@@ -4,7 +4,7 @@
 
 - **Status**: confirmed
 - **Analyzer**: schematic
-- **Source**: OV_Power.sch
+- **Source**: OV_Power_OV_Power.sch.json
 - **Created**: 2026-03-13
 
 ### Correct

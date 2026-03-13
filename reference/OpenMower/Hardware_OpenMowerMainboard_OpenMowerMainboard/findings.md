@@ -50,7 +50,7 @@
 
 - **Status**: confirmed
 - **Analyzer**: schematic
-- **Source**: multiple files
+- **Source**: Hardware_OpenMowerMainboard_OpenMowerMainboard.kicad_sch.json
 - **Related**: KH-010
 - **Created**: 2026-03-13
 

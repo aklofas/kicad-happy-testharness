@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _differ import extract_manifest_entry
 from utils import (
-    OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
+    HARNESS_DIR, OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     list_repos, discover_projects, data_dir, list_projects_in_data,
     project_prefix,
 )

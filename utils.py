@@ -150,6 +150,19 @@ def discover_projects(repo_name):
         if rel not in project_dirs:
             project_dirs[rel] = pcb.stem
 
+    # KiCad 4/5 .pro files — check header to confirm KiCad format
+    for pro5 in repo_dir.rglob("*.pro"):
+        rel = str(pro5.parent.relative_to(repo_dir))
+        if rel not in project_dirs:
+            try:
+                first_line = pro5.read_text(errors="replace").split("\n", 1)[0].strip()
+                if (first_line.startswith("update=")
+                        or first_line.startswith("[pcbnew")
+                        or first_line.startswith("[eeschema")):
+                    project_dirs[rel] = pro5.stem
+            except OSError:
+                pass
+
     projects = []
     for pdir, stem in sorted(project_dirs.items()):
         if pdir == ".":

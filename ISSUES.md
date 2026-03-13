@@ -3,7 +3,15 @@
 Tracker for kicad-happy analyzer bugs (KH-*) and test harness improvements (TH-*).
 Contains enough detail to resume work with zero conversation history.
 
-Last updated: 2026-03-13 (KH-027 through KH-040 fixed)
+Last updated: 2026-03-13 (fixed KH-015, KH-041-046, TH-007)
+
+---
+
+## Numbering convention
+
+Issue numbers are **globally unique and never reused**. Before assigning a new number,
+check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
+number: **KH-047**. Next TH number: **TH-008**.
 
 ---
 
@@ -59,29 +67,6 @@ Last updated: 2026-03-13 (KH-027 through KH-040 fixed)
   (lines 2892-2903) but only checks PWR_FLAG placement within the current analysis scope.
 - **Code location**: Line 2883-2925 of analyze_schematic.py
 - **Related findings**: FND-00000006
-
----
-
-### KH-015: Legacy schematic missing signal_analysis [OPEN]
-
-- **Severity**: HIGH
-- **Status**: OPEN
-- **Component**: `skills/kicad/scripts/analyze_schematic.py` line 1960, `parse_legacy_schematic()`
-- **Description**: The legacy parser's return dict (line 1960-1975) does not include a
-  `signal_analysis` key. The function never calls `analyze_signal_paths()`. Compare with
-  the KiCad 6+ path (line 5339+) which calls the full analysis pipeline including all 21
-  signal detectors. Result: ALL legacy (.sch) files get zero signal detections — no voltage
-  dividers, no current sense, no power regulators, no RC/LC filters, nothing.
-- **Evidence**: All legacy repos (daisho, OpenVent, education_tools, glasgow test-jig)
-  have empty signal_analysis in their outputs. This affects 60+ schematic files across
-  the test corpus.
-- **Proposed fix**: Add `analyze_signal_paths()` call to `parse_legacy_schematic()` after
-  `build_net_map()` and `build_pin_to_net_map()`, same as the KiCad 6+ path does. The
-  `AnalysisContext` and all detector functions are format-agnostic — they work on the
-  normalized component/net data structures that the legacy parser already produces.
-- **Code location**: Line 1960-1975 of analyze_schematic.py, before the return statement.
-  Model on the KiCad 6+ path at line 5339+.
-- **Related findings**: FND-00000015 (daisho), FND-00000022 (OpenVent)
 
 ---
 
@@ -280,15 +265,14 @@ Last updated: 2026-03-13 (KH-027 through KH-040 fixed)
 ## Priority Queue (open issues, ordered by impact)
 
 1. **KH-026** (HIGH) -- Hierarchical net merging for multi-instance sheets. Wrong connectivity.
-2. **KH-015** (HIGH) -- Legacy signal_analysis gap. All legacy files get zero detections.
-3. **KH-016** (HIGH) -- Legacy wire-to-pin broken. Only 4/160 nets connected in daisho.
-4. **KH-024** (MEDIUM) -- #GND as component in legacy parser.
-5. **KH-012** (MEDIUM) -- Voltage divider FPs.
-6. **KH-013** (LOW) -- PWR_FLAG warnings per-sheet scope.
-7. **KH-017** (LOW) -- Opamp feedback verification.
-8. **KH-018** (LOW) -- Diff pair on power rails and current sense nets.
-9. **KH-019** (LOW) -- RC filter shared-node FPs.
-10. **KH-020** (LOW) -- Capacitive feedback recognition.
-11. **KH-021** (LOW) -- BSS138 level shifter detection.
-12. **KH-022** (LOW) -- UART FP on PCIe Rx/Tx, CAN, motor outputs.
-13. **KH-025** (LOW) -- Crystal X-prefix classification.
+2. **KH-016** (HIGH) -- Legacy wire-to-pin broken. 50% orphan nets in ubertooth, 32 spurious nets in throwing-star.
+3. **KH-024** (MEDIUM) -- #GND as component in legacy parser.
+4. **KH-012** (MEDIUM) -- Voltage divider FPs.
+5. **KH-013** (LOW) -- PWR_FLAG warnings per-sheet scope.
+6. **KH-017** (LOW) -- Opamp feedback verification.
+7. **KH-018** (LOW) -- Diff pair on power rails and current sense nets.
+8. **KH-019** (LOW) -- RC filter shared-node FPs.
+9. **KH-020** (LOW) -- Capacitive feedback recognition.
+10. **KH-021** (LOW) -- BSS138 level shifter detection.
+11. **KH-022** (LOW) -- UART FP on PCIe Rx/Tx, CAN, motor outputs.
+12. **KH-025** (LOW) -- Crystal X-prefix classification.

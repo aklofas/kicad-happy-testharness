@@ -19,13 +19,13 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 - https://github.com/greatscottgadgets/hackrf-pro
 - https://github.com/greatscottgadgets/LNA1109
 - https://github.com/greatscottgadgets/LNA3030
-- https://github.com/greatscottgadgets/throwing-star-lan-tap
+- https://github.com/greatscottgadgets/throwing-star-lan-tap @ dceb2273972f
 - https://github.com/greatscottgadgets/ubertooth @ e0fd34d8abb8 (shallow)
 - https://github.com/greatscottgadgets/urti-mainboard
 - https://github.com/greatscottgadgets/yardstick
 - https://github.com/hackclub/OnBoard @ 4d3caeeabe21 (shallow)
 - https://github.com/im-tomu/tomu-hardware
-- https://github.com/Jana-Marie/analog-toolkit
+- https://github.com/Jana-Marie/analog-toolkit @ c5d317df88b8
 - https://github.com/Jana-Marie/Otter-Iron-PRO
 - https://github.com/openhwgroup/core-v-mcu-devkit
 - https://github.com/Ottercast/OtterCastAudioV2 @ 199395d7249a

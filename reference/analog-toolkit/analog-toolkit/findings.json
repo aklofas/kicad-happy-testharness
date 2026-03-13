@@ -1,0 +1,69 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "analog-toolkit.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "13 false positive RF matching networks on ADC input conditioning circuits (0-ohm series resistors + 10nF anti-aliasing caps)",
+      "correct": [
+        {
+          "type": "power_regulator",
+          "description": "U1 AP2204R-3.3 correctly identified as LDO with VBUS input and +3V3 output",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "type": "protection_devices",
+          "description": "F1 fuse and U2 USBLC6-4 ESD protection correctly identified",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "type": "decoupling",
+          "description": "Decoupling analysis correct: +3V3 (4x caps, 5.0uF), VBUS (1x 4.7uF), +3.3VA (1x 100nF)",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        },
+        {
+          "type": "bus_protocols",
+          "description": "I2C bus detected with correct no-pull-up observation; UART TX/RX detected",
+          "analyzer_section": "design_analysis.bus_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "rf_matching",
+          "description": "13 false positive RF matching networks detected on ADC input conditioning circuits. These are 0-ohm series resistors (R11-R16) and DNP resistors (R5-R10, R17-R23) with 10nF anti-aliasing caps (C8-C13). Nothing RF-related in this design.",
+          "analyzer_section": "signal_analysis.rf_matching"
+        },
+        {
+          "type": "statistics",
+          "description": "dnp_parts=1 but there are 13 DNP components (R5-R10, R17-R23). Counts BOM line items instead of component instances.",
+          "analyzer_section": "statistics.dnp_parts"
+        }
+      ],
+      "missed": [
+        {
+          "type": "rc_filters",
+          "description": "6 RC anti-aliasing filters on ADC inputs (R11-R16 series + C8-C13 shunt to GND). rc_filters array is empty.",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "type": "lc_filters",
+          "description": "Ferrite bead FB1 between +3V3 and +3.3VA with C7 100nF forms analog supply filter. Not detected.",
+          "analyzer_section": "signal_analysis.lc_filters"
+        }
+      ],
+      "suggestions": [
+        "RF matching detector too aggressive: triggering on any resistor near a cap connected to an IC. Should require antenna-like components or RF-frequency indicators.",
+        "Fix dnp_parts to count component instances, not BOM line items.",
+        "RC filter detection should handle 0-ohm series resistors (still a valid RC topology).",
+        "Detect ferrite_bead + cap as analog supply filtering pattern."
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "id": "FND-00000070",
+      "repo": "analog-toolkit",
+      "project": "analog-toolkit",
+      "created": "2026-03-13T20:28:15.034552+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

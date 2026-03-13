@@ -137,23 +137,21 @@ cd kicad-happy-testharness
 # 2. Clone the kicad-happy repo alongside this one (or set KICAD_HAPPY_DIR)
 git clone <kicad-happy-url> ../kicad-happy
 
-# 3. Configure your budget in CLAUDE.md (see "Usage budget" below)
-
-# 4. Clone all test repos
+# 3. Clone all test repos
 python3 checkout.py
 
-# 5. Discover KiCad files
+# 4. Discover KiCad files
 python3 discover.py
 
-# 6. Run analyzers (use --jobs for parallelism, --repo to target one repo)
+# 5. Run analyzers (use --jobs for parallelism, --repo to target one repo)
 python3 run/run_schematic.py --jobs 4
 python3 run/run_pcb.py --jobs 4
 python3 run/run_gerbers.py --jobs 4
 
-# 7. Validate outputs
+# 6. Validate outputs
 python3 validate/validate_outputs.py
 
-# 8. Extract MPNs and download datasheets
+# 7. Extract MPNs and download datasheets
 python3 validate/extract_mpns.py
 python3 validate/download_datasheets.py
 ```
@@ -180,10 +178,10 @@ export KICAD_HAPPY_DIR=/path/to/kicad-happy   # if not at ../kicad-happy
 
 ```
 repos.md                    # Master repo list -- human-editable markdown
-ISSUES.md                   # Git-tracked issue tracker (KH-* and TH-* issues)
+ISSUES.md                   # Open issues only (KH-* analyzer, TH-* harness)
+FIXED.md                    # Closed issues with root cause + fix details
 checkout.py                 # Clone repos + check for upstream updates
 discover.py                 # Find all KiCad files, write manifests
-monitor.py                  # Usage budget monitor -- tracks session costs
 utils.py                    # Shared utilities (path resolution, repo naming, unified runner)
 
 run/                        # Batch-run kicad-happy analyzers (all support --repo, --jobs)
@@ -224,6 +222,26 @@ reference/                  # Tracked in git -- known-good regression data
 
 repos/                      # Git-ignored -- cloned test repos
 results/                    # Git-ignored -- outputs, manifests, review packets
+```
+
+## Issue tracking
+
+Issues are discovered opportunistically while running analyzers, reviewing outputs, and doing
+Layer 3 reviews. Two files track them:
+
+- **ISSUES.md** -- Open issues only. Removed when fixed.
+- **FIXED.md** -- Closed issues with root cause, fix details, and verification.
+
+Issue prefixes: `KH-*` for kicad-happy analyzer bugs, `TH-*` for test harness issues.
+
+**Numbers are globally unique and never reused.** Before creating a new issue, check the
+"Numbering convention" section at the top of ISSUES.md for the next available number.
+
+```bash
+# Check current issue status
+cat ISSUES.md                    # open issues + priority queue
+cat FIXED.md                     # closed issues with fix details
+python3 regression/drift.py      # re-check findings against current outputs
 ```
 
 ## Adding test repos
@@ -294,26 +312,22 @@ python3 integration/test_datasheets.py --mpn STM32G474CEU6
 python3 integration/test_bom_manager.py --repo {repo} --stage analyze -v
 ```
 
-## Usage budget
+## Usage warning
 
 > **This test harness covers 1,100+ repos.** Running the full suite takes many Claude Code
-> sessions spread across multiple weeks. A built-in budget monitor prevents burning through
-> your weekly Claude Code limits in a single sitting.
+> sessions spread across multiple weeks. Be mindful of your account's usage limits.
 
-Configure your budget in `CLAUDE.md` (not tracked in git):
+There is no automated way to track Claude Code session costs from scripts. Anthropic's
+Usage/Cost Admin APIs require an organization-level Admin API key, and the interactive
+`/cost` command is only relevant for API-billed accounts (not Max/Pro subscriptions).
 
-```
-WEEKLY_BUDGET_USD=5.00
-BUDGET_LIMIT_PCT=20
-```
+**It is your responsibility to monitor your own usage and account limits.** To avoid
+excessive consumption:
 
-- **WEEKLY_BUDGET_USD** -- Your estimated total weekly Claude Code spend (based on your plan).
-- **BUDGET_LIMIT_PCT** -- Max percentage of that weekly budget to allocate to test harness work.
+- **Use `--repo` flags** to target specific repos rather than processing the entire corpus
+- **Work in batches** -- checkout, analyze, and validate a subset each session
+- **Use `--jobs`** for parallelism to reduce wall-clock time (but not token cost)
+- **Check your Anthropic dashboard** periodically for usage trends
 
-```bash
-python3 monitor.py status              # Current week's usage vs budget
-python3 monitor.py log 0.35 "ran schematic analyzer on batch 1"   # Log session cost
-python3 monitor.py history             # All logged sessions
-```
-
-Session costs come from the Claude Code `/cost` command. Log at end of each session. The test corpus is too large to process in one session -- work through repos in batches, and defer when the weekly allocation is spent.
+The test corpus is too large to process in one session. Plan your work across multiple
+sessions and weeks.
