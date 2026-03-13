@@ -505,7 +505,6 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 ## SparkFun boards
 
 - https://github.com/sparkfun/APDS-9960_RGB_and_Gesture_Sensor
-- https://github.com/sparkfun/OpenLog @ 140fe56ee7d3
 - https://github.com/sparkfun/Qwiic_Joystick
 - https://github.com/sparkfun/RedBoard_Artemis_Nano
 - https://github.com/sparkfun/SparkFun_Ambient_Light_Sensor-VEML7700

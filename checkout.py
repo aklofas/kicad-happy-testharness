@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Clone repos from repos.md at pinned commit hashes.
+"""Clone repos from repos.md at pinned commit hashes, and check for updates.
 
 Reads the list in repos.md, clones each repo into repos/, and checks
 out pinned commits where specified. New clones get their HEAD hash
@@ -9,10 +9,16 @@ Usage:
     python3 checkout.py
     python3 checkout.py --limit 5
     python3 checkout.py --filter "Open*,Glasgow*"
+    python3 checkout.py --check-updates
+    python3 checkout.py --check-updates --pin
+    python3 checkout.py --check-updates --fetch
+    python3 checkout.py --check-updates --json
+    python3 checkout.py --check-updates --filter "Open*"
 """
 
 import argparse
 import fnmatch
+import json
 import re
 import subprocess
 import sys
@@ -73,6 +79,11 @@ def parse_repos_md(path: Path) -> list[dict]:
             })
 
     return repos
+
+
+def _repo_name_from_url(url: str) -> str:
+    """Extract repo name from URL."""
+    return url.rstrip("/").split("/")[-1].removesuffix(".git")
 
 
 def pin_hash_in_repos_md(url: str, full_hash: str):
@@ -138,25 +149,46 @@ def get_head_hash(repo_dir: Path) -> str:
     return result.stdout.strip()
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Clone repos from repos.md")
-    parser.add_argument("--limit", type=int, default=0, help="Only clone first N repos")
-    parser.add_argument("--filter", type=str, default="",
-                        help="Comma-separated glob patterns to filter by repo name (e.g. 'Open*,Glasgow*')")
-    args = parser.parse_args()
+def get_remote_head(url: str) -> str | None:
+    """Get the HEAD commit hash from a remote repo without cloning."""
+    try:
+        result = subprocess.run(
+            ["git", "ls-remote", "--quiet", url, "HEAD"],
+            capture_output=True, text=True, timeout=30,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip().split()[0]
+    except (subprocess.TimeoutExpired, Exception):
+        pass
+    return None
 
-    if not REPOS_MD.exists():
-        print(f"Error: {REPOS_MD} not found")
-        sys.exit(1)
 
-    repos = parse_repos_md(REPOS_MD)
-    if args.filter:
-        patterns = [p.strip() for p in args.filter.split(",")]
-        repos = [r for r in repos
-                 if any(fnmatch.fnmatch(r["url"].rstrip("/").split("/")[-1].removesuffix(".git"), p)
-                        for p in patterns)]
-    if args.limit:
-        repos = repos[:args.limit]
+def fetch_local(repo_dir: Path) -> bool:
+    """Run git fetch in a local clone."""
+    try:
+        subprocess.run(
+            ["git", "fetch", "--quiet"],
+            cwd=str(repo_dir), capture_output=True, text=True, timeout=60,
+        )
+        return True
+    except Exception:
+        return False
+
+
+def _filter_repos(repos, filter_str):
+    """Filter repos by comma-separated glob patterns on repo name."""
+    if not filter_str:
+        return repos
+    patterns = [p.strip() for p in filter_str.split(",")]
+    return [r for r in repos
+            if any(fnmatch.fnmatch(_repo_name_from_url(r["url"]), p)
+                   for p in patterns)]
+
+
+def clone_repos(repos, limit):
+    """Clone/restore repos from repos.md."""
+    if limit:
+        repos = repos[:limit]
 
     CLONE_DIR.mkdir(exist_ok=True)
 
@@ -166,7 +198,7 @@ def main():
 
     for repo in repos:
         url = repo["url"]
-        repo_name = url.rstrip("/").split("/")[-1].removesuffix(".git")
+        repo_name = _repo_name_from_url(url)
         dest = CLONE_DIR / repo_name
 
         if dest.exists():
@@ -214,6 +246,120 @@ def main():
         pinned = sum(1 for r in repos if not r["hash"])
         if pinned:
             print(f"Pinned {pinned} new hashes in repos.md")
+
+
+def check_updates(repos, do_fetch, do_pin, as_json):
+    """Check if tracked repos have upstream updates."""
+    results = []
+    updated = 0
+
+    if not as_json:
+        print(f"Checking {len(repos)} repos for upstream updates...\n")
+
+    for repo in repos:
+        url = repo["url"]
+        repo_name = _repo_name_from_url(url)
+        pinned_hash = repo.get("hash")
+        repo_dir = CLONE_DIR / repo_name
+
+        entry = {
+            "name": repo_name,
+            "url": url,
+            "pinned": pinned_hash,
+        }
+
+        if not as_json:
+            print(f"  {repo_name}...", end="", flush=True)
+
+        # Fetch locally if requested
+        if do_fetch and repo_dir.exists():
+            fetch_local(repo_dir)
+
+        remote_hash = get_remote_head(url)
+        entry["remote"] = remote_hash
+
+        if remote_hash is None:
+            entry["status"] = "error"
+            if not as_json:
+                print(" error (could not reach remote)")
+        elif not pinned_hash:
+            entry["status"] = "not-pinned"
+            if not as_json:
+                print(f" not pinned (remote: {remote_hash[:12]})")
+            if do_pin:
+                pin_hash_in_repos_md(url, remote_hash)
+                if not as_json:
+                    print(f"    -> pinned {remote_hash[:12]} in repos.md")
+        elif remote_hash.startswith(pinned_hash) or pinned_hash.startswith(remote_hash[:len(pinned_hash)]):
+            entry["status"] = "up-to-date"
+            if not as_json:
+                print(" up-to-date")
+        else:
+            entry["status"] = "update-available"
+            updated += 1
+            if not as_json:
+                print(f" UPDATE AVAILABLE")
+                print(f"    pinned: {pinned_hash[:12]}")
+                print(f"    remote: {remote_hash[:12]}")
+            if do_pin:
+                pin_hash_in_repos_md(url, remote_hash)
+                if not as_json:
+                    print(f"    -> pinned {remote_hash[:12]} in repos.md")
+
+        results.append(entry)
+
+    if as_json:
+        print(json.dumps({
+            "total": len(results),
+            "updates_available": updated,
+            "repos": results,
+        }, indent=2))
+    else:
+        print(f"\n{'=' * 50}")
+        print(f"Total repos:       {len(results)}")
+        print(f"Updates available:  {updated}")
+        pinned = sum(1 for r in results if r["status"] == "up-to-date")
+        not_pinned = sum(1 for r in results if r["status"] == "not-pinned")
+        if pinned:
+            print(f"Up to date:        {pinned}")
+        if not_pinned:
+            print(f"Not pinned:        {not_pinned}")
+
+        if updated:
+            print(f"\nTo update, delete the repo dir and re-run checkout.py:")
+            for r in results:
+                if r["status"] == "update-available":
+                    print(f"  rm -rf repos/{r['name']} && python3 checkout.py")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Clone repos from repos.md and check for updates")
+    parser.add_argument("--limit", type=int, default=0,
+                        help="Only clone first N repos (clone mode only)")
+    parser.add_argument("--filter", type=str, default="",
+                        help="Comma-separated glob patterns to filter by repo name")
+    parser.add_argument("--check-updates", action="store_true",
+                        help="Check for upstream updates instead of cloning")
+    parser.add_argument("--pin", action="store_true",
+                        help="Update repos.md with new commit hashes (with --check-updates)")
+    parser.add_argument("--fetch", action="store_true",
+                        help="Also git fetch in local clones (with --check-updates)")
+    parser.add_argument("--json", action="store_true",
+                        help="Output as JSON (with --check-updates)")
+    args = parser.parse_args()
+
+    if not REPOS_MD.exists():
+        print(f"Error: {REPOS_MD} not found")
+        sys.exit(1)
+
+    repos = parse_repos_md(REPOS_MD)
+    repos = _filter_repos(repos, args.filter)
+
+    if args.check_updates:
+        check_updates(repos, args.fetch, args.pin, args.json)
+    else:
+        clone_repos(repos, args.limit)
 
 
 if __name__ == "__main__":

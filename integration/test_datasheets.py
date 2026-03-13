@@ -42,7 +42,7 @@ SCRIPTS = {
     "element14": KICAD_HAPPY_DIR / "skills" / "element14" / "scripts" / "fetch_datasheet_element14.py",
 }
 
-_TEST_MPNS_FILE = HARNESS_DIR / "data" / "test_mpns.json"
+_TEST_MPNS_FILE = HARNESS_DIR / "reference" / "test_mpns.json"
 
 _DEFAULT_MPNS = [
     {"mpn": "GRM155R71C104KA88J", "category": "passive_cap", "description": "Murata MLCC 0402", "manufacturer": "Murata Electronics"},

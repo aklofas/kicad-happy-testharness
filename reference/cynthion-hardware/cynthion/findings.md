@@ -1,0 +1,98 @@
+# Findings: cynthion-hardware / cynthion
+
+## FND-00000015: Deep review of cynthion-hardware across 17 sub-sheets. 4 LDOs correct, I2C/USB/memory detection solid. PWR_FLAG warnings spurious (Issue #10). Voltage divider false positives for BJT base bias networks (Issue #12). Missed SPI bus, Zener voltage monitor, and transistor circuits on power_supplies sheet.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: power_supplies.kicad_sch.json
+- **Related**: KH-010, KH-012
+- **Created**: 2026-03-13
+- **Datasheets**: AP7361EA (Diodes Inc.) - fixed 3.3V LDO with ADJ/NC pin, MIC5504 (Microchip) - 300mA LDO, 1.8V and 2.5V variants, TCR2EF115 (Toshiba) - 1.15V 200mA LDO, FUSB302B (ON Semi) - USB Type-C port controller with internal CC management, BZX884-B3V0 (Nexperia) - 3.0V Zener diode, BC847BS - dual NPN transistor, W25Q32JVSS (Winbond) - 32Mbit QSPI flash, S27KS0641 (Infineon) - 64Mbit HyperRAM, LFE5U-12F-6BG256C (Lattice) - ECP5 FPGA 12k LUTs
+
+### Correct
+- U5 (MIC5504-2.5YM5) -> +2V5 LDO from +3V3: correct topology, rails, lib_id
+- U4 (TCR2EF115 using MIC5504-1.8YM5 lib_id) -> +1V1 LDO from +3V3: correct. Net name +1V1 is a schematic oddity (part is 1.15V)
+- U3 (AP7361EA-33FGE-7) -> +3V3 LDO from +5V: correct. fb_net correctly identifies R81/R82 on ADJ/NC pin
+- U15 (MIC5504-1.8YM5) -> VCCRAM LDO from +3V3: correct. 1.8V for HyperRAM supply
+- 4 TVS diodes (D23, D24, D25, D26) correctly detected on CONTROL_VBUS, TARGET_A_VBUS, AUX_VBUS, TARGET_C_VBUS
+- R55/C62 and R56/C62 on control_port: correct as RC low-pass (194 Hz). Functionally a USB SE0/reset detection circuit
+- R107/C78 button debounce filter (4.82 Hz) on indicators_buttons: correct
+- 5 power rails with decoupling coverage correctly analyzed: +2V5 (4 caps), +1V1 (9 caps), +3V3 (16 caps), +5V (1 cap), VCCRAM (3 caps)
+- 6 I2C nets detected: MON.SCL/SDA (with 2.2k pullups), TARGET_C.SCL/SDA (with pullups), AUX_TYPE_C.SCL/SDA (no pullups - handled by IC)
+- U10 (HyperRAM S27KS0641) and U7 (W25Q32JVSS flash) correctly detected as memory interfaces connected to IC1 (ECP5)
+- 4 USB connectors detected (J1, J2 Type-C; J3 USB-A; J4 Type-C). J2 CC pulldown check passes correctly
+- USB differential pairs correctly identified: CONTROL_D+/D-, PHY_D+/D-, AUX_D+/D-, CONTROL_MCU_D+/D-
+- 8 PMOS transistor circuits in power_distribution correctly detected (VBUS switches Q1, Q4, Q5, Q6, Q7, Q9, Q12 and others)
+- 364 components in aggregated view: 77C, 30D, 120R, 24Q, 16U, 15J, 13RN, 4FL, 44TP, 3SW, 1Y, 8IC, 4FID, 4H. Reasonable for USB analysis platform
+
+### Incorrect
+- R78(2.2k)/R79(10k) and R88(2.2k)/R89(10k) in power_distribution detected as voltage dividers but are actually BJT base bias networks for Q11 and Q8. Mid-point connects to transistor base (B2 pin). Topologically correct but functionally misleading
+- R118(1k)/R102(5.1k) detected as voltage divider on FPGA_CONFIG.~{INIT}. R118 is a series resistor from U6:PA03, R102 is a pull-down. Topology is a divider but function is series-resistor-with-pulldown for FPGA init pin
+- Y1 (DSC60xx) classified under crystal_circuits but is a programmable oscillator module (not a bare crystal). Frequency null - failed to parse '60MHz' from 'Osc60MHz' value
+- J1 and J4 CC pulldown checks fail but CC lines connect to FUSB302B ICs (U2, U12) which manage CC internally. Not a real compliance issue
+
+### Missed
+- Q16 (BC847BS dual NPN) in power_supplies not detected. Forms a voltage monitor: R4(8.06k) from +3V3 biases D30(3.0V Zener), through R50(0R) to Q16 base, collector drives ~{POWER_GOOD} signal
+- D30 (BZX884-B3V0 Zener) in power_supplies not detected as part of voltage monitor/power-good circuit
+- SPI/QSPI bus between U7 (W25Q32JVSS flash) and IC1 (ECP5) not detected in bus_analysis. 6 signal nets: IO0-IO3, ~{CS}, FPGA_FLASH_CLK. Pin names clearly indicate SPI (CS, CLK, DI, DO)
+- 4 common-mode chokes (FL1-FL4, DLM0NSB280HY2D) on USB differential pairs not classified as EMI filtering components
+- U15 has (property 'DNP' 'DNP') text annotation but (dnp no) schema flag. Analyzer reports dnp:false which follows the schema flag, but designer intent from the property text is DNP. No warning raised about this discrepancy
+
+### Suggestions
+- Distinguish oscillator modules from bare crystals in crystal_circuits detection
+- Detect SPI buses by matching pin names (MOSI/MISO/SCK/CS or DI/DO/CLK/CS patterns)
+- Consider BJT base bias networks as a separate category from voltage_dividers, or add a 'function' field
+- Improve PWR_FLAG net resolution - currently shows net_name='PWR_FLAG' instead of the actual connected power rail
+- Add Zener voltage reference/monitor detection pattern: Zener + bias resistor + transistor = power-good circuit
+- Warn when DNP property text conflicts with dnp schema flag
+
+---
+
+## FND-00000019: All 3 voltage divider detections in cynthion are false positives: R78/R79 and R88/R89 are BJT base bias networks, R118/R102 is a series-resistor-with-pulldown on FPGA ~{INIT}
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: power_distribution.kicad_sch.json
+- **Related**: KH-012
+- **Created**: 2026-03-13
+
+### Correct
+(none)
+
+### Incorrect
+- R78(2.2k)/R79(10k) is BJT base bias for Q11, not a divider
+  (signal_analysis.voltage_dividers)
+- R88(2.2k)/R89(10k) same pattern for Q8
+  (signal_analysis.voltage_dividers)
+- R118(1k)/R102(5.1k) is series resistor + pulldown on FPGA config signal
+  (signal_analysis.voltage_dividers)
+
+### Missed
+(none)
+
+### Suggestions
+- Check if mid-point connects to a transistor base — if so, classify as bias network not divider
+
+---
+
+## FND-00000026: Multi-instance sub-sheets (usb_phy x3, type_c x2) have internal nets merged across instances, causing 53 false single-pin nets and incorrect ERC warnings
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: cynthion.kicad_sch.json
+- **Created**: 2026-03-13
+
+### Correct
+(none)
+
+### Incorrect
+- usb_phy.kicad_sch instantiated 3 times but DATA0/DIR/NXT internal nets merged into single nets. Each instance should have separate namespaced nets.
+  (nets)
+
+### Missed
+(none)
+
+### Suggestions
+- Per-instance net namespacing for multi-instance hierarchical sheets
+
+---

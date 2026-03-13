@@ -2,177 +2,66 @@
 
 Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of real-world open-source KiCad projects.
 
-## Important: Usage budget
+## Regression testing (3-layer approach)
 
-> **This test harness covers 1,100+ repos.** Running the full suite takes many Claude Code
-> sessions spread across multiple weeks. A built-in budget monitor prevents burning through
-> your weekly Claude Code limits in a single sitting.
+The harness uses three complementary layers to catch regressions and discover improvements.
+All operations are per-repo. Data is organized by `reference/{repo}/{project}/` where project
+is the subpath to the KiCad project directory with `/` encoded as `_`.
 
-Before running any analyzers, validators, or batch operations, you **must** configure your
-budget in `CLAUDE.md` (not tracked in git):
+### Layer 1: Baselines
 
-```
-WEEKLY_BUDGET_USD=5.00
-BUDGET_LIMIT_PCT=20
-```
-
-- **WEEKLY_BUDGET_USD** -- Your estimated total weekly Claude Code spend (based on your plan).
-- **BUDGET_LIMIT_PCT** -- Max percentage of that weekly budget to allocate to test harness
-  work. Start with 10-20%.
-
-With the defaults above, the test harness is allowed $1.00/week of Claude Code usage.
-The budget resets every Monday (ISO week).
-
-### Checking budget
+Baseline snapshots capture a summary of all analyzer outputs at a point in time. Compact manifests are checked into git (in `reference/`) so any machine can compare against them.
 
 ```bash
-python3 monitor.py status              # Current week's usage vs budget
-python3 monitor.py log 0.35 "ran schematic analyzer on batch 1"   # Log session cost
-python3 monitor.py history             # All logged sessions
+python3 regression/snapshot.py --repo OpenMower       # create baseline
+python3 regression/compare.py --repo OpenMower        # diff current vs baseline
+python3 regression/compare.py --all --only-changes    # all repos, only diffs
 ```
 
-Session costs come from the Claude Code `/cost` command. Log them at the end of each
-session to keep the ledger accurate. The ledger is stored in `data/usage.json` (git-ignored).
+### Layer 2: Assertions
 
-### How pacing works
-
-The test corpus is too large to process in one session. Instead:
-
-1. Each session, check budget with `python3 monitor.py status`
-2. Work through a batch of repos (checkout, analyze, validate)
-3. Log the session cost when done
-4. When the weekly allocation is spent, defer remaining work to next week
-5. Repeat until the full corpus is processed
-
-Claude Code is instructed (via `CLAUDE.md`) to **prompt the user for budget values before
-launching any batch operations** if they haven't been configured yet.
-
-## Quick start
+Assertions are machine-checkable facts about what an analyzer should find in a specific file. They live in `reference/{repo}/{project}/assertions/` and provide permanent regression protection.
 
 ```bash
-# 1. Clone this repo
-git clone <this-repo-url>
-cd kicad-happy-testharness
-
-# 2. Clone the kicad-happy repo alongside this one (or set KICAD_HAPPY_DIR)
-git clone <kicad-happy-url> ../kicad-happy
-
-# 3. Configure your budget in CLAUDE.md (see "Usage budget" above)
-
-# 4. Clone all test repos
-python3 checkout.py
-
-# 5. Discover KiCad files
-python3 discover.py
-
-# 6. Run analyzers
-python3 analyzers/run_schematic.py
-python3 analyzers/run_pcb.py
-python3 analyzers/run_gerbers.py
-
-# 7. Validate outputs
-python3 validators/validate_outputs.py
-
-# 8. Extract MPNs and download datasheets
-python3 validators/extract_mpns.py
-python3 validators/download_datasheets.py
+python3 regression/run_checks.py --repo OpenMower     # run assertions
+python3 regression/seed.py --repo OpenMower           # generate seed assertions
 ```
 
-## Requirements
+Assertion files are JSON with operators like `range`, `min_count`, `equals`, `exists`, `contains_match`, etc. See `regression/checks.py` for the full list.
 
-- **Python 3.8+** (stdlib only for core scripts)
-- **Git** (for cloning test repos)
-- **requests** (optional, for manufacturer datasheet scraping)
-- **DigiKey/Mouser/element14 API keys** (optional, for datasheet downloads and MPN validation)
+### Layer 3: LLM review
 
-## Finding kicad-happy
-
-All scripts that need the kicad-happy analyzers look for them in this order:
-
-1. `KICAD_HAPPY_DIR` environment variable
-2. `../kicad-happy` (sibling directory -- the common layout)
-
-Set the env var if your kicad-happy repo is elsewhere:
+Review packets pair source KiCad files with analyzer output summaries, making it easy for Claude to independently verify analysis quality and discover issues that deterministic checks miss.
 
 ```bash
-export KICAD_HAPPY_DIR=/path/to/kicad-happy
+python3 regression/packet.py --strategy random --count 5        # random review
+python3 regression/packet.py --strategy changed --repo OpenMower # changed files
+
+python3 regression/findings.py list                   # list all findings
+python3 regression/findings.py stats                  # summary statistics
+python3 regression/findings.py render                 # regenerate all findings.md
+python3 regression/findings.py promote FND-00000001   # promote to assertion
 ```
 
-## Directory structure
+### Promoting improvements
 
-```
-repos.md                  # Master repo list -- human-editable markdown
-checkout.py               # Clone test repos into repos/
-check_updates.py          # Check if repos have upstream updates
-discover.py               # Find all KiCad files, write manifests
-monitor.py                # Usage budget monitor -- tracks session costs
-
-analyzers/
-  run_schematic.py        # Batch run analyze_schematic.py on all schematics
-  run_pcb.py              # Batch run analyze_pcb.py on all PCBs
-  run_gerbers.py          # Batch run analyze_gerbers.py on all Gerber dirs
-
-baselines/
-  snapshot.py             # Create baseline snapshots of analyzer outputs
-  compare.py              # Compare current outputs against a baseline
-  _differ.py              # Semantic JSON diffing engine
-
-review/
-  assertions.py           # Assertion data model and evaluation engine
-  check_assertions.py     # Run assertions against current outputs
-  findings.py             # Manage review findings (new/confirmed/promoted)
-  packet.py               # Generate review packets for LLM analysis
-
-validators/
-  validate_outputs.py     # Check structural invariants in analyzer JSON
-  extract_mpns.py         # Extract MPN + manufacturer pairs from analyzer outputs
-  download_datasheets.py  # Download datasheets for extracted MPNs (parallel)
-  validate_mpns.py        # Validate MPNs against DigiKey/Mouser APIs
-  analyze_bom_mismatch.py # Analyze BOM qty vs component count discrepancies
-
-integration/
-  test_datasheets.py      # Test datasheet downloading across distributors
-  test_bom_manager.py     # Test BOM manager pipeline
-
-data/
-  test_mpns.json          # Curated set of test MPNs (checked in)
-  baselines/              # Compact baseline manifests (checked in)
-  assertions/             # Curated assertions per file (checked in)
-  findings/               # Review findings (checked in)
-
-repos/                    # Git-ignored -- cloned test repos
-results/                  # Git-ignored -- outputs, full baselines, review packets
-```
-
-## Adding test repos
-
-Edit `repos.md` directly. It's organized as a simple list grouped by category. To add a repo, add a line to the appropriate section:
-
-```
-- https://github.com/user/repo
-- https://github.com/user/large-repo (shallow)
-- https://github.com/user/pinned-repo @ abc123def456
-- https://github.com/user/pinned-shallow @ abc123def456 (shallow)
-```
-
-- Append `(shallow)` for large repos where you only need the latest snapshot
-- Append `@ <commit_hash>` to pin a specific commit for reproducibility
-- Prefer projects with clear open-source licenses (MIT, Apache, CERN-OHL, etc.)
-- After adding, run `python3 checkout.py` to clone the new repo
-
-Hashes are managed automatically:
-- `checkout.py` pins the HEAD hash into `repos.md` after cloning new repos
-- `checkout.py` verifies and restores existing repos to their pinned hash on each run
-- `repos.md` is the single source of truth for commit hashes (no separate state file)
-
-### Checking for upstream updates
+When analyzer outputs improve, promote the changes to reference data:
 
 ```bash
-python3 check_updates.py              # compare pinned hashes to remote HEAD
-python3 check_updates.py --pin        # update repos.md with new remote hashes
-python3 check_updates.py --fetch      # also git fetch in local clones
-python3 check_updates.py --json       # machine-readable output
+python3 regression/promote.py --repo OpenMower         # dry run
+python3 regression/promote.py --repo OpenMower --apply  # promote improvements
 ```
+
+### Typical workflow
+
+1. Make changes to the kicad-happy analyzers
+2. Run the analyzers: `python3 run/run_schematic.py`
+3. Compare against baseline: `python3 regression/compare.py --repo OpenMower --only-changes`
+4. Run assertions: `python3 regression/run_checks.py --repo OpenMower`
+5. Generate review packets for changed files: `python3 regression/packet.py --strategy changed --repo OpenMower`
+6. Review packets with Claude, record findings
+7. Promote confirmed findings to assertions
+8. If satisfied, promote to reference: `python3 regression/promote.py --repo OpenMower --apply`
 
 ## What gets tested
 
@@ -208,41 +97,142 @@ not KiCad files. `discover.py` filters legacy `.sch` files by checking the file 
 "EESchema" (the KiCad 5 signature) and excludes anything else. All Adafruit repos, for
 example, use Eagle format and are correctly excluded.
 
+## Quick start
+
+```bash
+# 1. Clone this repo
+git clone <this-repo-url>
+cd kicad-happy-testharness
+
+# 2. Clone the kicad-happy repo alongside this one (or set KICAD_HAPPY_DIR)
+git clone <kicad-happy-url> ../kicad-happy
+
+# 3. Configure your budget in CLAUDE.md (see "Usage budget" below)
+
+# 4. Clone all test repos
+python3 checkout.py
+
+# 5. Discover KiCad files
+python3 discover.py
+
+# 6. Run analyzers
+python3 run/run_schematic.py
+python3 run/run_pcb.py
+python3 run/run_gerbers.py
+
+# 7. Validate outputs
+python3 validate/validate_outputs.py
+
+# 8. Extract MPNs and download datasheets
+python3 validate/extract_mpns.py
+python3 validate/download_datasheets.py
+```
+
+### Requirements
+
+- **Python 3.8+** (stdlib only for core scripts)
+- **Git** (for cloning test repos)
+- **requests** (optional, for manufacturer datasheet scraping)
+- **DigiKey/Mouser/element14 API keys** (optional, for datasheet downloads and MPN validation)
+
+### Finding kicad-happy
+
+All scripts that need the kicad-happy analyzers look for them in this order:
+
+1. `KICAD_HAPPY_DIR` environment variable
+2. `../kicad-happy` (sibling directory -- the common layout)
+
+```bash
+export KICAD_HAPPY_DIR=/path/to/kicad-happy   # if not at ../kicad-happy
+```
+
+## Directory structure
+
+```
+repos.md                    # Master repo list -- human-editable markdown
+ISSUES.md                   # Git-tracked issue tracker (KH-* and TH-* issues)
+checkout.py                 # Clone repos + check for upstream updates
+discover.py                 # Find all KiCad files, write manifests
+monitor.py                  # Usage budget monitor -- tracks session costs
+utils.py                    # Shared utilities (path resolution, repo naming)
+
+run/                        # Batch-run kicad-happy analyzers
+  run_schematic.py          #   Run analyze_schematic.py on all schematics
+  run_pcb.py                #   Run analyze_pcb.py on all PCBs
+  run_gerbers.py            #   Run analyze_gerbers.py on all Gerber dirs
+
+regression/                 # 3-layer regression testing system
+  _differ.py                #   Semantic JSON diffing engine
+  checks.py                 #   Assertion data model and evaluation engine
+  snapshot.py               #   Snapshot outputs -> reference/ baselines
+  compare.py                #   Diff current outputs vs baselines
+  run_checks.py             #   Run assertions against outputs
+  seed.py                   #   Generate seed assertions from outputs
+  findings.py               #   Manage LLM review findings + render findings.md
+  packet.py                 #   Generate review packets for LLM analysis
+  promote.py                #   Promote improved results/ to reference/
+
+validate/                   # Output quality checks & BOM analysis
+  validate_outputs.py       #   Check structural invariants in analyzer JSON
+  extract_mpns.py           #   Extract MPN + manufacturer pairs from outputs
+  validate_mpns.py          #   Validate MPNs against DigiKey/Mouser APIs
+  analyze_bom_mismatch.py   #   Analyze BOM qty vs component count discrepancies
+  download_datasheets.py    #   Download datasheets from multiple sources
+
+integration/                # End-to-end tests
+  test_datasheets.py        #   Test datasheet downloading across distributors
+  test_bom_manager.py       #   Test BOM manager pipeline
+
+reference/                  # Tracked in git -- known-good regression data
+  test_mpns.json            #   Curated set of test MPNs
+  {repo}/{project}/         #   Per-repo, per-project reference data
+    baselines/              #     Compact baseline manifests
+    assertions/{type}/      #     Machine-checkable facts per file
+    findings.json           #     Structured observations from LLM review
+    findings.md             #     Human-readable view (auto-generated from JSON)
+
+repos/                      # Git-ignored -- cloned test repos
+results/                    # Git-ignored -- outputs, manifests, review packets
+```
+
+## Adding test repos
+
+Edit `repos.md` directly. It's organized as a simple list grouped by category:
+
+```
+- https://github.com/user/repo
+- https://github.com/user/large-repo (shallow)
+- https://github.com/user/pinned-repo @ abc123def456
+```
+
+- Append `(shallow)` for large repos where you only need the latest snapshot
+- Append `@ <commit_hash>` to pin a specific commit for reproducibility
+- After adding, run `python3 checkout.py` to clone the new repo
+
+Hashes are managed automatically -- `checkout.py` pins HEAD after cloning and verifies pinned hashes on each run. `repos.md` is the single source of truth.
+
+```bash
+python3 checkout.py --check-updates              # compare pinned hashes to remote HEAD
+python3 checkout.py --check-updates --pin        # update repos.md with new hashes
+```
+
 ## Validation scripts
 
 ### validate_outputs.py
 
-Checks structural invariants on schematic analyzer output:
-- Required JSON keys present
-- Component/net count sanity
-- BOM consistency
-- Signal analysis plausibility
+Checks structural invariants on schematic analyzer output (required keys, count sanity, BOM consistency, signal analysis plausibility):
 
 ```bash
-python3 validators/validate_outputs.py
-python3 validators/validate_outputs.py --results-dir path/to/outputs --manifests-dir path/to/manifests
+python3 validate/validate_outputs.py --repo OpenMower
 ```
 
-### extract_mpns.py
+### extract_mpns.py / download_datasheets.py
 
-Extracts manufacturer part numbers from analyzer JSON outputs:
-
-```bash
-python3 validators/extract_mpns.py
-python3 validators/extract_mpns.py --results-dir path/to/outputs --output results/extracted_mpns.json
-```
-
-### download_datasheets.py
-
-Downloads datasheets for extracted MPNs using multiple sources in parallel:
+Extract manufacturer part numbers from analyzer outputs, then download datasheets from multiple sources in parallel:
 
 ```bash
-python3 validators/download_datasheets.py                    # download all
-python3 validators/download_datasheets.py --limit 20         # first 20
-python3 validators/download_datasheets.py --project OpenMower # one project
-python3 validators/download_datasheets.py --status           # show progress
-python3 validators/download_datasheets.py --retry             # retry failures
-python3 validators/download_datasheets.py --workers 16        # more parallelism
+python3 validate/extract_mpns.py --repo OpenMower
+python3 validate/download_datasheets.py --project OpenMower --status
 ```
 
 Sources tried in order: direct URL from schematic, LCSC direct API, DigiKey, Mouser, LCSC (jlcsearch), element14, manufacturer website scraping.
@@ -254,7 +244,7 @@ Validates extracted MPNs against DigiKey and Mouser APIs (requires API keys):
 ```bash
 export DIGIKEY_CLIENT_ID=... DIGIKEY_CLIENT_SECRET=...
 export MOUSER_SEARCH_API_KEY=...
-python3 validators/validate_mpns.py --limit 50
+python3 validate/validate_mpns.py --limit 50
 ```
 
 ### analyze_bom_mismatch.py
@@ -262,101 +252,37 @@ python3 validators/validate_mpns.py --limit 50
 Analyzes root causes of BOM quantity vs component count mismatches:
 
 ```bash
-python3 validators/analyze_bom_mismatch.py
+python3 validate/analyze_bom_mismatch.py --repo OpenMower
 ```
-
-## Regression testing (3-layer approach)
-
-The harness uses three complementary layers to catch regressions and discover improvements:
-
-### Layer 1: Baselines
-
-Baseline snapshots capture a summary of all analyzer outputs at a point in time. Compact manifests are checked into git (in `data/baselines/`) so any machine can compare against them.
-
-```bash
-# Create a baseline after running analyzers
-python3 baselines/snapshot.py my-baseline
-
-# Also save full output copies for deeper diffing (git-ignored)
-python3 baselines/snapshot.py my-baseline --full
-
-# Compare current outputs against a baseline
-python3 baselines/compare.py my-baseline
-python3 baselines/compare.py my-baseline --type schematic --only-changes
-python3 baselines/compare.py my-baseline --json
-
-# List / delete baselines
-python3 baselines/snapshot.py --list
-python3 baselines/snapshot.py --delete old-baseline
-```
-
-### Layer 2: Assertions
-
-Assertions are machine-checkable facts about what an analyzer should find in a specific file. They live in `data/assertions/` and provide permanent regression protection.
-
-```bash
-# Run all assertions
-python3 review/check_assertions.py
-
-# Filter by type or file pattern
-python3 review/check_assertions.py --type schematic
-python3 review/check_assertions.py --file "hackrf*"
-python3 review/check_assertions.py --json
-```
-
-Assertion files are JSON in `data/assertions/<type>/<file>.json` with operators like `range`, `min_count`, `equals`, `exists`, `contains_match`, etc. See `review/assertions.py` for the full list.
-
-### Layer 3: LLM review
-
-Review packets pair source KiCad files with analyzer output summaries, making it easy for Claude to independently verify analysis quality and discover issues that deterministic checks miss.
-
-```bash
-# Generate review packets for random files
-python3 review/packet.py --strategy random --count 5
-
-# Review files that changed most from baseline
-python3 review/packet.py --strategy changed --baseline my-baseline --count 5
-
-# Review a specific file
-python3 review/packet.py --file "repos/hackrf/hardware/hackrf-one/hackrf-one.kicad_sch"
-
-# Manage findings from reviews
-python3 review/findings.py list
-python3 review/findings.py show FND-0001
-python3 review/findings.py stats
-
-# Promote a confirmed finding to a permanent assertion
-python3 review/findings.py promote FND-0001
-```
-
-### Typical workflow
-
-1. Make changes to the kicad-happy analyzers
-2. Run the analyzers: `python3 analyzers/run_schematic.py`
-3. Compare against baseline: `python3 baselines/compare.py my-baseline --only-changes`
-4. Run assertions: `python3 review/check_assertions.py`
-5. Generate review packets for changed files: `python3 review/packet.py --strategy changed --baseline my-baseline`
-6. Review packets with Claude, record findings
-7. Promote confirmed findings to assertions
-8. If satisfied, create a new baseline: `python3 baselines/snapshot.py new-baseline`
 
 ## Integration tests
-
-### test_datasheets.py
-
-Tests datasheet downloading across distributors (DigiKey, Mouser, LCSC, element14):
 
 ```bash
 python3 integration/test_datasheets.py --only lcsc     # LCSC needs no API key
 python3 integration/test_datasheets.py --mpn STM32G474CEU6
-python3 integration/test_datasheets.py --keep -v
-```
-
-### test_bom_manager.py
-
-Tests the BOM manager pipeline against test repos:
-
-```bash
-python3 integration/test_bom_manager.py
 python3 integration/test_bom_manager.py --repo hackrf --stage analyze -v
 ```
+
+## Usage budget
+
+> **This test harness covers 1,100+ repos.** Running the full suite takes many Claude Code
+> sessions spread across multiple weeks. A built-in budget monitor prevents burning through
+> your weekly Claude Code limits in a single sitting.
+
+Configure your budget in `CLAUDE.md` (not tracked in git):
+
+```
+WEEKLY_BUDGET_USD=5.00
+BUDGET_LIMIT_PCT=20
+```
+
+- **WEEKLY_BUDGET_USD** -- Your estimated total weekly Claude Code spend (based on your plan).
+- **BUDGET_LIMIT_PCT** -- Max percentage of that weekly budget to allocate to test harness work.
+
+```bash
+python3 monitor.py status              # Current week's usage vs budget
+python3 monitor.py log 0.35 "ran schematic analyzer on batch 1"   # Log session cost
+python3 monitor.py history             # All logged sessions
+```
+
+Session costs come from the Claude Code `/cost` command. Log at end of each session. The test corpus is too large to process in one session -- work through repos in batches, and defer when the weekly allocation is spent.

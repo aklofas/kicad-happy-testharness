@@ -1,0 +1,169 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_boards_glasgow_glasgow.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "current_sense detector produces 68 false positives in glasgow.kicad_sch by pairing R49 (0.15 ohm shunt) with every IC sharing GND net",
+      "correct": [
+        {
+          "type": "current_sense",
+          "description": "R49 (0R15) + INA233 current sense IC is correctly detected"
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "current_sense",
+          "description": "67 of 68 current_sense detections are false positives \u2014 R49 paired with unrelated ICs (SN74LVC1T45, CAT24M01X, etc.) that merely share GND net",
+          "analyzer_section": "signal_analysis.current_sense",
+          "related_issue": "#7"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Detector should require shunt resistor to be in series path (not shunt to GND) or check sense IC has current sense pins (INP/INM)"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "#7"
+      ],
+      "id": "FND-00000001",
+      "repo": "glasgow",
+      "project": "hardware_boards_glasgow",
+      "created": "2026-03-13T07:39:04.944067+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_boards_glasgow_glasgow.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Voltage divider false positives: R30/R48 and R56/R48 on ISNS_H net are current sense network components, not dividers. R5/R4 on ~{CY_RESET} is a pull-up/pull-down pair, not a sensing divider.",
+      "correct": [
+        {
+          "type": "voltage_divider",
+          "description": "R33/R28 (49k9/59k) feedback divider for VDAC\u2192VFB correctly detected with is_feedback=True"
+        },
+        {
+          "type": "voltage_divider",
+          "description": "R34/R35 on VIO\u2192VFB also appears to be a legitimate feedback divider"
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "voltage_divider",
+          "description": "R30 (4R7) / R48 (0R15) on ISNS_H \u2192 GND detected as divider but these are current sense shunt resistors",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "related_issue": "#12"
+        },
+        {
+          "type": "voltage_divider",
+          "description": "R56 (0R33) / R48 (0R15) on ISNS_H \u2192 GND same issue \u2014 current sense, not divider",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "related_issue": "#12"
+        },
+        {
+          "type": "voltage_divider",
+          "description": "R5/R4 (100k/100k) on ~{CY_RESET} \u2192 GND is a pull-up/pull-down pair on a digital reset line, not a voltage sensing divider",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "related_issue": "#12"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Filter out sub-1-ohm resistor pairs (these are current sense). Filter out equal-value resistor pairs on digital signal names. Require mid-point connection to an analog input or feedback pin."
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "#12"
+      ],
+      "id": "FND-00000006",
+      "repo": "glasgow",
+      "project": "hardware_boards_glasgow",
+      "created": "2026-03-13T07:39:31.676106+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_boards_glasgow_glasgow.kicad_sch.json",
+      "status": "new",
+      "summary": "Glasgow has 52 power symbols resolved with net_name +3V3 but +3V3 does not appear in the nets dictionary. Power symbol names may not be propagating correctly to the net builder for this specific rail.",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "type": "net_connectivity",
+          "description": "+3V3 power rail with 52 power symbols not appearing in nets dict \u2014 net builder may not be consolidating power symbol nets correctly for all rails",
+          "analyzer_section": "nets"
+        }
+      ],
+      "suggestions": [
+        "Investigate why +3V3 power symbols are not creating/joining a net in build_net_map(). May be a coordinate matching issue or power symbol resolution problem."
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "id": "FND-00000017",
+      "repo": "glasgow",
+      "project": "hardware_boards_glasgow",
+      "created": "2026-03-13T07:41:27.480301+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_boards_glasgow_glasgow.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "CRITICAL: +3V3 power rail completely missing from nets dict despite 52 power symbols in main sheet + 33 in io_banks (85 total). GND (133 symbols), +5V (10), +1V2 (5) all work correctly. This means ALL +3V3 connections are invisible \u2014 signal analysis for anything on the 3.3V rail will fail.",
+      "correct": [
+        {
+          "type": "net_building",
+          "description": "GND, +5V, +1V2, VCCPLL0, VCCPLL1, GNDPLL0, GNDPLL1 all correctly appear in nets"
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "type": "net_connectivity",
+          "description": "+3V3 power rail with 85 power symbols across 2 sheets not present in nets dict at all. Every component powered by +3V3 has a dangling power pin.",
+          "analyzer_section": "nets",
+          "related_issue": "NEW"
+        }
+      ],
+      "suggestions": [
+        "Debug build_net_map() for +3V3 specifically. May be a naming collision, coordinate issue, or power symbol lib_id resolution problem. Check if +3V3 power symbols have correct pin positions."
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "NEW - not yet in issue tracker"
+      ],
+      "id": "FND-00000018",
+      "repo": "glasgow",
+      "project": "hardware_boards_glasgow",
+      "created": "2026-03-13T07:41:56.417452+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_boards_glasgow_glasgow.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "73 capacitors with value \"u1\" (European notation for 0.1uF) have no parsed_value. Parser handles \"4u7\" but fails when unit prefix precedes digit.",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "type": "value_parsing",
+          "description": "\"u1\" = 0.1uF not parsed. Pattern: unit prefix before digit (u1, n47, p33). Parser only handles digit-first like \"4u7\".",
+          "analyzer_section": "components[*].parsed_value"
+        }
+      ],
+      "suggestions": [
+        "Add parsing for prefix-first notation: u1=0.1u, n47=0.47n, p33=0.33p"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "id": "FND-00000025",
+      "repo": "glasgow",
+      "project": "hardware_boards_glasgow",
+      "created": "2026-03-13T07:52:46.213218+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

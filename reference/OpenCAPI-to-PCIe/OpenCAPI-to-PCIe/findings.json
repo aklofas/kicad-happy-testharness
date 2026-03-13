@@ -1,0 +1,29 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "OpenCAPI-to-PCIe.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "32 PCIe Rx/Tx differential lanes falsely classified as UART signals due to net name pattern matching on \"Rx\"/\"Tx\"",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "net_classification",
+          "description": "All 32 Rx/Tx PCIe differential nets classified as UART. These are multi-gigabit serial lanes, not UART.",
+          "analyzer_section": "design_analysis.net_classification"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "UART detector should verify presence of UART transceiver IC, not just pattern-match on Rx/Tx net names"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "id": "FND-00000024",
+      "repo": "OpenCAPI-to-PCIe",
+      "project": "OpenCAPI-to-PCIe",
+      "created": "2026-03-13T07:52:46.212687+00:00",
+      "datasheets_used": []
+    }
+  ]
+}
