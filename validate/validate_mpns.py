@@ -23,7 +23,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import HARNESS_DIR
 
 
 def get_digikey_token():
@@ -49,7 +50,7 @@ def get_digikey_token():
         return None, None
 
 
-def search_digikey(mpn: str, token: str, client_id: str) -> dict | None:
+def search_digikey(mpn: str, token: str, client_id: str, max_retries: int = 3) -> dict | None:
     body = json.dumps({"Keywords": mpn, "Limit": 3, "Offset": 0}).encode()
     req = urllib.request.Request(
         "https://api.digikey.com/products/v4/search/keyword",
@@ -87,10 +88,10 @@ def search_digikey(mpn: str, token: str, client_id: str) -> dict | None:
             "exact_match": False,
         }
     except urllib.error.HTTPError as e:
-        if e.code == 429:
+        if e.code == 429 and max_retries > 0:
             print("  DigiKey rate limited, waiting 5s...", file=sys.stderr)
             time.sleep(5)
-            return search_digikey(mpn, token, client_id)
+            return search_digikey(mpn, token, client_id, max_retries=max_retries - 1)
         return None
     except Exception:
         return None

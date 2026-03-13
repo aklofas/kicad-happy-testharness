@@ -17,13 +17,13 @@ import json
 import sys
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(HARNESS_DIR))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     discover_projects, data_dir, list_repos,
+    project_prefix,
 )
 from checks import load_assertions, evaluate_assertion
 from snapshot import create_snapshot
@@ -53,10 +53,7 @@ def check_assertions_for_repo(repo_name):
             total += len(aset.get("assertions", []))
             continue
 
-        if project_path and project_path != ".":
-            prefix = project_path.replace("/", "_").replace("\\", "_") + "_"
-        else:
-            prefix = ""
+        prefix = project_prefix(project_path)
 
         safe_name = prefix + file_pattern
         output_file = type_dir / (safe_name + ".json")

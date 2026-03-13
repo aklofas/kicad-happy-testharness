@@ -26,8 +26,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(HARNESS_DIR))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import DATA_DIR, data_dir
 
 

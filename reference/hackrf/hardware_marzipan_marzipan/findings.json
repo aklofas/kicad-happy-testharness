@@ -1,0 +1,104 @@
+{
+  "findings": [
+    {
+      "id": "FND-00000029",
+      "repo": "hackrf",
+      "project": "hardware_marzipan_marzipan",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "hardware_marzipan_marzipan.sch.json",
+      "summary": "\"Part Number\" field not recognized in legacy parser MPN extraction",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "mpn_extraction",
+          "description": "All 108 components with \"Part Number\" fields get empty mpn. Legacy parser line 1707 missing \"PART NUMBER\" alias in the MPN field name fallback chain.",
+          "analyzer_section": "components[*].mpn"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Add \"PART NUMBER\" and \"Part Number\" to the MPN field alias list in the legacy parser"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000030",
+      "repo": "hackrf",
+      "project": "hardware_marzipan_marzipan",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "hardware_marzipan_marzipan.sch.json",
+      "summary": "\"Description\" custom field not captured in legacy parser",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "type": "component_field",
+          "description": "Legacy parser has no case for \"DESCRIPTION\" field. Custom \"Description\" fields present on components are not extracted.",
+          "analyzer_section": "components[*].description"
+        }
+      ],
+      "suggestions": [
+        "Add \"DESCRIPTION\" to the field extraction logic in the legacy parser"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000031",
+      "repo": "hackrf",
+      "project": "hardware_marzipan_marzipan",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "hardware_marzipan_marzipan.sch.json",
+      "summary": "Note=\"DNP\" not recognized as Do Not Populate",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "dnp_detection",
+          "description": "28 components have Note=DNP but dnp_parts=0. Analyzer only checks for field named \"DNP\", not the value \"DNP\" in other fields like Note.",
+          "analyzer_section": "summary.dnp_parts"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Check for value \"DNP\" in Note, Comment, and Value fields in addition to checking for a field named \"DNP\""
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000032",
+      "repo": "hackrf",
+      "project": "hardware_marzipan_marzipan",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "hardware_marzipan_marzipan.sch.json",
+      "summary": "U15 LXES1TBCC2-004 ESD suppressor misclassified as IC (U prefix)",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "component_classification",
+          "description": "U15 LXES1TBCC2-004 is an ESD suppressor but classified as IC due to U reference prefix.",
+          "analyzer_section": "components"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Consider library name or component keywords for ESD/TVS classification rather than relying solely on reference prefix"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    }
+  ]
+}

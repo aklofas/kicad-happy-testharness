@@ -15,26 +15,26 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 - https://github.com/greatscottgadgets/cynthion-hardware @ 13aa71c2fb0b
 - https://github.com/greatscottgadgets/daisho @ 1d2f5e1cb16a (shallow)
 - https://github.com/greatscottgadgets/greatfet-hardware
-- https://github.com/greatscottgadgets/hackrf (shallow)
+- https://github.com/greatscottgadgets/hackrf @ 5275150bf031 (shallow)
 - https://github.com/greatscottgadgets/hackrf-pro
 - https://github.com/greatscottgadgets/LNA1109
 - https://github.com/greatscottgadgets/LNA3030
 - https://github.com/greatscottgadgets/throwing-star-lan-tap
-- https://github.com/greatscottgadgets/ubertooth (shallow)
+- https://github.com/greatscottgadgets/ubertooth @ e0fd34d8abb8 (shallow)
 - https://github.com/greatscottgadgets/urti-mainboard
 - https://github.com/greatscottgadgets/yardstick
-- https://github.com/hackclub/OnBoard (shallow)
+- https://github.com/hackclub/OnBoard @ 4d3caeeabe21 (shallow)
 - https://github.com/im-tomu/tomu-hardware
 - https://github.com/Jana-Marie/analog-toolkit
 - https://github.com/Jana-Marie/Otter-Iron-PRO
 - https://github.com/openhwgroup/core-v-mcu-devkit
-- https://github.com/Ottercast/OtterCastAudioV2
+- https://github.com/Ottercast/OtterCastAudioV2 @ 199395d7249a
 - https://github.com/prusa3d/MKxS-IR-sensor
-- https://github.com/scottbez1/splitflap (shallow)
+- https://github.com/scottbez1/splitflap @ 76252e0ed1de (shallow)
 - https://github.com/Seeed-Studio/kicad-mcp-server
 - https://github.com/Seeed-Studio/OSHW-reCamera-Series
-- https://github.com/skot/bitaxe
-- https://github.com/VoronDesign/Voron-Hardware (shallow)
+- https://github.com/skot/bitaxe @ 942bbd97aab0
+- https://github.com/VoronDesign/Voron-Hardware @ 5e5fca576138 (shallow)
 
 ## RP2040 / Raspberry Pi
 
@@ -136,7 +136,7 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 - https://github.com/Ogbonna-Joseph/STM32-KICAD-DESIGN
 - https://github.com/OLIMEX/OLIMEXINO-STM32F3
 - https://github.com/OLIMEX/STM32F4
-- https://github.com/pms67/HadesFCS
+- https://github.com/pms67/HadesFCS @ ad6935db6ad8
 - https://github.com/pms67/STM32F4-Reference-PCB
 - https://github.com/Stulinaz/STM32F103RB_USB_to_UART_SPI_I2C
 - https://github.com/TG9541/nrf24stm8l
@@ -188,7 +188,7 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 - https://github.com/LibreSolar/uext-gsm
 - https://github.com/LibreSolar/uext-lora
 - https://github.com/markh2016/KicadMotorController
-- https://github.com/mjbots/moteus (shallow)
+- https://github.com/mjbots/moteus @ b75347fa2c57 (shallow)
 - https://github.com/mlab-modules/SOLARMINI01
 - https://github.com/mlab-modules/SOLARMINIBAT01
 - https://github.com/ncsurobotics/SW-KiCadTemplates
@@ -348,7 +348,7 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 - https://codeberg.org/FPGAbot/HandAssemble_Pmod
 - https://github.com/fm4dd/pmod-i2c24io
 - https://github.com/FPGAwars/icezum
-- https://github.com/icebreaker-fpga/icebreaker
+- https://github.com/icebreaker-fpga/icebreaker @ 7ac3d6c14d49
 - https://github.com/machdyne/eis
 - https://github.com/OLIMEX/AgonLight2
 - https://github.com/OLIMEX/GateMateA1-EVB

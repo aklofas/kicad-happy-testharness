@@ -17,11 +17,10 @@ import json
 import sys
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(HARNESS_DIR))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import evaluate_assertion, load_assertions
-from utils import OUTPUTS_DIR, DATA_DIR
+from utils import OUTPUTS_DIR, DATA_DIR, project_prefix
 
 
 def find_output_file(file_pattern, repo_name, project_path, analyzer_type):
@@ -35,10 +34,7 @@ def find_output_file(file_pattern, repo_name, project_path, analyzer_type):
         return None
 
     # Build prefix from project_path (not project_name)
-    if project_path and project_path != ".":
-        prefix = project_path.replace("/", "_").replace("\\", "_") + "_"
-    else:
-        prefix = ""
+    prefix = project_prefix(project_path)
 
     safe_name = prefix + file_pattern
 

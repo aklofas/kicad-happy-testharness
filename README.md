@@ -13,8 +13,8 @@ is the subpath to the KiCad project directory with `/` encoded as `_`.
 Baseline snapshots capture a summary of all analyzer outputs at a point in time. Compact manifests are checked into git (in `reference/`) so any machine can compare against them.
 
 ```bash
-python3 regression/snapshot.py --repo OpenMower       # create baseline
-python3 regression/compare.py --repo OpenMower        # diff current vs baseline
+python3 regression/snapshot.py --repo {repo}       # create baseline
+python3 regression/compare.py --repo {repo}        # diff current vs baseline
 python3 regression/compare.py --all --only-changes    # all repos, only diffs
 ```
 
@@ -23,8 +23,8 @@ python3 regression/compare.py --all --only-changes    # all repos, only diffs
 Assertions are machine-checkable facts about what an analyzer should find in a specific file. They live in `reference/{repo}/{project}/assertions/` and provide permanent regression protection.
 
 ```bash
-python3 regression/run_checks.py --repo OpenMower     # run assertions
-python3 regression/seed.py --repo OpenMower           # generate seed assertions
+python3 regression/run_checks.py --repo {repo}     # run assertions
+python3 regression/seed.py --repo {repo}           # generate seed assertions
 ```
 
 Assertion files are JSON with operators like `range`, `min_count`, `equals`, `exists`, `contains_match`, etc. See `regression/checks.py` for the full list.
@@ -35,7 +35,7 @@ Review packets pair source KiCad files with analyzer output summaries, making it
 
 ```bash
 python3 regression/packet.py --strategy random --count 5        # random review
-python3 regression/packet.py --strategy changed --repo OpenMower # changed files
+python3 regression/packet.py --strategy changed --repo {repo} # changed files
 
 python3 regression/findings.py list                   # list all findings
 python3 regression/findings.py stats                  # summary statistics
@@ -48,20 +48,20 @@ python3 regression/findings.py promote FND-00000001   # promote to assertion
 When analyzer outputs improve, promote the changes to reference data:
 
 ```bash
-python3 regression/promote.py --repo OpenMower         # dry run
-python3 regression/promote.py --repo OpenMower --apply  # promote improvements
+python3 regression/promote.py --repo {repo}         # dry run
+python3 regression/promote.py --repo {repo} --apply  # promote improvements
 ```
 
 ### Typical workflow
 
 1. Make changes to the kicad-happy analyzers
-2. Run the analyzers: `python3 run/run_schematic.py`
-3. Compare against baseline: `python3 regression/compare.py --repo OpenMower --only-changes`
-4. Run assertions: `python3 regression/run_checks.py --repo OpenMower`
-5. Generate review packets for changed files: `python3 regression/packet.py --strategy changed --repo OpenMower`
+2. Run the analyzers: `python3 run/run_schematic.py --jobs 4`
+3. Compare against baseline: `python3 regression/compare.py --repo {repo} --only-changes`
+4. Run assertions: `python3 regression/run_checks.py --repo {repo}`
+5. Generate review packets for changed files: `python3 regression/packet.py --strategy changed --repo {repo}`
 6. Review packets with Claude, record findings
 7. Promote confirmed findings to assertions
-8. If satisfied, promote to reference: `python3 regression/promote.py --repo OpenMower --apply`
+8. If satisfied, promote to reference: `python3 regression/promote.py --repo {repo} --apply`
 
 ## What gets tested
 
@@ -115,10 +115,10 @@ python3 checkout.py
 # 5. Discover KiCad files
 python3 discover.py
 
-# 6. Run analyzers
-python3 run/run_schematic.py
-python3 run/run_pcb.py
-python3 run/run_gerbers.py
+# 6. Run analyzers (use --jobs for parallelism, --repo to target one repo)
+python3 run/run_schematic.py --jobs 4
+python3 run/run_pcb.py --jobs 4
+python3 run/run_gerbers.py --jobs 4
 
 # 7. Validate outputs
 python3 validate/validate_outputs.py
@@ -154,9 +154,9 @@ ISSUES.md                   # Git-tracked issue tracker (KH-* and TH-* issues)
 checkout.py                 # Clone repos + check for upstream updates
 discover.py                 # Find all KiCad files, write manifests
 monitor.py                  # Usage budget monitor -- tracks session costs
-utils.py                    # Shared utilities (path resolution, repo naming)
+utils.py                    # Shared utilities (path resolution, repo naming, unified runner)
 
-run/                        # Batch-run kicad-happy analyzers
+run/                        # Batch-run kicad-happy analyzers (all support --repo, --jobs)
   run_schematic.py          #   Run analyze_schematic.py on all schematics
   run_pcb.py                #   Run analyze_pcb.py on all PCBs
   run_gerbers.py            #   Run analyze_gerbers.py on all Gerber dirs
@@ -223,7 +223,7 @@ python3 checkout.py --check-updates --pin        # update repos.md with new hash
 Checks structural invariants on schematic analyzer output (required keys, count sanity, BOM consistency, signal analysis plausibility):
 
 ```bash
-python3 validate/validate_outputs.py --repo OpenMower
+python3 validate/validate_outputs.py --repo {repo}
 ```
 
 ### extract_mpns.py / download_datasheets.py
@@ -231,8 +231,8 @@ python3 validate/validate_outputs.py --repo OpenMower
 Extract manufacturer part numbers from analyzer outputs, then download datasheets from multiple sources in parallel:
 
 ```bash
-python3 validate/extract_mpns.py --repo OpenMower
-python3 validate/download_datasheets.py --project OpenMower --status
+python3 validate/extract_mpns.py --repo {repo}
+python3 validate/download_datasheets.py --project {repo} --status
 ```
 
 Sources tried in order: direct URL from schematic, LCSC direct API, DigiKey, Mouser, LCSC (jlcsearch), element14, manufacturer website scraping.
@@ -252,7 +252,7 @@ python3 validate/validate_mpns.py --limit 50
 Analyzes root causes of BOM quantity vs component count mismatches:
 
 ```bash
-python3 validate/analyze_bom_mismatch.py --repo OpenMower
+python3 validate/analyze_bom_mismatch.py --repo {repo}
 ```
 
 ## Integration tests
@@ -260,7 +260,7 @@ python3 validate/analyze_bom_mismatch.py --repo OpenMower
 ```bash
 python3 integration/test_datasheets.py --only lcsc     # LCSC needs no API key
 python3 integration/test_datasheets.py --mpn STM32G474CEU6
-python3 integration/test_bom_manager.py --repo hackrf --stage analyze -v
+python3 integration/test_bom_manager.py --repo {repo} --stage analyze -v
 ```
 
 ## Usage budget

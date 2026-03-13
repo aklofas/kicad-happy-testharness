@@ -24,7 +24,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent
+from utils import HARNESS_DIR
 REPOS_MD = HARNESS_DIR / "repos.md"
 CLONE_DIR = HARNESS_DIR / "repos"
 

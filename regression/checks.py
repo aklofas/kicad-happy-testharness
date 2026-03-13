@@ -19,19 +19,11 @@ Supported operators:
 import fnmatch
 import json
 import re
+import sys
 from pathlib import Path
 
-
-def resolve_path(data, path):
-    """Navigate a dotted path through nested dicts."""
-    parts = path.split(".")
-    current = data
-    for part in parts:
-        if isinstance(current, dict) and part in current:
-            current = current[part]
-        else:
-            return None
-    return current
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import resolve_path
 
 
 def _countable(val):

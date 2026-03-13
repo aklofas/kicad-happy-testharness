@@ -23,11 +23,11 @@ import math
 import sys
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(HARNESS_DIR))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     discover_projects, data_dir, list_repos,
+    project_prefix,
 )
 
 
@@ -42,9 +42,8 @@ def _range_bounds(value, tolerance):
     return lo, hi
 
 
-def generate_schematic_assertions(output_file, tolerance=0.10):
-    """Generate assertions from a schematic analyzer output."""
-    data = json.loads(output_file.read_text())
+def generate_schematic_assertions(data, tolerance=0.10):
+    """Generate assertions from a schematic analyzer output dict."""
     stats = data.get("statistics", {})
     sa = data.get("signal_analysis", {})
     bom = data.get("bom", [])
@@ -122,13 +121,6 @@ def generate_schematic_assertions(output_file, tolerance=0.10):
     return assertions
 
 
-def _project_prefix(project_path):
-    """Get the output filename prefix for a project path."""
-    if project_path and project_path != ".":
-        return project_path.replace("/", "_").replace("\\", "_") + "_"
-    return ""
-
-
 def generate_for_repo(repo_name, atype, tolerance, min_components,
                       file_filter, dry_run):
     """Generate seed assertions for one repo."""
@@ -147,7 +139,7 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
     for proj in projects:
         proj_name = proj["name"]
         proj_path = proj["path"]
-        prefix = _project_prefix(proj_path)
+        prefix = project_prefix(proj_path)
 
         # Find output files for this project
         output_files = sorted(type_dir.glob("*.json"))
@@ -180,7 +172,7 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
                 continue
 
             if atype == "schematic":
-                assertions = generate_schematic_assertions(output_file, tolerance)
+                assertions = generate_schematic_assertions(data_content, tolerance)
             else:
                 continue
 

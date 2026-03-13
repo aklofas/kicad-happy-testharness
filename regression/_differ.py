@@ -4,19 +4,12 @@ Compares two analyzer JSON outputs and produces structured deltas
 that highlight new detections, lost detections, and changed values.
 """
 
+import sys
 from collections import Counter
+from pathlib import Path
 
-
-def resolve_path(data, path):
-    """Navigate a dotted path through nested dicts. Returns None if missing."""
-    parts = path.split(".")
-    current = data
-    for part in parts:
-        if isinstance(current, dict) and part in current:
-            current = current[part]
-        else:
-            return None
-    return current
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import resolve_path
 
 
 def _count_at_path(data, path):
@@ -197,13 +190,7 @@ def diff_schematic(baseline, current):
         "sourcing_audit.components_with_mpn",
         "sourcing_audit.components_without_mpn",
     ]
-    for path in design_count_paths:
-        bval = _count_at_path(baseline, path)
-        cval = _count_at_path(current, path)
-        if bval != cval:
-            result["design_deltas"][path] = {
-                "baseline": bval, "current": cval, "delta": cval - bval,
-            }
+    result["design_deltas"] = _diff_counts(baseline, current, design_count_paths)
 
     # Component type distribution
     base_dist = _component_type_distribution(baseline)
@@ -292,12 +279,8 @@ def diff_gerber(baseline, current):
         "count_deltas": {},
     }
 
-    count_paths = [
-        "layer_count",
-        "drill_file_count",
-    ]
     # Gerber outputs vary, so do a flexible count
-    for key in set(list(baseline.keys()) + list(current.keys())):
+    for key in baseline.keys() | current.keys():
         bval = baseline.get(key)
         cval = current.get(key)
         if isinstance(bval, list) and isinstance(cval, list) and len(bval) != len(cval):

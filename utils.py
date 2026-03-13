@@ -4,8 +4,12 @@ Provides path resolution, repo naming, project discovery, and constants
 used across discover.py, analyzer runners, baselines, and validators.
 """
 
+import functools
+import json
 import os
+import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent
@@ -14,6 +18,25 @@ DATA_DIR = HARNESS_DIR / "reference"
 MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
 OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
 ANALYZER_TYPES = ["schematic", "pcb", "gerber"]
+
+
+def project_prefix(project_path: str) -> str:
+    """Convert a project path to a filename prefix (e.g., 'sub/dir' → 'sub_dir_')."""
+    if project_path and project_path != ".":
+        return project_path.replace("/", "_").replace("\\", "_") + "_"
+    return ""
+
+
+def resolve_path(data: dict, path: str):
+    """Navigate a dotted path through nested dicts. Returns None if any key is missing."""
+    parts = path.split(".")
+    current = data
+    for part in parts:
+        if isinstance(current, dict) and part in current:
+            current = current[part]
+        else:
+            return None
+    return current
 
 
 def repo_name_from_path(path):
@@ -98,6 +121,7 @@ def filter_manifest_by_repo(lines, repo_name):
 # Project discovery
 # ---------------------------------------------------------------------------
 
+@functools.lru_cache(maxsize=64)
 def discover_projects(repo_name):
     """Discover KiCad projects within a repo.
 
@@ -148,61 +172,6 @@ def discover_projects(repo_name):
     return sorted(projects, key=lambda p: p["name"])
 
 
-def project_for_file(file_path, repo_name=None):
-    """Determine which project a KiCad file belongs to.
-
-    Returns {"name": str, "path": str} for the project, or None.
-    Matches the file to the project whose directory is the closest ancestor.
-    """
-    if repo_name is None:
-        repo_name = repo_name_from_path(file_path)
-    if not repo_name:
-        return None
-
-    projects = discover_projects(repo_name)
-    if not projects:
-        return None
-
-    wrp = within_repo_path(file_path).replace("\\", "/")
-    file_dir = str(Path(wrp).parent) if "/" in wrp else "."
-
-    # Find longest matching project path (closest ancestor)
-    best = None
-    for proj in projects:
-        ppath = proj["path"]
-        if ppath == ".":
-            # Root project matches everything
-            if best is None:
-                best = proj
-        elif file_dir == ppath or file_dir.startswith(ppath + "/"):
-            if best is None or len(ppath) > len(best["path"]):
-                best = proj
-
-    return best
-
-
-def safe_name_in_project(file_path, project_path):
-    """Get the safe filename for a file relative to its project directory.
-
-    Given file at Hardware/OpenMowerMainboard/dcdc.kicad_sch and
-    project_path "Hardware/OpenMowerMainboard", returns "dcdc.kicad_sch".
-
-    For files in subdirectories of the project, encodes with _:
-    Given SubDir/sheet.kicad_sch in project "ProjectDir",
-    returns "SubDir_sheet.kicad_sch".
-    """
-    wrp = within_repo_path(file_path).replace("\\", "/")
-    if project_path and project_path != ".":
-        prefix = project_path + "/"
-        if wrp.startswith(prefix):
-            within = wrp[len(prefix):]
-        else:
-            within = wrp
-    else:
-        within = wrp
-    return within.replace("/", "_").replace(os.sep, "_")
-
-
 def data_dir(repo_name, project_name, section=None):
     """Get the data directory for a repo/project (optionally with section).
 
@@ -229,3 +198,142 @@ def list_projects_in_data(repo_name):
             if has_section:
                 projects.append(d.name)
     return projects
+
+
+# ---------------------------------------------------------------------------
+# Shared analyzer runner
+# ---------------------------------------------------------------------------
+
+def _run_one(analyzer, file_path, outfile, errfile):
+    """Run a single analyzer subprocess. Returns (returncode, outfile)."""
+    try:
+        result = subprocess.run(
+            [sys.executable, str(analyzer), file_path, "-o", str(outfile)],
+            capture_output=True, text=True, timeout=120,
+        )
+        errfile.write_text(result.stderr)
+        return result.returncode, outfile
+    except subprocess.TimeoutExpired:
+        errfile.write_text("Timed out after 120s")
+        return None, outfile
+
+
+def run_analyzer(config, args=None):
+    """Shared runner for all analyzer types.
+
+    config keys:
+        type_name:       Display name (e.g., "schematic")
+        analyzer_script: Script filename (e.g., "analyze_schematic.py")
+        manifest_file:   Manifest filename (e.g., "all_schematics.txt")
+        output_subdir:   Output subdir (e.g., "schematic")
+        summarize:       callable(json_data) -> str, extracts summary from output
+    """
+    import argparse as _argparse
+
+    if args is None:
+        parser = _argparse.ArgumentParser(
+            description=f"Run {config['type_name']} analysis"
+        )
+        parser.add_argument("--repo", help=f"Only analyze {config['type_name']}s for this repo")
+        parser.add_argument("--jobs", "-j", type=int, default=1,
+                            help="Number of parallel analyzer processes (default: 1)")
+        args = parser.parse_args()
+
+    kicad_happy = resolve_kicad_happy_dir()
+    analyzer = kicad_happy / "skills" / "kicad" / "scripts" / config["analyzer_script"]
+
+    if not analyzer.exists():
+        print(f"Error: {analyzer} not found", file=sys.stderr)
+        sys.exit(1)
+
+    manifest = MANIFESTS_DIR / config["manifest_file"]
+
+    if not manifest.exists():
+        print(f"Error: {config['manifest_file']} not found. Run discover.py first.", file=sys.stderr)
+        sys.exit(1)
+
+    files = [line.strip() for line in manifest.read_text().splitlines() if line.strip()]
+
+    if args.repo:
+        files = filter_manifest_by_repo(files, args.repo)
+        if not files:
+            print(f"No {config['type_name']}s found for repo '{args.repo}'", file=sys.stderr)
+            sys.exit(1)
+
+    type_name = config["type_name"]
+    output_subdir = config["output_subdir"]
+    summarize = config["summarize"]
+    jobs = getattr(args, "jobs", 1)
+
+    print(f"=== Running {type_name} analysis ===")
+    print(f"Analyzer: {analyzer}")
+    print(f"Files: {len(files)}")
+    if jobs > 1:
+        print(f"Jobs: {jobs}")
+    print()
+
+    passed = failed = 0
+    repos_str = str(REPOS_DIR)
+
+    def _prepare(file_path):
+        repo = repo_name_from_path(file_path)
+        sname = safe_name(file_path)
+        relpath = file_path[len(repos_str):].lstrip(os.sep) if file_path.startswith(repos_str) else file_path
+        repo_out_dir = OUTPUTS_DIR / output_subdir / repo
+        repo_out_dir.mkdir(parents=True, exist_ok=True)
+        outfile = repo_out_dir / f"{sname}.json"
+        errfile = repo_out_dir / f"{sname}.err"
+        return relpath, outfile, errfile
+
+    def _format_result(i, relpath, returncode, outfile):
+        if returncode == 0:
+            try:
+                with open(outfile) as f:
+                    d = json.load(f)
+                summary = summarize(d)
+                return True, f"PASS [{i}] {relpath} ({summary})"
+            except Exception:
+                return True, f"PASS [{i}] {relpath} (parse_error)"
+        elif returncode is None:
+            return False, f"FAIL [{i}] {relpath}\n     Timed out"
+        else:
+            err_path = outfile.with_suffix(".err")
+            err_lines = err_path.read_text().strip().splitlines() if err_path.exists() else []
+            err_msg = err_lines[-1] if err_lines else f"exit {returncode}"
+            return False, f"FAIL [{i}] {relpath}\n     {err_msg}"
+
+    if jobs <= 1:
+        for i, file_path in enumerate(files, 1):
+            relpath, outfile, errfile = _prepare(file_path)
+            returncode, _ = _run_one(analyzer, file_path, outfile, errfile)
+            ok, msg = _format_result(i, relpath, returncode, outfile)
+            if ok:
+                passed += 1
+            else:
+                failed += 1
+            print(msg)
+    else:
+        # Parallel execution
+        tasks = {}
+        with ThreadPoolExecutor(max_workers=jobs) as pool:
+            for i, file_path in enumerate(files, 1):
+                relpath, outfile, errfile = _prepare(file_path)
+                future = pool.submit(_run_one, analyzer, file_path, outfile, errfile)
+                tasks[future] = (i, relpath, outfile)
+            for future in as_completed(tasks):
+                i, relpath, outfile = tasks[future]
+                returncode, _ = future.result()
+                ok, msg = _format_result(i, relpath, returncode, outfile)
+                if ok:
+                    passed += 1
+                else:
+                    failed += 1
+                print(msg)
+
+    total = passed + failed
+    print(f"\n=== Results ===")
+    print(f"Total: {total}")
+    print(f"Pass:  {passed}")
+    print(f"Fail:  {failed}")
+    if total > 0:
+        print(f"Rate:  {passed * 100 / total:.1f}%")

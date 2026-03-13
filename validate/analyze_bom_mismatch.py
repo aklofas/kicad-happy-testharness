@@ -8,10 +8,12 @@ Usage:
 
 import argparse
 import json
+import sys
 from collections import Counter
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import HARNESS_DIR
 
 
 def main():

@@ -21,10 +21,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(HARNESS_DIR))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (
-    OUTPUTS_DIR, MANIFESTS_DIR, REPOS_DIR, DATA_DIR,
+    HARNESS_DIR, OUTPUTS_DIR, MANIFESTS_DIR, REPOS_DIR, DATA_DIR,
     repo_name_from_path, safe_name as _safe_name,
     filter_manifest_by_repo, list_projects_in_data,
 )
@@ -103,18 +102,24 @@ def _check_datasheets(data):
     available = []
     missing = []
 
+    # Pre-build a lookup map of PDF stems for fast matching
+    pdf_map = {}
+    if DATASHEETS_DIR.exists():
+        for pdf in DATASHEETS_DIR.rglob("*.pdf"):
+            pdf_map[pdf.stem.lower()] = pdf.name
+
     for entry in bom:
         mpn = entry.get("mpn", "").strip()
         if not mpn:
             continue
 
         found = False
-        if DATASHEETS_DIR.exists():
-            for pdf in DATASHEETS_DIR.rglob("*.pdf"):
-                if mpn.lower() in pdf.stem.lower():
-                    available.append({"mpn": mpn, "file": pdf.name})
-                    found = True
-                    break
+        mpn_lower = mpn.lower()
+        for stem, filename in pdf_map.items():
+            if mpn_lower in stem:
+                available.append({"mpn": mpn, "file": filename})
+                found = True
+                break
         if not found:
             missing.append(mpn)
 

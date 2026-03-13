@@ -1,0 +1,90 @@
+{
+  "file_pattern": "neapolitan.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~290 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 261,
+        "max": 319
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~355 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 319,
+        "max": 391
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Has 120 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 60
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "Has 69 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 34
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Has 21 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Has 16 inductor(s)",
+      "check": {
+        "path": "statistics.component_types.inductor",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 42 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 21
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Has 6 transistor(s)",
+      "check": {
+        "path": "statistics.component_types.transistor",
+        "op": "min_count",
+        "value": 3
+      }
+    }
+  ]
+}

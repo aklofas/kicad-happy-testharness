@@ -27,14 +27,14 @@ import tempfile
 import time
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import HARNESS_DIR, REPOS_DIR
 KICAD_HAPPY_DIR = Path(os.environ.get(
     "KICAD_HAPPY_DIR",
     str(HARNESS_DIR / ".." / "kicad-happy")
 )).resolve()
 
 BOM_MANAGER = KICAD_HAPPY_DIR / "skills" / "bom" / "scripts" / "bom_manager.py"
-REPOS_DIR = HARNESS_DIR / "repos"
 
 
 class Colors:

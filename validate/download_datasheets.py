@@ -20,6 +20,7 @@ Environment:
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -28,7 +29,8 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import HARNESS_DIR
 KICAD_HAPPY_DIR = Path(os.environ.get(
     "KICAD_HAPPY_DIR",
     str(HARNESS_DIR / ".." / "kicad-happy")
@@ -147,7 +149,6 @@ def try_manufacturer_scrape(mpn: str) -> bool:
 
     pdf_path = DATASHEETS_DIR / f"{safe_filename(mpn)}.pdf"
     headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"}
-    import re
 
     def _download_pdf(url: str) -> bool:
         try:

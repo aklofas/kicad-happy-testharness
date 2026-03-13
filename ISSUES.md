@@ -3,7 +3,7 @@
 Tracker for kicad-happy analyzer bugs (KH-*) and test harness improvements (TH-*).
 Contains enough detail to resume work with zero conversation history.
 
-Last updated: 2026-03-13
+Last updated: 2026-03-13 (KH-027 through KH-040 fixed)
 
 ---
 
@@ -139,6 +139,8 @@ Last updated: 2026-03-13
 - **Proposed fix**: Exclude pairs where either net name matches known power rail patterns
   (V+, V-, VCC, VDD, VEE, VSS) or opamp input pin names (IN+, IN-, INP, INN).
 - **Related findings**: FND-00000020
+- **Additional evidence**: moteus SXX_P/SXX_N current sense Kelvin nets falsely matched as
+  differential pair (they are single-ended analog sense lines for DRV8323 CSA inputs).
 
 ---
 
@@ -152,7 +154,9 @@ Last updated: 2026-03-13
   forming a filter — e.g., a pull-up resistor and a bypass capacitor both connected to
   the same power rail (which is excluded), but also on signal nets with multiple
   components.
-- **Evidence**: Found during Layer 3 reviews; specific instances not individually tracked.
+- **Evidence**: Found during Layer 3 reviews. Specific instances: bitaxe R4 (PGOOD pull-up)
+  + C35/C44 (3V3 decoupling) detected as 7.96 Hz filter; icebreaker R3 (LDO enable delay)
+  + C39 detected as filter instead of soft-start circuit.
 - **Proposed fix**: Add a check that the R-C pair forms a meaningful filter topology:
   the resistor's other pin should be a signal source, and the capacitor's other pin
   should be ground. If the capacitor's other pin is another signal net, it's likely
@@ -203,7 +207,9 @@ Last updated: 2026-03-13
 - **Description**: The bus protocol / UART detector matches net names containing "Rx" and
   "Tx" as UART signals. In OpenCAPI hardware, PCIe lane nets are named with Rx/Tx
   suffixes (e.g., "PCIE_Rx0", "PCIE_Tx0") and are falsely flagged as UART interfaces.
-- **Evidence**: OpenCAPI hardware repo: PCIe lanes flagged as UART.
+- **Evidence**: OpenCAPI hardware repo: PCIe lanes flagged as UART. moteus: OUTX motor
+  phase output (27 pins on DRV8323) classified as UART. moteus: CAN_RX/CAN_TX categorized
+  as UART in test_coverage despite correct CAN bus detection.
 - **Proposed fix**: If the net name contains "PCIe", "PCIE", "PCI_E", or similar PCIe
   indicators, exclude from UART detection. More generally, UART detection should require
   both Rx and Tx on the same interface, not just any net with Rx/Tx in the name.
@@ -265,6 +271,9 @@ Last updated: 2026-03-13
 - **Code location**: `build_net_map()` hierarchical label handling, and the sheet
   traversal logic in the KiCad 6+ parser entry point.
 - **Related findings**: FND-00000014 (cynthion)
+- **Additional evidence**: moteus h_bridge.kicad_sch instantiated 3x for three-phase bridge.
+  All three half-bridges show identical nets (OUTX, GHX, GLX, SPX_Q) instead of per-instance
+  names. Makes three-phase bridge analysis incorrect — all phases appear electrically identical.
 
 ---
 
@@ -277,9 +286,9 @@ Last updated: 2026-03-13
 5. **KH-012** (MEDIUM) -- Voltage divider FPs.
 6. **KH-013** (LOW) -- PWR_FLAG warnings per-sheet scope.
 7. **KH-017** (LOW) -- Opamp feedback verification.
-8. **KH-018** (LOW) -- Diff pair on power rails.
+8. **KH-018** (LOW) -- Diff pair on power rails and current sense nets.
 9. **KH-019** (LOW) -- RC filter shared-node FPs.
 10. **KH-020** (LOW) -- Capacitive feedback recognition.
 11. **KH-021** (LOW) -- BSS138 level shifter detection.
-12. **KH-022** (LOW) -- UART FP on PCIe Rx/Tx.
+12. **KH-022** (LOW) -- UART FP on PCIe Rx/Tx, CAN, motor outputs.
 13. **KH-025** (LOW) -- Crystal X-prefix classification.

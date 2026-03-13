@@ -20,13 +20,13 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(HARNESS_DIR))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _differ import extract_manifest_entry
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     list_repos, discover_projects, data_dir, list_projects_in_data,
+    project_prefix,
 )
 
 
@@ -71,6 +71,7 @@ def create_snapshot(repo_name):
         }
 
         total_files = 0
+        baseline_dir.mkdir(parents=True, exist_ok=True)
         for atype in ANALYZER_TYPES:
             type_dir = OUTPUTS_DIR / atype / repo_name
             if not type_dir.exists():
@@ -78,10 +79,7 @@ def create_snapshot(repo_name):
 
             # Filter output files to this project: files whose safe_name
             # starts with the project path prefix
-            if proj_path and proj_path != ".":
-                prefix = proj_path.replace("/", "_").replace("\\", "_") + "_"
-            else:
-                prefix = ""
+            prefix = project_prefix(proj_path)
 
             json_files = sorted(type_dir.glob("*.json"))
             project_files = []
@@ -111,14 +109,12 @@ def create_snapshot(repo_name):
                 except Exception as e:
                     manifest[key] = {"error": str(e)}
 
-            baseline_dir.mkdir(parents=True, exist_ok=True)
             (baseline_dir / f"{atype}.json").write_text(
                 json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 
         if total_files == 0:
             continue
 
-        baseline_dir.mkdir(parents=True, exist_ok=True)
         (baseline_dir / "metadata.json").write_text(
             json.dumps(metadata, indent=2) + "\n")
         print(f"  {repo_name}/{proj_name}: {total_files} files")

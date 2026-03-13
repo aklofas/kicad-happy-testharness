@@ -16,19 +16,19 @@ import json
 import sys
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(HARNESS_DIR))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _differ import extract_manifest_entry
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     list_repos, list_projects_in_data,
+    project_prefix,
 )
 
 
 def _compare_manifest_entries(baseline_entry, current_entry):
     changes = {}
-    for key in set(list(baseline_entry.keys()) + list(current_entry.keys())):
+    for key in baseline_entry.keys() | current_entry.keys():
         bval = baseline_entry.get(key)
         cval = current_entry.get(key)
 
@@ -44,7 +44,7 @@ def _compare_manifest_entries(baseline_entry, current_entry):
             bsig = bval or {}
             csig = cval or {}
             sig_changes = {}
-            for sk in set(list(bsig.keys()) + list(csig.keys())):
+            for sk in bsig.keys() | csig.keys():
                 sb = bsig.get(sk, 0)
                 sc = csig.get(sk, 0)
                 if sb != sc:
@@ -56,7 +56,7 @@ def _compare_manifest_entries(baseline_entry, current_entry):
             bdist = bval or {}
             cdist = cval or {}
             type_changes = {}
-            for tk in set(list(bdist.keys()) + list(cdist.keys())):
+            for tk in bdist.keys() | cdist.keys():
                 tb = bdist.get(tk, 0)
                 tc = cdist.get(tk, 0)
                 if tb != tc:
@@ -81,10 +81,7 @@ def compare_project(repo_name, project_name, project_path, analyzer_type, only_c
     baseline_manifest = json.loads(baseline_file.read_text())
 
     # Build current manifest from outputs matching this project
-    if project_path and project_path != ".":
-        prefix = project_path.replace("/", "_").replace("\\", "_") + "_"
-    else:
-        prefix = ""
+    prefix = project_prefix(project_path)
 
     current_manifest = {}
     if current_dir.exists():
@@ -98,7 +95,7 @@ def compare_project(repo_name, project_name, project_path, analyzer_type, only_c
             except Exception as e:
                 current_manifest[key] = {"error": str(e)}
 
-    all_files = sorted(set(list(baseline_manifest.keys()) + list(current_manifest.keys())))
+    all_files = sorted(baseline_manifest.keys() | current_manifest.keys())
 
     results = {
         "files_compared": 0,

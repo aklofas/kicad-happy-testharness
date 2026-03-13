@@ -1,0 +1,279 @@
+{
+  "findings": [
+    {
+      "id": "FND-00000059",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "AE1 antenna connector classified as \"other\"",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "component_classification",
+          "description": "AE reference prefix not recognized. AE1 antenna connector classified as \"other\" instead of antenna/connector.",
+          "analyzer_section": "components"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Add AE reference prefix as antenna component type"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000060",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "C49 value \"DNP\" not flagged as dnp=true",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "dnp_detection",
+          "description": "5 parts with value=\"DNP\" but dnp=false. Value field containing \"DNP\" should trigger do-not-populate flag.",
+          "analyzer_section": "components[*].dnp"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Check Value field for \"DNP\" string in addition to dedicated DNP property"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000061",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "RF antenna matching network not detected",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "type": "rf_chain",
+          "description": "Pi-match from AP6236 to U.FL connector (C78+L5+C77+C75). rf_chains=[]. RF antenna matching network not detected.",
+          "analyzer_section": "signal_analysis.rf_chains"
+        }
+      ],
+      "suggestions": [
+        "Add RF matching network detection for pi/T/L topologies near antenna connectors"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000062",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "LC filter falsely merges series+shunt caps as parallel",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "lc_filter",
+          "description": "C78 (series DC block) and C77 (shunt to GND) merged as \"parallel\" in LC filter detection. These are different filter topologies.",
+          "analyzer_section": "signal_analysis.lc_filters"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Distinguish series DC-blocking caps from shunt-to-ground caps in LC filter topology analysis"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000063",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "AP6236 WiFi module classified as switching power regulator",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "component_classification",
+          "description": "AP6236 has internal DCDC converter but primary function is WiFi/BT module. Classified as switching power regulator instead of wireless module.",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Prioritize primary function classification — WiFi/BT modules with internal DCDC should be classified as wireless, not power regulators"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000064",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "SDIO bus protocol not detected",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "type": "bus_protocol",
+          "description": "WL_SDIO_CLK/CMD/D0-D3 with pull-ups and termination. No SDIO category in bus protocol detection.",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        }
+      ],
+      "suggestions": [
+        "Add SDIO bus protocol detection (CLK/CMD/D0-D3 pattern)"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000065",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "SDIO nets miscategorized as SPI in test_coverage",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "bus_protocol",
+          "description": "SDIO nets (WL_SDIO_CLK/CMD/D0-D3) miscategorized as SPI. Related to missing SDIO detection.",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Prioritize SDIO matching over SPI for nets with SDIO naming"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000066",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "PCM/I2S audio bus not detected",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "type": "bus_protocol",
+          "description": "BT_PCM_CLK/SYNC/DIN/DOUT audio bus signals not detected. No PCM/I2S bus category.",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        }
+      ],
+      "suggestions": [
+        "Add PCM/I2S audio bus detection (CLK/SYNC or BCLK/LRCK + data lines)"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000067",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "Decoupling caps not assigned per-pin",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "decoupling_analysis",
+          "description": "4 caps on +3V3 counted as one group for 2 separate power pins. Decoupling analysis does not assign caps to specific power pins.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Assign decoupling caps to specific power pins based on proximity or net connectivity"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000068",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "TCXO crystal circuit not detected",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "type": "crystal_circuit",
+          "description": "X1 26MHz TCXO output to U7 XTAL_IN. crystal_circuits=[]. Active oscillator (TCXO) not detected.",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        }
+      ],
+      "suggestions": [
+        "Add TCXO/VCTCXO detection in crystal circuit analysis"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000069",
+      "repo": "OtterCastAudioV2",
+      "project": "OtterCastAudioV2",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "OtterCastAudioV2.kicad_sch.json",
+      "summary": "X1 EN pin unconnected without warning",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "type": "unconnected_pin",
+          "description": "X1 EN pin is a single-pin unnamed net not reported in single_pin_nets.",
+          "analyzer_section": "single_pin_nets"
+        }
+      ],
+      "suggestions": [
+        "Report single-pin unnamed nets for all components, including passive/oscillator types"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    }
+  ]
+}

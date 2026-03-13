@@ -29,7 +29,7 @@ import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent
+from utils import HARNESS_DIR
 LEDGER_FILE = HARNESS_DIR / "results" / "usage.json"
 CLAUDE_MD = HARNESS_DIR / "CLAUDE.md"
 

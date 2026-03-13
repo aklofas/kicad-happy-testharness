@@ -1,0 +1,260 @@
+{
+  "findings": [
+    {
+      "id": "FND-00000033",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "Q1/Q2 CSD17311Q5 MOSFETs completely missing from all nets",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "net_connectivity",
+          "description": "Hidden pins (pins 1,2 marked hide) likely cause wire-to-pin matching failure. Zero net connections for both Q1 and Q2 CSD17311Q5 transistors.",
+          "analyzer_section": "nets"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Ensure hidden pins are still matched to wires/nets during connectivity analysis"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000034",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "PARTNO property not mapped to MPN field",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "mpn_extraction",
+          "description": "All 29 components have PARTNO custom property but mpn=\"\" for all. mpn_coverage=0/28.",
+          "analyzer_section": "components[*].mpn"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Add \"PARTNO\" to the MPN field alias fallback chain"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000035",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "3V3 net classified as \"signal\" instead of \"power\"",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "net_classification",
+          "description": "power_rails array empty despite multiple power nets. 3V3 net classified as signal instead of power.",
+          "analyzer_section": "signal_analysis.power_rails"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Ensure net names matching common power patterns (3V3, 5V, VCC, etc.) are classified as power rails"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000036",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "R4/C35 RC filter false positive (pull-up + decoupling caps)",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "rc_filter",
+          "description": "R4 is PGOOD pull-up, C35/C44 are decoupling caps. Falsely detected as RC filter.",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "related_issue": "KH-019"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Exclude pull-up resistors paired with decoupling caps from RC filter detection"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "KH-019"
+      ],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000037",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "Cross-domain false \"needs_level_shifter\" on I2C",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "level_shifter_detection",
+          "description": "INA260 sense inputs (IN+/IN-) misidentified as power domain, causing false needs_level_shifter flag on I2C bus.",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Do not classify analog sense inputs (IN+/IN-) as power domain indicators"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000038",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "5V hierarchical label marked as unconnected",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "connectivity",
+          "description": "5V hlabel on same wire as VIN_M label but not merged. 5V hierarchical label reported as unconnected.",
+          "analyzer_section": "unconnected_pins"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Merge hierarchical labels on the same wire segment when resolving connectivity"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000039",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "R13/C45 RC filter wrong ground_net (reports VOUT)",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "rc_filter",
+          "description": "R13/C45 RC filter reports ground_net as VOUT instead of actual ground net.",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "related_issue": "KH-019"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Verify ground_net assignment in RC filter detection logic"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [
+        "KH-019"
+      ],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000040",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "R4 pull-up classified as \"series\" resistor",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "resistor_classification",
+          "description": "R4 is a pull-up resistor on PGOOD but classified as series resistor.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Distinguish pull-up/pull-down resistors from series resistors by checking if one terminal is on a power rail"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000041",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "has_datasheet=false despite URL present for Q1/Q2",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "datasheet_detection",
+          "description": "Q1/Q2 CSD17311Q5 have datasheet URL in schematic properties but has_datasheet=false in output.",
+          "analyzer_section": "components[*].has_datasheet"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Check datasheet property extraction for components with hidden pins"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    },
+    {
+      "id": "FND-00000042",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-13T22:00:00.000000+00:00",
+      "status": "new",
+      "analyzer_type": "schematic",
+      "source_file": "bitaxeUltra.kicad_sch.json",
+      "summary": "Garbled pin order string in generic symbol warning",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "warning_format",
+          "description": "Generic symbol warning contains garbled pin order string.",
+          "analyzer_section": "warnings"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Review pin order string generation for generic symbols"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "datasheets_used": []
+    }
+  ]
+}

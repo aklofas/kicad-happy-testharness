@@ -29,7 +29,8 @@ import tempfile
 import time
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import HARNESS_DIR
 KICAD_HAPPY_DIR = Path(os.environ.get(
     "KICAD_HAPPY_DIR",
     str(HARNESS_DIR / ".." / "kicad-happy")

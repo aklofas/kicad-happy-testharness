@@ -13,9 +13,11 @@ Usage:
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import HARNESS_DIR
 
 
 def is_valid_mpn(mpn: str) -> bool:
