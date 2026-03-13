@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """Clone repos from repos.md at pinned commit hashes.
 
-Reads the list in repos.md, clones each repo into repos/,
-checks out pinned commits where specified, and records HEAD
-hashes in repos_state.json for reproducibility.
+Reads the list in repos.md, clones each repo into repos/, and checks
+out pinned commits where specified. New clones get their HEAD hash
+pinned back into repos.md for reproducibility.
 
 Usage:
     python3 checkout.py
     python3 checkout.py --limit 5
+    python3 checkout.py --filter "Open*,Glasgow*"
 """
 
 import argparse
-import json
+import fnmatch
 import re
 import subprocess
 import sys
@@ -20,7 +21,6 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent
 REPOS_MD = HARNESS_DIR / "repos.md"
 CLONE_DIR = HARNESS_DIR / "repos"
-STATE_FILE = HARNESS_DIR / "repos_state.json"
 
 
 def parse_repos_md(path: Path) -> list[dict]:
@@ -75,14 +75,32 @@ def parse_repos_md(path: Path) -> list[dict]:
     return repos
 
 
-def load_state() -> dict:
-    if STATE_FILE.exists():
-        return json.loads(STATE_FILE.read_text())
-    return {}
+def pin_hash_in_repos_md(url: str, full_hash: str):
+    """Write a short commit hash into repos.md for a specific repo URL."""
+    short_hash = full_hash[:12]
+    lines = REPOS_MD.read_text().splitlines()
 
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if not stripped.startswith("- http"):
+            continue
 
-def save_state(state: dict):
-    STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
+        text = stripped[2:].strip()
+        shallow = "(shallow)" in text
+        clean = text.replace("(shallow)", "").strip()
+
+        # Extract URL (strip existing hash if present)
+        line_url = clean.split(" @ ")[0].strip() if " @ " in clean else clean
+
+        if line_url != url:
+            continue
+
+        new_line = f"- {line_url} @ {short_hash}"
+        if shallow:
+            new_line += " (shallow)"
+        lines[i] = new_line
+        REPOS_MD.write_text("\n".join(lines) + "\n")
+        return
 
 
 def clone_repo(url: str, dest: Path, shallow: bool) -> bool:
@@ -123,6 +141,8 @@ def get_head_hash(repo_dir: Path) -> str:
 def main():
     parser = argparse.ArgumentParser(description="Clone repos from repos.md")
     parser.add_argument("--limit", type=int, default=0, help="Only clone first N repos")
+    parser.add_argument("--filter", type=str, default="",
+                        help="Comma-separated glob patterns to filter by repo name (e.g. 'Open*,Glasgow*')")
     args = parser.parse_args()
 
     if not REPOS_MD.exists():
@@ -130,11 +150,15 @@ def main():
         sys.exit(1)
 
     repos = parse_repos_md(REPOS_MD)
+    if args.filter:
+        patterns = [p.strip() for p in args.filter.split(",")]
+        repos = [r for r in repos
+                 if any(fnmatch.fnmatch(r["url"].rstrip("/").split("/")[-1].removesuffix(".git"), p)
+                        for p in patterns)]
     if args.limit:
         repos = repos[:args.limit]
 
     CLONE_DIR.mkdir(exist_ok=True)
-    state = load_state()
 
     print(f"=== Cloning {len(repos)} repositories ===")
 
@@ -146,7 +170,16 @@ def main():
         dest = CLONE_DIR / repo_name
 
         if dest.exists():
-            print(f"SKIP: {repo_name} (already cloned)")
+            # Verify existing clone is at the pinned hash
+            if repo["hash"] and not repo["shallow"]:
+                head = get_head_hash(dest)
+                if not head.startswith(repo["hash"]):
+                    print(f"RESTORE: {repo_name} ({head[:12]} -> {repo['hash'][:12]})", end="", flush=True)
+                    if checkout_hash(dest, repo["hash"]):
+                        print(" OK")
+                    else:
+                        failed += 1
+                        continue
             skipped += 1
             continue
 
@@ -165,16 +198,22 @@ def main():
                 continue
 
         head = get_head_hash(dest)
-        state[repo_name] = head
-        save_state(state)
-
         print(f" OK ({head[:12]})")
         cloned += 1
+
+        # Pin hash in repos.md if not already pinned
+        if not repo["hash"]:
+            pin_hash_in_repos_md(url, head)
 
     print(f"\n=== Results ===")
     print(f"Cloned:  {cloned}")
     print(f"Skipped: {skipped}")
     print(f"Failed:  {failed}")
+
+    if cloned > 0:
+        pinned = sum(1 for r in repos if not r["hash"])
+        if pinned:
+            print(f"Pinned {pinned} new hashes in repos.md")
 
 
 if __name__ == "__main__":

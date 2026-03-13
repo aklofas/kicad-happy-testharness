@@ -25,6 +25,7 @@ OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
 MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
 PACKETS_DIR = HARNESS_DIR / "results" / "review" / "packets"
 BASELINES_DIR = HARNESS_DIR / "data" / "baselines"
+DATASHEETS_DIR = HARNESS_DIR / "results" / "datasheets"
 
 
 def _safe_name(path_str):
@@ -94,6 +95,42 @@ def _generate_guidance(summary, analyzer_type):
     return focus
 
 
+def _check_datasheets(data):
+    """Check which BOM MPNs have datasheets available locally."""
+    bom = data.get("bom", [])
+    if not bom:
+        return None
+
+    available = []
+    missing = []
+
+    for entry in bom:
+        mpn = entry.get("mpn", "").strip()
+        if not mpn:
+            continue
+
+        # Check for datasheet files matching this MPN
+        found = False
+        if DATASHEETS_DIR.exists():
+            for pdf in DATASHEETS_DIR.rglob("*.pdf"):
+                if mpn.lower() in pdf.stem.lower():
+                    available.append({"mpn": mpn, "file": pdf.name})
+                    found = True
+                    break
+        if not found:
+            missing.append(mpn)
+
+    total = len(available) + len(missing)
+    if total == 0:
+        return None
+
+    return {
+        "available": available,
+        "missing": missing,
+        "coverage": f"{len(available)}/{total} ({len(available)*100//total}%)",
+    }
+
+
 def generate_packet(source_path, analyzer_type="schematic"):
     """Generate a single review packet."""
     output_file = _find_output(source_path, analyzer_type)
@@ -116,6 +153,11 @@ def generate_packet(source_path, analyzer_type="schematic"):
             packet["output_file"] = str(output_file)
             packet["summary"] = summary
             packet["guidance"] = _generate_guidance(summary, analyzer_type)
+
+            # Check datasheet availability for BOM entries
+            ds_info = _check_datasheets(data)
+            if ds_info:
+                packet["datasheets"] = ds_info
         except Exception as e:
             packet["output_error"] = str(e)
     else:

@@ -213,8 +213,13 @@ def main():
     print(f"Validating {len(schematics)} schematics...")
     print()
 
+    repos_dir = str(HARNESS_DIR / "repos")
+
     for sch_path in schematics:
-        safe_name = sch_path.replace("/", "_")
+        relpath = sch_path
+        if sch_path.startswith(repos_dir):
+            relpath = sch_path[len(repos_dir):].lstrip("/").lstrip(os.sep)
+        safe_name = relpath.replace(os.sep, "_").replace("/", "_")
         json_path = results_dir / f"{safe_name}.json"
 
         if not json_path.exists():

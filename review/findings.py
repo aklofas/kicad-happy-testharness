@@ -58,6 +58,7 @@ def add_finding(findings_data, finding):
     finding.setdefault("incorrect", [])
     finding.setdefault("missed", [])
     finding.setdefault("suggestions", [])
+    finding.setdefault("datasheets_used", [])
     finding.setdefault("should_become_assertion", False)
     findings_data["findings"].append(finding)
     return fid

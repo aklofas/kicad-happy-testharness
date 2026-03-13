@@ -82,8 +82,8 @@ def main():
                     with open(outfile) as f:
                         d = json.load(f)
                     s = d.get("statistics", d.get("summary", {}))
-                    fps = s.get("total_footprints", 0)
-                    tracks = s.get("total_tracks", 0)
+                    fps = s.get("footprint_count", 0)
+                    tracks = s.get("track_segments", 0)
                     print(f"PASS [{i}] {relpath} (footprints={fps} tracks={tracks})")
                 except Exception:
                     print(f"PASS [{i}] {relpath} (parse_error)")

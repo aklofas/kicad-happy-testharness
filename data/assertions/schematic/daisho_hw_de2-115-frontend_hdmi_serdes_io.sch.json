@@ -1,0 +1,54 @@
+{
+  "file_pattern": "daisho_hw_de2-115-frontend_hdmi_serdes_io.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-001",
+      "description": "Component count ~40 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 36,
+        "max": 44
+      }
+    },
+    {
+      "id": "SEED-002",
+      "description": "Net count ~80 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 72,
+        "max": 88
+      }
+    },
+    {
+      "id": "SEED-003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-004",
+      "description": "Has 6 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-005",
+      "description": "Has 33 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 16
+      }
+    }
+  ]
+}

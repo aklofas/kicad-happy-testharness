@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
-"""Extract MPN + Manufacturer pairs from KiCad schematic files."""
+"""Extract MPN + Manufacturer pairs from analyzer JSON outputs.
+
+Reads the schematic analyzer JSON results (not raw KiCad files) and
+collects all unique MPN entries with their metadata. This ensures we
+use the same extraction logic as the analyzer itself.
+"""
 
 import argparse
 import json
+import os
 import re
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 
-# Regex to match property lines: (property "Key" "Value" ...)
-PROP_RE = re.compile(r'\(property\s+"([^"]+)"\s+"([^"]*)"\s')
-
-# MPN property names
-MPN_KEYS = {"MPN", "MPN2", "Manufacturer Part #", "Manufacturer Part",
-            "Manufacturer Part Number", "Manufacturer_Part_Number",
-            "Manufacturer Product Number "}
-# Manufacturer property names (just the mfr name, not part number)
-MFR_KEYS = {"Manufacturer", "Manufacturer_Name"}
-
 
 def is_valid_mpn(mpn: str) -> bool:
+    """Filter out placeholder and generic part numbers."""
     mpn = mpn.strip()
     if not mpn:
         return False
@@ -27,129 +24,109 @@ def is_valid_mpn(mpn: str) -> bool:
         return False
     if mpn.upper() in ("DNP", "DNA", "N/A", "NA", "TBD", "~", "-", "--", "?", ""):
         return False
+    # Generic MFR- prefixed parts
     if re.match(r'^MF-(RES|CAP|LED|IND|FER|DIO|TVS)', mpn, re.IGNORECASE):
         return False
+    # Bare RC designators like "R0402 "
     if re.match(r'^[RC]\d{4}\s', mpn):
         return False
+    # Bare numbers
     if re.match(r'^\d{1,3}$', mpn):
         return False
     return True
 
 
-def extract_from_file(filepath: Path):
-    """Extract (mpn, manufacturer) pairs from a .kicad_sch file."""
+def project_name_from_filename(filename: str) -> str:
+    """Derive project name from safe filename (first segment before _)."""
+    # Safe names are like "OpenMower_Hardware_...json"
+    # The first part before the first path-separator-turned-underscore is the project
+    # But underscores are ambiguous. Use the repos dir to resolve if possible.
+    return filename.split("_")[0]
+
+
+def extract_from_json(json_path: Path) -> list[dict]:
+    """Extract MPN entries from an analyzer JSON output file."""
     try:
-        content = filepath.read_text(errors='replace')
+        data = json.loads(json_path.read_text())
     except Exception:
         return []
 
-    results = []
-    lines = content.split('\n')
+    entries = []
+    bom = data.get("bom", [])
 
-    in_symbol = False
-    symbol_depth = 0
-    symbol_props = {}
-    in_lib_symbols = False
-    lib_symbols_depth = 0
-
-    for line in lines:
-        stripped = line.strip()
-
-        if stripped.startswith('(lib_symbols'):
-            in_lib_symbols = True
-            lib_symbols_depth = line.count('(') - line.count(')')
+    for item in bom:
+        mpn = item.get("mpn", "").strip()
+        if not mpn or not is_valid_mpn(mpn):
             continue
 
-        if in_lib_symbols:
-            lib_symbols_depth += line.count('(') - line.count(')')
-            if lib_symbols_depth <= 0:
-                in_lib_symbols = False
-            continue
+        entry = {
+            "mpn": mpn,
+            "manufacturer": item.get("manufacturer", "").strip(),
+            "value": item.get("value", ""),
+            "datasheet": item.get("datasheet", ""),
+            "references": item.get("references", []),
+            "quantity": item.get("quantity", 0),
+        }
 
-        if not in_symbol and '(symbol' in stripped and '(lib_id' in stripped:
-            in_symbol = True
-            symbol_depth = line.count('(') - line.count(')')
-            symbol_props = {}
-            m = PROP_RE.search(stripped)
-            if m:
-                symbol_props[m.group(1)] = m.group(2)
-            continue
+        # Include distributor part numbers if present
+        for dist in ("digikey", "mouser", "lcsc", "element14"):
+            val = item.get(dist, "").strip()
+            if val:
+                entry[dist] = val
 
-        if in_symbol:
-            symbol_depth += line.count('(') - line.count(')')
+        entries.append(entry)
 
-            m = PROP_RE.search(stripped)
-            if m:
-                key, value = m.group(1), m.group(2)
-                if key not in symbol_props:
-                    symbol_props[key] = value
-
-            if symbol_depth <= 0:
-                mpn = None
-                manufacturer = None
-
-                for mk in ["MPN", "MPN2", "Manufacturer Part Number",
-                            "Manufacturer_Part_Number", "Manufacturer Part #",
-                            "Manufacturer Part", "Manufacturer Product Number "]:
-                    val = symbol_props.get(mk, "").strip()
-                    if val:
-                        mpn = val
-                        break
-
-                for mk in ["Manufacturer", "Manufacturer_Name"]:
-                    val = symbol_props.get(mk, "").strip()
-                    if val:
-                        manufacturer = val
-                        break
-
-                if mpn and is_valid_mpn(mpn):
-                    results.append((mpn, manufacturer or ""))
-
-                in_symbol = False
-                symbol_props = {}
-
-    return results
-
-
-def get_project_name(filepath: Path, repos_dir: Path) -> str:
-    rel = filepath.relative_to(repos_dir)
-    return rel.parts[0]
+    return entries
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Extract MPNs from KiCad schematics")
-    parser.add_argument("--repos-dir", default=str(HARNESS_DIR / "repos"),
-                        help="Directory containing cloned repos")
-    parser.add_argument("--output", "-o", default=str(HARNESS_DIR / "results" / "extracted_mpns.json"),
-                        help="Output JSON file path")
+    parser = argparse.ArgumentParser(
+        description="Extract MPNs from analyzer JSON outputs")
+    parser.add_argument(
+        "--results-dir",
+        default=str(HARNESS_DIR / "results" / "outputs" / "schematic"),
+        help="Directory containing schematic JSON output files")
+    parser.add_argument(
+        "--output", "-o",
+        default=str(HARNESS_DIR / "results" / "extracted_mpns.json"),
+        help="Output JSON file path")
     args = parser.parse_args()
 
-    repos_dir = Path(args.repos_dir)
+    results_dir = Path(args.results_dir)
     output_file = Path(args.output)
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
     seen = set()
     entries = []
+    projects = set()
 
-    for sch_file in sorted(repos_dir.rglob("*.kicad_sch")):
-        project = get_project_name(sch_file, repos_dir)
-        pairs = extract_from_file(sch_file)
+    for json_file in sorted(results_dir.glob("*.json")):
+        project = project_name_from_filename(json_file.stem)
+        file_entries = extract_from_json(json_file)
 
-        for mpn, manufacturer in pairs:
-            key = (mpn, manufacturer, project)
+        for entry in file_entries:
+            key = (entry["mpn"], entry["manufacturer"], project)
             if key not in seen:
                 seen.add(key)
-                entries.append({
-                    "mpn": mpn,
-                    "manufacturer": manufacturer,
-                    "source_project": project
-                })
+                entry["source_project"] = project
+                entries.append(entry)
+                projects.add(project)
 
-    entries.sort(key=lambda e: (e["manufacturer"].lower(), e["mpn"].lower()))
+    entries.sort(key=lambda e: (e.get("manufacturer", "").lower(), e["mpn"].lower()))
 
     output_file.write_text(json.dumps(entries, indent=2) + "\n")
-    print(f"Extracted {len(entries)} unique MPN entries from "
-          f"{len(set(e['source_project'] for e in entries))} projects")
+    print(f"Extracted {len(entries)} unique MPN entries from {len(projects)} projects")
+
+    # Summary by project
+    from collections import Counter
+    by_project = Counter(e["source_project"] for e in entries)
+    for proj, count in sorted(by_project.items()):
+        print(f"  {proj}: {count} MPNs")
+
+    # Count how many have datasheet URLs
+    with_ds = sum(1 for e in entries if e.get("datasheet") and e["datasheet"] != "~")
+    print(f"With datasheet URLs: {with_ds}")
+
     print(f"Output: {output_file}")
 
 

@@ -9,11 +9,11 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 
 ## Well-known hardware projects
 
-- https://github.com/analogdevicesinc/education_tools
-- https://github.com/ClemensElflein/OpenMower (shallow)
-- https://github.com/GlasgowEmbedded/glasgow (shallow)
-- https://github.com/greatscottgadgets/cynthion-hardware
-- https://github.com/greatscottgadgets/daisho (shallow)
+- https://github.com/analogdevicesinc/education_tools @ f3c45b78712a
+- https://github.com/ClemensElflein/OpenMower @ 4f11e685f301 (shallow)
+- https://github.com/GlasgowEmbedded/glasgow @ f975caae61a5 (shallow)
+- https://github.com/greatscottgadgets/cynthion-hardware @ 13aa71c2fb0b
+- https://github.com/greatscottgadgets/daisho @ 1d2f5e1cb16a (shallow)
 - https://github.com/greatscottgadgets/greatfet-hardware
 - https://github.com/greatscottgadgets/hackrf (shallow)
 - https://github.com/greatscottgadgets/hackrf-pro
@@ -505,7 +505,7 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 ## SparkFun boards
 
 - https://github.com/sparkfun/APDS-9960_RGB_and_Gesture_Sensor
-- https://github.com/sparkfun/OpenLog
+- https://github.com/sparkfun/OpenLog @ 140fe56ee7d3
 - https://github.com/sparkfun/Qwiic_Joystick
 - https://github.com/sparkfun/RedBoard_Artemis_Nano
 - https://github.com/sparkfun/SparkFun_Ambient_Light_Sensor-VEML7700
@@ -651,7 +651,7 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 - https://github.com/maudeve-it/3.3V-3A-step-down-converter-powered-by-USB-C
 - https://github.com/mjs513/Teensy-3.5-Breakout-Boaard
 - https://github.com/mwrnd/AlveoU25_JTAG_Adapter
-- https://github.com/mwrnd/OpenCAPI_Breakout
+- https://github.com/mwrnd/OpenCAPI_Breakout @ bf795c16630d
 - https://github.com/mwrnd/PCIe_x8_Breakout
 - https://github.com/mwrnd/QSFP_Breakout
 - https://github.com/mwrnd/SFP_Plug_Breakout
@@ -1056,7 +1056,7 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 - https://github.com/multigcs/rio-iceshield
 - https://github.com/Mustafa5355/cavli_c16qs-carrier-board
 - https://github.com/mvento/atmega2560_core
-- https://github.com/mwrnd/OpenCAPI-to-PCIe
+- https://github.com/mwrnd/OpenCAPI-to-PCIe @ 55d35b1d9105
 - https://github.com/mwrnd/PCIe_x16-to-x8_Debifurcator
 - https://github.com/mygnu/opilio-pcb
 - https://github.com/n1kdo/BandSelector
@@ -1076,7 +1076,7 @@ Format: `- URL [@ commit_hash] [(shallow)]`
 - https://github.com/ojg/thatmicpre
 - https://github.com/ONLYA/AR488-Bluetooth-Mega-2560
 - https://github.com/Open-Authenticator/hardware-design
-- https://github.com/Open-Vent-Bristol/OpenVent-Bristol_KiCad
+- https://github.com/Open-Vent-Bristol/OpenVent-Bristol_KiCad @ 58e4e2b82c11
 - https://github.com/overscore-media/luxigrid
 - https://github.com/pablov55/Beginner-s-Guide-to-KiCad
 - https://github.com/papamidas/ATU_0_HW

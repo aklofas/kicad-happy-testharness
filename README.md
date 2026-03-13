@@ -72,12 +72,18 @@ python3 analyzers/run_gerbers.py
 
 # 7. Validate outputs
 python3 validators/validate_outputs.py
+
+# 8. Extract MPNs and download datasheets
+python3 validators/extract_mpns.py
+python3 validators/download_datasheets.py
 ```
 
 ## Requirements
 
-- **Python 3.8+** (stdlib only -- no pip packages needed)
+- **Python 3.8+** (stdlib only for core scripts)
 - **Git** (for cloning test repos)
+- **requests** (optional, for manufacturer datasheet scraping)
+- **DigiKey/Mouser/element14 API keys** (optional, for datasheet downloads and MPN validation)
 
 ## Finding kicad-happy
 
@@ -119,7 +125,8 @@ review/
 
 validators/
   validate_outputs.py     # Check structural invariants in analyzer JSON
-  extract_mpns.py         # Extract MPN + manufacturer pairs from schematics
+  extract_mpns.py         # Extract MPN + manufacturer pairs from analyzer outputs
+  download_datasheets.py  # Download datasheets for extracted MPNs (parallel)
   validate_mpns.py        # Validate MPNs against DigiKey/Mouser APIs
   analyze_bom_mismatch.py # Analyze BOM qty vs component count discrepancies
 
@@ -153,15 +160,19 @@ Edit `repos.md` directly. It's organized as a simple list grouped by category. T
 - Prefer projects with clear open-source licenses (MIT, Apache, CERN-OHL, etc.)
 - After adding, run `python3 checkout.py` to clone the new repo
 
+Hashes are managed automatically:
+- `checkout.py` pins the HEAD hash into `repos.md` after cloning new repos
+- `checkout.py` verifies and restores existing repos to their pinned hash on each run
+- `repos.md` is the single source of truth for commit hashes (no separate state file)
+
 ### Checking for upstream updates
 
 ```bash
-python3 check_updates.py              # compare local hashes to remote HEAD
+python3 check_updates.py              # compare pinned hashes to remote HEAD
+python3 check_updates.py --pin        # update repos.md with new remote hashes
 python3 check_updates.py --fetch      # also git fetch in local clones
 python3 check_updates.py --json       # machine-readable output
 ```
-
-Pinned repos (with `@ hash`) are skipped since they're intentionally locked.
 
 ## What gets tested
 
@@ -182,6 +193,21 @@ The test corpus exercises:
 
 All analyzers are pure Python 3.8+ stdlib with no dependencies. They produce JSON output.
 
+### Supported file types
+
+| Extension | Analyzer | KiCad Version |
+|-----------|----------|---------------|
+| `.kicad_sch` | analyze_schematic.py | 6, 7, 8, 9 |
+| `.sch` | analyze_schematic.py | 5 (legacy, filtered for KiCad format) |
+| `.kicad_pcb` | analyze_pcb.py | 5, 6, 7, 8, 9 |
+| `.kicad_pro` | Direct JSON read | 6+ |
+| `.gbr`, `.g*`, `.drl` | analyze_gerbers.py | N/A |
+
+**Note on `.sch` files**: Many repos contain Eagle `.sch` files (XML/binary format) which are
+not KiCad files. `discover.py` filters legacy `.sch` files by checking the file header for
+"EESchema" (the KiCad 5 signature) and excludes anything else. All Adafruit repos, for
+example, use Eagle format and are correctly excluded.
+
 ## Validation scripts
 
 ### validate_outputs.py
@@ -199,12 +225,27 @@ python3 validators/validate_outputs.py --results-dir path/to/outputs --manifests
 
 ### extract_mpns.py
 
-Extracts manufacturer part numbers from KiCad schematics:
+Extracts manufacturer part numbers from analyzer JSON outputs:
 
 ```bash
 python3 validators/extract_mpns.py
-python3 validators/extract_mpns.py --repos-dir path/to/repos --output results/extracted_mpns.json
+python3 validators/extract_mpns.py --results-dir path/to/outputs --output results/extracted_mpns.json
 ```
+
+### download_datasheets.py
+
+Downloads datasheets for extracted MPNs using multiple sources in parallel:
+
+```bash
+python3 validators/download_datasheets.py                    # download all
+python3 validators/download_datasheets.py --limit 20         # first 20
+python3 validators/download_datasheets.py --project OpenMower # one project
+python3 validators/download_datasheets.py --status           # show progress
+python3 validators/download_datasheets.py --retry             # retry failures
+python3 validators/download_datasheets.py --workers 16        # more parallelism
+```
+
+Sources tried in order: direct URL from schematic, LCSC direct API, DigiKey, Mouser, LCSC (jlcsearch), element14, manufacturer website scraping.
 
 ### validate_mpns.py
 

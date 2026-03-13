@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Check if tracked repos have upstream updates.
 
-Compares the commit hashes in repos_state.json (recorded at clone time)
-against the current HEAD of each repo's default branch on GitHub.
+Compares the pinned commit hashes in repos.md against the current HEAD
+of each repo's default branch on the remote.
 
 Usage:
     python3 check_updates.py
-    python3 check_updates.py --fetch       # also git fetch in local clones
+    python3 check_updates.py --pin        # update repos.md with new hashes
+    python3 check_updates.py --fetch      # also git fetch in local clones
     python3 check_updates.py --json
 """
 
@@ -18,11 +19,10 @@ from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent
 CLONE_DIR = HARNESS_DIR / "repos"
-STATE_FILE = HARNESS_DIR / "repos_state.json"
 
 # Import repo parser from checkout
 sys.path.insert(0, str(HARNESS_DIR))
-from checkout import parse_repos_md, REPOS_MD
+from checkout import parse_repos_md, pin_hash_in_repos_md, REPOS_MD
 
 
 def get_remote_head(url: str) -> str | None:
@@ -37,18 +37,6 @@ def get_remote_head(url: str) -> str | None:
     except (subprocess.TimeoutExpired, Exception):
         pass
     return None
-
-
-def get_local_head(repo_dir: Path) -> str | None:
-    """Get HEAD hash of a local clone."""
-    try:
-        result = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=str(repo_dir), capture_output=True, text=True,
-        )
-        return result.stdout.strip() if result.returncode == 0 else None
-    except Exception:
-        return None
 
 
 def fetch_local(repo_dir: Path) -> bool:
@@ -67,6 +55,8 @@ def main():
     parser = argparse.ArgumentParser(description="Check for upstream updates")
     parser.add_argument("--fetch", action="store_true",
                         help="Also git fetch in local clones")
+    parser.add_argument("--pin", action="store_true",
+                        help="Update repos.md with new commit hashes")
     parser.add_argument("--json", action="store_true",
                         help="Output as JSON")
     args = parser.parse_args()
@@ -76,7 +66,6 @@ def main():
         sys.exit(1)
 
     repos = parse_repos_md(REPOS_MD)
-    state = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else {}
 
     results = []
     updated = 0
@@ -88,22 +77,13 @@ def main():
         url = repo["url"]
         repo_name = url.rstrip("/").split("/")[-1].removesuffix(".git")
         pinned_hash = repo.get("hash")
-        local_hash = state.get(repo_name)
         repo_dir = CLONE_DIR / repo_name
 
         entry = {
             "name": repo_name,
             "url": url,
             "pinned": pinned_hash,
-            "local": local_hash,
         }
-
-        # If pinned, the repo is intentionally locked -- skip update check
-        if pinned_hash:
-            entry["status"] = "pinned"
-            entry["remote"] = None
-            results.append(entry)
-            continue
 
         if not args.json:
             print(f"  {repo_name}...", end="", flush=True)
@@ -119,21 +99,29 @@ def main():
             entry["status"] = "error"
             if not args.json:
                 print(" error (could not reach remote)")
-        elif local_hash and remote_hash == local_hash:
+        elif not pinned_hash:
+            entry["status"] = "not-pinned"
+            if not args.json:
+                print(f" not pinned (remote: {remote_hash[:12]})")
+            if args.pin:
+                pin_hash_in_repos_md(url, remote_hash)
+                if not args.json:
+                    print(f"    -> pinned {remote_hash[:12]} in repos.md")
+        elif remote_hash.startswith(pinned_hash) or pinned_hash.startswith(remote_hash[:len(pinned_hash)]):
             entry["status"] = "up-to-date"
             if not args.json:
                 print(" up-to-date")
-        elif local_hash and remote_hash != local_hash:
+        else:
             entry["status"] = "update-available"
             updated += 1
             if not args.json:
                 print(f" UPDATE AVAILABLE")
-                print(f"    local:  {local_hash[:12]}")
+                print(f"    pinned: {pinned_hash[:12]}")
                 print(f"    remote: {remote_hash[:12]}")
-        else:
-            entry["status"] = "not-cloned"
-            if not args.json:
-                print(" not cloned yet")
+            if args.pin:
+                pin_hash_in_repos_md(url, remote_hash)
+                if not args.json:
+                    print(f"    -> pinned {remote_hash[:12]} in repos.md")
 
         results.append(entry)
 
@@ -147,9 +135,12 @@ def main():
         print(f"\n{'=' * 50}")
         print(f"Total repos:       {len(results)}")
         print(f"Updates available:  {updated}")
-        pinned = sum(1 for r in results if r["status"] == "pinned")
+        pinned = sum(1 for r in results if r["status"] == "up-to-date")
+        not_pinned = sum(1 for r in results if r["status"] == "not-pinned")
         if pinned:
-            print(f"Pinned (skipped):  {pinned}")
+            print(f"Up to date:        {pinned}")
+        if not_pinned:
+            print(f"Not pinned:        {not_pinned}")
 
         if updated:
             print(f"\nTo update, delete the repo dir and re-run checkout.py:")
