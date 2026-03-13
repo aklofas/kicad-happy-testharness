@@ -43,6 +43,36 @@ python3 regression/findings.py render                 # regenerate all findings.
 python3 regression/findings.py promote FND-00000001   # promote to assertion
 ```
 
+### How the ratchet works
+
+The three layers form a feedback loop that tightens over time:
+
+```
+findings → (promote) → assertions → (run_checks) → regression caught
+    ↑                                                       |
+    └──────── drift.py ← (re-check against outputs) ────────┘
+```
+
+- **Baselines** catch broad structural changes (new/removed sections, count shifts)
+- **Assertions** catch specific regressions (a known-good detection disappearing)
+- **Findings** capture context that can't be automated (why something is wrong, what's missing)
+
+`drift.py` closes the loop by re-checking findings against current outputs:
+
+- A "correct" item whose section is now empty → **regression** (analyzer broke something)
+- An "incorrect" item whose count dropped → **possibly fixed** (bug may be resolved)
+- A "missed" item whose section now has data → **now detected** (analyzer improved)
+
+This means findings aren't static records — they stay connected to the live outputs and
+surface drift without requiring manual re-review.
+
+```bash
+python3 regression/drift.py                    # all findings
+python3 regression/drift.py --repo {repo}      # one repo
+python3 regression/drift.py --status confirmed  # filter by status
+python3 regression/drift.py --json              # machine-readable
+```
+
 ### Promoting improvements
 
 When analyzer outputs improve, promote the changes to reference data:
@@ -169,6 +199,7 @@ regression/                 # 3-layer regression testing system
   run_checks.py             #   Run assertions against outputs
   seed.py                   #   Generate seed assertions from outputs
   findings.py               #   Manage LLM review findings + render findings.md
+  drift.py                  #   Detect findings drift against current outputs
   packet.py                 #   Generate review packets for LLM analysis
   promote.py                #   Promote improved results/ to reference/
 
