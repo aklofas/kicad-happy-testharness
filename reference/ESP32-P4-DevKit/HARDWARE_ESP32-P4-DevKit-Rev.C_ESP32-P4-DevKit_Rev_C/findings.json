@@ -1,0 +1,106 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/ESP32-P4-DevKit/HARDWARE/ESP32-P4-DevKit-Rev.C/ESP32-P4-DevKit_Rev_C.kicad_sch",
+      "status": "confirmed",
+      "summary": "Dev board with two TPS62A02 regulators and Ethernet PHY correctly identified; differential pairs properly detected with ESD protection; crystal circuit undetected; RMII signals misclassified as UART; voltage divider R16/R14 is SD card detect not a divider",
+      "correct": [
+        {
+          "description": "TPS62A02 switching regulator for 3.3V correctly identified with feedback divider R39/R40 (30.1k/6.49k), ratio 0.177, estimated Vout 3.38V"
+        },
+        {
+          "description": "Second TPS62A02 for separate power domain correctly detected"
+        },
+        {
+          "description": "RC filter on ESP_EN pin (R36 10k / C39 100nF, fc=159Hz) correctly identified as reset delay"
+        },
+        {
+          "description": "LC filter (L4 1uH / C62 47uF, resonant 23.2kHz) correctly detected at DCDC output"
+        },
+        {
+          "description": "Feedback network R39/R40 correctly duplicated in feedback_networks section"
+        },
+        {
+          "description": "Decoupling analysis shows good coverage: +3.3V has 77.8uF total across 18 caps with mixed values for broadband impedance"
+        },
+        {
+          "description": "Power rails correctly identified including +1V8, +2.5V, +3.3V, +5V, +5VP, VDD_SD"
+        },
+        {
+          "description": "Ethernet PHY IP101GRR (U2) correctly detected in ethernet_interfaces"
+        },
+        {
+          "description": "Ethernet differential pairs TD+/TD- and RD+/RD- correctly identified with ESD protection noted"
+        },
+        {
+          "description": "PoE power differential pair PW+/PW- detected between LAN_CON1 and POE_PWR1"
+        },
+        {
+          "description": "ESDS314DBVR ESD protection on Ethernet lines correctly identified"
+        },
+        {
+          "description": "I2C bus correctly identified with pull-ups (R22/R23 2.2k to +3.3V) on GPIO7/8"
+        },
+        {
+          "description": "Second I2C bus on GPIO32/33 correctly flagged as missing pull-ups"
+        },
+        {
+          "description": "W25Q128 SPI flash (U3, 16MB) detected as subcircuit"
+        },
+        {
+          "description": "Reverse polarity protection D1 (1N5822) correctly identified between +5VP and +5V"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Voltage divider R16/R14 (22R/4.7k) classified as signal voltage divider with ratio 0.995 but this is actually just a series resistor (R16=22R) on SD card detect line with pull-down R14 - the 22R is too small to be a divider top resistor, it is a current limiting resistor",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "Crystal oscillator components (R12 10M feedback resistor with C1/C2 22pF load caps) misidentified as RC low-pass filter at 723Hz instead of crystal circuit",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "RMII Ethernet signals (GPIO35/RMII_TXD1, RMII_RXDV, RMII_RXD0, etc.) misclassified as UART instead of Ethernet/RMII bus",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No crystal circuit detected for ESP32-P4 40MHz crystal with 22pF load caps and 10M feedback resistor",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "MIPI-DSI connector (MIPI-DSI1) and MIPI-CSI connector (MIPI-CSI1) present but differential pairs not detected",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "Buttons BOOT1 and RST1 classified as type other instead of switch",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "POE_PWR1 connector present suggesting Power-over-Ethernet capability but no PoE subcircuit detected",
+          "analyzer_section": "subcircuits"
+        },
+        {
+          "description": "SD card interface (MICRO_SD1) not detected as memory interface with card detect signal",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        }
+      ],
+      "suggestions": [
+        "Crystal circuit detector should recognize the pattern: high-value resistor (1M-10M) bridging two nets that also have small caps (10-33pF) to ground",
+        "Voltage divider detector should reject dividers where ratio > 0.95 as these are likely series resistor + pull-down configurations, not intentional voltage dividers",
+        "YTS-A016-X button footprints should be classified as switch type, not other",
+        "SD card interfaces should be detected when MICRO_SD footprint is present with data/clock/detect lines"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000113",
+      "repo": "ESP32-P4-DevKit",
+      "project": "HARDWARE_ESP32-P4-DevKit-Rev.C_ESP32-P4-DevKit_Rev_C",
+      "created": "2026-03-14T07:49:36.225609+00:00"
+    }
+  ]
+}

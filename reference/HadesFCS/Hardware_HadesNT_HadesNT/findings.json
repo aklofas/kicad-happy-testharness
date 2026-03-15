@@ -1,0 +1,64 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/HadesFCS/Hardware/HadesNT/HadesNT.sch",
+      "status": "confirmed",
+      "summary": "HadesNT flight controller - 102 components, zero signals due to KH-016; rich component set suggests many missed detections",
+      "correct": [
+        {
+          "description": "Component types well-classified: 7 ICs, 7 transistors, 32 caps, 25 resistors, 2 speakers, 1 crystal, 1 fuse"
+        },
+        {
+          "description": "Power rails identified: +3V3, +5V, GND, VBUS, VCC, VDD, VDDA, VS - comprehensive for a flight controller with analog domain"
+        },
+        {
+          "description": "1 DNP part correctly identified"
+        },
+        {
+          "description": "263 nets and 278 wires parsed, 35 no-connect markers counted"
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "Zero signal analysis on a board with 7 transistors, 1 crystal, 1 fuse, 2 inductors - all blocked by KH-016",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Crystal circuit not detected despite crystal component being enumerated",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "7 transistor circuits not analyzed - flight controllers use MOSFETs for motor outputs and power switching",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "VDDA rail suggests analog domain (ADC reference) with dedicated filtering - not analyzed",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Speaker/buzzer circuits (2 speakers) not detected",
+          "analyzer_section": "signal_analysis.buzzer_speaker_circuits"
+        },
+        {
+          "description": "Fuse as protection device not detected",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "suggestions": [
+        "Fix KH-016 to unlock signal analysis",
+        "Good test case for transistor circuit and buzzer/speaker detection once wiring is fixed"
+      ],
+      "related_issues": [
+        "KH-016"
+      ],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000082",
+      "repo": "HadesFCS",
+      "project": "Hardware_HadesNT_HadesNT",
+      "created": "2026-03-14T07:23:47.431688+00:00"
+    }
+  ]
+}

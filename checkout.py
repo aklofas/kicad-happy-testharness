@@ -87,8 +87,7 @@ def _repo_name_from_url(url: str) -> str:
 
 
 def pin_hash_in_repos_md(url: str, full_hash: str):
-    """Write a short commit hash into repos.md for a specific repo URL."""
-    short_hash = full_hash[:12]
+    """Write the full commit hash into repos.md for a specific repo URL."""
     lines = REPOS_MD.read_text().splitlines()
 
     for i, line in enumerate(lines):
@@ -106,7 +105,7 @@ def pin_hash_in_repos_md(url: str, full_hash: str):
         if line_url != url:
             continue
 
-        new_line = f"- {line_url} @ {short_hash}"
+        new_line = f"- {line_url} @ {full_hash}"
         if shallow:
             new_line += " (shallow)"
         lines[i] = new_line
@@ -114,12 +113,9 @@ def pin_hash_in_repos_md(url: str, full_hash: str):
         return
 
 
-def clone_repo(url: str, dest: Path, shallow: bool) -> bool:
-    """Clone a git repo. Returns True on success."""
-    cmd = ["git", "clone", "--quiet"]
-    if shallow:
-        cmd += ["--depth", "1"]
-    cmd += [url, str(dest)]
+def clone_repo(url: str, dest: Path) -> bool:
+    """Shallow-clone a git repo (--depth 1). Returns True on success."""
+    cmd = ["git", "clone", "--quiet", "--depth", "1", url, str(dest)]
     try:
         subprocess.run(cmd, check=True, capture_output=True, text=True)
         return True
@@ -129,15 +125,23 @@ def clone_repo(url: str, dest: Path, shallow: bool) -> bool:
 
 
 def checkout_hash(repo_dir: Path, commit_hash: str) -> bool:
-    """Check out a specific commit. Returns True on success."""
+    """Check out a specific commit in a shallow clone.
+
+    Fetches the specific commit with --depth 1, then checks it out.
+    Requires full 40-char hash (GitHub rejects short hashes for fetch).
+    Returns False only on fetch failure — caller decides how to handle.
+    """
     try:
+        subprocess.run(
+            ["git", "fetch", "--quiet", "--depth", "1", "origin", commit_hash],
+            cwd=str(repo_dir), check=True, capture_output=True, text=True,
+        )
         subprocess.run(
             ["git", "checkout", "--quiet", commit_hash],
             cwd=str(repo_dir), check=True, capture_output=True, text=True,
         )
         return True
-    except subprocess.CalledProcessError as e:
-        print(f" CHECKOUT FAILED: {e.stderr.strip()}")
+    except subprocess.CalledProcessError:
         return False
 
 
@@ -203,31 +207,30 @@ def clone_repos(repos, limit):
 
         if dest.exists():
             # Verify existing clone is at the pinned hash
-            if repo["hash"] and not repo["shallow"]:
+            if repo["hash"] and len(repo["hash"]) >= 40:
                 head = get_head_hash(dest)
                 if not head.startswith(repo["hash"]):
                     print(f"RESTORE: {repo_name} ({head[:12]} -> {repo['hash'][:12]})", end="", flush=True)
                     if checkout_hash(dest, repo["hash"]):
                         print(" OK")
                     else:
-                        failed += 1
-                        continue
+                        print(" (pin failed, keeping current)")
             skipped += 1
             continue
 
-        shallow_label = " (shallow)" if repo["shallow"] else ""
-        print(f"CLONE: {repo_name}{shallow_label}", end="", flush=True)
+        print(f"CLONE: {repo_name}", end="", flush=True)
 
-        if not clone_repo(url, dest, repo["shallow"]):
+        if not clone_repo(url, dest):
             failed += 1
             continue
 
-        # Check out pinned commit (skip for shallow clones — already at HEAD)
-        if repo["hash"] and not repo["shallow"]:
+        # Check out pinned commit via shallow fetch (needs full hash)
+        if repo["hash"] and len(repo["hash"]) >= 40:
             print(f" -> {repo['hash'][:12]}", end="", flush=True)
             if not checkout_hash(dest, repo["hash"]):
-                failed += 1
-                continue
+                print(f" (pin failed, staying at HEAD)", end="")
+        elif repo["hash"]:
+            print(f" (short hash, staying at HEAD)", end="")
 
         head = get_head_hash(dest)
         print(f" OK ({head[:12]})")

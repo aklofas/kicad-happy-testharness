@@ -1,0 +1,59 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/Otter-Iron-PRO/v2.0/Top/OtterIron_PRO_Top.sch",
+      "status": "confirmed",
+      "summary": "Otter Iron PRO v2.0 top board (33 components): I2C OLED display and USB detected, but very sparse signal analysis for a soldering iron control board",
+      "correct": [
+        {
+          "description": "I2C bus for OLED display detected (OLED_SDA/OLED_SCL) with 2.37k pull-ups to 3.3V"
+        },
+        {
+          "description": "Protection devices detected (4 total)"
+        },
+        {
+          "description": "Power rails +3V3, GND, VBUS correctly identified"
+        },
+        {
+          "description": "16 connectors identified - reflects the modular design with inter-board connections"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Secondary I2C lines (__unnamed_26, __unnamed_27) detected as I2C SCL/SDA but with no pull-ups and only U3 as device - likely false positive or internal routing",
+          "analyzer_section": "design_analysis.bus_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No power regulator detected on this board - the v2.0 modular design splits regulation across boards but local regulation should still be identified",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "User interface elements (SW1, SW2 buttons) not identified as control inputs for temperature/mode selection",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Inter-board connector pinout not analyzed for signal routing between top/bottom/USB/C245 connector boards",
+          "analyzer_section": "design_analysis"
+        },
+        {
+          "description": "No USB differential pair detected despite VBUS power rail being present",
+          "analyzer_section": "design_analysis.differential_pairs"
+        }
+      ],
+      "suggestions": [
+        "For modular designs with inter-board connectors, track signal continuity across board boundaries",
+        "Identify user input elements (buttons, encoders) as control interface components"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000148",
+      "repo": "Otter-Iron-PRO",
+      "project": "v2.0_Top_OtterIron_PRO_Top",
+      "created": "2026-03-14T07:53:19.922874+00:00"
+    }
+  ]
+}

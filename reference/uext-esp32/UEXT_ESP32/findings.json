@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/uext-esp32/UEXT_ESP32.sch",
+      "status": "confirmed",
+      "summary": "Very simple UEXT expansion board with ESP32-WROOM-32D (10 components). Minimal but mostly correct analysis. False positive SPI bus detection from UEXT connector pin names. Auto-program transistors correctly detected.",
+      "correct": [
+        {
+          "description": "ESP32-WROOM-32D correctly identified as sole IC on +3V3 rail"
+        },
+        {
+          "description": "UART TX/RX (UEXT_TX/UEXT_RX and FTDI_TX/FTDI_RX) correctly detected"
+        },
+        {
+          "description": "Two MMBT3904 auto-program transistors (Q1/Q2) correctly detected with collector/emitter nets"
+        },
+        {
+          "description": "Decoupling: single 10uF cap on +3V3 correctly identified as bulk-only (no bypass)"
+        },
+        {
+          "description": "Single pin net warning for FTDI_RX/FTDI_TX is valid - these connect only to ESP32 pins"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "False positive SPI bus detected - UEXT connector has SPI pins but they are UART signals (MOSI mapped to UEXT_RX, SCK to UEXT_TX)",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        },
+        {
+          "description": "I2C bus detected on unnamed nets with no devices - these are unconnected UEXT I2C pins, not an active bus",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "GND listed in power domain domain_groups for U1 - GND is ground reference not a power domain",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "ERC warning for GPIO2 net - pin IO34 is input-only on ESP32 and is correctly connected to UEXT RXD through J1",
+          "analyzer_section": "design_analysis.erc_warnings"
+        }
+      ],
+      "missed": [
+        {
+          "description": "UEXT connector standard (10-pin connector with 3.3V, GND, TXD, RXD, SCL, SDA, MISO, MOSI, SCK, CS) not identified",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Auto-program function of Q1/Q2 (DTR->GPIO0, RTS->RESET) not identified as boot/flash circuit",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "No power regulator detected - board is powered from UEXT 3.3V or FTDI connector",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Logo/graphic components (LOGO1, LOGO2) classified as type graphic which is fine but 2 of 10 components are non-functional",
+          "analyzer_section": "statistics"
+        }
+      ],
+      "suggestions": [
+        "Filter SPI false positives when pins map to UART signals on the actual IC",
+        "Filter I2C false positives when nets have no connected devices",
+        "Exclude GND from power domain groups",
+        "Detect ESP32 auto-program circuit pattern (DTR/RTS via BJTs to GPIO0/EN)"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000142",
+      "repo": "uext-esp32",
+      "project": "UEXT_ESP32",
+      "created": "2026-03-14T07:52:29.183845+00:00"
+    }
+  ]
+}

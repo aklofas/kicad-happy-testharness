@@ -1,0 +1,126 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/RP2350pc/HARDWARE/RP2350pc-Rev.A/RP2350pc_Rev_A.kicad_sch",
+      "status": "confirmed",
+      "summary": "Complex RP2350 SBC with DVI, USB hub, audio amplifier - rich signal analysis with 8 voltage dividers, 17 RC filters, power regulators, and audio signal paths all detected; PWM audio filter topology and ferrite bead classification are notable strengths; crystal circuits still undetected",
+      "correct": [
+        {
+          "description": "TPS62A02 switching regulator correctly identified with feedback divider R25/R26 (220k/49.9k), ratio 0.185, estimated Vout 3.25V"
+        },
+        {
+          "description": "MT3608 boost converter correctly identified with feedback divider R23/R24 (8.25k/1.05k), ratio 0.113, estimated Vout 5.31V"
+        },
+        {
+          "description": "CH217K USB power switch correctly identified as LDO for +5V_USB_HOST"
+        },
+        {
+          "description": "PWM audio low-pass filter R48/R53 (270R/150R to AUD-L) correctly detected as voltage divider with 0.357 ratio - this is the PWM-to-analog filter"
+        },
+        {
+          "description": "Matched stereo audio filters (AUD-L and AUD-R channels) both detected with identical component values"
+        },
+        {
+          "description": "Battery sensing divider R36/R37 (470k/470k) with 0.5 ratio correctly identified on GPIO47/BAT_SENS"
+        },
+        {
+          "description": "Power sensing divider R34/R35 (2.2k/4.7k) with 0.681 ratio on GPIO46/PWR_SENS correctly found"
+        },
+        {
+          "description": "VBUSM sensing divider R29/R30 (4.7k/10k) for USB hub correctly detected"
+        },
+        {
+          "description": "Audio amplifier supply filter R99 100R with parallel caps (1.1uF, fc=1.45kHz) correctly identified"
+        },
+        {
+          "description": "Analog audio domain RC filter R73 10R with 3 parallel caps (11.1uF, fc=1.43kHz) for +3.3VA correctly detected"
+        },
+        {
+          "description": "Multiple audio RC coupling networks (R68/C63, R82/C78, R81/C76, R69/C65 at fc=15.9Hz) correctly identified as AC coupling"
+        },
+        {
+          "description": "Audio MCLK RC filter R50 33R / C55 27pF at 178.6MHz correctly detected"
+        },
+        {
+          "description": "I2S DAC RC filters (R46/R47 33R with C49/C50 20pF at 241MHz) correctly found"
+        },
+        {
+          "description": "Audio codec crystal RC filters (R91/R104 1k with C90/C93/C81/C91 270pF at 589kHz) correctly detected"
+        },
+        {
+          "description": "Volume control RC filter R80 220k / C79 1uF at 0.72Hz correctly identified for slow volume ramping"
+        },
+        {
+          "description": "LC filter L3 4.7uH / 44uF at DCDC_VIN with 11.07kHz resonance correctly detected"
+        },
+        {
+          "description": "Ferrite beads correctly classified as ferrite_bead type (4 FB components)"
+        },
+        {
+          "description": "16 power rails including separate analog domains (+3.3VA, +5VA, GNDA, PWR_CC1/CC2, VREG_AVDD) correctly enumerated"
+        },
+        {
+          "description": "Decoupling analysis shows comprehensive coverage across +3.3V (105.6uF/22 caps), +1V1, +5V, +5V_USB, +5V_USB_HOST rails"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Audio codec crystal circuit components (R91/R104 with C90/C93/C81/C91) classified as generic RC low-pass filters - these are actually crystal load network components for an audio codec crystal oscillator",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "Crystal feedback resistor R13 1k with 27pF caps classified as RC filter at 5.89MHz - this is crystal oscillator biasing, not an RC filter",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "AMP volume control network (R77 10k / R42 1k) classified as voltage divider but this is actually part of the digital volume control circuit for the audio amplifier where T2 is used as a variable attenuator",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No crystal circuits detected - RP2350 uses a 12MHz crystal with 27pF load caps (C21/C22) visible in BOM",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "DVI connector (DVI1) present with 8 series resistors (R59-R66) for TMDS differential pairs but no DVI/HDMI interface detection",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "USB hub IC not detected (likely FE1.1s or similar given USB_HOST1-2 and USB_HOST3-4 connectors)",
+          "analyzer_section": "subcircuits"
+        },
+        {
+          "description": "Audio amplifier IC not detected as subcircuit despite extensive audio signal path analysis",
+          "analyzer_section": "subcircuits"
+        },
+        {
+          "description": "Power on/off switch circuit (PWR_ON/OFF1) with PWR_SW rail not analyzed as power management subcircuit",
+          "analyzer_section": "subcircuits"
+        },
+        {
+          "description": "Line-In audio connector and headset connector not linked to audio signal path",
+          "analyzer_section": "signal_analysis.buzzer_speaker_circuits"
+        },
+        {
+          "description": "SD card interface (MICRO_SD1) not detected",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        }
+      ],
+      "suggestions": [
+        "PWM audio filter detection is a strength - the divider + multi-cap topology for PWM-to-analog is correctly found, though it could be explicitly labeled as PWM DAC filter",
+        "Crystal circuit detector needs to handle both standard crystal (high-value feedback R + matched load caps) and codec crystal (lower value R with matched caps) patterns",
+        "DVI/HDMI interface detection should look for clusters of matched series resistors (typically 33-100R) connecting to DVI/HDMI connector footprints",
+        "The separate analog ground domain (GNDA) and analog supply filtering are well-detected strengths of the analyzer"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000128",
+      "repo": "RP2350pc",
+      "project": "HARDWARE_RP2350pc-Rev.A_RP2350pc_Rev_A",
+      "created": "2026-03-14T07:51:11.844537+00:00"
+    }
+  ]
+}

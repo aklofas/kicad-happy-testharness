@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/esp-rust-board/hardware/esp-rust-board/esp-rust-board.kicad_sch",
+      "status": "confirmed",
+      "summary": "Good detection of ESP32-C3 dev board with USB-C, I2C sensors, LiPo charging, and switching regulator. I2C bus missing pull-ups flagged but may have internal pull-ups in ESP32-C3 module. Crystal value 32.768Hz should be 32.768kHz.",
+      "correct": [
+        {
+          "description": "SY8088 switching regulator correctly identified with inductor L1, input +5V"
+        },
+        {
+          "description": "MCP73831 LiPo charger correctly placed in VBUS/+BATT power domains"
+        },
+        {
+          "description": "USB ESD protection (LESD5D5.0CT1G on D+/D-) correctly detected"
+        },
+        {
+          "description": "I2C bus detected with SHTC3 and ICM-42670-P sensors on SCL/SDA"
+        },
+        {
+          "description": "P-channel MOSFET Q1 (DMG3415U) power path switch correctly identified between VBUS/+BATT/+5V"
+        },
+        {
+          "description": "Reset circuit with pull-up and filter cap correctly detected on CHIP_PU net"
+        },
+        {
+          "description": "Power domains correctly map 6 ICs across +3V3, +5V, VBUS, +BATT rails"
+        },
+        {
+          "description": "UART TX/RX detected between ESP32-C3 (U3) and board connector (U4)"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Crystal Y1 value shown as 32.768Hz - should be 32.768kHz (frequency field is null, value string not parsed)",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "I2C bus shows has_pull_up=false but ESP32-C3 has internal pull-ups and board may use them intentionally",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "Switching regulator output_rail is null - should be +3V3 (SY8088 feeds the 3.3V domain)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Subcircuit neighbors are identical for all 6 ICs - neighbor detection appears broken, listing same caps for every IC regardless of actual connectivity",
+          "analyzer_section": "subcircuits"
+        }
+      ],
+      "missed": [
+        {
+          "description": "WS2812B addressable RGB LED (D9) not identified as a smart LED requiring data signal - classified as generic LED",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "LiPo charging circuit (MCP73831) charge current setting resistor not analyzed",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [
+        "Parse crystal frequency from value string (32.768kHz, 32.768Hz patterns)",
+        "Fix subcircuit neighbor detection - currently returns same list for all ICs",
+        "Detect WS2812B / addressable LED data chains",
+        "Analyze LiPo charger program resistor for charge current calculation"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000114",
+      "repo": "esp-rust-board",
+      "project": "hardware_esp-rust-board_esp-rust-board",
+      "created": "2026-03-14T07:49:47.205936+00:00"
+    }
+  ]
+}

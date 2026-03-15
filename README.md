@@ -237,6 +237,34 @@ Issue prefixes: `KH-*` for kicad-happy analyzer bugs, `TH-*` for test harness is
 **Numbers are globally unique and never reused.** Before creating a new issue, check the
 "Numbering convention" section at the top of ISSUES.md for the next available number.
 
+### Issue tracking protocol
+
+This protocol must be followed whenever issues are discovered or resolved:
+
+**Discovery** -- When running analyzers, reviewing outputs, or doing Layer 3 reviews, add
+new issues to ISSUES.md immediately. Don't wait for a dedicated triage step. Update existing
+issues with new evidence from additional repos.
+
+**Creating issues** -- Check the "Numbering convention" section in ISSUES.md for the next
+available number. Check both ISSUES.md and FIXED.md to avoid reusing numbers. Each issue
+entry must include: severity, component (file + function), description, evidence (repo +
+specific output), and proposed fix.
+
+**Fixing issues** -- When an issue is fixed, **in the same session**:
+1. Remove the issue entry from ISSUES.md
+2. Add a detailed entry to FIXED.md with: root cause, fix description, and verification results
+3. Update the priority queue at the bottom of ISSUES.md
+4. Clean up any consecutive `---` separators left by removals
+
+This is not optional -- updating ISSUES.md and FIXED.md is part of the fix itself, not a
+follow-up step.
+
+**Severity levels**:
+- **CRITICAL** -- Cascading failures, major data loss, large portions of output unusable
+- **HIGH** -- Significant accuracy impact, many false positives/negatives, missing important data
+- **MEDIUM** -- Localized false positives or misclassifications; workarounds exist
+- **LOW** -- Cosmetic, minor noise, or edge cases affecting few files
+
 ```bash
 # Check current issue status
 cat ISSUES.md                    # open issues + priority queue

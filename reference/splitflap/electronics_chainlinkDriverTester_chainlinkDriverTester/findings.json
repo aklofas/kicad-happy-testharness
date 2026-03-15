@@ -1,0 +1,54 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/splitflap/electronics/chainlinkDriverTester/chainlinkDriverTester.sch",
+      "status": "confirmed",
+      "summary": "Legacy KiCad 5 schematic with 141 components. Components, nets, and BOM extracted correctly. 0 signals detected due to KH-016 (legacy wire-to-pin connectivity limitation). Design has voltage regulators (AP7361C-33E, LM7805, buck converter), I2C devices (MCP23017, INA219), motor driver (VN7007ALH), ESP32 module, and shift registers which should yield multiple signal detections once KH-016 is resolved.",
+      "correct": [
+        {
+          "description": "All 141 components extracted with correct references, values, and lib_ids"
+        },
+        {
+          "description": "Component type classification correct: 7 ICs, 22 connectors, 13 resistors, 8 capacitors, 65 test points, LEDs, fuse, buzzer, switch"
+        },
+        {
+          "description": "Power rails correctly identified: +12V, +3.3V, +3V3, +5V, GND"
+        },
+        {
+          "description": "179 nets extracted with 80 named nets and proper pin associations"
+        },
+        {
+          "description": "BOM has 44 unique parts with correct footprint assignments"
+        },
+        {
+          "description": "7 subcircuits identified around ICs with neighbor components"
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "No signal analysis detected (0 signals) - voltage regulators (AP7361C-33E 3.3V LDO, LM7805 5V, buck converter), I2C bus (MCP23017 + INA219), motor driver circuit (VN7007ALH), and buzzer circuit should all be detectable",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "+3.3V and +3V3 are likely the same rail but listed separately - could note this as a design observation",
+          "analyzer_section": "design_analysis"
+        }
+      ],
+      "suggestions": [
+        "Resolving KH-016 would enable signal detection for this component-rich design",
+        "Could flag +3.3V vs +3V3 duplicate rail naming as a design observation"
+      ],
+      "related_issues": [
+        "KH-016"
+      ],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000076",
+      "repo": "splitflap",
+      "project": "electronics_chainlinkDriverTester_chainlinkDriverTester",
+      "created": "2026-03-14T07:23:06.802414+00:00"
+    }
+  ]
+}

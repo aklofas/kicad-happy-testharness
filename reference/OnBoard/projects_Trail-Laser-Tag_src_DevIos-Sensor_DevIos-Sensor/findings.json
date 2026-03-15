@@ -1,0 +1,41 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/OnBoard/projects/Trail-Laser-Tag/src/DevIos-Sensor/DevIos-Sensor.kicad_sch",
+      "status": "confirmed",
+      "summary": "Simple IR receiver board with two TSOP38438 IR receivers, a decoupling cap, and a current limiting resistor. Minimal design correctly analyzed.",
+      "correct": [
+        {
+          "description": "Two TSOP38438 IR receivers correctly identified as IC type"
+        },
+        {
+          "description": "Two 3-pin connectors for signal output correctly classified"
+        },
+        {
+          "description": "RC filter detected (R1 100R + C1 100nF) which is the recommended TSOP power supply filtering"
+        },
+        {
+          "description": "GND power rail correctly detected"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "C1 is typed as C_Polarized (Device:C_Polarized) but value 100nF suggests it is likely a ceramic capacitor, not polarized. However this is the schematic symbol choice, not an analyzer error.",
+          "analyzer_section": "bom"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "The two IR receivers with outputs combined on one net could be noted as a design observation about redundant/multi-zone IR sensing"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000105",
+      "repo": "OnBoard",
+      "project": "projects_Trail-Laser-Tag_src_DevIos-Sensor_DevIos-Sensor",
+      "created": "2026-03-14T07:26:30.896247+00:00"
+    }
+  ]
+}
