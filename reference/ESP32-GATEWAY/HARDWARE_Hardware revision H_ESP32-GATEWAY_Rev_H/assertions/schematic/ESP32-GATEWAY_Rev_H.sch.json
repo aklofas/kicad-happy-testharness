@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~186 (tolerance 10%)",
+      "description": "Net count ~181 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 167,
-        "max": 205
+        "min": 162,
+        "max": 200
       }
     },
     {
@@ -42,6 +42,24 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "4 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "9 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "1 ethernet_interfaces detected",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
@@ -50,8 +68,35 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "2 transistor_circuits detected",
+      "id": "SEED-00000008",
+      "description": "0 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 0
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "2 protection_devices detected",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "4 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "3 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
         "op": "min_count",
@@ -59,7 +104,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000012",
       "description": "Has 21 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -68,7 +113,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000013",
       "description": "Has 10 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -77,12 +122,21 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000014",
       "description": "Has 39 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
         "value": 19
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "Has 5 transistor(s)",
+      "check": {
+        "path": "statistics.component_types.transistor",
+        "op": "min_count",
+        "value": 2
       }
     }
   ]

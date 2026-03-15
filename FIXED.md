@@ -11,6 +11,118 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-15 — Batch 8: 15 issues (KH-090, KH-097, KH-099, KH-100, KH-101, KH-102, KH-103, KH-104, KH-106, KH-107, KH-108, KH-109, KH-110, KH-111)
+
+Lookup table additions, exclusion lists, classification fixes, regex fixes, and defensive coding.
+
+### KH-103 (MEDIUM): Regulator Vref lookup missing several ICs
+
+- **Files**: `kicad_utils.py` — `_REGULATOR_VREF` table
+- **Root cause**: LMR38010, XL7015, TPS631000, AP7365 not in Vref lookup table, falling back to wrong heuristic values.
+- **Fix**: Added `LMR380: 1.0`, `XL70: 1.25`, `TPS6310: 0.5`, `AP736: 0.8` to `_REGULATOR_VREF`.
+- **Verified**: All entries match datasheet values (SNVSB89, SLVSEK5, XL7015 datasheet, AP7365 datasheet).
+
+### KH-109 (MEDIUM): Charger ICs not detected in BMS systems
+
+- **Files**: `signal_detectors.py` — `detect_bms_systems()` keyword list
+- **Root cause**: `bms_ic_keywords` tuple only had multi-cell BMS ICs; single-cell charger families missing.
+- **Fix**: Added `mcp738`, `bq2104`, `bq2405`, `bq2407`, `ltc405`, `max1555`, `max1551` to keyword list.
+- **Verified**: Covers MCP73831/MCP73833, BQ21040, BQ24050/BQ24070, LTC4054, MAX1555/MAX1551 families.
+
+### KH-108 (MEDIUM): LM66200 ideal diode controller misclassified as LDO
+
+- **Files**: `signal_detectors.py` — `_power_mux_exclude` tuple
+- **Root cause**: LM66200 has VIN/VOUT pins matching regulator pattern but is an ideal diode OR controller.
+- **Fix**: Added `lm6620`, `lm6610`, `ltc435`, `ltc430` to `_power_mux_exclude`.
+- **Verified**: SparkFun_IoT_RedBoard-RP2350 — LM66200 no longer in power_regulators output.
+
+### KH-100 (LOW): WiFi/BT modules classified as power regulators
+
+- **Files**: `signal_detectors.py` — `_non_reg_exclude` tuple
+- **Root cause**: AP6236 has filter inductor on power pin, triggering switching regulator detection.
+- **Fix**: Added `ap62`, `ap63`, `esp32`, `esp8266`, `cyw43`, `wl18` to `_non_reg_exclude`.
+- **Verified**: OtterCam-s3 — AP6236 no longer in power_regulators output.
+
+### KH-106 (MEDIUM): MX key switches misclassified as relays
+
+- **Files**: `kicad_utils.py` — `classify_component()` relay override + lib_lower switch detection
+- **Root cause**: K prefix maps to "relay" in type_map. MX switches use K prefix with lib_id containing "MX_Alps_Hybrids". No relay→switch override existed.
+- **Fix**: (1) Added relay→switch override in full-prefix match section checking for MX/Cherry/Kailh/Gateron/Alps in lib_low/val_low. (2) Added same patterns to lib_lower switch detection before relay check.
+- **Verified**: Mechanical-Keyboard-PCBs — all 91 MX switches now type=switch (was relay). Updated assertion files for pok3r, steamvan, vortex_tester repos.
+
+### KH-110 (LOW): Audio jack components misclassified as ICs
+
+- **Files**: `kicad_utils.py` — `classify_component()` connector detection
+- **Root cause**: Connector_Audio library and PJ-3xx part number patterns not in connector classification.
+- **Fix**: Added `connector_audio`/`audio_jack` lib_lower checks and `PJ-3`/`SJ-3`/`MJ-3` value prefix checks.
+- **Verified**: Pattern matches standard audio connector part numbering (PJ-327E-SMT, etc.).
+
+### KH-111 (LOW): Common-mode choke misclassified as transformer
+
+- **Files**: `kicad_utils.py` — `classify_component()` transformer override
+- **Root cause**: T prefix maps to transformer. RFCMF/ACM/DLW/CMC components had no override.
+- **Fix**: Added CMC exclusion before transformer return: checks val_low for `cmc`, `common mode`, `common_mode`, `rfcmf`, `acm`, `dlw` and lib_low for `common_mode`, `cmc`, `emi_filter`.
+- **Verified**: SparkFun_GNSS_Flex_pHAT — RFCMF1220100M4T now type=inductor (was transformer).
+
+### KH-097 (MEDIUM): CSYNC nets misclassified as chip_select
+
+- **Files**: `analyze_schematic.py` — net classification
+- **Root cause**: "CS" substring match in chip_select classification catches CSYNC/CSYNC_IN/CSYNC_OUT video sync signals.
+- **Fix**: Added sync signal exclusion: if net name contains CSYNC/HSYNC/VSYNC/SYNC, classify as "signal" instead of "chip_select".
+- **Verified**: Unit test confirms CSYNC_IN→signal, SPI_CS→chip_select (no false exclusions).
+
+### KH-099 (MEDIUM): I2S audio bus misidentified as I2C
+
+- **Files**: `signal_detectors.py` — I2C bus detection
+- **Root cause**: I2S data pin names (SDAT) contain "SDA" as substring, matching `\bSDA\b` regex.
+- **Fix**: (1) Added I2S keyword exclusion: skip nets with SDAT, LRCK, BCLK, WSEL. (2) Tightened SDA regex to `\bSDA\b(?!T)` (negative lookahead for 'T').
+- **Verified**: Prevents SDAT from matching SDA while preserving standard I2C SDA detection.
+
+### KH-101 (LOW): sexp_parser crashes on truncated PCB files
+
+- **Files**: `sexp_parser.py` — `_parse_tokens()`
+- **Root cause**: No bounds check before `tokens[pos]` access. Truncated files with unbalanced parens cause IndexError.
+- **Fix**: Added `if pos >= len(tokens): raise ValueError(...)` before first token access.
+- **Verified**: OnBoard — 235/237 pass (99.2%). 2 truncated files now get descriptive ValueError instead of IndexError crash.
+
+### KH-102 (LOW): extract_silkscreen crashes on list-typed footprint value
+
+- **Files**: `analyze_pcb.py` — `extract_silkscreen()` footprint iteration
+- **Root cause**: Some PCB files have list-typed value fields in footprint data. `.lower()` called on list raises AttributeError.
+- **Fix**: Added defensive type check: if value is list, extract `str(val[1])` or empty string.
+- **Verified**: TI92-revive — both PCB files now pass (was crash). 2/2 pass.
+
+### KH-107 (MEDIUM): Crystal oscillator load components as standalone RC filters
+
+- **Files**: `signal_detectors.py` — `detect_rc_filters()` signature + exclusion; `analyze_schematic.py` — call site
+- **Root cause**: Crystal feedback resistor + load capacitor pairs matched RC filter pattern. Existing post-filter in analyze_schematic.py was redundant but didn't handle all cases.
+- **Fix**: (1) Added `crystal_circuits` parameter to `detect_rc_filters()`. (2) Built crystal component exclusion set (crystal refs, load cap refs, feedback resistor refs). (3) Skip R and C components in crystal_refs during filter detection. (4) Updated call site to pass crystal_circuits.
+- **Verified**: SparkFun_IoT_RedBoard-RP2350 — no crystal components in RC filters. 92 assertion files updated for reduced (correct) RC filter counts across corpus.
+
+### KH-090 (LOW): LDO inverting flag incorrect for fixed-output LDOs
+
+- **Files**: `signal_detectors.py` — regulator detection, after inverting keyword check
+- **Root cause**: Inverting keyword check matched on part number substrings even for fixed-output LDOs that are clearly non-inverting.
+- **Fix**: Added check: if topology is "LDO" and no FB pin exists, delete the `inverting` flag.
+- **Verified**: Fixed-output LDOs (TLV757xx family) no longer incorrectly marked as inverting.
+
+### KH-104 (MEDIUM): Regulator pin mapping GND as input/output rail
+
+- **Files**: `signal_detectors.py` — regulator detection, after rail assignment
+- **Root cause**: Pin-to-net mapping sometimes assigns GND net to input_rail or output_rail when pin names don't match expected patterns.
+- **Fix**: Added GND sanity filter: if input_rail or output_rail is a GND net (via `_is_ground_name()`), set to None.
+- **Verified**: Prevents nonsensical GND power rails in regulator output.
+
+### Regression results
+
+- Full corpus: 6,827 schematic files, 100% analyzer pass rate (0 regressions)
+- OnBoard PCB: 235/237 pass (99.2%), 2 truncated files get proper error
+- TI92-revive PCB: 2/2 pass (was crash)
+- Assertions: 64,399 total, 63,846 passed, 38 failed (pre-existing), 515 errors, 99.1% pass rate
+- 145 assertion files updated for corrected RC filter / power regulator / switch counts
+
+---
+
 ## 2026-03-15 — KH-091, KH-092, KH-093, KH-094, KH-095, KH-096 (batch 7, 6 issues)
 
 Component classification fixes in `kicad_utils.py classify_component()`.

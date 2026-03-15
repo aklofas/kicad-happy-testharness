@@ -15,7 +15,7 @@ Last updated: 2026-03-15
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-103**. Next TH number: **TH-008**.
+number: **KH-116**. Next TH number: **TH-008**.
 
 ---
 
@@ -85,24 +85,6 @@ number: **KH-103**. Next TH number: **TH-008**.
 **Findings**: FND-155, FND-158
 
 
-### KH-090 — LDO inverting flag incorrect for fixed-output LDOs (LOW)
-
-**Affected**: ISS-PCB
-**File**: `signal_detectors.py`, regulator topology detection
-**Symptom**: TLV75733PDRV (fixed-output 3.3V LDO) marked as `inverting=true`. TLV757xx family is a standard positive fixed-output LDO.
-**Fix direction**: Check for fixed-output LDOs (no FB pin, or fixed output voltage in part number) and set inverting=false.
-**Findings**: FND-153
-
-
-### KH-097 — CSYNC nets misclassified as chip_select (MEDIUM)
-
-**Affected**: Duplicanator-Scart-Duplicator
-**File**: `signal_detectors.py`, net classification
-**Symptom**: CSYNC_IN/CSYNC_OUT1/CSYNC_OUT2 (composite sync video signals) classified as 'chip_select' due to 'CS' substring match. CSYNC/HSYNC/VSYNC are video synchronization signals.
-**Fix direction**: Add CSYNC/HSYNC/VSYNC pattern exclusion before chip_select matching on 'CS' prefix.
-**Findings**: FND-185
-
-
 ### KH-098 — Flyback diode not detected in drain-to-supply topology (MEDIUM)
 
 **Affected**: KiDiff test cases
@@ -112,40 +94,49 @@ number: **KH-103**. Next TH number: **TH-008**.
 **Findings**: FND-191, FND-192
 
 
-### KH-099 — I2S audio bus misidentified as I2C (MEDIUM)
+### KH-105 — 3-resistor feedback networks not handled (MEDIUM)
 
-**Affected**: NUS-CPU-03-Nintendo-64-Motherboard
-**File**: `signal_detectors.py`, I2C detection
-**Symptom**: 9480F.SDAT (I2S serial audio data) classified as I2C SDA. I2S uses SDAT/LRCK/BCLK which is distinct from I2C SDA/SCL. No I2S bus detector exists.
-**Fix direction**: Exclude nets with I2S-related names (SDAT, LRCK, BCLK, WSEL) from I2C detection. Consider adding I2S bus detector.
-**Findings**: FND-172
-
-
-### KH-101 — sexp_parser crashes on truncated/malformed PCB files (LOW)
-
-**Affected**: OnBoard — `projects/holy60-3d/src/holy60-3d.kicad_pcb`, `projects/tofyKeeb/src/tofyKeeb.kicad_pcb`
-**File**: `sexp_parser.py`, `_parse_tokens()` line 67
-**Symptom**: `IndexError: list index out of range` when `tokens[pos]` exceeds token list bounds. Likely truncated or malformed `.kicad_pcb` files where parentheses are unbalanced.
-**Fix direction**: Add bounds check in `_parse_tokens()` to raise a descriptive error instead of IndexError, or catch at `parse_file()` level.
-**Impact**: Crashes analyzer on 2 known files. No output produced. Parser bug, not analyzer logic.
+**Affected**: KevinbotV3-KiCAD
+**File**: `signal_detectors.py`, voltage divider / regulator Vout estimation
+**Symptom**: LM25145 buck converter has R56 (18k) + R59 (2.15k) in series as top resistor, R58 (3.4k) as bottom. Analyzer only sees two resistors, estimates 0.979V instead of correct 5V.
+**Fix direction**: Detect series resistor pairs in feedback networks. When two resistors share a node that connects only to each other (no other components), treat them as a single combined resistance.
+**Findings**: FND-199, FND-200
 
 
-### KH-102 — extract_silkscreen crashes when footprint value is a list (LOW)
+### KH-112 — Ferrite bead impedance notation parsed as inductance (LOW)
 
-**Affected**: TI92-revive — `ti92-reviceStable/ti92-reviceStable.kicad_pcb`, `ti92revive/ti92revive.kicad_pcb`
-**File**: `analyze_pcb.py`, `extract_silkscreen()` line 2001
-**Symptom**: `AttributeError: 'list' object has no attribute 'lower'` on `fp.get("value", "").lower()`. The footprint's `value` field is parsed as a list instead of a string, likely from an unusual s-expression structure in the PCB file.
-**Fix direction**: Defensive coercion: `val = str(fp.get("value", "")).lower()` or check type before calling `.lower()`.
-**Impact**: Crashes analyzer on 2 known files. No output produced.
+**Affected**: kicad/panstamp-nrg3
+**File**: `kicad_utils.py`, `parse_value()` or signal detection
+**Symptom**: Ferrite bead value "600R/200mA" parsed as 600H inductance, creating nonsensical LC filter detections with impossibly high inductance values.
+**Fix direction**: Detect ferrite bead impedance notation (nnnR or nnn@xxxMHz) and classify as ferrite bead rather than inductor.
+**Findings**: FND-194
 
 
-### KH-100 — WiFi/BT modules classified as power regulators (LOW)
+### KH-113 — RS485 transceivers false positive on current sense detection (LOW)
 
-**Affected**: OtterCam-s3
-**File**: `signal_detectors.py`, regulator detection
-**Symptom**: AP6236 WiFi/BT combo module classified as power regulator with topology ic_with_internal_regulator because it has an inductor on its power pin (filter inductor, not switching regulator inductor).
-**Fix direction**: Add WiFi/BT/wireless module families (AP6xxx, ESP32, CYW43xxx, etc.) to the non-regulator exclusion list in detect_power_regulators().
-**Findings**: FND-180
+**Affected**: Gas-sens_Rs-485
+**File**: `signal_detectors.py`, current sense detection
+**Symptom**: R12 (R220) with LT1785 RS485 transceiver misidentified as current shunt + sense IC. The resistor is a bus termination/bias resistor, not a current sense shunt.
+**Fix direction**: Add RS485/RS232 transceiver families to current sense IC exclusion list (LT1785, MAX485, SN65HVD, etc.).
+**Findings**: FND-202, FND-203
+
+
+### KH-114 — Active oscillators treated as passive crystals (LOW)
+
+**Affected**: explorer
+**File**: `signal_detectors.py`, crystal circuit detection
+**Symptom**: SG-8002CA active oscillator has decoupling caps on its power pin misidentified as crystal load capacitors, producing nonsensical 50003pF load capacitance.
+**Fix direction**: Distinguish active oscillators (4-pin, have VCC/GND pins) from passive crystals (2-pin). Active oscillators should not have load_capacitance analysis.
+**Findings**: FND-215
+
+
+### KH-115 — Multi-tap resistor attenuators generate spurious voltage dividers (LOW)
+
+**Affected**: Ventilator
+**File**: `signal_detectors.py`, voltage divider detection
+**Symptom**: 3-resistor attenuator chains produce multiple pairwise voltage divider detections for each sub-pair, when only the overall divider ratio is meaningful.
+**Fix direction**: Detect chains of 3+ series resistors and report the overall divider rather than all combinatorial pairs.
+**Findings**: FND-207
 
 ---
 
@@ -157,10 +148,9 @@ number: **KH-103**. Next TH number: **TH-008**.
 4. **KH-082** (MEDIUM) — TVS IC protection devices not detected
 5. **KH-085** (MEDIUM) — RF chain keyword lists too narrow
 6. **KH-087** (MEDIUM) — Switching regulator output_rail missing
-7. **KH-097** (MEDIUM) — CSYNC nets as chip_select
-8. **KH-098** (MEDIUM) — Flyback diode drain-to-supply not detected
-9. **KH-099** (MEDIUM) — I2S misidentified as I2C
-10. **KH-090** (LOW) — LDO inverting flag incorrect
-11. **KH-100** (LOW) — WiFi modules as power regulators
-12. **KH-101** (LOW) — sexp_parser crash on truncated PCB files
-13. **KH-102** (LOW) — extract_silkscreen crash on list-typed value
+7. **KH-098** (MEDIUM) — Flyback diode drain-to-supply not detected
+8. **KH-105** (MEDIUM) — 3-resistor feedback networks
+9. **KH-112** (LOW) — Ferrite bead impedance as inductance
+10. **KH-113** (LOW) — RS485 transceiver current sense FP
+11. **KH-114** (LOW) — Active oscillators as passive crystals
+12. **KH-115** (LOW) — Multi-tap attenuator spurious dividers

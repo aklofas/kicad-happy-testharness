@@ -42,9 +42,18 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "Has 5 other(s)",
+      "description": "5 protection_devices detected",
       "check": {
-        "path": "statistics.component_types.other",
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Has 5 varistor(s)",
+      "check": {
+        "path": "statistics.component_types.varistor",
         "op": "min_count",
         "value": 2
       }

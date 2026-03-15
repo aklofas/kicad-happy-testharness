@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~87 (tolerance 10%)",
+      "description": "Net count ~91 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 78,
-        "max": 96
+        "min": 81,
+        "max": 101
       }
     },
     {
@@ -42,6 +42,15 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "1 key_matrices detected",
       "check": {
         "path": "signal_analysis.key_matrices",
@@ -50,7 +59,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "Has 64 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -59,7 +68,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "Has 66 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

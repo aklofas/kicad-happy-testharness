@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~177 (tolerance 10%)",
+      "description": "Net count ~121 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 159,
-        "max": 195
+        "min": 108,
+        "max": 134
       }
     },
     {
@@ -42,7 +42,16 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 design_observations detected",
+      "description": "1 crystal_circuits detected",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "2 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -50,7 +59,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "1 ethernet_interfaces detected",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
@@ -59,7 +68,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "Has 28 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -68,12 +77,12 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "Has 15 resistor(s)",
+      "id": "SEED-00000009",
+      "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 7
+        "value": 8
       }
     }
   ]

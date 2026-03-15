@@ -51,7 +51,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "5 design_observations detected",
+      "description": "8 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -102,46 +102,6 @@
         "op": "min_count",
         "value": 3
       }
-    },
-    {
-      "id": "FND-00000015-AST-00000001",
-      "description": "REVIEW: R78(2.2k)/R79(10k) and R88(2.2k)/R89(10k) in power_distribution detected as voltage dividers but are actually BJT base bias networks for Q11 and Q8. Mid-point connects to transistor base (B2 pin). Topologically correct but functionally misleading",
-      "created_from": "FND-00000015",
-      "check": {
-        "path": "",
-        "op": "exists"
-      },
-      "needs_review": true
-    },
-    {
-      "id": "FND-00000015-AST-00000002",
-      "description": "REVIEW: R118(1k)/R102(5.1k) detected as voltage divider on FPGA_CONFIG.~{INIT}. R118 is a series resistor from U6:PA03, R102 is a pull-down. Topology is a divider but function is series-resistor-with-pulldown for FPGA init pin",
-      "created_from": "FND-00000015",
-      "check": {
-        "path": "",
-        "op": "exists"
-      },
-      "needs_review": true
-    },
-    {
-      "id": "FND-00000015-AST-00000003",
-      "description": "REVIEW: Y1 (DSC60xx) classified under crystal_circuits but is a programmable oscillator module (not a bare crystal). Frequency null - failed to parse '60MHz' from 'Osc60MHz' value",
-      "created_from": "FND-00000015",
-      "check": {
-        "path": "",
-        "op": "exists"
-      },
-      "needs_review": true
-    },
-    {
-      "id": "FND-00000015-AST-00000004",
-      "description": "REVIEW: J1 and J4 CC pulldown checks fail but CC lines connect to FUSB302B ICs (U2, U12) which manage CC internally. Not a real compliance issue",
-      "created_from": "FND-00000015",
-      "check": {
-        "path": "",
-        "op": "exists"
-      },
-      "needs_review": true
     }
   ]
 }

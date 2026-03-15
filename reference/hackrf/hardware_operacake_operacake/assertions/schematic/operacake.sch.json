@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~311 (tolerance 10%)",
+      "description": "Net count ~284 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 279,
-        "max": 343
+        "min": 255,
+        "max": 313
       }
     },
     {
@@ -69,6 +69,15 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "2 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "1 rf_chains detected",
       "check": {
         "path": "signal_analysis.rf_chains",
@@ -77,7 +86,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "Has 35 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -86,16 +95,16 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "Has 7 connector(s)",
+      "id": "SEED-00000011",
+      "description": "Has 17 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 3
+        "value": 8
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 10 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -104,7 +113,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 16 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -113,7 +122,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "Has 18 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -122,21 +131,12 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "Has 6 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
         "op": "min_count",
         "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000015",
-      "description": "Has 10 other(s)",
-      "check": {
-        "path": "statistics.component_types.other",
-        "op": "min_count",
-        "value": 5
       }
     },
     {

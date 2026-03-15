@@ -78,7 +78,7 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "3 protection_devices detected",
+      "description": "1 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "min_count",
@@ -96,7 +96,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 transistor_circuits detected",
+      "description": "5 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
         "op": "min_count",
@@ -141,15 +141,6 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "Has 8 ic(s)",
-      "check": {
-        "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 4
-      }
-    },
-    {
-      "id": "SEED-00000017",
       "description": "Has 5 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
@@ -158,12 +149,21 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "Has 24 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
         "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "Has 5 transistor(s)",
+      "check": {
+        "path": "statistics.component_types.transistor",
+        "op": "min_count",
+        "value": 2
       }
     }
   ]

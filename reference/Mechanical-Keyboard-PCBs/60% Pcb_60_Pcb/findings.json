@@ -1,0 +1,48 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "60% Pcb_matrix.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "60% mechanical keyboard switch matrix with 68 keys across 5 rows and 15 columns, using Cherry MX-compatible switches with per-key diodes and LED resistors. Analyzer correctly detected the key matrix but misclassified MX switch components as relays.",
+      "correct": [
+        {
+          "description": "Key matrix correctly detected as 5 rows x 15 columns with 68 estimated keys, matching the 68 diodes in the schematic",
+          "analyzer_section": "signal_analysis.key_matrices"
+        },
+        {
+          "description": "Row nets ROW0-ROW4 and column nets COL0-COL14 correctly identified by net name pattern",
+          "analyzer_section": "signal_analysis.key_matrices"
+        },
+        {
+          "description": "68 diodes (D1-D68) correctly classified as diode type for anti-ghosting",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "68 resistors (R1-R68) correctly classified - these are per-key LED current-limiting resistors",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "+5V power rail correctly identified as the only power rail (for LED supply)",
+          "analyzer_section": "statistics.power_rails"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "91 MX key switches (K_ESC1, K_#1, K_TAB1, K_CAPS1, K_ENTER1, etc.) are classified as 'relay' type. These are MX_Alps_Hybrids library symbols representing Cherry MX mechanical keyboard switches, not relays. They should be classified as 'switch' or 'key_switch'",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "key_matrices shows switches_on_matrix=0 despite 91 switch symbols being present. The MX switches are the matrix switches but are not recognized because they are classified as relays instead of switches",
+          "analyzer_section": "signal_analysis.key_matrices"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Add MX_Alps_Hybrids library symbols (MX-1U, MX-1.25U, MX-1.5U, MX-1.75U, MX-2U, MX-2.25U, MX-2.75U, MX-6.25U, MX-7U, MX-ISO) to the switch/key_switch classification instead of relay",
+        "When key_matrices detection finds row/col nets, cross-reference with components on those nets to populate switches_on_matrix"
+      ],
+      "related_issues": []
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Hardware_SparkFun_GNSS_Flex_Breakout.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "GNSS flex breakout board with CH342F dual UART, 74HC4066 analog switches for signal routing, microSD slot, dual 2x10 GNSS plug-in headers, and USB-C. Analyzer correctly identifies regulators and ESD protection but misses several bus interfaces.",
+      "correct": [
+        {
+          "description": "AP7361C-3.3V (U4) correctly identified as fixed 3.3V LDO with 5V input",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "RT9080-3.3 (U1) correctly identified as fixed 3.3V LDO with 5V input",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "D1 DF5A5.6LFU correctly identified as multi-line ESD protection on SD card lines (SD_CLK, SD_DAT0, SD_CMD)",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "D21 DT1042-04SO correctly identified as ESD protection on multiple signal lines",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "D22 and D19 BAT60A Schottky diodes correctly classified",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "F1 6V/2A fuse correctly identified for circuit protection",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "3 decoupling rails (3.3V with 13 caps/46.3uF, 5V with 4 caps/22uF, VUSB2 with 1 cap) correctly analyzed",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        },
+        {
+          "description": "U5 and U3 74HC4066BQ correctly classified as ICs (analog switches for signal routing)",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "U2 CH342F correctly classified as IC (dual USB-UART bridge)",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "Design observation correctly flags U1 RT9080-3.3 missing output capacitor",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "47 protection devices comprehensively detected across SD card, GNSS, and USB signal lines",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TR2 RFCMF1220100M4T classified as type 'transformer' -- it is actually a common-mode choke/filter used for USB EMI suppression, not a power or signal transformer",
+          "analyzer_section": "components"
+        }
+      ],
+      "missed": [
+        {
+          "description": "I2C bus on SDA/SCL lines routed through GNSS headers not detected as bus interface",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        },
+        {
+          "description": "SD card interface (SD_CLK, SD_DAT0, SD_CMD, SD_DAT3) connecting to J1 microSD_Friction with ESD protection (D1) not detected as memory/storage interface",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        },
+        {
+          "description": "USB-C interface through CH342F (U2) dual UART bridge not detected as USB bus",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        },
+        {
+          "description": "74HC4066BQ (U3, U5) analog switch signal routing for GNSS UART multiplexing not analyzed -- these route UART TX/RX between GNSS module and CH342F or RP2350",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "No voltage dividers detected, but R5=100k and other resistors may form enable/bias networks worth flagging",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        }
+      ],
+      "suggestions": [
+        "Classify RFCMF-series parts as common-mode chokes rather than transformers (check for USB_Transformer in lib_id)",
+        "Add SD card interface detection when microSD connector + CLK/CMD/DAT signals are present",
+        "Detect CH342F as USB-UART bridge and create USB bus interface entry",
+        "Recognize 74HC4066 analog switches as signal routing elements"
+      ],
+      "related_issues": [],
+      "id": "FND-00000206",
+      "repo": "SparkFun_GNSS_Flex_Breakout",
+      "project": "Hardware_SparkFun_GNSS_Flex_Breakout",
+      "created": "2026-03-15T22:45:46.506251+00:00",
+      "datasheets_used": [],
+      "should_become_assertion": false
+    }
+  ]
+}
