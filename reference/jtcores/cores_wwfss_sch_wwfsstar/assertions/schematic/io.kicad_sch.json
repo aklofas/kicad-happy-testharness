@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~134 (tolerance 10%)",
+      "description": "Net count ~132 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 120,
-        "max": 148
+        "min": 118,
+        "max": 146
       }
     },
     {
@@ -51,11 +51,20 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "Has 17 ic(s)",
+      "description": "4 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Has 13 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 8
+        "value": 6
       }
     }
   ]

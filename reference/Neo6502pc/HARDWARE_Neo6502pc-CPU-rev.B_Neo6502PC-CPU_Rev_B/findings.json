@@ -1,0 +1,139 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Neo6502 retro computer board with RP2040 + W65C02S. IDC cables as capacitors, buzzer as switch, expansion bus misclassified, SPI missed, false I2C on HDMI/GPIO.",
+      "correct": [
+        {
+          "description": "All 8 ICs correctly identified (RP2040, W65C02S, etc.)",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "Power rails correctly identified",
+          "analyzer_section": "signal_analysis.power_rails"
+        },
+        {
+          "description": "I2C bus with pullup resistors correctly detected",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        },
+        {
+          "description": "UART interface correctly detected",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        },
+        {
+          "description": "HDMI differential pairs correctly identified",
+          "analyzer_section": "signal_analysis.differential_pairs"
+        },
+        {
+          "description": "USB compliance correctly analyzed",
+          "analyzer_section": "signal_analysis.usb_compliance"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Cable-PWR1 and Cable-pUEXT1 IDC cable connectors classified as capacitor",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "SPK1 piezo buzzer classified as switch instead of transducer",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "BUS1 40-pin expansion bus connector classified as SWD debug connector",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        },
+        {
+          "description": "HDMI and GPIO nets falsely detected as I2C interfaces",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        }
+      ],
+      "missed": [
+        {
+          "description": "SPI bus between RP2040 and peripheral ICs not detected",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        }
+      ],
+      "suggestions": [
+        "Recognize Cable and IDC connector library symbols as connectors not capacitors",
+        "Classify buzzer and speaker symbols as transducer not switch",
+        "Do not classify generic expansion connectors as SWD based solely on pin count",
+        "Validate I2C detection by requiring SCL+SDA net name patterns, not just any pair of signals on pullup resistors",
+        "Detect SPI from MOSI/MISO/SCK/CS net name patterns"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000171",
+      "repo": "Neo6502pc",
+      "project": "HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B",
+      "created": "2026-03-15T19:51:17.666509+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Neo6502 retro computer CPU board (122 components). Correct: all 8 ICs, power rails, I2C with pullups, UART, HDMI pairs, USB compliance, 7 DNP parts. Incorrect: Cable-PWR1/Cable-pUEXT1 as capacitor (are IDC cables), SPK1 buzzer as switch, BUS1 40-pin expansion as SWD debug connector, HDMI/GPIO nets falsely detected as I2C. Missed: SPI bus not detected, test points not in test_coverage.",
+      "correct": [
+        {
+          "description": "All 8 ICs correctly identified (RP2040, W65C02S, CH217K, CH334S, ZD25Q16B, 3x 74LVC245)",
+          "analyzer_section": "bom"
+        },
+        {
+          "description": "I2C bus with 2.2k pullups correctly detected",
+          "analyzer_section": "bus_analysis.i2c"
+        },
+        {
+          "description": "4 HDMI differential pairs with 270R series resistors detected",
+          "analyzer_section": "differential_pairs"
+        },
+        {
+          "description": "USB-C CC 5.1k pulldowns pass compliance",
+          "analyzer_section": "usb_compliance"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Cable-PWR1/Cable-pUEXT1 (IDC cables) misclassified as capacitor",
+          "analyzer_section": "components.type"
+        },
+        {
+          "description": "SPK1 buzzer misclassified as switch",
+          "analyzer_section": "components.type"
+        },
+        {
+          "description": "BUS1 40-pin expansion bus misidentified as SWD debug connector",
+          "analyzer_section": "test_coverage.debug_connectors"
+        },
+        {
+          "description": "HDMI differential signals and GPIO control nets falsely detected as I2C",
+          "analyzer_section": "bus_analysis.i2c"
+        }
+      ],
+      "missed": [
+        {
+          "description": "SPI bus (SPI1_RX/CSn/SCK/TX) not detected despite clear net names",
+          "analyzer_section": "bus_analysis.spi"
+        },
+        {
+          "description": "10 test points (TESTPAD) not in test_coverage despite being in component_types",
+          "analyzer_section": "test_coverage.test_points"
+        }
+      ],
+      "suggestions": [
+        "Add Cable/cable lib_id patterns as connector type",
+        "Add Buzzer/Speaker patterns as speaker type",
+        "Require majority debug pins for debug connector classification",
+        "Filter I2C detection to exclude differential pair nets"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000177",
+      "repo": "Neo6502pc",
+      "project": "HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B",
+      "created": "2026-03-15T19:54:38.225004+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

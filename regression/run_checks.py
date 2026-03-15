@@ -23,6 +23,46 @@ from checks import evaluate_assertion, load_assertions
 from utils import OUTPUTS_DIR, DATA_DIR, project_prefix
 
 
+def check_assertions(data_dir, repo_name=None, analyzer_type=None):
+    """Run assertions and return {total, passed, failed, errors} counts."""
+    assertion_sets = load_assertions(
+        data_dir, repo_name=repo_name, analyzer_type=analyzer_type,
+    )
+    total = passed = failed = errors = 0
+    for aset in assertion_sets:
+        atype = aset.get("analyzer_type", "schematic")
+        file_pattern = aset.get("file_pattern", "")
+        repo = aset.get("_repo", "")
+        project_path = aset.get("_project_path")
+        assertions = aset.get("assertions", [])
+
+        output_file = find_output_file(file_pattern, repo, project_path, atype)
+
+        if not output_file:
+            n = len(assertions)
+            errors += n
+            total += n
+            continue
+
+        try:
+            data = json.loads(output_file.read_text())
+        except Exception:
+            n = len(assertions)
+            errors += n
+            total += n
+            continue
+
+        for assertion in assertions:
+            total += 1
+            result = evaluate_assertion(assertion, data)
+            if result["passed"]:
+                passed += 1
+            else:
+                failed += 1
+
+    return {"total": total, "passed": passed, "failed": failed, "errors": errors}
+
+
 def find_output_file(file_pattern, repo_name, project_path, analyzer_type):
     """Find the output JSON file for an assertion.
 

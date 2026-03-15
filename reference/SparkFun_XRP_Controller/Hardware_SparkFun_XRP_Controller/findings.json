@@ -1,0 +1,124 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Hardware_SparkFun_XRP_Controller.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "SparkFun XRP robot controller with RP2350B. AP63357 reference voltage wrong, bus widths inflated, QSPI interface missed.",
+      "correct": [
+        {
+          "description": "RP2350B microcontroller correctly identified with proper pin count",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "DRV8411A dual motor drivers correctly identified",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "LSM6DSOX IMU correctly identified on I2C bus",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        },
+        {
+          "description": "Crystal Y1 correctly detected",
+          "analyzer_section": "signal_analysis.crystals"
+        },
+        {
+          "description": "USB compliance correctly analyzed",
+          "analyzer_section": "signal_analysis.usb_compliance"
+        },
+        {
+          "description": "WS2812B addressable LED chain correctly detected",
+          "analyzer_section": "signal_analysis.led_chains"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "AP63357 buck converter Vref reported as 0.6V but datasheet specifies 0.765V reference",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "QSPI_D bus width reported as 12, actual QSPI data bus is 4 bits wide",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        }
+      ],
+      "missed": [
+        {
+          "description": "QSPI flash memory interface to W25Q128 not detected as memory bus",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        }
+      ],
+      "suggestions": [
+        "Use correct Vref of 0.765V for AP63357 (check datasheet feedback divider reference)",
+        "Count unique data signals in bus, not total net segments, to avoid inflated bus widths",
+        "Detect QSPI memory interfaces from CS/CLK/D0-D3 net patterns to flash ICs"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000168",
+      "repo": "SparkFun_XRP_Controller",
+      "project": "Hardware_SparkFun_XRP_Controller",
+      "created": "2026-03-15T19:51:15.112609+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Hardware_SparkFun_XRP_Controller.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "SparkFun XRP Controller (RP2350B robotics board). Correct: 184 components, DRV8411A motor drivers, LSM6DSOX IMU, crystal, USB compliance, WS2812B, power OR-ing. Incorrect: AP63357 Vref wrong (0.6V vs 0.765V giving 3.87V vs actual 5V), bus widths inflated by counting label instances across sheets. Missed: QSPI memory interface, SPI to radio module, I2C bus to IMU.",
+      "correct": [
+        {
+          "description": "U1 RP2350B correctly identified with 81 pins",
+          "analyzer_section": "ic_pin_analysis"
+        },
+        {
+          "description": "U7/U8 DRV8411A motor drivers correctly identified",
+          "analyzer_section": "subcircuits"
+        },
+        {
+          "description": "Crystal Y1 12MHz with 15pF load caps correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "USB-C compliance with 5.1k CC pulldowns pass",
+          "analyzer_section": "usb_compliance"
+        },
+        {
+          "description": "D4 WS2812B addressable LED chain detected",
+          "analyzer_section": "signal_analysis.addressable_led_chains"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "AP63357 output voltage calculated as 3.873V using wrong Vref=0.6V (correct Vref=0.765V gives 4.94V matching 5V rail)",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "Bus signal widths inflated: QSPI_D width=12 (actual 4), IMU_INT width=4 (actual 2)",
+          "analyzer_section": "bus_topology.detected_bus_signals"
+        }
+      ],
+      "missed": [
+        {
+          "description": "QSPI memory interface between RP2350B and W25Q128/APS6404L not detected",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "SPI interface to RM2 radio module not detected",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        }
+      ],
+      "suggestions": [
+        "Add AP63357 Vref=0.765V to lookup table",
+        "Fix bus width to count unique signal names not label instances",
+        "Add QSPI bus detection"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000174",
+      "repo": "SparkFun_XRP_Controller",
+      "project": "Hardware_SparkFun_XRP_Controller",
+      "created": "2026-03-15T19:54:38.059535+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

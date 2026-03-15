@@ -5,7 +5,7 @@ repos to process first during Layer 1-3 batch testing sessions. Sorted by
 schematic complexity (total file size) as a proxy for design richness and
 signal detector coverage value.
 
-Last updated: 2026-03-15 | Tested: 285 | Remaining: 759
+Last updated: 2026-03-15 | Tested: 335 | Remaining: 709
 
 ---
 

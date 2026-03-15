@@ -22,7 +22,8 @@ from _differ import extract_manifest_entry
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     list_repos, list_projects_in_data,
-    project_prefix,
+    project_prefix, load_project_metadata,
+    filter_project_outputs,
 )
 
 
@@ -85,9 +86,7 @@ def compare_project(repo_name, project_name, project_path, analyzer_type, only_c
 
     current_manifest = {}
     if current_dir.exists():
-        for jf in sorted(current_dir.glob("*.json")):
-            if prefix and not jf.name.startswith(prefix):
-                continue
+        for jf in filter_project_outputs(current_dir, project_path):
             key = jf.name[len(prefix):] if prefix else jf.name
             try:
                 data = json.loads(jf.read_text())
@@ -212,11 +211,7 @@ def main():
         repo_output = {}
         for proj_name in projects:
             # Read project_path from metadata if available
-            meta_file = DATA_DIR / repo / proj_name / "baselines" / "metadata.json"
-            project_path = "."
-            if meta_file.exists():
-                meta = json.loads(meta_file.read_text())
-                project_path = meta.get("project_path", ".")
+            project_path = load_project_metadata(repo, proj_name).get("project_path", ".")
 
             proj_results = {}
             for atype in types:

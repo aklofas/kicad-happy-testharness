@@ -26,6 +26,7 @@ from utils import (
     HARNESS_DIR, OUTPUTS_DIR, MANIFESTS_DIR, REPOS_DIR, DATA_DIR,
     repo_name_from_path, safe_name as _safe_name,
     filter_manifest_by_repo, list_projects_in_data,
+    load_project_metadata,
 )
 
 PACKETS_DIR = HARNESS_DIR / "results" / "review" / "packets"
@@ -195,11 +196,7 @@ def select_changed(repo_name, count, analyzer_type):
     # Collect scores across all projects
     all_scored = []
     for proj_name in projects:
-        meta_file = DATA_DIR / repo_name / proj_name / "baselines" / "metadata.json"
-        project_path = "."
-        if meta_file.exists():
-            meta = json.loads(meta_file.read_text())
-            project_path = meta.get("project_path", ".")
+        project_path = load_project_metadata(repo_name, proj_name).get("project_path", ".")
 
         results = compare_project(repo_name, proj_name, project_path, analyzer_type)
         if "error" in results:

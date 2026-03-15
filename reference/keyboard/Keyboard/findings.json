@@ -1,0 +1,46 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Keyboard.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Mechanical keyboard (322 components from sub-sheets). Correct: 80 LEDs, 80 caps, 81 diodes, 81 switches all correctly counted; decoupling properly associated with +5V; missing footprints flagged. Incorrect: all 22 global labels flagged as single_use (C1-C15 and R1-R6 appear on multiple sheets). Missed: keyboard switch matrix detection, SK6812 LED daisy-chain.",
+      "correct": [
+        {
+          "description": "322 components correctly counted from sub-sheets",
+          "analyzer_section": "statistics.total_components"
+        },
+        {
+          "description": "Decoupling for 80 SK6812RGBW LEDs correct",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "All 22 global labels flagged as single_use despite appearing on multiple sheets",
+          "analyzer_section": "hierarchical_labels.single_use_global_labels"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Keyboard switch matrix (6x15 with anti-ghosting diodes) not detected",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "SK6812RGBW daisy-chain not detected",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [
+        "Fix single_use_global_labels to count across all hierarchical sheets"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000190",
+      "repo": "keyboard",
+      "project": "Keyboard",
+      "created": "2026-03-15T19:56:01.784737+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

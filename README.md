@@ -1,108 +1,55 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of real-world open-source KiCad projects.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,100+ real-world open-source KiCad projects.
 
-## Regression testing (3-layer approach)
-
-The harness uses three complementary layers to catch regressions and discover improvements.
-All operations are per-repo. Data is organized by `reference/{repo}/{project}/` where project
-is the subpath to the KiCad project directory with `/` encoded as `_`.
-
-### Layer 1: Baselines
-
-Baseline snapshots capture a summary of all analyzer outputs at a point in time. Compact manifests are checked into git (in `reference/`) so any machine can compare against them.
+## Quick start
 
 ```bash
-python3 regression/snapshot.py --repo {repo}       # create baseline
-python3 regression/compare.py --repo {repo}        # diff current vs baseline
-python3 regression/compare.py --all --only-changes    # all repos, only diffs
+# 1. Clone the kicad-happy repo alongside this one (or set KICAD_HAPPY_DIR)
+git clone <kicad-happy-url> ../kicad-happy
+
+# 2. Clone test repos
+python3 checkout.py
+
+# 3. Discover KiCad files
+python3 discover.py
+
+# 4. Run analyzers (use --jobs for parallelism, --repo to target one repo)
+python3 run/run_schematic.py --jobs 4
+python3 run/run_pcb.py --jobs 4
+python3 run/run_gerbers.py --jobs 4
+
+# 5. Snapshot and compare baselines
+python3 regression/snapshot.py --repo {repo}
+python3 regression/compare.py --repo {repo}
+
+# 6. Run assertions
+python3 regression/run_checks.py --repo {repo}
+
+# 7. Validate outputs
+python3 validate/validate_outputs.py --repo {repo}
+
+# 8. Promote improvements
+python3 regression/promote.py --repo {repo} --apply
 ```
 
-### Layer 2: Assertions
+### Requirements
 
-Assertions are machine-checkable facts about what an analyzer should find in a specific file. They live in `reference/{repo}/{project}/assertions/` and provide permanent regression protection.
+- **Python 3.8+** (stdlib only -- no external dependencies for core scripts)
+- **Git** (for cloning test repos)
+
+### Finding kicad-happy
+
+All scripts resolve the kicad-happy analyzer location in this order:
+
+1. `KICAD_HAPPY_DIR` environment variable
+2. `../kicad-happy` (sibling directory)
 
 ```bash
-python3 regression/run_checks.py --repo {repo}     # run assertions
-python3 regression/seed.py --repo {repo}           # generate seed assertions
+export KICAD_HAPPY_DIR=/path/to/kicad-happy   # if not at ../kicad-happy
 ```
 
-Assertion files are JSON with operators like `range`, `min_count`, `equals`, `exists`, `contains_match`, etc. See `regression/checks.py` for the full list.
-
-### Layer 3: LLM review
-
-Review packets pair source KiCad files with analyzer output summaries, making it easy for Claude to independently verify analysis quality and discover issues that deterministic checks miss.
-
-```bash
-python3 regression/packet.py --strategy random --count 5        # random review
-python3 regression/packet.py --strategy changed --repo {repo} # changed files
-
-python3 regression/findings.py list                   # list all findings
-python3 regression/findings.py stats                  # summary statistics
-python3 regression/findings.py render                 # regenerate all findings.md
-python3 regression/findings.py promote FND-00000001   # promote to assertion
-```
-
-### How the ratchet works
-
-The three layers form a feedback loop that tightens over time:
-
-```
-findings → (promote) → assertions → (run_checks) → regression caught
-    ↑                                                       |
-    └──────── drift.py ← (re-check against outputs) ────────┘
-```
-
-- **Baselines** catch broad structural changes (new/removed sections, count shifts)
-- **Assertions** catch specific regressions (a known-good detection disappearing)
-- **Findings** capture context that can't be automated (why something is wrong, what's missing)
-
-`drift.py` closes the loop by re-checking findings against current outputs:
-
-- A "correct" item whose section is now empty → **regression** (analyzer broke something)
-- An "incorrect" item whose count dropped → **possibly fixed** (bug may be resolved)
-- A "missed" item whose section now has data → **now detected** (analyzer improved)
-
-This means findings aren't static records — they stay connected to the live outputs and
-surface drift without requiring manual re-review.
-
-```bash
-python3 regression/drift.py                    # all findings
-python3 regression/drift.py --repo {repo}      # one repo
-python3 regression/drift.py --status confirmed  # filter by status
-python3 regression/drift.py --json              # machine-readable
-```
-
-### Promoting improvements
-
-When analyzer outputs improve, promote the changes to reference data:
-
-```bash
-python3 regression/promote.py --repo {repo}         # dry run
-python3 regression/promote.py --repo {repo} --apply  # promote improvements
-```
-
-### Typical workflow
-
-1. Make changes to the kicad-happy analyzers
-2. Run the analyzers: `python3 run/run_schematic.py --jobs 4`
-3. Compare against baseline: `python3 regression/compare.py --repo {repo} --only-changes`
-4. Run assertions: `python3 regression/run_checks.py --repo {repo}`
-5. Generate review packets for changed files: `python3 regression/packet.py --strategy changed --repo {repo}`
-6. Review packets with Claude, record findings
-7. Promote confirmed findings to assertions
-8. If satisfied, promote to reference: `python3 regression/promote.py --repo {repo} --apply`
-
-## What gets tested
-
-The test corpus exercises:
-
-- **KiCad versions**: 5 through 9 (legacy `.sch` and modern `.kicad_sch`)
-- **Design complexity**: From minimal breakout boards to large hierarchical designs
-- **Domains**: Power, RF, digital, mixed-signal, motor control, audio, sensors
-- **Edge cases**: Multi-instance sheets, unusual footprints, legacy formats
-
-### Analyzer scripts (from kicad-happy)
+## Analyzers under test
 
 | Analyzer | Input | Description |
 |----------|-------|-------------|
@@ -110,181 +57,155 @@ The test corpus exercises:
 | `analyze_pcb.py` | `.kicad_pcb` | Footprints, tracks, vias, zones, DFM analysis |
 | `analyze_gerbers.py` | Gerber directories | Layer completeness, drill alignment |
 
-All analyzers are pure Python 3.8+ stdlib with no dependencies. They produce JSON output.
+All analyzers are pure Python 3.8+ stdlib. They produce JSON output and support KiCad versions 5 through 9.
 
-### Supported file types
+**Note on `.sch` files**: `discover.py` filters legacy `.sch` files by checking the header for "EESchema" (KiCad 5 signature) to exclude Eagle XML/binary `.sch` files.
 
-| Extension | Analyzer | KiCad Version |
-|-----------|----------|---------------|
-| `.kicad_sch` | analyze_schematic.py | 6, 7, 8, 9 |
-| `.sch` | analyze_schematic.py | 5 (legacy, filtered for KiCad format) |
-| `.kicad_pcb` | analyze_pcb.py | 5, 6, 7, 8, 9 |
-| `.kicad_pro` | Direct JSON read | 6+ |
-| `.gbr`, `.g*`, `.drl` | analyze_gerbers.py | N/A |
+## Regression testing (3-layer approach)
 
-**Note on `.sch` files**: Many repos contain Eagle `.sch` files (XML/binary format) which are
-not KiCad files. `discover.py` filters legacy `.sch` files by checking the file header for
-"EESchema" (the KiCad 5 signature) and excludes anything else. All Adafruit repos, for
-example, use Eagle format and are correctly excluded.
+All operations are per-repo. Data is organized by `reference/{repo}/{project}/` where project is the subpath to the KiCad project directory with `/` encoded as `_`.
 
-## Quick start
+### Layer 1: Baselines
+
+Compact snapshots of analyzer outputs, checked into git. Any machine can diff against them.
 
 ```bash
-# 1. Clone this repo
-git clone <this-repo-url>
-cd kicad-happy-testharness
-
-# 2. Clone the kicad-happy repo alongside this one (or set KICAD_HAPPY_DIR)
-git clone <kicad-happy-url> ../kicad-happy
-
-# 3. Clone all test repos
-python3 checkout.py
-
-# 4. Discover KiCad files
-python3 discover.py
-
-# 5. Run analyzers (use --jobs for parallelism, --repo to target one repo)
-python3 run/run_schematic.py --jobs 4
-python3 run/run_pcb.py --jobs 4
-python3 run/run_gerbers.py --jobs 4
-
-# 6. Validate outputs
-python3 validate/validate_outputs.py
-
-# 7. Extract MPNs and download datasheets
-python3 validate/extract_mpns.py
-python3 validate/download_datasheets.py
+python3 regression/snapshot.py --repo {repo}
+python3 regression/compare.py --repo {repo}
+python3 regression/compare.py --all --only-changes
 ```
 
-### Requirements
+### Layer 2: Assertions
 
-- **Python 3.8+** (stdlib only for core scripts)
-- **Git** (for cloning test repos)
-- **requests** (optional, for manufacturer datasheet scraping)
-- **DigiKey/Mouser/element14 API keys** (optional, for datasheet downloads and MPN validation)
-
-### Finding kicad-happy
-
-All scripts that need the kicad-happy analyzers look for them in this order:
-
-1. `KICAD_HAPPY_DIR` environment variable
-2. `../kicad-happy` (sibling directory -- the common layout)
+Machine-checkable facts about what an analyzer should find in a specific file. Stored in `reference/{repo}/{project}/assertions/`. Operators include `range`, `min_count`, `equals`, `exists`, `contains_match`, etc.
 
 ```bash
-export KICAD_HAPPY_DIR=/path/to/kicad-happy   # if not at ../kicad-happy
+python3 regression/run_checks.py --repo {repo}
+python3 regression/seed.py --repo {repo}
 ```
 
-## Directory structure
+### Layer 3: LLM review
 
-```
-repos.md                    # Master repo list -- human-editable markdown
-priority.md                 # Testing priority -- all repos ranked by value
-status.md                   # Testing status -- batch history, purge log, corpus stats
-ISSUES.md                   # Open issues only (KH-* analyzer, TH-* harness)
-FIXED.md                    # Closed issues with root cause + fix details
-checkout.py                 # Clone repos + check for upstream updates
-discover.py                 # Find all KiCad files, write manifests
-utils.py                    # Shared utilities (path resolution, repo naming, unified runner)
-
-run/                        # Batch-run kicad-happy analyzers (all support --repo, --jobs)
-  run_schematic.py          #   Run analyze_schematic.py on all schematics
-  run_pcb.py                #   Run analyze_pcb.py on all PCBs
-  run_gerbers.py            #   Run analyze_gerbers.py on all Gerber dirs
-
-regression/                 # 3-layer regression testing system
-  _differ.py                #   Semantic JSON diffing engine
-  checks.py                 #   Assertion data model and evaluation engine
-  snapshot.py               #   Snapshot outputs -> reference/ baselines
-  compare.py                #   Diff current outputs vs baselines
-  run_checks.py             #   Run assertions against outputs
-  seed.py                   #   Generate seed assertions from outputs
-  findings.py               #   Manage LLM review findings + render findings.md
-  drift.py                  #   Detect findings drift against current outputs
-  packet.py                 #   Generate review packets for LLM analysis
-  promote.py                #   Promote improved results/ to reference/
-
-validate/                   # Output quality checks & BOM analysis
-  validate_outputs.py       #   Check structural invariants in analyzer JSON
-  extract_mpns.py           #   Extract MPN + manufacturer pairs from outputs
-  validate_mpns.py          #   Validate MPNs against DigiKey/Mouser APIs
-  analyze_bom_mismatch.py   #   Analyze BOM qty vs component count discrepancies
-  download_datasheets.py    #   Download datasheets from multiple sources
-
-integration/                # End-to-end tests
-  test_datasheets.py        #   Test datasheet downloading across distributors
-  test_bom_manager.py       #   Test BOM manager pipeline
-
-reference/                  # Tracked in git -- known-good regression data
-  test_mpns.json            #   Curated set of test MPNs
-  {repo}/{project}/         #   Per-repo, per-project reference data
-    baselines/              #     Compact baseline manifests
-    assertions/{type}/      #     Machine-checkable facts per file
-    findings.json           #     Structured observations from LLM review
-    findings.md             #     Human-readable view (auto-generated from JSON)
-
-repos/                      # Git-ignored -- cloned test repos
-results/                    # Git-ignored -- outputs, manifests, review packets
-```
-
-## Issue tracking
-
-Issues are discovered opportunistically while running analyzers, reviewing outputs, and doing
-Layer 3 reviews. Two files track them:
-
-- **ISSUES.md** -- Open issues only. Removed when fixed.
-- **FIXED.md** -- Closed issues with root cause, fix details, and verification.
-
-Issue prefixes: `KH-*` for kicad-happy analyzer bugs, `TH-*` for test harness issues.
-
-**Numbers are globally unique and never reused.** Before creating a new issue, check the
-"Numbering convention" section at the top of ISSUES.md for the next available number.
-
-### Issue tracking protocol
-
-This protocol must be followed whenever issues are discovered or resolved:
-
-**Discovery** -- When running analyzers, reviewing outputs, or doing Layer 3 reviews, add
-new issues to ISSUES.md immediately. Don't wait for a dedicated triage step. Update existing
-issues with new evidence from additional repos.
-
-**Creating issues** -- Check the "Numbering convention" section in ISSUES.md for the next
-available number. Check both ISSUES.md and FIXED.md to avoid reusing numbers. Each issue
-entry must include: severity, component (file + function), description, evidence (repo +
-specific output), and proposed fix.
-
-**Fixing issues** -- When an issue is fixed, **in the same session**:
-1. Remove the issue entry from ISSUES.md
-2. Add a detailed entry to FIXED.md with: root cause, fix description, and verification results
-3. Update the priority queue at the bottom of ISSUES.md
-4. Clean up any consecutive `---` separators left by removals
-
-This is not optional -- updating ISSUES.md and FIXED.md is part of the fix itself, not a
-follow-up step.
-
-**Severity levels**:
-- **CRITICAL** -- Cascading failures, major data loss, large portions of output unusable
-- **HIGH** -- Significant accuracy impact, many false positives/negatives, missing important data
-- **MEDIUM** -- Localized false positives or misclassifications; workarounds exist
-- **LOW** -- Cosmetic, minor noise, or edge cases affecting few files
+Review packets pair source files with analyzer output summaries for independent quality verification by Claude.
 
 ```bash
-# Check current issue status
-cat ISSUES.md                    # open issues + priority queue
-cat FIXED.md                     # closed issues with fix details
-python3 regression/drift.py      # re-check findings against current outputs
+python3 regression/packet.py --strategy random --count 5
+python3 regression/packet.py --strategy changed --repo {repo}
+
+python3 regression/findings.py list
+python3 regression/findings.py stats
+python3 regression/findings.py render
+python3 regression/findings.py promote FND-00000001
+```
+
+### How the layers connect
+
+```
+findings --> (promote) --> assertions --> (run_checks) --> regression caught
+    ^                                                           |
+    +---------- drift.py <-- (re-check against outputs) --------+
+```
+
+- **Baselines** catch broad structural changes (new/removed sections, count shifts)
+- **Assertions** catch specific regressions (a known-good detection disappearing)
+- **Findings** capture context that can't be automated (why something is wrong, what's missing)
+
+`drift.py` closes the loop by re-checking findings against current outputs, surfacing regressions and improvements without manual re-review.
+
+```bash
+python3 regression/drift.py --repo {repo}
+```
+
+### Promoting improvements
+
+```bash
+python3 regression/promote.py --repo {repo}          # dry run
+python3 regression/promote.py --repo {repo} --apply   # promote
+```
+
+## Constants audit
+
+The analyzer scripts contain 180+ hardcoded constants: lookup tables, keyword lists, numeric thresholds, and regex patterns. `audit_constants.py` scans analyzer source using Python AST, builds a registry of all constants, and tracks verification status.
+
+```bash
+python3 validate/audit_constants.py scan                # scan scripts, update registry
+python3 validate/audit_constants.py scan --diff          # show what changed since last scan
+
+python3 validate/audit_constants.py list                 # all constants
+python3 validate/audit_constants.py list --unverified    # unverified only
+python3 validate/audit_constants.py list --risk critical  # critical risk constants
+python3 validate/audit_constants.py list --risk high      # high+ risk constants
+python3 validate/audit_constants.py list --category datasheet_lookup
+python3 validate/audit_constants.py show CONST-001       # detail view
+
+python3 validate/audit_constants.py verify CONST-001 --source "LM317 datasheet SNVS774Q"
+python3 validate/audit_constants.py verify CONST-001 --entry TPS5430 --source "datasheet SLVS632L"
+
+python3 validate/audit_constants.py corpus              # cross-reference against outputs
+python3 validate/audit_constants.py stats                # summary breakdown
+python3 validate/audit_constants.py report               # full text report
+python3 validate/audit_constants.py render               # generate constants_registry.md
+```
+
+### Two-dimensional risk scoring
+
+Each constant is scored on two independent axes:
+
+- **Impact** (0.0-1.0) -- How bad is it if this constant is wrong? A hallucinated Vref value silently produces incorrect voltage calculations; a wrong keyword list causes misclassification.
+- **Overfit** (0.0-1.0) -- Is this constant pulling its weight across the corpus, or was it added to fix one project and doesn't generalize? Starts with structural heuristics (inline definitions, small local lists), then `corpus` fills in real data from analyzer outputs.
+
+These combine into a **risk score**: `max(impact * (1 - verified_fraction), overfit)`. Verification drives risk down -- a fully-verified high-impact constant drops to low risk. High overfit stays risky regardless.
+
+| Risk level | Score | Example |
+|---|---|---|
+| critical | >= 0.7 | `_REGULATOR_VREF` (92 unverified Vref values from datasheets) |
+| high | >= 0.5 | `type_map` (64-entry component classifier) |
+| medium | >= 0.3 | Keyword lists for IC family matching |
+| low | < 0.3 | Format codes, unit conversions, verified tables |
+
+### Corpus analysis
+
+`corpus` scans all analyzer outputs to measure which constants actually fire across the test corpus. For each constant, it records how many repos exercise it:
+
+- **`_REGULATOR_VREF`** -- traces `vref_source: "lookup"` in power_regulators to identify which prefix keys match real parts. Per-entry hit counts show which entries are exercised vs dead weight.
+- **`type_map`** -- counts which reference designator prefixes appear across all components.
+- **Signal detector keywords** -- maps keyword lists to their signal_analysis sections and counts repos with non-empty results.
+
+Entries with zero corpus hits get flagged (`corpus_unused_entries`) and increase the overfit score. This surfaces constants that were potentially added for one project and never exercised again.
+
+### Categories
+
+Each constant is auto-classified into a category that determines what kind of verification it needs:
+
+| Category | Description | Verification source |
+|---|---|---|
+| `physics` | Unit conversions, coordinate tolerances | Textbook / auto-verified |
+| `standard` | KiCad format codes, IPC designators, SI prefixes | KiCad docs, IPC standards |
+| `datasheet_lookup` | Part-specific values (Vref, quiescent current) | Manufacturer datasheets |
+| `heuristic_threshold` | Empirical cutoffs and scoring tables | Engineering justification + corpus tuning |
+| `keyword_classification` | Part families, net name patterns, pin names | KiCad stdlib + domain knowledge |
+
+The registry (`reference/constants_registry.json`) tracks stable IDs, content hashes for drift detection, per-entry verification for lookup tables, corpus hit data, and both risk dimensions.
+
+## Validation scripts
+
+```bash
+python3 validate/validate_outputs.py --repo {repo}     # structural invariants
+python3 validate/extract_mpns.py --repo {repo}          # extract MPNs from outputs
+python3 validate/analyze_bom_mismatch.py --repo {repo}  # BOM qty vs component count
+python3 validate/download_datasheets.py --project {repo} --status   # datasheet downloads
+python3 validate/validate_mpns.py --limit 50            # validate MPNs against APIs
 ```
 
 ## Repo management
 
-Three files work together to manage the test corpus:
-
-- **repos.md** — Master list of all repos with URLs and pinned commit hashes. Human-edited, grouped by category. Source of truth for what's in the corpus.
-- **priority.md** — All repos ranked by testing priority (schematic complexity). Used as guidance during batch testing to decide which repos to process next. Separates tested from untested.
-- **status.md** — Operational log of batch testing progress, corpus maintenance (purges), and issue fix history. Updated after each testing session.
+- **repos.md** -- Master list of all repos with URLs and pinned commit hashes
+- **priority.md** -- Repos ranked by testing priority (schematic complexity)
+- **status.md** -- Operational log of batch testing progress
 
 ### Adding test repos
 
-Edit `repos.md` directly. It's organized as a simple list grouped by category:
+Edit `repos.md` directly:
 
 ```
 - https://github.com/user/repo
@@ -292,80 +213,76 @@ Edit `repos.md` directly. It's organized as a simple list grouped by category:
 - https://github.com/user/pinned-repo @ abc123def456
 ```
 
-- Append `(shallow)` for large repos where you only need the latest snapshot
-- Append `@ <commit_hash>` to pin a specific commit for reproducibility
-- After adding, run `python3 checkout.py` to clone the new repo
-
-Hashes are managed automatically -- `checkout.py` pins HEAD after cloning and verifies pinned hashes on each run. `repos.md` is the single source of truth.
-
 ```bash
-python3 checkout.py --check-updates              # compare pinned hashes to remote HEAD
-python3 checkout.py --check-updates --pin        # update repos.md with new hashes
+python3 checkout.py                        # clone new repos
+python3 checkout.py --check-updates        # compare pinned hashes to remote HEAD
+python3 checkout.py --check-updates --pin  # update repos.md with new hashes
 ```
 
-## Validation scripts
+## Issue tracking
 
-### validate_outputs.py
+Issues are discovered opportunistically while running analyzers and reviewing outputs:
 
-Checks structural invariants on schematic analyzer output (required keys, count sanity, BOM consistency, signal analysis plausibility):
+- **ISSUES.md** -- Open issues only. Removed when fixed.
+- **FIXED.md** -- Closed issues with root cause, fix details, and verification.
 
-```bash
-python3 validate/validate_outputs.py --repo {repo}
+Prefixes: `KH-*` for analyzer bugs, `TH-*` for harness issues. Numbers are globally unique and never reused.
+
+## Directory structure
+
 ```
+repos.md                    # Master repo list
+priority.md                 # Testing priority ranking
+status.md                   # Batch testing progress log
+ISSUES.md                   # Open issues (KH-* analyzer, TH-* harness)
+FIXED.md                    # Closed issues with fix details
+checkout.py                 # Clone repos + check upstream updates
+discover.py                 # Find KiCad files, write manifests
+utils.py                    # Shared utilities (path resolution, unified runner)
 
-### extract_mpns.py / download_datasheets.py
+run/                        # Batch-run analyzers (all support --repo, --jobs)
+  run_schematic.py
+  run_pcb.py
+  run_gerbers.py
 
-Extract manufacturer part numbers from analyzer outputs, then download datasheets from multiple sources in parallel:
+regression/                 # 3-layer regression testing
+  _differ.py                #   Semantic JSON diff engine
+  checks.py                 #   Assertion data model + evaluation
+  snapshot.py               #   Snapshot outputs to reference/ baselines
+  compare.py                #   Diff current outputs vs baselines
+  run_checks.py             #   Run assertions against outputs
+  seed.py                   #   Generate seed assertions from outputs
+  findings.py               #   Manage LLM review findings
+  drift.py                  #   Detect findings drift against outputs
+  packet.py                 #   Generate review packets for LLM analysis
+  promote.py                #   Promote improved results/ to reference/
 
-```bash
-python3 validate/extract_mpns.py --repo {repo}
-python3 validate/download_datasheets.py --project {repo} --status
-```
+validate/                   # Output quality + constants audit
+  validate_outputs.py       #   Structural invariants on analyzer JSON
+  extract_mpns.py           #   Extract MPN + manufacturer pairs
+  validate_mpns.py          #   Validate MPNs against distributor APIs
+  analyze_bom_mismatch.py   #   BOM qty vs component count analysis
+  download_datasheets.py    #   Download datasheets from multiple sources
+  audit_constants.py        #   AST-based constant registry + verification
 
-Sources tried in order: direct URL from schematic, LCSC direct API, DigiKey, Mouser, LCSC (jlcsearch), element14, manufacturer website scraping.
+integration/                # End-to-end tests
+  test_datasheets.py        #   Datasheet download across distributors
+  test_bom_manager.py       #   BOM manager pipeline
 
-### validate_mpns.py
+reference/                  # Tracked in git -- known-good regression data
+  constants_registry.json   #   Constant audit registry
+  constants_registry.md     #   Auto-generated constant summary
+  test_mpns.json            #   Curated test MPNs
+  {repo}/{project}/         #   Per-repo, per-project reference data
+    baselines/              #     Compact baseline manifests
+    assertions/{type}/      #     Machine-checkable facts per file
+    findings.json           #     Structured findings from LLM review
+    findings.md             #     Human-readable view (auto-generated)
 
-Validates extracted MPNs against DigiKey and Mouser APIs (requires API keys):
-
-```bash
-export DIGIKEY_CLIENT_ID=... DIGIKEY_CLIENT_SECRET=...
-export MOUSER_SEARCH_API_KEY=...
-python3 validate/validate_mpns.py --limit 50
-```
-
-### analyze_bom_mismatch.py
-
-Analyzes root causes of BOM quantity vs component count mismatches:
-
-```bash
-python3 validate/analyze_bom_mismatch.py --repo {repo}
-```
-
-## Integration tests
-
-```bash
-python3 integration/test_datasheets.py --only lcsc     # LCSC needs no API key
-python3 integration/test_datasheets.py --mpn STM32G474CEU6
-python3 integration/test_bom_manager.py --repo {repo} --stage analyze -v
+repos/                      # Git-ignored -- cloned test repos
+results/                    # Git-ignored -- outputs, manifests, review packets
 ```
 
 ## Usage warning
 
-> **This test harness covers 1,100+ repos.** Running the full suite takes many Claude Code
-> sessions spread across multiple weeks. Be mindful of your account's usage limits.
-
-There is no automated way to track Claude Code session costs from scripts. Anthropic's
-Usage/Cost Admin APIs require an organization-level Admin API key, and the interactive
-`/cost` command is only relevant for API-billed accounts (not Max/Pro subscriptions).
-
-**It is your responsibility to monitor your own usage and account limits.** To avoid
-excessive consumption:
-
-- **Use `--repo` flags** to target specific repos rather than processing the entire corpus
-- **Work in batches** -- checkout, analyze, and validate a subset each session
-- **Use `--jobs`** for parallelism to reduce wall-clock time (but not token cost)
-- **Check your Anthropic dashboard** periodically for usage trends
-
-The test corpus is too large to process in one session. Plan your work across multiple
-sessions and weeks.
+The test corpus has 1,100+ repos and cannot be processed in a single session. Work through repos in batches using `--repo` flags. Use `--jobs` for parallelism where supported.

@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     discover_projects, data_dir, list_repos,
-    project_prefix,
+    project_prefix, filter_project_outputs,
 )
 
 
@@ -141,17 +141,9 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
         proj_path = proj["path"]
         prefix = project_prefix(proj_path)
 
-        # Find output files for this project
-        output_files = sorted(type_dir.glob("*.json"))
-        proj_outputs = []
-        for of in output_files:
-            if of.name.endswith(".err"):
-                continue
-            if prefix:
-                if of.name.startswith(prefix):
-                    proj_outputs.append(of)
-            else:
-                proj_outputs.append(of)
+        # Find output files for this project (filter_project_outputs
+        # only matches *.json which excludes .err files)
+        proj_outputs = filter_project_outputs(type_dir, proj_path)
 
         if file_filter:
             patterns = [p.strip() for p in file_filter.split(",")]

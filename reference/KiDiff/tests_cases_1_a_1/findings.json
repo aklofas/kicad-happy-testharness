@@ -1,0 +1,51 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "tests_cases_1_a_1.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "ESP32 8-channel MOSFET output board (77 components). Correct: all components, nets, AZ1117-3.3 LDO, CP2104 USB-UART, auto-reset circuit, MOSFET switches, BOM. Incorrect: flyback diodes D3-D10 not detected (drain-to-VCC topology missed), regulator input cap C4 falsely flagged as missing. Missed: D1/D2 power OR-ing, R17-R24 gate pulldowns.",
+      "correct": [
+        {
+          "description": "All 77 components with accurate pin-to-net assignment",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "AZ1117-3.3 correctly detected as LDO",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Q1/Q2 auto-reset circuit correctly traced",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "has_flyback_diode=false for Q3-Q10 despite D3-D10 Schottky diodes from drain to VCC",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "Regulator input cap falsely flagged as missing (C4 1uF is on the input net)",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [
+        {
+          "description": "D1/D2 Schottky power OR-ing not detected",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "suggestions": [
+        "Check flyback diodes from drain to supply rail not just drain-to-source",
+        "Fix regulator_caps to detect existing caps on input net"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000191",
+      "repo": "KiDiff",
+      "project": "tests_cases_1_a_1",
+      "created": "2026-03-15T19:56:01.840709+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

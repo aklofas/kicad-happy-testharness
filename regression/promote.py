@@ -13,7 +13,6 @@ Usage:
 """
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
@@ -22,63 +21,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
-    discover_projects, data_dir, list_repos,
-    project_prefix,
+    discover_projects, list_repos,
+    load_project_metadata,
 )
-from checks import load_assertions, evaluate_assertion
+from run_checks import check_assertions
 from snapshot import create_snapshot
 from compare import compare_project
 from seed import generate_for_repo
-
-
-def check_assertions_for_repo(repo_name):
-    """Run assertions and return pass/fail/error counts."""
-    assertion_sets = load_assertions(
-        DATA_DIR, repo_name=repo_name,
-    )
-    if not assertion_sets:
-        return {"total": 0, "passed": 0, "failed": 0, "errors": 0}
-
-    total = passed = failed = errors = 0
-    for aset in assertion_sets:
-        atype = aset.get("analyzer_type", "schematic")
-        file_pattern = aset.get("file_pattern", "")
-        repo = aset.get("_repo", "")
-        project_path = aset.get("_project_path")
-
-        # Find output file
-        type_dir = OUTPUTS_DIR / atype / repo
-        if not type_dir.exists():
-            errors += len(aset.get("assertions", []))
-            total += len(aset.get("assertions", []))
-            continue
-
-        prefix = project_prefix(project_path)
-
-        safe_name = prefix + file_pattern
-        output_file = type_dir / (safe_name + ".json")
-
-        if not output_file.exists():
-            errors += len(aset.get("assertions", []))
-            total += len(aset.get("assertions", []))
-            continue
-
-        try:
-            data = json.loads(output_file.read_text())
-        except Exception:
-            errors += len(aset.get("assertions", []))
-            total += len(aset.get("assertions", []))
-            continue
-
-        for assertion in aset.get("assertions", []):
-            total += 1
-            result = evaluate_assertion(assertion, data)
-            if result["passed"]:
-                passed += 1
-            else:
-                failed += 1
-
-    return {"total": total, "passed": passed, "failed": failed, "errors": errors}
 
 
 def check_baseline_changes(repo_name):
@@ -92,8 +41,8 @@ def check_baseline_changes(repo_name):
         proj_name = proj["name"]
         proj_path = proj["path"]
 
-        meta_file = data_dir(repo_name, proj_name, "baselines") / "metadata.json"
-        if not meta_file.exists():
+        meta = load_project_metadata(repo_name, proj_name)
+        if not meta:
             # No baseline yet — this is new
             # Check if outputs exist
             has_outputs = False
@@ -110,7 +59,6 @@ def check_baseline_changes(repo_name):
                 })
             continue
 
-        meta = json.loads(meta_file.read_text())
         stored_path = meta.get("project_path", ".")
 
         for atype in ANALYZER_TYPES:
@@ -149,7 +97,7 @@ def promote_repo(repo_name, dry_run=True):
         return False
 
     # Check assertion results
-    assertion_results = check_assertions_for_repo(repo_name)
+    assertion_results = check_assertions(DATA_DIR, repo_name=repo_name)
     total = assertion_results["total"]
     passed = assertion_results["passed"]
     if total > 0:

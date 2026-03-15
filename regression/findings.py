@@ -30,9 +30,22 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import DATA_DIR, data_dir
 
 
-def _iter_findings_files():
-    """Iterate all findings.json files under data/{repo}/{project}/."""
+def _iter_findings_files(repo_name=None):
+    """Iterate findings.json files under data/{repo}/{project}/.
+
+    If repo_name is given, only iterate that repo's projects.
+    """
     if not DATA_DIR.exists():
+        return
+    if repo_name:
+        repo_dir = DATA_DIR / repo_name
+        if repo_dir.is_dir():
+            for proj_dir in sorted(repo_dir.iterdir()):
+                if not proj_dir.is_dir():
+                    continue
+                ff = proj_dir / "findings.json"
+                if ff.exists():
+                    yield repo_name, proj_dir.name, ff
         return
     for repo_dir in sorted(DATA_DIR.iterdir()):
         if not repo_dir.is_dir() or repo_dir.name.startswith("."):
@@ -55,9 +68,7 @@ def load_findings(repo_name=None, project_name=None):
             return json.loads(ff.read_text())
         return {"findings": []}
 
-    for repo, proj, ff in _iter_findings_files():
-        if repo_name and repo != repo_name:
-            continue
+    for repo, proj, ff in _iter_findings_files(repo_name):
         try:
             data = json.loads(ff.read_text())
             for f in data.get("findings", []):

@@ -1,0 +1,69 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "HARDWARE_Hardware-revision-A_ESP32-SBC-FabGL_Rev_A.sch.json",
+      "status": "confirmed",
+      "summary": "OLIMEX ESP32-SBC-FabGL (118 components). Correct: 118 components, CH340X USB-UART, transistors, fiducials, RC/LC filters, ESD protection, USB pair. Incorrect: VGA1 DB-15 connector as varistor, AUDIO1 audio jack as IC, U5 SY8089 input_rail=GND, U7 MT3608 fb_net=GND. Missed: battery sensing voltage divider R17/R18, R-2R VGA DAC, PS/2 interfaces, SPI bus.",
+      "correct": [
+        {
+          "description": "118 components correctly extracted",
+          "analyzer_section": "statistics.total_components"
+        },
+        {
+          "description": "ESP32-WROVER-IE correctly identified",
+          "analyzer_section": "subcircuits"
+        },
+        {
+          "description": "USBLC6-2P6 ESD protection detected",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "VGA1 (DB-15 VGA connector) classified as varistor",
+          "analyzer_section": "bom.type"
+        },
+        {
+          "description": "AUDIO1 (audio jack) classified as IC",
+          "analyzer_section": "bom.type"
+        },
+        {
+          "description": "U5 SY8089 switching regulator reports input_rail=GND",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "U7 MT3608 boost converter reports fb_net=GND",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Voltage divider R17(470k)/R18(150k) for battery sensing not detected",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "R-2R DAC network for VGA output not detected",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "SPI bus to SD card not detected",
+          "analyzer_section": "design_analysis.bus_analysis"
+        }
+      ],
+      "suggestions": [
+        "Recognize VGA/audio connectors by footprint library",
+        "Fix switching regulator input_rail/fb_net detection (KH-087)"
+      ],
+      "related_issues": [
+        "KH-087"
+      ],
+      "should_become_assertion": true,
+      "id": "FND-00000182",
+      "repo": "ESP32-SBC-FabGL",
+      "project": "HARDWARE_Hardware-revision-A_ESP32-SBC-FabGL_Rev_A",
+      "created": "2026-03-15T19:54:38.510552+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

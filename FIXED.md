@@ -11,6 +11,77 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-15 — KH-091, KH-092, KH-093, KH-094, KH-095, KH-096 (batch 7, 6 issues)
+
+Component classification fixes in `kicad_utils.py classify_component()`.
+Source repos verified: commodorelcd, iMX8MP-SOM-EVB, ESP32-S3-DevKit-LiPo, NB-IoT,
+Castor_and_Pollux, NUS-CPU-03-Nintendo-64-Motherboard
+
+### KH-091 (HIGH): CR-prefix diodes misclassified as capacitor
+
+- **Files**: `kicad_utils.py` — `classify_component()` type_map
+- **Root cause**: CR (IPC-2612 standard diode/rectifier prefix) was not in type_map,
+  so it fell to single-char fallback where prefix[0]='C' → capacitor.
+- **Fix**: Added `"CR": "diode"` to type_map.
+- **Verified**: commodorelcd: 15 CR-prefix components now classified as diode (was capacitor).
+
+### KH-092 (HIGH): T-prefix transistors classified as transformer
+
+- **Files**: `kicad_utils.py` — `classify_component()` transformer override
+- **Root cause**: T→transformer in type_map. KH-079 added lib_id overrides but only
+  for "mosfet/fet/transistor/amplifier" keywords. Custom libs with Q_NPN_BEC or
+  "Transistors" footprint were missed.
+- **Fix**: (1) Added "bjt", "q_npn", "q_pnp", "q_nmos", "q_pmos" to transformer
+  override keyword list. (2) Added footprint check (fp_low) to transformer override.
+  (3) Changed return from "ic" to "transistor" for transistor-related overrides.
+- **Verified**: iMX8MP T1/T2 (BC817-40) → transistor (was transformer).
+  ESP32-S3-DevKit-LiPo T1/T2 (BC817-40) → transistor. NB-IoT T1-T5 → transistor.
+
+### KH-093 (HIGH): VR-prefix regulators classified as varistor
+
+- **Files**: `kicad_utils.py` — `classify_component()` varistor override, single-char fallback
+- **Root cause**: VR prefix falls to single-char V→varistor. Custom libs like
+  "iMX8MPLUS-SOM-EVB_Rev_B:AMS1117-ADJ" don't contain "regulator" keyword.
+- **Fix**: (1) Added footprint-based check ("regulator" in fp_low) to varistor override.
+  (2) Added value-based check for known regulator families (ams1117, lm78, lm317, etc.).
+  (3) Added same checks to single-char fallback varistor override.
+- **Verified**: iMX8MP VR1/VR2 (AMS1117) → ic (was varistor).
+
+### KH-094 (MEDIUM): Potentiometers (RV-prefix) classified as varistor
+
+- **Files**: `kicad_utils.py` — `classify_component()` varistor override
+- **Root cause**: RV→varistor in type_map. Override checked "r_pot" and "potentiometer"
+  but missed custom libs like "winterbloom:Eurorack_Pot" where only "pot" appears.
+- **Fix**: Broadened potentiometer check to include "pot" in lib_low alongside existing
+  "r_pot" and "potentiometer" checks.
+- **Verified**: Castor_and_Pollux RV1-RV5 → resistor (was varistor).
+
+### KH-095 (MEDIUM): D_TVS_Filled classified as LED
+
+- **Files**: `kicad_utils.py` — `classify_component()` diode→LED override
+- **Root cause**: `"led" in lib_low` matched "fi**led**" substring in "Device:D_TVS_Filled".
+- **Fix**: Changed from substring check to regex with negative lookbehind/lookahead:
+  `re.search(r'(?<![a-z])led(?![a-z])', ...)` ensures "led" appears as a standalone token.
+- **Verified**: Castor_and_Pollux D3-D6 (D_TVS_Filled) → diode (was led).
+
+### KH-096 (MEDIUM): Ferrite beads (FerriteBead) classified as fuse
+
+- **Files**: `kicad_utils.py` — `classify_component()` lib_id section + single-char fallback
+- **Root cause**: FIL prefix not in type_map, fell to single-char F→fuse. No ferrite bead
+  check in fuse override or lib_id fallback section.
+- **Fix**: (1) Added "ferritebead"/"ferrite_bead" check in lib_id fallback section before
+  inductor check. (2) Added "ferrite"/"bead" check in single-char fallback fuse override.
+- **Verified**: NUS-CPU-03 FIL1-FIL8 → ferrite_bead (was fuse).
+
+### Regression results
+
+- Full corpus: 6,827 files, 100% analyzer pass rate
+- Assertions: 55,245 total, 54,455 passed (98.6%) — no regression vs baseline
+- 23 repos reseeded assertions to reflect corrected classifications
+- Drift check: 0 regressions, 2 possibly_fixed findings (FND-183)
+
+---
+
 ## 2026-03-15 — KH-079, KH-083, KH-084, KH-086, KH-088, KH-089 (batch 6, 6 issues)
 
 Source repos verified: mutable_eurorack_kicad (102), Power_HW (114), openwrt-one (9),

@@ -15,7 +15,7 @@ Last updated: 2026-03-15
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-091**. Next TH number: **TH-008**.
+number: **KH-101**. Next TH number: **TH-008**.
 
 ---
 
@@ -65,7 +65,6 @@ number: **KH-091**. Next TH number: **TH-008**.
 **Findings**: FND-153, FND-154
 
 
-
 ### KH-085 — RF chain detection keyword lists too narrow (MEDIUM)
 
 **Affected**: vna
@@ -86,7 +85,6 @@ number: **KH-091**. Next TH number: **TH-008**.
 **Findings**: FND-155, FND-158
 
 
-
 ### KH-090 — LDO inverting flag incorrect for fixed-output LDOs (LOW)
 
 **Affected**: ISS-PCB
@@ -95,14 +93,54 @@ number: **KH-091**. Next TH number: **TH-008**.
 **Fix direction**: Check for fixed-output LDOs (no FB pin, or fixed output voltage in part number) and set inverting=false.
 **Findings**: FND-153
 
+
+### KH-097 — CSYNC nets misclassified as chip_select (MEDIUM)
+
+**Affected**: Duplicanator-Scart-Duplicator
+**File**: `signal_detectors.py`, net classification
+**Symptom**: CSYNC_IN/CSYNC_OUT1/CSYNC_OUT2 (composite sync video signals) classified as 'chip_select' due to 'CS' substring match. CSYNC/HSYNC/VSYNC are video synchronization signals.
+**Fix direction**: Add CSYNC/HSYNC/VSYNC pattern exclusion before chip_select matching on 'CS' prefix.
+**Findings**: FND-185
+
+
+### KH-098 — Flyback diode not detected in drain-to-supply topology (MEDIUM)
+
+**Affected**: KiDiff test cases
+**File**: `signal_detectors.py`, transistor circuit analysis
+**Symptom**: has_flyback_diode=false for Q3-Q10 MOSFET switches despite Schottky diodes D3-D10 with anode on drain net and cathode on VCC supply rail. Detector only checks drain-to-source diodes, missing the standard low-side switch flyback topology (drain to supply).
+**Fix direction**: Extend flyback diode detection to check for diodes from drain net to any power supply rail (VCC, VIN, etc.), not just drain-to-source.
+**Findings**: FND-191, FND-192
+
+
+### KH-099 — I2S audio bus misidentified as I2C (MEDIUM)
+
+**Affected**: NUS-CPU-03-Nintendo-64-Motherboard
+**File**: `signal_detectors.py`, I2C detection
+**Symptom**: 9480F.SDAT (I2S serial audio data) classified as I2C SDA. I2S uses SDAT/LRCK/BCLK which is distinct from I2C SDA/SCL. No I2S bus detector exists.
+**Fix direction**: Exclude nets with I2S-related names (SDAT, LRCK, BCLK, WSEL) from I2C detection. Consider adding I2S bus detector.
+**Findings**: FND-172
+
+
+### KH-100 — WiFi/BT modules classified as power regulators (LOW)
+
+**Affected**: OtterCam-s3
+**File**: `signal_detectors.py`, regulator detection
+**Symptom**: AP6236 WiFi/BT combo module classified as power regulator with topology ic_with_internal_regulator because it has an inductor on its power pin (filter inductor, not switching regulator inductor).
+**Fix direction**: Add WiFi/BT/wireless module families (AP6xxx, ESP32, CYW43xxx, etc.) to the non-regulator exclusion list in detect_power_regulators().
+**Findings**: FND-180
+
 ---
 
 ## Priority Queue (open issues, ordered by impact)
 
 1. **KH-078** (MEDIUM) — `build_net_map()` unhashable list crash
 2. **KH-080** (MEDIUM) — Power symbol despite in_bom=yes
-3. **KH-081** (MEDIUM) — Current sense false positives on Ethernet termination
+3. **KH-081** (MEDIUM) — Current sense FPs on Ethernet termination
 4. **KH-082** (MEDIUM) — TVS IC protection devices not detected
 5. **KH-085** (MEDIUM) — RF chain keyword lists too narrow
 6. **KH-087** (MEDIUM) — Switching regulator output_rail missing
-7. **KH-090** (LOW) — LDO inverting flag incorrect
+7. **KH-097** (MEDIUM) — CSYNC nets as chip_select
+8. **KH-098** (MEDIUM) — Flyback diode drain-to-supply not detected
+9. **KH-099** (MEDIUM) — I2S misidentified as I2C
+10. **KH-090** (LOW) — LDO inverting flag incorrect
+11. **KH-100** (LOW) — WiFi modules as power regulators

@@ -188,15 +188,6 @@ def validate_new_sections(ctx, name, data):
             ctx.anomalies["many_ground_domains"].append((name, f"{len(domains)} ground domains"))
 
 
-def validate_cross_reference(ctx, name, data, sch_path):
-    """Cross-reference schematic data with PCB if available."""
-    sch_dir = Path(sch_path).parent
-    pcb_files = list(sch_dir.glob("*.kicad_pcb"))
-    if not pcb_files:
-        return
-    ctx.stats["has_pcb"] += 1
-
-
 def main():
     parser = argparse.ArgumentParser(description="Validate analyzer JSON outputs")
     parser.add_argument("--repo", help="Only validate outputs for this repo")
@@ -276,7 +267,6 @@ def main():
     print(f"Total nets: {ctx.stats['total_nets']:,}")
     print(f"Zero-component files: {ctx.stats['zero_comp']}")
     print(f"Zero-net files: {ctx.stats['zero_net']}")
-    print(f"Files with paired PCB: {ctx.stats['has_pcb']}")
     print()
 
     if not ctx.anomalies:

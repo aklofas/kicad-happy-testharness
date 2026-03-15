@@ -1,0 +1,239 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "OtterCam-s3.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Allwinner S3-based camera board top-level sheet. U.FL connector classified as IC, Ethernet nets misidentified as UART, WiFi module as regulator.",
+      "correct": [
+        {
+          "description": "U1 Allwinner S3 SoC correctly identified as main IC",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "U3 SY8089 buck converter correctly identified as regulator",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "SDIO bus interfaces correctly detected",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        },
+        {
+          "description": "MIPI differential pairs correctly identified",
+          "analyzer_section": "signal_analysis.differential_pairs"
+        },
+        {
+          "description": "Crystal oscillators correctly detected",
+          "analyzer_section": "signal_analysis.crystals"
+        },
+        {
+          "description": "TVS protection devices correctly classified",
+          "analyzer_section": "components"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "AE1 U.FL antenna connector classified as IC instead of connector",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "EPHY_TX/RX Ethernet PHY nets misidentified as UART interface",
+          "analyzer_section": "signal_analysis.bus_interfaces"
+        },
+        {
+          "description": "AP6236 WiFi/BT module classified as voltage regulator",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "AXP209 PMIC estimated_vout 4.8V is incorrect",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Recognize U.FL and similar antenna connector footprints as connectors, not ICs",
+        "Distinguish EPHY_ prefixed nets as Ethernet, not UART",
+        "Do not classify WiFi/BT combo modules (AP6236, ESP32, etc.) as regulators",
+        "Improve PMIC output voltage estimation for multi-output PMICs like AXP209"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000166",
+      "repo": "OtterCam-s3",
+      "project": "OtterCam-s3",
+      "created": "2026-03-15T19:51:13.334653+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Power.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "OtterCam-s3 power sub-sheet with AXP209 PMIC and SY8089 buck. AXP209 vout wrong, USB ESD marking inconsistent, VINT misclassified.",
+      "correct": [
+        {
+          "description": "SY8089 buck converter correctly identified with proper output voltage",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "TVS D4 correctly identified for USB protection",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "USB-C CC pulldown resistors correctly identified",
+          "analyzer_section": "signal_analysis.usb_compliance"
+        },
+        {
+          "description": "Q1 LED driver transistor correctly identified",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "RC reset filter correctly detected",
+          "analyzer_section": "signal_analysis.rc_filters"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "AXP209 PMIC estimated_vout 4.8V is wrong for a multi-rail PMIC",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "USB differential pair has_esd flag inconsistent across detections",
+          "analyzer_section": "signal_analysis.usb_compliance"
+        },
+        {
+          "description": "VINT net classified as interrupt signal but is actually a voltage reference rail",
+          "analyzer_section": "signal_analysis.power_rails"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "For multi-output PMICs, list per-rail outputs instead of a single estimated_vout",
+        "Ensure has_esd is consistent for the same USB pair across all detection passes",
+        "Do not assume nets named VINT are interrupts; check context (power pin vs signal pin)"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000167",
+      "repo": "OtterCam-s3",
+      "project": "OtterCam-s3",
+      "created": "2026-03-15T19:51:14.154003+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "OtterCam-s3.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "OtterCam-s3 ESP32-S3 camera board main sheet. Correct: Allwinner S3, SY8089 buck, SDIO buses, MIPI pairs, crystals, TVS. Incorrect: AE1 U.FL connector as IC, EPHY nets as UART, AP6236 WiFi as regulator, AXP209 vout 4.8V wrong. Missed: Ethernet PHY interface, I2C SCL line, DDR memory interface.",
+      "correct": [
+        {
+          "description": "U1 AllWinner-S3 correctly identified with 234 pins",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "U3 SY8089 correctly detected as switching regulator",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Two SDIO buses correctly detected",
+          "analyzer_section": "design_analysis.bus_analysis.sdio"
+        },
+        {
+          "description": "5 MIPI differential pairs detected",
+          "analyzer_section": "design_analysis.differential_pairs"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "AE1 U.FL antenna connector classified as IC (should be connector)",
+          "analyzer_section": "bom.type"
+        },
+        {
+          "description": "EPHY_TX/RX Ethernet PHY nets misidentified as UART",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        },
+        {
+          "description": "AP6236 WiFi module classified as power regulator",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "AXP209 estimated_vout 4.8V incorrect (programmable PMIC)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Ethernet PHY interface not detected",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        },
+        {
+          "description": "DDR memory interface not detected",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        }
+      ],
+      "suggestions": [
+        "Recognize U.FL/coaxial connectors by Connector_Coaxial footprint",
+        "Add EPHY prefix to Ethernet detection, exclude from UART",
+        "Do not classify WiFi/BT modules as regulators"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000180",
+      "repo": "OtterCam-s3",
+      "project": "OtterCam-s3",
+      "created": "2026-03-15T19:54:38.395466+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Power.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "OtterCam-s3 Power sub-sheet (70 components). Correct: SY8089 buck, TVS D4, USB-C CC pulldowns, Q1 LED driver, RC reset filter. Incorrect: AXP209 vout 4.8V wrong, USB diff pair has_esd inconsistent, VINT classified as interrupt (is voltage ref), USB_DRV classified as high_speed. Missed: Multiple AXP209 output rails not enumerated.",
+      "correct": [
+        {
+          "description": "U3 SY8089 correctly detected with feedback divider R29/R30",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "D4 P6SMB6.8CA TVS correctly detected on +5V",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "USB-C CC 5.1k pulldowns pass",
+          "analyzer_section": "usb_compliance"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "AXP209 estimated_vout 4.8V wrong (programmable PMIC)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "USB differential pair has_esd inconsistent with protection_devices",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "VINT (voltage reference) classified as interrupt",
+          "analyzer_section": "design_analysis.net_classification"
+        }
+      ],
+      "missed": [
+        {
+          "description": "AXP209 multiple output rails not enumerated (only +3V3 reported)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "suggestions": [
+        "For multi-output PMICs, detect all output rails",
+        "Fix has_esd to check protection_devices",
+        "Do not classify VINT as interrupt"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000181",
+      "repo": "OtterCam-s3",
+      "project": "OtterCam-s3",
+      "created": "2026-03-15T19:54:38.453555+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

@@ -50,12 +50,11 @@ def discover_in(scan_dir):
     # PCBs: .kicad_pcb
     pcbs = sorted(str(p) for p in scan_dir.rglob("*.kicad_pcb"))
 
-    # Gerber directories
+    # Gerber directories — single traversal, case-insensitive
+    gerber_exts_lower = {e.lower() for e in GERBER_EXTENSIONS}
     gerber_dirs = set()
-    for ext in GERBER_EXTENSIONS:
-        for p in scan_dir.rglob(f"*{ext}"):
-            gerber_dirs.add(str(p.parent))
-        for p in scan_dir.rglob(f"*{ext.upper()}"):
+    for p in scan_dir.rglob("*"):
+        if p.suffix.lower() in gerber_exts_lower and p.is_file():
             gerber_dirs.add(str(p.parent))
     gerber_dirs = sorted(gerber_dirs)
 

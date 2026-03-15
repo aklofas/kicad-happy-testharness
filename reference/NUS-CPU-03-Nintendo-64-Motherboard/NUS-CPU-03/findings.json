@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "NUS-CPU-03.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Nintendo 64 NUS-CPU-03 motherboard with 271 components. Correct: LM78M05/7VZ5 regulators, crystal circuits, voltage dividers, LED driver, bus topology, RC filters, decoupling. Incorrect: I2S SDAT misidentified as I2C, VOUT signal net as power rail, ferrite beads as fuses, BOM grouping merges inductors+caps, reset observation shows entire +3.3V rail. Missed: RDRAM memory interface, I2S audio bus, video encoder output path, clock generator function.",
+      "correct": [
+        {
+          "description": "U13 LM78M05 correctly detected as LDO +12V to +5V",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Crystal X1/X2 with load caps correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "Q1 2SC2412K LED driver for D3 correctly detected",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "AD0-AD15 16-bit bus correctly detected",
+          "analyzer_section": "bus_topology.detected_bus_signals"
+        },
+        {
+          "description": "271 components with correct type breakdown",
+          "analyzer_section": "statistics.component_types"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "9480F.SDAT (I2S audio data) incorrectly classified as I2C SDA",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "VOUT (video encoder composite output) incorrectly listed as power rail",
+          "analyzer_section": "statistics.power_rails"
+        },
+        {
+          "description": "FIL1-FIL8 (Device:FerriteBead) classified as fuse instead of ferrite_bead",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "Reset pin observation for U10 shows entire +3.3V rail instead of tracing through U3 PST9128 supervisor",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [
+        {
+          "description": "RDRAM memory interface (U11/U14 to U9 RCP) not detected",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "I2S audio bus (SDAT/LRCK/BCLK between 9480F DAC and RCP) not detected",
+          "analyzer_section": "design_analysis.bus_analysis"
+        },
+        {
+          "description": "Video encoder output path with 75-ohm termination not characterized",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [
+        "Add I2S bus detection (SDAT/LRCK/BCLK distinct from I2C SDA/SCL)",
+        "Reclassify Device:FerriteBead as ferrite_bead not fuse",
+        "Do not classify nets as power rails when driving pin type is output"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000172",
+      "repo": "NUS-CPU-03-Nintendo-64-Motherboard",
+      "project": "NUS-CPU-03",
+      "created": "2026-03-15T19:54:37.946242+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

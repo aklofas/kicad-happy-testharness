@@ -23,7 +23,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import resolve_path
+from utils import resolve_path, load_project_metadata
 
 
 def _countable(val):
@@ -171,14 +171,8 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
 
             # Resolve project_path for output file mapping.
             # Try baselines metadata first, then discover from repo.
-            project_path = None
-            meta_file = proj_dir / "baselines" / "metadata.json"
-            if meta_file.exists():
-                try:
-                    meta = json.loads(meta_file.read_text())
-                    project_path = meta.get("project_path")
-                except Exception:
-                    pass
+            project_path = load_project_metadata(
+                repo_dir.name, proj_dir.name).get("project_path")
             if project_path is None:
                 # Fallback: look up from discover_projects if repo is checked out
                 try:

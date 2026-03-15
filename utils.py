@@ -39,22 +39,29 @@ def resolve_path(data: dict, path: str):
     return current
 
 
+def _path_relative_to_repos(path):
+    """Get path relative to the repos/ directory.
+
+    Handles both absolute paths under REPOS_DIR and paths containing 'repos/'.
+    Returns the relative path string (e.g., 'OpenMower/Hardware/board.kicad_sch').
+    """
+    path = str(path)
+    repos_str = str(REPOS_DIR)
+    if path.startswith(repos_str):
+        return path[len(repos_str):].lstrip(os.sep)
+    idx = path.find("repos" + os.sep)
+    if idx >= 0:
+        return path[idx + len("repos") + 1:]
+    return path
+
+
 def repo_name_from_path(path):
     """Extract repo name (first component under repos/).
 
     Given an absolute or relative path like repos/OpenMower/Hardware/...,
     returns 'OpenMower'.
     """
-    path = str(path)
-    repos_str = str(REPOS_DIR)
-    if path.startswith(repos_str):
-        rel = path[len(repos_str):].lstrip(os.sep)
-    else:
-        idx = path.find("repos" + os.sep)
-        if idx >= 0:
-            rel = path[idx + len("repos") + 1:]
-        else:
-            rel = path
+    rel = _path_relative_to_repos(path)
     parts = rel.replace("\\", "/").split("/")
     return parts[0] if parts and parts[0] else None
 
@@ -65,16 +72,7 @@ def within_repo_path(path):
     Given repos/OpenMower/Hardware/board.kicad_sch,
     returns 'Hardware/board.kicad_sch'.
     """
-    path = str(path)
-    repos_str = str(REPOS_DIR)
-    if path.startswith(repos_str):
-        rel = path[len(repos_str):].lstrip(os.sep)
-    else:
-        idx = path.find("repos" + os.sep)
-        if idx >= 0:
-            rel = path[idx + len("repos") + 1:]
-        else:
-            rel = path
+    rel = _path_relative_to_repos(path)
     parts = rel.replace("\\", "/").split("/", 1)
     return parts[1] if len(parts) > 1 else ""
 
@@ -108,6 +106,24 @@ def resolve_kicad_happy_dir():
     print("Error: Cannot find kicad-happy repo.", file=sys.stderr)
     print("  Set KICAD_HAPPY_DIR or clone it alongside this repo.", file=sys.stderr)
     sys.exit(1)
+
+
+def filter_project_outputs(type_dir, project_path):
+    """Filter output JSON files in type_dir to those matching a project path prefix."""
+    prefix = project_prefix(project_path)
+    files = sorted(type_dir.glob("*.json"))
+    if not prefix:
+        return files
+    return [f for f in files if f.name.startswith(prefix)]
+
+
+def load_project_metadata(repo_name, project_name):
+    """Load baseline metadata for a project. Returns dict (empty if missing)."""
+    meta_file = DATA_DIR / repo_name / project_name / "baselines" / "metadata.json"
+    try:
+        return json.loads(meta_file.read_text())
+    except (json.JSONDecodeError, OSError):
+        return {}
 
 
 def filter_manifest_by_repo(lines, repo_name):

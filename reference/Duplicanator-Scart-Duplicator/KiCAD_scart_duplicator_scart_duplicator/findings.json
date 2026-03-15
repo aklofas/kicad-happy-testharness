@@ -1,0 +1,59 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "KiCAD_scart_duplicator_scart_duplicator.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "SCART video duplicator with THS7374 4-channel video amp (41 components). Correct: THS7374 pin mapping, SCART connectors pin assignments, audio passthrough, D1 switching voltage protection, USB-C power. Incorrect: CSYNC nets classified as chip_select, RC filter false positives on video termination/bias networks (75-ohm termination and 5.36M DC bias). Missed: video amplifier/buffer topology, 1-to-2 signal splitter pattern.",
+      "correct": [
+        {
+          "description": "U1 THS7374 all 14 pins correctly mapped",
+          "analyzer_section": "ic_pin_analysis"
+        },
+        {
+          "description": "SCART J1 input and J3/J4 output pin assignments correct",
+          "analyzer_section": "ic_pin_analysis"
+        },
+        {
+          "description": "Audio passthrough correctly traced",
+          "analyzer_section": "nets"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "CSYNC_IN/OUT1/OUT2 classified as chip_select (is composite sync)",
+          "analyzer_section": "design_analysis.net_classification"
+        },
+        {
+          "description": "R5-R8 5.36M DC bias networks detected as filters",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "R1-R4 75-ohm video termination detected as high-pass filters",
+          "analyzer_section": "signal_analysis.rc_filters"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Video amplifier/buffer topology not recognized",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "1-to-2 SCART signal splitter pattern not detected",
+          "analyzer_section": "subcircuits"
+        }
+      ],
+      "suggestions": [
+        "Avoid matching CS substring in CSYNC/HSYNC/VSYNC names",
+        "Recognize 75-ohm resistor to ground at video amplifier input as termination"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000185",
+      "repo": "Duplicanator-Scart-Duplicator",
+      "project": "KiCAD_scart_duplicator_scart_duplicator",
+      "created": "2026-03-15T19:54:38.682197+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

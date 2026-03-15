@@ -26,7 +26,7 @@ from _differ import extract_manifest_entry
 from utils import (
     HARNESS_DIR, OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     list_repos, discover_projects, data_dir, list_projects_in_data,
-    project_prefix,
+    project_prefix, filter_project_outputs,
 )
 
 
@@ -77,18 +77,9 @@ def create_snapshot(repo_name):
             if not type_dir.exists():
                 continue
 
-            # Filter output files to this project: files whose safe_name
-            # starts with the project path prefix
+            # Filter output files to this project
             prefix = project_prefix(proj_path)
-
-            json_files = sorted(type_dir.glob("*.json"))
-            project_files = []
-            for jf in json_files:
-                if prefix:
-                    if jf.name.startswith(prefix):
-                        project_files.append(jf)
-                else:
-                    project_files.append(jf)
+            project_files = filter_project_outputs(type_dir, proj_path)
 
             if not project_files:
                 continue
