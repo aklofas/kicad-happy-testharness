@@ -151,8 +151,8 @@ python3 validate/audit_constants.py render               # generate constants_re
 
 Each constant is scored on two independent axes:
 
-- **Impact** (0.0-1.0) -- How bad is it if this constant is wrong? A hallucinated Vref value silently produces incorrect voltage calculations; a wrong keyword list causes misclassification.
-- **Overfit** (0.0-1.0) -- Is this constant pulling its weight across the corpus, or was it added to fix one project and doesn't generalize? Starts with structural heuristics (inline definitions, small local lists), then `corpus` fills in real data from analyzer outputs.
+- **Impact** (0.0-1.0) -- How bad is it if this constant is wrong. A hallucinated Vref value silently produces incorrect voltage calculations; a wrong keyword list causes misclassification.
+- **Overfit** (0.0-1.0) -- Whether this constant pulls its weight across the corpus, or was added to fix one project and doesn't generalize. Starts with structural heuristics (inline definitions, small local lists), then `corpus` fills in real data from analyzer outputs.
 
 These combine into a **risk score**: `max(impact * (1 - verified_fraction), overfit)`. Verification drives risk down -- a fully-verified high-impact constant drops to low risk. High overfit stays risky regardless.
 
