@@ -15,7 +15,7 @@ Last updated: 2026-03-15
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-101**. Next TH number: **TH-008**.
+number: **KH-103**. Next TH number: **TH-008**.
 
 ---
 
@@ -121,6 +121,24 @@ number: **KH-101**. Next TH number: **TH-008**.
 **Findings**: FND-172
 
 
+### KH-101 — sexp_parser crashes on truncated/malformed PCB files (LOW)
+
+**Affected**: OnBoard — `projects/holy60-3d/src/holy60-3d.kicad_pcb`, `projects/tofyKeeb/src/tofyKeeb.kicad_pcb`
+**File**: `sexp_parser.py`, `_parse_tokens()` line 67
+**Symptom**: `IndexError: list index out of range` when `tokens[pos]` exceeds token list bounds. Likely truncated or malformed `.kicad_pcb` files where parentheses are unbalanced.
+**Fix direction**: Add bounds check in `_parse_tokens()` to raise a descriptive error instead of IndexError, or catch at `parse_file()` level.
+**Impact**: Crashes analyzer on 2 known files. No output produced. Parser bug, not analyzer logic.
+
+
+### KH-102 — extract_silkscreen crashes when footprint value is a list (LOW)
+
+**Affected**: TI92-revive — `ti92-reviceStable/ti92-reviceStable.kicad_pcb`, `ti92revive/ti92revive.kicad_pcb`
+**File**: `analyze_pcb.py`, `extract_silkscreen()` line 2001
+**Symptom**: `AttributeError: 'list' object has no attribute 'lower'` on `fp.get("value", "").lower()`. The footprint's `value` field is parsed as a list instead of a string, likely from an unusual s-expression structure in the PCB file.
+**Fix direction**: Defensive coercion: `val = str(fp.get("value", "")).lower()` or check type before calling `.lower()`.
+**Impact**: Crashes analyzer on 2 known files. No output produced.
+
+
 ### KH-100 — WiFi/BT modules classified as power regulators (LOW)
 
 **Affected**: OtterCam-s3
@@ -144,3 +162,5 @@ number: **KH-101**. Next TH number: **TH-008**.
 9. **KH-099** (MEDIUM) — I2S misidentified as I2C
 10. **KH-090** (LOW) — LDO inverting flag incorrect
 11. **KH-100** (LOW) — WiFi modules as power regulators
+12. **KH-101** (LOW) — sexp_parser crash on truncated PCB files
+13. **KH-102** (LOW) — extract_silkscreen crash on list-typed value
