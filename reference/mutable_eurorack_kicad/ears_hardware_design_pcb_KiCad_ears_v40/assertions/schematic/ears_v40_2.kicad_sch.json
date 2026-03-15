@@ -1,0 +1,98 @@
+{
+  "file_pattern": "ears_v40_2.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~51 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 45,
+        "max": 57
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~37 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 33,
+        "max": 41
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "8 opamp_circuits detected",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "9 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "2 voltage_dividers detected",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 5 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Has 5 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 29 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 14
+      }
+    }
+  ]
+}

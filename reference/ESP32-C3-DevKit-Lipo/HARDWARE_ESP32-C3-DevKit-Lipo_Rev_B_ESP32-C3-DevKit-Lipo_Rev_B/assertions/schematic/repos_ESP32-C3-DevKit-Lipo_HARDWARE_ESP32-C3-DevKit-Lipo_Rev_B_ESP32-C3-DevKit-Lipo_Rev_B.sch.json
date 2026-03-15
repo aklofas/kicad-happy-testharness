@@ -1,0 +1,93 @@
+{
+  "file_pattern": "repos_ESP32-C3-DevKit-Lipo_HARDWARE_ESP32-C3-DevKit-Lipo_Rev_B_ESP32-C3-DevKit-Lipo_Rev_B.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000119",
+  "assertions": [
+    {
+      "id": "FND-00000119-AST-00000001",
+      "description": "SY8089 buck converter not detected in power_regulators despite being in BOM with inductor available",
+      "created_from": "FND-00000119",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000119-AST-00000002",
+      "description": "BL4054B LiPo charger not detected - charging circuit analysis missing",
+      "created_from": "FND-00000119",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000119-AST-00000003",
+      "description": "No crystal circuit detection (ESP32-C3 may use internal oscillator)",
+      "created_from": "FND-00000119",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000119-AST-00000004",
+      "description": "No decoupling analysis despite 7 capacitors present",
+      "created_from": "FND-00000119",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000119-AST-00000005",
+      "description": "USB CC resistors (R4/R2 5.1k) not identified for USB-C current advertisement",
+      "created_from": "FND-00000119",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000119-AST-00000006",
+      "description": "WPM2015-3 P-MOSFET power path switch not detected",
+      "created_from": "FND-00000119",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000119-AST-00000007",
+      "description": "REVIEW: Power domains ic_power_rails and domain_groups are completely empty despite 3 ICs (U1 BL4054B, U2 SY8089, U3 ESP32-C3) being present and power rails being detected",
+      "created_from": "FND-00000119",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000119-AST-00000008",
+      "description": "REVIEW: All 3 subcircuits have empty neighbor lists - neighbor detection failed",
+      "created_from": "FND-00000119",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

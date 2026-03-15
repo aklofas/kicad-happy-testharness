@@ -25,7 +25,7 @@
 
 ## FND-00000021: Differential pair detector matches any X+/X- net name pattern, producing FPs on V+/V- power rails and IN+/IN- opamp inputs. ESD detector then flags opamps as ESD devices.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: experiment-boards_wien_bridge_oscillator_wien_bridge_oscillator.kicad_sch.json
 - **Created**: 2026-03-13
@@ -52,7 +52,7 @@
 
 ## FND-00000022: Both RC filter detections (R3/C7 at 145 MHz, R9/C7 at 7.2 MHz) are false positives — R3 is output termination, R9 is Wien bridge positive feedback, C7 is negative feedback cap. They share the OUT node but serve different functions.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: experiment-boards_wien_bridge_oscillator_wien_bridge_oscillator.kicad_sch.json
 - **Created**: 2026-03-13

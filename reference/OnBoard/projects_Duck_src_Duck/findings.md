@@ -2,7 +2,7 @@
 
 ## FND-00000093: STM32F411 flight computer with GPS, flash, pyrotechnic channels. Pyro continuity sense dividers correctly detected. STM32 internal regulator classified as power_regulator which is debatable.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/Duck/src/Duck.kicad_sch
 - **Created**: 2026-03-14

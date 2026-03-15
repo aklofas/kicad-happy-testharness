@@ -2,7 +2,7 @@
 
 ## FND-00000123: Motor controller base board: good power regulation and CAN bus detection, but missing current sense on base board and isolation components not identified
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/rp2040-motor-controller/RP2040_base/RP2040_base.kicad_sch
 - **Created**: 2026-03-14

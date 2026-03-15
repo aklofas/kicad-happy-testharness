@@ -1,0 +1,27 @@
+{
+  "file_pattern": "throwing-star.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000071",
+  "assertions": [
+    {
+      "id": "FND-00000071-AST-00000001",
+      "description": "REVIEW: 32 RJ45 data pins appear as isolated __unnamed_0 through __unnamed_31 single-pin nets. All should be on SIG1-SIG8. SIG1-SIG3,SIG6 have zero pins resolved. SIG4,SIG5,SIG7,SIG8 each only have 1 cap pin (missing 3 RJ45 pins each).",
+      "created_from": "FND-00000071",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000071-AST-00000002",
+      "description": "REVIEW: Reports 41 nets but actual design has only 9 (GND + SIG1-SIG8). Inflated by 32 spurious single-pin nets from broken wire tracing.",
+      "created_from": "FND-00000071",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

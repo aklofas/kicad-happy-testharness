@@ -1,0 +1,84 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "electronic_design_production_ethersweep405_ethersweep.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Stepper motor controller with W5500 Ethernet, TMC2209 driver, AS5600 encoder. Ethernet PHY, motor driver, I2C bus correctly detected. Major gaps in crystal load caps, decoupling, SPI bus, and current sense false positives.",
+      "correct": [
+        {
+          "description": "W5500 (U1) correctly identified as Ethernet PHY with RJ45 connector J10 HR911105A",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        },
+        {
+          "description": "TMC2209-LA (U7) correctly identified as motor driver with 29 pins mapped",
+          "analyzer_section": "ic_pin_analysis"
+        },
+        {
+          "description": "I2C bus between STM32 (U3) and AS5600 (U5) with pull-ups R24, R27",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "SPI signals CS/SCK/MISO/MOSI correctly classified as chip_select/clock/data",
+          "analyzer_section": "bus_topology"
+        },
+        {
+          "description": "Power rails +28V, +3.3V, +3.3VA, DD4012SA enumerated",
+          "analyzer_section": "statistics"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "R4, R5 (33 ohm) falsely detected as current sense shunts -- these are Ethernet differential pair series termination resistors between W5500 TX/RX and HR911105A RJ45",
+          "analyzer_section": "signal_analysis.current_sense"
+        },
+        {
+          "description": "DD4012SA (U4, Diodes Inc buck converter) classified as power_symbol because lib_id is 'power:DD4012SA' with in_bom=yes -- excluded from components, ic_pin_analysis, and power_regulators entirely",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "All 109 components have empty string classification field",
+          "analyzer_section": "components"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No SPI bus detection between STM32 (PA5/SCK, PA6/MISO, PA7/MOSI, PB9/CS) and W5500 -- only I2C detected as bus protocol",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "Crystal Y3 (8MHz) load caps C10, C8 (22pF) not associated despite clear connectivity; Y2 (25MHz) load caps C33, C34 (18pF) also missed",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "Decoupling analysis reports all ICs (U6, U5, U7, U3) with rails_with_caps=[] despite extensive decoupling on +3.3V and GND",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "+28V motor power rail missing from power_budget despite 11 power symbol instances feeding TMC2209 via DD4012SA",
+          "analyzer_section": "signal_analysis.power_budget"
+        },
+        {
+          "description": "Ethernet magnetics not detected -- HR911105A has integrated magnetics with differential pairs but magnetics array is empty",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        }
+      ],
+      "suggestions": [
+        "Check in_bom flag before classifying components as power symbols -- DD4012SA has in_bom=yes",
+        "Add minimum resistance threshold for current_sense detection to avoid Ethernet termination resistors",
+        "Crystal load cap detection should use connectivity data already in ic_pin_analysis"
+      ],
+      "related_issues": [
+        "KH-079",
+        "KH-080",
+        "KH-081"
+      ],
+      "should_become_assertion": true,
+      "id": "FND-00000150",
+      "repo": "ethersweep",
+      "project": "electronic_design_production_ethersweep405_ethersweep",
+      "created": "2026-03-15T18:55:17.066538+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

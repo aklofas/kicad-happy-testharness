@@ -1,0 +1,39 @@
+{
+  "file_pattern": "boards_MIDAS-MK2_MIDAS-MK2.1-revA_MIDAS-MK2.1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000155",
+  "assertions": [
+    {
+      "id": "FND-00000155-AST-00000001",
+      "description": "Isolation components ISOW7742 and ISO1640BDR not listed in isolation_components despite being the isolators bridging GND and PYRO_GND domains",
+      "created_from": "FND-00000155",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000155-AST-00000002",
+      "description": "SPI_SCK, SPI_MOSI, SPI_MISO appear in I2C results (same SPI-as-I2C false positive pattern)",
+      "created_from": "FND-00000155",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000155-AST-00000003",
+      "description": "REVIEW: Switching regulators TPS566242 (U303) and TPS564247 (U105) report input_rail and fb_net but no output_rail -- LDOs do have output_rail",
+      "created_from": "FND-00000155",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

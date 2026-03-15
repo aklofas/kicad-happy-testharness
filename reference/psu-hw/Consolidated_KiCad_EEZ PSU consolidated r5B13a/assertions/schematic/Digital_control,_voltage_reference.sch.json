@@ -1,0 +1,71 @@
+{
+  "file_pattern": "Digital_control,_voltage_reference.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~36 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 32,
+        "max": 40
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~34 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 30,
+        "max": 38
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "Has 16 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Has 5 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Has 10 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 5
+      }
+    }
+  ]
+}

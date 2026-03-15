@@ -25,7 +25,7 @@
 
 ## FND-00000020: LM741 U2 classified as inverting amplifier with gain=-100 but R2 does NOT bridge OUT and IN- nets. R2 connects to experimenter socket, not the opamp output.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: experiment-boards_op_amp_experimenter_op_amp_experimenter.kicad_sch.json
 - **Created**: 2026-03-13

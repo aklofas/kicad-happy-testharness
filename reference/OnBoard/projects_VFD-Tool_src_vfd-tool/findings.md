@@ -2,7 +2,7 @@
 
 ## FND-00000087: RP2040-based VFD driver tool with USB-C. Good signal detection overall. TPS562200 estimated Vout only computed for one of two identical regulators. W25Q32 flash memory interface correctly detected.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/VFD-Tool/src/vfd-tool.kicad_sch
 - **Created**: 2026-03-14

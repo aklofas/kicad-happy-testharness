@@ -1,0 +1,31 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "breakouts_filter_breakout_filter_bank.sch.json",
+      "status": "promoted",
+      "summary": "RF filter bank breakout with Mini-Circuits LFCN low-pass filters. FI-prefix filters misclassified as fuses via F->fuse single-char fallback.",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "FI-prefix components (LFCN-6000D+, LFCN-4400+, etc.) classified as 'fuse' via F->fuse single-char fallback despite lib_id 'EMI_FILTER'",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Add 'FI' prefix to type_map as 'filter'",
+        "Add lib_id fallback: 'EMI_FILTER' or 'FILTER' in lib_id should override fuse classification"
+      ],
+      "related_issues": [
+        "KH-081"
+      ],
+      "should_become_assertion": true,
+      "id": "FND-00000151",
+      "repo": "vna",
+      "project": "breakouts_filter_breakout_filter_bank",
+      "created": "2026-03-15T18:55:17.097888+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

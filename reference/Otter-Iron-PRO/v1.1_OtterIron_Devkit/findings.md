@@ -2,7 +2,7 @@
 
 ## FND-00000141: USB-C soldering iron with STM32: power MOSFET heater drive and USB PD detected, but missing temperature sensing circuit and PID control loop identification
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/Otter-Iron-PRO/v1.1/OtterIron_Devkit.sch
 - **Created**: 2026-03-14

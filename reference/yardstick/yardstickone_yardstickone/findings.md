@@ -2,7 +2,7 @@
 
 ## FND-00000144: YardStick One is a Great Scott Gadgets sub-1GHz RF tool with CC1111 (8051+radio SoC), TX/RX amplifiers (SPF5043Z TX, RX MMIC), SKY13251 SP3T RF switches, LPF filter, and AP7313 3.3V LDO. The analyzer correctly identifies 9 subcircuits, the crystal circuit (48 MHz), AP7313 power regulator, 2 RC filters (33ohm/47pF at 102 MHz), 3 LC filters, and 1 protection device. This is a well-analyzed design with good RF component identification.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/yardstick/yardstickone/yardstickone.sch
 - **Related**: KH-047

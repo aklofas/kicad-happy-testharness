@@ -1,0 +1,59 @@
+{
+  "file_pattern": "repos_OpenCAPI_Breakout_OpenCAPI_Breakout.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000084",
+  "assertions": [
+    {
+      "id": "FND-00000084-AST-00000001",
+      "description": "No high-speed serial interface detection - this is an OpenCAPI breakout with 8 lanes of 25 Gbps differential pairs. Should be identified as a high-speed serial link topology",
+      "created_from": "FND-00000084",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000084-AST-00000002",
+      "description": "Connector-only breakout board topology not recognized - this is purely passive routing from one connector to individual coax connectors for probing/testing",
+      "created_from": "FND-00000084",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000084-AST-00000003",
+      "description": "REVIEW: 32 false positive UART detections - all Tx*/Rx* nets are OpenCAPI high-speed serial lanes (25 Gbps), not UART. The analyzer is matching on Tx/Rx naming convention without considering that these are differential pairs on a high-speed connector",
+      "created_from": "FND-00000084",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000084-AST-00000004",
+      "description": "REVIEW: ERC no_driver warnings on Rx nets are misleading - coaxial connectors have passive pins which is correct for a breakout board. The Rx pins on J1 are typed as input but the coax connector pins are passive, which is the expected topology",
+      "created_from": "FND-00000084",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000084-AST-00000005",
+      "description": "REVIEW: All 36 unique_parts count is inflated - many coax connectors are identical parts with different net labels. BOM should consolidate identical Conn_Coaxial footprints",
+      "created_from": "FND-00000084",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "file_pattern": "TARS-MK1.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~106 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 95,
+        "max": 117
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~502 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 451,
+        "max": 553
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "5 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 11 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Has 27 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 13
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 16 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Has 5 jumper(s)",
+      "check": {
+        "path": "statistics.component_types.jumper",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 12 led(s)",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "Has 10 other(s)",
+      "check": {
+        "path": "statistics.component_types.other",
+        "op": "min_count",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "Has 23 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 11
+      }
+    }
+  ]
+}

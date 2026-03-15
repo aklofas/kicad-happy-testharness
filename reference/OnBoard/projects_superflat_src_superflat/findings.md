@@ -2,7 +2,7 @@
 
 ## FND-00000094: Low-profile wireless keyboard with BQ24075 battery charger and XC6206 LDO. Key matrix and power chain correctly identified. BOM matches perfectly.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/superflat/src/superflat.kicad_sch
 - **Created**: 2026-03-14

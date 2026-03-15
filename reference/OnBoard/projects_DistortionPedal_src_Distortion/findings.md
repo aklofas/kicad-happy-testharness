@@ -2,7 +2,7 @@
 
 ## FND-00000092: Guitar distortion pedal with NJM4558 dual opamp, 3 BJT stages, and extensive RC filtering. Good signal analysis overall but missed bias voltage divider and potentiometers classified as other.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/DistortionPedal/src/Distortion.kicad_sch
 - **Created**: 2026-03-14

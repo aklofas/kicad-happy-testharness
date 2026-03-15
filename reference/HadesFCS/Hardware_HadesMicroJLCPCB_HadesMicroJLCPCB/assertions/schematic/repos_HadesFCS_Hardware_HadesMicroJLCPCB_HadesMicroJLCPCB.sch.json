@@ -1,0 +1,62 @@
+{
+  "file_pattern": "repos_HadesFCS_Hardware_HadesMicroJLCPCB_HadesMicroJLCPCB.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000083",
+  "assertions": [
+    {
+      "id": "FND-00000083-AST-00000001",
+      "description": "Zero signal analysis results despite 84 components - all signal detection blocked by KH-016 legacy wire-to-pin failure",
+      "created_from": "FND-00000083",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000083-AST-00000002",
+      "description": "VDDA rail with ferrite bead filtering for ADC reference not analyzed",
+      "created_from": "FND-00000083",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000083-AST-00000003",
+      "description": "2 diodes (likely ESD or reverse polarity protection) not detected",
+      "created_from": "FND-00000083",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000083-AST-00000004",
+      "description": "Fuse not detected as protection device",
+      "created_from": "FND-00000083",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000083-AST-00000005",
+      "description": "5 LEDs with likely series resistors not characterized",
+      "created_from": "FND-00000083",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    }
+  ]
+}

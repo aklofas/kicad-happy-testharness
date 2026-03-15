@@ -2,7 +2,7 @@
 
 ## FND-00000096: Hugo keyboard with KB2040 MCU, 76-key matrix using GPIO naming (A0-A3, D0-D13 etc). Matrix not detected, IC/connector refs missing, KiCad version unknown.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/Hugo's Keyboard/src/keyboar!.kicad_sch
 - **Created**: 2026-03-14

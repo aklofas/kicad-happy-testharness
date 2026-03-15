@@ -1,0 +1,70 @@
+{
+  "file_pattern": "repos_Voron-Hardware_Klipper_Expander_KiCad_STM32_Klipper_Expander.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000075",
+  "assertions": [
+    {
+      "id": "FND-00000075-AST-00000001",
+      "description": "AP2127K-3.3 LDO (U2) not detected as power regulator despite being present in BOM with correct value",
+      "created_from": "FND-00000075",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000075-AST-00000002",
+      "description": "No SWD debug interface detection despite SWDIO net being classified as debug",
+      "created_from": "FND-00000075",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000075-AST-00000003",
+      "description": "Neopixel/WS2812 level-shifted output circuit not characterized",
+      "created_from": "FND-00000075",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000075-AST-00000004",
+      "description": "REVIEW: Voltage divider detection false positive: R7 (100 ohm) / R11 (10K) with ratio 0.99 is actually a series resistor + pulldown on a PWM output, not a signal-conditioning divider",
+      "created_from": "FND-00000075",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000075-AST-00000005",
+      "description": "REVIEW: NRST pin flagged as connected to Neopixel net - this is likely a net naming/mapping error in the legacy parser, NRST would not be intentionally connected to a Neopixel data line",
+      "created_from": "FND-00000075",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000075-AST-00000006",
+      "description": "REVIEW: MOSFET load_type reported as led for all 4 channels - these are general-purpose PWM outputs for fans/heaters/LEDs, not specifically LED loads",
+      "created_from": "FND-00000075",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

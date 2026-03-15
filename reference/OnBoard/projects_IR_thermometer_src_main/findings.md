@@ -2,7 +2,7 @@
 
 ## FND-00000100: IR thermometer with MLX90614 sensor, SEEED XIAO MCU, SPX2920 LDO regulator, and SSD1306 OLED. Good overall detection.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/IR_thermometer/src/main.kicad_sch
 - **Created**: 2026-03-14

@@ -1,0 +1,49 @@
+{
+  "file_pattern": "repos_splitflap_electronics_chainlinkBase_chainlinkBase.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000079",
+  "assertions": [
+    {
+      "id": "FND-00000079-AST-00000001",
+      "description": "No signal analysis detected (0 signals) - RS-485 bus, I2C bus (MCP23017, INA219), SPI-like shift register interface, voltage regulators (AP7361C-33E, buck converter), level translation circuits, and motor driver should all be detectable",
+      "created_from": "FND-00000079",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000079-AST-00000002",
+      "description": "RS-485 interface (SP485) not detected as a bus protocol",
+      "created_from": "FND-00000079",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000079-AST-00000003",
+      "description": "REVIEW: SP485 uses lib_id Interface_UART:MAX485E - value/lib mismatch (SP485 vs MAX485E). These are pin-compatible but different parts. Analyzer reports what is in schematic correctly but could flag this",
+      "created_from": "FND-00000079",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000079-AST-00000004",
+      "description": "REVIEW: TPL7407L uses lib_id Transistor_Array:ULN2003A - same value/lib mismatch as chainlinkDriver",
+      "created_from": "FND-00000079",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "file_pattern": "repos_ESP32-EVB_HARDWARE_REV-L_ESP32-EVB_Rev_L.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000111",
+  "assertions": [
+    {
+      "id": "FND-00000111-AST-00000001",
+      "description": "CAN transceiver SN65HVD230 (U6) not detected as a bus transceiver subcircuit - should identify CAN-TX/CAN-RX connections to ESP32 and CANH/CANL bus lines",
+      "created_from": "FND-00000111",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000111-AST-00000002",
+      "description": "Ethernet magnetics (transformer/common-mode choke between PHY and RJ45 connector) not linked to Ethernet PHY in ethernet_interfaces",
+      "created_from": "FND-00000111",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000111-AST-00000003",
+      "description": "No crystal circuit detected despite ESP32-WROOM module likely having internal crystal; the 50MHz crystal for the LAN8710A PHY is also not identified",
+      "created_from": "FND-00000111",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000111-AST-00000004",
+      "description": "Relay driver circuits (Q1/Q2 driving REL1/REL2 with flyback diodes D1/D3) not identified as transistor switch circuits",
+      "created_from": "FND-00000111",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000111-AST-00000005",
+      "description": "USB-UART bridge (likely CH340 or similar) not identified as a subcircuit with its USB data lines",
+      "created_from": "FND-00000111",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000111-AST-00000006",
+      "description": "REVIEW: Ethernet RMII signals (GPIO19/TXD0, GPIO22/TXD1, etc.) misclassified as UART in bus_analysis instead of being recognized as Ethernet RMII bus signals",
+      "created_from": "FND-00000111",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000111-AST-00000007",
+      "description": "REVIEW: Only 1 power regulator detected (TPS62A02 for 3.3V) but board has additional regulators - the SY8089 buck converter and battery charger circuit are not identified",
+      "created_from": "FND-00000111",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

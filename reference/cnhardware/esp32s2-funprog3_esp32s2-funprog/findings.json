@@ -1,0 +1,40 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "esp32s2-funprog3_esp32s2-funprog.kicad_sch.json",
+      "status": "promoted",
+      "summary": "ESP32-S2 development board with PCB antenna, USB, LEDs. Antenna A1 misclassified as IC via A-prefix; complementary BJT U11 ZDT6790TA classified as IC despite BJT in lib_id.",
+      "correct": [
+        {
+          "description": "USBLC6-2P6 protection device correctly detected",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "A1 (PCB antenna, Device:R, value='ANT', 1206 footprint) classified as IC due to 'A' ref prefix -- should be antenna",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "U11 ZDT6790TA with lib_id 'cnhardware:ZDT6790-COMPLEMENTARY-BJT' classified as IC -- 'BJT' in lib_id should override U prefix",
+          "analyzer_section": "statistics.component_types"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Ref prefix 'A' should map to antenna, not IC",
+        "Lib_id containing 'BJT' should override IC classification from U prefix"
+      ],
+      "related_issues": [
+        "KH-079"
+      ],
+      "should_become_assertion": true,
+      "id": "FND-00000159",
+      "repo": "cnhardware",
+      "project": "esp32s2-funprog3_esp32s2-funprog",
+      "created": "2026-03-15T18:55:17.316336+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

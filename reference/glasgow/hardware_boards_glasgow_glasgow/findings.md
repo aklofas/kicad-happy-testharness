@@ -2,7 +2,7 @@
 
 ## FND-00000001: current_sense detector produces 68 false positives in glasgow.kicad_sch by pairing R49 (0.15 ohm shunt) with every IC sharing GND net
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_boards_glasgow_glasgow.kicad_sch.json
 - **Related**: KH-007
@@ -25,7 +25,7 @@
 
 ## FND-00000006: Voltage divider false positives: R30/R48 and R56/R48 on ISNS_H net are current sense network components, not dividers. R5/R4 on ~{CY_RESET} is a pull-up/pull-down pair, not a sensing divider.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_boards_glasgow_glasgow.kicad_sch.json
 - **Related**: KH-012
@@ -75,7 +75,7 @@
 
 ## FND-00000018: CRITICAL: +3V3 power rail completely missing from nets dict despite 52 power symbols in main sheet + 33 in io_banks (85 total). GND (133 symbols), +5V (10), +1V2 (5) all work correctly. This means ALL +3V3 connections are invisible — signal analysis for anything on the 3.3V rail will fail.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_boards_glasgow_glasgow.kicad_sch.json
 - **Related**: NEW - not yet in issue tracker
@@ -98,7 +98,7 @@
 
 ## FND-00000025: 73 capacitors with value "u1" (European notation for 0.1uF) have no parsed_value. Parser handles "4u7" but fails when unit prefix precedes digit.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_boards_glasgow_glasgow.kicad_sch.json
 - **Created**: 2026-03-13

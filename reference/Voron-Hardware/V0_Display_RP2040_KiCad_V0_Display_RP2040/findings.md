@@ -2,7 +2,7 @@
 
 ## FND-00000077: V0 Display RP2040 - well-analyzed KiCad 6+ schematic with good coverage of RP2040 support circuitry
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/Voron-Hardware/V0_Display_RP2040/KiCad/V0_Display_RP2040.kicad_sch
 - **Created**: 2026-03-14

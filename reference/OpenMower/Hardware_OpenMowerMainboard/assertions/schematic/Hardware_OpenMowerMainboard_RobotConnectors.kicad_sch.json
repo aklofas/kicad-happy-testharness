@@ -1,0 +1,28 @@
+{
+  "file_pattern": "Hardware_OpenMowerMainboard_RobotConnectors.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000014",
+  "assertions": [
+    {
+      "id": "FND-00000014-AST-00000001",
+      "description": "Q13-Q16 (BSS138) are classic MOSFET bidirectional level shifters (AN10441 topology). Gate tied to lower voltage rail (+3V3), drain on HV side with pull-up, source on LV side with pull-up. The analyzer detects them as transistor circuits but does not recognize the level-shifter pattern. No level_shifter signal path category exists.",
+      "created_from": "FND-00000014",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000016-AST-00000001",
+      "description": "REVIEW: Q13-Q16 each show gate_resistors including R48, R14, R17, R19, R15, R3, R9. Only R3 (for Q13) or the local pull-up is the actual gate-related resistor. The others are on the +3V3 power rail net and have no functional relationship to the gate drive of these MOSFETs.",
+      "created_from": "FND-00000016",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

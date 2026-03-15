@@ -1,0 +1,92 @@
+{
+  "file_pattern": "repos_esp32-4-channel-relays_esp32-4-channel-relays.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000139",
+  "assertions": [
+    {
+      "id": "FND-00000139-AST-00000001",
+      "description": "PC817 optocoupler isolation barrier between ESP32 control and relay power not detected in isolation_barriers",
+      "created_from": "FND-00000139",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000139-AST-00000002",
+      "description": "Relay flyback/freewheeling diodes (1N4007) not linked to their corresponding relay coils",
+      "created_from": "FND-00000139",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000139-AST-00000003",
+      "description": "MBT3904DW1 (Q1) dual transistor auto-program circuit for ESP32 boot/reset not detected as auto-program",
+      "created_from": "FND-00000139",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000139-AST-00000004",
+      "description": "Relay indicator LEDs (D2, D4, D6, D8 RED_LED) not linked to relay channels",
+      "created_from": "FND-00000139",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000139-AST-00000005",
+      "description": "Complete relay driver chain (GPIO -> optocoupler -> transistor -> relay coil + flyback diode) not detected as unified circuit",
+      "created_from": "FND-00000139",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000139-AST-00000006",
+      "description": "REVIEW: Subcircuit neighbors are identical for all 8 ICs - listing same components regardless of actual proximity",
+      "created_from": "FND-00000139",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000139-AST-00000007",
+      "description": "REVIEW: Transistor load_type shown as other for all 4 relay drivers - should be relay or indicate relay coil load",
+      "created_from": "FND-00000139",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000139-AST-00000008",
+      "description": "REVIEW: PRTR5V0U2X decoupling warning for VCC rail - PRTR5V0U2X does not need dedicated decoupling on VCC (it is internally clamped)",
+      "created_from": "FND-00000139",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

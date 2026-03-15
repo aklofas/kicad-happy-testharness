@@ -2,7 +2,7 @@
 
 ## FND-00000073: Legacy net resolver assigns pins to wrong nets: CC2591 RF_P/AVDD pins on GND, LPC1758 GPIO/XTAL pins on 3V3D. 71/143 nets are single-pin orphans (50%).
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_ubertooth-one_ubertooth-one.sch.json
 - **Related**: KH-015, KH-016

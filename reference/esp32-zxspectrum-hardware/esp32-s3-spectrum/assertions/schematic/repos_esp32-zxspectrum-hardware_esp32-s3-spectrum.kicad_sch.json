@@ -1,0 +1,92 @@
+{
+  "file_pattern": "repos_esp32-zxspectrum-hardware_esp32-s3-spectrum.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000146",
+  "assertions": [
+    {
+      "id": "FND-00000146-AST-00000001",
+      "description": "ZX Spectrum keyboard matrix using touch pads (K0-K10) with 74HC4051 multiplexers not identified as a key matrix",
+      "created_from": "FND-00000146",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000146-AST-00000002",
+      "description": "SD card interface (SD-01A connector Card1) not detected as a memory card interface",
+      "created_from": "FND-00000146",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000146-AST-00000003",
+      "description": "TFT display interface only partially detected (SPI signals found) - CS, DC, RST, and backlight control lines not grouped",
+      "created_from": "FND-00000146",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000146-AST-00000004",
+      "description": "Battery management subsystem (TP4057 charger + TPS2117 power mux + battery connector) not identified as a complete power path",
+      "created_from": "FND-00000146",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000146-AST-00000005",
+      "description": "QWIIC/I2C connectors (SM04B-SRSS-TB) not detected as I2C expansion ports",
+      "created_from": "FND-00000146",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000146-AST-00000006",
+      "description": "REVIEW: Touch pad matrix components (K0-K10) classified as relay type - these are PCB touch pads for a virtual ZX Spectrum keyboard, not electromechanical relays",
+      "created_from": "FND-00000146",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000146-AST-00000007",
+      "description": "REVIEW: Touch pad matrix components A1, V1, T1 classified as ic/varistor/transformer respectively - all are touch pad matrix elements",
+      "created_from": "FND-00000146",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000146-AST-00000008",
+      "description": "REVIEW: Component count shows 11 relays, 1 varistor, 1 transformer - all are actually touch pad keyboard matrix elements",
+      "created_from": "FND-00000146",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

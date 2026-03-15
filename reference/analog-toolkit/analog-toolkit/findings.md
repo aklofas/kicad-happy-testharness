@@ -2,7 +2,7 @@
 
 ## FND-00000070: 13 false positive RF matching networks on ADC input conditioning circuits (0-ohm series resistors + 10nF anti-aliasing caps)
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: analog-toolkit.kicad_sch.json
 - **Created**: 2026-03-13

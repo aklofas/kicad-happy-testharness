@@ -1,0 +1,92 @@
+{
+  "file_pattern": "repos_greatfet-hardware_luckybamboo_luckybamboo.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000124",
+  "assertions": [
+    {
+      "id": "FND-00000124-AST-00000001",
+      "description": "No RF chain detection despite this being a pure RF design with four ADF7242 transceivers, baluns, diplexers, an LNA, and an SP4T antenna switch",
+      "created_from": "FND-00000124",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000124-AST-00000002",
+      "description": "No RF matching networks detected despite extensive RF frontend with baluns and matching components",
+      "created_from": "FND-00000124",
+      "check": {
+        "path": "signal_analysis.rf_matching",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000124-AST-00000003",
+      "description": "ADF7242 transceivers not identified as RF transceivers in any signal analysis section. These are 802.15.4 radios critical to understanding the design.",
+      "created_from": "FND-00000124",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000124-AST-00000004",
+      "description": "SKY13322 SP4T switch not identified in RF chain despite being the antenna routing switch",
+      "created_from": "FND-00000124",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000124-AST-00000005",
+      "description": "No SPI bus detection for ADF7242 control interface despite SPI being the primary control bus",
+      "created_from": "FND-00000124",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000124-AST-00000006",
+      "description": "REVIEW: 17 false positive crystal circuits from balun modules (U8-U17, ADF7242_balun), diplexers (U6-U7, U12 HHM2293A1), LNA (U13 BGA7H1N6), and RF switch (U5 SKY13322). These are all RF components, not oscillators.",
+      "created_from": "FND-00000124",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000124-AST-00000007",
+      "description": "REVIEW: All 153 components have category=None despite correct component_types in statistics",
+      "created_from": "FND-00000124",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000124-AST-00000008",
+      "description": "REVIEW: All 17 subcircuit entries have empty neighbor_components arrays",
+      "created_from": "FND-00000124",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

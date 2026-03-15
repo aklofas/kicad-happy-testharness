@@ -2,7 +2,7 @@
 
 ## FND-00000109: Simple LM2596S-12 buck regulator. Good subcircuit and signal detection but incorrectly applies adjustable-version feedback analysis to the fixed 12V variant.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/Buck-Regulator/src/buck.kicad_sch
 - **Created**: 2026-03-14

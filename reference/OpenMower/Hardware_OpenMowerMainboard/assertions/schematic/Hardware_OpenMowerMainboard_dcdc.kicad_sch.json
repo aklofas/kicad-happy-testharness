@@ -1,0 +1,49 @@
+{
+  "file_pattern": "Hardware_OpenMowerMainboard_dcdc.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000002",
+  "assertions": [
+    {
+      "id": "FND-00000002-AST-00000001",
+      "description": "REVIEW: MAX20405 classified with topology=LDO but is actually a synchronous buck converter. Has inductor L1 + bootstrap cap C15 which are hallmarks of switching topology.",
+      "created_from": "FND-00000002",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000003-AST-00000001",
+      "description": "REVIEW: L1 (4.7uH) + C15 (0.1uF) flagged as LC filter at 232 kHz resonance. C15 is a bootstrap capacitor connected between BST and LX (switching node), not part of a filter.",
+      "created_from": "FND-00000003",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000005-AST-00000001",
+      "description": "digikey field is empty for all OpenMower components despite source having \"Digikey\" property with valid PNs (e.g. \"1276-1935-1-ND\")",
+      "created_from": "FND-00000005",
+      "check": {
+        "path": "components[*].digikey",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000012-AST-00000001",
+      "description": "R11/R12 form the output voltage feedback divider for IC3 (MAX20405 buck converter). The midpoint connects through JP5 to the FB pin of IC3. This should be detected as a feedback_network in addition to being a voltage_divider.",
+      "created_from": "FND-00000012",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    }
+  ]
+}

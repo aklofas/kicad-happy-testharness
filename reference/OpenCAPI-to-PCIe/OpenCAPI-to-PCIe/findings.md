@@ -2,7 +2,7 @@
 
 ## FND-00000024: 32 PCIe Rx/Tx differential lanes falsely classified as UART signals due to net name pattern matching on "Rx"/"Tx"
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: OpenCAPI-to-PCIe.kicad_sch.json
 - **Created**: 2026-03-13

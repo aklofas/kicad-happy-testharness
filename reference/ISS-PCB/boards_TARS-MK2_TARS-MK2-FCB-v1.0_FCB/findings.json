@@ -1,0 +1,53 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "boards_TARS-MK2_TARS-MK2-FCB-v1.0_FCB.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Flight computer with OSD3358 SiP, MIMXRT1062, sensors, LoRa, GPS. Good basic parsing but SPI-as-I2C false positives, LDO inverting flag errors, and TVS IC detection gaps.",
+      "correct": [
+        {
+          "description": "Crystal Y101 40MHz with load caps correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "CAN bus detection with MCP2518FDT and TCAN337G correct",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "USB differential pair detection correct",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TLV75733PDRV LDOs (U305, U505) marked as inverting=true -- TLV757xx is a standard positive fixed-output LDO",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [
+        {
+          "description": "TVS1800DRV (U301, U302) from Power_Protection library not detected as protection devices -- only discrete D-prefix TVS diodes detected",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "ECMF02-2AMX6 (U108) USB ESD/CM filter not in protection_devices, usb_data reports has_esd_protection=false despite U108 on those nets",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "suggestions": [
+        "Add Power_Protection library components to protection_devices detection",
+        "Fix LDO inverting flag -- TLV757xx and similar fixed-output LDOs should not be marked inverting"
+      ],
+      "related_issues": [
+        "KH-082"
+      ],
+      "should_become_assertion": true,
+      "id": "FND-00000153",
+      "repo": "ISS-PCB",
+      "project": "boards_TARS-MK2_TARS-MK2-FCB-v1.0_FCB",
+      "created": "2026-03-15T18:55:17.153933+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

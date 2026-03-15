@@ -1,0 +1,54 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "boards_MIDAS-MK2_MIDAS-MK2.1-revA_MIDAS-MK2.1.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Data acquisition board with ESP32-S3, motion sensors, pyro channels, CAN, LoRa. Good voltage divider and feedback detection. Switching regulators missing output_rail; isolation components not linked.",
+      "correct": [
+        {
+          "description": "Voltage dividers correctly identified for pyro sense (100k/30k) and feedback dividers",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "TPS566242 feedback (135k/30k -> 3.3V) and TPS564247 feedback (155k/30k -> 3.7V) correct with accurate Vout",
+          "analyzer_section": "signal_analysis.feedback_networks"
+        },
+        {
+          "description": "Switching regulator topology correctly identifies TPS566242 and TPS564247 with inductor references",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Switching regulators TPS566242 (U303) and TPS564247 (U105) report input_rail and fb_net but no output_rail -- LDOs do have output_rail",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Isolation components ISOW7742 and ISO1640BDR not listed in isolation_components despite being the isolators bridging GND and PYRO_GND domains",
+          "analyzer_section": "signal_analysis.isolation_barriers"
+        },
+        {
+          "description": "SPI_SCK, SPI_MOSI, SPI_MISO appear in I2C results (same SPI-as-I2C false positive pattern)",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "suggestions": [
+        "Switching regulators should trace output rail from inductor/output cap connections",
+        "ISOW77xx and ISO16xx should be recognized as isolation components"
+      ],
+      "related_issues": [
+        "KH-086",
+        "KH-087"
+      ],
+      "should_become_assertion": true,
+      "id": "FND-00000155",
+      "repo": "ISS-PCB",
+      "project": "boards_MIDAS-MK2_MIDAS-MK2.1-revA_MIDAS-MK2.1",
+      "created": "2026-03-15T18:55:17.207145+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

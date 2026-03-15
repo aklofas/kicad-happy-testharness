@@ -1,0 +1,72 @@
+{
+  "file_pattern": "repos_OnBoard_projects_HackerLamp_src_Lamp.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000106",
+  "assertions": [
+    {
+      "id": "FND-00000106-AST-00000001",
+      "description": "SK6812 addressable LED chain topology not detected - 100 LEDs in a daisy-chain DIN/DOUT pattern is a significant signal path",
+      "created_from": "FND-00000106",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000106-AST-00000002",
+      "description": "No power analysis despite 100 addressable LEDs drawing significant current (up to 6A at full white)",
+      "created_from": "FND-00000106",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000106-AST-00000003",
+      "description": "No connector analysis - XIAO-RP2040 has USB-C on-board for programming",
+      "created_from": "FND-00000106",
+      "check": {
+        "path": "statistics.component_types",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000106-AST-00000004",
+      "description": "XIAO-RP2040-DIP is a dev board module containing RP2040, USB-C, and power regulation - this context is missing",
+      "created_from": "FND-00000106",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000106-AST-00000005",
+      "description": "Only 2 unique parts and 101 components but no subcircuit detection of the LED array",
+      "created_from": "FND-00000106",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000106-AST-00000006",
+      "description": "REVIEW: IC function not identified for XIAO-RP2040-DIP - should be identified as Seeed XIAO RP2040 dev board",
+      "created_from": "FND-00000106",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

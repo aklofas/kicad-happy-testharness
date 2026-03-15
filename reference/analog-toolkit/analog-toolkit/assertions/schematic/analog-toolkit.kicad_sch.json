@@ -102,6 +102,48 @@
         "op": "min_count",
         "value": 11
       }
+    },
+    {
+      "id": "FND-00000070-AST-00000001",
+      "description": "6 RC anti-aliasing filters on ADC inputs (R11-R16 series + C8-C13 shunt to GND). rc_filters array is empty.",
+      "created_from": "FND-00000070",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000070-AST-00000002",
+      "description": "Ferrite bead FB1 between +3V3 and +3.3VA with C7 100nF forms analog supply filter. Not detected.",
+      "created_from": "FND-00000070",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000070-AST-00000003",
+      "description": "REVIEW: 13 false positive RF matching networks detected on ADC input conditioning circuits. These are 0-ohm series resistors (R11-R16) and DNP resistors (R5-R10, R17-R23) with 10nF anti-aliasing caps (C8-C13). Nothing RF-related in this design.",
+      "created_from": "FND-00000070",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000070-AST-00000004",
+      "description": "REVIEW: dnp_parts=1 but there are 13 DNP components (R5-R10, R17-R23). Counts BOM line items instead of component instances.",
+      "created_from": "FND-00000070",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
     }
   ]
 }

@@ -1,0 +1,39 @@
+{
+  "file_pattern": "repos_splitflap_electronics_chainlinkDriver_chainlinkDriver.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000078",
+  "assertions": [
+    {
+      "id": "FND-00000078-AST-00000001",
+      "description": "No signal analysis detected (0 signals) - SPI-like shift register chain (CLOCK, LATCH, DATA signals), motor drive outputs, and sensor input path should all be detectable",
+      "created_from": "FND-00000078",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000078-AST-00000002",
+      "description": "No SPI bus detection for the 74HC595/74HC165 daisy chain despite CLOCK, LATCH, DATA net names being present",
+      "created_from": "FND-00000078",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000078-AST-00000003",
+      "description": "REVIEW: TPL7407L components use lib_id Transistor_Array:ULN2003A - the value says TPL7407L but lib symbol is ULN2003A. Analyzer correctly reports what is in the schematic, but could note the value/lib mismatch as a design observation",
+      "created_from": "FND-00000078",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

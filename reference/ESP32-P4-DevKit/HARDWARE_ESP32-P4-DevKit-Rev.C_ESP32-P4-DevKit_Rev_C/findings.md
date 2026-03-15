@@ -2,7 +2,7 @@
 
 ## FND-00000113: Dev board with two TPS62A02 regulators and Ethernet PHY correctly identified; differential pairs properly detected with ESD protection; crystal circuit undetected; RMII signals misclassified as UART; voltage divider R16/R14 is SD card detect not a divider
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/ESP32-P4-DevKit/HARDWARE/ESP32-P4-DevKit-Rev.C/ESP32-P4-DevKit_Rev_C.kicad_sch
 - **Created**: 2026-03-14

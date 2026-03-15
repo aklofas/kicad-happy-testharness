@@ -1,0 +1,29 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "addlepatedarray_synthtest_synthtest.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Synthesizer test board with TCXO oscillator. Y1 CFPS-72 TCXO misclassified as crystal instead of oscillator.",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Y1 with lib_id 'Oscillator:CFPS-72' (active TCXO, value 'TG-5006CG-12H 26.0000M3') classified as crystal instead of oscillator",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Lib_id 'Oscillator:*' should classify as oscillator, not crystal",
+        "TCXO frequency parsing should extract 26MHz from 'TG-5006CG-12H 26.0000M3'"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000162",
+      "repo": "cnhardware",
+      "project": "addlepatedarray_synthtest_synthtest",
+      "created": "2026-03-15T18:55:17.399385+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

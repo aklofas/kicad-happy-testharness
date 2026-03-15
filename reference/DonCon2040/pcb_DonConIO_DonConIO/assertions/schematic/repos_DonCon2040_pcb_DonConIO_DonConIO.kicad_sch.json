@@ -1,0 +1,82 @@
+{
+  "file_pattern": "repos_DonCon2040_pcb_DonConIO_DonConIO.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000138",
+  "assertions": [
+    {
+      "id": "FND-00000138-AST-00000001",
+      "description": "Piezo sensor signal conditioning circuit not identified: the design uses op-amps or comparators with bipolar supply (+/-12V) to amplify and condition piezo drum hit signals",
+      "created_from": "FND-00000138",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000138-AST-00000002",
+      "description": "No power regulators detected - the PS1 component and associated circuitry providing +/-12V rails from +5V should be identified",
+      "created_from": "FND-00000138",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000138-AST-00000003",
+      "description": "LED indicator circuits for button feedback not classified as LED drive circuits",
+      "created_from": "FND-00000138",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000138-AST-00000004",
+      "description": "USB interface for RP2040 not detected",
+      "created_from": "FND-00000138",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000138-AST-00000005",
+      "description": "ADC input channels (Don_Right_ADC etc.) not linked to piezo sensor inputs",
+      "created_from": "FND-00000138",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000138-AST-00000006",
+      "description": "REVIEW: Nine voltage dividers detected but most are actually LED current limiting resistor networks with protection diodes, not signal voltage dividers. The 300/1k and 10k/1k combinations connected to diode cathodes (K) are LED drive circuits",
+      "created_from": "FND-00000138",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000138-AST-00000007",
+      "description": "REVIEW: Voltage divider with R11 4.7k / R10 1M (ratio 0.995) is not meaningful as a divider - likely a bias/discharge network for piezo conditioning",
+      "created_from": "FND-00000138",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

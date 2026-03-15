@@ -2,7 +2,7 @@
 
 ## FND-00000133: BrickPico is an 8-channel LED brick controller with RP2040 (Pico module) and AP62301WU buck converter. The analyzer correctly identifies 8 MOSFET transistor circuits (2N7002K for LED switching) and the AP62301WU power regulator. However, it generates 9 false positive RF matching networks from the buck converter input filter (polyfuses misidentified as antennas), and all 118 components have category=None.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/brickpico/boards/brickpico-8/kicad/brickpico.kicad_sch
 - **Related**: KH-047

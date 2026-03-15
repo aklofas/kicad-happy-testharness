@@ -2,7 +2,7 @@
 
 ## FND-00000098: Battery charger/power station with LT3790 buck-boost, ESP32-C3, USB-C PD. Major component classification failure: 105 of 136 components classified as other due to non-standard reference designator prefixes (Cch_, Rch_, Cc_, Ruc, etc).
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/mobile_power_station_charger/src/battery-bus.kicad_sch
 - **Created**: 2026-03-14

@@ -2,7 +2,7 @@
 
 ## FND-00000107: RP2040-based LoRa radio with RFM95W module, BLE5201 Bluetooth, W25Q128JVS flash, NCP1117 LDO, and 12MHz crystal. SPI to RFM95W detected but QSPI to flash and RF interface missed.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/YARLoRa/src/board.kicad_sch
 - **Created**: 2026-03-14

@@ -1,0 +1,92 @@
+{
+  "file_pattern": "electronic_design_production_ethersweep405_ethersweep.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000150",
+  "assertions": [
+    {
+      "id": "FND-00000150-AST-00000001",
+      "description": "No SPI bus detection between STM32 (PA5/SCK, PA6/MISO, PA7/MOSI, PB9/CS) and W5500 -- only I2C detected as bus protocol",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000150-AST-00000002",
+      "description": "Crystal Y3 (8MHz) load caps C10, C8 (22pF) not associated despite clear connectivity; Y2 (25MHz) load caps C33, C34 (18pF) also missed",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000150-AST-00000003",
+      "description": "Decoupling analysis reports all ICs (U6, U5, U7, U3) with rails_with_caps=[] despite extensive decoupling on +3.3V and GND",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000150-AST-00000004",
+      "description": "+28V motor power rail missing from power_budget despite 11 power symbol instances feeding TMC2209 via DD4012SA",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "signal_analysis.power_budget",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000150-AST-00000005",
+      "description": "Ethernet magnetics not detected -- HR911105A has integrated magnetics with differential pairs but magnetics array is empty",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000150-AST-00000006",
+      "description": "REVIEW: R4, R5 (33 ohm) falsely detected as current sense shunts -- these are Ethernet differential pair series termination resistors between W5500 TX/RX and HR911105A RJ45",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000150-AST-00000007",
+      "description": "REVIEW: DD4012SA (U4, Diodes Inc buck converter) classified as power_symbol because lib_id is 'power:DD4012SA' with in_bom=yes -- excluded from components, ic_pin_analysis, and power_regulators entirely",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000150-AST-00000008",
+      "description": "REVIEW: All 109 components have empty string classification field",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

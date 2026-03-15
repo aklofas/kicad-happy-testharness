@@ -1,0 +1,69 @@
+{
+  "file_pattern": "repos_OnBoard_projects_onboard-live-icepi-zero_src_icepi-zero.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000088",
+  "assertions": [
+    {
+      "id": "FND-00000088-AST-00000001",
+      "description": "No FPGA-specific analysis (ECP5 I/O banks, SERDES, PLL configuration)",
+      "created_from": "FND-00000088",
+      "check": {
+        "path": "design_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000088-AST-00000002",
+      "description": "FTDI FT2232 USB bridge not recognized as bus bridge/protocol converter",
+      "created_from": "FND-00000088",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000088-AST-00000003",
+      "description": "REVIEW: SIT8008 MEMS oscillator classified as crystal \u2014 it is a packaged oscillator, not a crystal requiring load caps",
+      "created_from": "FND-00000088",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000088-AST-00000004",
+      "description": "REVIEW: All 3 voltage dividers duplicated in feedback_networks (same R5/R6, R9/R10, R13/R14 pairs)",
+      "created_from": "FND-00000088",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000088-AST-00000005",
+      "description": "REVIEW: TLV62569 estimated Vout=1.1V for all three regulators despite different output rails (+1V1, +2V5, +3V3)",
+      "created_from": "FND-00000088",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000088-AST-00000006",
+      "description": "REVIEW: BOM sum (116) does not match total_components (121) \u2014 5 missing, only mounting_hole(4) accounted for",
+      "created_from": "FND-00000088",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

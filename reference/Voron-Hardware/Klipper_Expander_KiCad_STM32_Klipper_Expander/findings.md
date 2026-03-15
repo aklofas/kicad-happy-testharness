@@ -2,7 +2,7 @@
 
 ## FND-00000075: Klipper Expander - STM32F042 GPIO/PWM expander with 4 MOSFET outputs, good transistor detection but missing regulator
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/Voron-Hardware/Klipper_Expander/KiCad/STM32_Klipper_Expander.sch
 - **Related**: KH-012

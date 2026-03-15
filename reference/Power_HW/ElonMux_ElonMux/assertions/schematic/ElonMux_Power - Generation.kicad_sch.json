@@ -1,0 +1,81 @@
+{
+  "file_pattern": "ElonMux_Power - Generation.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000157",
+  "assertions": [
+    {
+      "id": "FND-00000157-AST-00000001",
+      "description": "BQ25756E feedback divider R711 (249k) / R713 (14k) from +VCHARGE_O to FB to FBG missed -- divider detector expects GND as bottom net, not dedicated FBG pin",
+      "created_from": "FND-00000157",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000157-AST-00000002",
+      "description": "R701/R702 (5 milliohm, 1W) current sense resistors on ACP/ACN and SRP/SRN pins not detected",
+      "created_from": "FND-00000157",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000157-AST-00000003",
+      "description": "TPS3701DDCR (IC803) function not classified -- should be 'voltage supervisor' or 'voltage detector'",
+      "created_from": "FND-00000157",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000157-AST-00000004",
+      "description": "Regulator output_rail is null despite FB pin connecting through divider to +3V3 net",
+      "created_from": "FND-00000157",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000157-AST-00000005",
+      "description": "REVIEW: LTC3126 estimated_vout=2.41V using assumed Vref=0.6V -- actual Vref=0.8V (VSET pins to GND), correct Vout=3.3V matching +3V3 output rail",
+      "created_from": "FND-00000157",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000157-AST-00000006",
+      "description": "REVIEW: IC801/IC802 LTC7000EMSE gate drivers have 0 pins parsed due to lib_name/lib_id mismatch -- lib_symbols keyed by local name but lookup uses lib_id",
+      "created_from": "FND-00000157",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000157-AST-00000007",
+      "description": "REVIEW: Bootstrap cap + power inductor misidentified as RF matching network in GEODE power_auxiliary",
+      "created_from": "FND-00000157",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

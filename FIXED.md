@@ -11,6 +11,90 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-15 — KH-079, KH-083, KH-084, KH-086, KH-088, KH-089 (batch 6, 6 issues)
+
+Source repos verified: mutable_eurorack_kicad (102), Power_HW (114), openwrt-one (9),
+ISS-PCB (181), cnhardware (77), ethersweep (10), vna (229)
+
+### KH-088 (CRITICAL): Eagle-import empty Value cascading power symbol net failure
+
+- **Files**: `analyze_schematic.py` — `extract_lib_symbols()`, `extract_components()`
+- **Root cause**: Eagle-imported KiCad schematics have empty instance Value for power
+  symbols. The analyzer used only the instance Value, so all power/ground connections
+  merged into a single empty-string net. Cascaded to break power rails, voltage
+  dividers, RC filters, and op-amp configurations.
+- **Fix**: (1) Store `lib_value` from lib_symbol definition in `extract_lib_symbols()`.
+  (2) In `extract_components()`, fall back to lib_symbol Value when instance Value is
+  empty.
+- **Verified**: mutable_eurorack_kicad Ripples: power rails now GND/VCC/VEE (was empty
+  mega-net). All 102 files pass.
+
+### KH-083 (CRITICAL): lib_name/lib_id mismatch causes 0-pin parsing in KiCad 7+
+
+- **Files**: `analyze_schematic.py` — `extract_components()`, `compute_pin_positions()`
+- **Root cause**: KiCad 7+ uses `(lib_name X)` when the local symbol name differs from
+  the library's `lib_id`. `compute_pin_positions()` only looked up by `lib_id`, missing
+  symbols keyed by their raw name (e.g., `TPS2116DRLR_1`).
+- **Fix**: (1) Extract `lib_name` from symbol instances. (2) Try `lib_name` first, then
+  `lib_id` as lookup key in `compute_pin_positions()` and `classify_component()` sym_def
+  lookup.
+- **Verified**: Power_HW GEODE rev2 TPS2116DRLR: 8 pins (was 0), full IC analysis.
+  PMV90ENER: 3 pins with gate/drain/source nets. All 114 files pass.
+
+### KH-079 (HIGH): Ref prefix single-char fallback overrides lib_id/footprint
+
+- **Files**: `kicad_utils.py` — `classify_component()`
+- **Root cause**: Single-char prefix fallback (T→transformer, F→fuse, etc.) returned
+  without checking lib_id/footprint/value for contradicting evidence.
+- **Fix**: Added `footprint` parameter to `classify_component()`. After single-char
+  fallback match, check lib_id/footprint/value keywords to override: transformer→test_point
+  (TP footprint), transformer→diode (TVS), fuse→fiducial, fuse→filter (EMI),
+  capacitor→mechanical (shield clips), switch→mounting_hole (standoffs),
+  ic→transistor (BJT), ic→transformer.
+- **Verified**: openwrt-one TPD → test_point (was transformer). All 7 repos pass.
+
+### KH-086 (HIGH): SPI nets falsely detected as I2C via pin-name fallback
+
+- **Files**: `analyze_schematic.py`, `signal_detectors.py`
+- **Root cause**: I2C detection scanned all nets for SDA/SCL pins but didn't exclude
+  SPI nets. Sensors with dual-function SDA/SCL pin names in SPI mode triggered false
+  I2C detection.
+- **Fix**: Added SPI keyword exclusion (SPI, MOSI, MISO in net name) to three I2C
+  detection paths: net-name-based, pin-name-based, and observation detector.
+- **Verified**: ISS-PCB TARS-MK4-FCB: SNS_SPI_* nets no longer reported as I2C.
+  All 181 ISS-PCB files pass.
+
+### KH-089 (HIGH): Regulator detection false positives from non-regulator ICs
+
+- **Files**: `signal_detectors.py` — `detect_power_regulators()`
+- **Root cause**: Any IC with VOUT/OUT/FB/SW pins passed the regulator gate. Title
+  blocks (0 pins), flash chips, RTCs, EEPROMs, logic buffers leaked through.
+- **Fix**: Added early exclusions: (1) Skip components with no pins. (2) Skip known
+  non-regulator IC families (eeprom, flash, rtc, uart, buffer, logic, w25q, at24c,
+  ht42b, ch340, cp210, ft232, 74lvc, 74hc).
+- **Verified**: openwrt-one regulators 40→25 (title blocks and non-regulators excluded).
+
+### KH-084 (HIGH): Voltage divider/feedback not linked to parent regulator
+
+- **Files**: `signal_detectors.py` — `detect_power_regulators()`
+- **Root cause**: (1) Switching regulator output_rail missing — no trace through inductor
+  from SW pin. (2) FB-at-top divider topology not recognized.
+- **Fix**: (1) After finding inductor on SW net, trace through to find output rail net.
+  (2) After building regulator list, cross-reference voltage divider top_nets with
+  regulator FB pins to detect FB-at-top topology.
+- **Verified**: Power_HW LMR36506: output_rail now traced through inductor. All 7 repos
+  pass with 0 regressions.
+
+### Regression results
+
+- All analyzer runs pass: mutable_eurorack_kicad (102), Power_HW (114), openwrt-one (9),
+  ISS-PCB (181), cnhardware (77), ethersweep (10), vna (229)
+- 0 regressions, multiple `now_detected` and `possibly_fixed` across all 7 repos
+- 66 findings promoted to assertions (119 confirmed, 44 new)
+- Assertion corpus: 55,276 total, 54,502 passed (98.6%)
+
+---
+
 ## 2026-03-15 — KH-016, KH-026, KH-048, KH-052, KH-064, KH-066, KH-067, KH-073 (batch 5, 8 issues)
 
 Source repos verified: ESP32-P4-PC, ESP32-EVB (12 revisions), ESP32-GATEWAY (9 revisions),

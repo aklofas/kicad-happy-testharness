@@ -1,0 +1,192 @@
+{
+  "file_pattern": "repos_hackrf-pro_hardware_praline_praline.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000117",
+  "assertions": [
+    {
+      "id": "FND-00000117-AST-00000001",
+      "description": "No detection of PLL loop filter (R25/R26/C44/C45/C47 form RFFC5072 charge pump filter)",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000002",
+      "description": "No RF switch detection for MXD8546F (SPDT) and MXD8638C (SP4T) RF switches critical to the signal routing",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000003",
+      "description": "No identification of the complete RF signal path: antenna -> balun -> switch -> mixer -> IF balun -> transceiver -> baseband",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000004",
+      "description": "FM8625H/BGS12P2L6 (U5, U6, U7) are RF amplifier switches but not detected in any RF analysis",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000005",
+      "description": "Power sequencing between multiple domains (VCC, VAA, 2V5RF, 1V2FPGA, etc.) not analyzed despite being critical for FPGA+RF design",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000006",
+      "description": "REVIEW: All capacitor farads values are raw numbers without SI prefix conversion: 18 pF stored as farads=18.0 instead of 1.8e-11, 100 pF as 100.0 instead of 1e-10, 1 uF as 1.0 instead of 1e-6",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000007",
+      "description": "REVIEW: All inductor henries values are raw numbers without SI prefix conversion: 10 nH stored as henries=10.0 instead of 1e-8, 2.2 uH as 2.2 instead of 2.2e-6",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000008",
+      "description": "REVIEW: Crystal effective_load_pF calculated as 9000000000003.0 instead of ~12 pF due to farads=18.0 for 18pF caps",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000009",
+      "description": "REVIEW: All RC filter cutoff frequencies are 0.00 Hz and time constants are thousands of seconds due to wrong farads values",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000010",
+      "description": "REVIEW: All LC filter resonant frequencies are 0.01-0.11 Hz instead of MHz/GHz range for RF filters due to wrong farads/henries",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000011",
+      "description": "REVIEW: Decoupling total_capacitance_uF values are millions (e.g. 55000000.0 uF for VCC rail) instead of tens of uF",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000012",
+      "description": "REVIEW: BGB741L7ESD (U38, U40) are RF LNAs but misclassified as power_regulators with topology=unknown",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000013",
+      "description": "REVIEW: RF chain amplifiers list is empty despite BGB741L7ESD (LNA), TRF37C73 (RF amp), MGA-81563 being present",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000014",
+      "description": "REVIEW: RF chain switches list is empty despite MXD8546F (U1, U2) and MXD8638C (U9, U12, U14) RF switches being present",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000015",
+      "description": "REVIEW: RF matching list is empty despite extensive matching networks around baluns and mixer",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000016",
+      "description": "REVIEW: I2S0_RX_SDA and I2S0_TX_SDA nets misidentified as I2C SDA lines (these are I2S audio data lines)",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000017",
+      "description": "REVIEW: MIXER.SDATA net misidentified as I2C SDA (this is a SPI-like serial data line for RFFC5072)",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000117-AST-00000018",
+      "description": "REVIEW: Decoupling has_bypass and has_high_freq are both false for all rails despite 100nF and smaller caps being present",
+      "created_from": "FND-00000117",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

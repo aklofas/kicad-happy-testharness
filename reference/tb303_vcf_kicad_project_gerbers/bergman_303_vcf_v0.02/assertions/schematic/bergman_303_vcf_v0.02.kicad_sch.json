@@ -1,0 +1,116 @@
+{
+  "file_pattern": "bergman_303_vcf_v0.02.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~69 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 62,
+        "max": 76
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~48 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 43,
+        "max": 53
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "2 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "2 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "11 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "18 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 17 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Has 30 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 15
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 18 transistor(s)",
+      "check": {
+        "path": "statistics.component_types.transistor",
+        "op": "min_count",
+        "value": 9
+      }
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "file_pattern": "repos_Voron-Hardware_Taco_Raven_KiCad_Voron_Klipper_Board.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000074",
+  "assertions": [
+    {
+      "id": "FND-00000074-AST-00000001",
+      "description": "No crystal circuit detected - ATSAMD51 typically uses an external crystal/oscillator, likely present but not identified",
+      "created_from": "FND-00000074",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000074-AST-00000002",
+      "description": "TMC2130 SPI bus topology not characterized - 8 stepper drivers sharing SPI with individual chip selects is a key design pattern",
+      "created_from": "FND-00000074",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000074-AST-00000003",
+      "description": "No current sense detection despite TMC2130 drivers having sense resistors for motor current setting",
+      "created_from": "FND-00000074",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000074-AST-00000004",
+      "description": "REVIEW: Single-pin nets reported on TMC2130 GNDP1 pins (SPI_CS_X/Y/E0/E1/Z2/Z3) - these are likely valid chip-select nets connected via hierarchical sheets, flagged as single-pin because sub-sheet connections are not followed",
+      "created_from": "FND-00000074",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000074-AST-00000005",
+      "description": "REVIEW: Regulator caps flagged as missing for A4403 and AP2112 input/output - likely present but on unnamed nets the analyzer cannot trace back to the regulator",
+      "created_from": "FND-00000074",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000074-AST-00000006",
+      "description": "REVIEW: MOSFET transistor circuits not detected despite board having high-current heater and fan outputs (expected for a Voron printer controller)",
+      "created_from": "FND-00000074",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000074-AST-00000007",
+      "description": "REVIEW: USB D+ flagged as missing ESD protection, but USB may not be a primary interface on this board",
+      "created_from": "FND-00000074",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

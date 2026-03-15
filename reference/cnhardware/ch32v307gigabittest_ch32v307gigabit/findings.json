@@ -1,0 +1,40 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ch32v307gigabittest_ch32v307gigabit.kicad_sch.json",
+      "status": "promoted",
+      "summary": "CH32V307 Gigabit Ethernet test board with RTL8211E PHY. Ethernet interface not detected; gigabit magnetics transformer U4 classified as IC despite 'Transformer' in lib_id; unannotated components silently dropped.",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "U4 with lib_id 'G2406S-Gigabit-Magnetics-Transformer' classified as IC -- 'Transformer' literally in lib_id but U prefix wins",
+          "analyzer_section": "statistics.component_types"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Ethernet interface not detected -- RTL8211E PHY + G2406S magnetics + 8P8C RJ45 with GMII bus nets all present",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        },
+        {
+          "description": "22 unannotated components (bare refs 'D', 'J', 'U' without numbers) silently dropped from output with no annotation_issues warning",
+          "analyzer_section": "components"
+        }
+      ],
+      "suggestions": [
+        "Lib_id keywords should have higher priority than ref prefix for classification",
+        "Unannotated components should be included in output or flagged in annotation_issues"
+      ],
+      "related_issues": [
+        "KH-079"
+      ],
+      "should_become_assertion": true,
+      "id": "FND-00000160",
+      "repo": "cnhardware",
+      "project": "ch32v307gigabittest_ch32v307gigabit",
+      "created": "2026-03-15T18:55:17.344146+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

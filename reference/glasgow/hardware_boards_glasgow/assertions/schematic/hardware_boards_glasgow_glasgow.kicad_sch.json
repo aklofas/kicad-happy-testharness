@@ -1,0 +1,69 @@
+{
+  "file_pattern": "hardware_boards_glasgow_glasgow.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000001",
+  "assertions": [
+    {
+      "id": "FND-00000001-AST-00000001",
+      "description": "REVIEW: 67 of 68 current_sense detections are false positives \u2014 R49 paired with unrelated ICs (SN74LVC1T45, CAT24M01X, etc.) that merely share GND net",
+      "created_from": "FND-00000001",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000006-AST-00000001",
+      "description": "REVIEW: R30 (4R7) / R48 (0R15) on ISNS_H \u2192 GND detected as divider but these are current sense shunt resistors",
+      "created_from": "FND-00000006",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000006-AST-00000002",
+      "description": "REVIEW: R56 (0R33) / R48 (0R15) on ISNS_H \u2192 GND same issue \u2014 current sense, not divider",
+      "created_from": "FND-00000006",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000006-AST-00000003",
+      "description": "REVIEW: R5/R4 (100k/100k) on ~{CY_RESET} \u2192 GND is a pull-up/pull-down pair on a digital reset line, not a voltage sensing divider",
+      "created_from": "FND-00000006",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000018-AST-00000001",
+      "description": "+3V3 power rail with 85 power symbols across 2 sheets not present in nets dict at all. Every component powered by +3V3 has a dangling power pin.",
+      "created_from": "FND-00000018",
+      "check": {
+        "path": "nets",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000025-AST-00000001",
+      "description": "\"u1\" = 0.1uF not parsed. Pattern: unit prefix before digit (u1, n47, p33). Parser only handles digit-first like \"4u7\".",
+      "created_from": "FND-00000025",
+      "check": {
+        "path": "components[*].parsed_value",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 ## FND-00000090: TPS61032 boost regulator design accurately analyzed. Switching topology, feedback divider, and output voltage estimation all detected correctly.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/5vRegulatorPCB/src/5v-boost-regulator.kicad_sch
 - **Created**: 2026-03-14

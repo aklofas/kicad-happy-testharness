@@ -1,0 +1,60 @@
+{
+  "file_pattern": "repos_Voron-Hardware_V0_Display_RP2040_KiCad_V0_Display_RP2040.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000077",
+  "assertions": [
+    {
+      "id": "FND-00000077-AST-00000001",
+      "description": "No encoder/rotary switch detection - board has 4 switches including encoder with A/B/switch signals",
+      "created_from": "FND-00000077",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000077-AST-00000002",
+      "description": "OLED/display interface not characterized despite being the primary function of this board",
+      "created_from": "FND-00000077",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000077-AST-00000003",
+      "description": "RP2040 boot mode configuration (USB boot vs flash boot) not analyzed",
+      "created_from": "FND-00000077",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000077-AST-00000004",
+      "description": "REVIEW: AVDD rail flagged as missing decoupling for RP2040 (U5) but AVDD typically has dedicated filtering via inductor - may be present but on a different net name",
+      "created_from": "FND-00000077",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000077-AST-00000005",
+      "description": "REVIEW: RC filter on OSC_OUT (1K + 30pF, fc=5.3MHz) is actually part of the crystal circuit load capacitor network, not a separate filter",
+      "created_from": "FND-00000077",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

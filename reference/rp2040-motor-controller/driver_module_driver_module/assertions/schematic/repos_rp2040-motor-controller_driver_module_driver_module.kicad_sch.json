@@ -1,0 +1,61 @@
+{
+  "file_pattern": "repos_rp2040-motor-controller_driver_module_driver_module.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000127",
+  "assertions": [
+    {
+      "id": "FND-00000127-AST-00000001",
+      "description": "EG3113 half-bridge gate drivers (3 instances) not recognized as motor gate drivers - they are the key BLDC driver ICs controlling 6 MOSFETs",
+      "created_from": "FND-00000127",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000127-AST-00000002",
+      "description": "Three-phase BLDC bridge topology not detected - 3x EG3113 half-bridge drivers form a complete 3-phase inverter",
+      "created_from": "FND-00000127",
+      "check": {
+        "path": "signal_analysis.bridge_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000127-AST-00000003",
+      "description": "Bootstrap capacitor circuits for high-side gate drive not identified",
+      "created_from": "FND-00000127",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000127-AST-00000004",
+      "description": "Phase outputs (A, B, C motor connections) not linked to the current sense and gate driver circuits as a complete motor drive channel",
+      "created_from": "FND-00000127",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000127-AST-00000005",
+      "description": "REVIEW: Current sense associates two shunts (R113, R105) with same INA240 U21 on A_P/A_N - likely one shunt per phase, check pin mapping",
+      "created_from": "FND-00000127",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

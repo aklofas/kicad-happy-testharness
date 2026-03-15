@@ -1,0 +1,122 @@
+{
+  "file_pattern": "repos_urti-mainboard_hardware_mainboard_mainboard.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000122",
+  "assertions": [
+    {
+      "id": "FND-00000122-AST-00000001",
+      "description": "No identification of the ECP5 FPGA (U1) as the central hub connecting USB, RF, memory, and debug subsystems",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000002",
+      "description": "USB3343-CP (U9) is a USB PHY not just a generic IC - its role in USB signal path (FPGA <-> PHY <-> USB connector) should be noted",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000003",
+      "description": "No JTAG/debug bus detection despite signals like TMS, TCK, TDI, TDO being present for FPGA programming",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000004",
+      "description": "DAC output path through opamp filter to mixer not traced as a signal chain",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000005",
+      "description": "HyperRAM interface operating at high speed deserves signal integrity notes (series termination, etc.)",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000006",
+      "description": "REVIEW: LMV358 opamp circuits both classified as comparator_or_open_loop but one is likely a Sallen-Key active filter (typical in baseband signal conditioning for SDR)",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000007",
+      "description": "REVIEW: UART bus analysis reports 66 entries which is far too many - appears to be matching any 2-pin net as UART, including power nets like 3V3RX",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000008",
+      "description": "REVIEW: TX_MIX_CTRL.SDATA and RX_MIX_CTRL.SDATA detected as I2C SDA but these are RFFC5072 SPI-like control bus data lines",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000009",
+      "description": "REVIEW: Crystal Y1 (TCXO) detected with no frequency - should parse the value or connected IC to determine frequency",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000010",
+      "description": "REVIEW: RF chain amplifiers list is empty despite design having baseband amplifier paths and gain stages",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000122-AST-00000011",
+      "description": "REVIEW: Missing regulator input cap flagged for U24 (LDO-ADJ) input rail __unnamed_82 but this is likely connected through the hierarchical sheet",
+      "created_from": "FND-00000122",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

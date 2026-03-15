@@ -2,7 +2,7 @@
 
 ## FND-00000102: Arduino Nano-based debate timer with buzzer, OLED display, rotary encoder, addressable LEDs, and push buttons. Good detection overall.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/Debate-Device/src/Debate Device.kicad_sch
 - **Created**: 2026-03-14

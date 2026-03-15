@@ -1,0 +1,89 @@
+{
+  "file_pattern": "12-24#2_Horse_3Bridge.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~28 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 25,
+        "max": 31
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~50 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 45,
+        "max": 56
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "2 protection_devices detected",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Has 10 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 6 led(s)",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Has 6 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 3
+      }
+    }
+  ]
+}

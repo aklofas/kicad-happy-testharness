@@ -1,0 +1,89 @@
+{
+  "file_pattern": "PX4FMUv2.4_SS_12.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~95 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 85,
+        "max": 105
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~53 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 47,
+        "max": 59
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 isolation_barriers detected",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Has 11 other(s)",
+      "check": {
+        "path": "statistics.component_types.other",
+        "op": "min_count",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 10 switch(s)",
+      "check": {
+        "path": "statistics.component_types.switch",
+        "op": "min_count",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Has 68 varistor(s)",
+      "check": {
+        "path": "statistics.component_types.varistor",
+        "op": "min_count",
+        "value": 34
+      }
+    }
+  ]
+}

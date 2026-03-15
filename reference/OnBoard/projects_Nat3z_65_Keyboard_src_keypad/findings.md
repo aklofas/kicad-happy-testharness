@@ -2,7 +2,7 @@
 
 ## FND-00000099: ATmega32U4 65-key keyboard with USB-C, crystal, and fuse protection. Good matrix and signal detection but IC refs missing.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/Nat3z_65_Keyboard/src/keypad.kicad_sch
 - **Created**: 2026-03-14

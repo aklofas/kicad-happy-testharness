@@ -1,0 +1,157 @@
+{
+  "file_pattern": "repos_ESP32-P4-PC_HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000112",
+  "assertions": [
+    {
+      "id": "FND-00000112-AST-00000001",
+      "description": "LT8912B HDMI bridge (U12) not identified as display interface subcircuit - this is a MIPI-DSI to HDMI converter, a significant design block",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000002",
+      "description": "FE1.1s USB hub (U7) not identified as USB hub subcircuit despite being a 4-port USB 2.0 hub IC",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000003",
+      "description": "ES8311 audio codec (U8) not classified as audio codec subcircuit with I2S/I2C interfaces",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000004",
+      "description": "W25Q128 SPI flash (U3, 16MB) not identified as memory interface",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000005",
+      "description": "No crystal circuits detected despite ESP32-P4 having external crystal oscillator with 22pF load caps (C1/C2) and 10M feedback resistor (R13)",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000006",
+      "description": "MIPI-DSI differential pairs (to LT8912B) not detected",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000007",
+      "description": "MIPI-CSI camera interface not detected",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000008",
+      "description": "HDMI differential pairs from LT8912B to HDMI connector not detected",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000009",
+      "description": "RCLAMP0524P ESD protection arrays (U9, U10, U11) not linked to the USB ports they protect",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000010",
+      "description": "TP4054 battery charger (U15) not identified as charger subcircuit",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000011",
+      "description": "REVIEW: TPS2116 (U13) classified as LDO but it is actually a power multiplexer/switch (selects between two input supplies), not a voltage regulator",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000012",
+      "description": "REVIEW: TPS62A02 (U5) detected as switching regulator but missing estimated_vout - the feedback network for FB_DCDC was not linked to the regulator",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000013",
+      "description": "REVIEW: Crystal oscillator RC filters (R87 1M with C113/C114 27pF, fc=5.9kHz) misidentified as generic low-pass filters - these are actually crystal load capacitor bias resistors for the 40MHz crystal",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000112-AST-00000014",
+      "description": "REVIEW: RC filter R13 10M with C1/C2 22pF classified as 723Hz low-pass but this is the crystal feedback resistor for the main oscillator",
+      "created_from": "FND-00000112",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

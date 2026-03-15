@@ -1,0 +1,38 @@
+{
+  "file_pattern": "boards_TARS-MK4_TARS-MK4-FCB-revC_TARS-MK4-FCB.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000154",
+  "assertions": [
+    {
+      "id": "FND-00000154-AST-00000001",
+      "description": "INA745x current/power monitors (U101, U201) not detected -- current_sense array empty despite dedicated current sensing ICs",
+      "created_from": "FND-00000154",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000154-AST-00000002",
+      "description": "REVIEW: SPI nets SNS_SPI_SCK, SNS_SPI_MOSI, SNS_SPI_MISO falsely detected as I2C SCL/SDA -- pin-name fallback doesn't exclude nets already identified as SPI",
+      "created_from": "FND-00000154",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000154-AST-00000003",
+      "description": "REVIEW: BME688_CS net reported as I2C SDA because Teensy pin 39 has multi-function name '17_A3_TX4_SDA1'",
+      "created_from": "FND-00000154",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

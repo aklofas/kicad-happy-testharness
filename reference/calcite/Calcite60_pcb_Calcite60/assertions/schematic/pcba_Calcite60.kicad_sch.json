@@ -1,0 +1,170 @@
+{
+  "file_pattern": "pcba_Calcite60.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~196 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 176,
+        "max": 216
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~131 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 117,
+        "max": 145
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 crystal_circuits detected",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "2 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "8 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "1 key_matrices detected",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "1 protection_devices detected",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "1 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "1 voltage_dividers detected",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 7 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "Has 7 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "Has 61 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 30
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "Has 25 mounting_hole(s)",
+      "check": {
+        "path": "statistics.component_types.mounting_hole",
+        "op": "min_count",
+        "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "Has 10 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "Has 68 switch(s)",
+      "check": {
+        "path": "statistics.component_types.switch",
+        "op": "min_count",
+        "value": 34
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "Has 7 test_point(s)",
+      "check": {
+        "path": "statistics.component_types.test_point",
+        "op": "min_count",
+        "value": 3
+      }
+    }
+  ]
+}

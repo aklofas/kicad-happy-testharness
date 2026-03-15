@@ -2,7 +2,7 @@
 
 ## FND-00000134: Multi-function Pico-based board with DS3231M RTC, SC16IS752 I2C-to-UART, TM1640 LED driver, and 14.7456MHz crystal. Excessive I2C false positives (10 buses detected for what should be 2-3). Crystal load cap mismatch (22pF vs 33pF) flagged correctly. Many unnamed nets suggest legacy format connectivity issues.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/picon-one-hw/kicad/picon-one v1.0a.sch
 - **Created**: 2026-03-14

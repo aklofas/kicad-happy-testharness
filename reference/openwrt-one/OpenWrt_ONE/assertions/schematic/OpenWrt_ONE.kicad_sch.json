@@ -1,0 +1,253 @@
+{
+  "file_pattern": "OpenWrt_ONE.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~38 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 34,
+        "max": 42
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~1005 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 904,
+        "max": 1106
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "4 crystal_circuits detected",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "98 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 isolation_barriers detected",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "40 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "1 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 8 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Has 6 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "FND-00000156-AST-00000001",
+      "description": "Zero voltage dividers detected across the entire design despite multiple feedback networks for buck converters",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000002",
+      "description": "Zero Ethernet interfaces detected -- EN8811 PHY + SQ24015-1PG/SG24002G magnetics + RJ45 connectors present",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000003",
+      "description": "Zero memory interfaces detected -- MT7981B to NT5AD512M16C4-JR DDR4 interface present",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000004",
+      "description": "Zero RF chains/matching detected -- MT7976C WiFi has SAW filters, BPFs, diplexers, matching inductors, MMCX connectors",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000005",
+      "description": "Crystal load caps not found for any of 4 crystals",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000006",
+      "description": "TCVCXO (SCO-F998_OSC81_40MHz) classified as crystal -- should be oscillator (lib_id root_2_TCVCXO)",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000007",
+      "description": "REVIEW: TPD? (34 instances) classified as transformer -- should be test_point (footprint TP0_3mm, lib_id contains TP-SMD)",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000008",
+      "description": "REVIEW: TVD? (8 instances) classified as transformer -- should be TVS diode (PAM02SD2303C for Ethernet ESD, lib_id contains TVSD)",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000009",
+      "description": "REVIEW: SO? (2 instances) classified as switch -- SMTSO-M2 standoffs are mechanical hardware, not switches",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000010",
+      "description": "REVIEW: CLIP? (32 instances) classified as capacitor -- SHIELD_CLIP components are RF shield clips, not capacitors",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000011",
+      "description": "REVIEW: 24 of 40 regulators are false positives: 8x BLOCK_BPI_2 title blocks, 6x repeated MT7981B SoC, plus flash/RTC/EEPROM/logic ICs",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000012",
+      "description": "REVIEW: AP7366-W5-7 inconsistently classified as switching in some sheets but correctly as LDO in others",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000013",
+      "description": "REVIEW: POE-RT5400-12V has estimated_vout=1.2 -- parsed '12V' suffix as denominator giving 1.2V instead of 12V",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000156-AST-00000014",
+      "description": "REVIEW: All switching regulators share identical rail names input_rail=DVDD33, output_rail=EN_1V8 -- rail assignment collapses across sheets",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

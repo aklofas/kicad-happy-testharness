@@ -2,7 +2,7 @@
 
 ## FND-00000105: Simple IR receiver board with two TSOP38438 IR receivers, a decoupling cap, and a current limiting resistor. Minimal design correctly analyzed.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/Trail-Laser-Tag/src/DevIos-Sensor/DevIos-Sensor.kicad_sch
 - **Created**: 2026-03-14

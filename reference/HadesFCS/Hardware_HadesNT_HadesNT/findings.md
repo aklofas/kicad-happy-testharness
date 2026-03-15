@@ -2,7 +2,7 @@
 
 ## FND-00000082: HadesNT flight controller - 102 components, zero signals due to KH-016; rich component set suggests many missed detections
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/HadesFCS/Hardware/HadesNT/HadesNT.sch
 - **Related**: KH-016

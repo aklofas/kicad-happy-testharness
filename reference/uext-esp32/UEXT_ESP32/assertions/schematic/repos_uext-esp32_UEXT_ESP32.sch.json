@@ -1,0 +1,91 @@
+{
+  "file_pattern": "repos_uext-esp32_UEXT_ESP32.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000142",
+  "assertions": [
+    {
+      "id": "FND-00000142-AST-00000001",
+      "description": "UEXT connector standard (10-pin connector with 3.3V, GND, TXD, RXD, SCL, SDA, MISO, MOSI, SCK, CS) not identified",
+      "created_from": "FND-00000142",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000142-AST-00000002",
+      "description": "Auto-program function of Q1/Q2 (DTR->GPIO0, RTS->RESET) not identified as boot/flash circuit",
+      "created_from": "FND-00000142",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000142-AST-00000003",
+      "description": "No power regulator detected - board is powered from UEXT 3.3V or FTDI connector",
+      "created_from": "FND-00000142",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000142-AST-00000004",
+      "description": "Logo/graphic components (LOGO1, LOGO2) classified as type graphic which is fine but 2 of 10 components are non-functional",
+      "created_from": "FND-00000142",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000142-AST-00000005",
+      "description": "REVIEW: False positive SPI bus detected - UEXT connector has SPI pins but they are UART signals (MOSI mapped to UEXT_RX, SCK to UEXT_TX)",
+      "created_from": "FND-00000142",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000142-AST-00000006",
+      "description": "REVIEW: I2C bus detected on unnamed nets with no devices - these are unconnected UEXT I2C pins, not an active bus",
+      "created_from": "FND-00000142",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000142-AST-00000007",
+      "description": "REVIEW: GND listed in power domain domain_groups for U1 - GND is ground reference not a power domain",
+      "created_from": "FND-00000142",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000142-AST-00000008",
+      "description": "REVIEW: ERC warning for GPIO2 net - pin IO34 is input-only on ESP32 and is correctly connected to UEXT RXD through J1",
+      "created_from": "FND-00000142",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

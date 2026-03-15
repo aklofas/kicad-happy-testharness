@@ -2,7 +2,7 @@
 
 ## FND-00000125: Very simple IR filament sensor (8 components) has severe connectivity parsing failure. Only 4 of 8 components have pins parsed, all nets are single-pin unnamed nets except GND. 29 wires exist but netlist is essentially empty. The EE-SX1103 photomicrosensor is misclassified as generic IC.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/MKxS-IR-sensor/rev.04/IR-endstop-04.sch
 - **Created**: 2026-03-14

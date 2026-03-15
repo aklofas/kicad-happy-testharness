@@ -178,6 +178,8 @@ export KICAD_HAPPY_DIR=/path/to/kicad-happy   # if not at ../kicad-happy
 
 ```
 repos.md                    # Master repo list -- human-editable markdown
+priority.md                 # Testing priority -- all repos ranked by value
+status.md                   # Testing status -- batch history, purge log, corpus stats
 ISSUES.md                   # Open issues only (KH-* analyzer, TH-* harness)
 FIXED.md                    # Closed issues with root cause + fix details
 checkout.py                 # Clone repos + check for upstream updates
@@ -272,7 +274,15 @@ cat FIXED.md                     # closed issues with fix details
 python3 regression/drift.py      # re-check findings against current outputs
 ```
 
-## Adding test repos
+## Repo management
+
+Three files work together to manage the test corpus:
+
+- **repos.md** — Master list of all repos with URLs and pinned commit hashes. Human-edited, grouped by category. Source of truth for what's in the corpus.
+- **priority.md** — All repos ranked by testing priority (schematic complexity). Used as guidance during batch testing to decide which repos to process next. Separates tested from untested.
+- **status.md** — Operational log of batch testing progress, corpus maintenance (purges), and issue fix history. Updated after each testing session.
+
+### Adding test repos
 
 Edit `repos.md` directly. It's organized as a simple list grouped by category:
 

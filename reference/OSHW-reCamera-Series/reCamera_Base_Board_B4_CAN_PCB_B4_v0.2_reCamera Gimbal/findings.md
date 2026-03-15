@@ -2,7 +2,7 @@
 
 ## FND-00000149: reCamera Gimbal (B4 v0.2) is a CAN-enabled camera base board with MCP2518FD CAN controller, MCP2558FD CAN transceiver, MP2315GJ buck converter, TPS22916 load switch, and BC856S transistor arrays. 123 components, 103 nets, 10 power rails. The analyzer correctly identifies the CAN bus interface, power regulators, RC filters, and protection devices. This is the most complex reCamera project with good overall analysis quality.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/OSHW-reCamera-Series/reCamera_Base_Board_B4_CAN/PCB_B4_v0.2/reCamera Gimbal.kicad_sch
 - **Related**: KH-047

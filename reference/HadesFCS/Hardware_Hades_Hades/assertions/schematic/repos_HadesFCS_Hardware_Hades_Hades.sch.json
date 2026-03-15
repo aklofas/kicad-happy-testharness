@@ -1,0 +1,61 @@
+{
+  "file_pattern": "repos_HadesFCS_Hardware_Hades_Hades.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000080",
+  "assertions": [
+    {
+      "id": "FND-00000080-AST-00000001",
+      "description": "Zero signal analysis results - no voltage dividers, RC filters, regulators, crystals, or any other signal patterns detected on a 208-component flight controller board",
+      "created_from": "FND-00000080",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000080-AST-00000002",
+      "description": "Flight controller should have: IMU (accelerometer/gyroscope), barometer, voltage regulators, motor driver outputs, RC receiver input - none detected",
+      "created_from": "FND-00000080",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000080-AST-00000003",
+      "description": "No design observations generated at all",
+      "created_from": "FND-00000080",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000080-AST-00000004",
+      "description": "12 ICs not analyzed for any signal paths - likely includes STM32 MCU, IMU sensors, regulators",
+      "created_from": "FND-00000080",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000080-AST-00000005",
+      "description": "REVIEW: Dual naming of 3.3V rail as both +3.3V and +3V3 suggests possible net aliasing issue in the legacy parser",
+      "created_from": "FND-00000080",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

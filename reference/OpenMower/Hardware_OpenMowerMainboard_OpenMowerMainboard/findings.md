@@ -2,7 +2,7 @@
 
 ## FND-00000002: MAX20405AFOF_VY+T (synchronous buck converter) classified as LDO in dcdc.kicad_sch
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_dcdc.kicad_sch.json
 - **Related**: KH-008
@@ -25,7 +25,7 @@
 
 ## FND-00000003: Bootstrap cap C15 between BST and LX pins on MAX20405 falsely detected as LC filter with L1
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_dcdc.kicad_sch.json
 - **Related**: KH-009
@@ -48,7 +48,7 @@
 
 ## FND-00000004: pwr_flag_warnings generated for sub-sheets where power rail source is on a different sheet (29 warnings across OpenMower, 37 in cynthion, 9 in education_tools, 6 in glasgow)
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_OpenMowerMainboard.kicad_sch.json
 - **Related**: KH-010
@@ -71,7 +71,7 @@
 
 ## FND-00000005: OpenMower uses property name "Digikey" (capital D, lowercase k) with 200 occurrences. get_property() does exact case match so "DigiKey" in the fallback chain misses "Digikey".
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_dcdc.kicad_sch.json
 - **Related**: KH-011
@@ -94,7 +94,7 @@
 
 ## FND-00000009: R5/R4 ratio=0.985 on RASPI_FAN_ON detected as voltage divider — this is a pull-up/pull-down on a digital GPIO signal, not a sensing divider
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_RaspberryPi.kicad_sch.json
 - **Related**: KH-012
@@ -117,7 +117,7 @@
 
 ## FND-00000010: Unused opamp units 3 and 4 of U2 (MCP604) incorrectly assigned input_resistor R49
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_opamps.kicad_sch.json
 - **Created**: 2026-03-13
@@ -139,7 +139,7 @@
 
 ## FND-00000012: R11/R12 feedback network for MAX20405 buck converter classified as voltage_divider but missed as feedback_network
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_dcdc.kicad_sch.json
 - **Created**: 2026-03-13
@@ -161,7 +161,7 @@
 
 ## FND-00000014: BSS138 level shifters Q13-Q16 not recognized as level_shifter topology
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_RobotConnectors.kicad_sch.json
 - **Created**: 2026-03-13
@@ -183,7 +183,7 @@
 
 ## FND-00000016: Q13-Q16 transistor gate_resistors list includes unrelated resistors from the +3V3 net
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_RobotConnectors.kicad_sch.json
 - **Created**: 2026-03-13

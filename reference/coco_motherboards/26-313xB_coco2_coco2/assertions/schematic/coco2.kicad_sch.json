@@ -1,0 +1,143 @@
+{
+  "file_pattern": "coco2.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~156 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 140,
+        "max": 172
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~213 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 191,
+        "max": 235
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 crystal_circuits detected",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "4 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "9 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "1 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 53 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 26
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Has 16 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 12 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "Has 5 ferrite_bead(s)",
+      "check": {
+        "path": "statistics.component_types.ferrite_bead",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "Has 24 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "Has 33 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 16
+      }
+    }
+  ]
+}

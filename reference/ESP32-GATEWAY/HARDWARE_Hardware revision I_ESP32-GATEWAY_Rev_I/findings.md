@@ -2,7 +2,7 @@
 
 ## FND-00000120: Legacy KiCad 5 format - Ethernet PHY detected but signal analysis severely limited; RMII signals misclassified as UART; zero voltage dividers/RC filters/power regulators detected despite TPS62A02 and CH340 being present; all subcircuit neighbors empty
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/ESP32-GATEWAY/HARDWARE/Hardware revision I/ESP32-GATEWAY_Rev_I.sch
 - **Related**: KH-016

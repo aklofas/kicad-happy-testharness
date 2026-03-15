@@ -2,7 +2,7 @@
 
 ## FND-00000122: Good overall analysis of complex FPGA+RF mainboard with correct unit parsing, proper bus detection, and comprehensive power domain mapping. Key gaps in RF component role identification and opamp configuration analysis.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/urti-mainboard/hardware/mainboard/mainboard.kicad_sch
 - **Created**: 2026-03-14
@@ -56,7 +56,7 @@
 
 ## FND-00000126: Radio module analysis has correct unit parsing and reasonable RF component detection but misses key RF signal chain elements. The dual-mixer architecture (2x RFFC5072) is detected but amplifier stages and switch components are not identified.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/urti-mainboard/hardware/mainboard/radio.kicad_sch
 - **Created**: 2026-03-14
@@ -103,7 +103,7 @@
 
 ## FND-00000131: Receiver chain analysis has correct unit parsing and good LC filter detection with plausible GHz-range resonant frequencies. RF chain topology correctly traces balun-to-mixer connections. Main gap is missing amplifier/filter integration into the RF chain.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/urti-mainboard/hardware/mainboard/rx.kicad_sch
 - **Created**: 2026-03-14

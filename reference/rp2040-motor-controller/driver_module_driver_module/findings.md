@@ -2,7 +2,7 @@
 
 ## FND-00000127: BLDC motor driver module: excellent current sense detection with INA240 amplifiers and 3-milliohm shunts, but missing half-bridge gate driver recognition for EG3113
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: repos/rp2040-motor-controller/driver_module/driver_module.kicad_sch
 - **Created**: 2026-03-14

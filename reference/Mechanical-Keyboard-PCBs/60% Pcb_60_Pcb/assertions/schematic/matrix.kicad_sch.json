@@ -1,0 +1,80 @@
+{
+  "file_pattern": "matrix.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~227 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 204,
+        "max": 250
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~158 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 142,
+        "max": 174
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 key_matrices detected",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Has 68 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 34
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Has 91 relay(s)",
+      "check": {
+        "path": "statistics.component_types.relay",
+        "op": "min_count",
+        "value": 45
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 68 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 34
+      }
+    }
+  ]
+}

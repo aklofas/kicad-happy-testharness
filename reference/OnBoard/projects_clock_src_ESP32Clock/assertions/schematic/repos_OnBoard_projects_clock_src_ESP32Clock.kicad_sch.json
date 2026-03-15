@@ -1,0 +1,81 @@
+{
+  "file_pattern": "repos_OnBoard_projects_clock_src_ESP32Clock.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000104",
+  "assertions": [
+    {
+      "id": "FND-00000104-AST-00000001",
+      "description": "WS2812D-F8 LEDs are addressable RGB LEDs in a daisy-chain topology - should detect LED chain/strip pattern with DIN/DOUT connections",
+      "created_from": "FND-00000104",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000104-AST-00000002",
+      "description": "No analysis of 10 generic capacitors (value=C) - likely decoupling caps that could resolve the missing decoupling warnings if values were parsed",
+      "created_from": "FND-00000104",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000104-AST-00000003",
+      "description": "USB-C connector type not identified (TYPE-C 16PIN 2MD(073) is an EasyEDA part)",
+      "created_from": "FND-00000104",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000104-AST-00000004",
+      "description": "ESP32 WiFi/BT capability not noted in any analysis section",
+      "created_from": "FND-00000104",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000104-AST-00000005",
+      "description": "REVIEW: IC function not identified for any of the 3 ICs (ESP32, USB-C, AZ1117H) - all show func=?",
+      "created_from": "FND-00000104",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000104-AST-00000006",
+      "description": "REVIEW: IC ref fields are ? for all components",
+      "created_from": "FND-00000104",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000104-AST-00000007",
+      "description": "REVIEW: Regulator output noted as missing caps but 10 capacitors on the board may include regulator output caps - needs net-level analysis",
+      "created_from": "FND-00000104",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

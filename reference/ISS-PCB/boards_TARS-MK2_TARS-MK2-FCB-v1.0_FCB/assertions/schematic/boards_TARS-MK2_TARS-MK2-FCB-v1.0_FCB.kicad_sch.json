@@ -1,0 +1,39 @@
+{
+  "file_pattern": "boards_TARS-MK2_TARS-MK2-FCB-v1.0_FCB.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000153",
+  "assertions": [
+    {
+      "id": "FND-00000153-AST-00000001",
+      "description": "TVS1800DRV (U301, U302) from Power_Protection library not detected as protection devices -- only discrete D-prefix TVS diodes detected",
+      "created_from": "FND-00000153",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000153-AST-00000002",
+      "description": "ECMF02-2AMX6 (U108) USB ESD/CM filter not in protection_devices, usb_data reports has_esd_protection=false despite U108 on those nets",
+      "created_from": "FND-00000153",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000153-AST-00000003",
+      "description": "REVIEW: TLV75733PDRV LDOs (U305, U505) marked as inverting=true -- TLV757xx is a standard positive fixed-output LDO",
+      "created_from": "FND-00000153",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

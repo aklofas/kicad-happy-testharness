@@ -1,0 +1,114 @@
+{
+  "file_pattern": "repos_RP2040pc_HARDWARE_RP2040pc-REV.B_RP2040pc_Rev_B.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000135",
+  "assertions": [
+    {
+      "id": "FND-00000135-AST-00000001",
+      "description": "No crystal circuit detected for RP2040 12MHz crystal with 18pF load caps (C15/C16) and 100R series resistor (R6)",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000135-AST-00000002",
+      "description": "DVI connector (DVI1) with 8 series resistors (R24-R31) for TMDS differential pairs not detected as display interface",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000135-AST-00000003",
+      "description": "Audio output circuit (SPK_L1, SPK_R1 speaker connectors with AUDIO1 headphone jack) not linked into audio signal chain",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "signal_analysis.buzzer_speaker_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000135-AST-00000004",
+      "description": "USB hub IC not detected as subcircuit (U4 with VBUSM pin suggests FE1.1s or similar)",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000135-AST-00000005",
+      "description": "Battery charger circuit not identified despite CHARGING1 LED and battery management components present",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000135-AST-00000006",
+      "description": "Power path management (D1/D5/D7/D9 Schottky diode OR-ing between USB/battery/external power) not analyzed as power path topology",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000135-AST-00000007",
+      "description": "PGM/RUN1 connector for RP2040 programming/debug not detected",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000135-AST-00000008",
+      "description": "REVIEW: Crystal circuit components (R6 100R series with C15/C16 18pF load caps) classified as RC filter at 88.4MHz - this is the RP2040 12MHz crystal oscillator circuit",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000135-AST-00000009",
+      "description": "REVIEW: Buttons (BOOT1 with T1102D footprint) classified as type other instead of switch",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000135-AST-00000010",
+      "description": "REVIEW: Some items classified as other (4 total) likely include buttons and connectors that should have proper types",
+      "created_from": "FND-00000135",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}

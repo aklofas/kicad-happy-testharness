@@ -1,0 +1,69 @@
+{
+  "file_pattern": "repos_OnBoard_projects_Buck-Regulator_src_buck.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000109",
+  "assertions": [
+    {
+      "id": "FND-00000109-AST-00000001",
+      "description": "LM2596 variant identification (-12 = fixed 12V, -5 = fixed 5V, -3.3 = fixed 3.3V, -ADJ = adjustable) should drive different analysis paths",
+      "created_from": "FND-00000109",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000109-AST-00000002",
+      "description": "Schottky diode (D1=SS54) in the buck converter freewheeling path not analyzed as part of the switching topology",
+      "created_from": "FND-00000109",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000109-AST-00000003",
+      "description": "REVIEW: LM2596S-12 is a FIXED 12V output regulator - the -12 suffix indicates fixed output. The feedback divider analysis calculates estimated_vout=14.135V using Vref=1.285V which is wrong. For fixed output versions, pin 4 (ON/OFF) is not a feedback pin, and the resistor divider likely serves as enable/UVLO control, not output voltage setting.",
+      "created_from": "FND-00000109",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000109-AST-00000004",
+      "description": "REVIEW: IC ref fields are ? for all components including U1, J1, J2",
+      "created_from": "FND-00000109",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000109-AST-00000005",
+      "description": "REVIEW: IC function not identified for LM2596S-12 despite lib_id containing Regulator_Switching",
+      "created_from": "FND-00000109",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    },
+    {
+      "id": "FND-00000109-AST-00000006",
+      "description": "REVIEW: Output rail shown as __unnamed_1 instead of being associated with Vout net",
+      "created_from": "FND-00000109",
+      "check": {
+        "path": "",
+        "op": "exists"
+      },
+      "needs_review": true
+    }
+  ]
+}
