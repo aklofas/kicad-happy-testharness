@@ -1,0 +1,38 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "DEVLPR.sch.json",
+      "status": "confirmed",
+      "summary": "EMG amplifier (40 components). 0 opamp circuits detected despite 3x OPA187 + 1x OPA2375 (4 active instances). 0 instrumentation amp circuits despite INA821. Dual +/-3V3 supply -3V3 rail decoupling not analyzed.",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "0 opamp circuits detected despite 3x OPA187 + 1x OPA2375 (4 active opamp instances)",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "0 instrumentation amp circuits detected despite INA821 present",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "Dual +/-3V3 supply: -3V3 rail decoupling not analyzed",
+          "analyzer_section": "signal_analysis.decoupling"
+        }
+      ],
+      "suggestions": [
+        "Detect OPA187/OPA2375 as opamp circuits",
+        "Detect INA821 as instrumentation amplifier",
+        "Analyze negative rail decoupling for dual supply designs"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000238",
+      "repo": "DEVLPR",
+      "project": "DEVLPR",
+      "created": "2026-03-16T12:00:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

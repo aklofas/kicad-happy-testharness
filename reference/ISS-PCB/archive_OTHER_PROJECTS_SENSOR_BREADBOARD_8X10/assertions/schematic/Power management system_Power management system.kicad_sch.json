@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~26 (tolerance 10%)",
+      "description": "Net count ~29 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 23,
-        "max": 29
+        "min": 26,
+        "max": 32
       }
     },
     {
@@ -42,6 +42,15 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 bms_systems detected",
+      "check": {
+        "path": "signal_analysis.bms_systems",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "4 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -50,7 +59,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "Has 8 led(s)",
       "check": {
         "path": "statistics.component_types.led",

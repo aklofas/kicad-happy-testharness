@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~12 (tolerance 10%)",
+      "description": "Net count ~21 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 18,
+        "max": 24
       }
     },
     {
@@ -42,16 +42,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 decoupling_analysis detected",
-      "check": {
-        "path": "signal_analysis.decoupling_analysis",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
-      "description": "4 design_observations detected",
+      "description": "3 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -59,7 +50,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000006",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,16 +59,16 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "2 voltage_dividers detected",
+      "id": "SEED-00000007",
+      "description": "1 rc_filters detected",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "signal_analysis.rc_filters",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "Has 6 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

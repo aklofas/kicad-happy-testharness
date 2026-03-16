@@ -11,6 +11,165 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-16 — Batch 10: 9 issues (KH-116 through KH-124)
+
+RC/LC filter fixes, classification corrections, keyword expansion, varistor detection, BMS refinement.
+
+### KH-116 (MEDIUM): RC filter false positive when output==ground net
+
+- **Files**: `signal_detectors.py` — `detect_rc_filters()`
+- **Root cause**: `ground_net` assignment defaulted to `r_other` when `c_other` wasn't ground, making `output_net == ground_net` for "RC-network" type filters.
+- **Fix**: Changed `ground_net` to use `c_other` (capacitor's far end) when neither end is ground. Also added `r_other == c_other` skip for truly shorted cases.
+- **Verified**: CoffeeRoaster R1/C1 and R2/C2 now have distinct output/ground nets. 53/53 assertions pass.
+
+### KH-117 (LOW): Varistors not detected as protection devices
+
+- **Files**: `signal_detectors.py` — `detect_protection_devices()`
+- **Root cause**: `get_two_pin_nets()` hardcodes pin numbers "1"/"2", but Eagle-imported varistors use "P$1"/"P$2"/"P$3" pin names.
+- **Fix**: Added fallback in varistor loop: if `get_two_pin_nets` fails, scan all `pin_net` entries for the component and collect unique nets.
+- **Verified**: robocup-pcb RV1 (500V PVG3 varistor) now detected as protection device. 91/91 assertions pass.
+
+### KH-118 (MEDIUM): TPLP5907MFX-3.3 linear regulator not detected
+
+- **Files**: `signal_detectors.py` — `detect_power_regulators()`
+- **Root cause**: "TPLP" not in regulator keyword list.
+- **Fix**: Added "tplp" and "hx630" to `reg_lib_keywords`.
+- **Verified**: pcb_kicad_rf_scom_bk48_v3 U19 TPLP5907MFX-3.3 now detected as LDO. 38/38 assertions pass.
+
+### KH-119 (HIGH): LC filter overcounting in RF designs
+
+- **Files**: `signal_detectors.py` — `detect_lc_filters()`
+- **Root cause**: Every L-C pair sharing a net counted as a filter. No topology validation; no fanout limit. RF matching networks triggered massive overcounting.
+- **Fix**: (1) Added shared_net fanout limit (>6 pins → skip). (2) Post-processing: if an inductor has LC pairings on both its nets (matching network pattern), keep only the largest-capacitance entry per side.
+- **Verified**: pcb_kicad_rf_scom_bk48_v3 LC filters reduced from 23 to 14. L7 reduced from 4 entries to 2. 38/38 assertions pass.
+
+### KH-120 (MEDIUM): RF transceiver ICs not detected in RF chains
+
+- **Files**: `signal_detectors.py` — `detect_rf_chains()`
+- **Root cause**: (1) BK4819 and CMX994 not in transceiver keyword list. (2) RF chain detection only searched `type == "ic"`, missing non-standard reference ICs classified as "other".
+- **Fix**: (1) Added "bk4819", "cmx994", "cmx99", "si4463", "si4432", "a7105" to transceiver keywords. (2) Changed type check to `c["type"] in ("ic", "other")`.
+- **Verified**: BK4819QN32SC and CMX994E1 both detected as RF transceivers. 38/38 assertions pass.
+
+### KH-121 (MEDIUM): RC filter bidirectional traversal duplicates
+
+- **Files**: `signal_detectors.py` — `detect_rc_filters()`
+- **Root cause**: Same R-C pair found from both net endpoints, creating duplicate entries with swapped input/output.
+- **Fix**: Track `seen_rc_pairs` as `set[frozenset[str]]`. Skip if R-C pair already processed.
+- **Verified**: DIY-LAPTOP Power Supply sheet: 0 duplicate R-C pairs (was >0 before). 176/176 assertions pass.
+
+### KH-122 (MEDIUM): SK6812/WS2812 addressable LEDs misclassified as diodes
+
+- **Files**: `kicad_utils.py` — `classify_component()`; `signal_detectors.py` — `detect_addressable_leds()`
+- **Root cause**: D-prefix components classified as "diode" before reaching SK6812 keyword checks. Custom library `tm_leds:SK6812MINI-E` lacks "led" token needed by the generic LED regex.
+- **Fix**: (1) Added addressable LED keyword check in `classify_component()` diode block. (2) `detect_addressable_leds()` now also searches "diode" type components as fallback.
+- **Verified**: kuro65: all 69 SK6812MINI-E components now type "led" (was "diode"). 1 addressable LED chain detected. 43/43 assertions pass.
+
+### KH-123 (LOW): MCP73871 battery charger misclassified as BMS
+
+- **Files**: `signal_detectors.py` — `detect_bms_systems()`
+- **Root cause**: BMS keyword list included single-cell charger ICs (TP4056, MP2639, MCP738xx) that handle charging only, not multi-cell monitoring/balancing.
+- **Fix**: Removed single-cell charger keywords from `bms_ic_keywords`. Only multi-cell BMS/AFE ICs remain (BQ769xx, LTC681x, ISL942x, MAX172x).
+- **Verified**: PCB-Modular-Multi-Protocol-Hub: 0 BMS systems (was 1 false positive for MCP73871). 85/85 assertions pass.
+
+### KH-124 (HIGH): PMIC regulators not detected (AXP803, MT3608)
+
+- **Files**: `signal_detectors.py` — `detect_power_regulators()`
+- **Root cause**: (1) "AXP" and "MT36" not in keyword list. (2) KiCad 5 legacy format components have 0 pins, causing early skip before keyword check.
+- **Fix**: (1) Added "axp", "mt36", "pmic", "dd40", "ip51" to `reg_lib_keywords`. (2) Added keyword-only fallback for pin-less ICs: if no FB/SW/VOUT pins found but component matches PMIC keywords, add as "unknown" topology entry.
+- **Verified**: DIY-LAPTOP Power Supply: AXP803 and MT3608 both detected (was 0). 176/176 assertions pass.
+
+---
+
+## 2026-03-16 — Batch 9: 12 issues (KH-078, KH-080, KH-081, KH-082, KH-085, KH-087, KH-098, KH-105, KH-112, KH-113, KH-114, KH-115)
+
+Crash fix, classification corrections, false positive suppression, detection expansion, chain merging, rail tracing.
+
+### KH-078 (MEDIUM): `build_net_map()` unhashable list crash
+
+- **Files**: `analyze_schematic.py` — `extract_labels()` and `build_net_map()`
+- **Root cause**: Malformed s-expression yields list instead of string for label name. Flows into dict key as unhashable type.
+- **Fix**: Defensive `isinstance(name, list)` coercion in both `extract_labels()` (line 597) and `build_net_map()` (line 901).
+- **Verified**: All test repos pass (kicad_schemes not checked out for direct verification).
+
+### KH-080 (MEDIUM): Power symbol despite in_bom=yes
+
+- **Files**: `kicad_utils.py` — `classify_component()`; `analyze_schematic.py` — call site
+- **Root cause**: `classify_component()` returned `"power_symbol"` for `lib_id.startswith("power:")` without checking `in_bom`. DD4012SA buck converter (lib_id=`power:DD4012SA`, in_bom=yes) became invisible.
+- **Fix**: Added `in_bom` parameter to `classify_component()`. Guard: `not in_bom` before returning `"power_symbol"`. Call site passes `in_bom=in_bom`.
+- **Verified**: ethersweep DD4012SA (U4) now type=`ic`. 10/10 schematics pass. Baselines unchanged (0/17 diffs).
+
+### KH-081 (MEDIUM): Current sense FPs on Ethernet termination
+
+- **Files**: `signal_detectors.py` — `detect_current_sense()`
+- **Root cause**: No IC exclusion mechanism. Ethernet PHYs (W5500) and RJ45 modules (HR911105A) falsely match as current sense ICs.
+- **Fix**: Added `_SENSE_IC_EXCLUDE` frozenset with Ethernet PHY/RJ45/MagJack families. Applied in both Pass 1 and Pass 2.
+- **Verified**: ethersweep current_sense=0 (was 3 false positives). 10/10 pass.
+
+### KH-082 (MEDIUM): TVS IC-packaged protection devices not detected
+
+- **Files**: `signal_detectors.py` — `detect_protection_devices()`
+- **Root cause**: ESD IC keyword list missed TVS/ECMF/CDSOT families; no `Power_Protection:` library check.
+- **Fix**: Added `tvs18`, `tvs1`, `ecmf`, `cdsot`, `smda`, `rclamp` to keywords. Added `is_protection_lib` check for `power_protection:` in lib_id.
+- **Verified**: ISS-PCB 181/181 pass.
+
+### KH-085 (MEDIUM): RF chain keyword lists too narrow
+
+- **Files**: `signal_detectors.py` — `detect_rf_chains()`
+- **Root cause**: Missing IC families (ADRF, ADMV, MAAM, HMC3xx) and missing categories (attenuators, couplers, power detectors, frequency multipliers).
+- **Fix**: Expanded switch keywords (+`adrf`, `hmc3`), amp keywords (+`maam`, `admv`). Added 4 new category tuples with classification loops, output dict entries, and `_rf_role()` mappings.
+- **Verified**: vna 229/229 pass.
+
+### KH-087 (MEDIUM): Switching regulator output_rail missing
+
+- **Files**: `signal_detectors.py` — `detect_power_regulators()`
+- **Root cause**: Output rail through inductor only traced before sanitization; input rail not traced through ferrite beads.
+- **Fix**: After GND sanitization, retry output_rail trace through inductor if topology=switching and no output_rail. Added ferrite bead input_rail tracing (skip same inductor).
+- **Verified**: Power_HW 114/114 pass. ISS-PCB 181/181 pass.
+
+### KH-098 (MEDIUM): Flyback diode drain-to-supply not detected
+
+- **Files**: `signal_detectors.py` — MOSFET analysis flyback check
+- **Root cause**: Detector only checked drain-to-source topology, missing standard low-side switch flyback (drain to supply rail).
+- **Fix**: After existing drain-to-source check, added drain-to-supply check: if diode's other pin is a power net (not GND), mark as flyback.
+- **Verified**: KiDiff 16/16 pass. Note: KiDiff test cases use connectors instead of power symbols, so flyback detection requires named power rails to trigger.
+
+### KH-105 (MEDIUM): 3-resistor feedback networks not handled
+
+- **Files**: `signal_detectors.py` — new `_merge_series_dividers()`; `analyze_schematic.py` — integration
+- **Root cause**: Pairwise divider detection can't see series resistors in feedback networks. R56+R59 (20.15k combined) treated as separate, yielding wrong Vout.
+- **Fix**: Added `_merge_series_dividers()` post-processor. Identifies pass-through nodes (2 resistors, no active pins), extends chains, combines series resistances, recalculates ratios.
+- **Verified**: Ventilator 30/30 pass. No baseline changes in tested repos.
+
+### KH-112 (LOW): Ferrite bead impedance notation parsed as inductance
+
+- **Files**: `kicad_utils.py` — `parse_value()` and `classify_component()`
+- **Root cause**: "600R/200mA" → split("/") → "600R" → trailing R multiplier → 600.0. Used as inductance in LC filter detection.
+- **Fix**: Early guard in `parse_value()`: regex `\d+[Rr]\s*[/@]\s*\d` returns None. In `classify_component()`: same regex reclassifies inductor as ferrite_bead.
+- **Verified**: All test repos pass (panstamp-nrg3 not checked out).
+
+### KH-113 (LOW): RS485 transceiver current sense FP
+
+- **Files**: `signal_detectors.py` — `detect_current_sense()`
+- **Root cause**: LT1785 RS485 transceiver matched as current sense IC (no exclusion list).
+- **Fix**: Added RS-485/RS-232/UART transceiver families to `_SENSE_IC_EXCLUDE` (lt178, max48, sn65hvd, st348, adm281/485/491, sp338/339, isl3, iso15, max23/31/32).
+- **Verified**: Gas-sens_Rs-485 10/10 pass.
+
+### KH-114 (LOW): Active oscillators treated as passive crystals
+
+- **Files**: `signal_detectors.py` — `detect_crystal_circuits()`
+- **Root cause**: Passive crystal loop processes all `type == "crystal"` components including active oscillators with 4+ pins, producing nonsensical load capacitance.
+- **Fix**: Before passive crystal loop body, check if component has >=4 pins AND has a VCC/VDD power pin (by name or connected net). If so, skip to active oscillator section.
+- **Verified**: explorer 4/4 pass.
+
+### KH-115 (LOW): Multi-tap attenuator spurious dividers
+
+- **Files**: `signal_detectors.py` — `_merge_series_dividers()` (same as KH-105)
+- **Root cause**: Pairwise detection generates all combinations from 3+ resistor chains.
+- **Fix**: Same `_merge_series_dividers()` function. Pass-through nodes are detected and chains merged. Sub-pair dividers marked `suppressed_by_chain: True`.
+- **Verified**: Ventilator 30/30 pass.
+
+---
+
 ## 2026-03-15 — Batch 8: 15 issues (KH-090, KH-097, KH-099, KH-100, KH-101, KH-102, KH-103, KH-104, KH-106, KH-107, KH-108, KH-109, KH-110, KH-111)
 
 Lookup table additions, exclusion lists, classification fixes, regex fixes, and defensive coding.

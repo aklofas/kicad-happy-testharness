@@ -1,0 +1,55 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Kicad Files_Hub.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Multi-Protocol Hub (167 components). Correct: 2 crystals, 2 transistors, 1 ethernet PHY, 2 voltage dividers, 3 regulators. False positive: MCP73871 battery charger classified as BMS (it's a charger, not BMS). RC filter overcounting: Ethernet termination network (R51-R54 50ohm + shared C58) generates 4 phantom filter detections. Protection device count conflates physical parts with protected nets (9 reported, 5 actual parts).",
+      "correct": [
+        {
+          "description": "Y2 16MHz and Y3 25MHz crystals correctly identified with proper load capacitance calculations",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "Q1 FDN340P PMOS and Q2 BC817 BJT correctly identified with proper pin assignments and driver ICs",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "U12 LAN8720A Ethernet PHY correctly detected",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        },
+        {
+          "description": "2 voltage dividers correctly identified: R60/R59 (ratio 0.909) and R21/R22 (ratio 0.25 for U10 VPCC)",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "3 power regulators correctly detected (U3, U4, U6)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U10 MCP73871 classified as bms_system but it is a single-cell Li-Ion battery charger IC, not a Battery Management System. BMS requires cell balancing, multi-cell monitoring, and discharge protection.",
+          "analyzer_section": "signal_analysis.bms_systems"
+        },
+        {
+          "description": "RC filter overcounting: C58 (0.1uF) shared by R51-R54 (50ohm Ethernet terminators) generates 4 separate filter detections. These are impedance matching/termination, not discrete RC filters.",
+          "analyzer_section": "signal_analysis.rc_filters"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Reclassify MCP73871 as battery_charger, not bms_system",
+        "Deduplicate RC filters sharing a common capacitor (Ethernet termination networks)",
+        "Report protection_devices as both physical part count and protected net count separately"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000225",
+      "repo": "PCB-Modular-Multi-Protocol-Hub",
+      "project": "Kicad Files_Hub",
+      "created": "2026-03-16T08:30:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

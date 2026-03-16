@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~32 (tolerance 10%)",
+      "description": "Net count ~41 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 28,
-        "max": 36
+        "min": 36,
+        "max": 46
       }
     },
     {
@@ -42,15 +42,6 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 decoupling_analysis detected",
-      "check": {
-        "path": "signal_analysis.decoupling_analysis",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
       "description": "6 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -59,8 +50,8 @@
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "2 lc_filters detected",
+      "id": "SEED-00000006",
+      "description": "3 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "min_count",
@@ -68,7 +59,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "Has 7 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

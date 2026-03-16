@@ -1,0 +1,37 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ground-station.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Ground station (30 components). Protection device U4 (USBLC6-2SC6) counted as 4 entries (per-net duplication). 1 regulator and 2 RC filters correctly detected.",
+      "correct": [
+        {
+          "description": "1 regulator correctly detected",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "2 RC filters correctly detected",
+          "analyzer_section": "signal_analysis.rc_filters"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Protection device U4 (USBLC6-2SC6) counted as 4 entries due to per-net counting instead of per-device",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Count multi-channel protection devices as single device instead of per-net"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000241",
+      "repo": "pygmy",
+      "project": "ground-station_ground-station",
+      "created": "2026-03-16T12:00:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

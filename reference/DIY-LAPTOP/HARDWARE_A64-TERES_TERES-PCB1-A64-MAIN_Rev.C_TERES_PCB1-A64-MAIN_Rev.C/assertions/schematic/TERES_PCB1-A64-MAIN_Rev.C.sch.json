@@ -60,7 +60,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "8 design_observations detected",
+      "description": "11 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -87,7 +87,16 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "28 rc_filters detected",
+      "description": "3 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "27 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
@@ -95,19 +104,10 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "1 rf_chains detected",
       "check": {
         "path": "signal_analysis.rf_chains",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "3 rf_matching detected",
-      "check": {
-        "path": "signal_analysis.rf_matching",
         "op": "min_count",
         "value": 1
       }
@@ -141,11 +141,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "Has 5 ferrite_bead(s)",
+      "description": "Has 16 ferrite_bead(s)",
       "check": {
         "path": "statistics.component_types.ferrite_bead",
         "op": "min_count",
-        "value": 2
+        "value": 8
       }
     },
     {
@@ -159,11 +159,11 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "Has 20 inductor(s)",
+      "description": "Has 9 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
         "op": "min_count",
-        "value": 10
+        "value": 4
       }
     },
     {

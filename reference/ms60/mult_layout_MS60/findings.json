@@ -1,0 +1,33 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "MS60.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Keyboard (155 components). Decoupling cap C6 double-counted on both +3V3 and +5V rails. Key matrix reports 78 switches on 5x15 matrix (75 positions) with 3 extra switches unexplained.",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Decoupling cap C6 double-counted - listed on both +3V3 and +5V rails",
+          "analyzer_section": "signal_analysis.decoupling"
+        },
+        {
+          "description": "Key matrix reports 78 switches on 5x15 matrix (75 positions) - 3 extra switches unexplained",
+          "analyzer_section": "signal_analysis.key_matrix"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Ensure decoupling caps are only counted on their actual rail",
+        "Validate key matrix switch count against matrix dimensions"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000234",
+      "repo": "ms60",
+      "project": "mult_layout_MS60",
+      "created": "2026-03-16T12:00:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

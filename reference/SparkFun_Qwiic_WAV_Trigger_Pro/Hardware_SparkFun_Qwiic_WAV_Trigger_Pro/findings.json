@@ -1,0 +1,46 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Hardware_usb.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "SparkFun WAV Trigger Pro USB sheet (34 components). Regulators, protection devices, voltage dividers, feedback network all correct. Critical: L2 value '30ohm' parsed as 30 Henry instead of impedance — invalidates LC filter detection. U6 AP3012 boost estimated output (2.418V) mismatches rail name 3.3V_P by 26.7%.",
+      "correct": [
+        {
+          "description": "U2 AP2112K-3.3 LDO and U6 AP3012 boost converter correctly identified and classified",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "U1 TPD3S014 3-channel ESD protector correctly identified protecting USB DP/DM/VBUS",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "2 voltage dividers correct: R23/R24 (100k/33k, ratio=0.248) feedback, R26/R27 (560/680ohm, ratio=0.548) VUSB detection",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "R23/R24 feedback network for U6 correctly detected",
+          "analyzer_section": "signal_analysis.feedback_networks"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "L2 value '30ohm' (ferrite bead impedance) misparsed as 30.0 henries. Invalidates LC filter detection (L2/C27 reported as LC filter with 29Hz resonance, but L2 is impedance not inductance).",
+          "analyzer_section": "signal_analysis.lc_filters"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Fix inductor value parser to distinguish ohm (impedance) from henry (inductance) — ferrite beads rated in ohms should not be treated as inductors",
+        "Verify U6 estimated output (2.418V) against design intent — 26.7% mismatch with 3.3V_P rail name"
+      ],
+      "related_issues": ["KH-112"],
+      "should_become_assertion": true,
+      "id": "FND-00000228",
+      "repo": "SparkFun_Qwiic_WAV_Trigger_Pro",
+      "project": "Hardware_SparkFun_Qwiic_WAV_Trigger_Pro",
+      "created": "2026-03-16T08:30:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

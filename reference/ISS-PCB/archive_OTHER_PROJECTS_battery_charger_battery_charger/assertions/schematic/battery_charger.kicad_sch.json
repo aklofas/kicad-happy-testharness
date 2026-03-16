@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~12 (tolerance 10%)",
+      "description": "Net count ~16 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 14,
+        "max": 18
       }
     },
     {
@@ -38,6 +38,15 @@
       "check": {
         "path": "signal_analysis",
         "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 bms_systems detected",
+      "check": {
+        "path": "signal_analysis.bms_systems",
+        "op": "min_count",
+        "value": 1
       }
     }
   ]

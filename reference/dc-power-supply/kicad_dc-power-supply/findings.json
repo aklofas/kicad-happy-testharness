@@ -1,0 +1,38 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "dc-power-supply.sch.json",
+      "status": "confirmed",
+      "summary": "DC power supply (129 components). 2 RF matching networks falsely detected (L1 ferrite EMI filter + C12 decoupling misidentified). 5 regulators correct. 10 RC filters detected but many are feedback networks not signal filters.",
+      "correct": [
+        {
+          "description": "5 regulators correctly detected",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "2 RF matching networks falsely detected - L1 ferrite bead EMI filter and C12 decoupling capacitor misidentified as RF matching",
+          "analyzer_section": "signal_analysis.rf_matching"
+        },
+        {
+          "description": "RC filter count includes feedback networks that are not signal filters",
+          "analyzer_section": "signal_analysis.rc_filters"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Distinguish ferrite EMI filters from RF matching networks",
+        "Distinguish feedback networks from signal RC filters"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000233",
+      "repo": "dc-power-supply",
+      "project": "kicad_dc-power-supply",
+      "created": "2026-03-16T12:00:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}
