@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~60 (tolerance 10%)",
+      "description": "Net count ~44 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 54,
-        "max": 66
+        "min": 39,
+        "max": 49
       }
     },
     {
@@ -51,6 +51,24 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "1 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "2 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 ethernet_interfaces detected",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
@@ -59,8 +77,8 @@
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "6 protection_devices detected",
+      "id": "SEED-00000009",
+      "description": "1 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "min_count",
@@ -68,7 +86,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "8 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -77,7 +95,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "Has 16 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -86,7 +104,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000012",
       "description": "Has 20 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

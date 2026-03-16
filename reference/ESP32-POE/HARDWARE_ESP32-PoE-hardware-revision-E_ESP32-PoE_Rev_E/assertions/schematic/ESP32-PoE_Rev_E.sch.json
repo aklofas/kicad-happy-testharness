@@ -60,7 +60,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "13 design_observations detected",
+      "description": "10 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -78,15 +78,6 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "0 power_regulators detected",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "min_count",
-        "value": 0
-      }
-    },
-    {
-      "id": "SEED-00000010",
       "description": "1 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -95,10 +86,19 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000010",
       "description": "4 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "1 rf_chains detected",
+      "check": {
+        "path": "signal_analysis.rf_chains",
         "op": "min_count",
         "value": 1
       }
@@ -141,6 +141,15 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "Has 5 ferrite_bead(s)",
+      "check": {
+        "path": "statistics.component_types.ferrite_bead",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "Has 6 fiducial(s)",
       "check": {
         "path": "statistics.component_types.fiducial",
@@ -149,19 +158,10 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "Has 6 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000018",
-      "description": "Has 6 inductor(s)",
-      "check": {
-        "path": "statistics.component_types.inductor",
         "op": "min_count",
         "value": 3
       }

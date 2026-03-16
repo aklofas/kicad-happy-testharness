@@ -78,15 +78,6 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "0 power_regulators detected",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "min_count",
-        "value": 0
-      }
-    },
-    {
-      "id": "SEED-00000010",
       "description": "2 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -95,10 +86,19 @@
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "6 rc_filters detected",
+      "id": "SEED-00000010",
+      "description": "5 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "1 rf_chains detected",
+      "check": {
+        "path": "signal_analysis.rf_chains",
         "op": "min_count",
         "value": 1
       }

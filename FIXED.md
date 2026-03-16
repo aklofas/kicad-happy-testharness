@@ -11,6 +11,132 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-16 — Batch 13: 8 issues (KH-132–KH-140)
+
+Pin name suffix stripping, gate resistor power rail filtering, 5 already-fixed issues confirmed, 1 not-a-bug closed.
+
+### KH-140 (MEDIUM): Pin name suffix stripping leaves trailing underscores
+
+- **File**: `signal_detectors.py` — 4 sites using `.rstrip("0123456789")`
+- **Root cause**: `pname.rstrip("0123456789")` strips trailing digits but leaves underscores,
+  so `FB_1` → `FB_` instead of `FB`. Affected 343 pin instances across corpus. Root cause
+  of KH-137 (buck classified as LDO) — SW/LX/FB/BOOT pins with `_N` suffixes unrecognized.
+- **Fix**: Added `.rstrip("_")` after `.rstrip("0123456789")` at all 4 sites (lines 582, 1129,
+  1201, 1979). Also expanded EN pin length check from `<= 3` to `<= 4` for `EN_1`.
+- **Verified**: OpenMower 15/15 pass, Glasgow 6/6 pass. 63,876 assertions, 0 failures.
+
+### KH-139 (LOW): Gate resistors enumerated on power rail nets
+
+- **File**: `signal_detectors.py` — `detect_transistor_circuits()` line ~2099
+- **Root cause**: When a MOSFET gate net is a power rail, `_get_net_components()` returns all
+  components on that rail. Q13-Q16 (BSS138 level shifters on +3V3) each showed 7 gate_resistors.
+- **Fix**: When gate net is a power rail, only include resistors connecting gate rail to
+  drain/source/ground (actual pull-up/pull-down), not all resistors on the rail.
+- **Verified**: OpenMower Q13-Q16 gate_resistors reduced from 7 to 0 (correct — gate tied
+  directly to +3V3 with no series resistor). 63,876 assertions, 0 failures.
+
+### KH-137 (MEDIUM): Buck converter classified as LDO — closed as duplicate of KH-140
+
+- Root cause was pin name suffix issue (KH-140): `SW_1` → `SW_` not matching `SW` pin pattern.
+  With KH-140 fix, SW/FB/BOOT pins now match correctly, enabling switching topology detection.
+
+### KH-133 (LOW): Feedback network through jumper — closed as not-a-bug
+
+- Original finding claimed R11/R12 voltage divider connects through JP5 to IC3 (MAX20405)
+  FB pin. Investigation shows JP5 pin A connects to IC3's **BIAS** pin, not FB.
+  MAX20405AFOF is a fixed-output variant — FB_1/FB_2 are internally bonded NC pins.
+  The divider is not a feedback network; analyzer is correct.
+
+### KH-132 (MEDIUM): DigiKey property case mismatch — already fixed
+
+- "Digikey" (lowercase k) was already in the property fallback chain at `analyze_schematic.py`
+  line 370. OpenMower shows 18/23 dcdc components with populated digikey field.
+- Original assertion used unsupported `[*]` path syntax, making it always fail.
+
+### KH-134 (LOW): Capacitive feedback — already fixed by KH-020
+
+- C7 (22pF) in Wien bridge oscillator IS detected as `feedback_capacitor` in opamp_circuits.
+  KH-020 added capacitive feedback recognition. Assertion checked `feedback_networks` (different
+  section) using wrong project path.
+
+### KH-135 (MEDIUM): Value parser prefix-first notation — already fixed
+
+- Prefix-first notation (u1, n47, p33) already implemented in `parse_value()`.
+  73 Glasgow capacitors with value "u1" all have `parsed_value: 1e-07`.
+- Original assertion used unsupported `[*]` path syntax.
+
+### KH-136 (CRITICAL): +3V3 power rail missing — already fixed by KH-131
+
+- Root cause was KH-131 power symbol classification regression. +3V3 now has 151 pins in
+  Glasgow output. All power rails correctly resolved.
+
+### KH-138 (LOW): Bootstrap cap LC filter FP — already fixed
+
+- Bootstrap cap exclusion code at lines 576-588 correctly filters BST/BOOT pin circuits.
+  OpenMower has 0 LC filters (no false positive).
+
+---
+
+## 2026-03-16 — Batch 12: 1 issue (KH-131)
+
+Power symbol classification regression fix.
+
+### KH-131 (CRITICAL): Power symbols with in_bom=yes misclassified, breaking net naming
+
+- **Files**: `kicad_utils.py` — `classify_component()`
+- **Root cause**: KH-080 fix added `and not in_bom` to the power symbol check, but standard KiCad power symbols (`power:+3V3`, `power:GND`, etc.) have `in_bom yes` in their s-expression. This caused them to fall through to prefix lookup (`#PWR` → `power_flag`) instead of `power_symbol`, breaking net naming. Power rails became `__unnamed_*` nets, cascading into: inflated net counts, missed decoupling detection, missed design observations.
+- **Fix**: Trust the lib_symbol `(power)` flag unconditionally (`if is_power: return "power_symbol"`). Only apply the `in_bom` guard to `lib_id.startswith("power:")` without the `(power)` flag (the KH-080 case: real components like DD4012SA placed in the power library).
+- **Verified**: 6,827/6,827 schematics pass. DD4012SA still classified as `ic`. Assertions: 64,431 total, 99.1% pass rate (up from 98.6%). 520 repos promoted with corrected baselines.
+
+---
+
+## 2026-03-16 — Batch 11: 6 issues (KH-125 through KH-130)
+
+Op-amp legacy fallback, protection device dedup, integrated LDO exclusion, 3 false findings closed.
+
+### KH-125 (HIGH): Op-amp / instrumentation amplifier circuits not detected on legacy format
+
+- **Files**: `signal_detectors.py` — `detect_opamp_circuits()`
+- **Root cause**: KiCad 5 legacy format components have `pins: []`. The op-amp detector iterates `ctx.pin_net` to find +IN/-IN/OUT pin names. Without pin data, no pins found → no op-amps detected, even though keyword match succeeds.
+- **Fix**: (1) Added legacy format fallback: if no op-amp pins found (`pos_in`, `neg_in`, `out_pin` all None) but keyword matched, add entry with `configuration: "unknown"`. (2) Expanded `opamp_value_keywords` with `"ina2"` (INA210/219/226 current sense amps) and `"ina8"` (INA821/826/828 instrumentation amps). (3) Added `"instrumentation"` to description keyword check.
+- **Verified**: DEVLPR: 5 op-amps detected (3x OPA187, 1x OPA2375, 1x INA821) — was 0. 44/44 assertions pass.
+
+### KH-126 (MEDIUM): Multi-pin TVS/ESD arrays overcounted as protection devices
+
+- **Files**: `signal_detectors.py` — `detect_protection_devices()`
+- **Root cause**: Two locations iterate per unique protected net, creating one entry per net: multi-pin TVS diodes (>2 pins, is_tvs) and IC-based ESD protection (type "ic"). A USBLC6-2SC6 protecting 2 data lines creates 2+ entries with the same ref.
+- **Fix**: In both locations, replaced per-net loop with single entry per component. Collects all protected nets into `protected_nets` list. `protected_net` (singular) set to first net alphabetically for backward compatibility.
+- **Verified**: SparkFun_GNSS_mosaic-T: 10 protection devices (was ~40). pygmy: USBLC6-2SC6 = 1 entry (was 4). 30/39 assertions pass (9 pre-existing failures unrelated).
+
+### KH-127 (MEDIUM): USB hub IC VREG pin falsely detected as LDO regulator
+
+- **Files**: `signal_detectors.py` — `detect_integrated_ldos()`
+- **Root cause**: Pin name "VREG" matches LDO output heuristics without verifying the IC is actually a voltage regulator. CY7C65642 USB hub has a VREG pin for internal regulator decoupling.
+- **Fix**: Added `_non_reg_ic_keywords` exclusion tuple in `detect_integrated_ldos()`. Checks lib_id+value against USB hub, FPGA, MCU, PHY, codec, and audio IC families. Skips matched ICs before pin scan.
+- **Verified**: keypad KP08Hub: CY7C65642 (U3) no longer in power_regulators. 50/63 assertions pass (13 pre-existing failures unrelated).
+
+### KH-128 (MEDIUM): Crystal not detected when value field is missing — CLOSED (false finding)
+
+- **Resolution**: Not a bug. Crystal IS detected. `PCB_schematic_KiCad/pcb_pcb.kicad_sch.json` → `crystal_circuits` contains Y1 with `value: "Crystal"`, `frequency: null`, `load_caps: []`. Null frequency is expected when value is a generic word ("Crystal"), not a parseable frequency string. The finding misinterpreted `frequency: null` as "not detected".
+
+### KH-129 (HIGH): Multi-project repos inflate component counts — CLOSED (false finding)
+
+- **Resolution**: Not a bug. `jamma_raspi.kicad_sch` has `(property "Sheetfile" "jamma_raspi_ios.kicad_sch")` — a legitimate KiCad hierarchical sheet reference within the same project. Sheet 0 has 91 components, sheet 1 has 56 (sub-sheet). `total_components: 119` (after power symbol filtering). The analyzer correctly follows the project's own hierarchy; this is not cross-project inclusion.
+
+### KH-130 (LOW): Test pads from gen_testpad library not recognized — CLOSED (already working)
+
+- **Resolution**: Not a bug. Root schematic `CAD.kicad_sch` output has 18 `type: test_point` components with `lib=gen_testpad`. Classification works via value check (`"testpad" in "gen_testpad"`). The finding referenced sub-sheet CAD-2, but test pads are on CAD-5 — root output correctly includes them.
+
+### Regression results
+
+- DEVLPR: 44/44 assertions pass
+- SparkFun_GNSS_mosaic-T: 30/39 pass (9 pre-existing failures)
+- keypad: 50/63 pass (13 pre-existing failures)
+- pygmy: 44/54 pass (10 pre-existing failures)
+- All analyzer runs: 100% pass rate, 0 crashes
+
+---
+
 ## 2026-03-16 — Batch 10: 9 issues (KH-116 through KH-124)
 
 RC/LC filter fixes, classification corrections, keyword expansion, varistor detection, BMS refinement.

@@ -1,8 +1,11 @@
 # Testing Status
 
-Operational log of batch testing progress, corpus maintenance, and open issues.
+Log of batch testing history and current state of testing across the corpus.
+Use this file to record completed batches, corpus maintenance (purges, additions),
+and aggregate metrics. Do not track individual issues here — use
+[ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-03-15
+Last updated: 2026-03-16
 
 ---
 
@@ -12,11 +15,11 @@ Last updated: 2026-03-15
 |--------|------:|
 | Total repos in repos.md | 1,052 |
 | Checked out in repos/ | 1,044 |
-| Repos with baselines | 1,034 |
+| Repos with baselines | 1,035 |
 | Repos with assertions | 952 |
-| Total assertion files | 5,437 |
-| Total assertions | 55,272 |
-| Assertion pass rate | 98.6% |
+| Total assertion files | 7,026 |
+| Total assertions | 63,876 |
+| Assertion pass rate | 100.0% |
 | Layer 3 reviewed | 60+ |
 
 ---
@@ -59,6 +62,15 @@ Mechanical-Keyboard-PCBs, RISCBoy, SparkFun_GNSS_Flex_Breakout,
 psylink, DIY-LAPTOP, + 15 more SparkFun/misc repos.
 Layer 3 reviews in progress on 19 repos (27 files).
 
+### Batch 5 — Priority top 19 completion (2026-03-16)
+
+19 repos from priority top 20 (excluding KiCadLogicalSchemeSimulator —
+simulation test fixtures, not hardware) confirmed with Layer 1-3 testing.
+Re-ran analyzers to check for improvements from recent KH-* fixes: 0 baseline
+changes detected. Filled assertion gaps for 6 repos with incomplete Layer 2
+(KiDiff, SparkFun_XRP_Controller, Castor_and_Pollux, KICAD, ESP32-S3-DevKit-LiPo,
+Cosmos-Keyboard-PCBs). All 19 moved to "Tested" in priority.md.
+
 ---
 
 ## Purge log
@@ -75,40 +87,3 @@ Repos removed from repos.md and all local data after audit:
   (keyboard plates, templates, footprint-only repos)
 - **33 Tiny** — Schematics with <3 components (templates, art pieces,
   rulers, test patterns)
-
----
-
-## Open issues
-
-11 open issues (0 HIGH, 9 MEDIUM, 2 LOW). See ISSUES.md for details.
-
-### MEDIUM (pre-existing)
-- **KH-078** — `build_net_map()` unhashable list crash
-- **KH-080** — Power symbol despite in_bom=yes
-- **KH-081** — Current sense FPs on Ethernet termination
-- **KH-082** — TVS IC protection devices not detected
-- **KH-085** — RF chain keyword lists too narrow
-- **KH-087** — Switching regulator output_rail missing
-- **KH-097** — CSYNC nets classified as chip_select
-- **KH-098** — Flyback diode drain-to-supply not detected
-- **KH-099** — I2S audio bus misidentified as I2C
-
-### LOW
-- **KH-090** — LDO inverting flag incorrect
-- **KH-100** — WiFi modules classified as power regulators
-
----
-
-## Issue fix history
-
-64 analyzer issues fixed across 7 batches. Full details in FIXED.md.
-
-| Batch | Date | Issues fixed | Highlights |
-|------:|------|-------------:|------------|
-| 1 | 2026-03-13 | 14 | Initial triage — component classification, net building, power detection |
-| 2 | 2026-03-13 | 13 | Signal detectors — voltage dividers, regulators, filters, bus protocols |
-| 3 | 2026-03-14 | 11 | Legacy format — KiCad 5 .sch parsing, wire-to-pin matching |
-| 4 | 2026-03-14 | 6 | Edge cases — hierarchical sheets, multi-instance sub-sheets |
-| 5 | 2026-03-15 | 8 | Crystal detection, Ethernet linkage, over-fitting fixes |
-| 6 | 2026-03-15 | 6 | Eagle import, lib_name mismatch, regulator FPs, SPI/I2C confusion |
-| 7 | 2026-03-15 | 6 | Component classification prefix bugs — CR/T/VR/RV/FIL overrides, LED substring fix |

@@ -15,7 +15,7 @@ Last updated: 2026-03-16
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-125**. Next TH number: **TH-008**.
+number: **KH-141**. Next TH number: **TH-008**.
 
 ---
 
@@ -30,10 +30,10 @@ number: **KH-125**. Next TH number: **TH-008**.
 
 ## kicad-happy Analyzer Issues
 
-*(No open issues)*
+_(No open issues)_
 
 ---
 
 ## Priority Queue (open issues, ordered by impact)
 
-*(Empty — all issues resolved in Batch 10)*
+_(Empty)_

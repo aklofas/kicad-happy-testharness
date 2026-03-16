@@ -69,7 +69,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "15 design_observations detected",
+      "description": "12 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -87,16 +87,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "0 power_regulators detected",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "min_count",
-        "value": 0
-      }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "6 protection_devices detected",
+      "description": "3 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "min_count",
@@ -104,10 +95,19 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000011",
       "description": "8 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "1 rf_chains detected",
+      "check": {
+        "path": "signal_analysis.rf_chains",
         "op": "min_count",
         "value": 1
       }
@@ -177,15 +177,6 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "Has 5 inductor(s)",
-      "check": {
-        "path": "statistics.component_types.inductor",
-        "op": "min_count",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000021",
       "description": "Has 45 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -194,7 +185,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "Has 6 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

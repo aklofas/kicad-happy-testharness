@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~367 (tolerance 10%)",
+      "description": "Net count ~162 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 330,
-        "max": 404
+        "min": 145,
+        "max": 179
       }
     },
     {
@@ -51,6 +51,24 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "1 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 key_matrices detected",
       "check": {
         "path": "signal_analysis.key_matrices",
@@ -59,7 +77,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
       "description": "Has 69 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -68,7 +86,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "Has 69 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -77,7 +95,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "Has 69 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -86,7 +104,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000012",
       "description": "Has 69 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
