@@ -17,11 +17,14 @@ Last updated: 2026-03-17
 | Checked out in repos/ | 1,044 |
 | Repos with baselines | 1,035 |
 | Repos with assertions | 1,035 |
-| Total assertion files | ~7,100 |
-| Total assertions | 64,066 |
+| Total assertion files | ~10,000 |
+| Total assertions (schematic) | 64,066 |
+| Total assertions (PCB) | 42,879 |
+| Total assertions | 106,945 |
 | Assertion pass rate | 100.0% |
-| Layer 3 reviewed | 158 |
-| Total findings | 319 |
+| Layer 3 reviewed (schematic) | 158 |
+| Layer 3 reviewed (PCB) | 5 |
+| Total findings | 324 |
 
 ---
 
@@ -109,6 +112,18 @@ Final: 64,066 assertions at 100.0% pass rate.
 Drift check before regression: 64 possibly_fixed, 90 now_detected findings
 (improvements from fixes), 41 stale-path regressions (non-existent output
 keys, not real issues), 102 no_output.
+
+### Batch 17 — PCB Layer 2-3 bootstrap (2026-03-17)
+
+PCB assertion seeding: 42,879 SEED-* assertions generated across 2,941 PCB files
+using `seed.py --all --type pcb`. PCB review packet support added to `packet.py`.
+
+First PCB Layer 3 reviews: 5 repos reviewed (hackrf, moteus, ESP32-P4-PC,
+Neo6502pc, RP2350pc). 5 PCB findings filed (FND-00000293 through FND-00000297).
+6 new KH-* issues discovered (KH-154 through KH-159), all in analyze_pcb.py:
+copper_layers_used includes non-copper layers, misses zone-only layers,
+paste-only stencil pads as thermal pads, connector pads as thermal pads,
+thermal via adequacy ignores drill size, zone stitching per-polygon areas.
 
 ---
 

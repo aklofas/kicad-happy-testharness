@@ -2,7 +2,7 @@
 
 ## FND-00000007: Legacy KiCad 5 .sch files (daisho: 60 files, OpenVent: 19 files) have 0 signal detections. Component extraction and net connectivity work, subcircuit detection works (231 subcircuits in daisho, 98 in OpenVent), but signal pattern analysis not wired up for legacy format.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: hw_main_board_main_board.sch.json
 - **Created**: 2026-03-13
@@ -45,7 +45,7 @@
 
 ## FND-00000028: X1/X2/X3 (40/12/25 MHz crystals, QUARTZCMS4_GROUND lib) classified as "connector" instead of "crystal"
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: hw_main_board_main_board.sch.json
 - **Created**: 2026-03-13

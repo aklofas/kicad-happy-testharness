@@ -10,8 +10,6 @@
 - FP6291 (U1) boost converter correctly detected as switching regulator with inductor L1, output rail BOOST, FB net, and feedback divider R5 (88k)/R6 (12k) giving ratio 0.12 and estimated Vout=5.0V
 - Feedback network R5/R6 correctly identified with is_feedback=true and connection to U1 pin 3 (FB)
 - L7805 (U6) correctly detected as LDO topology regulator
-- TP4056 (U2) correctly detected in bms_systems with NTC sensor TH1
-- LC filter L1/C2+C3+C4 at 16.37 kHz on BOOST net correctly detected - this is the boost converter output filter
 - RC filter R29/C9 at 1.59 kHz correctly detected as low-pass filter
 - 24 LEDs (D4-D26) correctly classified as LED type
 - Component counts: 101 total, 31 resistors, 24 LEDs, 10 caps, 23 connectors, 6 ICs - all plausible for this design
@@ -29,6 +27,10 @@
 ### Missed
 - LM555 timer (U3) driving CD4017 decade counters (U4, U5) to create LED sequencing pattern is not detected. This is a classic 555+4017 LED chaser circuit
   (signal_analysis.design_observations)
+- TP4056 (U2) no longer detected in bms_systems (was previously detected with NTC sensor TH1)
+  (signal_analysis.bms_systems)
+- LC filter L1/C2+C3+C4 at 16.37 kHz on BOOST net no longer detected (boost converter output filter)
+  (signal_analysis.lc_filters)
 
 ### Suggestions
 - Filter bms_systems to only include known charger/BMS ICs (TP4056, BQ2057, etc.), not boost converters that happen to be in the same lib

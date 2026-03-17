@@ -59,3 +59,35 @@
 - The separate analog ground domain (GNDA) and analog supply filtering are well-detected strengths of the analyzer
 
 ---
+
+## FND-00000297: RP2350pc PCB: copper_layers_used includes F.Mask (non-copper layer), connector shield pads misidentified as thermal pads, zone stitching via areas inflated by per-polygon calculation
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: HARDWARE_RP2350pc-Rev.A_RP2350pc_Rev_A.kicad_pcb.json
+- **Related**: KH-154, KH-157, KH-159
+- **Created**: 2026-03-17
+
+### Correct
+- Footprint count and board dimensions consistent with RP2350 SBC
+- SMD/THT breakdown reasonable for modern mixed-technology board
+- DFM analysis present with appropriate tier
+- Power net routing analysis covers supply rails
+
+### Incorrect
+- copper_layers_used includes F.Mask which is a solder mask layer, not copper. Board should be 2 copper layers (F.Cu, B.Cu).
+  (statistics.copper_layers_used)
+- Connector shield/structural pads (USB, HDMI, SD card connectors) with no net are misidentified as thermal pads
+  (thermal_pad_vias)
+- Zone stitching via density uses per-polygon areas instead of per-net totals, inflating density numbers
+  (zone_stitching_vias)
+
+### Missed
+(none)
+
+### Suggestions
+- Filter copper_layers_used to only *.Cu layers
+- Filter thermal pad detection to exclude pads on connectors with no net
+- Use per-net total zone area for stitching via density calculation
+
+---

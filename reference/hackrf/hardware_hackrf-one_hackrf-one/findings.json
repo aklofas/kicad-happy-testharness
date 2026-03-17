@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "id": "FND-00000293",
+      "repo": "hackrf",
+      "project": "hardware_hackrf-one_hackrf-one",
+      "created": "2026-03-17T18:11:48.072700+00:00",
+      "status": "new",
+      "analyzer_type": "pcb",
+      "source_file": "hardware_hackrf-one_hackrf-one.kicad_pcb.json",
+      "summary": "hackrf-one PCB: copper_layers_used includes F.SilkS (non-copper layer), SMD count may be slightly inflated, no RF/impedance analysis for this RF-heavy board",
+      "correct": [
+        {
+          "description": "Footprint count (321) matches visual inspection of the hackrf-one board",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "Track segment count (4403) and via count (1173) consistent with dense 4-layer RF design",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "Board dimensions 120.9mm x 74.8mm match known hackrf-one form factor",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "DFM tier correctly identified for this production board",
+          "analyzer_section": "dfm"
+        },
+        {
+          "description": "Power net routing analysis captures major power rails",
+          "analyzer_section": "power_net_routing"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "copper_layers_used=5 includes F.SilkS which is not a copper layer. hackrf-one is a 4-layer board (F.Cu, In1.Cu, In2.Cu, B.Cu)",
+          "analyzer_section": "statistics.copper_layers_used",
+          "check": {
+            "path": "statistics.copper_layers_used",
+            "op": "equals",
+            "value": 4
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "No RF impedance analysis despite this being an SDR (Software Defined Radio) board with critical 50-ohm RF traces",
+          "analyzer_section": "rf_analysis"
+        },
+        {
+          "description": "No differential pair analysis despite USB and RF differential signaling",
+          "analyzer_section": "differential_pairs"
+        }
+      ],
+      "suggestions": [
+        "Filter copper_layers_used to only include layers matching *.Cu pattern",
+        "Add RF impedance analysis for boards with SMA/RF connectors",
+        "Add differential pair detection for USB and high-speed signals"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "KH-154"
+      ],
+      "datasheets_used": []
+    }
+  ]
+}

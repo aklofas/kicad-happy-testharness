@@ -63,3 +63,35 @@
 - Power multiplexer ICs (TPS2116, TPS2121) should not be classified as LDO
 
 ---
+
+## FND-00000295: ESP32-P4-PC PCB: paste-only stencil aperture pads misidentified as thermal pads (15/19 false positives), via adequacy formula ignores drill size, connector structural/shield pads misidentified as thermal pads
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B.kicad_pcb.json
+- **Related**: KH-156, KH-157, KH-158
+- **Created**: 2026-03-17
+
+### Correct
+- Footprint count and board dimensions consistent with ESP32-P4-PC dev kit
+- Copper layer count and routing statistics reasonable for 4-layer SBC
+- DFM analysis correctly identifies manufacturing constraints
+- Power net routing analysis covers major supply rails
+
+### Incorrect
+- thermal_pad_vias contains 15+ false positives from paste-only stencil aperture pads that have no copper pad, only solder paste openings for stencil alignment. These are not thermal pads.
+  (thermal_pad_vias)
+- Connector structural/shield pads (no net) misidentified as thermal pads. These are mechanical mounting or shield pads on USB/HDMI connectors, not thermal relief pads.
+  (thermal_pad_vias)
+- Thermal via adequacy formula does not account for drill size. A 1.0mm drill via has ~10x the thermal conductivity of a 0.3mm drill via, but both receive the same adequacy rating.
+  (thermal_pad_vias)
+
+### Missed
+(none)
+
+### Suggestions
+- Filter thermal pad detection to exclude pads with only paste layers (no copper)
+- Filter thermal pad detection to exclude pads with no net assignment
+- Include via drill diameter in thermal adequacy calculation
+
+---

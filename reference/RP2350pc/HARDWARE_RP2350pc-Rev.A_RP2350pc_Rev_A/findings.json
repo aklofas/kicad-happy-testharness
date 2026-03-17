@@ -175,6 +175,66 @@
       "repo": "RP2350pc",
       "project": "HARDWARE_RP2350pc-Rev.A_RP2350pc_Rev_A",
       "created": "2026-03-14T07:51:11.844537+00:00"
+    },
+    {
+      "id": "FND-00000297",
+      "repo": "RP2350pc",
+      "project": "HARDWARE_RP2350pc-Rev.A_RP2350pc_Rev_A",
+      "created": "2026-03-17T18:11:48.072700+00:00",
+      "status": "new",
+      "analyzer_type": "pcb",
+      "source_file": "HARDWARE_RP2350pc-Rev.A_RP2350pc_Rev_A.kicad_pcb.json",
+      "summary": "RP2350pc PCB: copper_layers_used includes F.Mask (non-copper layer), connector shield pads misidentified as thermal pads, zone stitching via areas inflated by per-polygon calculation",
+      "correct": [
+        {
+          "description": "Footprint count and board dimensions consistent with RP2350 SBC",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "SMD/THT breakdown reasonable for modern mixed-technology board",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "DFM analysis present with appropriate tier",
+          "analyzer_section": "dfm"
+        },
+        {
+          "description": "Power net routing analysis covers supply rails",
+          "analyzer_section": "power_net_routing"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "copper_layers_used includes F.Mask which is a solder mask layer, not copper. Board should be 2 copper layers (F.Cu, B.Cu).",
+          "analyzer_section": "statistics.copper_layers_used",
+          "check": {
+            "path": "statistics.copper_layers_used",
+            "op": "equals",
+            "value": 2
+          }
+        },
+        {
+          "description": "Connector shield/structural pads (USB, HDMI, SD card connectors) with no net are misidentified as thermal pads",
+          "analyzer_section": "thermal_pad_vias"
+        },
+        {
+          "description": "Zone stitching via density uses per-polygon areas instead of per-net totals, inflating density numbers",
+          "analyzer_section": "zone_stitching_vias"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Filter copper_layers_used to only *.Cu layers",
+        "Filter thermal pad detection to exclude pads on connectors with no net",
+        "Use per-net total zone area for stitching via density calculation"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "KH-154",
+        "KH-157",
+        "KH-159"
+      ],
+      "datasheets_used": []
     }
   ]
 }

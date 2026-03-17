@@ -2,7 +2,7 @@
 
 ## FND-00000023: Legacy parse_legacy_schematic() does not call analyze_signal_paths() — 8+ circuit categories missed including LT1936 buck, LT3796 charger, LT6106 current sense, 5 voltage dividers, VNH5019 H-bridge, LTC4416 power path controller
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: OV_Power_OV_Power.sch.json
 - **Created**: 2026-03-13
@@ -24,7 +24,7 @@
 
 ## FND-00000027: 20 #GND power symbols classified as type "other" and included in components/BOM. Legacy parser checks for #PWR and #FLG prefixes but not #GND.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: OV_Power_OV_Power.sch.json
 - **Created**: 2026-03-13

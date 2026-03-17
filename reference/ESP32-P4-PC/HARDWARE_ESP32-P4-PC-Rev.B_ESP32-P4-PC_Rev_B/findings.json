@@ -198,6 +198,66 @@
       "repo": "ESP32-P4-PC",
       "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
       "created": "2026-03-14T07:49:07.755469+00:00"
+    },
+    {
+      "id": "FND-00000295",
+      "repo": "ESP32-P4-PC",
+      "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
+      "created": "2026-03-17T18:11:48.072700+00:00",
+      "status": "new",
+      "analyzer_type": "pcb",
+      "source_file": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B.kicad_pcb.json",
+      "summary": "ESP32-P4-PC PCB: paste-only stencil aperture pads misidentified as thermal pads (15/19 false positives), via adequacy formula ignores drill size, connector structural/shield pads misidentified as thermal pads",
+      "correct": [
+        {
+          "description": "Footprint count and board dimensions consistent with ESP32-P4-PC dev kit",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "Copper layer count and routing statistics reasonable for 4-layer SBC",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "DFM analysis correctly identifies manufacturing constraints",
+          "analyzer_section": "dfm"
+        },
+        {
+          "description": "Power net routing analysis covers major supply rails",
+          "analyzer_section": "power_net_routing"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "thermal_pad_vias contains 15+ false positives from paste-only stencil aperture pads that have no copper pad, only solder paste openings for stencil alignment. These are not thermal pads.",
+          "analyzer_section": "thermal_pad_vias",
+          "check": {
+            "path": "thermal_pad_vias",
+            "op": "max_count",
+            "value": 5
+          }
+        },
+        {
+          "description": "Connector structural/shield pads (no net) misidentified as thermal pads. These are mechanical mounting or shield pads on USB/HDMI connectors, not thermal relief pads.",
+          "analyzer_section": "thermal_pad_vias"
+        },
+        {
+          "description": "Thermal via adequacy formula does not account for drill size. A 1.0mm drill via has ~10x the thermal conductivity of a 0.3mm drill via, but both receive the same adequacy rating.",
+          "analyzer_section": "thermal_pad_vias"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Filter thermal pad detection to exclude pads with only paste layers (no copper)",
+        "Filter thermal pad detection to exclude pads with no net assignment",
+        "Include via drill diameter in thermal adequacy calculation"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "KH-156",
+        "KH-157",
+        "KH-158"
+      ],
+      "datasheets_used": []
     }
   ]
 }

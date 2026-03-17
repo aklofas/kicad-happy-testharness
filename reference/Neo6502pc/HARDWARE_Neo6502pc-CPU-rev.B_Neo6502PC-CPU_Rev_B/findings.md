@@ -55,3 +55,32 @@
 - Filter I2C detection to exclude differential pair nets
 
 ---
+
+## FND-00000296: Neo6502pc PCB: copper_layers_used includes F.SilkS (non-copper layer), 15 of 19 thermal_pad_vias are paste-only false positives from stencil aperture pads
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_pcb.json
+- **Related**: KH-154, KH-156
+- **Created**: 2026-03-17
+
+### Correct
+- Footprint count and SMD/THT mix consistent with retro computer board with DIP ICs
+- Board dimensions match Neo6502pc form factor
+- Routing completeness correctly detected
+- DFM analysis present and reasonable
+
+### Incorrect
+- copper_layers_used includes F.SilkS which is a silkscreen layer, not copper. Board should be 2 copper layers (F.Cu, B.Cu).
+  (statistics.copper_layers_used)
+- 15 of 19 thermal_pad_vias are false positives from paste-only stencil aperture pads with no copper. Same issue as ESP32-P4-PC.
+  (thermal_pad_vias)
+
+### Missed
+(none)
+
+### Suggestions
+- Filter copper_layers_used to only *.Cu layers
+- Filter thermal pad detection to exclude paste-only pads
+
+---
