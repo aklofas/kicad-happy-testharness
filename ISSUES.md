@@ -15,7 +15,7 @@ Last updated: 2026-03-17
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-160**. Next TH number: **TH-008**.
+number: **KH-161**. Next TH number: **TH-008**.
 
 ---
 
@@ -30,8 +30,18 @@ number: **KH-160**. Next TH number: **TH-008**.
 
 ## kicad-happy Analyzer Issues
 
-(No open issues)
+### KH-160: PWR_FLAG skip over-aggressive for single-sheet connector-powered designs [MEDIUM]
+
+**Analyzer**: analyze_schematic.py
+**Discovered**: 2026-03-17 (Layer 3 review)
+
+The skip at line ~3706 (`if _is_power_net_name(net_name) or _is_ground_name(net_name): continue`) suppresses PWR_FLAG warnings on well-known power net names (GND, VCC, etc.). This reduces false positives on multi-sheet designs where power port symbols provide the power_out pin, but is over-aggressive for single-sheet designs where power comes from connectors (which have passive pins, not power_out). In those designs, KiCad ERC would flag the missing PWR_FLAG and the analyzer should too.
+
+**Root cause**: The skip unconditionally suppresses warnings on any net with a recognized power/ground name, regardless of whether a power port symbol actually exists on that net.
+**Fix**: Gate the skip on whether the net has at least one power port symbol (power_out pin), or on multi-sheet designs. If the only power source on the net is a connector's passive pin, the PWR_FLAG warning should not be suppressed.
+
+---
 
 ## Priority Queue (open issues, ordered by impact)
 
-(Empty)
+1. **KH-160** [MEDIUM] -- PWR_FLAG skip over-aggressive for connector-powered single-sheet designs
