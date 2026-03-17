@@ -16,18 +16,10 @@
   (signal_analysis.power_regulators)
 - IC801/IC802 LTC7000EMSE gate drivers have 0 pins parsed due to lib_name/lib_id mismatch -- lib_symbols keyed by local name but lookup uses lib_id
   (ic_pin_analysis)
-- Bootstrap cap + power inductor misidentified as RF matching network in GEODE power_auxiliary
-  (signal_analysis.rf_matching)
 
 ### Missed
-- BQ25756E feedback divider R711 (249k) / R713 (14k) from +VCHARGE_O to FB to FBG missed -- divider detector expects GND as bottom net, not dedicated FBG pin
-  (signal_analysis.voltage_dividers)
 - R701/R702 (5 milliohm, 1W) current sense resistors on ACP/ACN and SRP/SRN pins not detected
   (signal_analysis.current_sense)
-- TPS3701DDCR (IC803) function not classified -- should be 'voltage supervisor' or 'voltage detector'
-  (ic_pin_analysis)
-- Regulator output_rail is null despite FB pin connecting through divider to +3V3 net
-  (signal_analysis.power_regulators)
 
 ### Suggestions
 - Voltage divider detector should accept dedicated feedback ground pins (FBG, AGND, etc.) as bottom reference

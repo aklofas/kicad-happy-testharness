@@ -17,8 +17,7 @@
   (signal_analysis.rc_filters)
 
 ### Missed
-- Voltage divider R3(18K) + R4(5.693K) on Arduino analog input A0 not detected, possibly due to duplicate R3 reference designator confusing component matching
-  (signal_analysis.voltage_dividers)
+(none)
 
 ### Suggestions
 - RC filter detection should verify that R and C share a connected node and that output != ground

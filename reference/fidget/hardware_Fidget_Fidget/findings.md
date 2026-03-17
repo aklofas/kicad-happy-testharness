@@ -20,8 +20,7 @@
 (none)
 
 ### Missed
-- The 74ALVC16245DG (U8-U11, U13-U14) bus transceivers and 74AHC16373DG (U15-U16) latches forming bus-level I/O from the FPGA are not characterized in design_observations. These 8 bus interface ICs represent the primary I/O expansion architecture.
-  (signal_analysis.design_observations)
+(none)
 
 ### Suggestions
 - Detect 74-series bus transceivers/buffers/latches as bus interface topology in design_observations

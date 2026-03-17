@@ -10,7 +10,6 @@
 ### Correct
 - Digital logic ICs (buffers, latches, memory) correctly classified
 - Voltage dividers for biasing correctly detected
-- KiCad version correctly identified as '5 (legacy)'
 
 ### Incorrect
 - NPN transistors with (1,0,0,-1) Y-flip transform have collector/emitter pins swapped — Q2 reports emitter=+5V (should be collector), Q1 reports collector=GND (should be emitter), Q3 has both C/E on same net
@@ -19,8 +18,7 @@
   (signal_analysis.transistor_circuits)
 
 ### Missed
-- U6 AM1S-0512SZ isolated DC-DC converter not detected as power regulator — generates +12V rail
-  (signal_analysis.power_regulators)
+(none)
 
 ### Suggestions
 - Fix Y-flip (1,0,0,-1) transform matrix handling for Q_NPN_CBE in KiCad 5 legacy

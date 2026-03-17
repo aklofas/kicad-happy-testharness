@@ -15,8 +15,6 @@
 - U230 20MHz active oscillator correctly identified
 
 ### Incorrect
-- All 10 rf_matching detections are false positives on a precision DC measurement board — L231/L232/L233 are 47ohm ferrite beads for clock distribution, L123/L127 are precision ADC input guard networks
-  (signal_analysis.rf_matching)
 - U151/U160/U165 (LT1001) classified as comparator_or_open_loop — each has capacitor-only feedback (C151/C160/C165) from output to inverting input, making them integrators in the voltage reference regulation loops
   (signal_analysis.opamp_circuits)
 - U111 (AD817A) classified as compensator with R118 as feedback_resistor — R118 connects two different opamps' inverting inputs (inter-stage coupling), not U111's output; C118 is the sole feedback element (integrator)

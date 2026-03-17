@@ -14,8 +14,6 @@
 - 2 crystals (Y1=8MHz, Y2=12MHz) with 22pF load caps correct
 
 ### Incorrect
-- False key_matrix: SC1-SC4 (Device:Solar_Cell) with D2-D5 blocking diodes and SW1/SW2 arming switches detected as 2x2 key matrix — rows are power rails (BQ1_OUT, VSOLAR), not scan lines
-  (signal_analysis.key_matrices)
 - RC filter double-counting: R2+C5 and R1+C5 both reported as separate filters sharing capacitor C5
   (signal_analysis.rc_filters)
 - False missing-input-cap warnings for all 4 TPS63001/TPS63002 — caps exist but hierarchical sheet merges PGND with VIN

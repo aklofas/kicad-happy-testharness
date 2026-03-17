@@ -15,10 +15,6 @@
 ### Incorrect
 - Q8 AO3401A false led_driver for D7/R25 — D7 is on net __unnamed_32 (USR_LED), Q8 drain is on __unnamed_4; no connectivity. R25 (215k) is Q10 gate pull-down, not LED current resistor
   (signal_analysis.transistor_circuits)
-- protection_devices empty — D3/D4/D5 BSD5C051L TVS diodes on USB D-/D+ and +5V all missed
-  (signal_analysis.protection_devices)
-- USB-C CC pull-down check reports fail for cc1 and cc2 — R8/R9 (5.1k) are correctly wired but CC nets are anonymous (__unnamed_46/33), checker uses net name matching
-  (design_analysis.usb_compliance)
 - Q5/Q7/Q9 has_snubber=true false positive — R18 (215k) is an open-drain pull-up, not a snubber
   (signal_analysis.transistor_circuits)
 - I2C bus_analysis has_pull_up=false for CAM.SDA/SCL despite R29/R30 (10k to +3V3) present; design_observations correctly detects them

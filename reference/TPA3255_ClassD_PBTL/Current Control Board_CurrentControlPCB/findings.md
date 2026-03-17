@@ -30,12 +30,8 @@
 ### Missed
 - D1 and D2 (2.5V Zeners) used as signal clamps on the error signal path (SIG_ERR to SIG_ERR_Clip) not detected as protection/clamping circuit
   (signal_analysis.protection_devices)
-- RV1 10k potentiometer for current setpoint adjustment not specifically flagged as a user-adjustable parameter
-  (signal_analysis.design_observations)
 - XLR input (J1 AC3FAH2-XLR) and banana jack outputs (J3, J4, J5) not detected as audio/test interfaces
   (signal_analysis.bus_interfaces)
-- SW1 SW_DIP_x04 4-position DIP switch for configuration not analyzed
-  (signal_analysis.design_observations)
 
 ### Suggestions
 - Detect Zener diode pairs used as signal clamps in opamp circuits

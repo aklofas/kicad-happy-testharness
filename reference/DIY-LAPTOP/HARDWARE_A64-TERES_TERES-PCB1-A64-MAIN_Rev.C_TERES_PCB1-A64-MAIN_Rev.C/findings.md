@@ -19,12 +19,7 @@
   (signal_analysis.rc_filters)
 
 ### Missed
-- AXP803 PMIC (U14) with 8+ internal voltage regulators (DCDC5/6, DLDO1-4, ALDO1-3) generating +1.5V, +1.8V, +3.0VA, +3.3V, +5V, 1.1V_CPUX/S, 1.2V_HSIC — 0 power_regulators detected
-  (signal_analysis.power_regulators)
-- MT3608 (U13) boost converter for IPS backlight not detected as power regulator
-  (signal_analysis.power_regulators)
-- R80(8.25k)/R81(1.1k) feedback voltage divider on MT3608 FB pin not detected. Vout=0.6*(1+8.25/1.1)≈5.1V for backlight.
-  (signal_analysis.voltage_dividers)
+(none)
 
 ### Suggestions
 - Add PMIC detection (AXP, SY8xxx, MP2xxx families) — PMICs are major power sources in laptop/SBC designs

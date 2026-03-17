@@ -12,7 +12,6 @@
 - 3 RC filters correctly detected
 - 1 crystal correctly detected
 - 2 BJTs correctly detected
-- 1 SPI flash correctly detected
 
 ### Incorrect
 (none)

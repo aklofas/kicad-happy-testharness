@@ -21,8 +21,6 @@
 ### Missed
 - VBUS power rail decoupling not detected because capacitors have no pin-net associations in legacy .sch parse output (pins array is empty for all components)
   (signal_analysis.decoupling_analysis)
-- DIN global label as the data input to the LED chain not identified (it exists in the source .sch as a named wire label)
-  (signal_analysis.addressable_led_chains)
 
 ### Suggestions
 - Improve legacy .sch pin-net extraction -- the parser is not resolving wire-to-pin connections for components in KiCad 4/5 format, resulting in empty pins arrays and broken signal detection

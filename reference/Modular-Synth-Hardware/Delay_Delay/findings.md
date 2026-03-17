@@ -9,7 +9,6 @@
 
 ### Correct
 - Op-amp circuits for TL072/TL074 correctly identified with inverting/non-inverting configurations
-- Voltage dividers for CV biasing networks correctly detected
 - PT2399 delay ICs correctly classified as ICs
 
 ### Incorrect

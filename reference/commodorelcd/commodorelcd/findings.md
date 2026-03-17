@@ -10,10 +10,7 @@
 ### Correct
 - All ICs correctly identified and classified
 - 44 ferrite beads correctly identified
-- Crystal oscillators correctly detected
-- UART interface correctly detected
 - LM324 and LM358 opamps correctly identified
-- Bus topology correctly analyzed
 
 ### Incorrect
 - 12 CR-prefixed diodes misclassified as capacitor (CR is a standard diode reference designator per IEEE 315)
@@ -46,7 +43,6 @@
 - **Created**: 2026-03-15
 
 ### Correct
-- All ICs correctly identified (65102, 5707, 5706, 6522, 6551, 6264)
 - 44 FB-prefixed components correctly classified as ferrite_bead
 - Crystal circuits Y1 4MHz and Y3 3.579545MHz correctly detected
 - LM324/LM358 opamp circuits correctly analyzed
@@ -54,18 +50,10 @@
 ### Incorrect
 - 12 CR-prefixed components misclassified as capacitor instead of diode (CR1 1N4728 zener, CR15 LM385-2.5 voltage reference, etc)
   (statistics.component_types)
-- CNP1 Speaker_Crystal classified as capacitor instead of speaker
-  (bom.type)
-- CN2 DB37_Female_MountingHoles classified as mounting_hole instead of connector
-  (bom.type)
-- DC1 DCDC-Conv classified as diode instead of ic/module
-  (bom.type)
 
 ### Missed
 - No power_regulators detected despite DC1 DCDC-Conv generating -12V/-5V
   (signal_analysis.power_regulators)
-- 4N28 optocoupler not in isolation_barriers (only LCA110 solid-state relay detected)
-  (signal_analysis.isolation_barriers)
 
 ### Suggestions
 - Add CR as standard diode reference prefix

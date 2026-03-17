@@ -16,10 +16,7 @@
   (hierarchical_labels.single_use_global_labels)
 
 ### Missed
-- Keyboard switch matrix (6x15 with anti-ghosting diodes) not detected
-  (signal_analysis)
-- SK6812RGBW daisy-chain not detected
-  (signal_analysis)
+(none)
 
 ### Suggestions
 - Fix single_use_global_labels to count across all hierarchical sheets

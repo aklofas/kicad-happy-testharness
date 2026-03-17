@@ -35,34 +35,6 @@
     },
     {
       "analyzer_type": "schematic",
-      "source_file": "Hardware_OpenMowerMainboard_dcdc.kicad_sch.json",
-      "status": "promoted",
-      "summary": "Bootstrap cap C15 between BST and LX pins on MAX20405 falsely detected as LC filter with L1",
-      "correct": [],
-      "incorrect": [
-        {
-          "type": "lc_filter",
-          "description": "L1 (4.7uH) + C15 (0.1uF) flagged as LC filter at 232 kHz resonance. C15 is a bootstrap capacitor connected between BST and LX (switching node), not part of a filter.",
-          "analyzer_section": "signal_analysis.lc_filters",
-          "related_issue": "#9"
-        }
-      ],
-      "missed": [],
-      "suggestions": [
-        "Recognize BST/BOOT pin names and exclude bootstrap cap circuits from LC filter detection"
-      ],
-      "should_become_assertion": true,
-      "related_issues": [
-        "#9"
-      ],
-      "id": "FND-00000003",
-      "repo": "OpenMower",
-      "project": "Hardware_OpenMowerMainboard",
-      "created": "2026-03-13T07:39:04.944856+00:00",
-      "datasheets_used": []
-    },
-    {
-      "analyzer_type": "schematic",
       "source_file": "Hardware_OpenMowerMainboard_OpenMowerMainboard.kicad_sch.json",
       "status": "promoted",
       "summary": "pwr_flag_warnings generated for sub-sheets where power rail source is on a different sheet (29 warnings across OpenMower, 37 in cynthion, 9 in education_tools, 6 in glasgow)",
@@ -72,14 +44,7 @@
           "description": "Technically correct: each sub-sheet individually lacks power_out or PWR_FLAG on those rails"
         }
       ],
-      "incorrect": [
-        {
-          "type": "pwr_flag_warning",
-          "description": "In hierarchical designs, power rails sourced on one sheet appear as power_in-only on other sheets. Warnings are noisy since the PWR_FLAG/power_out exists in the hierarchy, just not on this particular sheet.",
-          "analyzer_section": "pwr_flag_warnings",
-          "related_issue": "#10"
-        }
-      ],
+      "incorrect": [],
       "missed": [],
       "suggestions": [
         "Cross-reference hierarchically: if a power net has power_out/PWR_FLAG on ANY sheet in the design, suppress the warning on other sheets. Or mark these as informational rather than warnings."
@@ -224,46 +189,13 @@
         }
       ],
       "incorrect": [],
-      "missed": [
-        {
-          "type": "level_shifter",
-          "description": "Q13-Q16 (BSS138) are classic MOSFET bidirectional level shifters (AN10441 topology). Gate tied to lower voltage rail (+3V3), drain on HV side with pull-up, source on LV side with pull-up. The analyzer detects them as transistor circuits but does not recognize the level-shifter pattern. No level_shifter signal path category exists.",
-          "analyzer_section": "signal_analysis",
-          "related_issue": null
-        }
-      ],
+      "missed": [],
       "suggestions": [
         "Add level_shifter detection: NMOS with gate=power_rail, source on one signal domain, drain on another, with pull-up resistors on both sides"
       ],
       "should_become_assertion": false,
       "related_issues": [],
       "id": "FND-00000014",
-      "repo": "OpenMower",
-      "project": "Hardware_OpenMowerMainboard",
-      "created": "2026-03-13T18:00:00.000000+00:00",
-      "datasheets_used": []
-    },
-    {
-      "analyzer_type": "schematic",
-      "source_file": "Hardware_OpenMowerMainboard_RobotConnectors.kicad_sch.json",
-      "status": "promoted",
-      "summary": "Q13-Q16 transistor gate_resistors list includes unrelated resistors from the +3V3 net",
-      "correct": [],
-      "incorrect": [
-        {
-          "type": "transistor_circuit",
-          "description": "Q13-Q16 each show gate_resistors including R48, R14, R17, R19, R15, R3, R9. Only R3 (for Q13) or the local pull-up is the actual gate-related resistor. The others are on the +3V3 power rail net and have no functional relationship to the gate drive of these MOSFETs.",
-          "analyzer_section": "signal_analysis.transistor_circuits[].gate_resistors",
-          "related_issue": null
-        }
-      ],
-      "missed": [],
-      "suggestions": [
-        "When the gate net is a power rail, do not enumerate all resistors on that rail as gate_resistors. Only include resistors directly in the gate drive path."
-      ],
-      "should_become_assertion": true,
-      "related_issues": [],
-      "id": "FND-00000016",
       "repo": "OpenMower",
       "project": "Hardware_OpenMowerMainboard",
       "created": "2026-03-13T18:00:00.000000+00:00",

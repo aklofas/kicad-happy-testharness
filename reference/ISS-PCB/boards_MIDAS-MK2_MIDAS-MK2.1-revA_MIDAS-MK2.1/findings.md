@@ -18,10 +18,7 @@
   (signal_analysis.power_regulators)
 
 ### Missed
-- Isolation components ISOW7742 and ISO1640BDR not listed in isolation_components despite being the isolators bridging GND and PYRO_GND domains
-  (signal_analysis.isolation_barriers)
-- SPI_SCK, SPI_MOSI, SPI_MISO appear in I2C results (same SPI-as-I2C false positive pattern)
-  (signal_analysis.design_observations)
+(none)
 
 ### Suggestions
 - Switching regulators should trace output rail from inductor/output cap connections

@@ -11,34 +11,17 @@
           "analyzer_section": "signal_analysis.lc_filters"
         },
         {
-          "description": "RF matching networks correctly detect target ICs",
-          "analyzer_section": "signal_analysis.rf_matching"
-        },
-        {
           "description": "Power regulators correctly detected",
           "analyzer_section": "signal_analysis.power_regulators"
         }
       ],
       "incorrect": [
         {
-          "description": "C18/C19/C20/C21 (100nF power bypass caps) falsely labeled as 'antenna' components in rf_matching \u2014 100nF is far too large for RF coupling",
-          "analyzer_section": "signal_analysis.rf_matching"
-        },
-        {
           "description": "3 RC networks (R14/C11 68R/10nF, R11/C13, R15/C12) misclassified as 'high-pass' with output_net='GND' \u2014 actual cap terminals connect to CLK_MIX2_P/CLK_MIX1_P/CLK_MIX1_N, not GND",
           "analyzer_section": "signal_analysis.rc_filters"
         }
       ],
-      "missed": [
-        {
-          "description": "AD8343 active mixer ICs (U2, U3) not detected as mixers in rf_chains \u2014 rf_chains[0].mixers is empty on a board named QFHMIX01",
-          "analyzer_section": "signal_analysis.rf_chains"
-        },
-        {
-          "description": "LT6604-5 (U4) dual anti-aliasing filter IC absent from rf_chains.filters \u2014 dedicated analog filter IC for IF/baseband output",
-          "analyzer_section": "signal_analysis.rf_chains"
-        }
-      ],
+      "missed": [],
       "suggestions": [
         "Add AD8343 to mixer component recognition",
         "rf_matching should exclude bypass caps (>10nF) from antenna classification",

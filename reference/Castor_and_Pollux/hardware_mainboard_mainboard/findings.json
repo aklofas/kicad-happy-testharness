@@ -15,14 +15,6 @@
           "analyzer_section": "signal_analysis.power_regulators"
         },
         {
-          "description": "8 hierarchical sheets correctly detected (castor, pollux, mcu, leds, etc.)",
-          "analyzer_section": "hierarchical_sheets"
-        },
-        {
-          "description": "Power rails (+12V, -12V, 3.3V, 5V) correctly identified",
-          "analyzer_section": "signal_analysis.power_rails"
-        },
-        {
           "description": "Opamp circuits correctly detected in analog signal path",
           "analyzer_section": "signal_analysis.opamp_circuits"
         }
@@ -73,10 +65,6 @@
         {
           "description": "Q1 PNP transistor correctly identified",
           "analyzer_section": "components"
-        },
-        {
-          "description": "Cross-domain signals between hierarchical sheets correctly tracked",
-          "analyzer_section": "hierarchical_sheets"
         }
       ],
       "incorrect": [
@@ -87,10 +75,6 @@
         {
           "description": "R18/R16 flagged as voltage divider but is actually a transistor bias network for Q1",
           "analyzer_section": "signal_analysis.voltage_dividers"
-        },
-        {
-          "description": "False ERC warnings generated on hierarchical labels that are properly connected in parent sheet",
-          "analyzer_section": "erc_warnings"
         }
       ],
       "missed": [],
@@ -136,16 +120,7 @@
           "analyzer_section": "statistics.component_types"
         }
       ],
-      "missed": [
-        {
-          "description": "I2C bus for MCP4728 DAC not detected",
-          "analyzer_section": "design_analysis.bus_analysis.i2c"
-        },
-        {
-          "description": "USB interface not detected",
-          "analyzer_section": "design_analysis.bus_analysis"
-        }
-      ],
+      "missed": [],
       "suggestions": [
         "Classify D_TVS_Filled as TVS diode not LED",
         "Classify symbols with Pot in name as potentiometer not varistor"
@@ -187,12 +162,7 @@
           "analyzer_section": "connectivity_issues.single_pin_nets"
         }
       ],
-      "missed": [
-        {
-          "description": "Oscillator core topology (current source + integrator + comparator + flip-flop) not detected",
-          "analyzer_section": "signal_analysis"
-        }
-      ],
+      "missed": [],
       "suggestions": [
         "Suppress single-pin-net and no-driver warnings for hierarchical label inputs in sub-sheets"
       ],

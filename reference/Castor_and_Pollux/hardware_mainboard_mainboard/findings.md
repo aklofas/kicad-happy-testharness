@@ -10,8 +10,6 @@
 ### Correct
 - 191 components correctly enumerated
 - LD1117-3.3 correctly identified as voltage regulator with 3.3V output
-- 8 hierarchical sheets correctly detected (castor, pollux, mcu, leds, etc.)
-- Power rails (+12V, -12V, 3.3V, 5V) correctly identified
 - Opamp circuits correctly detected in analog signal path
 
 ### Incorrect
@@ -43,15 +41,12 @@
 ### Correct
 - Opamp circuits correctly identified: integrator, buffer, inverting stages
 - Q1 PNP transistor correctly identified
-- Cross-domain signals between hierarchical sheets correctly tracked
 
 ### Incorrect
 - RV6-RV8 potentiometers (Eurorack_Pot) misclassified as varistor
   (components)
 - R18/R16 flagged as voltage divider but is actually a transistor bias network for Q1
   (signal_analysis.voltage_dividers)
-- False ERC warnings generated on hierarchical labels that are properly connected in parent sheet
-  (erc_warnings)
 
 ### Missed
 (none)
@@ -82,10 +77,7 @@
   (statistics.component_types)
 
 ### Missed
-- I2C bus for MCP4728 DAC not detected
-  (design_analysis.bus_analysis.i2c)
-- USB interface not detected
-  (design_analysis.bus_analysis)
+(none)
 
 ### Suggestions
 - Classify D_TVS_Filled as TVS diode not LED
@@ -113,8 +105,7 @@
   (connectivity_issues.single_pin_nets)
 
 ### Missed
-- Oscillator core topology (current source + integrator + comparator + flip-flop) not detected
-  (signal_analysis)
+(none)
 
 ### Suggestions
 - Suppress single-pin-net and no-driver warnings for hierarchical label inputs in sub-sheets

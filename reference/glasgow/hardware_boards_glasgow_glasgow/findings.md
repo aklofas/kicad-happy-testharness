@@ -51,28 +51,6 @@
 
 ---
 
-## FND-00000017: Glasgow has 52 power symbols resolved with net_name +3V3 but +3V3 does not appear in the nets dictionary. Power symbol names may not be propagating correctly to the net builder for this specific rail.
-
-- **Status**: new
-- **Analyzer**: schematic
-- **Source**: hardware_boards_glasgow_glasgow.kicad_sch.json
-- **Created**: 2026-03-13
-
-### Correct
-(none)
-
-### Incorrect
-(none)
-
-### Missed
-- +3V3 power rail with 52 power symbols not appearing in nets dict — net builder may not be consolidating power symbol nets correctly for all rails
-  (nets)
-
-### Suggestions
-- Investigate why +3V3 power symbols are not creating/joining a net in build_net_map(). May be a coordinate matching issue or power symbol resolution problem.
-
----
-
 ## FND-00000018: CRITICAL: +3V3 power rail completely missing from nets dict despite 52 power symbols in main sheet + 33 in io_banks (85 total). GND (133 symbols), +5V (10), +1V2 (5) all work correctly. This means ALL +3V3 connections are invisible — signal analysis for anything on the 3.3V rail will fail.
 
 - **Status**: promoted
@@ -88,8 +66,7 @@
 (none)
 
 ### Missed
-- +3V3 power rail with 85 power symbols across 2 sheets not present in nets dict at all. Every component powered by +3V3 has a dangling power pin.
-  (nets)
+(none)
 
 ### Suggestions
 - Debug build_net_map() for +3V3 specifically. May be a naming collision, coordinate issue, or power symbol lib_id resolution problem. Check if +3V3 power symbols have correct pin positions.

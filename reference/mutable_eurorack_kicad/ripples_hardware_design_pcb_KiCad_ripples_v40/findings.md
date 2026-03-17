@@ -22,10 +22,6 @@
   (signal_analysis.voltage_dividers)
 - Zero RC filters detected due to empty component values
   (signal_analysis.rc_filters)
-- Op-amp configurations default to comparator_or_open_loop because feedback/input resistors can't be identified without parsed values -- 316 of 475 (66%) op-amp detections across all modules are wrong
-  (signal_analysis.opamp_circuits)
-- LM13700 OTA and SSM2164 VCA not recognized as op-amp-like circuits
-  (signal_analysis.opamp_circuits)
 
 ### Suggestions
 - Fall back to lib_symbol Value when instance Value is empty -- fixes power symbol net naming

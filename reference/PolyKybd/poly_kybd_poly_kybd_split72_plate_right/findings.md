@@ -29,8 +29,6 @@
 ### Missed
 - Key matrix not detected — KRow0-7/KCol0-20 GPIO matrix exists but switch components are on keyboard daughterboard, not in parsed sheets
   (signal_analysis.key_matrices)
-- WS2812B LED chain severely undercounted: 108 sheet instances each with WS2812B, but analyzer parses unique file once and reports 2 chains of length 1 instead of ~100+
-  (signal_analysis.addressable_led_chains)
 
 ### Suggestions
 - Differential pair matching: require longer common prefix, not single-character _P/_N

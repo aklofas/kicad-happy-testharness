@@ -30,10 +30,7 @@
   (signal_analysis.design_observations)
 
 ### Missed
-- The 3-axis geophone signal processing chain (EHZ/EHE/EHN paths) with low-pass, bandpass, and anti-aliasing stages feeding into an ADC is not characterized as a coherent multi-channel data acquisition system in design_observations
-  (signal_analysis.design_observations)
-- RS-232 interface topology with D17-D20 SMAJ15CA protection on TX/RX lines not detected as a bus protocol (RS-232 male and female connectors J6/J7 with protection)
-  (signal_analysis.design_observations)
+(none)
 
 ### Suggestions
 - Detect SG-8002CA and similar active oscillator part numbers (SG-*, ASCO*, ASE*, DSC*) as active_oscillator type and skip load cap analysis for them

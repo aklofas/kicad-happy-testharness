@@ -15,8 +15,6 @@
 - 3 power regulators correctly detected (U3, U4, U6)
 
 ### Incorrect
-- U10 MCP73871 classified as bms_system but it is a single-cell Li-Ion battery charger IC, not a Battery Management System. BMS requires cell balancing, multi-cell monitoring, and discharge protection.
-  (signal_analysis.bms_systems)
 - RC filter overcounting: C58 (0.1uF) shared by R51-R54 (50ohm Ethernet terminators) generates 4 separate filter detections. These are impedance matching/termination, not discrete RC filters.
   (signal_analysis.rc_filters)
 

@@ -17,7 +17,7 @@
       ],
       "incorrect": [
         {
-          "description": "R80+C143 misidentified as RC filter (1.93Hz cutoff) — R80 is the upper leg of MT3608 feedback divider (Ra in Vout=0.6*(1+Ra/Rb)). C143 is FB pin sense capacitor, not a signal filter.",
+          "description": "R80+C143 misidentified as RC filter (1.93Hz cutoff) \u2014 R80 is the upper leg of MT3608 feedback divider (Ra in Vout=0.6*(1+Ra/Rb)). C143 is FB pin sense capacitor, not a signal filter.",
           "analyzer_section": "signal_analysis.rc_filters"
         },
         {
@@ -25,27 +25,16 @@
           "analyzer_section": "signal_analysis.rc_filters"
         }
       ],
-      "missed": [
-        {
-          "description": "AXP803 PMIC (U14) with 8+ internal voltage regulators (DCDC5/6, DLDO1-4, ALDO1-3) generating +1.5V, +1.8V, +3.0VA, +3.3V, +5V, 1.1V_CPUX/S, 1.2V_HSIC — 0 power_regulators detected",
-          "analyzer_section": "signal_analysis.power_regulators"
-        },
-        {
-          "description": "MT3608 (U13) boost converter for IPS backlight not detected as power regulator",
-          "analyzer_section": "signal_analysis.power_regulators"
-        },
-        {
-          "description": "R80(8.25k)/R81(1.1k) feedback voltage divider on MT3608 FB pin not detected. Vout=0.6*(1+8.25/1.1)≈5.1V for backlight.",
-          "analyzer_section": "signal_analysis.voltage_dividers"
-        }
-      ],
+      "missed": [],
       "suggestions": [
-        "Add PMIC detection (AXP, SY8xxx, MP2xxx families) — PMICs are major power sources in laptop/SBC designs",
+        "Add PMIC detection (AXP, SY8xxx, MP2xxx families) \u2014 PMICs are major power sources in laptop/SBC designs",
         "Add MT3608/boost converter part number patterns to regulator detection",
         "Distinguish feedback divider sense networks from passive RC filters by checking IC FB pin connectivity",
         "Deduplicate RC filters: same R-C pair with reversed input/output should be reported once"
       ],
-      "related_issues": ["KH-118"],
+      "related_issues": [
+        "KH-118"
+      ],
       "should_become_assertion": true,
       "id": "FND-00000227",
       "repo": "DIY-LAPTOP",

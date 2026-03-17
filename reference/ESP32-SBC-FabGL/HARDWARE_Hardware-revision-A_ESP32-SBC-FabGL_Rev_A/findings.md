@@ -14,22 +14,11 @@
 - USBLC6-2P6 ESD protection detected
 
 ### Incorrect
-- VGA1 (DB-15 VGA connector) classified as varistor
-  (bom.type)
-- AUDIO1 (audio jack) classified as IC
-  (bom.type)
-- U5 SY8089 switching regulator reports input_rail=GND
-  (signal_analysis.power_regulators)
-- U7 MT3608 boost converter reports fb_net=GND
-  (signal_analysis.power_regulators)
+(none)
 
 ### Missed
 - Voltage divider R17(470k)/R18(150k) for battery sensing not detected
   (signal_analysis.voltage_dividers)
-- R-2R DAC network for VGA output not detected
-  (signal_analysis)
-- SPI bus to SD card not detected
-  (design_analysis.bus_analysis)
 
 ### Suggestions
 - Recognize VGA/audio connectors by footprint library

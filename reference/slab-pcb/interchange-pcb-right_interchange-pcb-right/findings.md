@@ -17,10 +17,7 @@
   (design_analysis.bus_analysis.i2c)
 
 ### Missed
-- Level-shifting topology (3.3V RP2040 through 5V AHCT buffer to WS2812) not detected
-  (signal_analysis)
-- TCA4307 I2C buffer/isolator topology not detected
-  (subcircuits)
+(none)
 
 ### Suggestions
 - Exclude non-I2C nets (RDY/READY) from I2C detection

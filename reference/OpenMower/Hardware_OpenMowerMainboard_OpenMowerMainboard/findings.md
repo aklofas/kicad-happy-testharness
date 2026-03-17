@@ -23,29 +23,6 @@
 
 ---
 
-## FND-00000003: Bootstrap cap C15 between BST and LX pins on MAX20405 falsely detected as LC filter with L1
-
-- **Status**: promoted
-- **Analyzer**: schematic
-- **Source**: Hardware_OpenMowerMainboard_dcdc.kicad_sch.json
-- **Related**: KH-009
-- **Created**: 2026-03-13
-
-### Correct
-(none)
-
-### Incorrect
-- L1 (4.7uH) + C15 (0.1uF) flagged as LC filter at 232 kHz resonance. C15 is a bootstrap capacitor connected between BST and LX (switching node), not part of a filter.
-  (signal_analysis.lc_filters)
-
-### Missed
-(none)
-
-### Suggestions
-- Recognize BST/BOOT pin names and exclude bootstrap cap circuits from LC filter detection
-
----
-
 ## FND-00000004: pwr_flag_warnings generated for sub-sheets where power rail source is on a different sheet (29 warnings across OpenMower, 37 in cynthion, 9 in education_tools, 6 in glasgow)
 
 - **Status**: promoted
@@ -58,8 +35,7 @@
 - Technically correct: each sub-sheet individually lacks power_out or PWR_FLAG on those rails
 
 ### Incorrect
-- In hierarchical designs, power rails sourced on one sheet appear as power_in-only on other sheets. Warnings are noisy since the PWR_FLAG/power_out exists in the hierarchy, just not on this particular sheet.
-  (pwr_flag_warnings)
+(none)
 
 ### Missed
 (none)
@@ -173,32 +149,9 @@
 (none)
 
 ### Missed
-- Q13-Q16 (BSS138) are classic MOSFET bidirectional level shifters (AN10441 topology). Gate tied to lower voltage rail (+3V3), drain on HV side with pull-up, source on LV side with pull-up. The analyzer detects them as transistor circuits but does not recognize the level-shifter pattern. No level_shifter signal path category exists.
-  (signal_analysis)
+(none)
 
 ### Suggestions
 - Add level_shifter detection: NMOS with gate=power_rail, source on one signal domain, drain on another, with pull-up resistors on both sides
-
----
-
-## FND-00000016: Q13-Q16 transistor gate_resistors list includes unrelated resistors from the +3V3 net
-
-- **Status**: promoted
-- **Analyzer**: schematic
-- **Source**: Hardware_OpenMowerMainboard_RobotConnectors.kicad_sch.json
-- **Created**: 2026-03-13
-
-### Correct
-(none)
-
-### Incorrect
-- Q13-Q16 each show gate_resistors including R48, R14, R17, R19, R15, R3, R9. Only R3 (for Q13) or the local pull-up is the actual gate-related resistor. The others are on the +3V3 power rail net and have no functional relationship to the gate drive of these MOSFETs.
-  (signal_analysis.transistor_circuits[].gate_resistors)
-
-### Missed
-(none)
-
-### Suggestions
-- When the gate net is a power rail, do not enumerate all resistors on that rail as gate_resistors. Only include resistors directly in the gate drive path.
 
 ---

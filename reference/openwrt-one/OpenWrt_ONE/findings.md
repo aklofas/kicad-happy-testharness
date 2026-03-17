@@ -38,10 +38,6 @@
   (signal_analysis.memory_interfaces)
 - Zero RF chains/matching detected -- MT7976C WiFi has SAW filters, BPFs, diplexers, matching inductors, MMCX connectors
   (signal_analysis.rf_chains)
-- Crystal load caps not found for any of 4 crystals
-  (signal_analysis.crystal_circuits)
-- TCVCXO (SCO-F998_OSC81_40MHz) classified as crystal -- should be oscillator (lib_id root_2_TCVCXO)
-  (signal_analysis.crystal_circuits)
 
 ### Suggestions
 - Footprint-based override: TP* footprint should force test_point classification regardless of ref prefix

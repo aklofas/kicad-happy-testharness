@@ -20,8 +20,7 @@
   (signal_analysis.rc_filters)
 
 ### Missed
-- TC1 trimmer capacitor on X1 pin1 not reported as crystal load cap — only C13 counted
-  (signal_analysis.crystal_circuits)
+(none)
 
 ### Suggestions
 - RC filter: resistor connecting from power rail (+5V) to a clock net via cap should be classified as pull-up/bias, not LP filter

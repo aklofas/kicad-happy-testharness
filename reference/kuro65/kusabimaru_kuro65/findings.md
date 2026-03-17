@@ -16,8 +16,7 @@
   (statistics.component_types)
 
 ### Missed
-- 0 addressable_led_chains detected despite 69 SK6812MINI-E LEDs with DIN->DOUT daisy-chain topology (per-key RGB backlight)
-  (signal_analysis.addressable_led_chains)
+(none)
 
 ### Suggestions
 - Add SK6812/WS2812 addressable LED detection by library name pattern matching

@@ -10,7 +10,6 @@
 ### Correct
 - Crystal X2 (32.768KHz) correctly identified with load caps C44/C45 (20pF each), effective CL 13pF
 - Crystal X1 (26MHz) detected, no load caps noted (consistent with integrated oscillator)
-- RF matching network correctly found for ANT1 (SMA) with L13 (3.3n) and C64 (47p)
 - LDO U4 (AP7365-3.3) correctly identified with topology=LDO and estimated_vout=3.3V from fixed_suffix
 - Q1 (DMG3415U) PMOS identified as p-channel with correct gate/drain/source nets, used as power switch between VBUS and battery
 - Q3 (DMG3415U) PMOS correctly identified as high-side switch from +BATT

@@ -15,18 +15,6 @@
           "analyzer_section": "signal_analysis.power_regulators"
         },
         {
-          "description": "SDIO bus interfaces correctly detected",
-          "analyzer_section": "signal_analysis.bus_interfaces"
-        },
-        {
-          "description": "MIPI differential pairs correctly identified",
-          "analyzer_section": "signal_analysis.differential_pairs"
-        },
-        {
-          "description": "Crystal oscillators correctly detected",
-          "analyzer_section": "signal_analysis.crystals"
-        },
-        {
           "description": "TVS protection devices correctly classified",
           "analyzer_section": "components"
         }
@@ -35,10 +23,6 @@
         {
           "description": "AE1 U.FL antenna connector classified as IC instead of connector",
           "analyzer_section": "components"
-        },
-        {
-          "description": "EPHY_TX/RX Ethernet PHY nets misidentified as UART interface",
-          "analyzer_section": "signal_analysis.bus_interfaces"
         },
         {
           "description": "AP6236 WiFi/BT module classified as voltage regulator",
@@ -79,10 +63,6 @@
           "analyzer_section": "components"
         },
         {
-          "description": "USB-C CC pulldown resistors correctly identified",
-          "analyzer_section": "signal_analysis.usb_compliance"
-        },
-        {
           "description": "Q1 LED driver transistor correctly identified",
           "analyzer_section": "components"
         },
@@ -95,14 +75,6 @@
         {
           "description": "AXP209 PMIC estimated_vout 4.8V is wrong for a multi-rail PMIC",
           "analyzer_section": "signal_analysis.power_regulators"
-        },
-        {
-          "description": "USB differential pair has_esd flag inconsistent across detections",
-          "analyzer_section": "signal_analysis.usb_compliance"
-        },
-        {
-          "description": "VINT net classified as interrupt signal but is actually a voltage reference rail",
-          "analyzer_section": "signal_analysis.power_rails"
         }
       ],
       "missed": [],
@@ -143,10 +115,6 @@
         }
       ],
       "incorrect": [
-        {
-          "description": "AE1 U.FL antenna connector classified as IC (should be connector)",
-          "analyzer_section": "bom.type"
-        },
         {
           "description": "EPHY_TX/RX Ethernet PHY nets misidentified as UART",
           "analyzer_section": "design_analysis.bus_analysis.uart"
@@ -216,12 +184,7 @@
           "analyzer_section": "design_analysis.net_classification"
         }
       ],
-      "missed": [
-        {
-          "description": "AXP209 multiple output rails not enumerated (only +3V3 reported)",
-          "analyzer_section": "signal_analysis.power_regulators"
-        }
-      ],
+      "missed": [],
       "suggestions": [
         "For multi-output PMICs, detect all output rails",
         "Fix has_esd to check protection_devices",

@@ -14,8 +14,6 @@
 (none)
 
 ### Missed
-- 2x LM324AN quad op-amps (U1, U3) with all 8 channels active not detected in opamp_circuits. Each stage has sense signal input with feedback configuration for keyboard matrix signal conditioning.
-  (signal_analysis.opamp_circuits)
 - 8 RC filter stages (36K + 500pF, fc≈88Hz) on op-amp outputs not detected. Each LM324 output feeds through CD4066 analog switch to R-C low-pass filter.
   (signal_analysis.rc_filters)
 

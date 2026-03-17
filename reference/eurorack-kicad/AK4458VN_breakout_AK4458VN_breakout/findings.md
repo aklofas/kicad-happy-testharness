@@ -8,14 +8,11 @@
 - **Created**: 2026-03-16
 
 ### Correct
-- Power regulators correctly detected
 - AK4458VN correctly classified as IC
 
 ### Incorrect
 - RC filter R32(150ohm)+C14(120pF) falsely groups C11(1nF) as parallel — C11 shares only the input node, not the output node. Reported fc=947kHz vs correct 8.84MHz
   (signal_analysis.rc_filters)
-- AK4458VN pin 17 'I2C' (mode-select config pin) and pin 15 'CAD0_I2C/CSN/_DIF' (address/CS pin) falsely detected as I2C bus lines
-  (signal_analysis.bus_interfaces)
 - NE5532 differential-to-single-ended output stages (U4-U7) classified as 'compensator' instead of difference amplifier
   (signal_analysis.opamp_circuits)
 
@@ -38,7 +35,6 @@
 - **Created**: 2026-03-16
 
 ### Correct
-- WS2812B addressable LED chain correctly detected
 - LDO regulator correctly detected
 - TL072 buffer/comparator classifications correct
 
@@ -64,11 +60,9 @@
 ### Correct
 - NE5532 inverting amp stages correctly identified
 - DAC output anti-aliasing RC filters correctly detected
-- Legitimate I2C bus (SDA/SCL to AK4458VN) correctly detected
 
 ### Incorrect
-- 4 spurious I2C entries from Teensy 4.0 multi-function pin names containing SCL1/SDA1/SCL2/SDA2 — these pins used as analog inputs or unconnected in this design
-  (signal_analysis.bus_interfaces)
+(none)
 
 ### Missed
 (none)

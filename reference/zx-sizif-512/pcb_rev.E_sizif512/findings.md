@@ -17,10 +17,6 @@
   (signal_analysis.transistor_circuits)
 - Q13/Q14 gate_driver_ics inflated to 19 ICs — gates statically biased at +3.3V, analyzer traverses entire +3.3V power net listing all connected ICs as gate drivers
   (signal_analysis.transistor_circuits)
-- D2 (2W10, lib Device:D_Bridge_-A+A) classified as 'diode' instead of bridge rectifier — bridge_circuits detector returns 0 results
-  (signal_analysis.bridge_circuits)
-- kicad_version='unknown' for KiCad 6 file (version 20211123); sheets_parsed=None
-  (metadata)
 
 ### Missed
 - LM311N comparator (U18) and LM386N audio amplifier (U19) not detected in opamp_circuits — both are central ZX Spectrum functional circuits

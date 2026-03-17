@@ -28,9 +28,9 @@
 
 ---
 
-## FND-00000072: PCB analysis correct overall but copper_layers_used=0 despite tracks on both Front and Back, and front_side/back_side component counts are 0
+## FND-00000072: PCB analysis correct overall but copper_layers_used=0 despite tracks on both Front and Back, and front_side/back_side component counts are 0 — RESOLVED: now reports copper_layers_used=2, front_side=6
 
-- **Status**: promoted
+- **Status**: resolved
 - **Analyzer**: pcb
 - **Source**: throwing-star.kicad_pcb.json
 - **Created**: 2026-03-13

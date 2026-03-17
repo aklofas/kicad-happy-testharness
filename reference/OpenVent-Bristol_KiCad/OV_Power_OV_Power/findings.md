@@ -15,8 +15,7 @@
 (none)
 
 ### Missed
-- signal_analysis key entirely absent from legacy output. parse_legacy_schematic() returns at line 1960 without calling analyze_signal_paths() or any Tier 1-3 analysis.
-  (signal_analysis)
+(none)
 
 ### Suggestions
 - Add analyze_signal_paths() and downstream analysis calls to parse_legacy_schematic() before the return dict — all required inputs (components, nets, lib_symbols, pin_net) are already available

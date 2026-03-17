@@ -15,20 +15,8 @@
           "analyzer_section": "components"
         },
         {
-          "description": "Crystal oscillators correctly detected",
-          "analyzer_section": "signal_analysis.crystals"
-        },
-        {
-          "description": "UART interface correctly detected",
-          "analyzer_section": "signal_analysis.bus_interfaces"
-        },
-        {
           "description": "LM324 and LM358 opamps correctly identified",
           "analyzer_section": "signal_analysis.opamp_circuits"
-        },
-        {
-          "description": "Bus topology correctly analyzed",
-          "analyzer_section": "signal_analysis.bus_interfaces"
         }
       ],
       "incorrect": [
@@ -77,10 +65,6 @@
       "summary": "Commodore LCD computer (231 components). Correct: all ICs, 44 ferrite beads, crystals, UART, opamps, bus topology. Incorrect: 12 CR-prefixed diodes misclassified as capacitor (CR is standard diode prefix), Speaker CNP1 as capacitor, DB37 connector CN2 as mounting_hole, DC1 DCDC-Conv as diode. Missed: no power_regulators detected, 4N28 optocoupler not in isolation_barriers.",
       "correct": [
         {
-          "description": "All ICs correctly identified (65102, 5707, 5706, 6522, 6551, 6264)",
-          "analyzer_section": "bom.type"
-        },
-        {
           "description": "44 FB-prefixed components correctly classified as ferrite_bead",
           "analyzer_section": "statistics.component_types"
         },
@@ -97,28 +81,12 @@
         {
           "description": "12 CR-prefixed components misclassified as capacitor instead of diode (CR1 1N4728 zener, CR15 LM385-2.5 voltage reference, etc)",
           "analyzer_section": "statistics.component_types"
-        },
-        {
-          "description": "CNP1 Speaker_Crystal classified as capacitor instead of speaker",
-          "analyzer_section": "bom.type"
-        },
-        {
-          "description": "CN2 DB37_Female_MountingHoles classified as mounting_hole instead of connector",
-          "analyzer_section": "bom.type"
-        },
-        {
-          "description": "DC1 DCDC-Conv classified as diode instead of ic/module",
-          "analyzer_section": "bom.type"
         }
       ],
       "missed": [
         {
           "description": "No power_regulators detected despite DC1 DCDC-Conv generating -12V/-5V",
           "analyzer_section": "signal_analysis.power_regulators"
-        },
-        {
-          "description": "4N28 optocoupler not in isolation_barriers (only LCA110 solid-state relay detected)",
-          "analyzer_section": "signal_analysis.isolation_barriers"
         }
       ],
       "suggestions": [

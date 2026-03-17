@@ -53,14 +53,6 @@
         {
           "description": "U4 IS61C5128AS-25TLI (512Kx8 SRAM) and U6 S29GL064S70TFI040 (64Mbit NOR flash) not detected in memory_interfaces. They connect to U1 STM32F401VCTx through bus buffers (U10/U8/U11/U9 74ALVC16245DG, U15/U16 74AHC16373DG) rather than directly, which prevents detection.",
           "analyzer_section": "signal_analysis.memory_interfaces"
-        },
-        {
-          "description": "Bus buffer topology not detected: 6x 74ALVC16245DG bidirectional buffers and 2x 74AHC16373DG latches forming address/data bus between MCU, SRAM, and flash. This is a classic 65C02-style bus architecture.",
-          "analyzer_section": "signal_analysis.design_observations"
-        },
-        {
-          "description": "U7 AP22816KC is a USB load switch (power path control) but not detected as a power management device in power_regulators or protection_devices",
-          "analyzer_section": "signal_analysis.power_regulators"
         }
       ],
       "suggestions": [

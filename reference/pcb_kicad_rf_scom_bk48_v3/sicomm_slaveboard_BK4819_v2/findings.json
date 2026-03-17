@@ -13,10 +13,6 @@
         {
           "description": "U19 IC pin analysis correct: VIN/GND/EN/NC/VOUT pins properly mapped, decoupling caps identified per rail",
           "analyzer_section": "ic_pin_analysis"
-        },
-        {
-          "description": "0 ERC warnings correctly reported",
-          "analyzer_section": "erc"
         }
       ],
       "incorrect": [
@@ -25,18 +21,15 @@
           "analyzer_section": "signal_analysis.design_observations"
         }
       ],
-      "missed": [
-        {
-          "description": "U19 TPLP5907MFX-3.3 linear voltage regulator not detected as power_regulator. Part has clear LDO topology: VIN(VBAT)→VOUT(A3V3) with EN tied to VBAT, input/output decoupling present. Part number not in regulator keyword list.",
-          "analyzer_section": "signal_analysis.power_regulators"
-        }
-      ],
+      "missed": [],
       "suggestions": [
         "Add TPLP pattern to regulator part number recognition (TECH PUBLIC linear regulators)",
         "Fix design_observations decoupling logic to use IC pin analysis data correctly",
         "Consider topology-based regulator detection as fallback when part number matching fails"
       ],
-      "related_issues": ["KH-118"],
+      "related_issues": [
+        "KH-118"
+      ],
       "should_become_assertion": true,
       "id": "FND-00000219",
       "repo": "pcb_kicad_rf_scom_bk48_v3",
@@ -61,23 +54,15 @@
         {
           "description": "Hierarchical schematic properly analyzed across 3 sheets (Amplifier, SCT3811, PCB_sicomm_bk4819)",
           "analyzer_section": "statistics"
-        },
-        {
-          "description": "16 ERC no-driver warnings are legitimate for test harness design with jumper connectors (JP1-JP3)",
-          "analyzer_section": "erc"
         }
       ],
       "incorrect": [
         {
-          "description": "23 LC filters overcounted — analyzer pairs every inductor-capacitor sharing a net. In RF designs these are impedance matching components, not discrete LC filters. L7 alone generates 4 pairs.",
+          "description": "23 LC filters overcounted \u2014 analyzer pairs every inductor-capacitor sharing a net. In RF designs these are impedance matching components, not discrete LC filters. L7 alone generates 4 pairs.",
           "analyzer_section": "signal_analysis.lc_filters"
         }
       ],
       "missed": [
-        {
-          "description": "BK4819QN32SC (full RF transceiver in SCT3811.kicad_sch) and U23 CMX994E1 (analog front-end with LNA/mixer/IF stages) not detected in RF chains. Only U44 RFSW8000 switch + U4 MGA-68563 amp detected.",
-          "analyzer_section": "signal_analysis.rf_chains"
-        },
         {
           "description": "X2 26MHz crystal in SCT3811.kicad_sch not detected as crystal circuit. Primary clock source for RF design.",
           "analyzer_section": "signal_analysis.crystal_circuits"

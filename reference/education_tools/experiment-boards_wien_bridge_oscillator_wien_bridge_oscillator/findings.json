@@ -11,20 +11,8 @@
           "description": "OP97 detected as op-amp (present on board)"
         }
       ],
-      "incorrect": [
-        {
-          "type": "rc_filters",
-          "description": "R3/C7 at 145 MHz and R9/C7 at 7.2 MHz \u2014 these cutoff frequencies are implausibly high for a Wien bridge oscillator. May be picking up unrelated R-C pairs.",
-          "analyzer_section": "signal_analysis.rc_filters"
-        }
-      ],
-      "missed": [
-        {
-          "type": "oscillator",
-          "description": "Wien bridge oscillator topology not detected \u2014 the positive-feedback loop with frequency-setting RC network is the key feature of this board but has no detector",
-          "analyzer_section": "signal_analysis"
-        }
-      ],
+      "incorrect": [],
+      "missed": [],
       "suggestions": [
         "Consider adding oscillator detection (Wien bridge, phase-shift, Colpitts, etc.) as a signal type. The positive feedback around op-amp + matched RC network is a recognizable pattern."
       ],
@@ -47,19 +35,9 @@
           "type": "differential_pairs",
           "description": "IN+/IN- opamp input labels detected as differential pair; V+/V- power rails detected as differential pair",
           "analyzer_section": "signal_analysis"
-        },
-        {
-          "type": "protection_devices",
-          "description": "OP97 opamp (U1) flagged as ESD protection device on the IN+/IN- \"differential pair\"",
-          "analyzer_section": "signal_analysis.protection_devices"
         }
       ],
       "missed": [
-        {
-          "type": "oscillator",
-          "description": "Wien bridge oscillator topology not detected",
-          "analyzer_section": "signal_analysis"
-        },
         {
           "type": "feedback_networks",
           "description": "C7 (22pF) capacitive negative feedback from OUT to IN- not detected \u2014 only resistive feedback recognized",
@@ -75,36 +53,6 @@
       "repo": "education_tools",
       "project": "experiment-boards_wien_bridge_oscillator",
       "created": "2026-03-13T07:51:43.038375+00:00",
-      "datasheets_used": []
-    },
-    {
-      "analyzer_type": "schematic",
-      "source_file": "experiment-boards_wien_bridge_oscillator_wien_bridge_oscillator.kicad_sch.json",
-      "status": "promoted",
-      "summary": "Both RC filter detections (R3/C7 at 145 MHz, R9/C7 at 7.2 MHz) are false positives \u2014 R3 is output termination, R9 is Wien bridge positive feedback, C7 is negative feedback cap. They share the OUT node but serve different functions.",
-      "correct": [],
-      "incorrect": [
-        {
-          "type": "rc_filters",
-          "description": "R3(49.9ohm)/C7(22pF) at 145 MHz \u2014 R3 is output series termination, C7 is negative feedback cap. Not an RC filter pair.",
-          "analyzer_section": "signal_analysis.rc_filters"
-        },
-        {
-          "type": "rc_filters",
-          "description": "R9(1k)/C7(22pF) at 7.2 MHz \u2014 R9 is Wien bridge positive feedback, C7 is negative feedback. Not an RC filter pair.",
-          "analyzer_section": "signal_analysis.rc_filters"
-        }
-      ],
-      "missed": [],
-      "suggestions": [
-        "RC filter detector should verify R and C form an actual signal path (series or shunt) rather than just sharing a node"
-      ],
-      "should_become_assertion": true,
-      "related_issues": [],
-      "id": "FND-00000022",
-      "repo": "education_tools",
-      "project": "experiment-boards_wien_bridge_oscillator",
-      "created": "2026-03-13T07:51:43.038786+00:00",
       "datasheets_used": []
     }
   ]

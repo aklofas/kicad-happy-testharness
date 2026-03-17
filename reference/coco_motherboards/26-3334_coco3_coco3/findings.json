@@ -32,12 +32,7 @@
         }
       ],
       "incorrect": [],
-      "missed": [
-        {
-          "description": "TC1 (10-50pF trimmer) on X1 pin2 not reported as crystal load cap \u2014 only C60 on pin1 counted",
-          "analyzer_section": "signal_analysis.crystal_circuits"
-        }
-      ],
+      "missed": [],
       "suggestions": [
         "Crystal circuit detector should recognize Device:C_Variable/trimmer capacitors as load caps"
       ],
@@ -76,14 +71,6 @@
         {
           "description": "C61 and R64 absent from component list \u2014 multi-path shared symbols resolve to unannotated C?/R? instead of root-sheet annotated instances. 86.83MHz ~CTS clock filter entirely missing.",
           "analyzer_section": "components"
-        },
-        {
-          "description": "0 voltage dividers detected vs 3 in KiCad5 for identical circuit \u2014 R31+R32 video level divider missed; R31/R32 appear as false-positive RC filter entries instead",
-          "analyzer_section": "signal_analysis.voltage_dividers"
-        },
-        {
-          "description": "Output schema: sheets_parsed=None, sheet_files=None; sheet data under 'sheets' key \u2014 mismatches KiCad5 schema. Net count 271 vs 371 due to UUID-scoped hierarchical net names.",
-          "analyzer_section": "metadata"
         }
       ],
       "missed": [],

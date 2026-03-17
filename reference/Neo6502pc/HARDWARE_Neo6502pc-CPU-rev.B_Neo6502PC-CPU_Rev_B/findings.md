@@ -9,21 +9,12 @@
 
 ### Correct
 - All 8 ICs correctly identified (RP2040, W65C02S, etc.)
-- Power rails correctly identified
-- I2C bus with pullup resistors correctly detected
-- UART interface correctly detected
-- HDMI differential pairs correctly identified
-- USB compliance correctly analyzed
 
 ### Incorrect
 - Cable-PWR1 and Cable-pUEXT1 IDC cable connectors classified as capacitor
   (components)
 - SPK1 piezo buzzer classified as switch instead of transducer
   (components)
-- BUS1 40-pin expansion bus connector classified as SWD debug connector
-  (signal_analysis.bus_interfaces)
-- HDMI and GPIO nets falsely detected as I2C interfaces
-  (signal_analysis.bus_interfaces)
 
 ### Missed
 - SPI bus between RP2040 and peripheral ICs not detected
@@ -47,25 +38,15 @@
 
 ### Correct
 - All 8 ICs correctly identified (RP2040, W65C02S, CH217K, CH334S, ZD25Q16B, 3x 74LVC245)
-- I2C bus with 2.2k pullups correctly detected
-- 4 HDMI differential pairs with 270R series resistors detected
 - USB-C CC 5.1k pulldowns pass compliance
 
 ### Incorrect
-- Cable-PWR1/Cable-pUEXT1 (IDC cables) misclassified as capacitor
-  (components.type)
-- SPK1 buzzer misclassified as switch
-  (components.type)
 - BUS1 40-pin expansion bus misidentified as SWD debug connector
   (test_coverage.debug_connectors)
-- HDMI differential signals and GPIO control nets falsely detected as I2C
-  (bus_analysis.i2c)
 
 ### Missed
 - SPI bus (SPI1_RX/CSn/SCK/TX) not detected despite clear net names
   (bus_analysis.spi)
-- 10 test points (TESTPAD) not in test_coverage despite being in component_types
-  (test_coverage.test_points)
 
 ### Suggestions
 - Add Cable/cable lib_id patterns as connector type

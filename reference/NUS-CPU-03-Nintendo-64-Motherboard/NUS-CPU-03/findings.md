@@ -27,10 +27,6 @@
 ### Missed
 - RDRAM memory interface (U11/U14 to U9 RCP) not detected
   (signal_analysis.memory_interfaces)
-- I2S audio bus (SDAT/LRCK/BCLK between 9480F DAC and RCP) not detected
-  (design_analysis.bus_analysis)
-- Video encoder output path with 75-ohm termination not characterized
-  (signal_analysis)
 
 ### Suggestions
 - Add I2S bus detection (SDAT/LRCK/BCLK distinct from I2C SDA/SCL)

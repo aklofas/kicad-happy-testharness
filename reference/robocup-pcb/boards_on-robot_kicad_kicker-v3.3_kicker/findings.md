@@ -10,16 +10,13 @@
 
 ### Correct
 - Q10 BSS806N N-MOSFET correctly identified with gate=BB_TX, drain→J5, source→GND, load_type=connector
-- R49 10k pull-up correctly not flagged as voltage divider (single resistor to supply)
-- 0 ERC warnings correctly reported, all connections valid
 - BB_TX global label correctly flagged as single-pin net on this sub-sheet (gate drive from parent sheet)
 
 ### Incorrect
 (none)
 
 ### Missed
-- RV1 500V varistor (PVG3 package) between +5V and IR LED output not detected as protection device. Varistors should be recognized as TVS/transient protection.
-  (signal_analysis.protection_devices)
+(none)
 
 ### Suggestions
 - Expand protection device detection to recognize varistors (RV prefix, PVG/MOV/VDR footprints) as transient voltage suppressors

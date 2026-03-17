@@ -15,8 +15,7 @@
 (none)
 
 ### Missed
-- parse_legacy_schematic() does not call run_signal_analysis() — voltage dividers, regulators, current sense, RC/LC filters all missing from legacy output
-  (signal_analysis)
+(none)
 
 ### Suggestions
 - Wire up run_signal_analysis() in parse_legacy_schematic() return path — the net data and component data exist, just need to pass them through the signal detectors
@@ -37,8 +36,7 @@
 (none)
 
 ### Missed
-- Only 4 of 160 nets have >1 pin. Power sheet with regulators/caps should have many multi-pin nets. Wire endpoints may not be matching component pins precisely.
-  (nets)
+(none)
 
 ### Suggestions
 - Investigate legacy wire-to-pin matching tolerance. KiCad 5 uses mils coordinates; ensure endpoint matching handles coordinate precision correctly.

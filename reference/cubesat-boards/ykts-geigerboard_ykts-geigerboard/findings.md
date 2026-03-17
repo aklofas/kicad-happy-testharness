@@ -16,16 +16,13 @@
 ### Incorrect
 - LM2733YMF (U9) output_rail=__unnamed_18 (same as input) — true HV output is __unnamed_15 after rectifier diode D4 MBR0520LT, not traced past diode
   (signal_analysis.power_regulators)
-- L2+C18 (1uH+100nF) AVR AVCC power filter misclassified as RF antenna matching network targeting ATmega328P — this is standard AVR analog supply decoupling
-  (signal_analysis.rf_matching)
 - 9 capacitors with unitless pF values (220, 470, 510, 1000, 2200) parsed as Farads — time constants up to 4.84 billion seconds, LC resonant frequencies of 0.00Hz
   (signal_analysis.rc_filters)
 - Q1/Q2 gate_driver_ics lists 9 ICs via +3V3 power net traversal — gates are statically biased, not driven by any IC
   (signal_analysis.transistor_circuits)
 
 ### Missed
-- LMC555 (U5) timer in astable configuration for HV supply oscillation not recognized as timer/oscillator
-  (signal_analysis)
+(none)
 
 ### Suggestions
 - Boost converter output: trace through catch/rectifier diode to find true output rail

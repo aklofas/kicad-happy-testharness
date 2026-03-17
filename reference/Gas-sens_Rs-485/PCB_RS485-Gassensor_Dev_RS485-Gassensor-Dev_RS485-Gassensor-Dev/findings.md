@@ -20,8 +20,6 @@
   (signal_analysis.current_sense)
 - Same OKI-78SR voltage estimation error: estimated_vout=1.5V instead of 5V
   (signal_analysis.power_regulators)
-- Same zero-decoupling issue where capacitors on named power rails are not found
-  (signal_analysis.decoupling_analysis)
 
 ### Missed
 (none)

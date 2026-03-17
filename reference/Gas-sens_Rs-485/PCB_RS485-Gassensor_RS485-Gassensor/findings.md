@@ -26,8 +26,6 @@
   (signal_analysis.current_sense)
 - U4 (OKI-78SR-5_1.5-W36-C) estimated_vout=1.5V is wrong; it outputs 5V. The '1.5' in the part name refers to the 1.5A current rating, not the output voltage. The output rail is correctly labeled +5V.
   (signal_analysis.power_regulators)
-- Decoupling analysis shows 0 capacitors found, yet C1 (4.7uF) through C16 are present. The zero-decoupling finding and 'rails_without_caps' observations for U1, U2, U4, U5 suggest the net tracing did not connect capacitors to the named power rails.
-  (signal_analysis.decoupling_analysis)
 
 ### Missed
 (none)

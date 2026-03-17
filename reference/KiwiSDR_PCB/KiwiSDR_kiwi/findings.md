@@ -21,8 +21,7 @@
   (signal_analysis.opamp_circuits)
 
 ### Missed
-- 66.6666MHz XO oscillator (U402) for ADC clock distribution not captured in crystal_circuits
-  (signal_analysis.crystal_circuits)
+(none)
 
 ### Suggestions
 - Verify KH-101 fix covers multi-pin ICs with close pin spacing

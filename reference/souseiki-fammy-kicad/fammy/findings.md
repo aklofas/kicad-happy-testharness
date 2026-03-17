@@ -9,7 +9,6 @@
 
 ### Correct
 - 1 BJT correctly detected
-- 10 decoupling caps correctly detected
 
 ### Incorrect
 - RC filter capacitor reuse: C2 appears in 3 filters, C3 in 2 - same capacitor counted in multiple filter instances

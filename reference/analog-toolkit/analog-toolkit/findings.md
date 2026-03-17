@@ -14,8 +14,6 @@
 - I2C bus detected with correct no-pull-up observation; UART TX/RX detected
 
 ### Incorrect
-- 13 false positive RF matching networks detected on ADC input conditioning circuits. These are 0-ohm series resistors (R11-R16) and DNP resistors (R5-R10, R17-R23) with 10nF anti-aliasing caps (C8-C13). Nothing RF-related in this design.
-  (signal_analysis.rf_matching)
 - dnp_parts=1 but there are 13 DNP components (R5-R10, R17-R23). Counts BOM line items instead of component instances.
   (statistics.dnp_parts)
 

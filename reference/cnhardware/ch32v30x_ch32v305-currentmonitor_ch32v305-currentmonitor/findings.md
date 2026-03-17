@@ -18,8 +18,6 @@
 ### Missed
 - R1 (0.1 ohm), R2 (1 ohm) current sense resistors not detected on a board named 'currentmonitor'
   (signal_analysis.current_sense)
-- I2S bus (I2SCK, I2SSD, I2SWS nets) between AK5534 and CH32V305 not detected -- no I2S detector
-  (signal_analysis.design_observations)
 
 ### Suggestions
 - Low-value resistors (<1 ohm) should be detected as current sense candidates

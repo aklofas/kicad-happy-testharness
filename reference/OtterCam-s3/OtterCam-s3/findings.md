@@ -10,16 +10,11 @@
 ### Correct
 - U1 Allwinner S3 SoC correctly identified as main IC
 - U3 SY8089 buck converter correctly identified as regulator
-- SDIO bus interfaces correctly detected
-- MIPI differential pairs correctly identified
-- Crystal oscillators correctly detected
 - TVS protection devices correctly classified
 
 ### Incorrect
 - AE1 U.FL antenna connector classified as IC instead of connector
   (components)
-- EPHY_TX/RX Ethernet PHY nets misidentified as UART interface
-  (signal_analysis.bus_interfaces)
 - AP6236 WiFi/BT module classified as voltage regulator
   (signal_analysis.power_regulators)
 - AXP209 PMIC estimated_vout 4.8V is incorrect
@@ -46,17 +41,12 @@
 ### Correct
 - SY8089 buck converter correctly identified with proper output voltage
 - TVS D4 correctly identified for USB protection
-- USB-C CC pulldown resistors correctly identified
 - Q1 LED driver transistor correctly identified
 - RC reset filter correctly detected
 
 ### Incorrect
 - AXP209 PMIC estimated_vout 4.8V is wrong for a multi-rail PMIC
   (signal_analysis.power_regulators)
-- USB differential pair has_esd flag inconsistent across detections
-  (signal_analysis.usb_compliance)
-- VINT net classified as interrupt signal but is actually a voltage reference rail
-  (signal_analysis.power_rails)
 
 ### Missed
 (none)
@@ -82,8 +72,6 @@
 - 5 MIPI differential pairs detected
 
 ### Incorrect
-- AE1 U.FL antenna connector classified as IC (should be connector)
-  (bom.type)
 - EPHY_TX/RX Ethernet PHY nets misidentified as UART
   (design_analysis.bus_analysis.uart)
 - AP6236 WiFi module classified as power regulator
@@ -125,8 +113,7 @@
   (design_analysis.net_classification)
 
 ### Missed
-- AXP209 multiple output rails not enumerated (only +3V3 reported)
-  (signal_analysis.power_regulators)
+(none)
 
 ### Suggestions
 - For multi-output PMICs, detect all output rails

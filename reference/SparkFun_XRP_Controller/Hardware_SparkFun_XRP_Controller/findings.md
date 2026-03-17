@@ -10,16 +10,10 @@
 ### Correct
 - RP2350B microcontroller correctly identified with proper pin count
 - DRV8411A dual motor drivers correctly identified
-- LSM6DSOX IMU correctly identified on I2C bus
-- Crystal Y1 correctly detected
-- USB compliance correctly analyzed
-- WS2812B addressable LED chain correctly detected
 
 ### Incorrect
 - AP63357 buck converter Vref reported as 0.6V but datasheet specifies 0.765V reference
   (signal_analysis.power_regulators)
-- QSPI_D bus width reported as 12, actual QSPI data bus is 4 bits wide
-  (signal_analysis.bus_interfaces)
 
 ### Missed
 - QSPI flash memory interface to W25Q128 not detected as memory bus

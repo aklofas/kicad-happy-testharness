@@ -24,16 +24,8 @@
   (components)
 
 ### Missed
-- No SPI bus detection between STM32 (PA5/SCK, PA6/MISO, PA7/MOSI, PB9/CS) and W5500 -- only I2C detected as bus protocol
-  (signal_analysis.design_observations)
-- Crystal Y3 (8MHz) load caps C10, C8 (22pF) not associated despite clear connectivity; Y2 (25MHz) load caps C33, C34 (18pF) also missed
-  (signal_analysis.crystal_circuits)
-- Decoupling analysis reports all ICs (U6, U5, U7, U3) with rails_with_caps=[] despite extensive decoupling on +3.3V and GND
-  (signal_analysis.design_observations)
 - +28V motor power rail missing from power_budget despite 11 power symbol instances feeding TMC2209 via DD4012SA
   (signal_analysis.power_budget)
-- Ethernet magnetics not detected -- HR911105A has integrated magnetics with differential pairs but magnetics array is empty
-  (signal_analysis.ethernet_interfaces)
 
 ### Suggestions
 - Check in_bom flag before classifying components as power symbols -- DD4012SA has in_bom=yes

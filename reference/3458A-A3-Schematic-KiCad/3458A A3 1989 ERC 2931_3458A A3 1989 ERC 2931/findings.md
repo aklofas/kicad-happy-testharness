@@ -15,8 +15,6 @@
 - Precision RC filters for signal path correctly detected (XO_OVLD, XF/R, ACDA/DCDA)
 
 ### Incorrect
-- All 9 rf_matching entries are false positives — L231/L232/L233 are clock distribution ferrite beads from 20MHz oscillator to logic ICs; L123/L127 with C128/C129/C119/C122 are precision integrator input filters on summing node
-  (signal_analysis.rf_matching)
 - U405 EL2018 (lib PCM_Analog_Comparator_AKL:AD8561AN, desc 'IC COMPARATOR HS') misclassified as 'compensator' — C403 22pF from output HTRIG to inverting input is positive feedback for hysteresis, not opamp compensation
   (signal_analysis.opamp_circuits)
 - RC filter [7] (R407+C403, ground_net=HTRIG) is false positive — R407 is comparator input resistor, C403 is hysteresis cap; HTRIG is comparator output, not ground

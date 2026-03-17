@@ -10,15 +10,9 @@
 
 ### Correct
 - 58 components correctly extracted
-- SY8089 correctly detected as switching regulator
 
 ### Incorrect
-- T1/T2 BC817-40 NPN BJTs (lib_id Q_NPN_BEC) classified as transformer instead of transistor
-  (bom.type)
-- pUEXT1 (lib_id CONN_01X10) classified as other instead of connector
-  (bom.type)
-- SY8089 input_rail=GND incorrect
-  (signal_analysis.power_regulators)
+(none)
 
 ### Missed
 - Voltage divider R6(470k)/R7(150k) for battery sensing not detected

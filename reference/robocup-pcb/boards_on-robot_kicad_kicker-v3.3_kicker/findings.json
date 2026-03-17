@@ -7,16 +7,8 @@
       "summary": "Robocup kicker breakbeam sub-sheet (11 components). Correct: Q10 BSS806N MOSFET correctly identified with proper pin mapping and connector load type, R49 pull-up correctly not flagged as divider, power distribution correct. False negative: RV1 500V varistor (PVG3) not detected as protection device. Single-pin net on RV1 pin 1 is expected (NC pin on 3-pin package).",
       "correct": [
         {
-          "description": "Q10 BSS806N N-MOSFET correctly identified with gate=BB_TX, drain→J5, source→GND, load_type=connector",
+          "description": "Q10 BSS806N N-MOSFET correctly identified with gate=BB_TX, drain\u2192J5, source\u2192GND, load_type=connector",
           "analyzer_section": "signal_analysis.transistor_circuits"
-        },
-        {
-          "description": "R49 10k pull-up correctly not flagged as voltage divider (single resistor to supply)",
-          "analyzer_section": "signal_analysis.voltage_dividers"
-        },
-        {
-          "description": "0 ERC warnings correctly reported, all connections valid",
-          "analyzer_section": "erc"
         },
         {
           "description": "BB_TX global label correctly flagged as single-pin net on this sub-sheet (gate drive from parent sheet)",
@@ -24,16 +16,13 @@
         }
       ],
       "incorrect": [],
-      "missed": [
-        {
-          "description": "RV1 500V varistor (PVG3 package) between +5V and IR LED output not detected as protection device. Varistors should be recognized as TVS/transient protection.",
-          "analyzer_section": "signal_analysis.protection_devices"
-        }
-      ],
+      "missed": [],
       "suggestions": [
         "Expand protection device detection to recognize varistors (RV prefix, PVG/MOV/VDR footprints) as transient voltage suppressors"
       ],
-      "related_issues": ["KH-117"],
+      "related_issues": [
+        "KH-117"
+      ],
       "should_become_assertion": true,
       "id": "FND-00000218",
       "repo": "robocup-pcb",
@@ -45,7 +34,7 @@
       "analyzer_type": "schematic",
       "source_file": "boards_on-robot_kicad_kicker-v3.3_HV_-_Regulation.kicad_sch.json",
       "status": "confirmed",
-      "summary": "Robocup kicker HV regulation sub-sheet (48 components, LT3751FE boost converter). Correct: current sense R16 7mohm shunt detected, RC filter R15+C9 gate snubber detected, Q2 IRFS4227 MOSFET correctly identified. False negative: R17(505k)/R18(113k) feedback voltage divider for HV regulation not detected — critical feedback element missed.",
+      "summary": "Robocup kicker HV regulation sub-sheet (48 components, LT3751FE boost converter). Correct: current sense R16 7mohm shunt detected, RC filter R15+C9 gate snubber detected, Q2 IRFS4227 MOSFET correctly identified. False negative: R17(505k)/R18(113k) feedback voltage divider for HV regulation not detected \u2014 critical feedback element missed.",
       "correct": [
         {
           "description": "R16 7mohm current sense shunt with U3 LT3751FE CSN/CSP pins correctly detected, max current calculations accurate",

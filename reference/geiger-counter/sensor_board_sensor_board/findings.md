@@ -24,8 +24,6 @@
   (signal_analysis.power_regulators)
 - The 16 AP331A comparators (U1-U16) are used as signal discriminators for the photodiode channels but are not detected in opamp_circuits. While comparators are distinct from op-amps, they share the same topology and the analyzer should recognize comparator-based circuits.
   (signal_analysis.opamp_circuits)
-- The 3-stage signal chain per channel (photodiode bias via 220k+100nF, comparator threshold detection, BJT output buffer with cascade) represents a coherent signal discriminator topology that could be flagged as a higher-level circuit pattern
-  (signal_analysis.design_observations)
 
 ### Suggestions
 - Add TL431/MMTL431 family to power_regulators detection as shunt voltage reference/regulator

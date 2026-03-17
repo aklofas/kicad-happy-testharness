@@ -15,10 +15,6 @@
           "analyzer_section": "signal_analysis.crystal_circuits"
         },
         {
-          "description": "R2=1k/C5=15pF 10.6MHz RC filter detected (part of crystal circuit)",
-          "analyzer_section": "signal_analysis.rc_filters"
-        },
-        {
           "description": "D1 and D3 DT1042-04SO correctly identified as USB ESD protection on USB_D+/USB_D- and XBLR_USB_D+/XBLR_USB_D- lines",
           "analyzer_section": "signal_analysis.protection_devices"
         },
@@ -47,17 +43,8 @@
           "analyzer_section": "signal_analysis.design_observations"
         }
       ],
-      "incorrect": [
-        {
-          "description": "R2=1k/C5=15pF detected as standalone 10.6MHz RC low-pass filter, but R2 is actually the crystal oscillator feedback resistor for Y1 and C5 is the crystal load capacitor -- this is not an independent filter",
-          "analyzer_section": "signal_analysis.rc_filters"
-        }
-      ],
+      "incorrect": [],
       "missed": [
-        {
-          "description": "LM66200 (U6) ideal diode OR controller between VUSB and VBATT not detected -- handles power source selection",
-          "analyzer_section": "signal_analysis.power_regulators"
-        },
         {
           "description": "MCP73831 (U8) single-cell LiPo battery charger from VUSB not detected as battery management component",
           "analyzer_section": "signal_analysis.bms_systems"
@@ -81,10 +68,6 @@
         {
           "description": "XBee LR LoRaWAN module (U4) not detected as RF/radio component despite being a LoRaWAN transceiver",
           "analyzer_section": "signal_analysis.rf_chains"
-        },
-        {
-          "description": "SW1 DPDT slide switch for UART routing between RP2350 and XBLR not analyzed for signal path switching",
-          "analyzer_section": "signal_analysis.transistor_circuits"
         }
       ],
       "suggestions": [

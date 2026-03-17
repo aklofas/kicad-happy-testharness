@@ -21,10 +21,7 @@
   (signal_analysis.rc_filters)
 
 ### Missed
-- Video amplifier/buffer topology not recognized
-  (signal_analysis)
-- 1-to-2 SCART signal splitter pattern not detected
-  (subcircuits)
+(none)
 
 ### Suggestions
 - Avoid matching CS substring in CSYNC/HSYNC/VSYNC names

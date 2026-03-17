@@ -35,8 +35,6 @@
   (design_analysis.cross_domain_signals)
 
 ### Missed
-- OP484ESZ-REEL (IC11, IC12) quad opamps for 8 NTC channels not detected — uses +IN_A/-IN_A pin naming not matched by analyzer's IN+/IN- suffix patterns
-  (signal_analysis.opamp_circuits)
 - MT29F64G NAND flash not detected as memory interface despite full EBI bus
   (signal_analysis.memory_interfaces)
 - DRV8825 stepper motor driver not detected in bridge_circuits

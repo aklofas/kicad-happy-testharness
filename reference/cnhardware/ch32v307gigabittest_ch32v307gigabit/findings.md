@@ -18,8 +18,6 @@
 ### Missed
 - Ethernet interface not detected -- RTL8211E PHY + G2406S magnetics + 8P8C RJ45 with GMII bus nets all present
   (signal_analysis.ethernet_interfaces)
-- 22 unannotated components (bare refs 'D', 'J', 'U' without numbers) silently dropped from output with no annotation_issues warning
-  (components)
 
 ### Suggestions
 - Lib_id keywords should have higher priority than ref prefix for classification

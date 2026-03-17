@@ -9,9 +9,7 @@
 
 ### Correct
 - 18 transistors correctly identified in the analog filter topology
-- Power rails correctly identified
 - Component values correctly extracted
-- Inrush current analysis correctly performed
 
 ### Incorrect
 - L7805 voltage regulator classified as IC instead of power regulator
@@ -42,12 +40,9 @@
 - L7805 correctly in power_budget producing +5V from +12V
 
 ### Incorrect
-- U1 L7805 (lib_id Regulator_Linear:L7805) classified as type ic instead of regulator
-  (bom.type)
+(none)
 
 ### Missed
-- No analog filter detection for classic 4-pole transistor ladder VCF
-  (signal_analysis)
 - Trimmers RV1/RV2 classified as resistor instead of potentiometer
   (bom.type)
 

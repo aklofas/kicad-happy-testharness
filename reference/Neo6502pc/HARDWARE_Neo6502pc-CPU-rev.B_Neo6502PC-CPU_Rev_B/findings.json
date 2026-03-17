@@ -9,26 +9,6 @@
         {
           "description": "All 8 ICs correctly identified (RP2040, W65C02S, etc.)",
           "analyzer_section": "components"
-        },
-        {
-          "description": "Power rails correctly identified",
-          "analyzer_section": "signal_analysis.power_rails"
-        },
-        {
-          "description": "I2C bus with pullup resistors correctly detected",
-          "analyzer_section": "signal_analysis.bus_interfaces"
-        },
-        {
-          "description": "UART interface correctly detected",
-          "analyzer_section": "signal_analysis.bus_interfaces"
-        },
-        {
-          "description": "HDMI differential pairs correctly identified",
-          "analyzer_section": "signal_analysis.differential_pairs"
-        },
-        {
-          "description": "USB compliance correctly analyzed",
-          "analyzer_section": "signal_analysis.usb_compliance"
         }
       ],
       "incorrect": [
@@ -39,14 +19,6 @@
         {
           "description": "SPK1 piezo buzzer classified as switch instead of transducer",
           "analyzer_section": "components"
-        },
-        {
-          "description": "BUS1 40-pin expansion bus connector classified as SWD debug connector",
-          "analyzer_section": "signal_analysis.bus_interfaces"
-        },
-        {
-          "description": "HDMI and GPIO nets falsely detected as I2C interfaces",
-          "analyzer_section": "signal_analysis.bus_interfaces"
         }
       ],
       "missed": [
@@ -81,44 +53,20 @@
           "analyzer_section": "bom"
         },
         {
-          "description": "I2C bus with 2.2k pullups correctly detected",
-          "analyzer_section": "bus_analysis.i2c"
-        },
-        {
-          "description": "4 HDMI differential pairs with 270R series resistors detected",
-          "analyzer_section": "differential_pairs"
-        },
-        {
           "description": "USB-C CC 5.1k pulldowns pass compliance",
           "analyzer_section": "usb_compliance"
         }
       ],
       "incorrect": [
         {
-          "description": "Cable-PWR1/Cable-pUEXT1 (IDC cables) misclassified as capacitor",
-          "analyzer_section": "components.type"
-        },
-        {
-          "description": "SPK1 buzzer misclassified as switch",
-          "analyzer_section": "components.type"
-        },
-        {
           "description": "BUS1 40-pin expansion bus misidentified as SWD debug connector",
           "analyzer_section": "test_coverage.debug_connectors"
-        },
-        {
-          "description": "HDMI differential signals and GPIO control nets falsely detected as I2C",
-          "analyzer_section": "bus_analysis.i2c"
         }
       ],
       "missed": [
         {
           "description": "SPI bus (SPI1_RX/CSn/SCK/TX) not detected despite clear net names",
           "analyzer_section": "bus_analysis.spi"
-        },
-        {
-          "description": "10 test points (TESTPAD) not in test_coverage despite being in component_types",
-          "analyzer_section": "test_coverage.test_points"
         }
       ],
       "suggestions": [

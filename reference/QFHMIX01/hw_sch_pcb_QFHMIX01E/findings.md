@@ -9,20 +9,14 @@
 
 ### Correct
 - LC filter networks correctly identified with inductor-capacitor topology
-- RF matching networks correctly detect target ICs
 - Power regulators correctly detected
 
 ### Incorrect
-- C18/C19/C20/C21 (100nF power bypass caps) falsely labeled as 'antenna' components in rf_matching — 100nF is far too large for RF coupling
-  (signal_analysis.rf_matching)
 - 3 RC networks (R14/C11 68R/10nF, R11/C13, R15/C12) misclassified as 'high-pass' with output_net='GND' — actual cap terminals connect to CLK_MIX2_P/CLK_MIX1_P/CLK_MIX1_N, not GND
   (signal_analysis.rc_filters)
 
 ### Missed
-- AD8343 active mixer ICs (U2, U3) not detected as mixers in rf_chains — rf_chains[0].mixers is empty on a board named QFHMIX01
-  (signal_analysis.rf_chains)
-- LT6604-5 (U4) dual anti-aliasing filter IC absent from rf_chains.filters — dedicated analog filter IC for IF/baseband output
-  (signal_analysis.rf_chains)
+(none)
 
 ### Suggestions
 - Add AD8343 to mixer component recognition

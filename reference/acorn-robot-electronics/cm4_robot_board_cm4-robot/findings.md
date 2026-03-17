@@ -26,10 +26,6 @@
   (signal_analysis.ethernet_interfaces)
 - ISO1050DUB isolated CAN transceivers (U10/U11) not detected as isolation barriers — separate VCC1/VCC2 power domains
   (signal_analysis.isolation_barriers)
-- SPI bus not detected — MCP2515 x2 + SC16IS752 x2 sharing SERIAL_CLK/COPI/CIPO
-  (design_analysis.bus_analysis.spi)
-- I2C bus not detected — SCL6/SDA6 with ADS1115, LIS3MDL, PCA9536, LSM6DS3
-  (design_analysis.bus_analysis.i2c)
 
 ### Suggestions
 - Boost converter output_rail: trace inductor SW → Schottky cathode to find actual output net

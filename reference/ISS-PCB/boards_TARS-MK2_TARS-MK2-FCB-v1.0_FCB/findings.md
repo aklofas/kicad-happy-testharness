@@ -18,10 +18,7 @@
   (signal_analysis.power_regulators)
 
 ### Missed
-- TVS1800DRV (U301, U302) from Power_Protection library not detected as protection devices -- only discrete D-prefix TVS diodes detected
-  (signal_analysis.protection_devices)
-- ECMF02-2AMX6 (U108) USB ESD/CM filter not in protection_devices, usb_data reports has_esd_protection=false despite U108 on those nets
-  (signal_analysis.protection_devices)
+(none)
 
 ### Suggestions
 - Add Power_Protection library components to protection_devices detection

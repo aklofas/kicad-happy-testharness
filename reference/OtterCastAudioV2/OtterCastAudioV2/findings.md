@@ -22,28 +22,6 @@
 
 ---
 
-## FND-00000060: C49 value "DNP" not flagged as dnp=true
-
-- **Status**: new
-- **Analyzer**: schematic
-- **Source**: OtterCastAudioV2.kicad_sch.json
-- **Created**: 2026-03-13
-
-### Correct
-(none)
-
-### Incorrect
-- 5 parts with value="DNP" but dnp=false. Value field containing "DNP" should trigger do-not-populate flag.
-  (components[*].dnp)
-
-### Missed
-(none)
-
-### Suggestions
-- Check Value field for "DNP" string in addition to dedicated DNP property
-
----
-
 ## FND-00000061: RF antenna matching network not detected
 
 - **Status**: new
@@ -132,28 +110,6 @@
 
 ---
 
-## FND-00000065: SDIO nets miscategorized as SPI in test_coverage
-
-- **Status**: new
-- **Analyzer**: schematic
-- **Source**: OtterCastAudioV2.kicad_sch.json
-- **Created**: 2026-03-13
-
-### Correct
-(none)
-
-### Incorrect
-- SDIO nets (WL_SDIO_CLK/CMD/D0-D3) miscategorized as SPI. Related to missing SDIO detection.
-  (signal_analysis.bus_protocols)
-
-### Missed
-(none)
-
-### Suggestions
-- Prioritize SDIO matching over SPI for nets with SDIO naming
-
----
-
 ## FND-00000066: PCM/I2S audio bus not detected
 
 - **Status**: new
@@ -195,28 +151,6 @@
 
 ### Suggestions
 - Assign decoupling caps to specific power pins based on proximity or net connectivity
-
----
-
-## FND-00000068: TCXO crystal circuit not detected
-
-- **Status**: new
-- **Analyzer**: schematic
-- **Source**: OtterCastAudioV2.kicad_sch.json
-- **Created**: 2026-03-13
-
-### Correct
-(none)
-
-### Incorrect
-(none)
-
-### Missed
-- X1 26MHz TCXO output to U7 XTAL_IN. crystal_circuits=[]. Active oscillator (TCXO) not detected.
-  (signal_analysis.crystal_circuits)
-
-### Suggestions
-- Add TCXO/VCTCXO detection in crystal circuit analysis
 
 ---
 

@@ -29,10 +29,6 @@
           "analyzer_section": "signal_analysis.power_regulators"
         },
         {
-          "description": "L2+C18 (1uH+100nF) AVR AVCC power filter misclassified as RF antenna matching network targeting ATmega328P \u2014 this is standard AVR analog supply decoupling",
-          "analyzer_section": "signal_analysis.rf_matching"
-        },
-        {
           "description": "9 capacitors with unitless pF values (220, 470, 510, 1000, 2200) parsed as Farads \u2014 time constants up to 4.84 billion seconds, LC resonant frequencies of 0.00Hz",
           "analyzer_section": "signal_analysis.rc_filters"
         },
@@ -41,12 +37,7 @@
           "analyzer_section": "signal_analysis.transistor_circuits"
         }
       ],
-      "missed": [
-        {
-          "description": "LMC555 (U5) timer in astable configuration for HV supply oscillation not recognized as timer/oscillator",
-          "analyzer_section": "signal_analysis"
-        }
-      ],
+      "missed": [],
       "suggestions": [
         "Boost converter output: trace through catch/rectifier diode to find true output rail",
         "RF matching: exclude detections where target is connected via AVCC/VCC power pin",

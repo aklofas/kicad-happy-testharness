@@ -13,7 +13,7 @@
       "incorrect": [
         {
           "type": "value_parsing",
-          "description": "L1/L2 are 600-ohm ferrite beads in 0402. LC filter shows resonant_hz=2.97 and henries=600.0. Physically impossible — ferrite beads are rated in ohms at frequency, not henries.",
+          "description": "L1/L2 are 600-ohm ferrite beads in 0402. LC filter shows resonant_hz=2.97 and henries=600.0. Physically impossible \u2014 ferrite beads are rated in ohms at frequency, not henries.",
           "analyzer_section": "signal_analysis.lc_filters"
         }
       ],
@@ -22,81 +22,6 @@
         "Detect ferrite beads by library name or impedance-rated value format. Do not parse bare numeric inductor values as henries when the component is a ferrite bead."
       ],
       "should_become_assertion": true,
-      "related_issues": [],
-      "datasheets_used": []
-    },
-    {
-      "id": "FND-00000044",
-      "repo": "icebreaker",
-      "project": "hardware_v1.1a_icebreaker",
-      "created": "2026-03-13T22:00:00.000000+00:00",
-      "status": "new",
-      "analyzer_type": "schematic",
-      "source_file": "hardware_v1.1a_icebreaker.kicad_sch.json",
-      "summary": "FT2232H internal 1.8V LDO not detected as power regulator",
-      "correct": [],
-      "incorrect": [],
-      "missed": [
-        {
-          "type": "power_regulator",
-          "description": "VREGOUT pin 49 of FT2232H drives +1V8 rail via internal LDO. Only dedicated VREG components are detected as power regulators.",
-          "analyzer_section": "signal_analysis.power_regulators"
-        }
-      ],
-      "suggestions": [
-        "Detect VREGOUT/VREG pins on ICs as internal power regulators driving rails"
-      ],
-      "should_become_assertion": false,
-      "related_issues": [],
-      "datasheets_used": []
-    },
-    {
-      "id": "FND-00000045",
-      "repo": "icebreaker",
-      "project": "hardware_v1.1a_icebreaker",
-      "created": "2026-03-13T22:00:00.000000+00:00",
-      "status": "new",
-      "analyzer_type": "schematic",
-      "source_file": "hardware_v1.1a_icebreaker.kicad_sch.json",
-      "summary": "Crystal/oscillator circuit not detected",
-      "correct": [],
-      "incorrect": [],
-      "missed": [
-        {
-          "type": "crystal_circuit",
-          "description": "U7 is 12MHz SiT2001 MEMS oscillator. crystal_circuits=[]. Active oscillators not detected, only passive crystal circuits.",
-          "analyzer_section": "signal_analysis.crystal_circuits"
-        }
-      ],
-      "suggestions": [
-        "Add detection for active oscillator components (SiT, MEMS, TCXO) in addition to passive crystals"
-      ],
-      "should_become_assertion": true,
-      "related_issues": [],
-      "datasheets_used": []
-    },
-    {
-      "id": "FND-00000046",
-      "repo": "icebreaker",
-      "project": "hardware_v1.1a_icebreaker",
-      "created": "2026-03-13T22:00:00.000000+00:00",
-      "status": "new",
-      "analyzer_type": "schematic",
-      "source_file": "hardware_v1.1a_icebreaker.kicad_sch.json",
-      "summary": "93C46B EEPROM missed in memory_interfaces",
-      "correct": [],
-      "incorrect": [],
-      "missed": [
-        {
-          "type": "memory_interface",
-          "description": "U1 is a 93C46B EEPROM in pkl_memory library but not detected in memory_interfaces.",
-          "analyzer_section": "signal_analysis.memory_interfaces"
-        }
-      ],
-      "suggestions": [
-        "Detect EEPROM components by library name (memory/EEPROM keywords) or part number patterns"
-      ],
-      "should_become_assertion": false,
       "related_issues": [],
       "datasheets_used": []
     },

@@ -17,8 +17,7 @@
 (none)
 
 ### Missed
-- R9 and R10 (10k) pull-up resistors on TX_HV and RTS_HV drain lines not characterized as part of BSS138 level-shifting circuit
-  (signal_analysis.transistor_circuits)
+(none)
 
 ### Suggestions
 - Consider characterizing pull-up/pull-down resistors associated with MOSFET level-shifter circuits
