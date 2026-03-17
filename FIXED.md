@@ -11,6 +11,68 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-17 — Batch 17: 6 PCB issues (KH-154–KH-159)
+
+PCB Layer 3 review surfaced 6 bugs in analyze_pcb.py: incorrect copper layer counts,
+false positive thermal pad detections, and inflated zone stitching densities. All fixed.
+
+### KH-154 (HIGH): copper_layers_used includes non-copper layers
+
+- **File**: `analyze_pcb.py` — `compute_statistics()` line ~2277
+- **Root cause**: Filtered layers by type `in ("signal", "power", "mixed", "user")`. In KiCad
+  7+ files, non-copper layers (F.SilkS, F.Mask, B.Paste, etc.) all have type `"user"`, so
+  they were included in `copper_layer_names`.
+- **Fix**: Replaced type-based filter with layer-number filter. KiCad copper layers have
+  numbers 0–31 (0=F.Cu, 31=B.Cu, 1–30=inner layers).
+- **Verified**: hackrf 5→4, Neo6502pc-PWR 3→2. Full corpus 42,872 assertions at 100%.
+
+### KH-155 (MEDIUM): copper_layers_used misses zone-only layers
+
+- **File**: `analyze_pcb.py` — `compute_statistics()` lines ~2306–2308
+- **Root cause**: Zones WERE included in `all_used_layers`, but the buggy type filter from
+  KH-154 excluded their copper layers. Fixing KH-154's layer-number filter resolved this.
+- **Fix**: No additional code change needed — resolved by KH-154 fix.
+- **Verified**: moteus now correctly reports 4 copper layers (In1.Cu counted via zone fills).
+
+### KH-156 (HIGH): Paste-only stencil aperture pads as thermal pads
+
+- **File**: `analyze_pcb.py` — `analyze_thermal_pad_vias()` and `analyze_thermal_vias()`
+- **Root cause**: Thermal pad detection checked `pad.get("type") != "smd"` but didn't verify
+  the pad has copper layers. Paste-only stencil apertures (type=smd, layers=["F.Paste"])
+  passed the filter.
+- **Fix**: Added copper-layer check: skip pads whose layers don't include any `*.Cu` layer.
+  Applied to both `analyze_thermal_pad_vias()` and `analyze_thermal_vias()`.
+- **Verified**: ESP32-P4-PC thermal_pad_vias ~19→2, Neo6502pc ~19→2-3.
+
+### KH-157 (MEDIUM): Connector structural/shield pads as thermal pads
+
+- **File**: `analyze_pcb.py` — `analyze_thermal_pad_vias()` and `analyze_thermal_vias()`
+- **Root cause**: Unnamed/EP pads with no net bypassed the power/ground net check. Structural
+  pads on connectors (mounting tabs, shield pads) have no net but passed as EP pads.
+- **Fix**: Added no-net filter before the power/ground check: skip pads with empty net_name
+  or net_number ≤ 0. Real thermal pads always have a net connection.
+- **Verified**: False positives from connector structural pads eliminated.
+
+### KH-158 (LOW): Thermal via adequacy ignores drill diameter
+
+- **File**: `analyze_pcb.py` — `analyze_thermal_pad_vias()` lines ~3044–3061
+- **Root cause**: Via count and adequacy thresholds treated all vias equally regardless of
+  drill size. A 1.0mm drill via conducts ~10× more heat than a 0.3mm via.
+- **Fix**: Weight each via by `(drill/0.3)²` (cross-sectional area ratio). Added
+  `effective_via_count` to output. Adequacy thresholds use effective count.
+- **Verified**: Boards with larger drill vias now get more accurate adequacy ratings.
+
+### KH-159 (LOW): Zone stitching per-polygon areas inflate density
+
+- **File**: `analyze_pcb.py` — `analyze_thermal_vias()` lines ~1441–1467
+- **Root cause**: Iterated over `zone_bounds` (one entry per zone polygon). Multi-polygon
+  nets created duplicate stitching entries with different areas but the same via list.
+- **Fix**: Aggregate zone_bounds by net before computing density. One stitching entry per
+  net with total area across all polygons.
+- **Verified**: Duplicate stitching entries eliminated. Full corpus 42,872 assertions at 100%.
+
+---
+
 ## 2026-03-16 — Batch 14: 13 issues (KH-141–KH-153)
 
 Layer 3 Batch 15 review surfaced 9 new bugs, 4 already known. All 13 fixed: false positives

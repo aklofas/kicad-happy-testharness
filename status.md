@@ -19,8 +19,9 @@ Last updated: 2026-03-17
 | Repos with assertions | 1,035 |
 | Total assertion files | ~10,000 |
 | Total assertions (schematic) | 64,066 |
-| Total assertions (PCB) | 42,879 |
-| Total assertions | 106,945 |
+| Total assertions (PCB) | 42,786 |
+| Total assertions (gerber) | 9,088 |
+| Total assertions | 115,940 |
 | Assertion pass rate | 100.0% |
 | Layer 3 reviewed (schematic) | 158 |
 | Layer 3 reviewed (PCB) | 5 |
@@ -124,6 +125,16 @@ Neo6502pc, RP2350pc). 5 PCB findings filed (FND-00000293 through FND-00000297).
 copper_layers_used includes non-copper layers, misses zone-only layers,
 paste-only stencil pads as thermal pads, connector pads as thermal pads,
 thermal via adequacy ignores drill size, zone stitching per-polygon areas.
+
+### Batch 18 — PCB fixes KH-154–KH-159 and full re-seed (2026-03-17)
+
+All 6 PCB issues fixed in analyze_pcb.py. Full corpus re-run: 3,491/3,493 pass
+(2 pre-existing parse failures). PCB assertions re-seeded: 42,786 at 100%.
+Gerber assertions verified: 9,088 at 100%. Total: 115,940 assertions at 100%.
+
+Key fixes: copper layer filter changed from type-based to name-based ("Cu" in name),
+paste-only/no-net pads excluded from thermal detection, drill-weighted via adequacy,
+per-net zone stitching aggregation. 0 open KH-* issues remain.
 
 ---
 
