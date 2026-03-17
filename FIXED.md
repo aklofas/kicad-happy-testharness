@@ -11,6 +11,79 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-17 — Batch 18: 7 PCB/Gerber issues (KH-161, KH-162, KH-168–KH-172)
+
+PCB and Gerber Layer 3 reviews surfaced 14 issues; this batch fixes the 4 HIGH and 3
+MEDIUM issues with clear root causes. Remaining 7 issues (KH-160, KH-163–167, KH-173)
+need more investigation or are LOW severity.
+
+### KH-161 (HIGH): back_side footprint count is 0 on KiCad 9
+
+- **File**: `analyze_pcb.py` — `compute_statistics()` line ~2300
+- **Root cause**: `back_copper` was resolved via `l["number"] == 31`. In KiCad 9, B.Cu
+  is layer number 2 (not 31), so number 31 resolved to "F.CrtYd" — no footprint matched.
+- **Fix**: Removed number-based layer lookup. Hardcoded `front_copper, back_copper =
+  "F.Cu", "B.Cu"` since these names are invariant across KiCad 5–9.
+- **Verified**: explorer `back_side=83` (was 0), `front_side=185` unchanged. Full corpus
+  3491/3493 pass (2 pre-existing parser errors).
+
+### KH-162 (HIGH): Hierarchical net names not recognized as power
+
+- **File**: `kicad_utils.py` — `is_power_net_name()` line ~591, `is_ground_name()` line ~627
+- **Root cause**: `/Power Supply/VCC` didn't match because hierarchical path prefix
+  wasn't stripped before pattern matching.
+- **Fix**: Added `rsplit("/", 1)[-1]` prefix stripping at the top of both functions.
+- **Verified**: explorer `power_net_routing` now has 2 nets, `current_capacity` present.
+
+### KH-168 (HIGH): NPTH holes unconditionally classified as mounting
+
+- **File**: `analyze_gerbers.py` — `classify_drill_holes()` lines ~564–568
+- **Root cause**: All NPTH file holes went to `mounting_count` without checking diameter
+  or per-tool aper_function.
+- **Fix**: For NPTH files, check per-tool X2 aper_function first (ViaDrill/ComponentDrill),
+  then fall back to diameter heuristic: ≤2.0mm → component, >2.0mm → mounting.
+- **Verified**: CO60 mounting 510→326 (NPTH alignment pins moved to component),
+  MechKeyboard mounting 371→0 (all NPTH ≤2mm). Full corpus 1048/1048 pass.
+
+### KH-169 (HIGH): Layer count not inferred from X2 Ln designation
+
+- **File**: `analyze_gerbers.py` — after layer count computation, line ~1058
+- **Root cause**: Layer count only counted found copper gerber files. If inner layers
+  were missing but B.Cu had `Copper,L4,Bot`, layer_count stayed at 2.
+- **Fix**: Added scan of all gerber X2 FileFunction attributes for `Copper,Ln` pattern,
+  using max(Ln) as lower bound for layer count.
+- **Verified**: SparkFun_GNSSDO `layer_count=4` (was 2).
+
+### KH-170 (MEDIUM): MixedPlating drill files not recognized
+
+- **File**: `analyze_gerbers.py` — drill type detection lines ~387–395, completeness
+  checks lines ~628–644
+- **Root cause**: Only "NonPlated" and "Plated" matched in FileFunction; "MixedPlating"
+  fell through to "unknown".
+- **Fix**: Added "MixedPlating" → type "mixed". Updated layer_span regex. Updated
+  `has_pth_drill`/`has_npth_drill` to accept "mixed" type.
+- **Verified**: glasgow revC3 `has_pth=True, has_npth=True` (MixedPlating recognized).
+
+### KH-171 (MEDIUM): Unknown-type drill files cause complete=false
+
+- **File**: `analyze_gerbers.py` — completeness check line ~644
+- **Root cause**: Required `d.get("type") == "PTH"` for completeness. KiCad 5 combined
+  .drl files without X2 attributes got type "unknown".
+- **Fix**: Relaxed `complete` check to accept "unknown" type drills (in addition to PTH
+  and mixed). `has_pth_drill` stays strict for informational accuracy.
+- **Verified**: esp32-lifepo4-board `complete=True` (was False).
+
+### KH-172 (MEDIUM): Alignment threshold fixed at 2mm
+
+- **File**: `analyze_gerbers.py` — `check_alignment()` lines ~675–680
+- **Root cause**: Hardcoded 2.0mm threshold caused false positives on large boards where
+  copper-to-edge gap naturally exceeds 2mm.
+- **Fix**: Use relative threshold: 5% of Edge.Cuts dimension, minimum 2.0mm.
+- **Verified**: bitaxe `aligned=True` (was False), modular-psu mostly `aligned=True`.
+  Full corpus 161,878 assertions, 0 failures.
+
+---
+
 ## 2026-03-17 — Batch 17: 6 PCB issues (KH-154–KH-159)
 
 PCB Layer 3 review surfaced 6 bugs in analyze_pcb.py: incorrect copper layer counts,

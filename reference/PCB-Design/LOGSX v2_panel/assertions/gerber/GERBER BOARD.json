@@ -91,12 +91,22 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "Mounting holes ~9 (tolerance 10%)",
+      "description": "Component holes ~2 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.component_holes.count",
+        "op": "range",
+        "min": 1,
+        "max": 3
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Mounting holes ~7 (tolerance 10%)",
       "check": {
         "path": "drill_classification.mounting_holes.count",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 6,
+        "max": 8
       }
     }
   ]
