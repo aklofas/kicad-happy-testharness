@@ -65,6 +65,38 @@ def _summarize_schematic_output(data):
     }
 
 
+def _summarize_pcb_output(data):
+    """Extract review-relevant summary from PCB analyzer output."""
+    stats = data.get("statistics", {})
+    conn = data.get("connectivity", {})
+    dfm = data.get("dfm", {})
+
+    return {
+        "footprint_count": stats.get("footprint_count", 0),
+        "smd_count": stats.get("smd_count", 0),
+        "tht_count": stats.get("tht_count", 0),
+        "front_side": stats.get("front_side", 0),
+        "back_side": stats.get("back_side", 0),
+        "copper_layers": stats.get("copper_layers_used", 0),
+        "copper_layer_names": stats.get("copper_layer_names", []),
+        "track_segments": stats.get("track_segments", 0),
+        "via_count": stats.get("via_count", 0),
+        "zone_count": stats.get("zone_count", 0),
+        "net_count": stats.get("net_count", 0),
+        "total_track_length_mm": stats.get("total_track_length_mm", 0),
+        "board_width_mm": stats.get("board_width_mm", 0),
+        "board_height_mm": stats.get("board_height_mm", 0),
+        "routing_complete": stats.get("routing_complete"),
+        "unrouted_count": stats.get("unrouted_net_count", 0),
+        "dfm_tier": dfm.get("dfm_tier", ""),
+        "dfm_violation_count": dfm.get("violation_count", 0),
+        "decoupling_count": len(data.get("decoupling_placement", [])),
+        "power_net_count": len(data.get("power_net_routing", [])),
+        "thermal_pad_vias": len(data.get("thermal_pad_vias", [])),
+        "sections_present": sorted(k for k in data.keys() if k != "file"),
+    }
+
+
 def _generate_guidance(summary, analyzer_type):
     """Generate review focus areas from output summary."""
     focus = []
@@ -90,6 +122,45 @@ def _generate_guidance(summary, analyzer_type):
 
         if not focus:
             focus.append("General review: verify component types and signal paths")
+
+    elif analyzer_type == "pcb":
+        fps = summary.get("footprint_count", 0)
+        if fps == 0:
+            focus.append("Zero footprints -- is this an empty or template PCB?")
+        else:
+            smd = summary.get("smd_count", 0)
+            tht = summary.get("tht_count", 0)
+            focus.append(f"{fps} footprints ({smd} SMD, {tht} THT) -- verify counts")
+
+        cu = summary.get("copper_layers", 0)
+        if cu > 2:
+            focus.append(f"{cu}-layer board -- verify layer stack and inner layer usage")
+
+        if not summary.get("routing_complete"):
+            unrouted = summary.get("unrouted_count", 0)
+            focus.append(f"Routing incomplete ({unrouted} unrouted) -- expected or error?")
+
+        dfm_violations = summary.get("dfm_violation_count", 0)
+        if dfm_violations > 0:
+            tier = summary.get("dfm_tier", "")
+            focus.append(f"{dfm_violations} DFM violations (tier: {tier}) -- verify severity")
+
+        decoupling = summary.get("decoupling_count", 0)
+        if decoupling > 0:
+            focus.append(f"{decoupling} decoupling placements -- verify IC/cap associations")
+        elif fps > 20:
+            focus.append("No decoupling analysis -- are there ICs with bypass caps?")
+
+        power = summary.get("power_net_count", 0)
+        if power > 0:
+            focus.append(f"{power} power net(s) analyzed -- verify current capacity ratings")
+
+        thermal = summary.get("thermal_pad_vias", 0)
+        if thermal > 0:
+            focus.append(f"{thermal} thermal pad via(s) -- verify adequacy for QFN/BGA")
+
+        if not focus:
+            focus.append("General review: verify footprint placement and connectivity")
 
     return focus
 
@@ -151,6 +222,8 @@ def generate_packet(source_path, analyzer_type="schematic"):
             data = json.loads(output_file.read_text())
             if analyzer_type == "schematic":
                 summary = _summarize_schematic_output(data)
+            elif analyzer_type == "pcb":
+                summary = _summarize_pcb_output(data)
             else:
                 summary = {"sections": sorted(data.keys())}
 
@@ -295,6 +368,11 @@ def main():
                 print(f"    Components: {s['total_components']}, Nets: {s['total_nets']}")
                 if sig_str:
                     print(f"    Signals: {sig_str}")
+            elif "footprint_count" in s:
+                print(f"    Footprints: {s['footprint_count']} ({s.get('smd_count',0)} SMD, {s.get('tht_count',0)} THT)")
+                print(f"    Layers: {s.get('copper_layers',0)}, Tracks: {s.get('track_segments',0)}, Vias: {s.get('via_count',0)}")
+                if s.get("dfm_tier"):
+                    print(f"    DFM: {s['dfm_tier']} ({s.get('dfm_violation_count',0)} violations)")
         if packet.get("guidance"):
             print(f"    Focus areas:")
             for g in packet["guidance"][:3]:

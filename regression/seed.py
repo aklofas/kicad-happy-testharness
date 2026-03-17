@@ -121,6 +121,191 @@ def generate_schematic_assertions(data, tolerance=0.10):
     return assertions
 
 
+def generate_pcb_assertions(data, tolerance=0.10):
+    """Generate assertions from a PCB analyzer output dict."""
+    stats = data.get("statistics", {})
+    conn = data.get("connectivity", {})
+    dfm = data.get("dfm", {})
+
+    assertions = []
+    ast_num = 1
+
+    # Footprint count range
+    fp_count = stats.get("footprint_count", 0)
+    if fp_count > 0:
+        lo, hi = _range_bounds(fp_count, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Footprint count ~{fp_count} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.footprint_count", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Net count range
+    net_count = stats.get("net_count", 0)
+    if net_count > 0:
+        lo, hi = _range_bounds(net_count, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Net count ~{net_count} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.net_count", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Copper layers used
+    cu_layers = stats.get("copper_layers_used", 0)
+    if cu_layers > 0:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"{cu_layers} copper layer(s) used",
+            "check": {"path": "statistics.copper_layers_used", "op": "equals",
+                      "value": cu_layers},
+        })
+        ast_num += 1
+
+    # Track segment count range
+    track_segs = stats.get("track_segments", 0)
+    if track_segs > 0:
+        lo, hi = _range_bounds(track_segs, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Track segments ~{track_segs} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.track_segments", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Via count range
+    via_count = stats.get("via_count", 0)
+    if via_count > 0:
+        lo, hi = _range_bounds(via_count, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Via count ~{via_count} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.via_count", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Zone count
+    zone_count = stats.get("zone_count", 0)
+    if zone_count > 0:
+        lo, hi = _range_bounds(zone_count, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Zone count ~{zone_count} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.zone_count", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # SMD vs THT breakdown
+    smd = stats.get("smd_count", 0)
+    if smd > 0:
+        lo, hi = _range_bounds(smd, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"SMD count ~{smd} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.smd_count", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    tht = stats.get("tht_count", 0)
+    if tht > 0:
+        lo, hi = _range_bounds(tht, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"THT count ~{tht} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.tht_count", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Routing completeness
+    routing_complete = stats.get("routing_complete")
+    if routing_complete is not None:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": "Routing completeness status",
+            "check": {"path": "statistics.routing_complete", "op": "equals",
+                      "value": routing_complete},
+        })
+        ast_num += 1
+
+    # Connectivity section exists
+    if conn:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": "Connectivity analysis present",
+            "check": {"path": "connectivity", "op": "exists"},
+        })
+        ast_num += 1
+
+    # DFM section exists
+    if dfm:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": "DFM analysis present",
+            "check": {"path": "dfm", "op": "exists"},
+        })
+        ast_num += 1
+
+        # DFM tier
+        tier = dfm.get("dfm_tier", "")
+        if tier:
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"DFM tier is '{tier}'",
+                "check": {"path": "dfm.dfm_tier", "op": "equals", "value": tier},
+            })
+            ast_num += 1
+
+    # Decoupling placement (if present)
+    decoupling = data.get("decoupling_placement", [])
+    if decoupling:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"{len(decoupling)} decoupling placement(s) analyzed",
+            "check": {"path": "decoupling_placement", "op": "min_count", "value": 1},
+        })
+        ast_num += 1
+
+    # Power net routing (if present)
+    power_routing = data.get("power_net_routing", [])
+    if power_routing:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"{len(power_routing)} power net(s) analyzed",
+            "check": {"path": "power_net_routing", "op": "min_count", "value": 1},
+        })
+        ast_num += 1
+
+    # Thermal analysis (if present)
+    thermal = data.get("thermal_analysis", {})
+    if thermal:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": "Thermal analysis present",
+            "check": {"path": "thermal_analysis", "op": "exists"},
+        })
+        ast_num += 1
+
+    # Placement analysis (if present)
+    placement = data.get("placement_analysis", {})
+    if placement:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": "Placement analysis present",
+            "check": {"path": "placement_analysis", "op": "exists"},
+        })
+        ast_num += 1
+
+    return assertions
+
+
 def generate_for_repo(repo_name, atype, tolerance, min_components,
                       file_filter, dry_run):
     """Generate seed assertions for one repo."""
@@ -158,13 +343,18 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
             except Exception:
                 continue
 
-            comps = data_content.get("statistics", {}).get("total_components", 0)
-            if comps < min_components:
-                skipped += 1
-                continue
-
             if atype == "schematic":
+                comps = data_content.get("statistics", {}).get("total_components", 0)
+                if comps < min_components:
+                    skipped += 1
+                    continue
                 assertions = generate_schematic_assertions(data_content, tolerance)
+            elif atype == "pcb":
+                fps = data_content.get("statistics", {}).get("footprint_count", 0)
+                if fps < min_components:
+                    skipped += 1
+                    continue
+                assertions = generate_pcb_assertions(data_content, tolerance)
             else:
                 continue
 
