@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~57 (tolerance 10%)",
+      "description": "Net count ~137 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 51,
-        "max": 63
+        "min": 123,
+        "max": 151
       }
     },
     {
@@ -42,6 +42,33 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "2 crystal_circuits detected",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "3 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 ethernet_interfaces detected",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
@@ -50,7 +77,25 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000009",
+      "description": "7 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "2 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "Has 24 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -59,7 +104,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000012",
       "description": "Has 18 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

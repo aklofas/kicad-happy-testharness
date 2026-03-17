@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~2 (tolerance 10%)",
+      "description": "Net count ~21 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 1,
-        "max": 3
+        "min": 18,
+        "max": 24
       }
     },
     {
@@ -42,6 +42,15 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 protection_devices detected",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "Has 12 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

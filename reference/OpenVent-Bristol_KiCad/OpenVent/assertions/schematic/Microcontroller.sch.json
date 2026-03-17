@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~44 (tolerance 10%)",
+      "description": "Net count ~137 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 39,
-        "max": 49
+        "min": 123,
+        "max": 151
       }
     },
     {
@@ -42,6 +42,42 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 bridge_circuits detected",
+      "check": {
+        "path": "signal_analysis.bridge_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 crystal_circuits detected",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 protection_devices detected",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "3 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -50,7 +86,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000010",
       "description": "Has 12 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -59,7 +95,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000011",
       "description": "Has 5 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

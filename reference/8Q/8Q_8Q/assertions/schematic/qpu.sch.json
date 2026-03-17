@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~183 (tolerance 10%)",
+      "description": "Net count ~947 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 164,
-        "max": 202
+        "min": 852,
+        "max": 1042
       }
     },
     {
@@ -42,6 +42,24 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "8 crystal_circuits detected",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "22 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "Has 8 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -50,7 +68,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000008",
       "description": "Has 8 crystal(s)",
       "check": {
         "path": "statistics.component_types.crystal",
@@ -59,7 +77,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
       "description": "Has 218 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -68,7 +86,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "Has 8 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -77,7 +95,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "Has 16 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -86,7 +104,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000012",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -95,7 +113,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
       "description": "Has 8 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

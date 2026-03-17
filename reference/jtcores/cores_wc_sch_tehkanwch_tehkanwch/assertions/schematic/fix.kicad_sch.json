@@ -51,7 +51,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "15 protection_devices detected",
+      "description": "9 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "min_count",
@@ -60,11 +60,20 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "Has 15 varistor(s)",
+      "description": "Has 6 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 9 varistor(s)",
       "check": {
         "path": "statistics.component_types.varistor",
         "op": "min_count",
-        "value": 7
+        "value": 4
       }
     }
   ]

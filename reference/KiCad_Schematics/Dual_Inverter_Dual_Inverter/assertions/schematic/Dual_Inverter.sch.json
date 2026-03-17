@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~19 (tolerance 10%)",
+      "description": "Net count ~20 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 17,
-        "max": 21
+        "min": 18,
+        "max": 22
       }
     },
     {
@@ -42,9 +42,18 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 design_observations detected",
+      "description": "4 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
         "op": "min_count",
         "value": 1
       }

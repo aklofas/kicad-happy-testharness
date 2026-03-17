@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~45 (tolerance 10%)",
+      "description": "Net count ~134 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 40,
-        "max": 50
+        "min": 120,
+        "max": 148
       }
     },
     {
@@ -69,6 +69,15 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "2 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 5 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",

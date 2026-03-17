@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-03-16
+Last updated: 2026-03-17
 
 ---
 
@@ -17,8 +17,8 @@ Last updated: 2026-03-16
 | Checked out in repos/ | 1,044 |
 | Repos with baselines | 1,035 |
 | Repos with assertions | 1,035 |
-| Total assertion files | 7,026 |
-| Total assertions | 63,876 |
+| Total assertion files | ~7,100 |
+| Total assertions | 64,066 |
 | Assertion pass rate | 100.0% |
 | Layer 3 reviewed | 158 |
 | Total findings | 319 |
@@ -96,6 +96,19 @@ zx-sizif-512, 3458A-A3-66533-2021-KS-RoHS-SMD-KiCad, 3458A-A3-Schematic-KiCad,
 moco, acorn-robot-electronics, KiwiSDR_PCB, Neptune, tokay-lite-pcb,
 Amiga-2000-EATX, cubesat-boards, coco_motherboards, su-pcb,
 FHNW-Pro4E-FS19T8-3DPrinterBoard-STM32, Zynq-SoM, dib-mio168, PolyKybd.
+
+### Batch 16 — Full corpus regression after Batch 14 fixes (2026-03-17)
+
+Full corpus re-run of schematic analyzer (6,827 schematics) after fixing all
+13 KH-141 through KH-153 bugs in kicad-happy. 6,827/6,827 pass, 0 failures.
+3,359 baselines refreshed. Assertions reseeded for 127 repos that had stale
+expectations from pre-fix output (rf_matching, rc_filter, opamp, key_matrix
+counts changed; net counts changed from improved legacy lib resolution).
+Final: 64,066 assertions at 100.0% pass rate.
+
+Drift check before regression: 64 possibly_fixed, 90 now_detected findings
+(improvements from fixes), 41 stale-path regressions (non-existent output
+keys, not real issues), 102 no_output.
 
 ---
 
