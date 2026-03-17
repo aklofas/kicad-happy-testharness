@@ -1,0 +1,65 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ykts-geigerboard_ykts-geigerboard.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "CubeSat Geiger counter board (102 components). LM2733YMF boost converter output rail same as input (doesn't trace past rectifier diode). L2+C18 AVR AVCC filter misclassified as RF matching. Unitless pF capacitor values parsed as Farads producing absurd time constants. Gate_driver_ics inflated via +3V3 power net traversal.",
+      "correct": [
+        {
+          "description": "AD8606ARZ dual opamp detected as comparator_or_open_loop \u2014 correct, no feedback network",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "2 crystal circuits (Y1/Y2 8MHz) with 22pF load caps correct",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "Voltage divider R6(100)/R4(12K) for Geiger pulse comparator input correct",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "LC filter L3+C25/C26 (10uH+2.3uF) at 33kHz for boost output correct",
+          "analyzer_section": "signal_analysis.lc_filters"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "LM2733YMF (U9) output_rail=__unnamed_18 (same as input) \u2014 true HV output is __unnamed_15 after rectifier diode D4 MBR0520LT, not traced past diode",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "L2+C18 (1uH+100nF) AVR AVCC power filter misclassified as RF antenna matching network targeting ATmega328P \u2014 this is standard AVR analog supply decoupling",
+          "analyzer_section": "signal_analysis.rf_matching"
+        },
+        {
+          "description": "9 capacitors with unitless pF values (220, 470, 510, 1000, 2200) parsed as Farads \u2014 time constants up to 4.84 billion seconds, LC resonant frequencies of 0.00Hz",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "Q1/Q2 gate_driver_ics lists 9 ICs via +3V3 power net traversal \u2014 gates are statically biased, not driven by any IC",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        }
+      ],
+      "missed": [
+        {
+          "description": "LMC555 (U5) timer in astable configuration for HV supply oscillation not recognized as timer/oscillator",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [
+        "Boost converter output: trace through catch/rectifier diode to find true output rail",
+        "RF matching: exclude detections where target is connected via AVCC/VCC power pin",
+        "Capacitor parser: treat bare numbers without unit suffix as pF when in realistic range",
+        "Skip power nets when collecting gate_driver_ics"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000283",
+      "repo": "cubesat-boards",
+      "project": "ykts-geigerboard_ykts-geigerboard",
+      "created": "2026-03-16T21:23:07.361364+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

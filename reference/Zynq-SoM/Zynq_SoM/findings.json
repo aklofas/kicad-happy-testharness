@@ -1,0 +1,65 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Zynq_SoM.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Zynq XC7Z020 SoM (288 components). TPSM82864 voltage monitoring divider (R78/R79 to STM32 ADC) misidentified as regulator feedback divider. RTL8211F Ethernet interface not detected (custom lib_id). Duplicate reset_pin observations for eMMC (3x). has_high_freq=false on rails with 47nF 0201 caps (standard FPGA HF bypass).",
+      "correct": [
+        {
+          "description": "MPM3834/MPM3822 switching regulators correctly identified",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "TPS7A20 LDO correctly identified",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "DDR3L SDRAM interface correctly detected",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "STM32G431 system controller crystal correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TPSM82864 (U8) feedback divider misidentified \u2014 R78/R79 (100k/100k) are STM32 ADC voltage monitoring dividers on +1V0 rail, not regulator FB divider. TPSM82864 FB pin ties directly to +1V0, voltage set via VSET pin R25.",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Duplicate reset_pin observations for U7 (IS21ES08G eMMC) \u2014 emitted 3 times identically",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "has_high_freq=false on +1V35 with 11x 47nF/0201 caps (SRF ~23MHz) \u2014 47nF in 0201 is standard FPGA HF bypass",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        },
+        {
+          "description": "TPSM82864 multi-VOUT pins flagged as multi_driver_net \u2014 internal connection of power module QFN pads is expected",
+          "analyzer_section": "connectivity_issues.multi_driver_nets"
+        }
+      ],
+      "missed": [
+        {
+          "description": "RTL8211F Ethernet PHY interface not detected \u2014 custom lib_id MyLibrary:RTL8211F-CG not matched by Ethernet detector",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        }
+      ],
+      "suggestions": [
+        "When FB pin ties directly to output rail with no divider, don't attribute separate monitoring dividers as feedback",
+        "Deduplicate reset_pin observations by component reference",
+        "Raise has_high_freq threshold or make it footprint-aware (47nF/0201 is HF bypass)",
+        "Ethernet detector: match on part value (RTL8211) not just lib_id prefix"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000290",
+      "repo": "Zynq-SoM",
+      "project": "Zynq_SoM",
+      "created": "2026-03-16T21:43:56.604885+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

@@ -16,11 +16,12 @@ Last updated: 2026-03-16
 | Total repos in repos.md | 1,052 |
 | Checked out in repos/ | 1,044 |
 | Repos with baselines | 1,035 |
-| Repos with assertions | 952 |
+| Repos with assertions | 1,035 |
 | Total assertion files | 7,026 |
 | Total assertions | 63,876 |
 | Assertion pass rate | 100.0% |
-| Layer 3 reviewed | 60+ |
+| Layer 3 reviewed | 158 |
+| Total findings | 319 |
 
 ---
 
@@ -70,6 +71,31 @@ Re-ran analyzers to check for improvements from recent KH-* fixes: 0 baseline
 changes detected. Filled assertion gaps for 6 repos with incomplete Layer 2
 (KiDiff, SparkFun_XRP_Controller, Castor_and_Pollux, KICAD, ESP32-S3-DevKit-LiPo,
 Cosmos-Keyboard-PCBs). All 19 moved to "Tested" in priority.md.
+
+### Batch 14 — Complete priority queue verified (2026-03-16)
+
+All 603 remaining repos from priority.md's "To test" queue verified at once.
+599 valid repos confirmed with Layer 1-2 testing (all had baselines and
+assertions from earlier batches). 4 purged repos removed (Kicad-Design-Library,
+kicad-blocks, designGuardDesktopApp, kicad_schemes). Total: 16,934 assertions
+checked across 695 repos (96+48+599+52 from earlier batches), all at 100% pass.
+Priority queue is now empty — all 1,035 repos with baselines have been tested.
+
+### Batch 15 — Layer 3 signal-rich batch (20 repos, 2026-03-16)
+
+20 repos selected by weighted signal richness for Layer 3 LLM review.
+38 findings added (FND-00000255 through FND-00000292). Key recurring issues:
+RC filter false positives from opamp feedback, JFET typed as mosfet,
+LED driver false positives, duplicate design_observations per multi-unit IC,
+integrator misclassified as compensator, RF matching false positives on
+non-RF circuits, VC-prefix trimmer cap as varistor, solar cell array as
+key matrix, unitless pF values parsed as Farads.
+
+Repos: Modular-Synth-Hardware, eurorack-kicad, eurorack-pmod, QFHMIX01,
+zx-sizif-512, 3458A-A3-66533-2021-KS-RoHS-SMD-KiCad, 3458A-A3-Schematic-KiCad,
+moco, acorn-robot-electronics, KiwiSDR_PCB, Neptune, tokay-lite-pcb,
+Amiga-2000-EATX, cubesat-boards, coco_motherboards, su-pcb,
+FHNW-Pro4E-FS19T8-3DPrinterBoard-STM32, Zynq-SoM, dib-mio168, PolyKybd.
 
 ---
 

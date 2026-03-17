@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "cm4_robot_board_cm4-robot.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "CM4 robot board (246 components). TPS61040 boost output_rail wrong (+5V instead of +12V). 7 SPDT config switches falsely detected as keyboard matrix. Ethernet interface, CAN isolation barriers, SPI and I2C buses missed.",
+      "correct": [
+        {
+          "description": "LDO TLV1117LV33 and buck LM2576HVS-5 correctly identified",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "10 MOSFET circuits correctly identified with gate drivers",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "8 protection devices (CDSOT23-SM712 TVS, polyfuses, USBLC6, TPD4E1U06) correctly detected",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "VMOT battery voltage sensing divider correctly identified with ADS1115 load",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "WS2812B LED chain of 7 LEDs correctly detected",
+          "analyzer_section": "signal_analysis.addressable_led_chains"
+        },
+        {
+          "description": "4 crystal circuits with load cap calculations correct",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TPS61040DBVR (U12) output_rail='+5V' but actual boost output is +12V \u2014 Schottky D11 cathode connects to +12V rail",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "False key_matrix \u2014 7 independent SPDT config switches (SW2-SW7) with per-switch diodes resemble matrix topology; row nets are CAN/enable signals, not keyboard rows",
+          "analyzer_section": "signal_analysis.key_matrices"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Ethernet interface not detected \u2014 CM4 pairs through TPD4E1U06 ESD to G2401CG transformer to RJ45",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        },
+        {
+          "description": "ISO1050DUB isolated CAN transceivers (U10/U11) not detected as isolation barriers \u2014 separate VCC1/VCC2 power domains",
+          "analyzer_section": "signal_analysis.isolation_barriers"
+        },
+        {
+          "description": "SPI bus not detected \u2014 MCP2515 x2 + SC16IS752 x2 sharing SERIAL_CLK/COPI/CIPO",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        },
+        {
+          "description": "I2C bus not detected \u2014 SCL6/SDA6 with ADS1115, LIS3MDL, PCA9536, LSM6DS3",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        }
+      ],
+      "suggestions": [
+        "Boost converter output_rail: trace inductor SW \u2192 Schottky cathode to find actual output net",
+        "Key matrix: reject row/col nets that are protocol signals (CAN, EN, nRESET)",
+        "Add Ethernet transformer detection via known part patterns",
+        "Detect ISO1050/ISO1042 as isolation barriers by part value/lib_id"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000272",
+      "repo": "acorn-robot-electronics",
+      "project": "cm4_robot_board_cm4-robot",
+      "created": "2026-03-16T20:50:00.799115+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

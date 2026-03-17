@@ -1,0 +1,54 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "2000EATX-KiCAD-R31_2000ATX.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Amiga 2000 EATX recreation (612 components). Two bugs found: Q200/Q201 MMBFJ211 JFETs misclassified as MOSFET (hardcoded type in signal_detectors.py). VC800 trimmer capacitor misclassified as varistor (VC prefix falls through to V->varistor), missing from Y800 crystal load caps. RC filters (67 entries, mostly 1k+1nF Zorro bus snubbers), BJT circuits, voltage dividers, MC7905 regulator, active oscillators all correct.",
+      "correct": [
+        {
+          "description": "67 RC filters correctly detected including 60 Zorro bus 1k+1nF snubbers",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "Q202 PNP audio transistor, Q300/Q301/Q9100 NPN switches correctly identified",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "MC7905 -5V regulator correctly detected",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Y800 32.768kHz RTC crystal correctly identified",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "X1/X2 28.63636MHz active oscillators correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Q200/Q201 MMBFJ211 (lib Transistor_FET:BF545C) N-channel JFETs classified as type='mosfet' \u2014 signal_detectors.py hardcodes mosfet for all G/D/S transistors",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "VC800 (CTRIM 22-47pF trimmer cap, lib 2000ATX-rescue:CTRIM-Device) misclassified as 'varistor' \u2014 VC prefix has no entry in type_map, falls to single-char V->varistor. Missing from Y800 crystal load_caps (shows only C810, should be C810+VC800)",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Add JFET detection based on lib_id containing 'jfet', 'bf545', 'j310', etc.",
+        "Add VC->capacitor to type_map for variable/trimmer capacitors"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000280",
+      "repo": "Amiga-2000-EATX",
+      "project": "2000EATX-KiCAD-R31_2000ATX",
+      "created": "2026-03-16T21:08:26.679677+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

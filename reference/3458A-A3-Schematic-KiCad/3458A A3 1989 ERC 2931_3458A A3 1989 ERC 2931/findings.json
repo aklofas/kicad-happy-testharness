@@ -1,0 +1,64 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "3458A A3 1989 ERC 2931_3458A A3 1989 ERC 2931.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "HP 3458A A3 analog board 1989 recreation (270 components). All 9 rf_matching entries are false positives (clock ferrite beads and precision integrator input filters). EL2018 comparator misclassified as compensator (C403 hysteresis is positive feedback). False RC filter from comparator hysteresis network. Duplicate design_observations per IC unit.",
+      "correct": [
+        {
+          "description": "Active 20MHz oscillator U230 correctly identified",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "LM6361 U140 correctly classified as transimpedance_or_buffer with R141=12.1k feedback",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "LM358 U170 units correctly classified as inverting (gain=-0.412) and buffer",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "LT1001 reference regulators U160/U165 for +12ref/-12ref correctly identified",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "Precision RC filters for signal path correctly detected (XO_OVLD, XF/R, ACDA/DCDA)",
+          "analyzer_section": "signal_analysis.rc_filters"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "All 9 rf_matching entries are false positives \u2014 L231/L232/L233 are clock distribution ferrite beads from 20MHz oscillator to logic ICs; L123/L127 with C128/C129/C119/C122 are precision integrator input filters on summing node",
+          "analyzer_section": "signal_analysis.rf_matching"
+        },
+        {
+          "description": "U405 EL2018 (lib PCM_Analog_Comparator_AKL:AD8561AN, desc 'IC COMPARATOR HS') misclassified as 'compensator' \u2014 C403 22pF from output HTRIG to inverting input is positive feedback for hysteresis, not opamp compensation",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "RC filter [7] (R407+C403, ground_net=HTRIG) is false positive \u2014 R407 is comparator input resistor, C403 is hysteresis cap; HTRIG is comparator output, not ground",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "Duplicate design_observations: U213 5x, U303 7x, U302 7x, U353 7x, U150 7x, U403 5x \u2014 decoupling check iterates per unit, inflating 25 unique ICs to 66 entries",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "RF matching should exclude ferrite beads and require RF-context ICs (not logic gates or precision opamps)",
+        "Opamp classifier should check lib_id/description for 'COMPARATOR' \u2014 feedback to inverting input on comparators is hysteresis, not compensation",
+        "RC filter should exclude cases where ground_net is a driven output (not ground/power rail)",
+        "Deduplicate design_observations by component reference"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000268",
+      "repo": "3458A-A3-Schematic-KiCad",
+      "project": "3458A A3 1989 ERC 2931_3458A A3 1989 ERC 2931",
+      "created": "2026-03-16T20:50:00.615015+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

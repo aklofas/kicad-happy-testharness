@@ -1,0 +1,88 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_board_mainboard.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Neptune analog synth filter mainboard (273 components, 6 TL074 ICs). Opamp circuits, RC filters, voltage dividers, BJT VCA transistors all well detected. U1 unit3 non-inverting amplifier (+8VREF generator, gain=3.2) misclassified as transimpedance_or_buffer. Duplicate design_observations: U1 decoupling warning emitted 5 times (once per TL074 unit).",
+      "correct": [
+        {
+          "description": "30 opamp circuit entries for 6 TL074 chips with accurate gain values and configurations",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "TL431A correctly classified as voltage reference with REF shorted to cathode (2.5V config)",
+          "analyzer_section": "ic_pin_analysis"
+        },
+        {
+          "description": "4 BJT VCA transistors (BCM847 NPN, MMBT3906 PNP) correctly typed with LED load detection",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "31 RC filters with correct topology categorization (low-pass, high-pass, RC-network)",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "16 voltage dividers including TL431 reference and potentiometer bias correctly detected",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "Decoupling coverage for +12V/-12V (8 caps each, 20.6uF) correctly reported",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U1 unit3 (+8VREF non-inverting amp, gain=3.2) misclassified as 'transimpedance_or_buffer' \u2014 has R205 (220k) feedback and R202 (100k) to GND, a standard non-inverting topology",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "design_observations: U1 TL074 decoupling warning emitted 5 times (once per symbol unit) instead of once per IC",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Non-inverting topology: if feedback resistor found from output to inv_input AND second resistor from inv_input to GND, classify as non_inverting with gain=(Rf+Rg)/Rg",
+        "Deduplicate design_observations by (component reference, category)"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000276",
+      "repo": "Neptune",
+      "project": "hardware_board_mainboard",
+      "created": "2026-03-16T21:08:26.494615+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_hubble-lens_hubble-lens.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Neptune Hubble test fixture (66 components, 14 DG449 analog switches). Correctly reports zero opamp/filter/divider detections. Decoupling warnings for 14 ICs without bypass caps are factually accurate.",
+      "correct": [
+        {
+          "description": "Zero opamp circuits, RC filters, voltage dividers correctly reported for switch-only board",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "14 DG449 power domains correctly identified on +/-12V rails",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "14 decoupling warnings accurately reflect no bypass caps on board",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000277",
+      "repo": "Neptune",
+      "project": "hardware_board_mainboard",
+      "created": "2026-03-16T21:08:26.527379+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

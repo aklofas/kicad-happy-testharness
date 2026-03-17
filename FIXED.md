@@ -11,6 +11,138 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-16 — Batch 14: 13 issues (KH-141–KH-153)
+
+Layer 3 Batch 15 review surfaced 9 new bugs, 4 already known. All 13 fixed: false positives
+eliminated, misclassifications corrected, missing parser support added.
+
+### KH-141 (MEDIUM-HIGH): Legacy KiCad 5 sym-lib-table not parsed for pin resolution
+
+- **File**: `analyze_schematic.py` — `_resolve_legacy_libs()`
+- **Root cause**: Only tried `*-cache.lib` (Strategy 1) and `LIBS:` header (Strategy 2). KiCad 5
+  file version 4 uses `sym-lib-table` (S-expression) — never parsed. 515 repos affected.
+- **Fix**: Added Strategy 2.5 — parse `sym-lib-table`, resolve `${KIPRJMOD}`, load referenced
+  `.lib` files via `_parse_legacy_lib()`.
+- **Verified**: All 13 affected repos pass, 0 failures.
+
+### KH-142 (MEDIUM): Legacy .lib ALIAS directive not handled
+
+- **File**: `analyze_schematic.py` — `_parse_legacy_lib()`
+- **Root cause**: Only registered primary `DEF` name, ignoring `ALIAS name1 name2 ...` lines.
+  397 `.lib` files use ALIAS directives.
+- **Fix**: Track `current_aliases` list during DEF block parsing. At ENDDEF, register same
+  symbol definition under each alias name.
+- **Verified**: All repos pass, 0 failures.
+
+### KH-143 (LOW): Multi-unit TVS diode arrays create duplicate protection entries
+
+- **File**: `signal_detectors.py` — `detect_protection_devices()` line ~1631
+- **Root cause**: Missing duplicate ref check for 2-pin TVS path. Multi-unit TVS arrays
+  (e.g. PESD3V3L4UG) created one entry per unit with same pins.
+- **Fix**: Added `if any(p["ref"] == comp["reference"] for p in protection_devices): continue`
+  before appending, matching existing pattern at lines 1587 and 1644.
+- **Verified**: 9 genuine duplicates eliminated across corpus.
+
+### KH-144 (MEDIUM): Test pad components misclassified when value is empty
+
+- **File**: `kicad_utils.py` — `classify_component()`, and `analyze_schematic.py` — test point detection
+- **Root cause**: testpad/testpoint check only checked `val_low`, not `lib_low` or `fp_low`.
+  JITX-generated `gen_testpad` components with empty value misclassified as IC.
+- **Fix**: (1) Expanded classify_component check to also match `lib_low` and `fp_low`.
+  (2) Added "testpad"/"test_pad" to lib_lower check. (3) Added to footprint check in
+  analyze_test_coverage.
+- **Verified**: All repos pass.
+
+### KH-145 (HIGH): RC filter false positives from opamp feedback R+C pairs
+
+- **File**: `signal_detectors.py` — `detect_rc_filters()`, `analyze_schematic.py` — detector ordering
+- **Root cause**: No exclusion for R+C pairs already identified as opamp feedback components.
+  Any R+C sharing a signal net matched as RC filter.
+- **Fix**: (1) Moved `detect_opamp_circuits()` before `detect_rc_filters()`. (2) Added
+  `opamp_circuits` parameter to `detect_rc_filters()`. (3) Built exclusion set from
+  feedback_resistor, feedback_capacitor, input_resistor refs. (4) Excluded from both
+  resistor loop and capacitor check.
+- **Verified**: eurorack-pmod RC filters 15→1 (14 false positives eliminated). All repos pass.
+
+### KH-146 (MEDIUM): JFET classified as mosfet in transistor_circuits
+
+- **File**: `signal_detectors.py` — FET type assignment and P-channel detection
+- **Root cause**: Line 2227 hardcoded `"type": "mosfet"` for all FETs. No JFET detection from
+  lib_id. "p_jfet" missing from P-channel patterns.
+- **Fix**: (1) Added "p_jfet" to P-channel detection. (2) Added JFET keyword detection from
+  lib_id/value (jfet, n_jfet, p_jfet, j310, j271, mmbfj, bf545, etc.). (3) Set type to
+  "jfet" when keywords match.
+- **Verified**: All JFET circuits now correctly typed.
+
+### KH-147 (MEDIUM): LED driver false positives — no net connectivity verification
+
+- **File**: `signal_detectors.py` — `detect_led_drivers()`
+- **Root cause**: LED found on other_net wasn't verified to actually have a pin there.
+  Resistors >100kΩ (pull-downs, not current limiters) not excluded.
+- **Fix**: (1) Verify LED has a pin on other_net via get_two_pin_nets. (2) Reject
+  resistors >100kΩ as not current-limiting.
+- **Verified**: zx-sizif-512, tokay-lite-pcb, FHNW false positives eliminated.
+
+### KH-148 (MEDIUM): Duplicate design_observations for multi-unit ICs
+
+- **File**: `signal_detectors.py` — `detect_design_observations()` and `detect_power_regulators()`
+- **Root cause**: Iterating `ctx.components` which has one entry per schematic unit. A 7-unit
+  IC appears 7 times with same reference.
+- **Fix**: Pre-filter to unique references using dict comprehension
+  `{c["reference"]: c for c in ctx.components if c["type"] == "ic"}.values()` in both
+  detect_design_observations (IC loop and reset_pin loop) and detect_power_regulators.
+- **Verified**: moco U1 (7 units) now 1 entry each. 3458A-A3-66533 observations reduced.
+
+### KH-149 (MEDIUM): Integrator misclassified as compensator
+
+- **File**: `signal_detectors.py` — opamp feedback search
+- **Root cause**: `out_comps & neg_comps` found components on both nets but didn't verify
+  direct pin-to-pin connection. Input resistors touching inverting input from a different
+  source were falsely matched as feedback resistors. Also, 2-hop search didn't check
+  `mid == neg_net` (degenerate case through feedback cap).
+- **Fix**: (1) After finding candidates via set intersection, verify with
+  `get_two_pin_nets()` that {pin1_net, pin2_net} == {out_net, neg_net}. (2) Added
+  `mid == neg_net` skip in 2-hop search.
+- **Verified**: VCO U101u2 now correctly `integrator` (was `compensator`). All repos pass.
+
+### KH-150 (MEDIUM): RF matching false positives on non-RF circuits
+
+- **File**: `signal_detectors.py` — `detect_rf_matching()`
+- **Root cause**: Triggered on any L+C network near an IC without verifying RF context.
+  Ferrite beads, AVCC decoupling, precision input guards all matched.
+- **Fix**: (1) Skip components with "ferrite"/"bead"/"emi" in description/keywords/value
+  during BFS. (2) After finding target IC, require RF-related keywords. (3) Skip
+  ferrite_bead type components.
+- **Verified**: 3458A-A3-66533 RF matching 10→0. cubesat-boards geiger 1→0. All repos pass.
+
+### KH-151 (LOW): VC-prefix trimmer capacitor misclassified as varistor
+
+- **File**: `kicad_utils.py` — `classify_component()` type_map
+- **Root cause**: No entry for prefix `VC`. Single-char fallback matched `V` → `varistor`.
+- **Fix**: Added `"VC": "capacitor"` to type_map.
+- **Verified**: Amiga-2000-EATX VC800 now `capacitor` (was `varistor`).
+
+### KH-152 (LOW): Solar cell array falsely detected as key matrix
+
+- **File**: `signal_detectors.py` — `detect_key_matrices()` topology method
+- **Root cause**: Solar cells with blocking diodes satisfy switch-diode grid topology.
+  Row/col nets are power rails, not scan lines.
+- **Fix**: (1) Exclude components with "solar" in lib_id/value. (2) Filter out power rail
+  nets from topology-detected row/col nets.
+- **Verified**: cubesat-boards ykts-power key_matrices 1→0.
+
+### KH-153 (MEDIUM): Bare integer capacitor values parsed as Farads instead of pF
+
+- **File**: `kicad_utils.py` — `parse_value()`, `kicad_types.py`, `analyze_schematic.py`
+- **Root cause**: Bare numbers returned as literal float. For capacitors in KiCad 5 legacy
+  schematics, bare integers represent picofarads.
+- **Fix**: Added optional `component_type` parameter to `parse_value()`. When
+  `component_type == "capacitor"` and result >= 1.0 (bare number path), multiply by 1e-12.
+  Updated callers in `kicad_types.py` and `analyze_schematic.py` to pass component type.
+- **Verified**: cubesat-boards geiger 9 capacitors now correct pF values.
+
+---
+
 ## 2026-03-16 — Batch 13: 8 issues (KH-132–KH-140)
 
 Pin name suffix stripping, gate resistor power rail filtering, 5 already-fixed issues confirmed, 1 not-a-bug closed.
