@@ -306,6 +306,147 @@ def generate_pcb_assertions(data, tolerance=0.10):
     return assertions
 
 
+def generate_gerber_assertions(data, tolerance=0.10):
+    """Generate assertions from a gerber analyzer output dict."""
+    stats = data.get("statistics", {})
+    comp = data.get("completeness", {})
+    alignment = data.get("alignment", {})
+    drill_class = data.get("drill_classification", {})
+    pad_summary = data.get("pad_summary", {})
+
+    assertions = []
+    ast_num = 1
+
+    # Layer count
+    layer_count = data.get("layer_count", 0)
+    if layer_count > 0:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"{layer_count} copper layer(s)",
+            "check": {"path": "layer_count", "op": "equals", "value": layer_count},
+        })
+        ast_num += 1
+
+    # Gerber file count range
+    gerber_files = stats.get("gerber_files", 0)
+    if gerber_files > 0:
+        lo, hi = _range_bounds(gerber_files, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Gerber file count ~{gerber_files} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.gerber_files", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Drill file count
+    drill_files = stats.get("drill_files", 0)
+    if drill_files > 0:
+        lo, hi = _range_bounds(drill_files, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Drill file count ~{drill_files} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.drill_files", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Total holes range
+    total_holes = stats.get("total_holes", 0)
+    if total_holes > 0:
+        lo, hi = _range_bounds(total_holes, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Total holes ~{total_holes} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.total_holes", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Total flashes range
+    total_flashes = stats.get("total_flashes", 0)
+    if total_flashes > 0:
+        lo, hi = _range_bounds(total_flashes, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Total flashes ~{total_flashes} (tolerance {tolerance:.0%})",
+            "check": {"path": "statistics.total_flashes", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Completeness
+    complete = comp.get("complete")
+    if complete is not None:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Completeness is {complete}",
+            "check": {"path": "completeness.complete", "op": "equals",
+                      "value": complete},
+        })
+        ast_num += 1
+
+    # Found layers count
+    found_layers = comp.get("found_layers", [])
+    if found_layers:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"{len(found_layers)} layer(s) found",
+            "check": {"path": "completeness.found_layers", "op": "min_count",
+                      "value": len(found_layers)},
+        })
+        ast_num += 1
+
+    # Alignment
+    aligned = alignment.get("aligned")
+    if aligned is not None:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Alignment is {aligned}",
+            "check": {"path": "alignment.aligned", "op": "equals",
+                      "value": aligned},
+        })
+        ast_num += 1
+
+    # Drill classification - vias
+    via_count = drill_class.get("vias", {}).get("count", 0)
+    if via_count > 0:
+        lo, hi = _range_bounds(via_count, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Via holes ~{via_count} (tolerance {tolerance:.0%})",
+            "check": {"path": "drill_classification.vias.count", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Drill classification - component holes
+    comp_holes = drill_class.get("component_holes", {}).get("count", 0)
+    if comp_holes > 0:
+        lo, hi = _range_bounds(comp_holes, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Component holes ~{comp_holes} (tolerance {tolerance:.0%})",
+            "check": {"path": "drill_classification.component_holes.count", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Drill classification - mounting holes
+    mount_holes = drill_class.get("mounting_holes", {}).get("count", 0)
+    if mount_holes > 0:
+        lo, hi = _range_bounds(mount_holes, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Mounting holes ~{mount_holes} (tolerance {tolerance:.0%})",
+            "check": {"path": "drill_classification.mounting_holes.count", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    return assertions
+
+
 def generate_for_repo(repo_name, atype, tolerance, min_components,
                       file_filter, dry_run):
     """Generate seed assertions for one repo."""
@@ -355,6 +496,12 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
                     skipped += 1
                     continue
                 assertions = generate_pcb_assertions(data_content, tolerance)
+            elif atype == "gerber":
+                gerber_files = data_content.get("statistics", {}).get("gerber_files", 0)
+                if gerber_files < 2:
+                    skipped += 1
+                    continue
+                assertions = generate_gerber_assertions(data_content, tolerance)
             else:
                 continue
 

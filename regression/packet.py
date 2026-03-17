@@ -97,6 +97,40 @@ def _summarize_pcb_output(data):
     }
 
 
+def _summarize_gerber_output(data):
+    """Extract review-relevant summary from gerber analyzer output."""
+    stats = data.get("statistics", {})
+    comp = data.get("completeness", {})
+    alignment = data.get("alignment", {})
+    drill_class = data.get("drill_classification", {})
+    pad_summary = data.get("pad_summary", {})
+
+    return {
+        "layer_count": data.get("layer_count", 0),
+        "generator": data.get("generator"),
+        "gerber_files": stats.get("gerber_files", 0),
+        "drill_files": stats.get("drill_files", 0),
+        "total_holes": stats.get("total_holes", 0),
+        "total_flashes": stats.get("total_flashes", 0),
+        "total_draws": stats.get("total_draws", 0),
+        "complete": comp.get("complete"),
+        "found_layers": comp.get("found_layers", []),
+        "missing_required": comp.get("missing_required", []),
+        "missing_recommended": comp.get("missing_recommended", []),
+        "has_pth_drill": comp.get("has_pth_drill", False),
+        "has_npth_drill": comp.get("has_npth_drill", False),
+        "aligned": alignment.get("aligned"),
+        "alignment_issues": alignment.get("issues", []),
+        "via_holes": drill_class.get("vias", {}).get("count", 0),
+        "component_holes": drill_class.get("component_holes", {}).get("count", 0),
+        "mounting_holes": drill_class.get("mounting_holes", {}).get("count", 0),
+        "smd_apertures": pad_summary.get("smd_apertures", 0),
+        "tht_holes": pad_summary.get("tht_holes", 0),
+        "smd_ratio": pad_summary.get("smd_ratio", 0),
+        "sections_present": sorted(k for k in data.keys() if k != "directory"),
+    }
+
+
 def _generate_guidance(summary, analyzer_type):
     """Generate review focus areas from output summary."""
     focus = []
@@ -162,6 +196,46 @@ def _generate_guidance(summary, analyzer_type):
         if not focus:
             focus.append("General review: verify footprint placement and connectivity")
 
+    elif analyzer_type == "gerber":
+        gerber_files = summary.get("gerber_files", 0)
+        if gerber_files == 0:
+            focus.append("Zero gerber files -- is this an empty directory?")
+        else:
+            layers = summary.get("layer_count", 0)
+            focus.append(f"{gerber_files} gerber files, {layers} copper layer(s) -- verify layer count")
+
+        if not summary.get("complete"):
+            missing = summary.get("missing_required", [])
+            if missing:
+                focus.append(f"Missing required layers: {', '.join(missing)} -- are source files present?")
+            else:
+                focus.append("Completeness check failed -- verify layer set")
+
+        if not summary.get("aligned"):
+            issues = summary.get("alignment_issues", [])
+            if issues:
+                focus.append(f"Alignment issues ({len(issues)}) -- verify layer registration")
+            else:
+                focus.append("Layers not aligned -- verify coordinate origins match")
+
+        drill_files = summary.get("drill_files", 0)
+        if drill_files == 0 and summary.get("total_holes", 0) == 0:
+            focus.append("No drill files -- is this a no-hole design or missing files?")
+
+        via_holes = summary.get("via_holes", 0)
+        comp_holes = summary.get("component_holes", 0)
+        if via_holes + comp_holes > 0:
+            focus.append(f"Drill classification: {via_holes} vias, {comp_holes} component holes -- verify split")
+
+        smd_ratio = summary.get("smd_ratio", 0)
+        if smd_ratio > 0.9:
+            focus.append(f"SMD ratio {smd_ratio:.0%} -- nearly all-SMD board")
+        elif smd_ratio == 0 and comp_holes > 0:
+            focus.append("All through-hole -- verify no SMD pads were missed")
+
+        if not focus:
+            focus.append("General review: verify layer completeness and drill accuracy")
+
     return focus
 
 
@@ -224,6 +298,8 @@ def generate_packet(source_path, analyzer_type="schematic"):
                 summary = _summarize_schematic_output(data)
             elif analyzer_type == "pcb":
                 summary = _summarize_pcb_output(data)
+            elif analyzer_type == "gerber":
+                summary = _summarize_gerber_output(data)
             else:
                 summary = {"sections": sorted(data.keys())}
 
@@ -373,6 +449,12 @@ def main():
                 print(f"    Layers: {s.get('copper_layers',0)}, Tracks: {s.get('track_segments',0)}, Vias: {s.get('via_count',0)}")
                 if s.get("dfm_tier"):
                     print(f"    DFM: {s['dfm_tier']} ({s.get('dfm_violation_count',0)} violations)")
+            elif "gerber_files" in s:
+                print(f"    Gerbers: {s['gerber_files']}, Drills: {s.get('drill_files',0)}, Layers: {s.get('layer_count',0)}")
+                print(f"    Holes: {s.get('total_holes',0)} (vias={s.get('via_holes',0)}, comp={s.get('component_holes',0)}, mount={s.get('mounting_holes',0)})")
+                complete = "complete" if s.get("complete") else "incomplete"
+                aligned = "aligned" if s.get("aligned") else "misaligned"
+                print(f"    Status: {complete}, {aligned}")
         if packet.get("guidance"):
             print(f"    Focus areas:")
             for g in packet["guidance"][:3]:

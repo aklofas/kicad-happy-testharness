@@ -1,0 +1,63 @@
+{
+  "file_pattern": "Gerber-ESP32-Mix3",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "2 copper layer(s)",
+      "check": {
+        "path": "layer_count",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Gerber file count ~7 (tolerance 10%)",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "range",
+        "min": 6,
+        "max": 8
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Total flashes ~2028 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_flashes",
+        "op": "range",
+        "min": 1825,
+        "max": 2231
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Completeness is False",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": false
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "6 layer(s) found",
+      "check": {
+        "path": "completeness.found_layers",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Alignment is True",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    }
+  ]
+}
