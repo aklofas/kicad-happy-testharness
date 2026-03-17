@@ -1,0 +1,36 @@
+{
+  "file_pattern": "testcontroller.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 8 opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "equals",
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "U1 in opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U3 in opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U3$"
+      }
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 ## FND-00000192: Variant b of ESP32 MOSFET board — coordinate-only differences from variant a. Output is logically identical confirming position-independent parsing. Same issues as variant a (flyback diode false negative, regulator cap false positive).
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: tests_cases_1_b_1.kicad_sch.json
 - **Created**: 2026-03-15

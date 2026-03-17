@@ -23,7 +23,12 @@
       "missed": [
         {
           "description": "OLED display (J2, labeled oled, Conn_01x04_Pin) is a 4-pin I2C OLED module but not detected as an I2C device in bus analysis since it uses generic connector symbols",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

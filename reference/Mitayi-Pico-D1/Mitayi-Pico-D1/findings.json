@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/Mitayi-Pico-D1/Mitayi-Pico-D1.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "RP2040 dev board with good analysis quality. Crystal circuit, SPI flash, LDO, USB, decoupling all detected. Power domains correctly map RP2040 dual-rail (+1V1/+3V3). Minor issues with crystal frequency not parsed from value string and all subcircuit neighbors being identical.",
       "correct": [
         {
@@ -45,21 +45,43 @@
         },
         {
           "description": "RC filter on XOUT (R10 1K + C18 30pF, fc=5.3MHz) is not actually an RC filter - C18 is a crystal load cap",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R10$"
+          }
         }
       ],
       "missed": [
         {
           "description": "SPI bus between RP2040 and W25Q32 flash not detected in bus_analysis.spi",
-          "analyzer_section": "design_analysis.bus_analysis.spi"
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB-C connector CC resistors (R3/R4 5.1K) not identified",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "BS5817WS Schottky diode (D1) function not identified - likely VSYS power OR-ing",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
         }
       ],
       "suggestions": [

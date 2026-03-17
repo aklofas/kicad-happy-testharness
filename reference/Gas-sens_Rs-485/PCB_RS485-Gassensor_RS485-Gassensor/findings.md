@@ -2,7 +2,7 @@
 
 ## FND-00000202: RS485 gas sensor board with dual STM32G031K8 MCUs (U1 LQFP-32 active, U2 QFN-32 DNP), MCP6002 and AD8676 op-amps for gas sensor signal conditioning, OKI-78SR DC-DC converter, AP2127N LDO, RS485 transceiver (LT1785), and 4 sub-sheets. Thorough opamp detection and good voltage divider identification for sensor reference biasing.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: PCB_RS485-Gassensor_RS485-Gassensor.kicad_sch.json
 - **Created**: 2026-03-15

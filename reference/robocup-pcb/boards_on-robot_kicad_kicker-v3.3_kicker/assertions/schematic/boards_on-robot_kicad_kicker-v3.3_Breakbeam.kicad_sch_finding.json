@@ -1,0 +1,29 @@
+{
+  "file_pattern": "boards_on-robot_kicad_kicker-v3.3_Breakbeam.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000218",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000218-AST-01",
+      "description": "Q10 BSS806N N-MOSFET correctly identified with gate=BB_TX, drain\u2192J5, source\u2192GND, load_type=connector",
+      "created_from": "FND-00000218",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q10$"
+      }
+    },
+    {
+      "id": "FND-00000218-AST-02",
+      "description": "BB_TX global label correctly flagged as single-pin net on this sub-sheet (gate drive from parent sheet)",
+      "created_from": "FND-00000218",
+      "check": {
+        "path": "connectivity_issues",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/mobile_power_station_charger/src/battery-bus.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Battery charger/power station with LT3790 buck-boost, ESP32-C3, USB-C PD. Major component classification failure: 105 of 136 components classified as other due to non-standard reference designator prefixes (Cch_, Rch_, Cc_, Ruc, etc).",
       "correct": [
         {
@@ -40,27 +40,57 @@
       "missed": [
         {
           "description": "No voltage dividers detected despite many 200K/100K/33K resistors likely forming feedback networks",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No current sense detection despite Rch_Ibat (0.013 ohm) and Rch_Iin (0.003 ohm) sense resistors",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No charger circuit detection for LT3790 buck-boost charger",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB-C PD controller (CYPD3177) not recognized",
-          "analyzer_section": "design_analysis"
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ACS712 current sensor IC not detected",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "MCP4725 DAC not recognized as analog output device",
-          "analyzer_section": "design_analysis"
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

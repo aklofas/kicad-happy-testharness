@@ -2,7 +2,7 @@
 
 ## FND-00000194: panStamp NRG3 wireless sensor node with XBee, MSP430, USB, and sensor subsystem across 5 sheets. The analyzer correctly identifies the multi-sheet hierarchy, RF matching, crystal circuits, and MOSFET power switching, but has issues with ferrite bead inductance parsing and the LDO output rail.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: panstamp-nrg3_nrg3.sch.json
 - **Created**: 2026-03-15

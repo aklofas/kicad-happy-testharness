@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/Koeg-Board/src/koeg-board-pcb.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Keyboard PCB with nRF52-based BLE. Key matrix (5x5, 42 keys) correctly detected. RF matching networks identified for dual chip antennas. BOM sum (260) does not match total_components (290) \u2014 gap of 30 partially explained by 26 non-BOM types.",
       "correct": [
         {
@@ -37,11 +37,21 @@
       "missed": [
         {
           "description": "No power regulators detected despite board needing voltage regulation for nRF52 from battery/USB",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No BLE/wireless bus protocol detected for nRF52-based design",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

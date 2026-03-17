@@ -3,22 +3,38 @@
     {
       "analyzer_type": "schematic",
       "source_file": "hw_sch_pcb_QFHMIX01E.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "QFH antenna RF mixer board (235 components). AD8343 active mixers not detected in rf_chains. Power bypass caps falsely labeled as 'antenna' in rf_matching. LO port series RC networks misclassified as high-pass with wrong output_net=GND.",
       "correct": [
         {
           "description": "LC filter networks correctly identified with inductor-capacitor topology",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power regulators correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "3 RC networks (R14/C11 68R/10nF, R11/C13, R15/C12) misclassified as 'high-pass' with output_net='GND' \u2014 actual cap terminals connect to CLK_MIX2_P/CLK_MIX1_P/CLK_MIX1_N, not GND",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R14$"
+          }
         }
       ],
       "missed": [],

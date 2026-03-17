@@ -1,0 +1,82 @@
+{
+  "file_pattern": "hardware_Fidget_Fidget.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000214",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000214-AST-01",
+      "description": "Three-stage LDO power chain correctly detected: U3 AP2112K-3.3 (5V->3.3V), U4 MIC5365-1.2YC5 (3.3V->1.2V), U5 MIC5365-2.5YC5 (3.3V->2.5V) with correct input/output rails and estimated voltages from fixed_suffix",
+      "created_from": "FND-00000214",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
+      }
+    },
+    {
+      "id": "FND-00000214-AST-02",
+      "description": "AT25SF081 SPI flash (U1) correctly detected as memory interface connected to ICE40HX4K (U2) with 6 shared signal nets",
+      "created_from": "FND-00000214",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "contains_match",
+        "field": "memory_reference",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "FND-00000214-AST-03",
+      "description": "Two active oscillators U6 KC2520Z16.0000C15XXK (16 MHz) and U7 KC3225Z3.68640C1KX00 (3.6864 MHz) correctly identified as active_oscillator type with no load caps (correct for active oscillators)",
+      "created_from": "FND-00000214",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U6$"
+      }
+    },
+    {
+      "id": "FND-00000214-AST-04",
+      "description": "RC filter R2 (100 ohm) / C4+C2 (10.1uF parallel) at 157.58 Hz correctly detected as low-pass on +1V2 rail to GND",
+      "created_from": "FND-00000214",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R2$"
+      }
+    },
+    {
+      "id": "FND-00000214-AST-05",
+      "description": "5-rail decoupling analysis correctly identified: +3.3V (18 caps, 4.5uF), +1V2 (3 caps, 1.11uF including C6 0.01uF high-freq), +5V (2 caps, 1.1uF), +2V5 (2 caps, 1.1uF), VBUS (9 caps, 0.9uF)",
+      "created_from": "FND-00000214",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000214-AST-06",
+      "description": "USB data lines USB_DN and USB_DP correctly flagged with has_esd_protection=false, noting only R6/R5 series resistors and U2 FPGA connections",
+      "created_from": "FND-00000214",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000214-AST-07",
+      "description": "Component types correctly classified: 15 ICs, 7 jumpers, 3 switches, 2 oscillators, 3 test points, 5 LEDs, 11 connectors",
+      "created_from": "FND-00000214",
+      "check": {
+        "path": "statistics.component_types",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

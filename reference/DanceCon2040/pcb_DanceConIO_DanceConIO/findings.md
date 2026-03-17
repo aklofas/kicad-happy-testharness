@@ -2,7 +2,7 @@
 
 ## FND-00000136: Dance pad controller with RP2040 and 3x ADS124S06 precision ADCs: excellent RC filter detection for ADC input conditioning, but missing SPI bus and ADC reference circuit analysis
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/DanceCon2040/pcb/DanceConIO/DanceConIO.kicad_sch
 - **Created**: 2026-03-14

@@ -9,22 +9,44 @@
         {
           "type": "power_regulator",
           "description": "U1 AP2204R-3.3 correctly identified as LDO with VBUS input and +3V3 output",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U1$"
+          }
         },
         {
           "type": "protection_devices",
           "description": "F1 fuse and U2 USBLC6-4 ESD protection correctly identified",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^F1$"
+          }
         },
         {
           "type": "decoupling",
           "description": "Decoupling analysis correct: +3V3 (4x caps, 5.0uF), VBUS (1x 4.7uF), +3.3VA (1x 100nF)",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "type": "bus_protocols",
           "description": "I2C bus detected with correct no-pull-up observation; UART TX/RX detected",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -38,12 +60,24 @@
         {
           "type": "rc_filters",
           "description": "6 RC anti-aliasing filters on ADC inputs (R11-R16 series + C8-C13 shunt to GND). rc_filters array is empty.",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R11$"
+          }
         },
         {
           "type": "lc_filters",
           "description": "Ferrite bead FB1 between +3V3 and +3.3VA with C7 100nF forms analog supply filter. Not detected.",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "contains_match",
+            "field": "inductor.ref",
+            "pattern": "^FB1$"
+          }
         }
       ],
       "suggestions": [

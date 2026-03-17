@@ -2,7 +2,7 @@
 
 ## FND-00000171: Neo6502 retro computer board with RP2040 + W65C02S. IDC cables as capacitors, buzzer as switch, expansion bus misclassified, SPI missed, false I2C on HDMI/GPIO.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_sch.json
 - **Created**: 2026-03-15
@@ -31,7 +31,7 @@
 
 ## FND-00000177: Neo6502 retro computer CPU board (122 components). Correct: all 8 ICs, power rails, I2C with pullups, UART, HDMI pairs, USB compliance, 7 DNP parts. Incorrect: Cable-PWR1/Cable-pUEXT1 as capacitor (are IDC cables), SPK1 buzzer as switch, BUS1 40-pin expansion as SWD debug connector, HDMI/GPIO nets falsely detected as I2C. Missed: SPI bus not detected, test points not in test_coverage.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_sch.json
 - **Created**: 2026-03-15

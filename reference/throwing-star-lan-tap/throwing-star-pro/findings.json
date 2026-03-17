@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "throwing-star.sch.json",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Legacy wire-to-pin connectivity completely broken: all 32 RJ45 data pins appear as isolated unnamed nets instead of being connected to SIG1-SIG8 labeled nets",
       "correct": [
         {
@@ -52,8 +52,8 @@
     {
       "analyzer_type": "pcb",
       "source_file": "throwing-star.kicad_pcb.json",
-      "status": "resolved",
-      "summary": "PCB analysis correct overall but copper_layers_used=0 despite tracks on both Front and Back, and front_side/back_side component counts are 0 — RESOLVED: now reports copper_layers_used=2, front_side=6",
+      "status": "promoted",
+      "summary": "PCB analysis correct overall but copper_layers_used=0 despite tracks on both Front and Back, and front_side/back_side component counts are 0 \u2014 RESOLVED: now reports copper_layers_used=2, front_side=6",
       "correct": [
         {
           "type": "footprints",
@@ -62,7 +62,12 @@
         {
           "type": "tracks",
           "description": "Track layer distribution correct: Front:130, Back:74. 204 total segments, 4 vias.",
-          "analyzer_section": "tracks"
+          "analyzer_section": "tracks",
+          "check": {
+            "path": "tracks",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

@@ -1,0 +1,74 @@
+{
+  "file_pattern": "Rotonometron v1.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 addressable_led_chains",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 key_matrices",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 4 transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q2 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Q4 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Q1 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Q3 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q3$"
+      }
+    }
+  ]
+}

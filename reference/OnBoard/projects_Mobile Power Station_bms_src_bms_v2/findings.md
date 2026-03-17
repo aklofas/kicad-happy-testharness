@@ -2,7 +2,7 @@
 
 ## FND-00000108: BMS v2 board with TPS2491 hot-swap controller, BQ7721605 battery protector, 8x HY2213-BB3A cell balancers, MOSFETs for power switching. Massive misclassification: 84 components as other.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/Mobile Power Station/bms/src/bms_v2.kicad_sch
 - **Created**: 2026-03-14

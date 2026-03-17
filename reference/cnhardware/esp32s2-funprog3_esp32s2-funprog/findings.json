@@ -8,7 +8,12 @@
       "correct": [
         {
           "description": "USBLC6-2P6 protection device correctly detected",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

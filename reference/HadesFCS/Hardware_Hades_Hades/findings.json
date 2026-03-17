@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/HadesFCS/Hardware/Hades/Hades.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Hades flight controller - 208 components with zero signal detections due to KH-016 legacy wire-to-pin matching failure",
       "correct": [
         {
@@ -31,19 +31,39 @@
       "missed": [
         {
           "description": "Zero signal analysis results - no voltage dividers, RC filters, regulators, crystals, or any other signal patterns detected on a 208-component flight controller board",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Flight controller should have: IMU (accelerometer/gyroscope), barometer, voltage regulators, motor driver outputs, RC receiver input - none detected",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No design observations generated at all",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "12 ICs not analyzed for any signal paths - likely includes STM32 MCU, IMU sensors, regulators",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

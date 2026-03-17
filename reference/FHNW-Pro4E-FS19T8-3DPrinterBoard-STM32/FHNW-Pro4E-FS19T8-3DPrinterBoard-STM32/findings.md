@@ -2,7 +2,7 @@
 
 ## FND-00000289: 3D printer controller (STM32F103+ESP32, KiCad 5, 264 components). BUK963R3-60E power MOSFETs (T101/T402/T403) misclassified as transformers due to passive pin types. Fan MOSFET drain/source nets inverted. Fan MOSFETs falsely linked to LED D401 as LED drivers. LM2675M buck regulators have null input_rail and unknown topology.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: FHNW-Pro4E-FS19T8-3DPrinterBoard-STM32.sch.json
 - **Created**: 2026-03-16

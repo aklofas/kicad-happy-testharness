@@ -1,0 +1,86 @@
+{
+  "file_pattern": "26-313xA_coco2_coco2.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000286",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000286-AST-01",
+      "description": "14.318MHz crystal X1 with C13 (39pF) load cap correct",
+      "created_from": "FND-00000286",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^X1$"
+      }
+    },
+    {
+      "id": "FND-00000286-AST-02",
+      "description": "Cassette interface RC filters (R5+C26, R23+C32, R22+C33) correct",
+      "created_from": "FND-00000286",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R5$"
+      }
+    },
+    {
+      "id": "FND-00000286-AST-03",
+      "description": "R14+C8 LP at 1.59Hz power-on reset RC correctly detected",
+      "created_from": "FND-00000286",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R14$"
+      }
+    },
+    {
+      "id": "FND-00000286-AST-04",
+      "description": "Q1 KSD880O driven by SC77527P correctly identified",
+      "created_from": "FND-00000286",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "FND-00000286-AST-05",
+      "description": "Q2 2N3904 with collector=GNDS correctly captured",
+      "created_from": "FND-00000286",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q2$"
+      }
+    },
+    {
+      "id": "FND-00000286-AST-06",
+      "description": "R12+C15 and R29+C17 clock filters at 28.42MHz correct",
+      "created_from": "FND-00000286",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R12$"
+      }
+    },
+    {
+      "id": "FND-00000286-AST-07",
+      "description": "INCORRECT: R8(10K)+C21(150pF) classified as LP filter at 106kHz on VDGCLK \u2014 this is a pull-up/termination bias network from +5V, not a signal-path filter",
+      "created_from": "FND-00000286",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R8$"
+      },
+      "aspirational": true
+    }
+  ]
+}

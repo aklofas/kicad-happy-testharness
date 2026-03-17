@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/HadesFCS/Hardware/HadesNT/HadesNT.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "HadesNT flight controller - 102 components, zero signals due to KH-016; rich component set suggests many missed detections",
       "correct": [
         {
@@ -23,27 +23,57 @@
       "missed": [
         {
           "description": "Zero signal analysis on a board with 7 transistors, 1 crystal, 1 fuse, 2 inductors - all blocked by KH-016",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Crystal circuit not detected despite crystal component being enumerated",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "7 transistor circuits not analyzed - flight controllers use MOSFETs for motor outputs and power switching",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "VDDA rail suggests analog domain (ADC reference) with dedicated filtering - not analyzed",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Speaker/buzzer circuits (2 speakers) not detected",
-          "analyzer_section": "signal_analysis.buzzer_speaker_circuits"
+          "analyzer_section": "signal_analysis.buzzer_speaker_circuits",
+          "check": {
+            "path": "signal_analysis.buzzer_speaker_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Fuse as protection device not detected",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

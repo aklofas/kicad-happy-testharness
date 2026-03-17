@@ -2,7 +2,7 @@
 
 ## FND-00000212: 16-channel photodiode sensor board using BPW34 photodiodes with AP331A comparators and BC849C BJT signal conditioning. The analyzer correctly identified the 32 transistor circuits, voltage reference divider, and 66 RC filter stages. It missed the comparator-based signal discriminator topology and the MMTL431B voltage reference function.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: sensor_board_sensor_board.kicad_sch.json
 - **Created**: 2026-03-15

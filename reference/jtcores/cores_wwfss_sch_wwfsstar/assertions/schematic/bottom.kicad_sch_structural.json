@@ -1,0 +1,95 @@
+{
+  "file_pattern": "bottom.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 128 protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "equals",
+        "value": 128
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "VR4 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^VR4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "VR8 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^VR8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "VR3 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^VR3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "VR2 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^VR2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "VR5 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^VR5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 2 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R1 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R7 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R7$"
+      }
+    }
+  ]
+}

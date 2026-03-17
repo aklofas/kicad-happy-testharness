@@ -3,20 +3,35 @@
     {
       "analyzer_type": "schematic",
       "source_file": "KiCAD_scart_duplicator_scart_duplicator.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "SCART video duplicator with THS7374 4-channel video amp (41 components). Correct: THS7374 pin mapping, SCART connectors pin assignments, audio passthrough, D1 switching voltage protection, USB-C power. Incorrect: CSYNC nets classified as chip_select, RC filter false positives on video termination/bias networks (75-ohm termination and 5.36M DC bias). Missed: video amplifier/buffer topology, 1-to-2 signal splitter pattern.",
       "correct": [
         {
           "description": "U1 THS7374 all 14 pins correctly mapped",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SCART J1 input and J3/J4 output pin assignments correct",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Audio passthrough correctly traced",
-          "analyzer_section": "nets"
+          "analyzer_section": "nets",
+          "check": {
+            "path": "nets",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -26,11 +41,23 @@
         },
         {
           "description": "R5-R8 5.36M DC bias networks detected as filters",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R5$"
+          }
         },
         {
           "description": "R1-R4 75-ohm video termination detected as high-pass filters",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R1$"
+          }
         }
       ],
       "missed": [],

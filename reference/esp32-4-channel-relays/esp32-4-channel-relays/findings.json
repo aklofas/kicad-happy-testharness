@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/esp32-4-channel-relays/esp32-4-channel-relays.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "ESP32 relay board with CH340C USB-UART, 4x relay drivers with optocouplers, and PRTR5V0U2X ESD protection. Good detection of relay driver transistors, USB ESD, fuse, and LDO. PC817 optocouplers provide relay isolation but isolation_barriers not detected.",
       "correct": [
         {
@@ -51,23 +51,49 @@
       "missed": [
         {
           "description": "PC817 optocoupler isolation barrier between ESP32 control and relay power not detected in isolation_barriers",
-          "analyzer_section": "signal_analysis.isolation_barriers"
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Relay flyback/freewheeling diodes (1N4007) not linked to their corresponding relay coils",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "MBT3904DW1 (Q1) dual transistor auto-program circuit for ESP32 boot/reset not detected as auto-program",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "Relay indicator LEDs (D2, D4, D6, D8 RED_LED) not linked to relay channels",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Complete relay driver chain (GPIO -> optocoupler -> transistor -> relay coil + flyback diode) not detected as unified circuit",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

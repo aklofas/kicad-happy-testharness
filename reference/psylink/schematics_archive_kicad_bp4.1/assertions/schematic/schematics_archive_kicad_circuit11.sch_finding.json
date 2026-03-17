@@ -1,0 +1,40 @@
+{
+  "file_pattern": "schematics_archive_kicad_circuit11.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000226",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000226-AST-01",
+      "description": "R1(1M)/R2(110K) voltage divider correctly identified with ratio 0.099 for TPS61220 boost converter feedback",
+      "created_from": "FND-00000226",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R1$"
+      }
+    },
+    {
+      "id": "FND-00000226-AST-02",
+      "description": "R3(110K)/C7(100uF) RC filter correctly identified with 0.01Hz cutoff \u2014 extremely low-frequency filter for DC reference stabilization",
+      "created_from": "FND-00000226",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R3$"
+      }
+    },
+    {
+      "id": "FND-00000226-AST-03",
+      "description": "Decoupling analysis correct: V+ rail has 150uF total, Vbat has 110uF total",
+      "created_from": "FND-00000226",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/tomu-hardware/pcb/tomu.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Minimal USB board (EFM32HG): USB differential pairs detected but very sparse analysis output for 22-component design, many components marked DNP",
       "correct": [
         {
@@ -35,23 +35,48 @@
       "missed": [
         {
           "description": "EFM32HG (Happy Gecko) MCU not identified in IC pin analysis - this is the main and essentially only IC on the board",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No power regulator detected - the board likely derives 3.3V from USB 5V through the EFM32 internal regulator or an external component",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Touch/capacitive sensing pads (LEDs used as touch sensors on Tomu) not identified",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB device configuration (bus-powered, no external crystal needed for USB on EFM32HG) not noted",
-          "analyzer_section": "usb_compliance"
+          "analyzer_section": "usb_compliance",
+          "check": {
+            "path": "usb_compliance",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No decoupling analysis despite capacitors being present",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

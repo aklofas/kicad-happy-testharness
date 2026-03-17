@@ -41,7 +41,13 @@
         {
           "type": "feedback_networks",
           "description": "C7 (22pF) capacitive negative feedback from OUT to IN- not detected \u2014 only resistive feedback recognized",
-          "analyzer_section": "signal_analysis.feedback_networks"
+          "analyzer_section": "signal_analysis.feedback_networks",
+          "check": {
+            "path": "signal_analysis.feedback_networks",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^C7$"
+          }
         }
       ],
       "suggestions": [

@@ -15,7 +15,12 @@
         {
           "type": "component_field",
           "description": "Legacy parser has no case for \"DESCRIPTION\" field. Custom \"Description\" fields present on components are not extracted.",
-          "analyzer_section": "components[*].description"
+          "analyzer_section": "components[*].description",
+          "check": {
+            "path": "components[*].description",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

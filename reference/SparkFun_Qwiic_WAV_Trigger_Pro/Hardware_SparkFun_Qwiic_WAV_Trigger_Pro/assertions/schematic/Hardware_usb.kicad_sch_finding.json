@@ -1,0 +1,64 @@
+{
+  "file_pattern": "Hardware_usb.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000228",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000228-AST-01",
+      "description": "U2 AP2112K-3.3 LDO and U6 AP3012 boost converter correctly identified and classified",
+      "created_from": "FND-00000228",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$"
+      }
+    },
+    {
+      "id": "FND-00000228-AST-02",
+      "description": "U1 TPD3S014 3-channel ESD protector correctly identified protecting USB DP/DM/VBUS",
+      "created_from": "FND-00000228",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "FND-00000228-AST-03",
+      "description": "2 voltage dividers correct: R23/R24 (100k/33k, ratio=0.248) feedback, R26/R27 (560/680ohm, ratio=0.548) VUSB detection",
+      "created_from": "FND-00000228",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R23$"
+      }
+    },
+    {
+      "id": "FND-00000228-AST-04",
+      "description": "R23/R24 feedback network for U6 correctly detected",
+      "created_from": "FND-00000228",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R23$"
+      }
+    },
+    {
+      "id": "FND-00000228-AST-05",
+      "description": "INCORRECT: L2 value '30ohm' (ferrite bead impedance) misparsed as 30.0 henries. Invalidates LC filter detection (L2/C27 reported as LC filter with 29Hz resonance, but L2 is impedance not inductance).",
+      "created_from": "FND-00000228",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
+      },
+      "aspirational": true
+    }
+  ]
+}

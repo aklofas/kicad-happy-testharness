@@ -1,0 +1,132 @@
+{
+  "file_pattern": "Digital_control,_voltage_reference.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 4 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 6 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R81 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R81$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R79 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R79$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R80 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R80$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R77 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R77$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R76 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R76$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R78B1 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R78B1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Exactly 2 transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Q16 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q16$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Q15 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q15$"
+      }
+    }
+  ]
+}

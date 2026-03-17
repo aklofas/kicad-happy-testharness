@@ -2,7 +2,7 @@
 
 ## FND-00000199: Parallax Propeller 2 based robot controller board with voltage monitoring (TMUX1511 analog mux), DC motor drivers, USB-C, multiple I/O connectors, fuses, and PSU sub-sheet with LM25145 synchronous buck converter. Good voltage divider and RC filter detection; PSU analysis finds the switching regulator. Many connectors and test points correctly classified.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: P2 Kevinbot Board.kicad_sch.json
 - **Created**: 2026-03-15

@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/Buck-Regulator/src/buck.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Simple LM2596S-12 buck regulator. Good subcircuit and signal detection but incorrectly applies adjustable-version feedback analysis to the fixed 12V variant.",
       "correct": [
         {
@@ -46,11 +46,21 @@
       "missed": [
         {
           "description": "LM2596 variant identification (-12 = fixed 12V, -5 = fixed 5V, -3.3 = fixed 3.3V, -ADJ = adjustable) should drive different analysis paths",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Schottky diode (D1=SS54) in the buck converter freewheeling path not analyzed as part of the switching topology",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

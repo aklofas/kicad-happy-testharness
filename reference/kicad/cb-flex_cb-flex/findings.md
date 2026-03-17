@@ -2,7 +2,7 @@
 
 ## FND-00000195: panStamp flexible battery board with panStamp NRG2 module, SIM800L GSM/GPRS, level shifter, sensor interface, and PSU across 3 sheets. Good detection of voltage dividers, RC filter, power regulators, and RF matching, but regulator output pin mapping has issues and I2C bus detection flags missing pullups.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: cb-flex_cb-flex.sch.json
 - **Created**: 2026-03-15

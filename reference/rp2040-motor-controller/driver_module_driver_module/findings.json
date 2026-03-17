@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/rp2040-motor-controller/driver_module/driver_module.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "BLDC motor driver module: excellent current sense detection with INA240 amplifiers and 3-milliohm shunts, but missing half-bridge gate driver recognition for EG3113",
       "correct": [
         {
@@ -28,25 +28,51 @@
       "incorrect": [
         {
           "description": "Current sense associates two shunts (R113, R105) with same INA240 U21 on A_P/A_N - likely one shunt per phase, check pin mapping",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "not_contains_match",
+            "field": "shunt.ref",
+            "pattern": "^R113$"
+          }
         }
       ],
       "missed": [
         {
           "description": "EG3113 half-bridge gate drivers (3 instances) not recognized as motor gate drivers - they are the key BLDC driver ICs controlling 6 MOSFETs",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Three-phase BLDC bridge topology not detected - 3x EG3113 half-bridge drivers form a complete 3-phase inverter",
-          "analyzer_section": "signal_analysis.bridge_circuits"
+          "analyzer_section": "signal_analysis.bridge_circuits",
+          "check": {
+            "path": "signal_analysis.bridge_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Bootstrap capacitor circuits for high-side gate drive not identified",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Phase outputs (A, B, C motor connections) not linked to the current sense and gate driver circuits as a complete motor drive channel",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

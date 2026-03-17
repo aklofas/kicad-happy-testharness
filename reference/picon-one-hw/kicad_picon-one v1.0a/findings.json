@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/picon-one-hw/kicad/picon-one v1.0a.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Multi-function Pico-based board with DS3231M RTC, SC16IS752 I2C-to-UART, TM1640 LED driver, and 14.7456MHz crystal. Excessive I2C false positives (10 buses detected for what should be 2-3). Crystal load cap mismatch (22pF vs 33pF) flagged correctly. Many unnamed nets suggest legacy format connectivity issues.",
       "correct": [
         {
@@ -53,23 +53,48 @@
       "missed": [
         {
           "description": "Raspberry Pi Pico module (MCU1) not detected as a component or processor",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "TM1640 LED driver function not identified - drives 7-segment display grid/segment lines",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DIP switch (DIP1) configuration not analyzed",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No power regulator detected - board likely powered from Pico USB/VSYS",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "12V input connectors (12V1, 12V2) not traced through power path",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -2,7 +2,7 @@
 
 ## FND-00000283: CubeSat Geiger counter board (102 components). LM2733YMF boost converter output rail same as input (doesn't trace past rectifier diode). L2+C18 AVR AVCC filter misclassified as RF matching. Unitless pF capacitor values parsed as Farads producing absurd time constants. Gate_driver_ics inflated via +3V3 power net traversal.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: ykts-geigerboard_ykts-geigerboard.kicad_sch.json
 - **Created**: 2026-03-16

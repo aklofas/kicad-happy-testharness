@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/Voron-Hardware/V0_Display_RP2040/KiCad/V0_Display_RP2040.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "V0 Display RP2040 - well-analyzed KiCad 6+ schematic with good coverage of RP2040 support circuitry",
       "correct": [
         {
@@ -44,15 +44,30 @@
       "missed": [
         {
           "description": "No encoder/rotary switch detection - board has 4 switches including encoder with A/B/switch signals",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "OLED/display interface not characterized despite being the primary function of this board",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "RP2040 boot mode configuration (USB boot vs flash boot) not analyzed",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

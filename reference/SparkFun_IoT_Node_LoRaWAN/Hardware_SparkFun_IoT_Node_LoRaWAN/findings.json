@@ -8,66 +8,148 @@
       "correct": [
         {
           "description": "RT9080-3.3 (U7) correctly identified as fixed 3.3V LDO regulator via value suffix parsing",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U7$"
+          }
         },
         {
           "description": "Y1 12MHz crystal with C5=15pF and C2=15pF load caps correctly detected, effective load 10.5pF",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "D1 and D3 DT1042-04SO correctly identified as USB ESD protection on USB_D+/USB_D- and XBLR_USB_D+/XBLR_USB_D- lines",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
         },
         {
           "description": "Q1 DMG2305UX correctly identified as P-channel MOSFET power switch controlled by gate on __unnamed_34",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "WS2812B_CBI (D4) addressable LED chain correctly detected on LED_IN net",
-          "analyzer_section": "signal_analysis.addressable_led_chains"
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "D2 BAT20J correctly classified as diode (Schottky for reverse polarity protection)",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "9 decoupling rails analyzed including 3.3V, 1.1V, 3.3V_XBLR, VBATT, VDDA",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "U1 RP2350A, U2 W25Q128JVPIM, U3 APS6404L-3SQR-ZR, U4 XBLR (XBee LR), U5 CH340C all correctly classified as ICs",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Design observations correctly flag missing I2C pull-ups on SDA/SCL and missing input cap on U7",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [],
       "missed": [
         {
           "description": "MCP73831 (U8) single-cell LiPo battery charger from VUSB not detected as battery management component",
-          "analyzer_section": "signal_analysis.bms_systems"
+          "analyzer_section": "signal_analysis.bms_systems",
+          "check": {
+            "path": "signal_analysis.bms_systems",
+            "op": "contains_match",
+            "field": "bms_reference",
+            "pattern": "^U8$"
+          }
         },
         {
           "description": "MAX17048 (U9) I2C fuel gauge for battery monitoring not detected",
-          "analyzer_section": "signal_analysis.bms_systems"
+          "analyzer_section": "signal_analysis.bms_systems",
+          "check": {
+            "path": "signal_analysis.bms_systems",
+            "op": "contains_match",
+            "field": "bms_reference",
+            "pattern": "^U9$"
+          }
         },
         {
           "description": "I2C bus on SDA/SCL connecting U1 (RP2350A) and U9 (MAX17048) with pull-up jumper JP7 not detected as bus interface",
-          "analyzer_section": "signal_analysis.bus_interfaces"
+          "analyzer_section": "signal_analysis.bus_interfaces",
+          "check": {
+            "path": "signal_analysis.bus_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "QSPI flash interface (U2 W25Q128JVPIM) and QSPI PSRAM interface (U3 APS6404L-3SQR-ZR) not detected as memory buses",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "Dual USB-C interfaces with CH340C (U5) USB-UART bridge for both RP2350 and XBLR module not detected as USB buses",
-          "analyzer_section": "signal_analysis.bus_interfaces"
+          "analyzer_section": "signal_analysis.bus_interfaces",
+          "check": {
+            "path": "signal_analysis.bus_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "XBee LR LoRaWAN module (U4) not detected as RF/radio component despite being a LoRaWAN transceiver",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

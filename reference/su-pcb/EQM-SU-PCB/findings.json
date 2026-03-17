@@ -3,52 +3,112 @@
     {
       "analyzer_type": "schematic",
       "source_file": "EQM-SU-PCB.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "AcubeSAT satellite payload PCB (371 components). I2C SDA lines (TWD0/TWD1) misclassified as SCL. OP484 quad opamps (8 thermistor channels) missed due to +IN_A/-IN_A pin naming. INA228 current sense high/low nets reversed. Opamp feedback T-network resistors falsely detected as voltage dividers. DRV8825 stepper driver not in bridge_circuits.",
       "correct": [
         {
           "description": "SPI bus correctly identified with FGDOS and MCU",
-          "analyzer_section": "design_analysis.bus_analysis.spi"
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "CAN buses correctly identified (CAN0/CAN1 with TCAN337GD)",
-          "analyzer_section": "design_analysis.bus_analysis.can"
+          "analyzer_section": "design_analysis.bus_analysis.can",
+          "check": {
+            "path": "design_analysis.bus_analysis.can",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "I2C pull-ups R107/R108/R106/R109 (4.7k to +3V3) correctly identified",
-          "analyzer_section": "design_analysis.bus_analysis.i2c"
+          "analyzer_section": "design_analysis.bus_analysis.i2c",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "7 NTC thermistor bias divider networks correctly identified",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "INA228 current sense with R64 (50mohm shunt) correctly identified",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "contains_match",
+            "field": "shunt.ref",
+            "pattern": "^R64$"
+          }
         },
         {
           "description": "Crystal Y5 (32.768kHz) with C9/C10 load caps correct",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y5$"
+          }
         },
         {
           "description": "TCXO oscillators Y1-Y4 correctly classified as active_oscillator",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "6 MOSFET transistor circuits correctly identified",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ESD protection D1 on USB_VCC correctly identified",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
         },
         {
           "description": "RC valve coil snubbers (50ohm/100nF) correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DACC_USB DAC smoothing filter (R70=1k, C48=3.9u, 40.81Hz) correct",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R70$"
+          }
         }
       ],
       "incorrect": [
@@ -62,11 +122,23 @@
         },
         {
           "description": "Voltage dividers falsely detected from opamp feedback T-networks (R156/R148, R158/R150 with ratio ~0.001 from opamp output/inverting-input)",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R156$"
+          }
         },
         {
           "description": "RC filter duplicate entry: R70+C49 reported in reverse direction alongside correct R70+C48 entry (shared-node bidirectional detection)",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R70$"
+          }
         },
         {
           "description": "INA228 (IC3) false missing-decoupling warning for +12V \u2014 IC3 supply is +3V3, +12V is only the measured rail",
@@ -80,11 +152,21 @@
       "missed": [
         {
           "description": "MT29F64G NAND flash not detected as memory interface despite full EBI bus",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DRV8825 stepper motor driver not detected in bridge_circuits",
-          "analyzer_section": "signal_analysis.bridge_circuits"
+          "analyzer_section": "signal_analysis.bridge_circuits",
+          "check": {
+            "path": "signal_analysis.bridge_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

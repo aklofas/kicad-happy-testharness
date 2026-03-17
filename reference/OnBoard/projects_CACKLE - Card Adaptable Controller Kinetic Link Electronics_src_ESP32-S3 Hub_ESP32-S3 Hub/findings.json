@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/CACKLE - Card Adaptable Controller Kinetic Link Electronics/src/ESP32-S3 Hub/ESP32-S3 Hub.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "ESP32-S3 hub board with 74HC595 shift register, THVD1420 RS-485 transceiver, 40MHz crystal, SPI/I2C buses, and extensive connector system. Good crystal and decoupling analysis but bus protocols and RS-485 not identified.",
       "correct": [
         {
@@ -36,37 +36,78 @@
         },
         {
           "description": "RC filter R7=10k/C13=1uF with fc=15.9Hz detected but this is likely a power-on reset or enable delay circuit, not a signal filter",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R7$"
+          }
         }
       ],
       "missed": [
         {
           "description": "THVD1420DRLR is a half-duplex RS-485/RS-422 transceiver with ESD protection - not identified as bus protocol or analyzed",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "74HC595 is an 8-bit shift register used for chip select expansion via SPI - purpose not analyzed",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SPI bus topology with 8 chip selects driving multiple sensor boards via FPC connectors not identified as a bus protocol",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "I2C bus (SDA/SCL) not identified as a bus protocol despite detected bus signals",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No power regulator detected - board may be powered externally via connectors but power path not analyzed",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ESP32-S3 WiFi/BT capability not noted",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "FPC connectors (Panasonic Y3b 7-pin) connecting to sensor boards not analyzed for interface type",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

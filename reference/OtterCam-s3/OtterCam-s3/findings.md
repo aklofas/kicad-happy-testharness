@@ -2,7 +2,7 @@
 
 ## FND-00000166: Allwinner S3-based camera board top-level sheet. U.FL connector classified as IC, Ethernet nets misidentified as UART, WiFi module as regulator.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: OtterCam-s3.kicad_sch.json
 - **Created**: 2026-03-15
@@ -33,7 +33,7 @@
 
 ## FND-00000167: OtterCam-s3 power sub-sheet with AXP209 PMIC and SY8089 buck. AXP209 vout wrong, USB ESD marking inconsistent, VINT misclassified.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Power.kicad_sch.json
 - **Created**: 2026-03-15
@@ -60,7 +60,7 @@
 
 ## FND-00000180: OtterCam-s3 ESP32-S3 camera board main sheet. Correct: Allwinner S3, SY8089 buck, SDIO buses, MIPI pairs, crystals, TVS. Incorrect: AE1 U.FL connector as IC, EPHY nets as UART, AP6236 WiFi as regulator, AXP209 vout 4.8V wrong. Missed: Ethernet PHY interface, I2C SCL line, DDR memory interface.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: OtterCam-s3.kicad_sch.json
 - **Created**: 2026-03-15
@@ -94,7 +94,7 @@
 
 ## FND-00000181: OtterCam-s3 Power sub-sheet (70 components). Correct: SY8089 buck, TVS D4, USB-C CC pulldowns, Q1 LED driver, RC reset filter. Incorrect: AXP209 vout 4.8V wrong, USB diff pair has_esd inconsistent, VINT classified as interrupt (is voltage ref), USB_DRV classified as high_speed. Missed: Multiple AXP209 output rails not enumerated.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Power.kicad_sch.json
 - **Created**: 2026-03-15

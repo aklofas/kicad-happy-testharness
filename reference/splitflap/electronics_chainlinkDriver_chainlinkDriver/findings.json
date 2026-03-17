@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/splitflap/electronics/chainlinkDriver/chainlinkDriver.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Legacy KiCad 5 schematic for split-flap motor driver board. 65 components, 184 nets correctly extracted. 0 signals detected due to KH-016. Design centers on 4x 74HC595 shift registers driving 4x TPL7407L open-drain arrays for motor control, plus 74HC165 parallel-in shift register for sensor input and 74HC125 buffer. This is a well-structured SPI-like daisy-chain topology.",
       "correct": [
         {
@@ -34,11 +34,21 @@
       "missed": [
         {
           "description": "No signal analysis detected (0 signals) - SPI-like shift register chain (CLOCK, LATCH, DATA signals), motor drive outputs, and sensor input path should all be detectable",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No SPI bus detection for the 74HC595/74HC165 daisy chain despite CLOCK, LATCH, DATA net names being present",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -3,12 +3,17 @@
     {
       "analyzer_type": "schematic",
       "source_file": "pcb.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "STM32 board (104 components). Crystal Y1 present but not detected. Multi-driver VCC conflict (2 regulators driving same net). 3 regulators detected. 7 components missing value.",
       "correct": [
         {
           "description": "3 regulators detected",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -20,11 +25,22 @@
       "missed": [
         {
           "description": "Crystal Y1 present in schematic but not detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "7 components missing value field",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

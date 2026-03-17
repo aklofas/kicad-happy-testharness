@@ -1,0 +1,52 @@
+{
+  "file_pattern": "OpenWrt_ONE.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000156",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000156-AST-01",
+      "description": "Zero voltage dividers detected across the entire design despite multiple feedback networks for buck converters",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000156-AST-02",
+      "description": "Zero Ethernet interfaces detected -- EN8811 PHY + SQ24015-1PG/SG24002G magnetics + RJ45 connectors present",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000156-AST-03",
+      "description": "Zero memory interfaces detected -- MT7981B to NT5AD512M16C4-JR DDR4 interface present",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000156-AST-04",
+      "description": "Zero RF chains/matching detected -- MT7976C WiFi has SAW filters, BPFs, diplexers, matching inductors, MMCX connectors",
+      "created_from": "FND-00000156",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

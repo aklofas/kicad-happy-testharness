@@ -1,0 +1,40 @@
+{
+  "file_pattern": "hw_sch_pcb_QFHMIX01E.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000264",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000264-AST-01",
+      "description": "LC filter networks correctly identified with inductor-capacitor topology",
+      "created_from": "FND-00000264",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000264-AST-02",
+      "description": "Power regulators correctly detected",
+      "created_from": "FND-00000264",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000264-AST-03",
+      "description": "INCORRECT: 3 RC networks (R14/C11 68R/10nF, R11/C13, R15/C12) misclassified as 'high-pass' with output_net='GND' \u2014 actual cap terminals connect to CLK_MIX2_P/CLK_MIX1_P/CLK_MIX1_N, not GND",
+      "created_from": "FND-00000264",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R14$"
+      },
+      "aspirational": true
+    }
+  ]
+}

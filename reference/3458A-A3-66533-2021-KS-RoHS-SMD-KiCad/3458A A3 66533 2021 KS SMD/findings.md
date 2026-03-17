@@ -2,7 +2,7 @@
 
 ## FND-00000267: HP 3458A A3 precision DMM analog board (399 components). All 10 rf_matching detections are false positives (ferrite beads for clock distribution and precision ADC guard networks). Three LT1001 integrators misclassified as comparator_or_open_loop. AD817A integrator misclassified as compensator. AD817A non-inverting amp misclassified as transimpedance_or_buffer. Duplicate design_observations per multi-unit IC.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: 3458A A3 66533 2021 KS SMD.kicad_sch.json
 - **Created**: 2026-03-16

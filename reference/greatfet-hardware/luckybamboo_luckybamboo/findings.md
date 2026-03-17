@@ -2,7 +2,7 @@
 
 ## FND-00000124: GreatFET Lucky Bamboo is a 2.4 GHz 802.15.4 radio board with four ADF7242 transceivers, SKY13322 SP4T RF switch, BGA7H1N6 LNA, eight ADF7242 balun/filter modules, and three HHM2293A1 diplexers. The analyzer finds 21 crystal circuits but zero RF chains, zero RF matching networks, and empty neighbor_components for all subcircuits. The crystal circuit detector correctly finds the four XTAL4PIN crystals with 18pF load caps (CL_eff=12pF), but also generates 17 false positives from the balun/diplexer/switch ICs.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/greatfet-hardware/luckybamboo/luckybamboo.sch
 - **Related**: KH-016

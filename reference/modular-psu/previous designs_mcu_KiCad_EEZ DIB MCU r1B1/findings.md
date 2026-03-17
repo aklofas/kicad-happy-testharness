@@ -2,7 +2,7 @@
 
 ## FND-00000186: EEZ DIB MCU r1B2 (189 components, 6 hierarchical sheets). Correct: STM32F769 176 pins, Ethernet PHY, SDRAM, LD1117 LDO, TPS61169, ESD protection, USB pairs. Incorrect: STM32F769 power pins mapped to wrong signal nets (systematic multi-unit pin-swap bug), SPEED1/TOUCH1/VBUS1 LEDs misclassified (switch/transformer/varistor), ZD1/ZD2 TVS as other, IC4 duplicated 4x in power_regulators, crystal feedback R/C detected as RC filter, VLED+/- as differential pair. Missed: crystal load caps, SPI/SDMMC/JTAG buses, voltage dividers.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: EEZ_DIB_MCU_r1B2.sch.json
 - **Created**: 2026-03-15
@@ -35,7 +35,7 @@
 
 ## FND-00000187: EEZ DIB MCU r1B1 — all 189 components extracted but ALL have 0 pins and ALL 181 nets have empty pin lists. Root cause: r1B1-cache.lib prefix mismatch with sub-sheets referencing r1B2-eagle-import. Signal analysis almost completely empty. Same component misclassifications as r1B2.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: EEZ_DIB_MCU_r1B1.sch.json
 - **Created**: 2026-03-15

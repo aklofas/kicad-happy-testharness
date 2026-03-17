@@ -1,0 +1,52 @@
+{
+  "file_pattern": "hardware_mm_reflectometer_rf_output_mm_rf_output.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000152",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000152-AST-01",
+      "description": "RF chain with 7+ components (ADRF5042, ADRF5730, MAAM-011109 x2, ATS2012, LTC5596, FPC07181) returns empty rf_chains -- keywords miss ADRF/ADMV/MAAM families",
+      "created_from": "FND-00000152",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000152-AST-02",
+      "description": "No attenuator category in RF chain detection -- ATS2012, ADRF5730, HMC424 are common RF attenuators with no detection category",
+      "created_from": "FND-00000152",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000152-AST-03",
+      "description": "Component ki_description field not extracted from lib_symbols -- contains text like 'Wideband Amplifier 10 MHz - 40 GHz' that could enable description-based RF classification",
+      "created_from": "FND-00000152",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000152-AST-04",
+      "description": "PLL loop filter not detected -- R/C networks on LMX2592/LMX2820 CPout pins form classic passive loop filters detected only as individual rc_filters",
+      "created_from": "FND-00000152",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 ## FND-00000121: OLIMEX ESP32 dev board with LiPo, CH340X USB-UART, and HX6211A LDO. Same empty power domains issue as C3 variant. Auto-program transistor circuit detected but missing relay to USB-UART bridge function.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/ESP32-DevKit-LiPo/HARDWARE/ESP32-DevKit-LiPo-Rev.D/ESP32-DevKit-Lipo_Rev_D.sch
 - **Created**: 2026-03-14

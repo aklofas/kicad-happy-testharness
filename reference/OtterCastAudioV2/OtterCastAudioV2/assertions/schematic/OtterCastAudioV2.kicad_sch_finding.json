@@ -1,0 +1,30 @@
+{
+  "file_pattern": "OtterCastAudioV2.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000061",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000061-AST-01",
+      "description": "Pi-match from AP6236 to U.FL connector (C78+L5+C77+C75). rf_chains=[]. RF antenna matching network not detected.",
+      "created_from": "FND-00000061",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000064-AST-01",
+      "description": "WL_SDIO_CLK/CMD/D0-D3 with pull-ups and termination. No SDIO category in bus protocol detection.",
+      "created_from": "FND-00000064",
+      "check": {
+        "path": "signal_analysis.bus_protocols",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/DonCon2040/pcb/DonConIO/DonConIO.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Taiko drum game controller with RP2040: voltage dividers over-detected from LED current limiting networks, good power rail identification with +/-12V for piezo amplification",
       "correct": [
         {
@@ -26,29 +26,60 @@
         },
         {
           "description": "Voltage divider with R11 4.7k / R10 1M (ratio 0.995) is not meaningful as a divider - likely a bias/discharge network for piezo conditioning",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R11$"
+          }
         }
       ],
       "missed": [
         {
           "description": "Piezo sensor signal conditioning circuit not identified: the design uses op-amps or comparators with bipolar supply (+/-12V) to amplify and condition piezo drum hit signals",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No power regulators detected - the PS1 component and associated circuitry providing +/-12V rails from +5V should be identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "LED indicator circuits for button feedback not classified as LED drive circuits",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB interface for RP2040 not detected",
-          "analyzer_section": "design_analysis.differential_pairs"
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ADC input channels (Don_Right_ADC etc.) not linked to piezo sensor inputs",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

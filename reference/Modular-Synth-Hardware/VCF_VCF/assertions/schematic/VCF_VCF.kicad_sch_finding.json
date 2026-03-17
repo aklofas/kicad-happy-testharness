@@ -1,0 +1,88 @@
+{
+  "file_pattern": "VCF_VCF.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000257",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000257-AST-01",
+      "description": "10-transistor ladder (Q101-Q110) correctly typed as BJT transistors",
+      "created_from": "FND-00000257",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q101$"
+      }
+    },
+    {
+      "id": "FND-00000257-AST-02",
+      "description": "Voltage dividers for CV input networks accurately detected",
+      "created_from": "FND-00000257",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000257-AST-03",
+      "description": "INCORRECT: Four phantom opamp entries with unit=null generated from TL072 power unit (unit 3) placements \u2014 U101, U104, U105, U106 each get a spurious entry with cross-contaminated nets from different units",
+      "created_from": "FND-00000257",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U101$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000257-AST-04",
+      "description": "INCORRECT: U106 unit 2 misclassified as 'compensator' \u2014 R201 (4.7M) connects from +12V to inverting input as bias, not feedback; C201 (1n) is the sole feedback element (integrator)",
+      "created_from": "FND-00000257",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U106$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000257-AST-05",
+      "description": "INCORRECT: Q302, Q402, Q201 (NPN, base=GND) each accumulate 22 false base_resistors and 5 false base_driver_ics from GND net traversal",
+      "created_from": "FND-00000257",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^Q302$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000257-AST-06",
+      "description": "INCORRECT: Q303, Q403 load_type='connector' \u2014 GND-collector traversal finds J101 power connector as load instead of emitter-side resistors",
+      "created_from": "FND-00000257",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^Q303$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000257-AST-07",
+      "description": "INCORRECT: False parallel capacitor grouping: C301+C401 reported as 20uF parallel but they connect to different exponential converter branches (different pin2 nodes)",
+      "created_from": "FND-00000257",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^C301$"
+      }
+    }
+  ]
+}

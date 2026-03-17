@@ -1,0 +1,50 @@
+{
+  "file_pattern": "Hardware_JST_SparkFun_BlueSMiRF-v2-JST.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000216",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000216-AST-01",
+      "description": "U2 AP2112K-3.3 LDO correctly identified with topology=LDO, estimated_vout=3.3V, input/output rails correct",
+      "created_from": "FND-00000216",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$"
+      }
+    },
+    {
+      "id": "FND-00000216-AST-02",
+      "description": "Q1 and Q2 BSS138 N-MOSFETs correctly identified with proper gate/drain/source net mapping and connector load type",
+      "created_from": "FND-00000216",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "FND-00000216-AST-03",
+      "description": "All 38 components correctly counted, BOM values verified (C1=10uF, C2=1.0uF, C3=1.0uF, C4=10uF, 10 resistors)",
+      "created_from": "FND-00000216",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000216-AST-04",
+      "description": "Input/output decoupling capacitors for U2 correctly identified (C1+C2 input, C3+C4 output)",
+      "created_from": "FND-00000216",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

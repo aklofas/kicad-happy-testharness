@@ -30,7 +30,7 @@
       "repo": "OtterCastAudioV2",
       "project": "OtterCastAudioV2",
       "created": "2026-03-13T22:00:00.000000+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "schematic",
       "source_file": "OtterCastAudioV2.kicad_sch.json",
       "summary": "RF antenna matching network not detected",
@@ -40,7 +40,12 @@
         {
           "type": "rf_chain",
           "description": "Pi-match from AP6236 to U.FL connector (C78+L5+C77+C75). rf_chains=[]. RF antenna matching network not detected.",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -64,7 +69,13 @@
         {
           "type": "lc_filter",
           "description": "C78 (series DC block) and C77 (shunt to GND) merged as \"parallel\" in LC filter detection. These are different filter topologies.",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "not_contains_match",
+            "field": "inductor.ref",
+            "pattern": "^C78$"
+          }
         }
       ],
       "missed": [],
@@ -105,7 +116,7 @@
       "repo": "OtterCastAudioV2",
       "project": "OtterCastAudioV2",
       "created": "2026-03-13T22:00:00.000000+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "schematic",
       "source_file": "OtterCastAudioV2.kicad_sch.json",
       "summary": "SDIO bus protocol not detected",
@@ -115,7 +126,12 @@
         {
           "type": "bus_protocol",
           "description": "WL_SDIO_CLK/CMD/D0-D3 with pull-ups and termination. No SDIO category in bus protocol detection.",
-          "analyzer_section": "signal_analysis.bus_protocols"
+          "analyzer_section": "signal_analysis.bus_protocols",
+          "check": {
+            "path": "signal_analysis.bus_protocols",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -140,7 +156,12 @@
         {
           "type": "bus_protocol",
           "description": "BT_PCM_CLK/SYNC/DIN/DOUT audio bus signals not detected. No PCM/I2S bus category.",
-          "analyzer_section": "signal_analysis.bus_protocols"
+          "analyzer_section": "signal_analysis.bus_protocols",
+          "check": {
+            "path": "signal_analysis.bus_protocols",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -190,7 +211,12 @@
         {
           "type": "unconnected_pin",
           "description": "X1 EN pin is a single-pin unnamed net not reported in single_pin_nets.",
-          "analyzer_section": "single_pin_nets"
+          "analyzer_section": "single_pin_nets",
+          "check": {
+            "path": "single_pin_nets",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

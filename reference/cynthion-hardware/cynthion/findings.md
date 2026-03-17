@@ -2,7 +2,7 @@
 
 ## FND-00000015: Deep review of cynthion-hardware across 17 sub-sheets. 4 LDOs correct, I2C/USB/memory detection solid. PWR_FLAG warnings spurious (Issue #10). Voltage divider false positives for BJT base bias networks (Issue #12). Missed SPI bus, Zener voltage monitor, and transistor circuits on power_supplies sheet.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: power_supplies.kicad_sch.json
 - **Related**: KH-010, KH-012
@@ -77,7 +77,7 @@
 
 ## FND-00000026: Multi-instance sub-sheets (usb_phy x3, type_c x2) have internal nets merged across instances, causing 53 false single-pin nets and incorrect ERC warnings
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: cynthion.kicad_sch.json
 - **Created**: 2026-03-13

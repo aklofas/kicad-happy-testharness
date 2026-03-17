@@ -3,24 +3,44 @@
     {
       "analyzer_type": "schematic",
       "source_file": "iMX8MPLUS-SOM-EVB_Rev_B.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "329-component OLIMEX iMX8M Plus EVB. Correct: Ethernet PHYs, crystals, HDMI, ESD protection, SPI buses, USB pairs. Incorrect: U5/U10 MCP2562 CAN transceivers have completely scrambled pin-to-net mapping, VR1/VR2 AMS1117 as varistors, Flash_Con1 as fuse, T1/T2 digital transistors as transformers, false three-phase bridge from PHY strap FETs. Missed: AMS1117 LDOs not in power_regulators, USB power switches, several component type misclassifications.",
       "correct": [
         {
           "description": "329 components correctly counted",
-          "analyzer_section": "statistics.total_components"
+          "analyzer_section": "statistics.total_components",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Dual KSZ9031 Ethernet PHYs detected",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "25MHz crystals with 33pF load caps detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ESDS314DBVR ESD ICs correctly detected",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -48,11 +68,22 @@
       "missed": [
         {
           "description": "VR1/VR2 AMS1117-1.2 LDOs not detected as power regulators",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^VR1$"
+          }
         },
         {
           "description": "MICRO_SD1, MICROPHONE1 classified as other instead of connector",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

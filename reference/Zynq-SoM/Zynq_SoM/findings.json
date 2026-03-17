@@ -3,30 +3,56 @@
     {
       "analyzer_type": "schematic",
       "source_file": "Zynq_SoM.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Zynq XC7Z020 SoM (288 components). TPSM82864 voltage monitoring divider (R78/R79 to STM32 ADC) misidentified as regulator feedback divider. RTL8211F Ethernet interface not detected (custom lib_id). Duplicate reset_pin observations for eMMC (3x). has_high_freq=false on rails with 47nF 0201 caps (standard FPGA HF bypass).",
       "correct": [
         {
           "description": "MPM3834/MPM3822 switching regulators correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "TPS7A20 LDO correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DDR3L SDRAM interface correctly detected",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "STM32G431 system controller crystal correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "TPSM82864 (U8) feedback divider misidentified \u2014 R78/R79 (100k/100k) are STM32 ADC voltage monitoring dividers on +1V0 rail, not regulator FB divider. TPSM82864 FB pin ties directly to +1V0, voltage set via VSET pin R25.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U8$"
+          }
         },
         {
           "description": "Duplicate reset_pin observations for U7 (IS21ES08G eMMC) \u2014 emitted 3 times identically",
@@ -44,7 +70,12 @@
       "missed": [
         {
           "description": "RTL8211F Ethernet PHY interface not detected \u2014 custom lib_id MyLibrary:RTL8211F-CG not matched by Ethernet detector",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

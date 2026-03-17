@@ -3,16 +3,26 @@
     {
       "analyzer_type": "schematic",
       "source_file": "pcb.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Robot board (57 components). Regulator feedback Vout mismatch: 2.495V calculated vs 3.3V net label. LC filters and MOSFET circuits correctly detected.",
       "correct": [
         {
           "description": "2 LC filters correctly detected",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "2 MOSFET circuits correctly detected",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

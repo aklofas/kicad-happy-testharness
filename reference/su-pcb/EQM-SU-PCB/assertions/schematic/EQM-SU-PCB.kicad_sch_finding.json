@@ -1,0 +1,169 @@
+{
+  "file_pattern": "EQM-SU-PCB.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000288",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000288-AST-01",
+      "description": "SPI bus correctly identified with FGDOS and MCU",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000288-AST-02",
+      "description": "CAN buses correctly identified (CAN0/CAN1 with TCAN337GD)",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "design_analysis.bus_analysis.can",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000288-AST-03",
+      "description": "I2C pull-ups R107/R108/R106/R109 (4.7k to +3V3) correctly identified",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000288-AST-04",
+      "description": "7 NTC thermistor bias divider networks correctly identified",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000288-AST-05",
+      "description": "INA228 current sense with R64 (50mohm shunt) correctly identified",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R64$"
+      }
+    },
+    {
+      "id": "FND-00000288-AST-06",
+      "description": "Crystal Y5 (32.768kHz) with C9/C10 load caps correct",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y5$"
+      }
+    },
+    {
+      "id": "FND-00000288-AST-07",
+      "description": "TCXO oscillators Y1-Y4 correctly classified as active_oscillator",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y1$"
+      }
+    },
+    {
+      "id": "FND-00000288-AST-08",
+      "description": "6 MOSFET transistor circuits correctly identified",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000288-AST-09",
+      "description": "ESD protection D1 on USB_VCC correctly identified",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D1$"
+      }
+    },
+    {
+      "id": "FND-00000288-AST-10",
+      "description": "RC valve coil snubbers (50ohm/100nF) correctly detected",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000288-AST-11",
+      "description": "DACC_USB DAC smoothing filter (R70=1k, C48=3.9u, 40.81Hz) correct",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R70$"
+      }
+    },
+    {
+      "id": "FND-00000288-AST-12",
+      "description": "INCORRECT: Voltage dividers falsely detected from opamp feedback T-networks (R156/R148, R158/R150 with ratio ~0.001 from opamp output/inverting-input)",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R156$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000288-AST-13",
+      "description": "INCORRECT: RC filter duplicate entry: R70+C49 reported in reverse direction alongside correct R70+C48 entry (shared-node bidirectional detection)",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R70$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000288-AST-14",
+      "description": "MT29F64G NAND flash not detected as memory interface despite full EBI bus",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000288-AST-15",
+      "description": "DRV8825 stepper motor driver not detected in bridge_circuits",
+      "created_from": "FND-00000288",
+      "check": {
+        "path": "signal_analysis.bridge_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/superflat/src/superflat.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Low-profile wireless keyboard with BQ24075 battery charger and XC6206 LDO. Key matrix and power chain correctly identified. BOM matches perfectly.",
       "correct": [
         {
@@ -35,7 +35,12 @@
       "missed": [
         {
           "description": "No wireless/Bluetooth module detection despite being a wireless keyboard",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

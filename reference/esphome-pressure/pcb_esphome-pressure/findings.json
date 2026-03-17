@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/esphome-pressure/pcb/esphome-pressure.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Pressure sensor board with ESP32-C3, BD9G101G buck converter, and XGZP6899D I2C pressure sensor. Good I2C and regulator detection but 7 false positive RF matching networks from the power supply LC filter components.",
       "correct": [
         {
@@ -46,15 +46,31 @@
       "missed": [
         {
           "description": "Full-wave bridge rectifier (7x SS210 diodes) for 24VAC input not detected as a rectifier circuit",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Fuse F1 (140mA/340mA) on input not connected to protection_devices analysis",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^F1$"
+          }
         },
         {
           "description": "USB-C connector (J4) present but no USB data analysis or ESD protection check",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

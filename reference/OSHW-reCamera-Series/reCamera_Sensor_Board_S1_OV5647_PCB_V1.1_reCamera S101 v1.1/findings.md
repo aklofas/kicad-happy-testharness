@@ -2,7 +2,7 @@
 
 ## FND-00000147: reCamera S101 v1.1 is a camera sensor board with OV5647 image sensor (connected via FPC), NS4150B Class-D audio amplifier, and two SGM2036S LDO regulators (2.8V for sensor analog, 1.5V for sensor core). 92 components, 92 nets. The analyzer correctly identifies the LDOs, 5 transistor circuits, 7 RC filters, and the crystal circuit. However, the OV5647 camera sensor interface (MIPI CSI-2) is completely missed.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/OSHW-reCamera-Series/reCamera_Sensor_Board_S1_OV5647/PCB_V1.1/reCamera S101 v1.1.kicad_sch
 - **Related**: KH-047

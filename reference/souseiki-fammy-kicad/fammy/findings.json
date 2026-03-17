@@ -3,18 +3,29 @@
     {
       "analyzer_type": "schematic",
       "source_file": "fammy.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Famicom clone (52 components). 5 RC filters detected with suspicious capacitor reuse (C2 in 3 filters, C3 in 2). 1 BJT and 10 decoupling caps correct.",
       "correct": [
         {
           "description": "1 BJT correctly detected",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "RC filter capacitor reuse: C2 appears in 3 filters, C3 in 2 - same capacitor counted in multiple filter instances",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^C2$"
+          }
         }
       ],
       "missed": [],

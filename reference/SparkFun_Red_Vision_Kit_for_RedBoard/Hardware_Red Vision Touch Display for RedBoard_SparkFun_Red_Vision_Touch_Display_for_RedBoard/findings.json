@@ -3,19 +3,30 @@
     {
       "analyzer_type": "schematic",
       "source_file": "SparkFun_Red_Vision_Touch_Display_for_RedBoard.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Display board (34 components). Missing I2C pullups on SCL/SDA. Q1 transistor correctly detected. No protection devices.",
       "correct": [
         {
           "description": "Q1 transistor correctly detected",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         }
       ],
       "incorrect": [],
       "missed": [
         {
           "description": "Missing I2C pullup resistors on SCL/SDA lines not flagged",
-          "analyzer_section": "signal_analysis.bus_interfaces"
+          "analyzer_section": "signal_analysis.bus_interfaces",
+          "check": {
+            "path": "signal_analysis.bus_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

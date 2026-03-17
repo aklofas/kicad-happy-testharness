@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/HadesFCS/Hardware/HadesMicroJLCPCB/HadesMicroJLCPCB.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "HadesMicro JLCPCB edition - 84 components, zero signals due to KH-016; compact flight controller design",
       "correct": [
         {
@@ -23,23 +23,48 @@
       "missed": [
         {
           "description": "Zero signal analysis results despite 84 components - all signal detection blocked by KH-016 legacy wire-to-pin failure",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "VDDA rail with ferrite bead filtering for ADC reference not analyzed",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "2 diodes (likely ESD or reverse polarity protection) not detected",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Fuse not detected as protection device",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "5 LEDs with likely series resistors not characterized",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/HackerLamp/src/Lamp.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "HackerLamp with 100 SK6812 addressable LEDs driven by XIAO-RP2040. Very minimal analysis - only decoupling warning produced.",
       "correct": [
         {
@@ -22,23 +22,48 @@
       "missed": [
         {
           "description": "SK6812 addressable LED chain topology not detected - 100 LEDs in a daisy-chain DIN/DOUT pattern is a significant signal path",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No power analysis despite 100 addressable LEDs drawing significant current (up to 6A at full white)",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No connector analysis - XIAO-RP2040 has USB-C on-board for programming",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "XIAO-RP2040-DIP is a dev board module containing RP2040, USB-C, and power regulation - this context is missing",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Only 2 unique parts and 101 components but no subcircuit detection of the LED array",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

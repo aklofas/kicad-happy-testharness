@@ -5,7 +5,7 @@
       "repo": "icebreaker",
       "project": "hardware_v1.1a_icebreaker",
       "created": "2026-03-13T22:00:00.000000+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "schematic",
       "source_file": "hardware_v1.1a_icebreaker.kicad_sch.json",
       "summary": "Ferrite bead value \"600\" parsed as 600 Henries",
@@ -14,7 +14,13 @@
         {
           "type": "value_parsing",
           "description": "L1/L2 are 600-ohm ferrite beads in 0402. LC filter shows resonant_hz=2.97 and henries=600.0. Physically impossible \u2014 ferrite beads are rated in ohms at frequency, not henries.",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "not_contains_match",
+            "field": "inductor.ref",
+            "pattern": "^L1$"
+          }
         }
       ],
       "missed": [],
@@ -40,7 +46,13 @@
           "type": "rc_filter",
           "description": "R3=10k + C39=1u on U2 EN pin detected as RC filter. This is a soft-start delay circuit for an LDO enable pin, not a signal filter.",
           "analyzer_section": "signal_analysis.rc_filters",
-          "related_issue": "KH-019"
+          "related_issue": "KH-019",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R3$"
+          }
         }
       ],
       "missed": [],

@@ -2,7 +2,7 @@
 
 ## FND-00000080: Hades flight controller - 208 components with zero signal detections due to KH-016 legacy wire-to-pin matching failure
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/HadesFCS/Hardware/Hades/Hades.sch
 - **Related**: KH-016

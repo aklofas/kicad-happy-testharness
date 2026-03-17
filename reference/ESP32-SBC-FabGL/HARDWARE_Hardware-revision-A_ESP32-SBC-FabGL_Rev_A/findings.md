@@ -2,7 +2,7 @@
 
 ## FND-00000182: OLIMEX ESP32-SBC-FabGL (118 components). Correct: 118 components, CH340X USB-UART, transistors, fiducials, RC/LC filters, ESD protection, USB pair. Incorrect: VGA1 DB-15 connector as varistor, AUDIO1 audio jack as IC, U5 SY8089 input_rail=GND, U7 MT3608 fb_net=GND. Missed: battery sensing voltage divider R17/R18, R-2R VGA DAC, PS/2 interfaces, SPI bus.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: HARDWARE_Hardware-revision-A_ESP32-SBC-FabGL_Rev_A.sch.json
 - **Related**: KH-087

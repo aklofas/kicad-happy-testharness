@@ -2,7 +2,7 @@
 
 ## FND-00000085: SK6812 addressable LEDs (310x) misclassified as diodes. Switching regulator XL4016 correctly identified with feedback network. USB diff pair detected with ESD protection.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/PixelWave/src/PixelWave.kicad_sch
 - **Created**: 2026-03-14

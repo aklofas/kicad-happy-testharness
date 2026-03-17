@@ -2,7 +2,7 @@
 
 ## FND-00000088: ECP5 FPGA board with SDRAM, SPI flash, and FTDI USB. MEMS oscillator SIT8008 misidentified as crystal. Good power regulation and memory interface detection. Feedback networks duplicated with voltage dividers.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/onboard-live-icepi-zero/src/icepi-zero.kicad_sch
 - **Created**: 2026-03-14

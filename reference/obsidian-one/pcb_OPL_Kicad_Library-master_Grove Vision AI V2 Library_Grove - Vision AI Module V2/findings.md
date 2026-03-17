@@ -2,7 +2,7 @@
 
 ## FND-00000229: Grove Vision AI V2 module (112 components). Regulators (2 DCDC + 1 LDO), feedback networks, protection devices, voltage dividers, crystal all correctly detected. Issue: gate_driver_ics for Q4 lists unrelated ICs (U1 processor, U3 LDO) — should only include ICs with outputs connected to gate net. Q4 gate reportedly on VCC_3V3 rail warrants verification.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: pcb_OPL_Kicad_Library-master_Grove Vision AI V2 Library_Grove - Vision AI Module V2.kicad_sch.json
 - **Created**: 2026-03-16

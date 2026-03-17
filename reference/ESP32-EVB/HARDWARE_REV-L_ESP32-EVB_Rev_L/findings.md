@@ -2,7 +2,7 @@
 
 ## FND-00000111: CAN bus interface detected in bus_analysis but CAN transceiver (U6 SN65HVD230) not analyzed as subcircuit with neighbor components; Ethernet PHY magnetics and connector not linked to PHY
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/ESP32-EVB/HARDWARE/REV-L/ESP32-EVB_Rev_L.kicad_sch
 - **Related**: KH-016

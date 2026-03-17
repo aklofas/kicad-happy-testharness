@@ -2,7 +2,7 @@
 
 ## FND-00000196: panStamp relay and 0-10V output board with 8 relay channels (NPN transistor driven), 4 PWM-to-voltage converter channels, LF33 voltage regulator, and panStamp NRG2 module across 3 sheets. Excellent detection of RC filters for PWM smoothing, voltage dividers for op-amp feedback, and NPN relay driver circuits. No regulator detection is a notable gap.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: output-board_output-board.sch.json
 - **Created**: 2026-03-15

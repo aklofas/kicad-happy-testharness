@@ -8,33 +8,71 @@
       "correct": [
         {
           "description": "W5500 (U1) correctly identified as Ethernet PHY with RJ45 connector J10 HR911105A",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "contains_match",
+            "field": "phy_reference",
+            "pattern": "^U6$"
+          }
         },
         {
           "description": "TMC2209-LA (U7) correctly identified as motor driver with 29 pins mapped",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "I2C bus between STM32 (U3) and AS5600 (U5) with pull-ups R24, R27",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SPI signals CS/SCK/MISO/MOSI correctly classified as chip_select/clock/data",
-          "analyzer_section": "bus_topology"
+          "analyzer_section": "bus_topology",
+          "check": {
+            "path": "bus_topology",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power rails +28V, +3.3V, +3.3VA, DD4012SA enumerated",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "R4, R5 (33 ohm) falsely detected as current sense shunts -- these are Ethernet differential pair series termination resistors between W5500 TX/RX and HR911105A RJ45",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "not_contains_match",
+            "field": "shunt.ref",
+            "pattern": "^R4$"
+          }
         },
         {
           "description": "DD4012SA (U4, Diodes Inc buck converter) classified as power_symbol because lib_id is 'power:DD4012SA' with in_bom=yes -- excluded from components, ic_pin_analysis, and power_regulators entirely",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U4$"
+          }
         },
         {
           "description": "All 109 components have empty string classification field",
@@ -44,7 +82,12 @@
       "missed": [
         {
           "description": "+28V motor power rail missing from power_budget despite 11 power symbol instances feeding TMC2209 via DD4012SA",
-          "analyzer_section": "signal_analysis.power_budget"
+          "analyzer_section": "signal_analysis.power_budget",
+          "check": {
+            "path": "signal_analysis.power_budget",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

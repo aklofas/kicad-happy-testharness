@@ -2,7 +2,7 @@
 
 ## FND-00000218: Robocup kicker breakbeam sub-sheet (11 components). Correct: Q10 BSS806N MOSFET correctly identified with proper pin mapping and connector load type, R49 pull-up correctly not flagged as divider, power distribution correct. False negative: RV1 500V varistor (PVG3) not detected as protection device. Single-pin net on RV1 pin 1 is expected (NC pin on 3-pin package).
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: boards_on-robot_kicad_kicker-v3.3_Breakbeam.kicad_sch.json
 - **Related**: KH-117
@@ -25,7 +25,7 @@
 
 ## FND-00000221: Robocup kicker HV regulation sub-sheet (48 components, LT3751FE boost converter). Correct: current sense R16 7mohm shunt detected, RC filter R15+C9 gate snubber detected, Q2 IRFS4227 MOSFET correctly identified. False negative: R17(505k)/R18(113k) feedback voltage divider for HV regulation not detected — critical feedback element missed.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: boards_on-robot_kicad_kicker-v3.3_HV_-_Regulation.kicad_sch.json
 - **Created**: 2026-03-16

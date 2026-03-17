@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/RP2350pc/HARDWARE/RP2350pc-Rev.A/RP2350pc_Rev_A.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Complex RP2350 SBC with DVI, USB hub, audio amplifier - rich signal analysis with 8 voltage dividers, 17 RC filters, power regulators, and audio signal paths all detected; PWM audio filter topology and ferrite bead classification are notable strengths; crystal circuits still undetected",
       "correct": [
         {
@@ -67,45 +67,99 @@
       "incorrect": [
         {
           "description": "Audio codec crystal circuit components (R91/R104 with C90/C93/C81/C91) classified as generic RC low-pass filters - these are actually crystal load network components for an audio codec crystal oscillator",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R91$"
+          }
         },
         {
           "description": "Crystal feedback resistor R13 1k with 27pF caps classified as RC filter at 5.89MHz - this is crystal oscillator biasing, not an RC filter",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R13$"
+          }
         },
         {
           "description": "AMP volume control network (R77 10k / R42 1k) classified as voltage divider but this is actually part of the digital volume control circuit for the audio amplifier where T2 is used as a variable attenuator",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R77$"
+          }
         }
       ],
       "missed": [
         {
           "description": "No crystal circuits detected - RP2350 uses a 12MHz crystal with 27pF load caps (C21/C22) visible in BOM",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^C21$"
+          }
         },
         {
           "description": "DVI connector (DVI1) present with 8 series resistors (R59-R66) for TMDS differential pairs but no DVI/HDMI interface detection",
-          "analyzer_section": "design_analysis.differential_pairs"
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB hub IC not detected (likely FE1.1s or similar given USB_HOST1-2 and USB_HOST3-4 connectors)",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Audio amplifier IC not detected as subcircuit despite extensive audio signal path analysis",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power on/off switch circuit (PWR_ON/OFF1) with PWR_SW rail not analyzed as power management subcircuit",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Line-In audio connector and headset connector not linked to audio signal path",
-          "analyzer_section": "signal_analysis.buzzer_speaker_circuits"
+          "analyzer_section": "signal_analysis.buzzer_speaker_circuits",
+          "check": {
+            "path": "signal_analysis.buzzer_speaker_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SD card interface (MICRO_SD1) not detected",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

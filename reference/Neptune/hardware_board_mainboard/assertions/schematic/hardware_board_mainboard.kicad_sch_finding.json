@@ -1,0 +1,80 @@
+{
+  "file_pattern": "hardware_board_mainboard.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000276",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000276-AST-01",
+      "description": "30 opamp circuit entries for 6 TL074 chips with accurate gain values and configurations",
+      "created_from": "FND-00000276",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000276-AST-02",
+      "description": "TL431A correctly classified as voltage reference with REF shorted to cathode (2.5V config)",
+      "created_from": "FND-00000276",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000276-AST-03",
+      "description": "4 BJT VCA transistors (BCM847 NPN, MMBT3906 PNP) correctly typed with LED load detection",
+      "created_from": "FND-00000276",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000276-AST-04",
+      "description": "31 RC filters with correct topology categorization (low-pass, high-pass, RC-network)",
+      "created_from": "FND-00000276",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000276-AST-05",
+      "description": "16 voltage dividers including TL431 reference and potentiometer bias correctly detected",
+      "created_from": "FND-00000276",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000276-AST-06",
+      "description": "Decoupling coverage for +12V/-12V (8 caps each, 20.6uF) correctly reported",
+      "created_from": "FND-00000276",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000276-AST-07",
+      "description": "INCORRECT: U1 unit3 (+8VREF non-inverting amp, gain=3.2) misclassified as 'transimpedance_or_buffer' \u2014 has R205 (220k) feedback and R202 (100k) to GND, a standard non-inverting topology",
+      "created_from": "FND-00000276",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U1$"
+      },
+      "aspirational": true
+    }
+  ]
+}

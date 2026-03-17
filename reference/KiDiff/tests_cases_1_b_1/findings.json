@@ -3,12 +3,17 @@
     {
       "analyzer_type": "schematic",
       "source_file": "tests_cases_1_b_1.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Variant b of ESP32 MOSFET board \u2014 coordinate-only differences from variant a. Output is logically identical confirming position-independent parsing. Same issues as variant a (flyback diode false negative, regulator cap false positive).",
       "correct": [
         {
           "description": "All outputs identical to variant a despite coordinate changes",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/Otter-Iron-PRO/v2.0/Top/OtterIron_PRO_Top.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Otter Iron PRO v2.0 top board (33 components): I2C OLED display and USB detected, but very sparse signal analysis for a soldering iron control board",
       "correct": [
         {
@@ -28,19 +28,39 @@
       "missed": [
         {
           "description": "No power regulator detected on this board - the v2.0 modular design splits regulation across boards but local regulation should still be identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "User interface elements (SW1, SW2 buttons) not identified as control inputs for temperature/mode selection",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Inter-board connector pinout not analyzed for signal routing between top/bottom/USB/C245 connector boards",
-          "analyzer_section": "design_analysis"
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No USB differential pair detected despite VBUS power rail being present",
-          "analyzer_section": "design_analysis.differential_pairs"
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

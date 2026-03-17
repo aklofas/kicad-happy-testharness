@@ -8,74 +8,172 @@
       "correct": [
         {
           "description": "U3.1 ADA4610-2xR correctly identified as inverting amplifier with R3=1k input and R4=1k feedback, gain=-1.0 (0dB), producing I_CMD signal",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U3$"
+          }
         },
         {
           "description": "U4.1 ADA4610-2xR correctly identified as inverting amplifier with R6=1k input and R5=10k feedback, gain=-10.0 (20dB), producing IMON_FB signal for current monitor feedback",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U4$"
+          }
         },
         {
           "description": "U1.1 ADA4610-2xR correctly identified as buffer (output=OUT+, inverting input tied to output) driving SIG_ERR_Clip signal",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "U1.2 ADA4610-2xR correctly identified as inverting amplifier with R8=1k input and R9=1k feedback, gain=-1.0, producing OUT- (inverted copy of OUT+)",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "U2.2 ADA4610-2xR correctly identified as buffer producing +2.5V reference from R10=10k/R11=10k voltage divider",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "U2.1 ADA4610-2xR detected as transimpedance/buffer with R15=1k feedback for DC subtraction in current monitor path",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "U3.2 ADA4610-2xR correctly identified as comparator/open-loop configuration for signal error detection",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U3$"
+          }
         },
         {
           "description": "R10=10k/R11=10k voltage divider from +5V correctly detected producing 2.5V midpoint reference for U2 non-inverting input",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R10$"
+          }
         },
         {
           "description": "R12=1k/R14=1k voltage divider from IMon_In correctly detected feeding U2.1 for current monitoring",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R12$"
+          }
         },
         {
           "description": "R1=1k/R2=1k voltage divider from IN+ correctly detected feeding U3 for input signal conditioning",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R1$"
+          }
         },
         {
           "description": "L78L05_SO8 (U5) correctly identified as LDO regulator producing +5V from +15V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U5$"
+          }
         },
         {
           "description": "R7=1k/C1=47nF RC filter at 3.39kHz correctly detected in signal conditioning path",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R7$"
+          }
         },
         {
           "description": "D1 and D2 2.5V Zener diodes correctly classified for signal clamping",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "+15V and -15V decoupling correctly analyzed with 5 caps each (100uF bulk + 100nF bypass)",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "+5V rail has C9=10uF correctly noted with only bulk and no bypass cap",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [],
       "missed": [
         {
           "description": "D1 and D2 (2.5V Zeners) used as signal clamps on the error signal path (SIG_ERR to SIG_ERR_Clip) not detected as protection/clamping circuit",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
         },
         {
           "description": "XLR input (J1 AC3FAH2-XLR) and banana jack outputs (J3, J4, J5) not detected as audio/test interfaces",
-          "analyzer_section": "signal_analysis.bus_interfaces"
+          "analyzer_section": "signal_analysis.bus_interfaces",
+          "check": {
+            "path": "signal_analysis.bus_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

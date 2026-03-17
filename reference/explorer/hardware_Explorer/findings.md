@@ -2,7 +2,7 @@
 
 ## FND-00000215: AnyShake Explorer seismograph data acquisition board with STM32F103C8Tx MCU, 3-axis geophone signal conditioning (6x ADA4528-2ARMZ dual op-amps), MP2236GJ switching regulator, TPS5430DDA negative-rail generator, RS-232 interfaces, and NEO-M8M GNSS. Excellent op-amp and filter analysis. Crystal detection has a false positive with the active oscillator, and TPS5430DDA output topology is not fully traced.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_Explorer.kicad_sch.json
 - **Created**: 2026-03-15

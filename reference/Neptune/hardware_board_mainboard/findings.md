@@ -2,7 +2,7 @@
 
 ## FND-00000276: Neptune analog synth filter mainboard (273 components, 6 TL074 ICs). Opamp circuits, RC filters, voltage dividers, BJT VCA transistors all well detected. U1 unit3 non-inverting amplifier (+8VREF generator, gain=3.2) misclassified as transimpedance_or_buffer. Duplicate design_observations: U1 decoupling warning emitted 5 times (once per TL074 unit).
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_board_mainboard.kicad_sch.json
 - **Created**: 2026-03-16
@@ -32,7 +32,7 @@
 
 ## FND-00000277: Neptune Hubble test fixture (66 components, 14 DG449 analog switches). Correctly reports zero opamp/filter/divider detections. Decoupling warnings for 14 ICs without bypass caps are factually accurate.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_hubble-lens_hubble-lens.kicad_sch.json
 - **Created**: 2026-03-16

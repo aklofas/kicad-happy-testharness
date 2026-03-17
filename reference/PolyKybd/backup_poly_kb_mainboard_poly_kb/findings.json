@@ -8,43 +8,97 @@
       "correct": [
         {
           "description": "LDO U1 (XC6206P332MR) detected with correct input (+5V) and output (+3.3V) rails",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "Crystal Y1 16MHz detected with 12pF load caps; effective load 9pF calculated correctly",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "Three I2C buses (I2C1, I2C2, I2C3) identified; all correctly flagged as missing external pullup resistors",
-          "analyzer_section": "signal_analysis.design_observations (i2c_bus)"
+          "analyzer_section": "signal_analysis.design_observations (i2c_bus)",
+          "check": {
+            "path": "signal_analysis.design_observations (i2c_bus)",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "RC filter R2(10k)+C1(1u) on NRST net detected at 15.92 Hz (power-on reset circuit)",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R2$"
+          }
         },
         {
           "description": "Two WS2812B addressable LED chains detected in the 4 parsed sheets",
-          "analyzer_section": "signal_analysis.addressable_led_chains"
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Decoupling analysis correctly identifies +3.3V (11 caps, 11.2uF), +3.3VA (2 caps), +5V (1 cap)",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ERC no_driver warnings for FLASH_NHOLD (U2.VREF+ on wrong net), FLASH_NWP (U2.VCAP_2 on wrong net), and KB_LED_ARRAY (floating) are all genuine design issues",
-          "analyzer_section": "design_analysis.erc_warnings"
+          "analyzer_section": "design_analysis.erc_warnings",
+          "check": {
+            "path": "design_analysis.erc_warnings",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Single-pin net observations correctly surface U2.NRST (pin 14) isolated on 'PD14' net, U2.VCAP_1 (pin 49) isolated on 'PD10' net, and U2.BOOT0 (pin 94) isolated on 'PD12' net - all are genuine schematic wiring errors",
-          "analyzer_section": "signal_analysis.design_observations (single_pin_nets)"
+          "analyzer_section": "signal_analysis.design_observations (single_pin_nets)",
+          "check": {
+            "path": "signal_analysis.design_observations (single_pin_nets)",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Polyfuse F1 (2A) correctly identified as protection device on VCC rail",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^F1$"
+          }
         },
         {
           "description": "SPI1 and SPI2 buses identified; W25N01GVZEIG NAND flash on SPI2 detected",
-          "analyzer_section": "design_analysis.bus_analysis.spi"
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -62,25 +116,51 @@
         },
         {
           "description": "RC filter R9(22 ohm)+C1(1u) reported at 7.23 kHz with input '__unnamed_3'. R9 is a series resistor on the NRST line of the SWD debug connector (J1 pin 2), not an intentional RC filter. The topology arises incidentally from the shared C1 reset capacitor.",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R9$"
+          }
         }
       ],
       "missed": [
         {
           "description": "Key matrix not detected (key_matrices=[]). The design has an 8-row x 21-column GPIO matrix on KRow0-7 and KCol0-20 signals driven by the STM32F407, routed to keyboard connectors J3/J4/J7/J10-J12. The absence of explicit key switch components in the mainboard sub-schematic prevents detection.",
-          "analyzer_section": "signal_analysis.key_matrices"
+          "analyzer_section": "signal_analysis.key_matrices",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "74HCT595 shift register array (U500-U513, 14 chips) not recognized as a keyboard scan engine. The design uses Q-output pins (QC, QD, QF, QG) as the SHIFTR_CLK/RST/LATCH_CLK/NOE bus to keyboard connectors, while individual K_xxx key signals drive the control input pins (SRCLK, RCLK, ~SRCLR, ~OE). This is an unconventional use of shift registers for per-key addressing.",
-          "analyzer_section": "signal_analysis.key_matrices"
+          "analyzer_section": "signal_analysis.key_matrices",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Addressable LED chain severely undercounted. keyboard.sch has 108 total sheet instances of SSD1306_TO_SPI.sch (one per key position), each containing a WS2812B LED. Only the unique file is parsed once, so the actual per-key LED chain of 100+ WS2812B devices is reduced to 2 chains of length 1.",
-          "analyzer_section": "signal_analysis.addressable_led_chains"
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SHIFTR_NMASTER_RST global label appears on both mainboard.sch and keyboard.sch but does not resolve to any net in the output. The corresponding SHIFTR_RST net on mainboard connects only to 74HCT595 Q-output pins, not to any MCU reset control source. This net-name mismatch leaves the shift register reset undriven.",
-          "analyzer_section": "nets / signal_analysis"
+          "analyzer_section": "nets / signal_analysis",
+          "check": {
+            "path": "nets / signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

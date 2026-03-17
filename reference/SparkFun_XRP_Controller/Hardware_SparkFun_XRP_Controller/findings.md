@@ -2,7 +2,7 @@
 
 ## FND-00000168: SparkFun XRP robot controller with RP2350B. AP63357 reference voltage wrong, bus widths inflated, QSPI interface missed.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_SparkFun_XRP_Controller.kicad_sch.json
 - **Created**: 2026-03-15
@@ -28,7 +28,7 @@
 
 ## FND-00000174: SparkFun XRP Controller (RP2350B robotics board). Correct: 184 components, DRV8411A motor drivers, LSM6DSOX IMU, crystal, USB compliance, WS2812B, power OR-ing. Incorrect: AP63357 Vref wrong (0.6V vs 0.765V giving 3.87V vs actual 5V), bus widths inflated by counting label instances across sheets. Missed: QSPI memory interface, SPI to radio module, I2C bus to IMU.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_SparkFun_XRP_Controller.kicad_sch.json
 - **Created**: 2026-03-15

@@ -16,7 +16,13 @@
           "type": "power_regulator",
           "description": "MAX20405 classified with topology=LDO but is actually a synchronous buck converter. Has inductor L1 + bootstrap cap C15 which are hallmarks of switching topology.",
           "analyzer_section": "signal_analysis.power_regulators",
-          "related_issue": "#8"
+          "related_issue": "#8",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^L1$"
+          }
         }
       ],
       "missed": [],
@@ -36,7 +42,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "Hardware_OpenMowerMainboard_OpenMowerMainboard.kicad_sch.json",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "pwr_flag_warnings generated for sub-sheets where power rail source is on a different sheet (29 warnings across OpenMower, 37 in cynthion, 9 in education_tools, 6 in glasgow)",
       "correct": [
         {
@@ -71,7 +77,12 @@
           "type": "distributor_pn",
           "description": "digikey field is empty for all OpenMower components despite source having \"Digikey\" property with valid PNs (e.g. \"1276-1935-1-ND\")",
           "analyzer_section": "components[*].digikey",
-          "related_issue": "#11"
+          "related_issue": "#11",
+          "check": {
+            "path": "components[*].digikey",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -98,7 +109,13 @@
           "type": "voltage_divider",
           "description": "R5/R4 with ratio=0.985 on RASPI_FAN_ON. The near-unity ratio and digital signal name indicate pull-up/pull-down, not a voltage divider for sensing.",
           "analyzer_section": "signal_analysis.voltage_dividers",
-          "related_issue": "#12"
+          "related_issue": "#12",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R5$"
+          }
         }
       ],
       "missed": [],
@@ -131,7 +148,13 @@
           "type": "opamp_circuit",
           "description": "Units 3 and 4 have input_resistor={ref:R49, ohms:4700}. R49 is part of the R48/R49 voltage divider feeding unit 2's inverting input. The analyzer erroneously associates R49 as an input resistor for these unused units because R49 has one terminal on GND, which is the same net as these units' inputs.",
           "analyzer_section": "signal_analysis.opamp_circuits",
-          "related_issue": null
+          "related_issue": null,
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^R49$"
+          }
         }
       ],
       "missed": [],
@@ -163,7 +186,13 @@
           "type": "feedback_network",
           "description": "R11/R12 form the output voltage feedback divider for IC3 (MAX20405 buck converter). The midpoint connects through JP5 to the FB pin of IC3. This should be detected as a feedback_network in addition to being a voltage_divider.",
           "analyzer_section": "signal_analysis.feedback_networks",
-          "related_issue": null
+          "related_issue": null,
+          "check": {
+            "path": "signal_analysis.feedback_networks",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R11$"
+          }
         }
       ],
       "suggestions": [
@@ -180,7 +209,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "Hardware_OpenMowerMainboard_RobotConnectors.kicad_sch.json",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "BSS138 level shifters Q13-Q16 not recognized as level_shifter topology",
       "correct": [
         {

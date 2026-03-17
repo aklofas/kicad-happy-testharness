@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "hardware_ubertooth-one_ubertooth-one.sch.json",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Legacy net resolver assigns pins to wrong nets: CC2591 RF_P/AVDD pins on GND, LPC1758 GPIO/XTAL pins on 3V3D. 71/143 nets are single-pin orphans (50%).",
       "correct": [
         {
@@ -17,7 +17,12 @@
         {
           "type": "power_rails",
           "description": "6 rails correctly identified: 1V8, 3V3, 3V3D, GND, VBUS, VDDA",
-          "analyzer_section": "statistics.power_rails"
+          "analyzer_section": "statistics.power_rails",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "type": "dnp",

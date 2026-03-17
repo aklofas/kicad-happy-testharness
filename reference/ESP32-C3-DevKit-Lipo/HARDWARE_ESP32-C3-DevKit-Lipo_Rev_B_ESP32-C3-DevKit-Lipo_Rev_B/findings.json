@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/ESP32-C3-DevKit-Lipo/HARDWARE/ESP32-C3-DevKit-Lipo_Rev_B/ESP32-C3-DevKit-Lipo_Rev_B.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "OLIMEX ESP32-C3 dev board with LiPo charging. Power domains and IC identification empty despite detecting SY8089 buck and BL4054B charger in BOM. Subcircuit neighbors empty. USB data lines detected but no ESD protection noted.",
       "correct": [
         {
@@ -35,27 +35,58 @@
       "missed": [
         {
           "description": "SY8089 buck converter not detected in power_regulators despite being in BOM with inductor available",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "BL4054B LiPo charger not detected - charging circuit analysis missing",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No crystal circuit detection (ESP32-C3 may use internal oscillator)",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^C3$"
+          }
         },
         {
           "description": "No decoupling analysis despite 7 capacitors present",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB CC resistors (R4/R2 5.1k) not identified for USB-C current advertisement",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "WPM2015-3 P-MOSFET power path switch not detected",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

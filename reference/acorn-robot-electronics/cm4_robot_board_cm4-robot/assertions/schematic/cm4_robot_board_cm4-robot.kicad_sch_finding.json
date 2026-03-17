@@ -1,0 +1,103 @@
+{
+  "file_pattern": "cm4_robot_board_cm4-robot.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000272",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000272-AST-01",
+      "description": "LDO TLV1117LV33 and buck LM2576HVS-5 correctly identified",
+      "created_from": "FND-00000272",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000272-AST-02",
+      "description": "10 MOSFET circuits correctly identified with gate drivers",
+      "created_from": "FND-00000272",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000272-AST-03",
+      "description": "8 protection devices (CDSOT23-SM712 TVS, polyfuses, USBLC6, TPD4E1U06) correctly detected",
+      "created_from": "FND-00000272",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000272-AST-04",
+      "description": "VMOT battery voltage sensing divider correctly identified with ADS1115 load",
+      "created_from": "FND-00000272",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000272-AST-05",
+      "description": "WS2812B LED chain of 7 LEDs correctly detected",
+      "created_from": "FND-00000272",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000272-AST-06",
+      "description": "4 crystal circuits with load cap calculations correct",
+      "created_from": "FND-00000272",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000272-AST-07",
+      "description": "INCORRECT: TPS61040DBVR (U12) output_rail='+5V' but actual boost output is +12V \u2014 Schottky D11 cathode connects to +12V rail",
+      "created_from": "FND-00000272",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U12$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000272-AST-08",
+      "description": "Ethernet interface not detected \u2014 CM4 pairs through TPD4E1U06 ESD to G2401CG transformer to RJ45",
+      "created_from": "FND-00000272",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000272-AST-09",
+      "description": "ISO1050DUB isolated CAN transceivers (U10/U11) not detected as isolation barriers \u2014 separate VCC1/VCC2 power domains",
+      "created_from": "FND-00000272",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U10$"
+      },
+      "aspirational": true
+    }
+  ]
+}

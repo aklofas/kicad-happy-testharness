@@ -1,0 +1,53 @@
+{
+  "file_pattern": "WIRED-pH-EZO-Carrier-revA1.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 7 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 7
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 isolation_barriers",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U1 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U1$"
+      }
+    }
+  ]
+}

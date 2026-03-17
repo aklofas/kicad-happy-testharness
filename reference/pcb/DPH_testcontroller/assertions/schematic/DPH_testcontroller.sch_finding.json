@@ -1,0 +1,29 @@
+{
+  "file_pattern": "DPH_testcontroller.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000224",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000224-AST-01",
+      "description": "BOM component counts accurate: 16 diodes, 9 capacitors, 10 resistors, 4 ICs, 4 connectors, 1 switch",
+      "created_from": "FND-00000224",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000224-AST-02",
+      "description": "8 RC filter stages (36K + 500pF, fc\u224888Hz) on op-amp outputs not detected. Each LM324 output feeds through CD4066 analog switch to R-C low-pass filter.",
+      "created_from": "FND-00000224",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

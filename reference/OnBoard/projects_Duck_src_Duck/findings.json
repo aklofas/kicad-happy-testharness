@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/Duck/src/Duck.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "STM32F411 flight computer with GPS, flash, pyrotechnic channels. Pyro continuity sense dividers correctly detected. STM32 internal regulator classified as power_regulator which is debatable.",
       "correct": [
         {
@@ -44,11 +44,21 @@
       "missed": [
         {
           "description": "No barometric pressure sensor or IMU detection despite being a flight computer",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "GPS module (MAX-M10S) not recognized as GNSS receiver in bus_analysis",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

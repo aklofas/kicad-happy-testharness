@@ -26,11 +26,21 @@
       "missed": [
         {
           "description": "SSD1306 OLED module (Brd1) is on I2C bus (SCL/SDA pins connected to Arduino A4/A5) but I2C bus analysis only shows Arduino, not the OLED. The SSD1306 is typed as other rather than display/ic.",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SK6812MINI LEDs use a serial data protocol (single-wire NZR) but no observation about addressable LED chains is generated",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

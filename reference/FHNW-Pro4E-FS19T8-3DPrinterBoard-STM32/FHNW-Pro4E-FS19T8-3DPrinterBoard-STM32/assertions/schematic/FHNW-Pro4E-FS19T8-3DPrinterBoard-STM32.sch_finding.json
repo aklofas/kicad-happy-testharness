@@ -1,0 +1,130 @@
+{
+  "file_pattern": "FHNW-Pro4E-FS19T8-3DPrinterBoard-STM32.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000289",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000289-AST-01",
+      "description": "SG-210STF active oscillator correctly identified",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000289-AST-02",
+      "description": "Thermistor RC filters (R401/C401 etc, 3.39Hz ADC anti-alias) correctly detected",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R401$"
+      }
+    },
+    {
+      "id": "FND-00000289-AST-03",
+      "description": "Endstop debounce filters (10k/10u, 1.59Hz) correctly detected",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000289-AST-04",
+      "description": "ESP32 auto-reset BJT pair (Q1/Q2 2N3904) correctly identified",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "FND-00000289-AST-05",
+      "description": "4 protection devices (fuses F101/F401/F402, USBLC6 USB ESD) correct",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F101$"
+      }
+    },
+    {
+      "id": "FND-00000289-AST-06",
+      "description": "LC input filters for buck regulators (47uH/10nF, 232kHz) correct",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000289-AST-07",
+      "description": "VBUS detection divider (R503/R506, ratio 0.68) correct",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R503$"
+      }
+    },
+    {
+      "id": "FND-00000289-AST-08",
+      "description": "INCORRECT: T401/T404/T405 PMV40UN2 fan MOSFETs have drain/source inverted: drain_net='GND', source_net='Fan1_pwr' \u2014 should be source=GND, drain=Fan_pwr (load)",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^T401$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000289-AST-09",
+      "description": "INCORRECT: T401/T404/T405 each get false led_driver record pointing to D401 LED_YEL with R422 (100k) \u2014 D401 is in a different circuit section, no connectivity to fan MOSFETs",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^T401$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000289-AST-10",
+      "description": "INCORRECT: LM2675M-3.3 (U101) and LM2675M-5 (U102) both show input_rail=null and topology='unknown' \u2014 can't trace through input inductor to find +24V source",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U101$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000289-AST-11",
+      "description": "INCORRECT: SD_DETECT RC filter R216/C203 has wrong input_net='SD_DAT0' \u2014 should be +3.3V (R216 pulls up from +3.3V)",
+      "created_from": "FND-00000289",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R216$"
+      },
+      "aspirational": true
+    }
+  ]
+}

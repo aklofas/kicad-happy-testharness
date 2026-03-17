@@ -1,0 +1,19 @@
+{
+  "file_pattern": "eurorack-pmod-pcb.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-146-01",
+      "description": "KH-146: MMBFJ111 classified as JFET not MOSFET",
+      "issue": "KH-146",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "type",
+        "pattern": "^jfet$"
+      }
+    }
+  ]
+}

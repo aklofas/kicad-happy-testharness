@@ -1,0 +1,52 @@
+{
+  "file_pattern": "pcb_rev.B_sizif512.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000265",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000265-AST-01",
+      "description": "Digital logic ICs (buffers, latches, memory) correctly classified",
+      "created_from": "FND-00000265",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000265-AST-02",
+      "description": "Voltage dividers for biasing correctly detected",
+      "created_from": "FND-00000265",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000265-AST-03",
+      "description": "INCORRECT: NPN transistors with (1,0,0,-1) Y-flip transform have collector/emitter pins swapped \u2014 Q2 reports emitter=+5V (should be collector), Q1 reports collector=GND (should be emitter), Q3 has both C/E on same net",
+      "created_from": "FND-00000265",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^Q2$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000265-AST-04",
+      "description": "INCORRECT: Q1 falsely identified as LED driver for D12/R13 \u2014 no shared nets, ~142mm apart on schematic",
+      "created_from": "FND-00000265",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "file_pattern": "drone_power_2_screws_V2.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 6 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "L3 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 3 power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U3 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U2 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "U1 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Exactly 7 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 7
+      }
+    }
+  ]
+}

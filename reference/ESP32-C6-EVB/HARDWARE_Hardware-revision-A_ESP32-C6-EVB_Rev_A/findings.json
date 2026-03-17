@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/ESP32-C6-EVB/HARDWARE/Hardware-revision-A/ESP32-C6-EVB_Rev_A.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Legacy KiCad 5 format parsed but signal analysis almost entirely empty - only 2 design observations (USB data without ESD); I2C/UART buses detected from net names but all subcircuit neighbor_components lists are empty; 11 components misclassified as other",
       "correct": [
         {
@@ -41,39 +41,87 @@
       "missed": [
         {
           "description": "Zero voltage dividers detected despite the board having a buck regulator (SY8089) that requires a feedback divider",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Zero RC filters detected in the entire design",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Zero power regulators detected - SY8089AAAC (U2) is a buck regulator and TX4138 (U1) is a DC-DC controller, both should be identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "Zero protection devices detected despite SMAJ58A TVS diode (D1) and multiple Schottky diodes for reverse polarity protection",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
         },
         {
           "description": "Zero decoupling analysis despite having 11 capacitors on the board",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "All subcircuit neighbor_components lists are empty - no neighboring components linked to any IC",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Optocoupler-isolated relay driver circuits (OPT1-4 driving REL1-4) completely undetected - this is the main function of this EVB",
-          "analyzer_section": "signal_analysis.isolation_barriers"
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Crystal circuit for ESP32-C6 module not detected (12pF cap C5 suggests external crystal)",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^C6$"
+          }
         },
         {
           "description": "No USB interface detected despite USB-OTG1 connector present",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

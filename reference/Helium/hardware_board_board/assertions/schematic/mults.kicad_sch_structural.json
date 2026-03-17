@@ -1,0 +1,46 @@
+{
+  "file_pattern": "mults.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 12 opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "equals",
+        "value": 12
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "U1 in opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U4 in opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "U2 in opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U2$"
+      }
+    }
+  ]
+}

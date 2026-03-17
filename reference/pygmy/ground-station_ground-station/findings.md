@@ -2,7 +2,7 @@
 
 ## FND-00000241: Ground station (30 components). Protection device U4 (USBLC6-2SC6) counted as 4 entries (per-net duplication). 1 regulator and 2 RC filters correctly detected.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: ground-station.kicad_sch.json
 - **Created**: 2026-03-16

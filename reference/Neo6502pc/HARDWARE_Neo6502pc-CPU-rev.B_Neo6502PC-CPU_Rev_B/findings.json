@@ -3,12 +3,17 @@
     {
       "analyzer_type": "schematic",
       "source_file": "HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Neo6502 retro computer board with RP2040 + W65C02S. IDC cables as capacitors, buzzer as switch, expansion bus misclassified, SPI missed, false I2C on HDMI/GPIO.",
       "correct": [
         {
           "description": "All 8 ICs correctly identified (RP2040, W65C02S, etc.)",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -24,7 +29,12 @@
       "missed": [
         {
           "description": "SPI bus between RP2040 and peripheral ICs not detected",
-          "analyzer_section": "signal_analysis.bus_interfaces"
+          "analyzer_section": "signal_analysis.bus_interfaces",
+          "check": {
+            "path": "signal_analysis.bus_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -45,16 +55,26 @@
     {
       "analyzer_type": "schematic",
       "source_file": "HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Neo6502 retro computer CPU board (122 components). Correct: all 8 ICs, power rails, I2C with pullups, UART, HDMI pairs, USB compliance, 7 DNP parts. Incorrect: Cable-PWR1/Cable-pUEXT1 as capacitor (are IDC cables), SPK1 buzzer as switch, BUS1 40-pin expansion as SWD debug connector, HDMI/GPIO nets falsely detected as I2C. Missed: SPI bus not detected, test points not in test_coverage.",
       "correct": [
         {
           "description": "All 8 ICs correctly identified (RP2040, W65C02S, CH217K, CH334S, ZD25Q16B, 3x 74LVC245)",
-          "analyzer_section": "bom"
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB-C CC 5.1k pulldowns pass compliance",
-          "analyzer_section": "usb_compliance"
+          "analyzer_section": "usb_compliance",
+          "check": {
+            "path": "usb_compliance",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -66,7 +86,12 @@
       "missed": [
         {
           "description": "SPI bus (SPI1_RX/CSn/SCK/TX) not detected despite clear net names",
-          "analyzer_section": "bus_analysis.spi"
+          "analyzer_section": "bus_analysis.spi",
+          "check": {
+            "path": "bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

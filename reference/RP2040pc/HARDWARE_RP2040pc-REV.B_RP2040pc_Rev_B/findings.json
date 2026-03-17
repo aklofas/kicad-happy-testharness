@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/RP2040pc/HARDWARE/RP2040pc-REV.B/RP2040pc_Rev_B.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "RP2040 SBC with DVI, USB, battery management - good power regulation analysis with 3 regulators detected and 7 voltage dividers; audio PWM filters and protection diodes correctly found; crystal circuit undetected; DVI interface not analyzed",
       "correct": [
         {
@@ -52,7 +52,13 @@
       "incorrect": [
         {
           "description": "Crystal circuit components (R6 100R series with C15/C16 18pF load caps) classified as RC filter at 88.4MHz - this is the RP2040 12MHz crystal oscillator circuit",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R6$"
+          }
         },
         {
           "description": "Buttons (BOOT1 with T1102D footprint) classified as type other instead of switch",
@@ -66,31 +72,68 @@
       "missed": [
         {
           "description": "No crystal circuit detected for RP2040 12MHz crystal with 18pF load caps (C15/C16) and 100R series resistor (R6)",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^C15$"
+          }
         },
         {
           "description": "DVI connector (DVI1) with 8 series resistors (R24-R31) for TMDS differential pairs not detected as display interface",
-          "analyzer_section": "design_analysis.differential_pairs"
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Audio output circuit (SPK_L1, SPK_R1 speaker connectors with AUDIO1 headphone jack) not linked into audio signal chain",
-          "analyzer_section": "signal_analysis.buzzer_speaker_circuits"
+          "analyzer_section": "signal_analysis.buzzer_speaker_circuits",
+          "check": {
+            "path": "signal_analysis.buzzer_speaker_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB hub IC not detected as subcircuit (U4 with VBUSM pin suggests FE1.1s or similar)",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Battery charger circuit not identified despite CHARGING1 LED and battery management components present",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power path management (D1/D5/D7/D9 Schottky diode OR-ing between USB/battery/external power) not analyzed as power path topology",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
         },
         {
           "description": "PGM/RUN1 connector for RP2040 programming/debug not detected",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

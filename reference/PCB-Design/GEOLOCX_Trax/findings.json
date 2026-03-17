@@ -8,35 +8,79 @@
       "correct": [
         {
           "description": "Correctly parsed 5-sheet hierarchy with 92 components including 12 ICs",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "RF chain correctly identified with PE4259 switch (U3) and SX1278 transceiver (IC2)",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "U4 (LT1083-3.3) correctly detected as LDO with topology=LDO, input_rail=VDD, output_rail=+3.3V, estimated_vout=3.3",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U4$"
+          }
         },
         {
           "description": "Voltage divider R7/R8 (1K/1K) at 0.5 ratio feeding J9 pin 2 and C51 correctly detected",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R7$"
+          }
         },
         {
           "description": "ESD protection D1 (SP0503BAHT) correctly detected on USB data lines",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
         },
         {
           "description": "Crystal circuits Y1, Y2 at 32 MHz correctly detected (though load caps missing - likely due to schematic using generic C_Small symbols)",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "Decoupling observation for IC1 (W25Q128), IC2 (SX1278), IC3 (STM32G473), U7 (TESEO-LIV3F) noting missing caps is useful design feedback",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB data net D- correctly flagged with ESD protection, D+ without - accurate since SP0503BAHT only covers 3 lines",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -56,15 +100,31 @@
       "missed": [
         {
           "description": "BGA725L6 (U5) is a GPS LNA, not detected in rf_chains despite being in the RF signal path between antenna and TESEO-LIV3F",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "STC3117 (U8) is a battery fuel gauge IC connected to the battery monitoring circuit - not classified or noted in design_observations",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "MCP73113 (U3) is a LiPo battery charger IC - should be detected in bms_systems or at minimum noted as a charger",
-          "analyzer_section": "signal_analysis.bms_systems"
+          "analyzer_section": "signal_analysis.bms_systems",
+          "check": {
+            "path": "signal_analysis.bms_systems",
+            "op": "contains_match",
+            "field": "bms_reference",
+            "pattern": "^U3$"
+          }
         }
       ],
       "suggestions": [

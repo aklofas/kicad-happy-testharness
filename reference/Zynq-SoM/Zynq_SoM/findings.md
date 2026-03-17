@@ -2,7 +2,7 @@
 
 ## FND-00000290: Zynq XC7Z020 SoM (288 components). TPSM82864 voltage monitoring divider (R78/R79 to STM32 ADC) misidentified as regulator feedback divider. RTL8211F Ethernet interface not detected (custom lib_id). Duplicate reset_pin observations for eMMC (3x). has_high_freq=false on rails with 47nF 0201 caps (standard FPGA HF bypass).
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Zynq_SoM.kicad_sch.json
 - **Created**: 2026-03-16

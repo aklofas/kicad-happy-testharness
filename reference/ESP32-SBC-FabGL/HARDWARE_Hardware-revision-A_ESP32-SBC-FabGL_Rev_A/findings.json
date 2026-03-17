@@ -3,27 +3,48 @@
     {
       "analyzer_type": "schematic",
       "source_file": "HARDWARE_Hardware-revision-A_ESP32-SBC-FabGL_Rev_A.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "OLIMEX ESP32-SBC-FabGL (118 components). Correct: 118 components, CH340X USB-UART, transistors, fiducials, RC/LC filters, ESD protection, USB pair. Incorrect: VGA1 DB-15 connector as varistor, AUDIO1 audio jack as IC, U5 SY8089 input_rail=GND, U7 MT3608 fb_net=GND. Missed: battery sensing voltage divider R17/R18, R-2R VGA DAC, PS/2 interfaces, SPI bus.",
       "correct": [
         {
           "description": "118 components correctly extracted",
-          "analyzer_section": "statistics.total_components"
+          "analyzer_section": "statistics.total_components",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ESP32-WROVER-IE correctly identified",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USBLC6-2P6 ESD protection detected",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [],
       "missed": [
         {
           "description": "Voltage divider R17(470k)/R18(150k) for battery sensing not detected",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R17$"
+          }
         }
       ],
       "suggestions": [

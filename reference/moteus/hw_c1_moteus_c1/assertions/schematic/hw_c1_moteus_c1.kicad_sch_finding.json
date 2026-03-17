@@ -1,0 +1,20 @@
+{
+  "file_pattern": "hw_c1_moteus_c1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000050",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000050-AST-01",
+      "description": "3x R4/R5/R6 with Kelvin connections and anti-alias RC filters feeding DRV8323 integrated CSA. current_sense=[]. 2mOhm shunt resistors not detected.",
+      "created_from": "FND-00000050",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R4$"
+      },
+      "aspirational": true
+    }
+  ]
+}

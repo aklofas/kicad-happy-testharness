@@ -3,26 +3,48 @@
     {
       "analyzer_type": "schematic",
       "source_file": "tests_cases_1_a_1.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "ESP32 8-channel MOSFET output board (77 components). Correct: all components, nets, AZ1117-3.3 LDO, CP2104 USB-UART, auto-reset circuit, MOSFET switches, BOM. Incorrect: flyback diodes D3-D10 not detected (drain-to-VCC topology missed), regulator input cap C4 falsely flagged as missing. Missed: D1/D2 power OR-ing, R17-R24 gate pulldowns.",
       "correct": [
         {
           "description": "All 77 components with accurate pin-to-net assignment",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "AZ1117-3.3 correctly detected as LDO",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Q1/Q2 auto-reset circuit correctly traced",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "has_flyback_diode=false for Q3-Q10 despite D3-D10 Schottky diodes from drain to VCC",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q3$"
+          }
         },
         {
           "description": "Regulator input cap falsely flagged as missing (C4 1uF is on the input net)",
@@ -32,7 +54,13 @@
       "missed": [
         {
           "description": "D1/D2 Schottky power OR-ing not detected",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
         }
       ],
       "suggestions": [

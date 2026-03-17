@@ -1,0 +1,35 @@
+{
+  "file_pattern": "voltage_translators.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 5 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "R211 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R211$"
+      }
+    }
+  ]
+}

@@ -3,20 +3,35 @@
     {
       "analyzer_type": "schematic",
       "source_file": "commodorelcd.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Commodore LCD replica/interface board. CR-prefixed diodes misclassified as capacitors, speaker and DC-DC converter misclassified, no regulators detected.",
       "correct": [
         {
           "description": "All ICs correctly identified and classified",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "44 ferrite beads correctly identified",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "LM324 and LM358 opamps correctly identified",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -40,7 +55,12 @@
       "missed": [
         {
           "description": "No power regulators detected despite DC-DC converter and voltage regulation on board",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -61,20 +81,36 @@
     {
       "analyzer_type": "schematic",
       "source_file": "commodorelcd.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Commodore LCD computer (231 components). Correct: all ICs, 44 ferrite beads, crystals, UART, opamps, bus topology. Incorrect: 12 CR-prefixed diodes misclassified as capacitor (CR is standard diode prefix), Speaker CNP1 as capacitor, DB37 connector CN2 as mounting_hole, DC1 DCDC-Conv as diode. Missed: no power_regulators detected, 4N28 optocoupler not in isolation_barriers.",
       "correct": [
         {
           "description": "44 FB-prefixed components correctly classified as ferrite_bead",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Crystal circuits Y1 4MHz and Y3 3.579545MHz correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "LM324/LM358 opamp circuits correctly analyzed",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -86,7 +122,12 @@
       "missed": [
         {
           "description": "No power_regulators detected despite DC1 DCDC-Conv generating -12V/-5V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

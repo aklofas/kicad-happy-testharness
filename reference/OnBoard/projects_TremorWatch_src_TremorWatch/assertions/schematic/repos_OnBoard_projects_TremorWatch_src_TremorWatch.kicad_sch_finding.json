@@ -1,0 +1,30 @@
+{
+  "file_pattern": "repos_OnBoard_projects_TremorWatch_src_TremorWatch.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000103",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000103-AST-01",
+      "description": "MicroSD card (X1, Adafruit SDIO microSD symbol) uses SPI mode with CS, SCLK, DI (MOSI), DO (MISO) through RN1 series resistors to ESP32C3 but no SPI bus detected",
+      "created_from": "FND-00000103",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000103-AST-02",
+      "description": "RN1 provides series protection resistors on SD card SPI lines (CS, DI, SCLK via pins 7,6,5) with pull-ups to +3V3 (pins 1-4). This level-shifting/protection topology is not noted.",
+      "created_from": "FND-00000103",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

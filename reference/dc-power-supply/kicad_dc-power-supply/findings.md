@@ -2,7 +2,7 @@
 
 ## FND-00000233: DC power supply (129 components). 2 RF matching networks falsely detected (L1 ferrite EMI filter + C12 decoupling misidentified). 5 regulators correct. 10 RC filters detected but many are feedback networks not signal filters.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: dc-power-supply.sch.json
 - **Created**: 2026-03-16

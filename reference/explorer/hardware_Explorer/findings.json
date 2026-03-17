@@ -3,66 +3,148 @@
     {
       "analyzer_type": "schematic",
       "source_file": "hardware_Explorer.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "AnyShake Explorer seismograph data acquisition board with STM32F103C8Tx MCU, 3-axis geophone signal conditioning (6x ADA4528-2ARMZ dual op-amps), MP2236GJ switching regulator, TPS5430DDA negative-rail generator, RS-232 interfaces, and NEO-M8M GNSS. Excellent op-amp and filter analysis. Crystal detection has a false positive with the active oscillator, and TPS5430DDA output topology is not fully traced.",
       "correct": [
         {
           "description": "12 op-amp circuits correctly analyzed across 6x ADA4528-2ARMZ dual op-amps: 6 inverting preamp stages (U17-U19 units 1+2) with gains from -1.0 to -19.6, and 6 compensator stages (U13-U15 units 1+2) for the geophone signal processing chain",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U17$"
+          }
         },
         {
           "description": "U3 MP2236GJ switching regulator correctly identified with Vref=0.8V (lookup), feedback divider R7 (100k) / R8 (12k), and estimated Vout=7.467V from VIN input",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U3$"
+          }
         },
         {
           "description": "R7/R8 feedback divider correctly identified with is_feedback=true, ratio=0.107, connected to U3 FB pin",
-          "analyzer_section": "signal_analysis.feedback_networks"
+          "analyzer_section": "signal_analysis.feedback_networks",
+          "check": {
+            "path": "signal_analysis.feedback_networks",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R7$"
+          }
         },
         {
           "description": "6 anti-aliasing filters correctly detected at 26.98 Hz (R64-R66, R79-R81 at 5.9k with 1uF caps) on PREAMP_ZP/ZN/EP/EN/NP/NN to AAF_ZP/ZN/EP/EN/NP/NN nets",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R64$"
+          }
         },
         {
           "description": "Multiple sub-Hz bandpass filter stages correctly detected using 43k resistors with 4.7uF caps (~0.79 Hz) for the EHZ/EHE/EHN seismic signal paths",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "R1 (330k) / R2 (510k) voltage divider correctly detected as enable threshold for U3 MP2236GJ EN pin (not feedback)",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R1$"
+          }
         },
         {
           "description": "7 protection devices correctly identified: D2 SMAJ12A on power, D8 SMAJ5.0CA on digital, D17-D20 SMAJ15CA on RS-232 TX/RX lines",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D2$"
+          }
         },
         {
           "description": "U5 AMS1117-3.3 and U2 LP2985-2.5 LDOs correctly detected with fixed output voltages from part number suffix",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U5$"
+          }
         },
         {
           "description": "U4 TPS72325DBV correctly identified as inverting LDO (negative output regulator)",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U4$"
+          }
         },
         {
           "description": "U6 AT24CS08-SSHM EEPROM correctly detected as memory interface connected to U11 STM32F103C8Tx via 4 shared signal nets (I2C)",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U6$"
+          }
         },
         {
           "description": "R4 (3.3k) / R3 (10k) voltage divider correctly detected with U1 TPS5430DDA VSENSE pin connection",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R4$"
+          }
         },
         {
           "description": "VIN and VCC decoupling correctly analyzed: VIN has 3 caps (45uF total), VCC has 8 caps (60.9uF total)",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "Y1 SG-8002CA 8M-PCML0 is an active oscillator (SG-8002CA series by Epson), not a passive crystal. The analyzer incorrectly identified 12 power decoupling capacitors on D+3V3 rail as crystal load caps, resulting in a nonsensical effective_load_pF=50003.0. Active oscillators have no external load caps.",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "U1 TPS5430DDA detected as switching regulator with input_rail=VCC but no output_rail identified. The TPS5430DDA in this design generates the GNDA analog reference rail through an unusual topology (PH->L1->GNDA), and its feedback divider R4/R3 is detected as a separate voltage_divider but not linked to U1",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "Design observation for regulator_caps flags U4 TPS72325DBV and U5 AMS1117-3.3 as missing output caps, but the output nets are __unnamed which makes it hard to verify. U2 LP2985-2.5 also flagged for missing output caps on __unnamed_12",

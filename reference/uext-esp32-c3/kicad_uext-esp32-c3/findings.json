@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/uext-esp32-c3/kicad/uext-esp32-c3.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Clean UEXT ESP32-C3 board (16 components) with AP2210 LDO and NUP4202 USB ESD. Best analysis quality among UEXT boards. LDO, USB ESD, decoupling, UART all correctly detected. Reset RC filter properly identified. Minor false positive on SPI bus from UEXT connector pins.",
       "correct": [
         {
@@ -45,15 +45,30 @@
       "missed": [
         {
           "description": "USB Micro-B connector (J1) present but USB data path to ESP32-C3 native USB not fully analyzed",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "LED1 with R1 (1k) current limiting resistor not analyzed as LED circuit",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "UEXT connector standard not identified",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -3,34 +3,70 @@
     {
       "analyzer_type": "schematic",
       "source_file": "Kicad Files_Hub.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Multi-Protocol Hub (167 components). Correct: 2 crystals, 2 transistors, 1 ethernet PHY, 2 voltage dividers, 3 regulators. False positive: MCP73871 battery charger classified as BMS (it's a charger, not BMS). RC filter overcounting: Ethernet termination network (R51-R54 50ohm + shared C58) generates 4 phantom filter detections. Protection device count conflates physical parts with protected nets (9 reported, 5 actual parts).",
       "correct": [
         {
           "description": "Y2 16MHz and Y3 25MHz crystals correctly identified with proper load capacitance calculations",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y2$"
+          }
         },
         {
           "description": "Q1 FDN340P PMOS and Q2 BC817 BJT correctly identified with proper pin assignments and driver ICs",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "U12 LAN8720A Ethernet PHY correctly detected",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "contains_match",
+            "field": "phy_reference",
+            "pattern": "^U12$"
+          }
         },
         {
           "description": "2 voltage dividers correctly identified: R60/R59 (ratio 0.909) and R21/R22 (ratio 0.25 for U10 VPCC)",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R60$"
+          }
         },
         {
           "description": "3 power regulators correctly detected (U3, U4, U6)",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U3$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "RC filter overcounting: C58 (0.1uF) shared by R51-R54 (50ohm Ethernet terminators) generates 4 separate filter detections. These are impedance matching/termination, not discrete RC filters.",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R51$"
+          }
         }
       ],
       "missed": [],

@@ -3,58 +3,129 @@
     {
       "analyzer_type": "schematic",
       "source_file": "panstamp-nrg3_nrg3.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "panStamp NRG3 wireless sensor node with XBee, MSP430, USB, and sensor subsystem across 5 sheets. The analyzer correctly identifies the multi-sheet hierarchy, RF matching, crystal circuits, and MOSFET power switching, but has issues with ferrite bead inductance parsing and the LDO output rail.",
       "correct": [
         {
           "description": "Crystal X2 (32.768KHz) correctly identified with load caps C44/C45 (20pF each), effective CL 13pF",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X2$"
+          }
         },
         {
           "description": "Crystal X1 (26MHz) detected, no load caps noted (consistent with integrated oscillator)",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X1$"
+          }
         },
         {
           "description": "LDO U4 (AP7365-3.3) correctly identified with topology=LDO and estimated_vout=3.3V from fixed_suffix",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U4$"
+          }
         },
         {
           "description": "Q1 (DMG3415U) PMOS identified as p-channel with correct gate/drain/source nets, used as power switch between VBUS and battery",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "Q3 (DMG3415U) PMOS correctly identified as high-side switch from +BATT",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q3$"
+          }
         },
         {
           "description": "Q2 (BSS138L) NMOS level shifter correctly identified on TXD net",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q2$"
+          }
         },
         {
           "description": "Decoupling analysis correctly identifies 4 rails (VCC, VAA, +5V, +3.3V) with appropriate capacitors",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ESD protection D3 (0402ESDA-MLP1) correctly detected on USB data line",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D3$"
+          }
         },
         {
           "description": "RC filter R6/C37 (10k/100n, fc=159Hz) correctly detected as low-pass on sensor enable net",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R6$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "L3 value '600R/200mA' parsed as 600H inductance; this is a ferrite bead rated at 600 ohms impedance at 100MHz, not a 600H inductor. The LC filter with C43 at resonant_hz=5.31kHz is nonsensical as a result.",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "not_contains_match",
+            "field": "inductor.ref",
+            "pattern": "^L3$"
+          }
         },
         {
           "description": "L2 value '600R/200mA' has the same ferrite bead misparsing issue (600H), making the LC filter calculation with C14/C7 (resonant_hz=2.04Hz) invalid",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "not_contains_match",
+            "field": "inductor.ref",
+            "pattern": "^L2$"
+          }
         },
         {
           "description": "U4 (AP7365-3.3) output_rail is 'GND' which is incorrect; the output should be the +3.3V rail. The input_rail is also unnamed when it should connect to a power source.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U4$"
+          }
         }
       ],
       "missed": [],

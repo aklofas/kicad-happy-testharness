@@ -3,26 +3,48 @@
     {
       "analyzer_type": "schematic",
       "source_file": "VCO_VCO.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Analog VCO module (151 components). Sawtooth integrator core misclassified as compensator. GND-base transistors in exponential converter accumulate false base_resistor/driver lists from GND net traversal.",
       "correct": [
         {
           "description": "CA3080 OTA correctly identified",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Comparator/open-loop op-amp classifications appropriate for VCO core",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "U101 unit 2 misclassified as 'compensator' \u2014 R202 (6.8k) is the input resistor from gain pot, not feedback; C202 (1n) alone is the feedback element making this an integrator",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^U101$"
+          }
         },
         {
           "description": "Q302 and Q201 (2N3906 PNP, base=GND) each accumulate 16 false base_resistors and 12 false base_driver_ics from traversal of global GND net (132 connections)",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q302$"
+          }
         }
       ],
       "missed": [],

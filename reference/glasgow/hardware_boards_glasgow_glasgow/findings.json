@@ -16,7 +16,13 @@
           "type": "current_sense",
           "description": "67 of 68 current_sense detections are false positives \u2014 R49 paired with unrelated ICs (SN74LVC1T45, CAT24M01X, etc.) that merely share GND net",
           "analyzer_section": "signal_analysis.current_sense",
-          "related_issue": "#7"
+          "related_issue": "#7",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "not_contains_match",
+            "field": "shunt.ref",
+            "pattern": "^R49$"
+          }
         }
       ],
       "missed": [],
@@ -53,19 +59,37 @@
           "type": "voltage_divider",
           "description": "R30 (4R7) / R48 (0R15) on ISNS_H \u2192 GND detected as divider but these are current sense shunt resistors",
           "analyzer_section": "signal_analysis.voltage_dividers",
-          "related_issue": "#12"
+          "related_issue": "#12",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R30$"
+          }
         },
         {
           "type": "voltage_divider",
           "description": "R56 (0R33) / R48 (0R15) on ISNS_H \u2192 GND same issue \u2014 current sense, not divider",
           "analyzer_section": "signal_analysis.voltage_dividers",
-          "related_issue": "#12"
+          "related_issue": "#12",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R56$"
+          }
         },
         {
           "type": "voltage_divider",
           "description": "R5/R4 (100k/100k) on ~{CY_RESET} \u2192 GND is a pull-up/pull-down pair on a digital reset line, not a voltage sensing divider",
           "analyzer_section": "signal_analysis.voltage_dividers",
-          "related_issue": "#12"
+          "related_issue": "#12",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R5$"
+          }
         }
       ],
       "missed": [],
@@ -85,7 +109,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "hardware_boards_glasgow_glasgow.kicad_sch.json",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "CRITICAL: +3V3 power rail completely missing from nets dict despite 52 power symbols in main sheet + 33 in io_banks (85 total). GND (133 symbols), +5V (10), +1V2 (5) all work correctly. This means ALL +3V3 connections are invisible \u2014 signal analysis for anything on the 3.3V rail will fail.",
       "correct": [
         {
@@ -119,7 +143,12 @@
         {
           "type": "value_parsing",
           "description": "\"u1\" = 0.1uF not parsed. Pattern: unit prefix before digit (u1, n47, p33). Parser only handles digit-first like \"4u7\".",
-          "analyzer_section": "components[*].parsed_value"
+          "analyzer_section": "components[*].parsed_value",
+          "check": {
+            "path": "components[*].parsed_value",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

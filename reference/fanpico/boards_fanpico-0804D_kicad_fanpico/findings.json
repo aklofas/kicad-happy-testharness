@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/fanpico/boards/fanpico-0804D/kicad/fanpico.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "FanPico 0804D is an 8-channel PWM fan controller with RP2040 (Pico module), 74HC4051 analog mux for tachometer reading, SN74AHCT126 buffers for PWM signal routing, LM4040 voltage reference, and SPX1117 adjustable LDO. The analyzer correctly identifies 4 MOSFET transistor circuits (2N7002K open-drain tachometer outputs), 41 protection devices (TVS diodes on all I/O), and the SPX1117 power regulator. However, all 214 components have category=None, and the ERC warnings reveal genuine design insights.",
       "correct": [
         {
@@ -41,19 +41,39 @@
       "missed": [
         {
           "description": "PWM fan control topology not identified. The core function of this board (RP2040 generating PWM signals routed through SN74AHCT126 buffers to fan headers) is not captured in any signal analysis section.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "74HC4051 analog multiplexer function not identified. This mux routes 8 tachometer inputs to a single ADC channel on the RP2040 - a key design pattern for reducing GPIO usage.",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SN74AHCT126 buffer function not identified. Two quad buffers route PWM signals to fan headers with level shifting (3.3V to 5V tolerant).",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No I2C detection for the OLED display connector, despite having I2C signal names on the connector pins",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -2,7 +2,7 @@
 
 ## FND-00000169: Commodore LCD replica/interface board. CR-prefixed diodes misclassified as capacitors, speaker and DC-DC converter misclassified, no regulators detected.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: commodorelcd.kicad_sch.json
 - **Created**: 2026-03-15
@@ -37,7 +37,7 @@
 
 ## FND-00000175: Commodore LCD computer (231 components). Correct: all ICs, 44 ferrite beads, crystals, UART, opamps, bus topology. Incorrect: 12 CR-prefixed diodes misclassified as capacitor (CR is standard diode prefix), Speaker CNP1 as capacitor, DB37 connector CN2 as mounting_hole, DC1 DCDC-Conv as diode. Missed: no power_regulators detected, 4N28 optocoupler not in isolation_barriers.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: commodorelcd.kicad_sch.json
 - **Created**: 2026-03-15

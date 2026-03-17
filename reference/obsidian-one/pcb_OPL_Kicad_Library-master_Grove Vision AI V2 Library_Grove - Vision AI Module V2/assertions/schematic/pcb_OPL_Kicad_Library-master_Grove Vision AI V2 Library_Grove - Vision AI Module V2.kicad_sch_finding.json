@@ -1,0 +1,75 @@
+{
+  "file_pattern": "pcb_OPL_Kicad_Library-master_Grove Vision AI V2 Library_Grove - Vision AI Module V2.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000229",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000229-AST-01",
+      "description": "2 feedback networks correctly identified: U6/U4 SY80004DQD DCDC converters with R33/R34 and R16/R26 dividers (ratio 0.180, Vout\u22483.3V)",
+      "created_from": "FND-00000229",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R33$"
+      }
+    },
+    {
+      "id": "FND-00000229-AST-02",
+      "description": "U3 WR0331-18FF4R LDO (3.3V\u21921.8V) correctly detected with fixed output from part suffix",
+      "created_from": "FND-00000229",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
+      }
+    },
+    {
+      "id": "FND-00000229-AST-03",
+      "description": "4 ESD protection diodes (D5-D8, DF2S6.8FS) correctly identified protecting SPI bus pins",
+      "created_from": "FND-00000229",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D5$"
+      }
+    },
+    {
+      "id": "FND-00000229-AST-04",
+      "description": "X1 24MHz crystal with C14/C15 (12pF) load caps correctly detected, effective load 9pF",
+      "created_from": "FND-00000229",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^X1$"
+      }
+    },
+    {
+      "id": "FND-00000229-AST-05",
+      "description": "2 RC filters on reset circuit (R7/C3 1.59kHz, R7/C16 72.34Hz) correctly identified",
+      "created_from": "FND-00000229",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R7$"
+      }
+    },
+    {
+      "id": "FND-00000229-AST-06",
+      "description": "INCORRECT: Q4 gate_driver_ics contains unrelated ICs (U1 processor, U3 LDO, U5 memory) \u2014 should only list ICs with output pins connected to gate net",
+      "created_from": "FND-00000229",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
+      },
+      "aspirational": true
+    }
+  ]
+}

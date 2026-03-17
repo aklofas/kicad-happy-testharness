@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "CAD-2.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "USB-C tester (57 components). 18 test pads not detected as test points (gen_testpad lib_id not recognized). UART detector misclassifies USB 3.1 SuperSpeed signals as UART.",
       "correct": [],
       "incorrect": [
@@ -15,7 +15,12 @@
       "missed": [
         {
           "description": "18 test pads not detected as test points - gen_testpad library symbol not recognized",
-          "analyzer_section": "signal_analysis.test_points"
+          "analyzer_section": "signal_analysis.test_points",
+          "check": {
+            "path": "signal_analysis.test_points",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

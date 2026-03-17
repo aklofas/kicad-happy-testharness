@@ -2,7 +2,7 @@
 
 ## FND-00000273: V1 Acorn robot motherboard (KiCad 5, 208 components). AO3401A P-ch MOSFET misclassified as N-channel. Two isolated DC/DC converters and ACS725 current sensor missed.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: previous_revisions_V1_acorn_motherboard.sch.json
 - **Created**: 2026-03-16

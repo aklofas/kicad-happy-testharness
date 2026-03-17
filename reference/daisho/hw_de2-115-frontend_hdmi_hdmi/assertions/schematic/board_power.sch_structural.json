@@ -1,0 +1,132 @@
+{
+  "file_pattern": "board_power.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 10 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 10
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 3 power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "U903 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U903$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U902 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U902$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U901 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U901$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 4 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R909 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R909$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R903 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R903$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Exactly 3 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R915 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R915$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R914 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R914$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R906 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R906$"
+      }
+    }
+  ]
+}

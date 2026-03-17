@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/ESP32-DevKit-LiPo/HARDWARE/ESP32-DevKit-LiPo-Rev.D/ESP32-DevKit-Lipo_Rev_D.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "OLIMEX ESP32 dev board with LiPo, CH340X USB-UART, and HX6211A LDO. Same empty power domains issue as C3 variant. Auto-program transistor circuit detected but missing relay to USB-UART bridge function.",
       "correct": [
         {
@@ -39,27 +39,58 @@
       "missed": [
         {
           "description": "HX6211A LDO regulator not detected in power_regulators",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "BL4054B LiPo charger circuit not analyzed",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "CH340X USB-UART bridge function not identified",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "BAT54C dual Schottky diode (D3) power OR-ing function not detected",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No decoupling analysis despite capacitors present",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Auto-program circuit (Q2/Q3 DTR/RTS to GPIO0/EN) not linked to its USB-UART function",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q2$"
+          }
         }
       ],
       "suggestions": [

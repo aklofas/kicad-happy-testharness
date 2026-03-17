@@ -61,7 +61,13 @@
         },
         {
           "description": "BGB741L7ESD (U38, U40) are RF LNAs but misclassified as power_regulators with topology=unknown",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U38$"
+          }
         },
         {
           "description": "RF chain amplifiers list is empty despite BGB741L7ESD (LNA), TRF37C73 (RF amp), MGA-81563 being present",
@@ -91,23 +97,48 @@
       "missed": [
         {
           "description": "No detection of PLL loop filter (R25/R26/C44/C45/C47 form RFFC5072 charge pump filter)",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No RF switch detection for MXD8546F (SPDT) and MXD8638C (SP4T) RF switches critical to the signal routing",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No identification of the complete RF signal path: antenna -> balun -> switch -> mixer -> IF balun -> transceiver -> baseband",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "FM8625H/BGS12P2L6 (U5, U6, U7) are RF amplifier switches but not detected in any RF analysis",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power sequencing between multiple domains (VCC, VAA, 2V5RF, 1V2FPGA, etc.) not analyzed despite being critical for FPGA+RF design",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

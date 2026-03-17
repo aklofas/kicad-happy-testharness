@@ -2,7 +2,7 @@
 
 ## FND-00000213: STAN (Sentinel Tinkering and Analysis Node) - a retro computer board with STM32F401VCTx MCU, IS61C5128AS SRAM, S29GL064S70TFI040 NOR flash, bus buffers, and USB-C interface. The analyzer correctly identified the LDO regulator, USB ESD protection, crystal circuit, and decoupling. It missed memory interfaces due to bus buffer indirection and incorrectly classified control signals as power rails.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: STAN.kicad_sch.json
 - **Created**: 2026-03-15

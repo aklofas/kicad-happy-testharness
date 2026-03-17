@@ -1,0 +1,73 @@
+{
+  "file_pattern": "HadesGPSDongle.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 3 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "L2 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Q1 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Q2 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q2$"
+      }
+    }
+  ]
+}

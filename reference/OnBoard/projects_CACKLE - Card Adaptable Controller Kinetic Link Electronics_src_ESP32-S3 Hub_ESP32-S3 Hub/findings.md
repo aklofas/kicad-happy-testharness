@@ -2,7 +2,7 @@
 
 ## FND-00000110: ESP32-S3 hub board with 74HC595 shift register, THVD1420 RS-485 transceiver, 40MHz crystal, SPI/I2C buses, and extensive connector system. Good crystal and decoupling analysis but bus protocols and RS-485 not identified.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/CACKLE - Card Adaptable Controller Kinetic Link Electronics/src/ESP32-S3 Hub/ESP32-S3 Hub.kicad_sch
 - **Created**: 2026-03-14

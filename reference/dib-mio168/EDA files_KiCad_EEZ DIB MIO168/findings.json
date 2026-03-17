@@ -3,36 +3,73 @@
     {
       "analyzer_type": "schematic",
       "source_file": "EDA files_KiCad_EEZ DIB MIO168.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "EEZ DIB MIO168 mixed I/O module (279 components). Negative isolated rails (-15V_ISO, -5V_ISO) omitted from isolation_barriers. Phantom per-chip SPI bus entries for IC12/IC13 (already on main MIO bus). Duplicate reset_pin observation for IC8 (3x). OPA376 buffer has spurious input_resistor from neighboring opamp's feedback network.",
       "correct": [
         {
           "description": "Voltage dividers correctly detected: R13/R14 (1.25V reference), DIN level-shift networks (2K7+27K), PE-to-GND divider",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R13$"
+          }
         },
         {
           "description": "14 RC filters correctly detected including DAC output post-filters and ADIB connector filters",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "LP5907, L78L15, L79L15 regulators correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "OPA2196 inverting amplifiers with gain -0.121 correctly identified",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "W9812G6KH-6 SDRAM memory interface correctly detected",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Q1-Q5 2N7002PS digital output switches and Q9/Q11 IRLML2246 P-FET power switches correct",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "SI8641 digital isolator and WE-750315371 transformer correctly in isolation_barriers",
-          "analyzer_section": "signal_analysis.isolation_barriers"
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -50,7 +87,13 @@
         },
         {
           "description": "OPA376 (IC16) buffer has spurious input_resistor R17 (9K09) \u2014 R17 belongs to IC19's feedback path on shared 1V25_REF net",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^R17$"
+          }
         }
       ],
       "missed": [],

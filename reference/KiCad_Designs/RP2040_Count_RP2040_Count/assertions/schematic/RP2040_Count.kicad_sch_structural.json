@@ -1,0 +1,63 @@
+{
+  "file_pattern": "RP2040_Count.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 current_sense",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "R2 in current_sense",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 6 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 1 power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U2 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$"
+      }
+    }
+  ]
+}

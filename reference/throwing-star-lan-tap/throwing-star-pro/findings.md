@@ -2,7 +2,7 @@
 
 ## FND-00000071: Legacy wire-to-pin connectivity completely broken: all 32 RJ45 data pins appear as isolated unnamed nets instead of being connected to SIG1-SIG8 labeled nets
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: throwing-star.sch.json
 - **Related**: KH-016
@@ -30,7 +30,7 @@
 
 ## FND-00000072: PCB analysis correct overall but copper_layers_used=0 despite tracks on both Front and Back, and front_side/back_side component counts are 0 — RESOLVED: now reports copper_layers_used=2, front_side=6
 
-- **Status**: resolved
+- **Status**: promoted
 - **Analyzer**: pcb
 - **Source**: throwing-star.kicad_pcb.json
 - **Created**: 2026-03-13

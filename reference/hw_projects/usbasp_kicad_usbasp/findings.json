@@ -3,16 +3,28 @@
     {
       "analyzer_type": "schematic",
       "source_file": "usbasp_kicad_usbasp.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "USBasp programmer (35 components). Correct: crystal 12MHz, BS170F MOSFET level shifters, ATmega8A, USB-C CC check (correctly fails for 1.5k). Incorrect: gate_resistors lists all VCC pullups for each transistor. Missed: SPI/ISP bus, D4/D5 3V6 Zener USB clamps not in protection devices.",
       "correct": [
         {
           "description": "Crystal Y1 12MHz with 22pF load caps detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "Q1-Q4 BS170F MOSFET level shifters detected",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         }
       ],
       "incorrect": [
@@ -24,11 +36,22 @@
       "missed": [
         {
           "description": "SPI/ISP bus not detected (hierarchical labels obscure SPI function)",
-          "analyzer_section": "design_analysis.bus_analysis.spi"
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "D4/D5 3V6 Zener USB clamps not detected as protection",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D4$"
+          }
         }
       ],
       "suggestions": [

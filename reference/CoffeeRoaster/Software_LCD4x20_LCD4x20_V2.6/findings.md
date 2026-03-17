@@ -2,7 +2,7 @@
 
 ## FND-00000220: CoffeeRoaster LCD4x20 (17 components). All zero signal detections confirmed correct — design is Arduino Nano + PCF8574 I2C expander + LCD + 2x MAX31855 thermocouple ICs + switches/connectors. No passive filter/divider networks present. Minor: I2C bus and thermocouple sensor interface not characterized.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Software_LCD4x20_LCD4x20.kicad_sch.json
 - **Created**: 2026-03-16

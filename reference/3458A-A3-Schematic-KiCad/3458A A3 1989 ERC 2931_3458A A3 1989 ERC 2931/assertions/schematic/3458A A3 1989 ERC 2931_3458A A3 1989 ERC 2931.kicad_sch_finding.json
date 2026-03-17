@@ -1,0 +1,85 @@
+{
+  "file_pattern": "3458A A3 1989 ERC 2931_3458A A3 1989 ERC 2931.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000268",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000268-AST-01",
+      "description": "Active 20MHz oscillator U230 correctly identified",
+      "created_from": "FND-00000268",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U230$"
+      }
+    },
+    {
+      "id": "FND-00000268-AST-02",
+      "description": "LM6361 U140 correctly classified as transimpedance_or_buffer with R141=12.1k feedback",
+      "created_from": "FND-00000268",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U140$"
+      }
+    },
+    {
+      "id": "FND-00000268-AST-03",
+      "description": "LM358 U170 units correctly classified as inverting (gain=-0.412) and buffer",
+      "created_from": "FND-00000268",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U170$"
+      }
+    },
+    {
+      "id": "FND-00000268-AST-04",
+      "description": "LT1001 reference regulators U160/U165 for +12ref/-12ref correctly identified",
+      "created_from": "FND-00000268",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U160$"
+      }
+    },
+    {
+      "id": "FND-00000268-AST-05",
+      "description": "Precision RC filters for signal path correctly detected (XO_OVLD, XF/R, ACDA/DCDA)",
+      "created_from": "FND-00000268",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000268-AST-06",
+      "description": "INCORRECT: U405 EL2018 (lib PCM_Analog_Comparator_AKL:AD8561AN, desc 'IC COMPARATOR HS') misclassified as 'compensator' \u2014 C403 22pF from output HTRIG to inverting input is positive feedback for hysteresis, not opamp compensation",
+      "created_from": "FND-00000268",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U405$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000268-AST-07",
+      "description": "INCORRECT: RC filter [7] (R407+C403, ground_net=HTRIG) is false positive \u2014 R407 is comparator input resistor, C403 is hysteresis cap; HTRIG is comparator output, not ground",
+      "created_from": "FND-00000268",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R407$"
+      }
+    }
+  ]
+}

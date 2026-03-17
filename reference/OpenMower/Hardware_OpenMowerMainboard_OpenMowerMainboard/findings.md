@@ -25,7 +25,7 @@
 
 ## FND-00000004: pwr_flag_warnings generated for sub-sheets where power rail source is on a different sheet (29 warnings across OpenMower, 37 in cynthion, 9 in education_tools, 6 in glasgow)
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_OpenMowerMainboard.kicad_sch.json
 - **Related**: KH-010
@@ -137,7 +137,7 @@
 
 ## FND-00000014: BSS138 level shifters Q13-Q16 not recognized as level_shifter topology
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: Hardware_OpenMowerMainboard_RobotConnectors.kicad_sch.json
 - **Created**: 2026-03-13

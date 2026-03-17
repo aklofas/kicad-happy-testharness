@@ -2,7 +2,7 @@
 
 ## FND-00000135: RP2040 SBC with DVI, USB, battery management - good power regulation analysis with 3 regulators detected and 7 voltage dividers; audio PWM filters and protection diodes correctly found; crystal circuit undetected; DVI interface not analyzed
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/RP2040pc/HARDWARE/RP2040pc-REV.B/RP2040pc_Rev_B.kicad_sch
 - **Created**: 2026-03-14

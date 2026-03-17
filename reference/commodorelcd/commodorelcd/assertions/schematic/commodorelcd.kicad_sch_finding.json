@@ -1,0 +1,91 @@
+{
+  "file_pattern": "commodorelcd.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000169",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000169-AST-01",
+      "description": "All ICs correctly identified and classified",
+      "created_from": "FND-00000169",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000169-AST-02",
+      "description": "44 ferrite beads correctly identified",
+      "created_from": "FND-00000169",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000169-AST-03",
+      "description": "LM324 and LM358 opamps correctly identified",
+      "created_from": "FND-00000169",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000169-AST-04",
+      "description": "No power regulators detected despite DC-DC converter and voltage regulation on board",
+      "created_from": "FND-00000169",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000175-AST-01",
+      "description": "44 FB-prefixed components correctly classified as ferrite_bead",
+      "created_from": "FND-00000175",
+      "check": {
+        "path": "statistics.component_types",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000175-AST-02",
+      "description": "Crystal circuits Y1 4MHz and Y3 3.579545MHz correctly detected",
+      "created_from": "FND-00000175",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y1$"
+      }
+    },
+    {
+      "id": "FND-00000175-AST-03",
+      "description": "LM324/LM358 opamp circuits correctly analyzed",
+      "created_from": "FND-00000175",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000175-AST-04",
+      "description": "No power_regulators detected despite DC1 DCDC-Conv generating -12V/-5V",
+      "created_from": "FND-00000175",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

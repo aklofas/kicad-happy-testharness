@@ -2,7 +2,7 @@
 
 ## FND-00000257: Analog VCF module with transistor ladder (133 components). Four phantom unit=null op-amp entries from TL072 power units. Integrator misclassified as compensator. GND-base transistors with false driver lists. Transistor load_type='connector' via GND traversal.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: VCF_VCF.kicad_sch.json
 - **Created**: 2026-03-16

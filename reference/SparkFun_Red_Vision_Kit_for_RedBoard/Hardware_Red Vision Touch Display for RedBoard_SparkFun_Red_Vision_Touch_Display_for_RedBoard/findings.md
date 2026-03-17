@@ -2,7 +2,7 @@
 
 ## FND-00000245: Display board (34 components). Missing I2C pullups on SCL/SDA. Q1 transistor correctly detected. No protection devices.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: SparkFun_Red_Vision_Touch_Display_for_RedBoard.kicad_sch.json
 - **Created**: 2026-03-16

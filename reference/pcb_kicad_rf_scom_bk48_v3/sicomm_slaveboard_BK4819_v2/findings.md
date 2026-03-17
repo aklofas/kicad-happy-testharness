@@ -2,7 +2,7 @@
 
 ## FND-00000219: BK4819 RF board power sub-sheet (11 components). False negative: TPLP5907MFX-3.3 linear regulator (U19) not detected as power regulator despite clear LDO topology with input/output decoupling. IC pin analysis correctly identified all 5 pins and decoupling caps. Design observation incorrectly lists VBAT as rail_without_caps despite C1(10uF)+C163(100nF) being present.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: PCB_sicomm_bk4819.kicad_sch.json
 - **Related**: KH-118
@@ -28,7 +28,7 @@
 
 ## FND-00000222: BK4819 RF transceiver board main schematic (123 components). LC filter overcounting: 23 reported but most are L-C net pairs in RF matching, not discrete filters. RF chain detection misses BK4819 transceiver and CMX994E1 analog front-end. X2 26MHz crystal not detected. RF matching networks (2) correctly identified. ERC warnings (16) are expected for test/interface board with jumper connectors.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: sicomm_slaveboard_BK4819_v2.kicad_sch.json
 - **Created**: 2026-03-16

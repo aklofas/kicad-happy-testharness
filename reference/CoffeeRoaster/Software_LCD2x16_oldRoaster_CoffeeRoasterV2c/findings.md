@@ -2,7 +2,7 @@
 
 ## FND-00000217: CoffeeRoaster V2 board (22 components). False positive: 2 RC filters detected where R1/R2 and C1/C2 are not connected as RC networks (R1+R2 are part of a resistor junction, C1+C2 are switch debounce caps). False negative: voltage divider R3(18K)+R4(5.693K) on analog input A0 not detected. Schematic has duplicate R3 reference designator (design error).
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Software_LCD2x16_oldRoaster_CoffeeRoasterV2.kicad_sch.json
 - **Created**: 2026-03-16

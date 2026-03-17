@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OSHW-reCamera-Series/reCamera_Sensor_Board_S1_OV5647/PCB_V1.1/reCamera S101 v1.1.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "reCamera S101 v1.1 is a camera sensor board with OV5647 image sensor (connected via FPC), NS4150B Class-D audio amplifier, and two SGM2036S LDO regulators (2.8V for sensor analog, 1.5V for sensor core). 92 components, 92 nets. The analyzer correctly identifies the LDOs, 5 transistor circuits, 7 RC filters, and the crystal circuit. However, the OV5647 camera sensor interface (MIPI CSI-2) is completely missed.",
       "correct": [
         {
@@ -37,19 +37,39 @@
       "missed": [
         {
           "description": "MIPI CSI-2 camera interface not detected. The OV5647 connects via MIPI CSI-2 differential data lanes (at least 2 lanes + clock) which are a critical high-speed interface. No bus analysis identifies this.",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Camera sensor power sequencing not identified. OV5647 requires specific power-up order (DOVDD->AVDD->DVDD) controlled by the transistor switches and LDOs.",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "I2C SCCB interface for camera sensor configuration not explicitly detected (OV5647 uses SCCB which is I2C-compatible)",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "FPC connector interface to main board not characterized as a board-to-board connection carrying MIPI, I2C, power, and control signals",
-          "analyzer_section": "design_analysis"
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

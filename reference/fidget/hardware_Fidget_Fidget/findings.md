@@ -2,7 +2,7 @@
 
 ## FND-00000214: FPGA development board with ICE40HX4K-TQ144 (U2), AT25SF081 SPI flash (U1), three LDO regulators, two active oscillators, and bus-level I/O via 74-series buffers/transceivers. The analyzer correctly identified the power regulation chain, memory interface, oscillators, and decoupling. No significant errors found.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_Fidget_Fidget.kicad_sch.json
 - **Created**: 2026-03-15

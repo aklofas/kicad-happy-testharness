@@ -1,0 +1,19 @@
+{
+  "file_pattern": "OtterCam-s3.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-100-01",
+      "description": "KH-100: AP6236 WiFi module not falsely in power_regulators",
+      "issue": "KH-100",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U4$"
+      }
+    }
+  ]
+}

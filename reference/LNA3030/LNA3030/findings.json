@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/LNA3030/LNA3030.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "LNA3030 is nearly identical to LNA1109 - a Great Scott Gadgets LNA board with BGB741L7ESD LNA, SAW filter (FAR-F5QA vs DCC6C variant), GRF6011 switches, TVS diodes, and SMA connectors. Same 26 components, same topology. Exhibits identical analyzer issues as LNA1109: LNA falsely classified as power regulator, false crystal circuits, empty component categories, and fragmented RF chain detection.",
       "correct": [
         {
@@ -16,7 +16,13 @@
       "incorrect": [
         {
           "description": "Same false positive as LNA1109: U3 (LNA) classified as power_regulator",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U3$"
+          }
         },
         {
           "description": "Same false positive crystal circuits as LNA1109",
@@ -30,7 +36,12 @@
       "missed": [
         {
           "description": "Same as LNA1109: complete RF signal path not traced, LNA bias network not identified, operating frequency not inferred",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -31,11 +31,21 @@
       "missed": [
         {
           "description": "MicroSD card (X1, Adafruit SDIO microSD symbol) uses SPI mode with CS, SCLK, DI (MOSI), DO (MISO) through RN1 series resistors to ESP32C3 but no SPI bus detected",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "RN1 provides series protection resistors on SD card SPI lines (CS, DI, SCLK via pins 7,6,5) with pull-ups to +3V3 (pins 1-4). This level-shifting/protection topology is not noted.",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -3,20 +3,35 @@
     {
       "analyzer_type": "schematic",
       "source_file": "EEZ_DIB_MCU_r1B2.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "EEZ DIB MCU r1B2 (189 components, 6 hierarchical sheets). Correct: STM32F769 176 pins, Ethernet PHY, SDRAM, LD1117 LDO, TPS61169, ESD protection, USB pairs. Incorrect: STM32F769 power pins mapped to wrong signal nets (systematic multi-unit pin-swap bug), SPEED1/TOUCH1/VBUS1 LEDs misclassified (switch/transformer/varistor), ZD1/ZD2 TVS as other, IC4 duplicated 4x in power_regulators, crystal feedback R/C detected as RC filter, VLED+/- as differential pair. Missed: crystal load caps, SPI/SDMMC/JTAG buses, voltage dividers.",
       "correct": [
         {
           "description": "IC4 STM32F769 correctly identified with 176 pins across 4 units",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "IC17 DP83848 Ethernet PHY detected",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "IC5 LD1117 correctly detected as LDO",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -36,11 +51,22 @@
       "missed": [
         {
           "description": "Crystal Y1 load caps C8/C9 not detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "SPI/SDMMC/JTAG buses not detected",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -59,16 +85,26 @@
     {
       "analyzer_type": "schematic",
       "source_file": "EEZ_DIB_MCU_r1B1.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "EEZ DIB MCU r1B1 \u2014 all 189 components extracted but ALL have 0 pins and ALL 181 nets have empty pin lists. Root cause: r1B1-cache.lib prefix mismatch with sub-sheets referencing r1B2-eagle-import. Signal analysis almost completely empty. Same component misclassifications as r1B2.",
       "correct": [
         {
           "description": "All 189 unique components extracted with correct references and values",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "IC17 Ethernet PHY detected even without pin data",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -88,7 +124,12 @@
       "missed": [
         {
           "description": "All signal analysis empty due to missing pin connectivity",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

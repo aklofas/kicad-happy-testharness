@@ -1,0 +1,56 @@
+{
+  "file_pattern": "H_bridge_4_motors.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 4 protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "F1 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "F2 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "F3 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "F4 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F4$"
+      }
+    }
+  ]
+}

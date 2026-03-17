@@ -2,7 +2,7 @@
 
 ## FND-00000193: RP2040 keyboard PCB with dual USB-C and FSUSB42 muxes (58 components). Correct: all components classified correctly, XC6206 LDO detected, crystal 12MHz, WS2812B LED chain, USB compliance, power budget, footprint warnings. No incorrect classifications found. Missed: dual USB-C split keyboard architecture, VIK connector bus.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: lemon-pcb-swizzle_lemon-wired-swizzle.kicad_sch.json
 - **Created**: 2026-03-15

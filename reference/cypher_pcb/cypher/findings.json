@@ -3,16 +3,26 @@
     {
       "analyzer_type": "schematic",
       "source_file": "cypher.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Keyboard (324 components). Key matrix diode count mismatch: 88 detected vs 93 in schematic. WS2812B LED chain, LDO, and protection devices all correct.",
       "correct": [
         {
           "description": "1 LDO correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "5 protection devices correctly detected",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [],

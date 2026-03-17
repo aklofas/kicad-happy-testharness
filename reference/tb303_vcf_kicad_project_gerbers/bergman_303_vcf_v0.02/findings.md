@@ -2,7 +2,7 @@
 
 ## FND-00000170: TB-303 VCF clone analog filter circuit. L7805 regulator classified as IC, trimmers as resistors, no analog filter detection.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: bergman_303_vcf_v0.02.kicad_sch.json
 - **Created**: 2026-03-15
@@ -30,7 +30,7 @@
 
 ## FND-00000176: TB-303 VCF clone (69 components). Correct: all 18 transistors, power rails, L7805 in power_budget, resistor values. Incorrect: L7805 classified as IC instead of regulator, sleep current dominated by misclassified R4 path. Missed: no analog filter detection for 4-pole transistor ladder VCF, no voltage divider detection, trimmers RV1/RV2 classified as resistor instead of potentiometer.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: bergman_303_vcf_v0.02.kicad_sch.json
 - **Created**: 2026-03-15

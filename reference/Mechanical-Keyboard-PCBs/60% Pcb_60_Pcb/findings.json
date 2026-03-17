@@ -8,23 +8,48 @@
       "correct": [
         {
           "description": "Key matrix correctly detected as 5 rows x 15 columns with 68 estimated keys, matching the 68 diodes in the schematic",
-          "analyzer_section": "signal_analysis.key_matrices"
+          "analyzer_section": "signal_analysis.key_matrices",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Row nets ROW0-ROW4 and column nets COL0-COL14 correctly identified by net name pattern",
-          "analyzer_section": "signal_analysis.key_matrices"
+          "analyzer_section": "signal_analysis.key_matrices",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "68 diodes (D1-D68) correctly classified as diode type for anti-ghosting",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "68 resistors (R1-R68) correctly classified - these are per-key LED current-limiting resistors",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "+5V power rail correctly identified as the only power rail (for LED supply)",
-          "analyzer_section": "statistics.power_rails"
+          "analyzer_section": "statistics.power_rails",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

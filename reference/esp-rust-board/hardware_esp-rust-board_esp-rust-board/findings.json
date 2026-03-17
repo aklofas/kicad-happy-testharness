@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/esp-rust-board/hardware/esp-rust-board/esp-rust-board.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Good detection of ESP32-C3 dev board with USB-C, I2C sensors, LiPo charging, and switching regulator. I2C bus missing pull-ups flagged but may have internal pull-ups in ESP32-C3 module. Crystal value 32.768Hz should be 32.768kHz.",
       "correct": [
         {
@@ -34,7 +34,13 @@
       "incorrect": [
         {
           "description": "Crystal Y1 value shown as 32.768Hz - should be 32.768kHz (frequency field is null, value string not parsed)",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "I2C bus shows has_pull_up=false but ESP32-C3 has internal pull-ups and board may use them intentionally",
@@ -52,11 +58,21 @@
       "missed": [
         {
           "description": "WS2812B addressable RGB LED (D9) not identified as a smart LED requiring data signal - classified as generic LED",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "LiPo charging circuit (MCP73831) charge current setting resistor not analyzed",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

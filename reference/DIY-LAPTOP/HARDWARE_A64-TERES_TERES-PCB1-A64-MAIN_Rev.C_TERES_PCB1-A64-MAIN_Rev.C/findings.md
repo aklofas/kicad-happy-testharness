@@ -2,7 +2,7 @@
 
 ## FND-00000227: OLIMEX DIY-LAPTOP power supply sheet (152 components, 213 nets). Critical: 0 regulators detected on a POWER SUPPLY sheet containing AXP803 PMIC (8+ internal regulators) and MT3608 boost converter. 0 voltage dividers despite R80/R81 feedback divider on MT3608. RC filter R80+C143 misidentified as filter (actually feedback divider sense network). RC filter duplicates from bidirectional traversal. Crystals correctly detected.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.C_Power Supply, Extensions and MiPi-DSI .sch.json
 - **Related**: KH-118

@@ -2,7 +2,7 @@
 
 ## FND-00000043: Ferrite bead value "600" parsed as 600 Henries
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_v1.1a_icebreaker.kicad_sch.json
 - **Created**: 2026-03-13

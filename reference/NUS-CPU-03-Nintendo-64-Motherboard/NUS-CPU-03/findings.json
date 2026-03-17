@@ -3,28 +3,56 @@
     {
       "analyzer_type": "schematic",
       "source_file": "NUS-CPU-03.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Nintendo 64 NUS-CPU-03 motherboard with 271 components. Correct: LM78M05/7VZ5 regulators, crystal circuits, voltage dividers, LED driver, bus topology, RC filters, decoupling. Incorrect: I2S SDAT misidentified as I2C, VOUT signal net as power rail, ferrite beads as fuses, BOM grouping merges inductors+caps, reset observation shows entire +3.3V rail. Missed: RDRAM memory interface, I2S audio bus, video encoder output path, clock generator function.",
       "correct": [
         {
           "description": "U13 LM78M05 correctly detected as LDO +12V to +5V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U13$"
+          }
         },
         {
           "description": "Crystal X1/X2 with load caps correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X1$"
+          }
         },
         {
           "description": "Q1 2SC2412K LED driver for D3 correctly detected",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "AD0-AD15 16-bit bus correctly detected",
-          "analyzer_section": "bus_topology.detected_bus_signals"
+          "analyzer_section": "bus_topology.detected_bus_signals",
+          "check": {
+            "path": "bus_topology.detected_bus_signals",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "271 components with correct type breakdown",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -48,7 +76,13 @@
       "missed": [
         {
           "description": "RDRAM memory interface (U11/U14 to U9 RCP) not detected",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U11$"
+          }
         }
       ],
       "suggestions": [

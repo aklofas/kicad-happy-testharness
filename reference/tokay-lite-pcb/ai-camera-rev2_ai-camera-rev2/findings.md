@@ -2,7 +2,7 @@
 
 ## FND-00000278: Tokay-lite AI camera rev2 (ESP32, 176 components). Multiple issues: Q8 false LED driver association (no net connectivity to D7). 3 TVS diodes (BSD5C051L) missed in protection_devices. USB-C CC pull-down check fails despite correct 5.1k resistors (relies on net names not connectivity). MT9284 LED driver misclassified as voltage regulator with output_rail=VBUS. I2C bus_analysis reports has_pull_up=false despite pull-ups present.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: ai-camera-rev2_ai-camera-rev2.kicad_sch.json
 - **Created**: 2026-03-16
@@ -37,7 +37,7 @@
 
 ## FND-00000279: Tokay-lite AI camera rev3.1 (176 components). Same issues as rev2. Additionally, U8/U7 input_rail degrades to __unnamed_0 (was +3.3VA in rev2 — power label removed in this revision).
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: ai-camera-rev3.1_ai-camera-rev3.1.kicad_sch.json
 - **Created**: 2026-03-16

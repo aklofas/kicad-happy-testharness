@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/CACKLE - Card Adaptable Controller Kinetic Link Electronics/src/2s 40A PSU and charger/2s 40A PSU and charger.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "2S battery PSU/charger with BQ76905 BMS, half-bridge motor driver, RS-485. 16 false positive rf_matching detections on power filter components. RS-485 termination resistors misidentified as voltage divider.",
       "correct": [
         {
@@ -32,7 +32,13 @@
         },
         {
           "description": "R27(120ohm)/R26(120ohm) RS-485 termination/bias resistors falsely detected as voltage divider between RS485+ and RS485-",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R27$"
+          }
         },
         {
           "description": "BOM sum (92) does not match total_components (112) \u2014 20 missing: net_tie(11)+test_point(6)+mounting_hole(2)=19, still 1 unaccounted",
@@ -46,15 +52,31 @@
       "missed": [
         {
           "description": "No current sense detection despite R18 (5mOhm, 10W) being a high-power current sense resistor",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "contains_match",
+            "field": "shunt.ref",
+            "pattern": "^R18$"
+          }
         },
         {
           "description": "No charger circuit detection despite board name being \"2s 40A PSU and charger\"",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Missing regulator input/output cap warnings despite design_observations noting them",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -2,7 +2,7 @@
 
 ## FND-00000164: Eurorack Castor & Pollux synthesizer mainboard. TVS diodes and potentiometers misclassified; I2C and USB detection missing.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_mainboard_mainboard.kicad_sch.json
 - **Created**: 2026-03-15
@@ -33,7 +33,7 @@
 
 ## FND-00000165: Castor oscillator sub-sheet with opamp analog circuits. Potentiometers misclassified as varistors; false voltage divider and ERC warnings.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_mainboard_castor.kicad_sch.json
 - **Created**: 2026-03-15
@@ -60,7 +60,7 @@
 
 ## FND-00000178: Castor & Pollux Eurorack synthesizer mainboard (191 components). Correct: 8 hierarchical sheets, LD1117-3.3 regulator, power rails, opamp circuits, USB ESD protection. Incorrect: D3-D6 TVS diodes (D_TVS_Filled) classified as LED, RV1-RV12 potentiometers (Eurorack_Pot) classified as varistor. Missed: I2C for MCP4728 DAC, USB interface, addressable LED chain.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_mainboard_mainboard.kicad_sch.json
 - **Created**: 2026-03-15
@@ -87,7 +87,7 @@
 
 ## FND-00000179: Castor oscillator sub-sheet (46 components). Correct: opamp circuits (integrator, buffer, inverting stages), Q1 PNP transistor, cross-domain signals, RC filters, decoupling. Incorrect: RV6-RV8 potentiometers classified as varistor, R18/R16 transistor bias reported as voltage divider, false ERC warnings on hierarchical labels. Missed: oscillator core topology not detected, sub-octave divider function not identified.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_mainboard_castor.kicad_sch.json
 - **Created**: 2026-03-15

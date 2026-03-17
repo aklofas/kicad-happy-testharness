@@ -2,7 +2,7 @@
 
 ## FND-00000142: Very simple UEXT expansion board with ESP32-WROOM-32D (10 components). Minimal but mostly correct analysis. False positive SPI bus detection from UEXT connector pin names. Auto-program transistors correctly detected.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/uext-esp32/UEXT_ESP32.sch
 - **Created**: 2026-03-14

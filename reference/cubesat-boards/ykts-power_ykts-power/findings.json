@@ -3,30 +3,57 @@
     {
       "analyzer_type": "schematic",
       "source_file": "ykts-power_ykts-power.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "CubeSat power board (KiCad 5, 130 components). Solar cell array with blocking diodes falsely detected as 2x2 key matrix. RC filter double-counting on C5. False missing-input-cap warnings for TPS63001/TPS63002 due to hierarchical PGND/VIN merge. BQ25070 chargers and INA3221 power monitor not detected.",
       "correct": [
         {
           "description": "4 switching regulators (TPS63001 x2, TPS63002 x2) correctly identified with inductors and feedback nets",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "4 KIA3415 dual PMOS transistors correctly detected as P-channel with gate resistors",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "2 voltage dividers (490K/100K) correctly detected as BQ25070 feedback dividers",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "2 crystals (Y1=8MHz, Y2=12MHz) with 22pF load caps correct",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "RC filter double-counting: R2+C5 and R1+C5 both reported as separate filters sharing capacitor C5",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R2$"
+          }
         },
         {
           "description": "False missing-input-cap warnings for all 4 TPS63001/TPS63002 \u2014 caps exist but hierarchical sheet merges PGND with VIN",
@@ -36,11 +63,23 @@
       "missed": [
         {
           "description": "BQ25070 (U7, U14) battery charger ICs not detected as charging controllers \u2014 bms_systems empty",
-          "analyzer_section": "signal_analysis.bms_systems"
+          "analyzer_section": "signal_analysis.bms_systems",
+          "check": {
+            "path": "signal_analysis.bms_systems",
+            "op": "contains_match",
+            "field": "bms_reference",
+            "pattern": "^U7$"
+          }
         },
         {
           "description": "INA3221AIRGVR (U6) 3-channel current/power monitor with 3x 0.1ohm shunts not detected in current_sense",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "contains_match",
+            "field": "shunt.ref",
+            "pattern": "^U6$"
+          }
         }
       ],
       "suggestions": [

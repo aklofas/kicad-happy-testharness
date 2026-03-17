@@ -3,22 +3,38 @@
     {
       "analyzer_type": "schematic",
       "source_file": "bergman_303_vcf_v0.02.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "TB-303 VCF clone analog filter circuit. L7805 regulator classified as IC, trimmers as resistors, no analog filter detection.",
       "correct": [
         {
           "description": "18 transistors correctly identified in the analog filter topology",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Component values correctly extracted",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "L7805 voltage regulator classified as IC instead of power regulator",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^L7805$"
+          }
         },
         {
           "description": "RV1 and RV2 trimmer potentiometers classified as resistor instead of potentiometer",
@@ -28,7 +44,12 @@
       "missed": [
         {
           "description": "Analog filter topology not detected despite being the core function of the board (TB-303 VCF)",
-          "analyzer_section": "signal_analysis.filters"
+          "analyzer_section": "signal_analysis.filters",
+          "check": {
+            "path": "signal_analysis.filters",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -47,23 +68,38 @@
     {
       "analyzer_type": "schematic",
       "source_file": "bergman_303_vcf_v0.02.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "TB-303 VCF clone (69 components). Correct: all 18 transistors, power rails, L7805 in power_budget, resistor values. Incorrect: L7805 classified as IC instead of regulator, sleep current dominated by misclassified R4 path. Missed: no analog filter detection for 4-pole transistor ladder VCF, no voltage divider detection, trimmers RV1/RV2 classified as resistor instead of potentiometer.",
       "correct": [
         {
           "description": "All 18 transistors (16x 2SC945 NPN, 2x 2SA733 PNP) correctly enumerated",
-          "analyzer_section": "statistics.component_types.transistor"
+          "analyzer_section": "statistics.component_types.transistor",
+          "check": {
+            "path": "statistics.component_types.transistor",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "L7805 correctly in power_budget producing +5V from +12V",
-          "analyzer_section": "power_budget"
+          "analyzer_section": "power_budget",
+          "check": {
+            "path": "power_budget",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [],
       "missed": [
         {
           "description": "Trimmers RV1/RV2 classified as resistor instead of potentiometer",
-          "analyzer_section": "bom.type"
+          "analyzer_section": "bom.type",
+          "check": {
+            "path": "bom.type",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

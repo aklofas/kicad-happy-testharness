@@ -2,7 +2,7 @@
 
 ## FND-00000230: OLIMEX RVPC ESP32-S2 power rails board (37 components). All 6 HX6306P332MR LDO regulators correctly identified with accurate 3.3V output estimates. Crystal Y1 40MHz with correct load caps. RC filter R6/C2 correct. False positive: decoupling analysis reports missing output caps on regulators but caps are connected via global labels to shared rails that DO have proper decoupling.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: SOFTWARE_rvpc_tools_esp32s2-cookbook_hardware_exposed_power_rails_exposed_power_rails.kicad_sch.json
 - **Created**: 2026-03-16

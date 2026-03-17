@@ -1,0 +1,52 @@
+{
+  "file_pattern": "repos_urti-mainboard_hardware_mainboard_radio.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000126",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000126-AST-01",
+      "description": "No identification of the dual-conversion architecture (two mixer stages for wideband coverage)",
+      "created_from": "FND-00000126",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000126-AST-02",
+      "description": "No PLL loop filter detection for RFFC5072 charge pump outputs (R59/C90/C91/C87 form loop filter)",
+      "created_from": "FND-00000126",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000126-AST-03",
+      "description": "AFE IC (U11) and its SPI control bus not identified as part of the RF signal chain",
+      "created_from": "FND-00000126",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000126-AST-04",
+      "description": "Baseband IQ signal paths (TXBB.I+/-, TXBB.Q+/-, RXBB.I+/-, RXBB.Q+/-) not traced as differential pairs or signal chains",
+      "created_from": "FND-00000126",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

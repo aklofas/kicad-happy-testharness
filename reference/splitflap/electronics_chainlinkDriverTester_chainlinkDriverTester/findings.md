@@ -2,7 +2,7 @@
 
 ## FND-00000076: Legacy KiCad 5 schematic with 141 components. Components, nets, and BOM extracted correctly. 0 signals detected due to KH-016 (legacy wire-to-pin connectivity limitation). Design has voltage regulators (AP7361C-33E, LM7805, buck converter), I2C devices (MCP23017, INA219), motor driver (VN7007ALH), ESP32 module, and shift registers which should yield multiple signal detections once KH-016 is resolved.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/splitflap/electronics/chainlinkDriverTester/chainlinkDriverTester.sch
 - **Related**: KH-016

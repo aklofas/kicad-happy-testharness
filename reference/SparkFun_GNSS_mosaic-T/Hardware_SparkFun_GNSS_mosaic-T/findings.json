@@ -3,16 +3,26 @@
     {
       "analyzer_type": "schematic",
       "source_file": "SparkFun_GNSS_mosaic-T.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "GNSS mosaic-T board (106 components). Protection device count inflated (40 reported vs 14 actual) due to multi-pin TVS array per-pin counting. Regulators and RC filters correctly detected.",
       "correct": [
         {
           "description": "1 regulator correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "4 RC filters correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

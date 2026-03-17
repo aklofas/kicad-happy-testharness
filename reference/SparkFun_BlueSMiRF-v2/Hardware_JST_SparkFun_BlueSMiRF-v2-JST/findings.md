@@ -2,7 +2,7 @@
 
 ## FND-00000216: SparkFun BlueSMiRF-v2 JST Bluetooth module (38 components). Correct: AP2112K-3.3 LDO detection with 3.3V output, BSS138 level-shifter MOSFETs Q1/Q2 correctly identified, BOM counts and component values verified. Minor: gate resistor topology for level shifters not fully characterized, pull-up resistors R9/R10 not identified as part of level-shifting network.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_JST_SparkFun_BlueSMiRF-v2-JST.kicad_sch.json
 - **Created**: 2026-03-16

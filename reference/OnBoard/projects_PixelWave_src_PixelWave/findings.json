@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/PixelWave/src/PixelWave.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "SK6812 addressable LEDs (310x) misclassified as diodes. Switching regulator XL4016 correctly identified with feedback network. USB diff pair detected with ESD protection.",
       "correct": [
         {
@@ -41,11 +41,21 @@
       "missed": [
         {
           "description": "No LED matrix or addressable LED chain detection for 310 SK6812 LEDs",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Crystal circuits list is empty despite ESP32-S3 likely having crystal",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

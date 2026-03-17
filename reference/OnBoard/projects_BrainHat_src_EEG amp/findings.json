@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/BrainHat/src/EEG amp.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "EEG amplifier using AD8232 heart rate monitor IC and TS5A3159A analog switch. Opamp detection is questionable for AD8232 which is not a generic opamp.",
       "correct": [
         {
@@ -31,7 +31,12 @@
       "missed": [
         {
           "description": "No I2C or SPI bus detected. The AD8232 outputs are analog, so this is correct. However, the OLED or other peripherals may use I2C - would need to verify the full schematic hierarchy.",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

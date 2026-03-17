@@ -2,7 +2,7 @@
 
 ## FND-00000116: Pressure sensor board with ESP32-C3, BD9G101G buck converter, and XGZP6899D I2C pressure sensor. Good I2C and regulator detection but 7 false positive RF matching networks from the power supply LC filter components.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/esphome-pressure/pcb/esphome-pressure.kicad_sch
 - **Created**: 2026-03-14

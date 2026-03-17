@@ -1,0 +1,55 @@
+{
+  "file_pattern": "dl-010d-103.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 3 protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "F29 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F29$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "F34 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F34$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "F28 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F28$"
+      }
+    }
+  ]
+}

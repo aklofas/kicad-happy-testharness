@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/splitflap/electronics/chainlinkBase/chainlinkBase.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Legacy KiCad 5 schematic for the chainlink base/controller board. 64 components, 116 nets extracted correctly. 0 signals detected due to KH-016. Design includes ESP32 (TTGO T-Display), RS-485 transceiver (SP485), level translators (SN74LV1T34DBV), I2C GPIO expander (MCP23017), current sensor (INA219), motor driver (VN7007ALH), and voltage regulators.",
       "correct": [
         {
@@ -38,11 +38,21 @@
       "missed": [
         {
           "description": "No signal analysis detected (0 signals) - RS-485 bus, I2C bus (MCP23017, INA219), SPI-like shift register interface, voltage regulators (AP7361C-33E, buck converter), level translation circuits, and motor driver should all be detectable",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "RS-485 interface (SP485) not detected as a bus protocol",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

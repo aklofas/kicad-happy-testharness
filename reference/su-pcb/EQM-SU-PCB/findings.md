@@ -2,7 +2,7 @@
 
 ## FND-00000288: AcubeSAT satellite payload PCB (371 components). I2C SDA lines (TWD0/TWD1) misclassified as SCL. OP484 quad opamps (8 thermistor channels) missed due to +IN_A/-IN_A pin naming. INA228 current sense high/low nets reversed. Opamp feedback T-network resistors falsely detected as voltage dividers. DRV8825 stepper driver not in bridge_circuits.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: EQM-SU-PCB.kicad_sch.json
 - **Created**: 2026-03-16

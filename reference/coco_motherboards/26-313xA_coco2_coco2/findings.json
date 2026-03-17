@@ -3,38 +3,80 @@
     {
       "analyzer_type": "schematic",
       "source_file": "26-313xA_coco2_coco2.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "CoCo2 motherboard 26-313xA (KiCad 5, 152 components). Largely accurate. R8+C21 pull-up/termination on VDGCLK misclassified as LP filter. TC1 trimmer not counted as crystal load cap.",
       "correct": [
         {
           "description": "14.318MHz crystal X1 with C13 (39pF) load cap correct",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X1$"
+          }
         },
         {
           "description": "Cassette interface RC filters (R5+C26, R23+C32, R22+C33) correct",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R5$"
+          }
         },
         {
           "description": "R14+C8 LP at 1.59Hz power-on reset RC correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R14$"
+          }
         },
         {
           "description": "Q1 KSD880O driven by SC77527P correctly identified",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "Q2 2N3904 with collector=GNDS correctly captured",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q2$"
+          }
         },
         {
           "description": "R12+C15 and R29+C17 clock filters at 28.42MHz correct",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R12$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "R8(10K)+C21(150pF) classified as LP filter at 106kHz on VDGCLK \u2014 this is a pull-up/termination bias network from +5V, not a signal-path filter",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R8$"
+          }
         }
       ],
       "missed": [],

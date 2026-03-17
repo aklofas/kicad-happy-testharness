@@ -2,7 +2,7 @@
 
 ## FND-00000104: ESP32 clock display with 87 WS2812D-F8 addressable LEDs and AZ1117H-3.3 LDO. Regulator detected but LED chain and decoupling issues noted.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/clock/src/ESP32Clock.kicad_sch
 - **Created**: 2026-03-14

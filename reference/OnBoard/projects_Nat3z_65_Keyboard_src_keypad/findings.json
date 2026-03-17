@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/Nat3z_65_Keyboard/src/keypad.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "ATmega32U4 65-key keyboard with USB-C, crystal, and fuse protection. Good matrix and signal detection but IC refs missing.",
       "correct": [
         {
@@ -39,11 +39,21 @@
       "missed": [
         {
           "description": "Crystal frequency 16MHz detected in value but frequency field is None - should parse numeric frequency from value string",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB series resistors R2/R3 on D+/D- not analyzed for value correctness (22 ohm typical for USB)",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -3,16 +3,26 @@
     {
       "analyzer_type": "schematic",
       "source_file": "Keyboard.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Mechanical keyboard (322 components from sub-sheets). Correct: 80 LEDs, 80 caps, 81 diodes, 81 switches all correctly counted; decoupling properly associated with +5V; missing footprints flagged. Incorrect: all 22 global labels flagged as single_use (C1-C15 and R1-R6 appear on multiple sheets). Missed: keyboard switch matrix detection, SK6812 LED daisy-chain.",
       "correct": [
         {
           "description": "322 components correctly counted from sub-sheets",
-          "analyzer_section": "statistics.total_components"
+          "analyzer_section": "statistics.total_components",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Decoupling for 80 SK6812RGBW LEDs correct",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

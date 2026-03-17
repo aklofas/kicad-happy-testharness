@@ -8,7 +8,12 @@
       "correct": [
         {
           "description": "All 13 MOSFETs correctly mapped as transistor circuits",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -20,7 +25,13 @@
       "missed": [
         {
           "description": "R1 (0.1 ohm), R2 (1 ohm) current sense resistors not detected on a board named 'currentmonitor'",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "contains_match",
+            "field": "shunt.ref",
+            "pattern": "^R1$"
+          }
         }
       ],
       "suggestions": [

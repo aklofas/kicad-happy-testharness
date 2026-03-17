@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/MKxS-IR-sensor/rev.04/IR-endstop-04.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Very simple IR filament sensor (8 components) has severe connectivity parsing failure. Only 4 of 8 components have pins parsed, all nets are single-pin unnamed nets except GND. 29 wires exist but netlist is essentially empty. The EE-SX1103 photomicrosensor is misclassified as generic IC.",
       "correct": [
         {
@@ -40,23 +40,51 @@
       "missed": [
         {
           "description": "IR LED current limiting resistor R1 (330R) circuit not detected",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Phototransistor output with Q1 (2N7002K MOSFET) level shifter circuit not detected",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "Voltage divider R2/R3/R4 network for signal conditioning not detected",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R2$"
+          }
         },
         {
           "description": "BAT54K Schottky diode D2 ESD/clamp protection not detected",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D2$"
+          }
         },
         {
           "description": "No power rail detected other than GND - VCC/+5V rail should exist via connector P1",
-          "analyzer_section": "statistics.power_rails"
+          "analyzer_section": "statistics.power_rails",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

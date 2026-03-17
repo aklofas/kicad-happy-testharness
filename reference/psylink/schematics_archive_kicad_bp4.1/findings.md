@@ -2,7 +2,7 @@
 
 ## FND-00000226: PsyLink neural interface power/reference circuit (39 components). All detections confirmed correct: R1/R2 voltage divider (ratio 0.099) for boost converter feedback, R3/C7 RC filter (0.01Hz cutoff) for reference voltage stabilization. This is the power supply and reference generator sheet, not the EEG front-end. LM321 op-amp used as reference buffer is correctly not flagged as amplifier circuit.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: schematics_archive_kicad_circuit11.sch.json
 - **Created**: 2026-03-16

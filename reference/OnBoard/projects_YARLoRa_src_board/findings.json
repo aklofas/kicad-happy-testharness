@@ -29,15 +29,30 @@
       "missed": [
         {
           "description": "W25Q128JVS flash (U2) connected to RP2040 QSPI bus (QSPI_SD0/SD1/SCLK/SS) not detected as a second SPI/QSPI bus",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "RFM95W-915S2 is a LoRa radio module but no RF chain or RF-related observation is generated",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "BLE5201 Bluetooth module not noted as a wireless interface in design observations",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

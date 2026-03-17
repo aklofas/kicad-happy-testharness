@@ -2,7 +2,7 @@
 
 ## FND-00000269: BLDC motor controller rd321 (STSPIN32F0A, 95 components). 7 duplicate power_regulator entries and 13 duplicate design_observations from 7-unit IC. Three-phase half-bridge (SiZ250DT dual MOSFETs), current sense shunts, and internal opamps all missed.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_moco-rd321_moco-rd321.kicad_sch.json
 - **Created**: 2026-03-16
@@ -36,7 +36,7 @@
 
 ## FND-00000270: BLDC motor controller rd501 (DRV8301 + STM32, 131 components). Three-phase bridge correctly detected but driver_ics link to DRV8301 missing. DRV8301 current sense shunts (0.5mohm) not detected.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_moco-rd501_moco-rd501.kicad_sch.json
 - **Created**: 2026-03-16
@@ -65,7 +65,7 @@
 
 ## FND-00000271: BLDC motor controller sc1 (STSPIN32G4, 99 components). Wrong output_rail for internal buck (unnamed net instead of +3.3V). 5 duplicate power_regulator entries. Three-phase bridge (CSD88584Q5DC), current sense, and internal opamps all missed.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_moco-sc1_moco-sc1.kicad_sch.json
 - **Created**: 2026-03-16

@@ -1,0 +1,42 @@
+{
+  "file_pattern": "Hardware_OpenMowerMainboard_dcdc.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000002",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000002-AST-01",
+      "description": "INCORRECT: MAX20405 classified with topology=LDO but is actually a synchronous buck converter. Has inductor L1 + bootstrap cap C15 which are hallmarks of switching topology.",
+      "created_from": "FND-00000002",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "FND-00000005-AST-01",
+      "description": "digikey field is empty for all OpenMower components despite source having \"Digikey\" property with valid PNs (e.g. \"1276-1935-1-ND\")",
+      "created_from": "FND-00000005",
+      "check": {
+        "path": "components[*].digikey",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000012-AST-01",
+      "description": "R11/R12 form the output voltage feedback divider for IC3 (MAX20405 buck converter). The midpoint connects through JP5 to the FB pin of IC3. This should be detected as a feedback_network in addition to being a voltage_divider.",
+      "created_from": "FND-00000012",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R11$"
+      },
+      "aspirational": true
+    }
+  ]
+}

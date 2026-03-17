@@ -30,7 +30,7 @@
       "repo": "bitaxe",
       "project": "bitaxeUltra",
       "created": "2026-03-13T22:00:00.000000+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "schematic",
       "source_file": "bitaxeUltra.kicad_sch.json",
       "summary": "R4/C35 RC filter false positive (pull-up + decoupling caps)",
@@ -40,7 +40,13 @@
           "type": "rc_filter",
           "description": "R4 is PGOOD pull-up, C35/C44 are decoupling caps. Falsely detected as RC filter.",
           "analyzer_section": "signal_analysis.rc_filters",
-          "related_issue": "KH-019"
+          "related_issue": "KH-019",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R4$"
+          }
         }
       ],
       "missed": [],
@@ -68,7 +74,13 @@
           "type": "rc_filter",
           "description": "R13/C45 RC filter reports ground_net as VOUT instead of actual ground net.",
           "analyzer_section": "signal_analysis.rc_filters",
-          "related_issue": "KH-019"
+          "related_issue": "KH-019",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R13$"
+          }
         }
       ],
       "missed": [],

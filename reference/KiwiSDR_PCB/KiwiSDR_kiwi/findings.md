@@ -2,7 +2,7 @@
 
 ## FND-00000274: KiwiSDR SDR receiver (KiCad 5, 173 components). Core RF path well detected: 6 LC filter pairs in 30MHz anti-alias chain, LTC6401-20 ADC driver, TCXO, 4 power regulators. Two KiCad 5 legacy pin-swap bugs: LMR10530Y fb_net='SW1' instead of 'FB', and LTC6401-20 +IN/-IN and +OUT/-OUT systematically swapped.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: KiwiSDR_kiwi.sch.json
 - **Related**: KH-101
@@ -31,7 +31,7 @@
 
 ## FND-00000275: KiwiSDR active antenna combiner (144 components). RF amplifier chain with 8 JFET/BJT transistors well detected. JFETs misclassified as 'mosfet'. P-channel JFET J271 has is_pchannel=false. 2-emitter BJTs (NPN_2E/PNP_2E) have emitter_net=null. Bridge rectifier not detected.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: active_antenna_comb_comb.sch.json
 - **Created**: 2026-03-16

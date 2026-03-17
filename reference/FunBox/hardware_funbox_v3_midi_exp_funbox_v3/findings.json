@@ -8,50 +8,110 @@
       "correct": [
         {
           "description": "Three voltage dividers (R5/R6, R7/R10, R11/R12 all 1M/1M) correctly detected as virtual ground generators (VCC/2) feeding U1 (MCP6024) non-inverting inputs at pins 12, 5, and 10 for audio biasing",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R5$"
+          }
         },
         {
           "description": "Two anti-aliasing RC low-pass filters R2/C4 and R1/C3 (3.3k/2.2nF at 21.92 kHz) correctly detected on AUDIO_OUT_BUFFER_LEFT and AUDIO_OUT_BUFFER_RIGHT output paths",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R2$"
+          }
         },
         {
           "description": "Six op-amp buffer circuits correctly identified: U3 units 1,2 (MCP6002) and U1 units 1,2,3,4 (MCP6024) all in buffer configuration with gain=1.0",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U3$"
+          }
         },
         {
           "description": "U2 (L7805) correctly detected as LDO regulator with input=VCC, output=5V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "A1 (Electrosmith_Daisy_Seed_Rev7) correctly classified as IC (DSP module)",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "D1 (1N5817) and D2 (1N4148) correctly classified as diodes; D1 provides reverse polarity protection on VCC input",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "U5 (H11L1 optocoupler) correctly classified as IC for MIDI input isolation",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "64 total components: 5 ICs, 11 connectors, 20 resistors, 18 capacitors, 6 switches, 2 LEDs, 2 diodes",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Design observation correctly flags missing decoupling caps on VCC rail for A1 and U2",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Design observation correctly flags missing input/output caps for L7805 regulator",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [],
       "missed": [
         {
           "description": "H11L1 (U5) optocoupler not detected as an isolation_barrier. The H11L1 is a phototransistor optocoupler specifically used for MIDI input galvanic isolation, which is a textbook isolation barrier.",
-          "analyzer_section": "signal_analysis.isolation_barriers"
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U5$"
+          }
         }
       ],
       "suggestions": [

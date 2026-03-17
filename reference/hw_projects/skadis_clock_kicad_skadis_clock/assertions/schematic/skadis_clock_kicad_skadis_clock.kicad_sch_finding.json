@@ -1,0 +1,40 @@
+{
+  "file_pattern": "skadis_clock_kicad_skadis_clock.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000188",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000188-AST-01",
+      "description": "Crystal Y1 with 22pF load caps correctly detected",
+      "created_from": "FND-00000188",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y1$"
+      }
+    },
+    {
+      "id": "FND-00000188-AST-02",
+      "description": "Q1-Q4 BC807 PNP LED drivers correctly identified",
+      "created_from": "FND-00000188",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "FND-00000188-AST-03",
+      "description": "USB-C 5.1k CC pulldowns pass",
+      "created_from": "FND-00000188",
+      "check": {
+        "path": "usb_compliance",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

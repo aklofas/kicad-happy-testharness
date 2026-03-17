@@ -3,13 +3,19 @@
     {
       "analyzer_type": "schematic",
       "source_file": "KP08Hub_keypad.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "USB hub (23 components). Incorrect regulator topology: U3 (CY7C65642 USB hub IC) VREG pin classified as LDO output but it is actually a reference input pin.",
       "correct": [],
       "incorrect": [
         {
           "description": "U3 CY7C65642 USB hub IC VREG pin classified as LDO regulator output, but VREG is actually a voltage reference input pin",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U3$"
+          }
         }
       ],
       "missed": [],

@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/ESP32-EVB/HARDWARE/REV-L/ESP32-EVB_Rev_L.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "CAN bus interface detected in bus_analysis but CAN transceiver (U6 SN65HVD230) not analyzed as subcircuit with neighbor components; Ethernet PHY magnetics and connector not linked to PHY",
       "correct": [
         {
@@ -41,23 +41,50 @@
       "missed": [
         {
           "description": "CAN transceiver SN65HVD230 (U6) not detected as a bus transceiver subcircuit - should identify CAN-TX/CAN-RX connections to ESP32 and CANH/CANL bus lines",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "contains_match",
+            "field": "phy_reference",
+            "pattern": "^U6$"
+          }
         },
         {
           "description": "Ethernet magnetics (transformer/common-mode choke between PHY and RJ45 connector) not linked to Ethernet PHY in ethernet_interfaces",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No crystal circuit detected despite ESP32-WROOM module likely having internal crystal; the 50MHz crystal for the LAN8710A PHY is also not identified",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Relay driver circuits (Q1/Q2 driving REL1/REL2 with flyback diodes D1/D3) not identified as transistor switch circuits",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "USB-UART bridge (likely CH340 or similar) not identified as a subcircuit with its USB data lines",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

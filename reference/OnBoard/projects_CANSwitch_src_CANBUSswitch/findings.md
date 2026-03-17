@@ -2,7 +2,7 @@
 
 ## FND-00000097: Passive CAN bus switch using 4PDT mechanical switch with termination resistors. No active electronics. Analyzer output is reasonable for this passive-only design.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/CANSwitch/src/CANBUSswitch.kicad_sch
 - **Created**: 2026-03-14

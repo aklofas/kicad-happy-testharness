@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/ESP32-GATEWAY/HARDWARE/Hardware revision I/ESP32-GATEWAY_Rev_I.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Legacy KiCad 5 format - Ethernet PHY detected but signal analysis severely limited; RMII signals misclassified as UART; zero voltage dividers/RC filters/power regulators detected despite TPS62A02 and CH340 being present; all subcircuit neighbors empty",
       "correct": [
         {
@@ -46,35 +46,77 @@
       "missed": [
         {
           "description": "Zero voltage dividers detected - TPS62A02 has a feedback divider that should be found",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Zero RC filters detected in the entire design",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Zero power regulators detected - TPS62A02 (U1) switching regulator completely missed",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "Zero protection devices detected despite TVS diodes (TVS1-TVS4) and Schottky diode D6 present",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D6$"
+          }
         },
         {
           "description": "Zero decoupling analysis despite 21 capacitors on the board",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "CH340X USB-UART bridge not identified as USB interface",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Micro SD card interface (MICRO_SD1) not detected",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Separate +3.3VLAN power domain (dedicated Ethernet PHY supply) not analyzed for isolation from main +3.3V",
-          "analyzer_section": "design_analysis.power_domains"
+          "analyzer_section": "design_analysis.power_domains",
+          "check": {
+            "path": "design_analysis.power_domains",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

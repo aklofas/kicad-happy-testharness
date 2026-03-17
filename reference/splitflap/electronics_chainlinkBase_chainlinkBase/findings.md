@@ -2,7 +2,7 @@
 
 ## FND-00000079: Legacy KiCad 5 schematic for the chainlink base/controller board. 64 components, 116 nets extracted correctly. 0 signals detected due to KH-016. Design includes ESP32 (TTGO T-Display), RS-485 transceiver (SP485), level translators (SN74LV1T34DBV), I2C GPIO expander (MCP23017), current sensor (INA219), motor driver (VN7007ALH), and voltage regulators.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/splitflap/electronics/chainlinkBase/chainlinkBase.sch
 - **Related**: KH-016

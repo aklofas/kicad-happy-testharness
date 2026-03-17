@@ -24,7 +24,7 @@
 
 ## FND-00000061: RF antenna matching network not detected
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: OtterCastAudioV2.kicad_sch.json
 - **Created**: 2026-03-13
@@ -90,7 +90,7 @@
 
 ## FND-00000064: SDIO bus protocol not detected
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: OtterCastAudioV2.kicad_sch.json
 - **Created**: 2026-03-13

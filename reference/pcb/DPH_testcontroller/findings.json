@@ -3,19 +3,29 @@
     {
       "analyzer_type": "schematic",
       "source_file": "DPH_testcontroller.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "kiibohd DPH test controller (45 components, legacy KiCad 5). Zero signal detections but design contains 2x LM324 quad op-amps (8 active filter stages with 4066 analog switches) that were completely missed. BOM extraction is accurate.",
       "correct": [
         {
           "description": "BOM component counts accurate: 16 diodes, 9 capacitors, 10 resistors, 4 ICs, 4 connectors, 1 switch",
-          "analyzer_section": "bom"
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [],
       "missed": [
         {
           "description": "8 RC filter stages (36K + 500pF, fc\u224888Hz) on op-amp outputs not detected. Each LM324 output feeds through CD4066 analog switch to R-C low-pass filter.",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

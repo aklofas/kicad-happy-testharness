@@ -1,0 +1,93 @@
+{
+  "file_pattern": "mcu.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 7 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 7
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "L4 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 4 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R41 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R41$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R39 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R39$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R40 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R40$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R45 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R45$"
+      }
+    }
+  ]
+}

@@ -3,20 +3,35 @@
     {
       "analyzer_type": "schematic",
       "source_file": "interchange-pcb-right_interchange-pcb-right.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Keyboard/macro pad with RP2040, PCA9555 I/O expanders, TCA4307 I2C buffer, ADS1110 ADC, SK6812 LEDs (139 components). Correct: I2C buses with pullups, PCA9555 address pins, level shifter topology, component counts. Incorrect: I2C1_RDY (status output) falsely listed as I2C SCL line. Missed: level-shifting topology, TCA4307 I2C buffer topology, hierarchical sheet pin net resolution.",
       "correct": [
         {
           "description": "Six I2C bus segments correctly detected with pullup resistors",
-          "analyzer_section": "design_analysis.bus_analysis.i2c"
+          "analyzer_section": "design_analysis.bus_analysis.i2c",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "139 components with correct type breakdown",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "U5 SN74AHCT125 channel usage correctly analyzed",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

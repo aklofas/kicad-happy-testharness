@@ -1,0 +1,61 @@
+{
+  "file_pattern": "EEZ_DIB_MCU_r1B2.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000186",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000186-AST-01",
+      "description": "IC4 STM32F769 correctly identified with 176 pins across 4 units",
+      "created_from": "FND-00000186",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000186-AST-02",
+      "description": "IC17 DP83848 Ethernet PHY detected",
+      "created_from": "FND-00000186",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000186-AST-03",
+      "description": "IC5 LD1117 correctly detected as LDO",
+      "created_from": "FND-00000186",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000186-AST-04",
+      "description": "Crystal Y1 load caps C8/C9 not detected",
+      "created_from": "FND-00000186",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y1$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000186-AST-05",
+      "description": "SPI/SDMMC/JTAG buses not detected",
+      "created_from": "FND-00000186",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

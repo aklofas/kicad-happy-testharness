@@ -2,7 +2,7 @@
 
 ## FND-00000091: 2S battery PSU/charger with BQ76905 BMS, half-bridge motor driver, RS-485. 16 false positive rf_matching detections on power filter components. RS-485 termination resistors misidentified as voltage divider.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/OnBoard/projects/CACKLE - Card Adaptable Controller Kinetic Link Electronics/src/2s 40A PSU and charger/2s 40A PSU and charger.kicad_sch
 - **Created**: 2026-03-14

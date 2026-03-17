@@ -8,23 +8,48 @@
       "correct": [
         {
           "description": "All 41 SK6812 LEDs (D1-D41) correctly classified as type 'led'",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "All 43 100nF capacitors (C1-C43) correctly classified as type 'capacitor'",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "J1 Conn_01x06 and J2 Conn_01x02 correctly classified as connectors",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SK6812 LEDs correctly recognized as addressable LED type with single-wire WS2812 protocol",
-          "analyzer_section": "signal_analysis.addressable_led_chains"
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Component count accurate: 86 total (41 LEDs + 43 caps + 2 connectors)",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -36,7 +61,12 @@
       "missed": [
         {
           "description": "VBUS power rail decoupling not detected because capacitors have no pin-net associations in legacy .sch parse output (pins array is empty for all components)",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

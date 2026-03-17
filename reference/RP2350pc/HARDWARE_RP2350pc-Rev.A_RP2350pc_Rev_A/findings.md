@@ -2,7 +2,7 @@
 
 ## FND-00000128: Complex RP2350 SBC with DVI, USB hub, audio amplifier - rich signal analysis with 8 voltage dividers, 17 RC filters, power regulators, and audio signal paths all detected; PWM audio filter topology and ferrite bead classification are notable strengths; crystal circuits still undetected
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/RP2350pc/HARDWARE/RP2350pc-Rev.A/RP2350pc_Rev_A.kicad_sch
 - **Created**: 2026-03-14

@@ -1,0 +1,20 @@
+{
+  "file_pattern": "KP08Hub_keypad.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000244",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000244-AST-01",
+      "description": "INCORRECT: U3 CY7C65642 USB hub IC VREG pin classified as LDO regulator output, but VREG is actually a voltage reference input pin",
+      "created_from": "FND-00000244",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
+      },
+      "aspirational": true
+    }
+  ]
+}

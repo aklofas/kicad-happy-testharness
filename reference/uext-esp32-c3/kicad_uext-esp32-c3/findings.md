@@ -2,7 +2,7 @@
 
 ## FND-00000145: Clean UEXT ESP32-C3 board (16 components) with AP2210 LDO and NUP4202 USB ESD. Best analysis quality among UEXT boards. LDO, USB ESD, decoupling, UART all correctly detected. Reset RC filter properly identified. Minor false positive on SPI bus from UEXT connector pins.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/uext-esp32-c3/kicad/uext-esp32-c3.kicad_sch
 - **Created**: 2026-03-14

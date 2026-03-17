@@ -1,0 +1,62 @@
+{
+  "file_pattern": "KiCAD_scart_duplicator_scart_duplicator.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000185",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000185-AST-01",
+      "description": "U1 THS7374 all 14 pins correctly mapped",
+      "created_from": "FND-00000185",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000185-AST-02",
+      "description": "SCART J1 input and J3/J4 output pin assignments correct",
+      "created_from": "FND-00000185",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000185-AST-03",
+      "description": "Audio passthrough correctly traced",
+      "created_from": "FND-00000185",
+      "check": {
+        "path": "nets",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000185-AST-04",
+      "description": "INCORRECT: R5-R8 5.36M DC bias networks detected as filters",
+      "created_from": "FND-00000185",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R5$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000185-AST-05",
+      "description": "INCORRECT: R1-R4 75-ohm video termination detected as high-pass filters",
+      "created_from": "FND-00000185",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1$"
+      },
+      "aspirational": true
+    }
+  ]
+}

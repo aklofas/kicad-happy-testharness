@@ -3,34 +3,66 @@
     {
       "analyzer_type": "schematic",
       "source_file": "KiwiSDR_kiwi.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "KiwiSDR SDR receiver (KiCad 5, 173 components). Core RF path well detected: 6 LC filter pairs in 30MHz anti-alias chain, LTC6401-20 ADC driver, TCXO, 4 power regulators. Two KiCad 5 legacy pin-swap bugs: LMR10530Y fb_net='SW1' instead of 'FB', and LTC6401-20 +IN/-IN and +OUT/-OUT systematically swapped.",
       "correct": [
         {
           "description": "LTC2248 ADC and RF lowpass filter chain with 6 LC pairs at correct frequencies",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "16.368MHz TCXO correctly classified as active_oscillator",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "4 power regulators correct: LMR10530Y buck 1.0V, LP5907 LDOs 1.8V and 3.3V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SAW filter, SE4150L GPS LNA, Artix-7 FPGA correctly classified",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "LMR10530Y (U701) fb_net='SW1' instead of 'FB' \u2014 KiCad 5 legacy pin-position-matching swaps SW (pin 7/8) and FB (pin 5) due to close y-coordinates",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U701$"
+          }
         },
         {
           "description": "LTC6401-20 (U405) +IN/-IN and +OUT/-OUT pins systematically swapped \u2014 same KiCad 5 pin-position bug, paired pins swap",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^U405$"
+          }
         }
       ],
       "missed": [],
@@ -51,48 +83,98 @@
     {
       "analyzer_type": "schematic",
       "source_file": "active_antenna_comb_comb.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "KiwiSDR active antenna combiner (144 components). RF amplifier chain with 8 JFET/BJT transistors well detected. JFETs misclassified as 'mosfet'. P-channel JFET J271 has is_pchannel=false. 2-emitter BJTs (NPN_2E/PNP_2E) have emitter_net=null. Bridge rectifier not detected.",
       "correct": [
         {
           "description": "All 8 transistors detected with gate/base connections captured",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "TPS7A4501 and LM2941 LDOs correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "L202+C218 LC filter at 25.3Hz for power ripple correctly identified",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "contains_match",
+            "field": "inductor.ref",
+            "pattern": "^L202$"
+          }
         },
         {
           "description": "Q201 MMBT4401 capacitance multiplier with base RC filter correctly detected",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q201$"
+          }
         },
         {
           "description": "5 RC snubber networks at bridge rectifier correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "J310 N-JFETs and J271 P-JFET (Q501/Q502/Q507) typed as 'mosfet' \u2014 lib_id clearly indicates N_JFET/P_JFET",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q501$"
+          }
         },
         {
           "description": "Q502 J271 P_JFET has is_pchannel=false \u2014 'p_jfet' not in P-channel detection patterns",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q502$"
+          }
         },
         {
           "description": "Q503-Q506 (NPN_2E/PNP_2E 2-emitter BJTs) have emitter_net=null \u2014 pin detector looks for 'E'/'EMITTER' but these use 'E1'/'E2'",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q503$"
+          }
         }
       ],
       "missed": [
         {
           "description": "Bridge rectifier D201 (BR 0.5A 400V) not detected in bridge_circuits \u2014 detector focuses on H-bridge FETs, not diode bridges",
-          "analyzer_section": "signal_analysis.bridge_circuits"
+          "analyzer_section": "signal_analysis.bridge_circuits",
+          "check": {
+            "path": "signal_analysis.bridge_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

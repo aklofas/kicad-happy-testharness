@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/DanceCon2040/pcb/DanceConIO/DanceConIO.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Dance pad controller with RP2040 and 3x ADS124S06 precision ADCs: excellent RC filter detection for ADC input conditioning, but missing SPI bus and ADC reference circuit analysis",
       "correct": [
         {
@@ -26,23 +26,48 @@
       "missed": [
         {
           "description": "SPI bus connecting RP2040 to three ADS124S06 precision ADCs not detected - these are the primary data interfaces",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ADS124S06 precision delta-sigma ADCs (24-bit) not classified as measurement/instrumentation components",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No power regulators detected despite the board needing regulated 3.3V and 5V for the RP2040 and ADCs",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB interface for the RP2040-Zero module not detected (likely exposed through module pins)",
-          "analyzer_section": "design_analysis.differential_pairs"
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Load cell / force sensor application context not identified from the ADC input topology (multiple differential ADC channels with anti-aliasing)",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

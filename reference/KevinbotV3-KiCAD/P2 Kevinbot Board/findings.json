@@ -3,54 +3,115 @@
     {
       "analyzer_type": "schematic",
       "source_file": "P2 Kevinbot Board.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Parallax Propeller 2 based robot controller board with voltage monitoring (TMUX1511 analog mux), DC motor drivers, USB-C, multiple I/O connectors, fuses, and PSU sub-sheet with LM25145 synchronous buck converter. Good voltage divider and RC filter detection; PSU analysis finds the switching regulator. Many connectors and test points correctly classified.",
       "correct": [
         {
           "description": "Voltage divider R18/R19 (120K/10K, ratio=0.077) correctly detected for voltage monitoring channel C on VMOUT_C_RAW net",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R18$"
+          }
         },
         {
           "description": "Voltage divider R14/R15 (180K/10K, ratio=0.053) correctly detected for voltage monitoring channel A on VMOUT_A_RAW net",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R14$"
+          }
         },
         {
           "description": "RC low-pass filter R55/C20 (887R/10pF, fc=17.9MHz) correctly detected for high-frequency noise filtering",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R55$"
+          }
         },
         {
           "description": "RC low-pass filters R54/C18 and R53/C18 (20k/2.2uF, fc=3.62Hz) correctly detected as slow analog averaging filters",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R54$"
+          }
         },
         {
           "description": "Feedback divider R59/R58 (2.15k/3.4k) correctly identified as feedback network for the PSU regulator",
-          "analyzer_section": "signal_analysis.feedback_networks"
+          "analyzer_section": "signal_analysis.feedback_networks",
+          "check": {
+            "path": "signal_analysis.feedback_networks",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R59$"
+          }
         },
         {
           "description": "26 connectors, 7 test points, 4 fuses, 6 LEDs correctly classified",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Decoupling on +5V rail with 20uF across C22/C23 (10uF each) correctly detected",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power rails +5V, +5VUSB, VBUS, VCCIO, GND all correctly identified",
-          "analyzer_section": "statistics.power_rails"
+          "analyzer_section": "statistics.power_rails",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Buzzer correctly classified as component type 'buzzer'",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Ferrite bead correctly classified as component type 'ferrite_bead'",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "Voltage divider R59/R58 (2.15k/3.4k, ratio=0.613) is actually the feedback divider for the LM25145 buck converter. With Vref=0.6V, Vout=0.6/0.613=0.979V which is clearly wrong. The feedback_divider entry says R56 (18k) connects at the midpoint, suggesting a more complex 3-resistor divider. The estimated_vout of 0.979V is incorrect; the actual output should be 5V.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^R59$"
+          }
         },
         {
           "description": "VBUS decoupling shows only C1 (10nF) which seems low but may be correct for the specific design context",
@@ -78,29 +139,61 @@
       "correct": [
         {
           "description": "U15 (LM25145RGYR) correctly identified as switching regulator with inductor L1, bootstrap cap, output=+5V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U15$"
+          }
         },
         {
           "description": "4 voltage dividers correctly detected for the TMUX1511 analog mux channels",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "5 RC filters detected for voltage monitoring averaging and EMI suppression",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "2 feedback networks identified connecting to the LM25145 FB pin",
-          "analyzer_section": "signal_analysis.feedback_networks"
+          "analyzer_section": "signal_analysis.feedback_networks",
+          "check": {
+            "path": "signal_analysis.feedback_networks",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "18 resistors, 12 capacitors, 3 fuses correctly counted in sub-sheet",
-          "analyzer_section": "statistics.component_types"
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "U15 estimated_vout is 0.979V which is wrong; the LM25145 output is +5V. The 3-resistor feedback network (R56+R59 top, R58 bottom) is not correctly analyzed",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U15$"
+          }
         }
       ],
       "missed": [],

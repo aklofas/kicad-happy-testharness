@@ -2,7 +2,7 @@
 
 ## FND-00000146: ZX Spectrum emulator with ESP32-S3: good USB and power detection, but touch pad keyboard matrix misclassified as relays, missing SD card and HDMI/display interface detection
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/esp32-zxspectrum-hardware/esp32-s3-spectrum.kicad_sch
 - **Created**: 2026-03-14

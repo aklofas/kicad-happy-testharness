@@ -2,7 +2,7 @@
 
 ## FND-00000228: SparkFun WAV Trigger Pro USB sheet (34 components). Regulators, protection devices, voltage dividers, feedback network all correct. Critical: L2 value '30ohm' parsed as 30 Henry instead of impedance — invalidates LC filter detection. U6 AP3012 boost estimated output (2.418V) mismatches rail name 3.3V_P by 26.7%.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: Hardware_usb.kicad_sch.json
 - **Related**: KH-112

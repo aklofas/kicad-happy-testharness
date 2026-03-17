@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/OnBoard/projects/VFD-Tool/src/vfd-tool.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "RP2040-based VFD driver tool with USB-C. Good signal detection overall. TPS562200 estimated Vout only computed for one of two identical regulators. W25Q32 flash memory interface correctly detected.",
       "correct": [
         {
@@ -34,11 +34,23 @@
       "incorrect": [
         {
           "description": "TPS562200 U7 estimated Vout=2.58V but U8 (identical part) has no estimated Vout",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U7$"
+          }
         },
         {
           "description": "TPS54331DR U10 has no estimated Vout despite likely having feedback divider",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U10$"
+          }
         },
         {
           "description": "BOM sum (171) does not match total_components (174) \u2014 3 missing, test_points=4 but test_points appear in BOM for other projects",
@@ -48,11 +60,21 @@
       "missed": [
         {
           "description": "VFD (vacuum fluorescent display) driver circuitry not detected \u2014 this is the main function of the board",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No current sense detection despite likely having sense resistors for VFD filament drive",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

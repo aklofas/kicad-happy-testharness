@@ -8,11 +8,22 @@
       "correct": [
         {
           "description": "Crystal Y101 32.768kHz with load caps correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y101$"
+          }
         },
         {
           "description": "SPI bus detection correctly groups SPI signals",
-          "analyzer_section": "bus_topology"
+          "analyzer_section": "bus_topology",
+          "check": {
+            "path": "bus_topology",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -28,7 +39,13 @@
       "missed": [
         {
           "description": "INA745x current/power monitors (U101, U201) not detected -- current_sense array empty despite dedicated current sensing ICs",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "contains_match",
+            "field": "shunt.ref",
+            "pattern": "^U101$"
+          }
         }
       ],
       "suggestions": [

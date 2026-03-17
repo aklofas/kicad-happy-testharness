@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/Voron-Hardware/Taco_Raven/KiCad/Voron_Klipper_Board.sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "Taco Raven 3D printer controller board - good signal detection on legacy schematic with 358 components",
       "correct": [
         {
@@ -55,15 +55,30 @@
       "missed": [
         {
           "description": "No crystal circuit detected - ATSAMD51 typically uses an external crystal/oscillator, likely present but not identified",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "TMC2130 SPI bus topology not characterized - 8 stepper drivers sharing SPI with individual chip selects is a key design pattern",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No current sense detection despite TMC2130 drivers having sense resistors for motor current setting",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -8,39 +8,91 @@
       "correct": [
         {
           "description": "NCP1532 (U5) correctly detected as switching regulator with input_rail=PWR_EN",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U5$"
+          }
         },
         {
           "description": "Voltage divider R17/R18 (450k/100k) at ratio 0.182 correctly detected as feedback divider for NCP1532 SW2 output (3.3V rail)",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R17$"
+          }
         },
         {
           "description": "Voltage divider R19/R20 (100k/100k) at ratio 0.5 correctly detected as feedback divider for NCP1532 SW1 output (1.2V rail)",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R19$"
+          }
         },
         {
           "description": "Audio voltage divider R15/R14 (680/220) at ratio 0.244 on AUDIO_PWM net feeding P4 headphone jack is correct",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R15$"
+          }
         },
         {
           "description": "ESD protection D3, D4 (DF2B7AFS) on USB_DP and USB_DM correctly detected, plus D5 on +5V rail",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D3$"
+          }
         },
         {
           "description": "RC-networks R8/C5 and R7/C3 at ~16 kHz on +1V2 rail correctly detected as PLL supply filters",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R8$"
+          }
         },
         {
           "description": "DSC60XX (U2) correctly identified as active oscillator",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "USB data nets USB_DP/USB_DM correctly flagged with ESD protection present (D3/D4)",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Decoupling coverage across 4 rails (+BATT, +5V, +3V3, +1V2) correctly tallied",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -60,19 +112,42 @@
       "missed": [
         {
           "description": "BQ21040 (U4) is a LiPo battery charger IC not detected in bms_systems",
-          "analyzer_section": "signal_analysis.bms_systems"
+          "analyzer_section": "signal_analysis.bms_systems",
+          "check": {
+            "path": "signal_analysis.bms_systems",
+            "op": "contains_match",
+            "field": "bms_reference",
+            "pattern": "^U4$"
+          }
         },
         {
           "description": "W25Q16 (U6) SPI flash connected to iCE40 FPGA (U1) not detected in memory_interfaces",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U6$"
+          }
         },
         {
           "description": "GS74116 (U3) 4Mbit SRAM connected to iCE40 FPGA (U1) via parallel address/data bus not detected in memory_interfaces",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U3$"
+          }
         },
         {
           "description": "CP2102N (U7) USB-UART bridge not classified or noted in design_observations",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

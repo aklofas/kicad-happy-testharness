@@ -1,0 +1,30 @@
+{
+  "file_pattern": "Software_LCD2x16_oldRoaster_CoffeeRoasterV2.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000217",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000217-AST-01",
+      "description": "Component counts and BOM values correctly extracted",
+      "created_from": "FND-00000217",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000217-AST-02",
+      "description": "INCORRECT: 2 RC filters (R2+C2, R1+C1) detected as false positives - R1/R2 connect to a resistor junction at __unnamed_35, while C1/C2 are switch debounce capacitors. These components are not wired as RC filter networks.",
+      "created_from": "FND-00000217",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R2$"
+      },
+      "aspirational": true
+    }
+  ]
+}

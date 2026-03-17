@@ -3,40 +3,79 @@
     {
       "analyzer_type": "schematic",
       "source_file": "hardware_eurorack-pmod-r3.5_eurorack-pmod-pcb.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Eurorack FPGA audio PMOD interface r3.5 (153 components). MMBFJ111 JFETs misclassified as MOSFET. 14/15 RC filters are opamp feedback pairs, not standalone filters. Voltage dividers are actually opamp feedback networks.",
       "correct": [
         {
           "description": "AK4619VN audio codec correctly classified as IC",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "TL074/TL072 opamp compensator configurations correctly identified",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power regulators correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "Q2-Q5 MMBFJ111 JFETs classified as 'mosfet' \u2014 signal_detectors.py hardcodes type='mosfet' for all FETs with no JFET distinction",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q2$"
+          }
         },
         {
           "description": "14 of 15 RC filters are opamp feedback R+C pairs (output-to-inverting-input), not standalone filters \u2014 only R35+C32 is genuine",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R35$"
+          }
         },
         {
           "description": "R27/R28 and R19/R20 voltage dividers are actually opamp feedback networks (R27 is feedback from U2 output to inverting input)",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R27$"
+          }
         }
       ],
       "missed": [
         {
           "description": "U11 LTV-357T optocoupler not detected as isolation component \u2014 only one ground net (GNDD) and 'Isolator' in lib_id doesn't match keyword 'isolated'",
-          "analyzer_section": "signal_analysis.isolation_barriers"
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U11$"
+          }
         }
       ],
       "suggestions": [
@@ -56,22 +95,39 @@
     {
       "analyzer_type": "schematic",
       "source_file": "hardware_eurorack-pmod-r3.1_eurorack-pmod-pcb.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Eurorack FPGA PMOD r3.1 (116 components). Same RC filter false positive pattern as r3.5. Resistor network in opamp feedback path not detected.",
       "correct": [
         {
           "description": "TL074/TL072 opamp configurations correctly identified",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "14 of 15 RC filters are opamp feedback pairs, only R33+C27 (VREF filter) is genuine",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R33$"
+          }
         },
         {
           "description": "U9 unit 2 TL072 classified as 'comparator_or_open_loop' \u2014 feedback through RN7 (resistor_network type) missed because 2-hop detection only looks for 'resistor' type, not 'resistor_network'",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^U9$"
+          }
         }
       ],
       "missed": [],

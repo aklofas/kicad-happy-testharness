@@ -2,7 +2,7 @@
 
 ## FND-00000050: Current sense shunts (2mOhm) not detected
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hw_c1_moteus_c1.kicad_sch.json
 - **Created**: 2026-03-13

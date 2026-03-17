@@ -2,7 +2,7 @@
 
 ## FND-00000129: FanPico 0804D is an 8-channel PWM fan controller with RP2040 (Pico module), 74HC4051 analog mux for tachometer reading, SN74AHCT126 buffers for PWM signal routing, LM4040 voltage reference, and SPX1117 adjustable LDO. The analyzer correctly identifies 4 MOSFET transistor circuits (2N7002K open-drain tachometer outputs), 41 protection devices (TVS diodes on all I/O), and the SPX1117 power regulator. However, all 214 components have category=None, and the ERC warnings reveal genuine design insights.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/fanpico/boards/fanpico-0804D/kicad/fanpico.kicad_sch
 - **Related**: KH-047

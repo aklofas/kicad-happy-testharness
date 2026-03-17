@@ -3,12 +3,17 @@
     {
       "analyzer_type": "schematic",
       "source_file": "dc-power-supply.sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "DC power supply (129 components). 2 RF matching networks falsely detected (L1 ferrite EMI filter + C12 decoupling misidentified). 5 regulators correct. 10 RC filters detected but many are feedback networks not signal filters.",
       "correct": [
         {
           "description": "5 regulators correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

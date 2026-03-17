@@ -3,7 +3,7 @@
     {
       "analyzer_type": "schematic",
       "source_file": "repos/core-v-mcu-devkit/kicad/OpenHW DevKit.kicad_sch",
-      "status": "promoted",
+      "status": "confirmed",
       "summary": "RISC-V dev kit with CORE-V MCU: strong bus protocol and power regulation detection, voltage sense dividers correctly found for power monitoring",
       "correct": [
         {
@@ -37,19 +37,39 @@
       "missed": [
         {
           "description": "JTAG/debug interface (jtag signals visible in nets) not identified as a debug bus protocol",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "MikroBUS click socket interface not identified - standardized expansion bus with SPI, I2C, UART, and GPIO",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Camera interface connector not detected as a parallel camera bus (MIPI CSI or parallel)",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "AWS ExpressLink module interface not identified as a cloud connectivity subsystem",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

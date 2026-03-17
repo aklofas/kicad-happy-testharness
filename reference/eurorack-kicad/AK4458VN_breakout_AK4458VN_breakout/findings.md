@@ -2,7 +2,7 @@
 
 ## FND-00000258: AK4458VN 8-ch DAC breakout (85 components). False parallel cap in RC filter inflates capacitance 10x. I2C config pins falsely detected as bus lines. NE5532 difference amplifiers classified as compensator. I2S/TDM audio interface not detected (no detector exists).
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: AK4458VN_breakout_AK4458VN_breakout.kicad_sch.json
 - **Created**: 2026-03-16
@@ -29,7 +29,7 @@
 
 ## FND-00000259: Eurorack switch sequencer with Pico + TL072 (133 components). TMUX4051PWR analog mux falsely classified as isolation barrier.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: switch_sequencer_switch_sequencer_switch_sequencer.kicad_sch.json
 - **Created**: 2026-03-16
@@ -52,7 +52,7 @@
 
 ## FND-00000260: Teensy 4.0 eurorack DC interface with AK4458VN DAC (143 components). Teensy GPIO pins with I2C-capable names trigger false I2C bus detections.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: teensy_dc_interface_teensy_dc_interface.kicad_sch.json
 - **Created**: 2026-03-16

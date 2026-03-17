@@ -1,0 +1,43 @@
+{
+  "file_pattern": "power_distribution.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000019",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000019-AST-01",
+      "description": "INCORRECT: R78(2.2k)/R79(10k) is BJT base bias for Q11, not a divider",
+      "created_from": "FND-00000019",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R78$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000019-AST-02",
+      "description": "INCORRECT: R88(2.2k)/R89(10k) same pattern for Q8",
+      "created_from": "FND-00000019",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R88$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000019-AST-03",
+      "description": "INCORRECT: R118(1k)/R102(5.1k) is series resistor + pulldown on FPGA config signal",
+      "created_from": "FND-00000019",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R118$"
+      }
+    }
+  ]
+}

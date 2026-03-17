@@ -2,7 +2,7 @@
 
 ## FND-00000140: LNA3030 is nearly identical to LNA1109 - a Great Scott Gadgets LNA board with BGB741L7ESD LNA, SAW filter (FAR-F5QA vs DCC6C variant), GRF6011 switches, TVS diodes, and SMA connectors. Same 26 components, same topology. Exhibits identical analyzer issues as LNA1109: LNA falsely classified as power regulator, false crystal circuits, empty component categories, and fragmented RF chain detection.
 
-- **Status**: promoted
+- **Status**: confirmed
 - **Analyzer**: schematic
 - **Source**: repos/LNA3030/LNA3030.sch
 - **Related**: KH-016

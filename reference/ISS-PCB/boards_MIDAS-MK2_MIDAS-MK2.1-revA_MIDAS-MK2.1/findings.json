@@ -8,21 +8,42 @@
       "correct": [
         {
           "description": "Voltage dividers correctly identified for pyro sense (100k/30k) and feedback dividers",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "TPS566242 feedback (135k/30k -> 3.3V) and TPS564247 feedback (155k/30k -> 3.7V) correct with accurate Vout",
-          "analyzer_section": "signal_analysis.feedback_networks"
+          "analyzer_section": "signal_analysis.feedback_networks",
+          "check": {
+            "path": "signal_analysis.feedback_networks",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Switching regulator topology correctly identifies TPS566242 and TPS564247 with inductor references",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "Switching regulators TPS566242 (U303) and TPS564247 (U105) report input_rail and fb_net but no output_rail -- LDOs do have output_rail",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U303$"
+          }
         }
       ],
       "missed": [],

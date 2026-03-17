@@ -24,7 +24,7 @@
 
 ## FND-00000036: R4/C35 RC filter false positive (pull-up + decoupling caps)
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: bitaxeUltra.kicad_sch.json
 - **Related**: KH-019

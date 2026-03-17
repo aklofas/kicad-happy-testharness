@@ -3,40 +3,80 @@
     {
       "analyzer_type": "schematic",
       "source_file": "ykts-payload_ykts-payload.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "CubeSat payload board (155 components). RC filter double-counting on shared capacitors (C14, C29). MAX4372FEUK current sense amplifier with 0.1ohm shunt not detected.",
       "correct": [
         {
           "description": "4 voltage dividers as 4.7K/10K SPI level shifters for AT25DF161 flash correctly identified",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "4 crystal circuits (Y1/Y3 8MHz, Y2/Y4 12MHz) with 22pF load caps correct",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "3 power regulators (AMS1117-5.0, dual L78L33) correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "PMOS Q1 PMV65XP high-side switch correctly identified",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "RC filter double-counting: C14 appears in two entries (R30+C14 and R29+C14) \u2014 only R30+C14 is a genuine power-on reset filter; R29 shares the same cap node",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R30$"
+          }
         },
         {
           "description": "Same double-counting for C29 (R48+C29 and R47+C29)",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R48$"
+          }
         }
       ],
       "missed": [
         {
           "description": "MAX4372FEUK (U4) current sense amplifier with R_CSB1 (0.1ohm shunt) on +5V rail not detected in current_sense",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "contains_match",
+            "field": "shunt.ref",
+            "pattern": "^U4$"
+          }
         }
       ],
       "suggestions": [

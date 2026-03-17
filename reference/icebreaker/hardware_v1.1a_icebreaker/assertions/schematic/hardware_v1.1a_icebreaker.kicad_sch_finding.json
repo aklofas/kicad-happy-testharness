@@ -1,0 +1,20 @@
+{
+  "file_pattern": "hardware_v1.1a_icebreaker.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000043",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000043-AST-01",
+      "description": "INCORRECT: L1/L2 are 600-ohm ferrite beads in 0402. LC filter shows resonant_hz=2.97 and henries=600.0. Physically impossible \u2014 ferrite beads are rated in ohms at frequency, not henries.",
+      "created_from": "FND-00000043",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1$"
+      },
+      "aspirational": true
+    }
+  ]
+}

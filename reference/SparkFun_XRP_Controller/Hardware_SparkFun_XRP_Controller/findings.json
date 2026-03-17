@@ -3,16 +3,26 @@
     {
       "analyzer_type": "schematic",
       "source_file": "Hardware_SparkFun_XRP_Controller.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "SparkFun XRP robot controller with RP2350B. AP63357 reference voltage wrong, bus widths inflated, QSPI interface missed.",
       "correct": [
         {
           "description": "RP2350B microcontroller correctly identified with proper pin count",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DRV8411A dual motor drivers correctly identified",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -24,7 +34,12 @@
       "missed": [
         {
           "description": "QSPI flash memory interface to W25Q128 not detected as memory bus",
-          "analyzer_section": "signal_analysis.bus_interfaces"
+          "analyzer_section": "signal_analysis.bus_interfaces",
+          "check": {
+            "path": "signal_analysis.bus_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -43,28 +58,54 @@
     {
       "analyzer_type": "schematic",
       "source_file": "Hardware_SparkFun_XRP_Controller.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "SparkFun XRP Controller (RP2350B robotics board). Correct: 184 components, DRV8411A motor drivers, LSM6DSOX IMU, crystal, USB compliance, WS2812B, power OR-ing. Incorrect: AP63357 Vref wrong (0.6V vs 0.765V giving 3.87V vs actual 5V), bus widths inflated by counting label instances across sheets. Missed: QSPI memory interface, SPI to radio module, I2C bus to IMU.",
       "correct": [
         {
           "description": "U1 RP2350B correctly identified with 81 pins",
-          "analyzer_section": "ic_pin_analysis"
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "U7/U8 DRV8411A motor drivers correctly identified",
-          "analyzer_section": "subcircuits"
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Crystal Y1 12MHz with 15pF load caps correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "USB-C compliance with 5.1k CC pulldowns pass",
-          "analyzer_section": "usb_compliance"
+          "analyzer_section": "usb_compliance",
+          "check": {
+            "path": "usb_compliance",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "D4 WS2812B addressable LED chain detected",
-          "analyzer_section": "signal_analysis.addressable_led_chains"
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -80,11 +121,21 @@
       "missed": [
         {
           "description": "QSPI memory interface between RP2350B and W25Q128/APS6404L not detected",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SPI interface to RM2 radio module not detected",
-          "analyzer_section": "design_analysis.bus_analysis.spi"
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

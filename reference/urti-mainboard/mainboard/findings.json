@@ -52,7 +52,13 @@
         },
         {
           "description": "Crystal Y1 (TCXO) detected with no frequency - should parse the value or connected IC to determine frequency",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "RF chain amplifiers list is empty despite design having baseband amplifier paths and gain stages",
@@ -66,23 +72,48 @@
       "missed": [
         {
           "description": "No identification of the ECP5 FPGA (U1) as the central hub connecting USB, RF, memory, and debug subsystems",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB3343-CP (U9) is a USB PHY not just a generic IC - its role in USB signal path (FPGA <-> PHY <-> USB connector) should be noted",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No JTAG/debug bus detection despite signals like TMS, TCK, TDI, TDO being present for FPGA programming",
-          "analyzer_section": "design_analysis.bus_analysis"
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DAC output path through opamp filter to mixer not traced as a signal chain",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "HyperRAM interface operating at high speed deserves signal integrity notes (series termination, etc.)",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -156,19 +187,39 @@
       "missed": [
         {
           "description": "No identification of the dual-conversion architecture (two mixer stages for wideband coverage)",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "No PLL loop filter detection for RFFC5072 charge pump outputs (R59/C90/C91/C87 form loop filter)",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "AFE IC (U11) and its SPI control bus not identified as part of the RF signal chain",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Baseband IQ signal paths (TXBB.I+/-, TXBB.Q+/-, RXBB.I+/-, RXBB.Q+/-) not traced as differential pairs or signal chains",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [
@@ -240,19 +291,39 @@
       "missed": [
         {
           "description": "No identification of the RX signal flow: antenna -> matching -> LNA -> mixer -> IF balun -> baseband filter -> ADC",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "PLL loop filter for RFFC5072 not detected",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Baseband IQ differential outputs (RXBB.I+/-, RXBB.Q+/-) not traced as signal pairs",
-          "analyzer_section": "signal_analysis"
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "U14 receiver IC not identified by type (likely MAX2831 or similar) and its role in the chain not noted",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

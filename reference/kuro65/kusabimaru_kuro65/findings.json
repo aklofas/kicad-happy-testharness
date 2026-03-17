@@ -3,16 +3,26 @@
     {
       "analyzer_type": "schematic",
       "source_file": "kusabimaru_switches.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Kuro65 keyboard switches sheet (276 components). Key matrix 5x16 correctly detected with 69 keys. Critical: 69 SK6812MINI-E addressable LEDs misclassified as generic diodes, 0 addressable_led_chains detected. BOM shows 138 diodes but 69 are actually RGB LED ICs.",
       "correct": [
         {
           "description": "Key matrix correctly detected: 5 rows x 16 columns, 69 switch-diode pairs, matrix structure valid",
-          "analyzer_section": "signal_analysis.key_matrices"
+          "analyzer_section": "signal_analysis.key_matrices",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "69 bypass capacitors (100nF each) correctly detected as decoupling, totaling 6.9uF",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

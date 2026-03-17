@@ -2,7 +2,7 @@
 
 ## FND-00000281: CubeSat payload board (155 components). RC filter double-counting on shared capacitors (C14, C29). MAX4372FEUK current sense amplifier with 0.1ohm shunt not detected.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: ykts-payload_ykts-payload.kicad_sch.json
 - **Created**: 2026-03-16

@@ -3,36 +3,69 @@
     {
       "analyzer_type": "schematic",
       "source_file": "pcb_rev.E_sizif512.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "ZX Spectrum clone rev.E (KiCad 6, 195 components). 10 transistors falsely identified as LED drivers for standalone D1. MOSFET gate_driver_ics inflated by +3.3V power net traversal. Bridge rectifier D2 not detected. LM311/LM386 absent from opamp_circuits. kicad_version='unknown'.",
       "correct": [
         {
           "description": "EPM1270T144 CPLD and AS6C4008 SRAM correctly classified",
-          "analyzer_section": "components"
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "LM2596 switching regulator correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "RC filters for audio path correctly identified",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "10 transistors (Q5-Q12 2SA1175 PNP + Q13/Q14 ZVN2106A MOSFET) falsely identified as driving LED D1 \u2014 D1 is standalone (anode +5V, cathode through R3 470ohm to GND), no shared nets with any transistor",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q5$"
+          }
         },
         {
           "description": "Q13/Q14 gate_driver_ics inflated to 19 ICs \u2014 gates statically biased at +3.3V, analyzer traverses entire +3.3V power net listing all connected ICs as gate drivers",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q13$"
+          }
         }
       ],
       "missed": [
         {
           "description": "LM311N comparator (U18) and LM386N audio amplifier (U19) not detected in opamp_circuits \u2014 both are central ZX Spectrum functional circuits",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U18$"
+          }
         }
       ],
       "suggestions": [

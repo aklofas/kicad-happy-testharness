@@ -3,38 +3,78 @@
     {
       "analyzer_type": "schematic",
       "source_file": "2000EATX-KiCAD-R31_2000ATX.kicad_sch.json",
-      "status": "confirmed",
+      "status": "promoted",
       "summary": "Amiga 2000 EATX recreation (612 components). Two bugs found: Q200/Q201 MMBFJ211 JFETs misclassified as MOSFET (hardcoded type in signal_detectors.py). VC800 trimmer capacitor misclassified as varistor (VC prefix falls through to V->varistor), missing from Y800 crystal load caps. RC filters (67 entries, mostly 1k+1nF Zorro bus snubbers), BJT circuits, voltage dividers, MC7905 regulator, active oscillators all correct.",
       "correct": [
         {
           "description": "67 RC filters correctly detected including 60 Zorro bus 1k+1nF snubbers",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Q202 PNP audio transistor, Q300/Q301/Q9100 NPN switches correctly identified",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q202$"
+          }
         },
         {
           "description": "MC7905 -5V regulator correctly detected",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Y800 32.768kHz RTC crystal correctly identified",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y800$"
+          }
         },
         {
           "description": "X1/X2 28.63636MHz active oscillators correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X1$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "Q200/Q201 MMBFJ211 (lib Transistor_FET:BF545C) N-channel JFETs classified as type='mosfet' \u2014 signal_detectors.py hardcodes mosfet for all G/D/S transistors",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q200$"
+          }
         },
         {
           "description": "VC800 (CTRIM 22-47pF trimmer cap, lib 2000ATX-rescue:CTRIM-Device) misclassified as 'varistor' \u2014 VC prefix has no entry in type_map, falls to single-char V->varistor. Missing from Y800 crystal load_caps (shows only C810, should be C810+VC800)",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^Y800$"
+          }
         }
       ],
       "missed": [],

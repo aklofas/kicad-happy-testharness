@@ -2,7 +2,7 @@
 
 ## FND-00000191: ESP32 8-channel MOSFET output board (77 components). Correct: all components, nets, AZ1117-3.3 LDO, CP2104 USB-UART, auto-reset circuit, MOSFET switches, BOM. Incorrect: flyback diodes D3-D10 not detected (drain-to-VCC topology missed), regulator input cap C4 falsely flagged as missing. Missed: D1/D2 power OR-ing, R17-R24 gate pulldowns.
 
-- **Status**: confirmed
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: tests_cases_1_a_1.kicad_sch.json
 - **Created**: 2026-03-15
