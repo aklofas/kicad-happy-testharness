@@ -1,0 +1,437 @@
+[
+  {
+    "issue": "KH-041",
+    "type": "false_positive_fix",
+    "summary": "RF matching false positives eliminated on analog-toolkit",
+    "assertions": [
+      {
+        "repo": "analog-toolkit",
+        "project": "analog-toolkit",
+        "source_file": "analog-toolkit.kicad_sch",
+        "check": {"path": "signal_analysis.rf_matching", "op": "max_count", "value": 0},
+        "description": "KH-041: No false RF matching on non-RF analog design"
+      }
+    ]
+  },
+  {
+    "issue": "KH-042",
+    "type": "count_change_fix",
+    "summary": "dnp_parts counts component instances not BOM lines",
+    "assertions": [
+      {
+        "repo": "analog-toolkit",
+        "project": "analog-toolkit",
+        "source_file": "analog-toolkit.kicad_sch",
+        "check": {"path": "statistics.dnp_parts", "op": "equals", "value": 13},
+        "description": "KH-042: 13 DNP resistor instances correctly counted"
+      }
+    ]
+  },
+  {
+    "issue": "KH-080",
+    "type": "classification_fix",
+    "summary": "DD4012SA buck converter with power: lib_id classified as IC",
+    "assertions": [
+      {
+        "repo": "ethersweep",
+        "project": "electronic_design_development_ethersweep407_CAN_ethersweep",
+        "source_file": "ethersweep.kicad_sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "U4", "assert_field": "type", "assert_value": "ic"},
+        "description": "KH-080: DD4012SA classified as IC not power_symbol"
+      }
+    ]
+  },
+  {
+    "issue": "KH-091",
+    "type": "classification_fix",
+    "summary": "CR-prefix diodes correctly classified as diode not capacitor",
+    "assertions": [
+      {
+        "repo": "commodorelcd",
+        "project": "commodorelcd",
+        "source_file": "commodorelcd.kicad_sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "CR9", "assert_field": "type", "assert_value": "diode"},
+        "description": "KH-091: CR9 classified as diode (CR-prefix IPC-2612)"
+      },
+      {
+        "repo": "commodorelcd",
+        "project": "commodorelcd",
+        "source_file": "commodorelcd.kicad_sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "CR22", "assert_field": "type", "assert_value": "diode"},
+        "description": "KH-091: CR22 classified as diode (CR-prefix IPC-2612)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-092",
+    "type": "classification_fix",
+    "summary": "T-prefix transistors classified as transistor not transformer",
+    "assertions": [
+      {
+        "repo": "iMX8MP-SOM-EVB",
+        "project": "HARDWARE_iMX8MP-SOM-EVB-rev.b_iMX8MPLUS-SOM-EVB_Rev_B",
+        "source_file": "iMX8MPLUS-SOM-EVB_Rev_B.sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "T1", "assert_field": "type", "assert_value": "transistor"},
+        "description": "KH-092: T1 (BC817-40) classified as transistor not transformer"
+      },
+      {
+        "repo": "ESP32-S3-DevKit-LiPo",
+        "project": "HARDWARE_ESP32-S3-DevKit-LiPo_Rev_B_ESP32-S3-DevKit-LiPo_Rev_B",
+        "source_file": "ESP32-S3-DevKit-LiPo_Rev_B.sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "T1", "assert_field": "type", "assert_value": "transistor"},
+        "description": "KH-092: T1 (BC817-40) classified as transistor not transformer"
+      },
+      {
+        "repo": "NB-IoT",
+        "project": "HARDWARE_NB-IoT-DevKit_Rev_B_NB-IoT-DevKit_Rev_B",
+        "source_file": "NB-IoT-DevKit_Rev_B.sch",
+        "check": {"path": "components", "op": "count_matches", "field": "type", "pattern": "^transformer$", "value": 0},
+        "description": "KH-092: No transformer-classified T-prefix transistors"
+      }
+    ]
+  },
+  {
+    "issue": "KH-093",
+    "type": "classification_fix",
+    "summary": "VR-prefix regulators classified as IC not varistor",
+    "assertions": [
+      {
+        "repo": "iMX8MP-SOM-EVB",
+        "project": "HARDWARE_iMX8MP-SOM-EVB-rev.b_iMX8MPLUS-SOM-EVB_Rev_B",
+        "source_file": "iMX8MPLUS-SOM-EVB_Rev_B.sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "VR1", "assert_field": "type", "assert_value": "ic"},
+        "description": "KH-093: VR1 (AMS1117-1.2) classified as IC not varistor"
+      }
+    ]
+  },
+  {
+    "issue": "KH-094",
+    "type": "classification_fix",
+    "summary": "RV-prefix potentiometers classified as resistor not varistor",
+    "assertions": [
+      {
+        "repo": "Castor_and_Pollux",
+        "project": "hardware_mainboard_mainboard",
+        "source_file": "mainboard.kicad_sch",
+        "check": {"path": "components", "op": "count_matches", "field": "type", "pattern": "^varistor$", "value": 0},
+        "description": "KH-094: No varistors (RV1-RV12 potentiometers correctly classified)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-095",
+    "type": "classification_fix",
+    "summary": "D_TVS_Filled classified as diode not LED",
+    "assertions": [
+      {
+        "repo": "Castor_and_Pollux",
+        "project": "hardware_mainboard_mainboard",
+        "source_file": "mainboard.kicad_sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "D3", "assert_field": "type", "assert_value": "diode"},
+        "description": "KH-095: D3 (D_TVS_Filled) classified as diode not LED"
+      }
+    ]
+  },
+  {
+    "issue": "KH-096",
+    "type": "classification_fix",
+    "summary": "FIL-prefix ferrite beads classified as ferrite_bead not fuse",
+    "assertions": [
+      {
+        "repo": "NUS-CPU-03-Nintendo-64-Motherboard",
+        "project": "NUS-CPU-03",
+        "source_file": "NUS-CPU-03.kicad_sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "FIL1", "assert_field": "type", "assert_value": "ferrite_bead"},
+        "description": "KH-096: FIL1 classified as ferrite_bead not fuse"
+      }
+    ]
+  },
+  {
+    "issue": "KH-100",
+    "type": "false_positive_fix",
+    "summary": "WiFi/BT modules excluded from power regulator detection",
+    "assertions": [
+      {
+        "repo": "OtterCam-s3",
+        "project": "OtterCam-s3",
+        "source_file": "OtterCam-s3.kicad_sch",
+        "check": {"path": "signal_analysis.power_regulators", "op": "not_contains_match", "field": "ref", "pattern": "^U4$"},
+        "description": "KH-100: AP6236 WiFi module not falsely in power_regulators"
+      }
+    ]
+  },
+  {
+    "issue": "KH-106",
+    "type": "classification_fix",
+    "summary": "MX key switches classified as switch not relay",
+    "assertions": [
+      {
+        "repo": "Mechanical-Keyboard-PCBs",
+        "project": "60% Pcb_60_Pcb",
+        "source_file": "matrix.kicad_sch",
+        "check": {"path": "components", "op": "count_matches", "field": "type", "pattern": "^relay$", "value": 0},
+        "description": "KH-106: No relay-classified MX key switches"
+      },
+      {
+        "repo": "steamvan",
+        "project": "steamvan",
+        "source_file": "matrix.sch",
+        "check": {"path": "components", "op": "count_matches", "field": "type", "pattern": "^relay$", "value": 0},
+        "description": "KH-106: No relay-classified MX key switches"
+      }
+    ]
+  },
+  {
+    "issue": "KH-108",
+    "type": "false_positive_fix",
+    "summary": "LM66200 ideal diode controller excluded from power regulators",
+    "assertions": [
+      {
+        "repo": "SparkFun_IoT_RedBoard-RP2350",
+        "project": "Hardware_SparkFun_IoT_RedBoard-RP2350",
+        "source_file": "power.kicad_sch",
+        "check": {"path": "signal_analysis.power_regulators", "op": "not_contains_match", "field": "value", "pattern": "LM66200"},
+        "description": "KH-108: LM66200 ideal diode not falsely in power_regulators"
+      }
+    ]
+  },
+  {
+    "issue": "KH-111",
+    "type": "classification_fix",
+    "summary": "Common-mode choke RFCMF classified as inductor not transformer",
+    "assertions": [
+      {
+        "repo": "SparkFun_GNSS_Flex_pHAT",
+        "project": "Hardware_SparkFun_GNSS_Flex_pHAT",
+        "source_file": "SparkFun_GNSS_Flex_pHAT.kicad_sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "TR1", "assert_field": "type", "assert_value": "inductor"},
+        "description": "KH-111: RFCMF common-mode choke classified as inductor"
+      }
+    ]
+  },
+  {
+    "issue": "KH-117",
+    "type": "detection_fix",
+    "summary": "Varistors detected as protection devices via pin fallback",
+    "assertions": [
+      {
+        "repo": "robocup-pcb",
+        "project": "boards_on-robot_kicad_kicker-v3.3_kicker",
+        "source_file": "kicker.kicad_sch",
+        "check": {"path": "signal_analysis.protection_devices", "op": "contains_match", "field": "ref", "pattern": "^RV1$"},
+        "description": "KH-117: RV1 (500V varistor) detected as protection device"
+      }
+    ]
+  },
+  {
+    "issue": "KH-118",
+    "type": "detection_fix",
+    "summary": "TPLP5907 linear regulator detected with new keyword",
+    "assertions": [
+      {
+        "repo": "pcb_kicad_rf_scom_bk48_v3",
+        "project": "sicomm_slaveboard_BK4819_v2",
+        "source_file": "sicomm_slaveboard_BK4819_v2.kicad_sch",
+        "check": {"path": "signal_analysis.power_regulators", "op": "contains_match", "field": "ref", "pattern": "^U19$"},
+        "description": "KH-118: U19 TPLP5907 detected as LDO regulator"
+      }
+    ]
+  },
+  {
+    "issue": "KH-119",
+    "type": "count_change_fix",
+    "summary": "LC filter overcounting fixed via fanout limit and dedup",
+    "assertions": [
+      {
+        "repo": "pcb_kicad_rf_scom_bk48_v3",
+        "project": "sicomm_slaveboard_BK4819_v2",
+        "source_file": "sicomm_slaveboard_BK4819_v2.kicad_sch",
+        "check": {"path": "signal_analysis.lc_filters", "op": "max_count", "value": 14},
+        "description": "KH-119: LC filters at most 14 (was 23 from overcounting)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-120",
+    "type": "detection_fix",
+    "summary": "BK4819 and CMX994 detected as RF transceivers",
+    "assertions": [
+      {
+        "repo": "pcb_kicad_rf_scom_bk48_v3",
+        "project": "sicomm_slaveboard_BK4819_v2",
+        "source_file": "sicomm_slaveboard_BK4819_v2.kicad_sch",
+        "check": {"path": "signal_analysis.rf_chains", "op": "min_count", "value": 1},
+        "description": "KH-120: At least 1 RF chain detected"
+      }
+    ]
+  },
+  {
+    "issue": "KH-122",
+    "type": "classification_fix",
+    "summary": "SK6812 addressable LEDs classified as LED not diode",
+    "assertions": [
+      {
+        "repo": "kuro65",
+        "project": "kusabimaru_kuro65",
+        "source_file": "kuro65.kicad_sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "D84", "assert_field": "type", "assert_value": "led"},
+        "description": "KH-122: D84 (SK6812MINI-E) classified as LED not diode"
+      },
+      {
+        "repo": "kuro65",
+        "project": "kusabimaru_kuro65",
+        "source_file": "kuro65.kicad_sch",
+        "check": {"path": "signal_analysis.addressable_led_chains", "op": "min_count", "value": 1},
+        "description": "KH-122: Addressable LED chain detected"
+      }
+    ]
+  },
+  {
+    "issue": "KH-123",
+    "type": "false_positive_fix",
+    "summary": "Single-cell charger ICs removed from BMS detection",
+    "assertions": [
+      {
+        "repo": "PCB-Modular-Multi-Protocol-Hub",
+        "project": "Kicad Files_Hub",
+        "source_file": "Hub.kicad_sch",
+        "check": {"path": "signal_analysis.bms_systems", "op": "max_count", "value": 0},
+        "description": "KH-123: MCP73871 charger not falsely detected as BMS"
+      }
+    ]
+  },
+  {
+    "issue": "KH-125",
+    "type": "detection_fix",
+    "summary": "Op-amp circuits not detected on KiCad 5 legacy format",
+    "assertions": [
+      {
+        "repo": "DEVLPR",
+        "project": "DEVLPR",
+        "source_file": "DEVLPR.sch",
+        "check": {"path": "signal_analysis.opamp_circuits", "op": "min_count", "value": 2},
+        "description": "KH-125: At least 2 opamp circuits detected on main sheet"
+      }
+    ]
+  },
+  {
+    "issue": "KH-127",
+    "type": "false_positive_fix",
+    "summary": "USB hub IC VREG pin falsely detected as LDO regulator",
+    "assertions": [
+      {
+        "repo": "keypad",
+        "project": "KP08Hub",
+        "source_file": "KP08Hub.kicad_sch",
+        "check": {"path": "signal_analysis.power_regulators", "op": "not_contains_match", "field": "ref", "pattern": "^U3$"},
+        "description": "KH-127: CY7C65642 USB hub not falsely in power_regulators"
+      }
+    ]
+  },
+  {
+    "issue": "KH-145",
+    "type": "false_positive_fix",
+    "summary": "RC filter false positives from opamp feedback R+C pairs",
+    "assertions": [
+      {
+        "repo": "eurorack-pmod",
+        "project": "eurorack-pmod",
+        "source_file": "eurorack-pmod.kicad_sch",
+        "check": {"path": "signal_analysis.rc_filters", "op": "max_count", "value": 3},
+        "description": "KH-145: No more than 3 RC filters (was 15 before fix)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-146",
+    "type": "classification_fix",
+    "summary": "JFET classified as mosfet in transistor_circuits",
+    "assertions": [
+      {
+        "repo": "eurorack-pmod",
+        "project": "hardware_eurorack-pmod-r3.5_eurorack-pmod-pcb",
+        "source_file": "eurorack-pmod-pcb.kicad_sch",
+        "check": {"path": "signal_analysis.transistor_circuits", "op": "contains_match", "field": "type", "pattern": "^jfet$"},
+        "description": "KH-146: MMBFJ111 classified as JFET not MOSFET"
+      }
+    ]
+  },
+  {
+    "issue": "KH-147",
+    "type": "false_positive_fix",
+    "summary": "LED driver false positives — no net connectivity verification",
+    "assertions": [
+      {
+        "repo": "zx-sizif-512",
+        "project": "pcb_rev.E_sizif512",
+        "source_file": "sizif512.kicad_sch",
+        "check": {"path": "signal_analysis.led_drivers", "op": "max_count", "value": 0},
+        "description": "KH-147: No false LED drivers on zx-sizif-512"
+      },
+      {
+        "repo": "tokay-lite-pcb",
+        "project": "ai-camera-rev3.2_ai-camera-rev3.2",
+        "source_file": "ai-camera-rev3.2.kicad_sch",
+        "check": {"path": "signal_analysis.led_drivers", "op": "max_count", "value": 0},
+        "description": "KH-147: No false LED drivers on tokay-lite-pcb"
+      }
+    ]
+  },
+  {
+    "issue": "KH-148",
+    "type": "count_change_fix",
+    "summary": "Duplicate design_observations for multi-unit ICs",
+    "assertions": [
+      {
+        "repo": "3458A-A3-66533-2021-KS-RoHS-SMD-KiCad",
+        "project": "3458A A3 66533 2021 KS SMD",
+        "source_file": "3458A A3 66533 2021 KS SMD.kicad_sch",
+        "check": {"path": "signal_analysis.design_observations", "op": "count_matches",
+                  "field": "component", "pattern": "^U302$", "value": 1},
+        "description": "KH-148: Exactly 1 design_observation for U302 (not 7 duplicates)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-150",
+    "type": "false_positive_fix",
+    "summary": "RF matching false positives on non-RF circuits",
+    "assertions": [
+      {
+        "repo": "3458A-A3-66533-2021-KS-RoHS-SMD-KiCad",
+        "project": "3458A A3 66533 2021 KS SMD",
+        "source_file": "3458A A3 66533 2021 KS SMD.kicad_sch",
+        "check": {"path": "signal_analysis.rf_matching", "op": "max_count", "value": 0},
+        "description": "KH-150: No false RF matching on precision DC measurement board"
+      }
+    ]
+  },
+  {
+    "issue": "KH-151",
+    "type": "classification_fix",
+    "summary": "VC-prefix trimmer capacitors classified as capacitor not varistor",
+    "assertions": [
+      {
+        "repo": "Amiga-2000-EATX",
+        "project": "2000EATX-KiCAD-R31_2000ATX",
+        "source_file": "2000ATX.kicad_sch",
+        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "VC800", "assert_field": "type", "assert_value": "capacitor"},
+        "description": "KH-151: VC800 trimmer classified as capacitor not varistor"
+      }
+    ]
+  },
+  {
+    "issue": "KH-152",
+    "type": "false_positive_fix",
+    "summary": "Solar cell array falsely detected as key matrix",
+    "assertions": [
+      {
+        "repo": "cubesat-boards",
+        "project": "ykts-power",
+        "source_file": "ykts-power.sch",
+        "check": {"path": "signal_analysis.key_matrices", "op": "max_count", "value": 0},
+        "description": "KH-152: No false key matrix on solar cell array board"
+      }
+    ]
+  }
+]

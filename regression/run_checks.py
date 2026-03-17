@@ -120,6 +120,7 @@ def main():
         sys.exit(0)
 
     total = passed = failed = errors = 0
+    aspirational_total = aspirational_passed = aspirational_failed = 0
     failures = []
     all_results = []
 
@@ -134,8 +135,12 @@ def main():
 
         if not output_file:
             for assertion in aset.get("assertions", []):
-                total += 1
-                errors += 1
+                if assertion.get("aspirational"):
+                    aspirational_total += 1
+                    aspirational_failed += 1
+                else:
+                    total += 1
+                    errors += 1
                 all_results.append({
                     "file": file_pattern,
                     "repo": repo_name,
@@ -144,6 +149,7 @@ def main():
                     "description": assertion.get("description", ""),
                     "passed": False,
                     "error": "output file not found",
+                    "aspirational": assertion.get("aspirational", False),
                 })
             continue
 
@@ -151,40 +157,61 @@ def main():
             data = json.loads(output_file.read_text())
         except Exception as e:
             for assertion in aset.get("assertions", []):
-                total += 1
-                errors += 1
+                if assertion.get("aspirational"):
+                    aspirational_total += 1
+                    aspirational_failed += 1
+                else:
+                    total += 1
+                    errors += 1
                 all_results.append({
                     "file": file_pattern,
                     "id": assertion.get("id", "?"),
                     "passed": False,
                     "error": f"JSON parse error: {e}",
+                    "aspirational": assertion.get("aspirational", False),
                 })
             continue
 
         for assertion in aset.get("assertions", []):
-            total += 1
+            is_aspirational = assertion.get("aspirational", False)
             result = evaluate_assertion(assertion, data)
             result["file"] = file_pattern
             result["repo"] = repo_name
             result["project"] = project_name
+            result["aspirational"] = is_aspirational
 
-            if result["passed"]:
-                passed += 1
+            if is_aspirational:
+                aspirational_total += 1
+                if result["passed"]:
+                    aspirational_passed += 1
+                else:
+                    aspirational_failed += 1
             else:
-                failed += 1
-                failures.append(result)
+                total += 1
+                if result["passed"]:
+                    passed += 1
+                else:
+                    failed += 1
+                    failures.append(result)
 
             all_results.append(result)
 
     if args.json:
-        print(json.dumps({
+        out = {
             "total": total,
             "passed": passed,
             "failed": failed,
             "errors": errors,
             "pass_rate": f"{passed/total*100:.1f}%" if total > 0 else "N/A",
             "results": all_results,
-        }, indent=2))
+        }
+        if aspirational_total > 0:
+            out["aspirational"] = {
+                "total": aspirational_total,
+                "passed": aspirational_passed,
+                "failed": aspirational_failed,
+            }
+        print(json.dumps(out, indent=2))
         return
 
     print("=" * 70)
@@ -196,6 +223,10 @@ def main():
     print(f"Errors: {errors}")
     if total > 0:
         print(f"Rate:   {passed/total*100:.1f}%")
+
+    if aspirational_total > 0:
+        print(f"\nAspirational: {aspirational_total} total, "
+              f"{aspirational_passed} passing, {aspirational_failed} failing")
 
     if failures:
         print(f"\n--- Failures ---")

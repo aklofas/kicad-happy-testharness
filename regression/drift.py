@@ -20,6 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import OUTPUTS_DIR, resolve_path
 from regression.findings import load_findings
+from regression.checks import evaluate_assertion
 
 
 def _load_output(analyzer_type, repo, source_file):
@@ -71,12 +72,21 @@ def validate_finding(finding):
         if not section:
             continue
         has_checkable = True
-        count = _section_count(output, section)
         desc = item.get("description", section)
-        if count is None or count == 0:
-            results.append(("regression", "correct", f"{desc} — {section} now empty/missing"))
+        check = item.get("check")
+        if check:
+            r = evaluate_assertion({"check": check, "id": "drift", "description": ""}, output)
+            if r["passed"]:
+                results.append(("ok", "correct", f"{desc} — check passed"))
+            else:
+                results.append(("regression", "correct",
+                                f"{desc} — check FAILED: actual={r.get('actual')}"))
         else:
-            results.append(("ok", "correct", f"{desc} — {section} has {count} items"))
+            count = _section_count(output, section)
+            if count is None or count == 0:
+                results.append(("regression", "correct", f"{desc} — {section} now empty/missing"))
+            else:
+                results.append(("ok", "correct", f"{desc} — {section} has {count} items"))
 
     # Check incorrect items — count change suggests fix
     for item in finding.get("incorrect", []):
@@ -84,12 +94,24 @@ def validate_finding(finding):
         if not section:
             continue
         has_checkable = True
-        count = _section_count(output, section)
         desc = item.get("description", section)
-        if count is None or count == 0:
-            results.append(("possibly_fixed", "incorrect", f"{desc} — {section} now empty"))
+        check = item.get("check")
+        if check:
+            r = evaluate_assertion({"check": check, "id": "drift", "description": ""}, output)
+            if r["passed"]:
+                # not_contains_match passed = ref is gone = bug fixed
+                results.append(("possibly_fixed", "incorrect",
+                                f"{desc} — bug appears fixed"))
+            else:
+                # not_contains_match failed = ref still there = bug still present
+                results.append(("ok", "incorrect",
+                                f"{desc} — bug still present: {r.get('actual')}"))
         else:
-            results.append(("ok", "incorrect", f"{desc} — {section} has {count} items"))
+            count = _section_count(output, section)
+            if count is None or count == 0:
+                results.append(("possibly_fixed", "incorrect", f"{desc} — {section} now empty"))
+            else:
+                results.append(("ok", "incorrect", f"{desc} — {section} has {count} items"))
 
     # Check missed items — data appearing suggests new detection
     for item in finding.get("missed", []):
@@ -97,12 +119,22 @@ def validate_finding(finding):
         if not section:
             continue
         has_checkable = True
-        count = _section_count(output, section)
         desc = item.get("description", section)
-        if count is not None and count > 0:
-            results.append(("now_detected", "missed", f"{desc} — {section} now has {count} items"))
+        check = item.get("check")
+        if check:
+            r = evaluate_assertion({"check": check, "id": "drift", "description": ""}, output)
+            if r["passed"]:
+                results.append(("now_detected", "missed",
+                                f"{desc} — check passed (now detected)"))
+            else:
+                results.append(("ok", "missed",
+                                f"{desc} — check still failing: actual={r.get('actual')}"))
         else:
-            results.append(("ok", "missed", f"{desc} — {section} still empty/missing"))
+            count = _section_count(output, section)
+            if count is not None and count > 0:
+                results.append(("now_detected", "missed", f"{desc} — {section} now has {count} items"))
+            else:
+                results.append(("ok", "missed", f"{desc} — {section} still empty/missing"))
 
     if not has_checkable:
         return [("no_checkable_items", None, "no items with analyzer_section")]

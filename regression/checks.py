@@ -13,7 +13,8 @@ Assertion format:
 
 Supported operators:
     range, min_count, max_count, equals, exists, not_exists,
-    greater_than, less_than, field_equals, contains_match
+    greater_than, less_than, field_equals, contains_match,
+    not_contains_match, count_matches
 """
 
 import fnmatch
@@ -24,6 +25,20 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import resolve_path, load_project_metadata
+
+
+def _item_field(item, field):
+    """Get a field value from a dict, supporting dotted paths (e.g., 'r_top.ref')."""
+    if not isinstance(item, dict):
+        return ""
+    parts = field.split(".")
+    val = item
+    for part in parts:
+        if isinstance(val, dict):
+            val = val.get(part, "")
+        else:
+            return ""
+    return val
 
 
 def _countable(val):
@@ -67,8 +82,14 @@ def evaluate_assertion(assertion, data):
         result["expected"] = f"<= {threshold}"
     elif op == "equals":
         expected = check.get("value")
-        result["passed"] = val == expected
-        result["actual"] = val
+        # When comparing a list/dict to a number, compare count
+        if isinstance(val, (list, dict)) and isinstance(expected, (int, float)):
+            actual = len(val)
+            result["passed"] = actual == expected
+            result["actual"] = actual
+        else:
+            result["passed"] = val == expected
+            result["actual"] = val
         result["expected"] = expected
     elif op == "exists":
         result["passed"] = val is not None and val != [] and val != {} and val != ""
@@ -119,7 +140,7 @@ def evaluate_assertion(assertion, data):
         pattern = check.get("pattern", "")
         for item in val:
             if isinstance(item, dict):
-                field_val = str(item.get(field, ""))
+                field_val = str(_item_field(item, field))
                 if re.search(pattern, field_val, re.IGNORECASE):
                     result["passed"] = True
                     result["actual"] = field_val
@@ -127,6 +148,37 @@ def evaluate_assertion(assertion, data):
                     return result
         result["actual"] = f"no match in {len(val)} items"
         result["expected"] = f"match for /{pattern}/"
+    elif op == "not_contains_match":
+        if not isinstance(val, list):
+            result["passed"] = True
+            result["actual"] = "not a list"
+            return result
+        field = check.get("field", "")
+        pattern = check.get("pattern", "")
+        for item in val:
+            if isinstance(item, dict):
+                field_val = str(_item_field(item, field))
+                if re.search(pattern, field_val, re.IGNORECASE):
+                    result["passed"] = False
+                    result["actual"] = field_val
+                    result["expected"] = f"no match for /{pattern}/"
+                    return result
+        result["passed"] = True
+        result["actual"] = f"no match in {len(val)} items"
+        result["expected"] = f"no match for /{pattern}/"
+    elif op == "count_matches":
+        if not isinstance(val, list):
+            result["actual"] = 0
+        else:
+            field = check.get("field", "")
+            pattern = check.get("pattern", ".*")
+            count = sum(1 for item in val if isinstance(item, dict)
+                        and re.search(pattern, str(_item_field(item, field)),
+                                      re.IGNORECASE))
+            result["actual"] = count
+        expected = check.get("value", 0)
+        result["passed"] = result["actual"] == expected
+        result["expected"] = f"exactly {expected} matches"
     else:
         result["actual"] = f"unknown op: {op}"
 
