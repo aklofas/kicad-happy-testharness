@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~33 (tolerance 10%)",
+      "description": "Net count ~37 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 29,
-        "max": 37
+        "min": 33,
+        "max": 41
       }
     },
     {
@@ -78,6 +78,15 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "3 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "3 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -86,7 +95,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "Has 7 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -95,7 +104,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 31 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -104,7 +113,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "Has 10 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

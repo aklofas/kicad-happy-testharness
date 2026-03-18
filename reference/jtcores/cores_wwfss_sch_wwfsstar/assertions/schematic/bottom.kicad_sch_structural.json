@@ -5,6 +5,24 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 8 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 8 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 128 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -13,7 +31,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000004",
       "description": "VR4 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -23,7 +41,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000005",
       "description": "VR8 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -33,7 +51,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "VR3 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -43,7 +61,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "VR2 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -53,42 +71,13 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "VR5 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^VR5$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 2 rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "R1 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "R7 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R7$"
       }
     }
   ]

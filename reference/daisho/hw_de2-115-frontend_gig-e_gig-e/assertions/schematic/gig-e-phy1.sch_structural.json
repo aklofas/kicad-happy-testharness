@@ -51,6 +51,16 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "U302 in ethernet_interfaces",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "contains_match",
+        "field": "phy_reference",
+        "pattern": "^U302$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -59,7 +69,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "U303 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",

@@ -11,6 +11,71 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-17 — Batch 19: 5 MEDIUM issues (KH-160, KH-163, KH-164, KH-165, KH-174)
+
+Fixes remaining 5 MEDIUM issues across schematic and PCB analyzers. All independent
+fixes: IC-prefix decoupling, PWR_FLAG skip removal, small DFN/QFN thermal pad detection,
+thermal via containment margin, and raw adequacy reporting.
+
+### KH-160 (MEDIUM): PWR_FLAG skip over-aggressive for connector-powered designs
+
+- **File**: `analyze_schematic.py` — `check_pwr_flag_warnings()` lines ~3703–3707
+- **Root cause**: Lines 3704–3707 skipped PWR_FLAG warnings on any net with a recognized
+  power/ground name, even when no power port symbol (power_out pin) existed. The function
+  already iterates only over `known_power_rails` (nets with `#PWR`/`#FLG` components).
+  If a power port symbol provides power_out, `has_power_out` is True and the skip never
+  triggers. Reaching the skip meant the net genuinely lacked a power_out driver.
+- **Fix**: Removed the name-based skip entirely (deleted lines 3704–3707).
+- **Verified**: Full corpus 6827/6827 schematic pass. No false positives in modular-psu
+  (multi-sheet with proper power symbols). 162,234 assertions, 0 failures.
+
+### KH-163 (MEDIUM): thermal_pad_vias and thermal_analysis contradictory via counts
+
+- **File**: `analyze_pcb.py` — `analyze_thermal_pad_vias()` line ~3050
+- **Root cause**: Rectangular containment used 1.1x margin. Vias placed on standard
+  manufacturing grids fell outside. IC2 (BD00FC0W, TO-252-5) in modular-psu: pad is
+  5.5×5.7mm rotated 90°, nearest vias at ±4.25mm from pad center in local-y (half_h=2.85,
+  ratio=1.49x). thermal_analysis uses 1.5x circular radius, found 44 vias; thermal_pad_vias
+  found 0.
+- **Fix**: Widened containment margin from 1.1x to 1.5x to match thermal_analysis proximity.
+- **Verified**: IC2 now reports via_count=18, adequacy="good" (was 0/"none"). Full corpus
+  3491/3493 pass (2 pre-existing parser errors).
+
+### KH-164 (MEDIUM): decoupling_placement absent for IC-prefix components
+
+- **File**: `analyze_pcb.py` — `analyze_decoupling_placement()` line ~1040
+- **Root cause**: IC regex `^U\d` only matched U-prefix components. modular-psu has IC1
+  (MAX31760AEE+) and IC2 (BD00FC0W) — "IC" prefix not "U".
+- **Fix**: Broadened regex to `^(U|IC)\d`.
+- **Verified**: modular-psu aux-ps now has 2 decoupling_placement entries (IC1, IC2). MCU
+  boards show 16 entries each.
+
+### KH-165 (MEDIUM): Thermal pad detection misses small DFN/QFN exposed pads
+
+- **File**: `analyze_pcb.py` — `analyze_thermal_pad_vias()` and `analyze_thermal_vias()`
+- **Root cause**: Two issues: (1) EP detection only matched pad names "0", "EP", "" — DFN
+  variants use numbered pads as EP. (2) Area thresholds too high: EP pads needed >4mm²,
+  non-EP needed >9mm² — excluded 2×2mm DFN EPs (~2.5mm²).
+- **Fix**: (1) Added area-ratio EP detection: if pad area ≥3× median signal pad area,
+  treat as EP. Applied to both functions. (2) Lowered thresholds: EP pads ≥2mm² (was >4mm²),
+  non-EP >6mm² (was >9mm²).
+- **Verified**: cnhardware CH32V003F4U6 now detected (pad_area=2.72mm²) in both
+  thermal_pad_vias and thermal_pads.
+
+### KH-174 (MEDIUM): Thermal via adequacy too aggressive for small-drill designs
+
+- **File**: `analyze_pcb.py` — `analyze_thermal_pad_vias()` lines ~3104–3111
+- **Root cause**: Adequacy thresholds calibrated for 0.3mm reference vias. Designs using
+  smaller vias (0.2mm) to prevent solder wicking scored "insufficient" despite following
+  manufacturer's recommended via pattern.
+- **Fix**: Added `raw_adequacy` field (same thresholds but using raw via count instead of
+  effective). Added `small_via_note` when raw count meets threshold but effective doesn't,
+  explaining the discrepancy with average drill size. Tracks drill_sum during via counting.
+- **Verified**: New fields appear correctly. Existing fields unchanged. 162,234 assertions,
+  0 failures.
+
+---
+
 ## 2026-03-17 — Batch 18: 7 PCB/Gerber issues (KH-161, KH-162, KH-168–KH-172)
 
 PCB and Gerber Layer 3 reviews surfaced 14 issues; this batch fixes the 4 HIGH and 3

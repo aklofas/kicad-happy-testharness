@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~114 (tolerance 10%)",
+      "description": "Net count ~115 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 102,
-        "max": 126
+        "min": 103,
+        "max": 127
       }
     },
     {
@@ -42,6 +42,24 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "Has 19 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

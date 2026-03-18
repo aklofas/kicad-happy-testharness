@@ -14,20 +14,20 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 decoupling_analysis",
+      "description": "Exactly 2 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 5 design_observations",
+      "description": "Exactly 6 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -89,15 +89,34 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 5 rc_filters",
+      "description": "Exactly 1 protection_devices",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 5
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000011",
+      "description": "F1 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Exactly 4 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "R55 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -107,7 +126,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000014",
       "description": "R54 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -117,7 +136,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000015",
       "description": "R53 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -127,7 +146,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000016",
       "description": "R57 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -137,26 +156,16 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
-      "description": "R50 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R50$"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "Exactly 4 voltage_dividers",
+      "id": "STRUCT-00000017",
+      "description": "Exactly 5 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "R18 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -166,7 +175,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "R14 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -176,7 +185,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "R59 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -186,13 +195,23 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "R56 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R56$"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "R50 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R50$"
       }
     }
   ]

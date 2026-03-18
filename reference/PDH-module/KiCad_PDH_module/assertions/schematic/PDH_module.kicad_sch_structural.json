@@ -5,11 +5,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling_analysis",
+      "description": "Exactly 3 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -131,11 +131,11 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "Exactly 2 protection_devices",
+      "description": "Exactly 3 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -160,6 +160,16 @@
     },
     {
       "id": "STRUCT-00000017",
+      "description": "D6 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -168,7 +178,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "R30 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

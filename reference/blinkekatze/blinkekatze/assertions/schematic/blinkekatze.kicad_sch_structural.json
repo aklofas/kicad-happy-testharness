@@ -14,20 +14,20 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 decoupling_analysis",
+      "description": "Exactly 3 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 5 design_observations",
+      "description": "Exactly 6 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -217,15 +217,25 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "Exactly 3 voltage_dividers",
+      "description": "Exactly 4 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000024",
+      "description": "R1 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
       "description": "R17 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -235,7 +245,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "R18 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -245,7 +255,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000027",
       "description": "R13 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
