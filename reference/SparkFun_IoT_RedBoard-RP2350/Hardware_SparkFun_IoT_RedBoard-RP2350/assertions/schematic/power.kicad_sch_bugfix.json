@@ -14,6 +14,17 @@
         "field": "value",
         "pattern": "LM66200"
       }
+    },
+    {
+      "id": "BUGFIX-KH-107-01",
+      "description": "KH-107: RC filters <= 5 on power sheet (crystal components excluded)",
+      "issue": "KH-107",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "max_count",
+        "value": 5
+      }
     }
   ]
 }

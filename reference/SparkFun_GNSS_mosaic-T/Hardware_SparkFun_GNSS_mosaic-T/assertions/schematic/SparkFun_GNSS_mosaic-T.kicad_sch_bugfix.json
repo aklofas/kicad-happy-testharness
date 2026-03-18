@@ -1,0 +1,29 @@
+{
+  "file_pattern": "SparkFun_GNSS_mosaic-T.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-126-01",
+      "description": "KH-126: Protection devices <= 15 (was ~40 from per-net overcounting)",
+      "issue": "KH-126",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "max_count",
+        "value": 15
+      }
+    },
+    {
+      "id": "BUGFIX-KH-143-01",
+      "description": "KH-143: Protection devices <= 20 (no duplicate multi-unit TVS entries)",
+      "issue": "KH-143",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "max_count",
+        "value": 20
+      }
+    }
+  ]
+}

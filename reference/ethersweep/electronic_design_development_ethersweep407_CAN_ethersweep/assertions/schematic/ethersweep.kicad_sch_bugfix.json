@@ -16,6 +16,17 @@
         "assert_field": "type",
         "assert_value": "ic"
       }
+    },
+    {
+      "id": "BUGFIX-KH-081-01",
+      "description": "KH-081: No false current sense on ethersweep Ethernet design",
+      "issue": "KH-081",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "max_count",
+        "value": 0
+      }
     }
   ]
 }

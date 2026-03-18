@@ -1,0 +1,40 @@
+{
+  "file_pattern": "ubertooth-one.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-015-01",
+      "description": "KH-015: signal_analysis section exists on legacy .sch file",
+      "issue": "KH-015",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-015-02",
+      "description": "KH-015: At least 1 voltage divider detected on legacy ubertooth-one",
+      "issue": "KH-015",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "BUGFIX-KH-045-01",
+      "description": "KH-045: At least 1 component has MPN via Field2 positional fallback",
+      "issue": "KH-045",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "components",
+        "op": "contains_match",
+        "field": "mpn",
+        "pattern": "."
+      }
+    }
+  ]
+}

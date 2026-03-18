@@ -1,0 +1,19 @@
+{
+  "file_pattern": "CoffeeRoasterV2c.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-116-01",
+      "description": "KH-116: No RC filters with output_net == GND (was false positive)",
+      "issue": "KH-116",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "output_net",
+        "pattern": "^GND$"
+      }
+    }
+  ]
+}

@@ -1,5 +1,107 @@
 [
   {
+    "issue": "KH-015",
+    "type": "detection_fix",
+    "summary": "Legacy KiCad 5 schematic missing signal_analysis entirely",
+    "assertions": [
+      {
+        "repo": "ubertooth",
+        "project": "hardware_ubertooth-one_ubertooth-one",
+        "source_file": "ubertooth-one.sch",
+        "check": {
+          "path": "signal_analysis",
+          "op": "exists"
+        },
+        "description": "KH-015: signal_analysis section exists on legacy .sch file"
+      },
+      {
+        "repo": "ubertooth",
+        "project": "hardware_ubertooth-one_ubertooth-one",
+        "source_file": "ubertooth-one.sch",
+        "check": {
+          "path": "signal_analysis.voltage_dividers",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-015: At least 1 voltage divider detected on legacy ubertooth-one"
+      }
+    ]
+  },
+  {
+    "issue": "KH-027",
+    "type": "detection_fix",
+    "summary": "Symbol name filter skips valid custom symbols ending in _digit",
+    "assertions": [
+      {
+        "repo": "bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "bitaxeUltra.kicad_sch",
+        "check": {
+          "path": "components",
+          "op": "contains_match",
+          "field": "reference",
+          "pattern": "^Q[12]$"
+        },
+        "description": "KH-027: Q1/Q2 transistors present (not filtered by symbol name filter)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-029",
+    "type": "detection_fix",
+    "summary": "MPN field aliases (PARTNO, Part Number) not recognized",
+    "assertions": [
+      {
+        "repo": "bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "bitaxeUltra.kicad_sch",
+        "check": {
+          "path": "components",
+          "op": "contains_match",
+          "field": "mpn",
+          "pattern": "CSD17311"
+        },
+        "description": "KH-029: CSD17311Q5 MPN populated via PARTNO field alias"
+      }
+    ]
+  },
+  {
+    "issue": "KH-032",
+    "type": "detection_fix",
+    "summary": "SDIO bus protocol detection not implemented",
+    "assertions": [
+      {
+        "repo": "OtterCastAudioV2",
+        "project": "OtterCastAudioV2",
+        "source_file": "OtterCastAudioV2.kicad_sch",
+        "check": {
+          "path": "design_analysis.bus_analysis.sdio",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-032: At least 1 SDIO bus detected on OtterCastAudioV2"
+      }
+    ]
+  },
+  {
+    "issue": "KH-033",
+    "type": "detection_fix",
+    "summary": "DNP detection from value/Note field",
+    "assertions": [
+      {
+        "repo": "OtterCastAudioV2",
+        "project": "OtterCastAudioV2",
+        "source_file": "OtterCastAudioV2.kicad_sch",
+        "check": {
+          "path": "statistics.dnp_parts",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-033: At least 1 DNP part detected (C49 value=DNP)"
+      }
+    ]
+  },
+  {
     "issue": "KH-041",
     "type": "false_positive_fix",
     "summary": "RF matching false positives eliminated on analog-toolkit",
@@ -8,7 +110,11 @@
         "repo": "analog-toolkit",
         "project": "analog-toolkit",
         "source_file": "analog-toolkit.kicad_sch",
-        "check": {"path": "signal_analysis.rf_matching", "op": "max_count", "value": 0},
+        "check": {
+          "path": "signal_analysis.rf_matching",
+          "op": "max_count",
+          "value": 0
+        },
         "description": "KH-041: No false RF matching on non-RF analog design"
       }
     ]
@@ -22,8 +128,133 @@
         "repo": "analog-toolkit",
         "project": "analog-toolkit",
         "source_file": "analog-toolkit.kicad_sch",
-        "check": {"path": "statistics.dnp_parts", "op": "equals", "value": 13},
+        "check": {
+          "path": "statistics.dnp_parts",
+          "op": "equals",
+          "value": 13
+        },
         "description": "KH-042: 13 DNP resistor instances correctly counted"
+      }
+    ]
+  },
+  {
+    "issue": "KH-045",
+    "type": "detection_fix",
+    "summary": "Legacy custom field MPN/manufacturer extraction from generic Field1/Field2",
+    "assertions": [
+      {
+        "repo": "ubertooth",
+        "project": "hardware_ubertooth-one_ubertooth-one",
+        "source_file": "ubertooth-one.sch",
+        "check": {
+          "path": "components",
+          "op": "contains_match",
+          "field": "mpn",
+          "pattern": "."
+        },
+        "description": "KH-045: At least 1 component has MPN via Field2 positional fallback"
+      }
+    ]
+  },
+  {
+    "issue": "KH-051",
+    "type": "detection_fix",
+    "summary": "Addressable LED chain detection (WS2812/SK6812/APA102)",
+    "assertions": [
+      {
+        "repo": "esp-rust-board",
+        "project": "hardware_esp-rust-board_esp-rust-board",
+        "source_file": "esp-rust-board.kicad_sch",
+        "check": {
+          "path": "signal_analysis.addressable_led_chains",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-051: At least 1 addressable LED chain detected (WS2812B)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-054",
+    "type": "detection_fix",
+    "summary": "RF amplifier ICs not detected in RF chains",
+    "assertions": [
+      {
+        "repo": "LNA1109",
+        "project": "LNA1109",
+        "source_file": "LNA1109.kicad_sch",
+        "check": {
+          "path": "signal_analysis.rf_chains",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-054: RF chain detected on LNA1109 (BGB741L7ESD amplifier)"
+      },
+      {
+        "repo": "LNA1109",
+        "project": "LNA1109",
+        "source_file": "LNA1109.kicad_sch",
+        "check": {
+          "path": "signal_analysis.power_regulators",
+          "op": "max_count",
+          "value": 0
+        },
+        "description": "KH-054: BGB741L7ESD not falsely detected as power regulator"
+      }
+    ]
+  },
+  {
+    "issue": "KH-057",
+    "type": "false_positive_fix",
+    "summary": "UART false positives from RMII/PCIe/clock/USB signals",
+    "assertions": [
+      {
+        "repo": "ESP32-EVB",
+        "project": "HARDWARE_REV-F_ESP32-EVB_Rev_F",
+        "source_file": "ESP32-EVB_Rev_F.sch",
+        "check": {
+          "path": "design_analysis.bus_analysis.uart",
+          "op": "not_contains_match",
+          "field": "net",
+          "pattern": "RMII|EMAC|ENET"
+        },
+        "description": "KH-057: No RMII/EMAC signals falsely in UART on ESP32-EVB"
+      }
+    ]
+  },
+  {
+    "issue": "KH-064",
+    "type": "classification_fix",
+    "summary": "Crystal Q-prefix components classified as transistor instead of crystal",
+    "assertions": [
+      {
+        "repo": "ESP32-P4-PC",
+        "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
+        "source_file": "ESP32-P4-PC_Rev_B.kicad_sch",
+        "check": {
+          "path": "signal_analysis.crystal_circuits",
+          "op": "min_count",
+          "value": 3
+        },
+        "description": "KH-064: At least 3 crystal circuits detected (Q-prefix crystals classified correctly)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-066",
+    "type": "detection_fix",
+    "summary": "Ethernet interface missing magnetics and connector linkage",
+    "assertions": [
+      {
+        "repo": "ESP32-EVB",
+        "project": "HARDWARE_REV-F_ESP32-EVB_Rev_F",
+        "source_file": "ESP32-EVB_Rev_F.sch",
+        "check": {
+          "path": "signal_analysis.ethernet_interfaces",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-066: At least 1 Ethernet interface detected on ESP32-EVB"
       }
     ]
   },
@@ -36,8 +267,106 @@
         "repo": "ethersweep",
         "project": "electronic_design_development_ethersweep407_CAN_ethersweep",
         "source_file": "ethersweep.kicad_sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "U4", "assert_field": "type", "assert_value": "ic"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "U4",
+          "assert_field": "type",
+          "assert_value": "ic"
+        },
         "description": "KH-080: DD4012SA classified as IC not power_symbol"
+      }
+    ]
+  },
+  {
+    "issue": "KH-081",
+    "type": "false_positive_fix",
+    "summary": "Current sense FPs on Ethernet termination (W5500, HR911105A)",
+    "assertions": [
+      {
+        "repo": "ethersweep",
+        "project": "electronic_design_development_ethersweep407_CAN_ethersweep",
+        "source_file": "ethersweep.kicad_sch",
+        "check": {
+          "path": "signal_analysis.current_sense",
+          "op": "max_count",
+          "value": 0
+        },
+        "description": "KH-081: No false current sense on ethersweep Ethernet design"
+      }
+    ]
+  },
+  {
+    "issue": "KH-083",
+    "type": "detection_fix",
+    "summary": "lib_name/lib_id mismatch causes 0-pin parsing in KiCad 7+",
+    "assertions": [
+      {
+        "repo": "Power_HW",
+        "project": "GEODE_rev2_SMPS_Motherboard_smps_legged_robot",
+        "source_file": "Project Architecture.kicad_sch",
+        "check": {
+          "path": "signal_analysis.power_regulators",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-083: Power regulators detected after lib_name resolution fix"
+      }
+    ]
+  },
+  {
+    "issue": "KH-085",
+    "type": "detection_fix",
+    "summary": "RF chain keyword lists too narrow (missing ADRF, HMC3xx, etc.)",
+    "assertions": [
+      {
+        "repo": "hackrf",
+        "project": "hardware_hackrf-one_hackrf-one",
+        "source_file": "hackrf-one.kicad_sch",
+        "check": {
+          "path": "signal_analysis.rf_chains",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-085: At least 1 RF chain detected on hackrf-one"
+      }
+    ]
+  },
+  {
+    "issue": "KH-086",
+    "type": "false_positive_fix",
+    "summary": "SPI nets falsely detected as I2C via pin-name fallback",
+    "assertions": [
+      {
+        "repo": "ISS-PCB",
+        "project": "boards_TARS-MK4_TARS-MK4-FCB-revC_TARS-MK4-FCB",
+        "source_file": "TARS-MK4-FCB.kicad_sch",
+        "check": {
+          "path": "design_analysis.bus_analysis.i2c",
+          "op": "not_contains_match",
+          "field": "net",
+          "pattern": "SPI"
+        },
+        "description": "KH-086: No SPI nets falsely reported as I2C on TARS-MK4-FCB"
+      }
+    ]
+  },
+  {
+    "issue": "KH-088",
+    "type": "detection_fix",
+    "summary": "Eagle-import empty Value cascading power symbol net failure",
+    "assertions": [
+      {
+        "repo": "mutable_eurorack_kicad",
+        "project": "ripples_hardware_design_pcb_KiCad_ripples_v40",
+        "source_file": "ripples_v40.kicad_sch",
+        "check": {
+          "path": "signal_analysis.opamp_circuits",
+          "op": "min_count",
+          "value": 10
+        },
+        "description": "KH-088: >= 10 opamp circuits detected after Eagle-import power net fix"
       }
     ]
   },
@@ -50,14 +379,28 @@
         "repo": "commodorelcd",
         "project": "commodorelcd",
         "source_file": "commodorelcd.kicad_sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "CR9", "assert_field": "type", "assert_value": "diode"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "CR9",
+          "assert_field": "type",
+          "assert_value": "diode"
+        },
         "description": "KH-091: CR9 classified as diode (CR-prefix IPC-2612)"
       },
       {
         "repo": "commodorelcd",
         "project": "commodorelcd",
         "source_file": "commodorelcd.kicad_sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "CR22", "assert_field": "type", "assert_value": "diode"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "CR22",
+          "assert_field": "type",
+          "assert_value": "diode"
+        },
         "description": "KH-091: CR22 classified as diode (CR-prefix IPC-2612)"
       }
     ]
@@ -71,21 +414,41 @@
         "repo": "iMX8MP-SOM-EVB",
         "project": "HARDWARE_iMX8MP-SOM-EVB-rev.b_iMX8MPLUS-SOM-EVB_Rev_B",
         "source_file": "iMX8MPLUS-SOM-EVB_Rev_B.sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "T1", "assert_field": "type", "assert_value": "transistor"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "T1",
+          "assert_field": "type",
+          "assert_value": "transistor"
+        },
         "description": "KH-092: T1 (BC817-40) classified as transistor not transformer"
       },
       {
         "repo": "ESP32-S3-DevKit-LiPo",
         "project": "HARDWARE_ESP32-S3-DevKit-LiPo_Rev_B_ESP32-S3-DevKit-LiPo_Rev_B",
         "source_file": "ESP32-S3-DevKit-LiPo_Rev_B.sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "T1", "assert_field": "type", "assert_value": "transistor"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "T1",
+          "assert_field": "type",
+          "assert_value": "transistor"
+        },
         "description": "KH-092: T1 (BC817-40) classified as transistor not transformer"
       },
       {
         "repo": "NB-IoT",
         "project": "HARDWARE_NB-IoT-DevKit_Rev_B_NB-IoT-DevKit_Rev_B",
         "source_file": "NB-IoT-DevKit_Rev_B.sch",
-        "check": {"path": "components", "op": "count_matches", "field": "type", "pattern": "^transformer$", "value": 0},
+        "check": {
+          "path": "components",
+          "op": "count_matches",
+          "field": "type",
+          "pattern": "^transformer$",
+          "value": 0
+        },
         "description": "KH-092: No transformer-classified T-prefix transistors"
       }
     ]
@@ -99,7 +462,14 @@
         "repo": "iMX8MP-SOM-EVB",
         "project": "HARDWARE_iMX8MP-SOM-EVB-rev.b_iMX8MPLUS-SOM-EVB_Rev_B",
         "source_file": "iMX8MPLUS-SOM-EVB_Rev_B.sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "VR1", "assert_field": "type", "assert_value": "ic"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "VR1",
+          "assert_field": "type",
+          "assert_value": "ic"
+        },
         "description": "KH-093: VR1 (AMS1117-1.2) classified as IC not varistor"
       }
     ]
@@ -113,7 +483,13 @@
         "repo": "Castor_and_Pollux",
         "project": "hardware_mainboard_mainboard",
         "source_file": "mainboard.kicad_sch",
-        "check": {"path": "components", "op": "count_matches", "field": "type", "pattern": "^varistor$", "value": 0},
+        "check": {
+          "path": "components",
+          "op": "count_matches",
+          "field": "type",
+          "pattern": "^varistor$",
+          "value": 0
+        },
         "description": "KH-094: No varistors (RV1-RV12 potentiometers correctly classified)"
       }
     ]
@@ -127,7 +503,14 @@
         "repo": "Castor_and_Pollux",
         "project": "hardware_mainboard_mainboard",
         "source_file": "mainboard.kicad_sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "D3", "assert_field": "type", "assert_value": "diode"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "D3",
+          "assert_field": "type",
+          "assert_value": "diode"
+        },
         "description": "KH-095: D3 (D_TVS_Filled) classified as diode not LED"
       }
     ]
@@ -141,7 +524,14 @@
         "repo": "NUS-CPU-03-Nintendo-64-Motherboard",
         "project": "NUS-CPU-03",
         "source_file": "NUS-CPU-03.kicad_sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "FIL1", "assert_field": "type", "assert_value": "ferrite_bead"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "FIL1",
+          "assert_field": "type",
+          "assert_value": "ferrite_bead"
+        },
         "description": "KH-096: FIL1 classified as ferrite_bead not fuse"
       }
     ]
@@ -155,8 +545,30 @@
         "repo": "OtterCam-s3",
         "project": "OtterCam-s3",
         "source_file": "OtterCam-s3.kicad_sch",
-        "check": {"path": "signal_analysis.power_regulators", "op": "not_contains_match", "field": "ref", "pattern": "^U4$"},
+        "check": {
+          "path": "signal_analysis.power_regulators",
+          "op": "not_contains_match",
+          "field": "ref",
+          "pattern": "^U4$"
+        },
         "description": "KH-100: AP6236 WiFi module not falsely in power_regulators"
+      }
+    ]
+  },
+  {
+    "issue": "KH-102",
+    "type": "false_positive_fix",
+    "summary": "extract_silkscreen crashes on list-typed footprint value",
+    "assertions": [
+      {
+        "repo": "TI92-revive",
+        "project": "ti92-reviceStable_ti92-reviceStable",
+        "source_file": "ti92-reviceStable.kicad_pcb",
+        "check": {
+          "path": "statistics",
+          "op": "exists"
+        },
+        "description": "KH-102: TI92-revive PCB parses without crash (was AttributeError)"
       }
     ]
   },
@@ -169,15 +581,45 @@
         "repo": "Mechanical-Keyboard-PCBs",
         "project": "60% Pcb_60_Pcb",
         "source_file": "matrix.kicad_sch",
-        "check": {"path": "components", "op": "count_matches", "field": "type", "pattern": "^relay$", "value": 0},
+        "check": {
+          "path": "components",
+          "op": "count_matches",
+          "field": "type",
+          "pattern": "^relay$",
+          "value": 0
+        },
         "description": "KH-106: No relay-classified MX key switches"
       },
       {
         "repo": "steamvan",
         "project": "steamvan",
         "source_file": "matrix.sch",
-        "check": {"path": "components", "op": "count_matches", "field": "type", "pattern": "^relay$", "value": 0},
+        "check": {
+          "path": "components",
+          "op": "count_matches",
+          "field": "type",
+          "pattern": "^relay$",
+          "value": 0
+        },
         "description": "KH-106: No relay-classified MX key switches"
+      }
+    ]
+  },
+  {
+    "issue": "KH-107",
+    "type": "false_positive_fix",
+    "summary": "Crystal oscillator load components as standalone RC filters",
+    "assertions": [
+      {
+        "repo": "SparkFun_IoT_RedBoard-RP2350",
+        "project": "Hardware_SparkFun_IoT_RedBoard-RP2350",
+        "source_file": "power.kicad_sch",
+        "check": {
+          "path": "signal_analysis.rc_filters",
+          "op": "max_count",
+          "value": 5
+        },
+        "description": "KH-107: RC filters <= 5 on power sheet (crystal components excluded)"
       }
     ]
   },
@@ -190,7 +632,12 @@
         "repo": "SparkFun_IoT_RedBoard-RP2350",
         "project": "Hardware_SparkFun_IoT_RedBoard-RP2350",
         "source_file": "power.kicad_sch",
-        "check": {"path": "signal_analysis.power_regulators", "op": "not_contains_match", "field": "value", "pattern": "LM66200"},
+        "check": {
+          "path": "signal_analysis.power_regulators",
+          "op": "not_contains_match",
+          "field": "value",
+          "pattern": "LM66200"
+        },
         "description": "KH-108: LM66200 ideal diode not falsely in power_regulators"
       }
     ]
@@ -204,8 +651,34 @@
         "repo": "SparkFun_GNSS_Flex_pHAT",
         "project": "Hardware_SparkFun_GNSS_Flex_pHAT",
         "source_file": "SparkFun_GNSS_Flex_pHAT.kicad_sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "TR1", "assert_field": "type", "assert_value": "inductor"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "TR1",
+          "assert_field": "type",
+          "assert_value": "inductor"
+        },
         "description": "KH-111: RFCMF common-mode choke classified as inductor"
+      }
+    ]
+  },
+  {
+    "issue": "KH-116",
+    "type": "false_positive_fix",
+    "summary": "RC filter false positive when output==ground net",
+    "assertions": [
+      {
+        "repo": "CoffeeRoaster",
+        "project": "Software_LCD2x16_oldRoaster_CoffeeRoasterV2c",
+        "source_file": "CoffeeRoasterV2c.kicad_sch",
+        "check": {
+          "path": "signal_analysis.rc_filters",
+          "op": "not_contains_match",
+          "field": "output_net",
+          "pattern": "^GND$"
+        },
+        "description": "KH-116: No RC filters with output_net == GND (was false positive)"
       }
     ]
   },
@@ -218,7 +691,12 @@
         "repo": "robocup-pcb",
         "project": "boards_on-robot_kicad_kicker-v3.3_kicker",
         "source_file": "kicker.kicad_sch",
-        "check": {"path": "signal_analysis.protection_devices", "op": "contains_match", "field": "ref", "pattern": "^RV1$"},
+        "check": {
+          "path": "signal_analysis.protection_devices",
+          "op": "contains_match",
+          "field": "ref",
+          "pattern": "^RV1$"
+        },
         "description": "KH-117: RV1 (500V varistor) detected as protection device"
       }
     ]
@@ -232,7 +710,12 @@
         "repo": "pcb_kicad_rf_scom_bk48_v3",
         "project": "sicomm_slaveboard_BK4819_v2",
         "source_file": "sicomm_slaveboard_BK4819_v2.kicad_sch",
-        "check": {"path": "signal_analysis.power_regulators", "op": "contains_match", "field": "ref", "pattern": "^U19$"},
+        "check": {
+          "path": "signal_analysis.power_regulators",
+          "op": "contains_match",
+          "field": "ref",
+          "pattern": "^U19$"
+        },
         "description": "KH-118: U19 TPLP5907 detected as LDO regulator"
       }
     ]
@@ -246,7 +729,11 @@
         "repo": "pcb_kicad_rf_scom_bk48_v3",
         "project": "sicomm_slaveboard_BK4819_v2",
         "source_file": "sicomm_slaveboard_BK4819_v2.kicad_sch",
-        "check": {"path": "signal_analysis.lc_filters", "op": "max_count", "value": 14},
+        "check": {
+          "path": "signal_analysis.lc_filters",
+          "op": "max_count",
+          "value": 14
+        },
         "description": "KH-119: LC filters at most 14 (was 23 from overcounting)"
       }
     ]
@@ -260,7 +747,11 @@
         "repo": "pcb_kicad_rf_scom_bk48_v3",
         "project": "sicomm_slaveboard_BK4819_v2",
         "source_file": "sicomm_slaveboard_BK4819_v2.kicad_sch",
-        "check": {"path": "signal_analysis.rf_chains", "op": "min_count", "value": 1},
+        "check": {
+          "path": "signal_analysis.rf_chains",
+          "op": "min_count",
+          "value": 1
+        },
         "description": "KH-120: At least 1 RF chain detected"
       }
     ]
@@ -274,14 +765,25 @@
         "repo": "kuro65",
         "project": "kusabimaru_kuro65",
         "source_file": "kuro65.kicad_sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "D84", "assert_field": "type", "assert_value": "led"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "D84",
+          "assert_field": "type",
+          "assert_value": "led"
+        },
         "description": "KH-122: D84 (SK6812MINI-E) classified as LED not diode"
       },
       {
         "repo": "kuro65",
         "project": "kusabimaru_kuro65",
         "source_file": "kuro65.kicad_sch",
-        "check": {"path": "signal_analysis.addressable_led_chains", "op": "min_count", "value": 1},
+        "check": {
+          "path": "signal_analysis.addressable_led_chains",
+          "op": "min_count",
+          "value": 1
+        },
         "description": "KH-122: Addressable LED chain detected"
       }
     ]
@@ -295,8 +797,30 @@
         "repo": "PCB-Modular-Multi-Protocol-Hub",
         "project": "Kicad Files_Hub",
         "source_file": "Hub.kicad_sch",
-        "check": {"path": "signal_analysis.bms_systems", "op": "max_count", "value": 0},
+        "check": {
+          "path": "signal_analysis.bms_systems",
+          "op": "max_count",
+          "value": 0
+        },
         "description": "KH-123: MCP73871 charger not falsely detected as BMS"
+      }
+    ]
+  },
+  {
+    "issue": "KH-124",
+    "type": "detection_fix",
+    "summary": "PMIC regulators not detected (AXP803, MT3608)",
+    "assertions": [
+      {
+        "repo": "DIY-LAPTOP",
+        "project": "HARDWARE_A64-TERES_TERES-PCB1-A64-MAIN_Rev.C_TERES_PCB1-A64-MAIN_Rev.C",
+        "source_file": "Power Supply, Extensions and MiPi-DSI .sch",
+        "check": {
+          "path": "signal_analysis.power_regulators",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-124: At least 1 power regulator detected on Power Supply sheet"
       }
     ]
   },
@@ -309,8 +833,30 @@
         "repo": "DEVLPR",
         "project": "DEVLPR",
         "source_file": "DEVLPR.sch",
-        "check": {"path": "signal_analysis.opamp_circuits", "op": "min_count", "value": 2},
+        "check": {
+          "path": "signal_analysis.opamp_circuits",
+          "op": "min_count",
+          "value": 2
+        },
         "description": "KH-125: At least 2 opamp circuits detected on main sheet"
+      }
+    ]
+  },
+  {
+    "issue": "KH-126",
+    "type": "false_positive_fix",
+    "summary": "Multi-pin TVS/ESD arrays overcounted as protection devices",
+    "assertions": [
+      {
+        "repo": "SparkFun_GNSS_mosaic-T",
+        "project": "Hardware_SparkFun_GNSS_mosaic-T",
+        "source_file": "SparkFun_GNSS_mosaic-T.kicad_sch",
+        "check": {
+          "path": "signal_analysis.protection_devices",
+          "op": "max_count",
+          "value": 15
+        },
+        "description": "KH-126: Protection devices <= 15 (was ~40 from per-net overcounting)"
       }
     ]
   },
@@ -323,8 +869,31 @@
         "repo": "keypad",
         "project": "KP08Hub",
         "source_file": "KP08Hub.kicad_sch",
-        "check": {"path": "signal_analysis.power_regulators", "op": "not_contains_match", "field": "ref", "pattern": "^U3$"},
+        "check": {
+          "path": "signal_analysis.power_regulators",
+          "op": "not_contains_match",
+          "field": "ref",
+          "pattern": "^U3$"
+        },
         "description": "KH-127: CY7C65642 USB hub not falsely in power_regulators"
+      }
+    ]
+  },
+  {
+    "issue": "KH-143",
+    "type": "false_positive_fix",
+    "summary": "Multi-unit TVS diode arrays create duplicate protection entries",
+    "assertions": [
+      {
+        "repo": "SparkFun_GNSS_mosaic-T",
+        "project": "Hardware_SparkFun_GNSS_mosaic-T",
+        "source_file": "SparkFun_GNSS_mosaic-T.kicad_sch",
+        "check": {
+          "path": "signal_analysis.protection_devices",
+          "op": "max_count",
+          "value": 20
+        },
+        "description": "KH-143: Protection devices <= 20 (no duplicate multi-unit TVS entries)"
       }
     ]
   },
@@ -337,7 +906,11 @@
         "repo": "eurorack-pmod",
         "project": "eurorack-pmod",
         "source_file": "eurorack-pmod.kicad_sch",
-        "check": {"path": "signal_analysis.rc_filters", "op": "max_count", "value": 3},
+        "check": {
+          "path": "signal_analysis.rc_filters",
+          "op": "max_count",
+          "value": 3
+        },
         "description": "KH-145: No more than 3 RC filters (was 15 before fix)"
       }
     ]
@@ -351,7 +924,12 @@
         "repo": "eurorack-pmod",
         "project": "hardware_eurorack-pmod-r3.5_eurorack-pmod-pcb",
         "source_file": "eurorack-pmod-pcb.kicad_sch",
-        "check": {"path": "signal_analysis.transistor_circuits", "op": "contains_match", "field": "type", "pattern": "^jfet$"},
+        "check": {
+          "path": "signal_analysis.transistor_circuits",
+          "op": "contains_match",
+          "field": "type",
+          "pattern": "^jfet$"
+        },
         "description": "KH-146: MMBFJ111 classified as JFET not MOSFET"
       }
     ]
@@ -359,20 +937,28 @@
   {
     "issue": "KH-147",
     "type": "false_positive_fix",
-    "summary": "LED driver false positives — no net connectivity verification",
+    "summary": "LED driver false positives \u2014 no net connectivity verification",
     "assertions": [
       {
         "repo": "zx-sizif-512",
         "project": "pcb_rev.E_sizif512",
         "source_file": "sizif512.kicad_sch",
-        "check": {"path": "signal_analysis.led_drivers", "op": "max_count", "value": 0},
+        "check": {
+          "path": "signal_analysis.led_drivers",
+          "op": "max_count",
+          "value": 0
+        },
         "description": "KH-147: No false LED drivers on zx-sizif-512"
       },
       {
         "repo": "tokay-lite-pcb",
         "project": "ai-camera-rev3.2_ai-camera-rev3.2",
         "source_file": "ai-camera-rev3.2.kicad_sch",
-        "check": {"path": "signal_analysis.led_drivers", "op": "max_count", "value": 0},
+        "check": {
+          "path": "signal_analysis.led_drivers",
+          "op": "max_count",
+          "value": 0
+        },
         "description": "KH-147: No false LED drivers on tokay-lite-pcb"
       }
     ]
@@ -386,8 +972,13 @@
         "repo": "3458A-A3-66533-2021-KS-RoHS-SMD-KiCad",
         "project": "3458A A3 66533 2021 KS SMD",
         "source_file": "3458A A3 66533 2021 KS SMD.kicad_sch",
-        "check": {"path": "signal_analysis.design_observations", "op": "count_matches",
-                  "field": "component", "pattern": "^U302$", "value": 1},
+        "check": {
+          "path": "signal_analysis.design_observations",
+          "op": "count_matches",
+          "field": "component",
+          "pattern": "^U302$",
+          "value": 1
+        },
         "description": "KH-148: Exactly 1 design_observation for U302 (not 7 duplicates)"
       }
     ]
@@ -401,7 +992,11 @@
         "repo": "3458A-A3-66533-2021-KS-RoHS-SMD-KiCad",
         "project": "3458A A3 66533 2021 KS SMD",
         "source_file": "3458A A3 66533 2021 KS SMD.kicad_sch",
-        "check": {"path": "signal_analysis.rf_matching", "op": "max_count", "value": 0},
+        "check": {
+          "path": "signal_analysis.rf_matching",
+          "op": "max_count",
+          "value": 0
+        },
         "description": "KH-150: No false RF matching on precision DC measurement board"
       }
     ]
@@ -415,7 +1010,14 @@
         "repo": "Amiga-2000-EATX",
         "project": "2000EATX-KiCAD-R31_2000ATX",
         "source_file": "2000ATX.kicad_sch",
-        "check": {"path": "components", "op": "field_equals", "match_field": "reference", "match_value": "VC800", "assert_field": "type", "assert_value": "capacitor"},
+        "check": {
+          "path": "components",
+          "op": "field_equals",
+          "match_field": "reference",
+          "match_value": "VC800",
+          "assert_field": "type",
+          "assert_value": "capacitor"
+        },
         "description": "KH-151: VC800 trimmer classified as capacitor not varistor"
       }
     ]
@@ -429,8 +1031,170 @@
         "repo": "cubesat-boards",
         "project": "ykts-power",
         "source_file": "ykts-power.sch",
-        "check": {"path": "signal_analysis.key_matrices", "op": "max_count", "value": 0},
+        "check": {
+          "path": "signal_analysis.key_matrices",
+          "op": "max_count",
+          "value": 0
+        },
         "description": "KH-152: No false key matrix on solar cell array board"
+      }
+    ]
+  },
+  {
+    "issue": "KH-154",
+    "type": "count_change_fix",
+    "summary": "copper_layers_used includes non-copper layers due to type=user filter",
+    "assertions": [
+      {
+        "repo": "hackrf",
+        "project": "hardware_hackrf-one_hackrf-one",
+        "source_file": "hackrf-one.kicad_pcb",
+        "check": {
+          "path": "statistics.copper_layers_used",
+          "op": "equals",
+          "value": 4
+        },
+        "description": "KH-154: hackrf-one has 4 copper layers (was 5 before fix)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-155",
+    "type": "detection_fix",
+    "summary": "copper_layers_used misses zone-only layers (resolved by KH-154 fix)",
+    "assertions": [
+      {
+        "repo": "moteus",
+        "project": "hw_c1_moteus_c1",
+        "source_file": "moteus_c1.kicad_pcb",
+        "check": {
+          "path": "statistics.copper_layers_used",
+          "op": "equals",
+          "value": 4
+        },
+        "description": "KH-155: moteus correctly reports 4 copper layers including zone-only"
+      }
+    ]
+  },
+  {
+    "issue": "KH-156",
+    "type": "false_positive_fix",
+    "summary": "Paste-only stencil aperture pads falsely detected as thermal pads",
+    "assertions": [
+      {
+        "repo": "ESP32-P4-PC",
+        "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
+        "source_file": "ESP32-P4-PC_Rev_B.kicad_pcb",
+        "check": {
+          "path": "thermal_pad_vias",
+          "op": "max_count",
+          "value": 10
+        },
+        "description": "KH-156: ESP32-P4-PC thermal_pad_vias <= 10 (was ~19 from paste-only pads)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-161",
+    "type": "count_change_fix",
+    "summary": "back_side footprint count is 0 on KiCad 9 due to B.Cu layer number change",
+    "assertions": [
+      {
+        "repo": "explorer",
+        "project": "hardware_Explorer",
+        "source_file": "Explorer.kicad_pcb",
+        "check": {
+          "path": "statistics.back_side",
+          "op": "min_count",
+          "value": 50
+        },
+        "description": "KH-161: explorer back_side footprint count >= 50 (was 0 before fix)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-162",
+    "type": "detection_fix",
+    "summary": "Hierarchical net names not recognized as power in PCB analyzer",
+    "assertions": [
+      {
+        "repo": "explorer",
+        "project": "hardware_Explorer",
+        "source_file": "Explorer.kicad_pcb",
+        "check": {
+          "path": "power_net_routing",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-162: explorer has at least 1 power_net_routing entry"
+      }
+    ]
+  },
+  {
+    "issue": "KH-163",
+    "type": "count_change_fix",
+    "summary": "thermal_pad_vias and thermal_analysis contradictory via counts",
+    "assertions": [
+      {
+        "repo": "modular-psu",
+        "project": "aux-ps_EDA files_KiCad_EEZ DIB AUX-PS",
+        "source_file": "EEZ DIB AUX-PS.kicad_pcb",
+        "check": {
+          "path": "thermal_pad_vias",
+          "op": "contains_match",
+          "field": "component",
+          "pattern": "^IC2$"
+        },
+        "description": "KH-163: IC2 (BD00FC0W) now has thermal_pad_vias entry (was missing)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-164",
+    "type": "detection_fix",
+    "summary": "decoupling_placement absent for IC-prefix components",
+    "assertions": [
+      {
+        "repo": "modular-psu",
+        "project": "aux-ps_EDA files_KiCad_EEZ DIB AUX-PS",
+        "source_file": "EEZ DIB AUX-PS.kicad_pcb",
+        "check": {
+          "path": "decoupling_placement",
+          "op": "contains_match",
+          "field": "ic",
+          "pattern": "^IC1$"
+        },
+        "description": "KH-164: IC1 (MAX31760AEE+) has decoupling_placement entry"
+      },
+      {
+        "repo": "modular-psu",
+        "project": "aux-ps_EDA files_KiCad_EEZ DIB AUX-PS",
+        "source_file": "EEZ DIB AUX-PS.kicad_pcb",
+        "check": {
+          "path": "decoupling_placement",
+          "op": "contains_match",
+          "field": "ic",
+          "pattern": "^IC2$"
+        },
+        "description": "KH-164: IC2 (BD00FC0W) has decoupling_placement entry"
+      }
+    ]
+  },
+  {
+    "issue": "KH-165",
+    "type": "detection_fix",
+    "summary": "Thermal pad detection misses small DFN/QFN exposed pads",
+    "assertions": [
+      {
+        "repo": "cnhardware",
+        "project": "ch32v003_ch32v003f4u6_opendant_ch32v003f4u6_opendant",
+        "source_file": "ch32v003f4u6_opendant.kicad_pcb",
+        "check": {
+          "path": "thermal_pad_vias",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-165: CH32V003F4U6 thermal_pad_vias detected (pad_area ~2.72mm2)"
       }
     ]
   }
