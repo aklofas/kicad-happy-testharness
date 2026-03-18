@@ -16,6 +16,7 @@ Usage:
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -25,7 +26,7 @@ from utils import (
     discover_projects, data_dir, list_repos,
     project_prefix, filter_project_outputs,
 )
-from regression.refextract import REF_FIELD_MAP, get_ref_from_item
+from regression.refextract import REF_FIELD_MAP, PCB_REF_FIELD_MAP, get_ref_from_item
 
 
 def generate_structural_assertions(data, strict=True):
@@ -96,6 +97,79 @@ def generate_structural_assertions(data, strict=True):
     return assertions
 
 
+def generate_pcb_structural_assertions(data, strict=True):
+    """Generate structural assertions from a PCB analyzer output.
+
+    Covers: decoupling_placement, thermal_pad_vias,
+    thermal_analysis.thermal_pads, tombstoning_risk.
+
+    Returns list of assertion dicts.
+    """
+    assertions = []
+    ast_num = 1
+
+    for section_path, ref_field in sorted(PCB_REF_FIELD_MAP.items()):
+        # Navigate dotted path (e.g., "thermal_analysis.thermal_pads")
+        parts = section_path.split(".")
+        items = data
+        for part in parts:
+            if isinstance(items, dict):
+                items = items.get(part)
+            else:
+                items = None
+                break
+
+        if not isinstance(items, list) or not items:
+            continue
+
+        # Count assertion
+        count = len(items)
+        if strict:
+            assertions.append({
+                "id": f"STRUCT-{ast_num:08d}",
+                "description": f"Exactly {count} {section_path}",
+                "check": {
+                    "path": section_path,
+                    "op": "equals",
+                    "value": count,
+                },
+            })
+        else:
+            lo = max(0, count - 1)
+            hi = count + 1
+            assertions.append({
+                "id": f"STRUCT-{ast_num:08d}",
+                "description": f"~{count} {section_path} (±1)",
+                "check": {
+                    "path": section_path,
+                    "op": "range",
+                    "min": lo,
+                    "max": hi,
+                },
+            })
+        ast_num += 1
+
+        # Per-ref assertions
+        seen_refs = set()
+        for item in items:
+            ref = item.get(ref_field)
+            if ref and ref not in seen_refs:
+                seen_refs.add(ref)
+                assertions.append({
+                    "id": f"STRUCT-{ast_num:08d}",
+                    "description": f"{ref} in {section_path}",
+                    "check": {
+                        "path": section_path,
+                        "op": "contains_match",
+                        "field": ref_field,
+                        "pattern": f"^{re.escape(ref)}$",
+                    },
+                })
+                ast_num += 1
+
+    return assertions
+
+
 def generate_for_repo(repo_name, atype, strict, min_components,
                       dry_run):
     """Generate structural assertions for one repo."""
@@ -123,15 +197,19 @@ def generate_for_repo(repo_name, atype, strict, min_components,
             except Exception:
                 continue
 
-            comps = data_content.get("statistics", {}).get("total_components", 0)
+            stats = data_content.get("statistics", {})
+            comps = (stats.get("total_components", 0)
+                     or stats.get("footprint_count", 0))
             if comps < min_components:
                 skipped += 1
                 continue
 
-            if atype != "schematic":
+            if atype == "schematic":
+                assertions = generate_structural_assertions(data_content, strict)
+            elif atype == "pcb":
+                assertions = generate_pcb_structural_assertions(data_content, strict)
+            else:
                 continue
-
-            assertions = generate_structural_assertions(data_content, strict)
             if not assertions:
                 continue
 

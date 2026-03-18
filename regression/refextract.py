@@ -155,6 +155,14 @@ REF_FIELD_MAP = {
     "addressable_led_chains": None,      # first_led is the lead, not a simple ref field
 }
 
+# Maps PCB analyzer section names to the field containing component refs.
+PCB_REF_FIELD_MAP = {
+    "decoupling_placement": "ic",
+    "thermal_pad_vias": "component",
+    "thermal_analysis.thermal_pads": "component",
+    "tombstoning_risk": "component",
+}
+
 
 def get_ref_from_item(detector_name, item):
     """Extract the component ref from a signal analysis item.
