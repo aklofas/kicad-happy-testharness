@@ -14,12 +14,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Gerber file count ~7 (tolerance 10%)",
+      "description": "Gerber file count ~8 (tolerance 10%)",
       "check": {
         "path": "statistics.gerber_files",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 7,
+        "max": 9
       }
     },
     {
@@ -44,30 +44,30 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "Total flashes ~15552 (tolerance 10%)",
+      "description": "Total flashes ~17940 (tolerance 10%)",
       "check": {
         "path": "statistics.total_flashes",
         "op": "range",
-        "min": 13996,
-        "max": 17108
+        "min": 16146,
+        "max": 19734
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "Completeness is False",
+      "description": "Completeness is True",
       "check": {
         "path": "completeness.complete",
         "op": "equals",
-        "value": false
+        "value": true
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "7 layer(s) found",
+      "description": "8 layer(s) found",
       "check": {
         "path": "completeness.found_layers",
         "op": "min_count",
-        "value": 7
+        "value": 8
       }
     },
     {
@@ -91,12 +91,22 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "Component holes ~618 (tolerance 10%)",
+      "description": "Component holes ~594 (tolerance 10%)",
       "check": {
         "path": "drill_classification.component_holes.count",
         "op": "range",
-        "min": 556,
-        "max": 680
+        "min": 534,
+        "max": 654
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Mounting holes ~24 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.mounting_holes.count",
+        "op": "range",
+        "min": 21,
+        "max": 27
       }
     }
   ]

@@ -67,13 +67,15 @@ def generate_bugfix_assertions(issue_filter=None, dry_run=True):
             if not repo or not project or not source_file or not check:
                 continue
 
-            # Determine analyzer type from source file extension
-            if source_file.endswith(".kicad_sch") or source_file.endswith(".sch"):
-                atype = "schematic"
-            elif source_file.endswith(".kicad_pcb"):
-                atype = "pcb"
-            else:
-                atype = "schematic"
+            # Determine analyzer type from source file extension or explicit field
+            atype = ast_def.get("analyzer_type", "")
+            if not atype:
+                if source_file.endswith(".kicad_sch") or source_file.endswith(".sch"):
+                    atype = "schematic"
+                elif source_file.endswith(".kicad_pcb"):
+                    atype = "pcb"
+                else:
+                    atype = "schematic"
 
             assertion = {
                 "id": f"BUGFIX-{issue}-{i:02d}",

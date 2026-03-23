@@ -1197,5 +1197,187 @@
         "description": "KH-165: CH32V003F4U6 thermal_pad_vias detected (pad_area ~2.72mm2)"
       }
     ]
+  },
+  {
+    "issue": "KH-183",
+    "type": "count_change_fix",
+    "summary": "Drill extent coordinates normalized to mm",
+    "assertions": [
+      {
+        "repo": "HadesFCS",
+        "project": "Hardware_Hades_Hades",
+        "source_file": "Gerber",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "alignment.layer_extents.drill_PTH.width",
+          "op": "range",
+          "min": 50,
+          "max": 200
+        },
+        "description": "KH-183: drill_PTH width in mm (~97.7), not raw units (~97663)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-184",
+    "type": "detection_fix",
+    "summary": "Combined PTH+NPTH drill file correctly reports has_pth_drill",
+    "assertions": [
+      {
+        "repo": "HadesFCS",
+        "project": "Hardware_HadesNT_HadesNT",
+        "source_file": "gerber",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "completeness.has_pth_drill",
+          "op": "equals",
+          "value": true
+        },
+        "description": "KH-184: has_pth_drill=true for combined drill file with vias"
+      },
+      {
+        "repo": "glasgow",
+        "project": "hardware_boards_glasgow_glasgow",
+        "source_file": "revA",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "completeness.has_pth_drill",
+          "op": "equals",
+          "value": true
+        },
+        "description": "KH-184: glasgow revA has_pth_drill=true for combined drill file"
+      }
+    ]
+  },
+  {
+    "issue": "KH-185",
+    "type": "count_change_fix",
+    "summary": "front_side/back_side component counts from mask/silk layers",
+    "assertions": [
+      {
+        "repo": "bitaxe",
+        "project": "bitaxeUltra",
+        "source_file": "Manufacturing Files_gerbers",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "component_analysis.front_side",
+          "op": "min_count",
+          "value": 100
+        },
+        "description": "KH-185: bitaxe front_side >= 100 (was 0 before fix)"
+      },
+      {
+        "repo": "SparkFun_XRP_Controller",
+        "project": "Hardware_Production_SparkFun_XRP_Controller",
+        "source_file": "Hardware_Production",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "component_analysis.front_side",
+          "op": "min_count",
+          "value": 100
+        },
+        "description": "KH-185: SparkFun XRP front_side >= 100 (was 0 before fix)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-186",
+    "type": "classification_fix",
+    "summary": "Large NPTH holes classified as mounting not component",
+    "assertions": [
+      {
+        "repo": "SparkFun_XRP_Controller",
+        "project": "Hardware_Production_SparkFun_XRP_Controller",
+        "source_file": "Hardware_Production",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "drill_classification.mounting_holes.count",
+          "op": "min_count",
+          "value": 1
+        },
+        "description": "KH-186: NPTH 3.1mm holes classified as mounting (was 0)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-166",
+    "type": "false_positive_fix",
+    "summary": "missing_revision warning suppressed when title block has rev",
+    "assertions": [
+      {
+        "repo": "modular-psu",
+        "project": "aux-ps_EDA files_KiCad_EEZ DIB AUX-PS",
+        "source_file": "EEZ DIB AUX-PS.kicad_pcb",
+        "check": {
+          "path": "silkscreen.documentation_warnings",
+          "op": "not_contains_match",
+          "field": "type",
+          "pattern": "^missing_revision$"
+        },
+        "description": "KH-166: No false missing_revision warning when title block has rev=r3B7"
+      }
+    ]
+  },
+  {
+    "issue": "KH-167",
+    "type": "false_positive_fix",
+    "summary": "ESD/TVS protection devices excluded from decoupling analysis",
+    "assertions": [
+      {
+        "repo": "cnhardware",
+        "project": "ch32v30x_ch32v305-radioset_ch32v305-radioset",
+        "source_file": "ch32v305-radioset.kicad_pcb",
+        "check": {
+          "path": "decoupling_placement",
+          "op": "not_contains_match",
+          "field": "ic",
+          "pattern": "^U3$"
+        },
+        "description": "KH-167: U3 (RCLAMP0502N) not in decoupling analysis"
+      }
+    ]
+  },
+  {
+    "issue": "KH-175",
+    "type": "count_change_fix",
+    "summary": "Sleep current total excludes conditional pull-up paths",
+    "assertions": []
+  },
+  {
+    "issue": "KH-173",
+    "type": "accuracy_fix",
+    "summary": "SMD ratio counted unique aperture defs instead of flash instances",
+    "assertions": [
+      {
+        "repo": "bitaxe",
+        "project": "Manufacturing Files_gerbers",
+        "source_file": "gerbers",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "pad_summary.smd_apertures",
+          "op": "min_value",
+          "value": 100
+        },
+        "description": "KH-173: bitaxe SMD pad count reflects flash instances (>100), not unique aperture defs (~45)"
+      },
+      {
+        "repo": "bitaxe",
+        "project": "Manufacturing Files_gerbers",
+        "source_file": "gerbers",
+        "analyzer_type": "gerber",
+        "check": {
+          "path": "pad_summary.smd_ratio",
+          "op": "min_value",
+          "value": 0.7
+        },
+        "description": "KH-173: bitaxe SMD ratio >= 0.7 (BGA design, was erroneously 0.44)"
+      }
+    ]
+  },
+  {
+    "issue": "KH-176",
+    "type": "documentation_fix",
+    "summary": "DFM fab capability thresholds not canonicalized in reference docs",
+    "assertions": []
   }
 ]

@@ -80,6 +80,55 @@
       "repo": "HadesFCS",
       "project": "Hardware_HadesMicroJLCPCB_HadesMicroJLCPCB",
       "created": "2026-03-14T07:23:55.059656+00:00"
+    },
+    {
+      "id": "FND-00000301",
+      "repo": "HadesFCS",
+      "project": "Hardware_HadesMicroJLCPCB_HadesMicroJLCPCB",
+      "created": "2026-03-18T04:16:33.304866+00:00",
+      "status": "new",
+      "analyzer_type": "gerber",
+      "source_file": "Hardware/HadesMicroJLCPCB/gerbers/",
+      "summary": "Gerber review: JLCPCB variant of HadesMicro. Same drill unit + smd + combined drill bugs",
+      "correct": [
+        {
+          "type": "layer_completeness",
+          "description": "Nearly identical to HadesMicro with 7 fewer vias (165 vs 172) -- expected production variant",
+          "analyzer_section": "drill_classification"
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "unit_conversion",
+          "description": "Drill extent coordinates not normalized to mm -- values 1000x too large. Affects alignment.layer_extents for drill entries",
+          "analyzer_section": "alignment.layer_extents",
+          "severity": "major",
+          "related_issue": "KH-183"
+        },
+        {
+          "type": "pad_summary",
+          "description": "pad_summary.smd_apertures=0 and smd_ratio=0.0 wrong -- F.Paste has hundreds of flashes",
+          "analyzer_section": "pad_summary",
+          "severity": "major",
+          "related_issue": "KH-177"
+        },
+        {
+          "type": "drill_type",
+          "description": "Combined PTH+NPTH drill file classified as 'unknown', has_pth_drill=false and has_npth_drill=false despite vias and press-fit holes",
+          "analyzer_section": "completeness",
+          "severity": "major",
+          "related_issue": "KH-184"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "should_become_assertion": false,
+      "related_issues": [
+        "KH-177",
+        "KH-183",
+        "KH-184"
+      ],
+      "datasheets_used": []
     }
   ]
 }

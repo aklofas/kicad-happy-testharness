@@ -38,6 +38,18 @@
         "field": "ic",
         "pattern": "^IC2$"
       }
+    },
+    {
+      "id": "BUGFIX-KH-166-01",
+      "description": "KH-166: No false missing_revision warning when title block has rev=r3B7",
+      "issue": "KH-166",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "silkscreen.documentation_warnings",
+        "op": "not_contains_match",
+        "field": "type",
+        "pattern": "^missing_revision$"
+      }
     }
   ]
 }

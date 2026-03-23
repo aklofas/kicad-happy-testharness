@@ -161,6 +161,67 @@
       "project": "hardware_boards_glasgow",
       "created": "2026-03-13T07:52:46.213218+00:00",
       "datasheets_used": []
+    },
+    {
+      "id": "FND-00000303",
+      "repo": "glasgow",
+      "project": "hardware_boards_glasgow_glasgow",
+      "created": "2026-03-18T04:16:33.304866+00:00",
+      "status": "new",
+      "analyzer_type": "gerber",
+      "source_file": "hardware/boards/glasgow/",
+      "summary": "Gerber review: 6 revisions (revA-C3) of 4-layer FPGA board. Cross-revision progression correctly tracked",
+      "correct": [
+        {
+          "type": "layer_count",
+          "description": "All 6 revisions correctly 4-layer. Alignment progression accurate: revA-C1 misaligned, revC2-C3 aligned. Via evolution (0.3mm-only to 0.3+0.2mm BGA escape) captured",
+          "analyzer_section": "layer_count"
+        },
+        {
+          "type": "drill_classification",
+          "description": "revC3 correctly uses X2 classification (KiCad 7) while revA-C2 use diameter heuristic (KiCad 5.x). Correctly adapts across versions",
+          "analyzer_section": "drill_classification"
+        },
+        {
+          "type": "completeness",
+          "description": "Growing file count handled: 11 (revA) to 15 (revC3, adds Fab+Courtyard). Extra layers not false-flagged",
+          "analyzer_section": "completeness"
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "pad_summary",
+          "description": "smd_ratio=0.0 for all 6 revisions. Wrong for FPGA board (revC3: 812 front paste flashes)",
+          "analyzer_section": "pad_summary",
+          "severity": "medium",
+          "related_issue": "KH-177"
+        },
+        {
+          "type": "drill_classification",
+          "description": "revC3: 3.5mm mounting holes misclassified as component_holes via X2 ComponentDrill. Same holes correctly classified in revC1/C2 via diameter heuristic",
+          "analyzer_section": "drill_classification.mounting_holes",
+          "severity": "low",
+          "related_issue": "KH-186"
+        },
+        {
+          "type": "completeness",
+          "description": "has_pth_drill=false for revA-C2 (5 revisions) despite 189-560 vias. Only revC3 with explicit MixedPlating gets true",
+          "analyzer_section": "completeness",
+          "severity": "low",
+          "related_issue": "KH-184"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Override X2 ComponentDrill for NPTH >= 2.5mm as mounting holes"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "KH-177",
+        "KH-184",
+        "KH-186"
+      ],
+      "datasheets_used": []
     }
   ]
 }

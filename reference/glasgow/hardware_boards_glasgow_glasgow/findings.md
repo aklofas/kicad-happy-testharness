@@ -94,3 +94,32 @@
 - Add parsing for prefix-first notation: u1=0.1u, n47=0.47n, p33=0.33p
 
 ---
+
+## FND-00000303: Gerber review: 6 revisions (revA-C3) of 4-layer FPGA board. Cross-revision progression correctly tracked
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: hardware/boards/glasgow/
+- **Related**: KH-177, KH-184, KH-186
+- **Created**: 2026-03-18
+
+### Correct
+- All 6 revisions correctly 4-layer. Alignment progression accurate: revA-C1 misaligned, revC2-C3 aligned. Via evolution (0.3mm-only to 0.3+0.2mm BGA escape) captured
+- revC3 correctly uses X2 classification (KiCad 7) while revA-C2 use diameter heuristic (KiCad 5.x). Correctly adapts across versions
+- Growing file count handled: 11 (revA) to 15 (revC3, adds Fab+Courtyard). Extra layers not false-flagged
+
+### Incorrect
+- smd_ratio=0.0 for all 6 revisions. Wrong for FPGA board (revC3: 812 front paste flashes)
+  (pad_summary)
+- revC3: 3.5mm mounting holes misclassified as component_holes via X2 ComponentDrill. Same holes correctly classified in revC1/C2 via diameter heuristic
+  (drill_classification.mounting_holes)
+- has_pth_drill=false for revA-C2 (5 revisions) despite 189-560 vias. Only revC3 with explicit MixedPlating gets true
+  (completeness)
+
+### Missed
+(none)
+
+### Suggestions
+- Override X2 ComponentDrill for NPTH >= 2.5mm as mounting holes
+
+---

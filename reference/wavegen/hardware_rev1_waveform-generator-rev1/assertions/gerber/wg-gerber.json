@@ -24,6 +24,26 @@
     },
     {
       "id": "SEED-00000003",
+      "description": "Drill file count ~1 (tolerance 10%)",
+      "check": {
+        "path": "statistics.drill_files",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Total holes ~92 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_holes",
+        "op": "range",
+        "min": 82,
+        "max": 102
+      }
+    },
+    {
+      "id": "SEED-00000005",
       "description": "Total flashes ~1060 (tolerance 10%)",
       "check": {
         "path": "statistics.total_flashes",
@@ -33,16 +53,16 @@
       }
     },
     {
-      "id": "SEED-00000004",
-      "description": "Completeness is False",
+      "id": "SEED-00000006",
+      "description": "Completeness is True",
       "check": {
         "path": "completeness.complete",
         "op": "equals",
-        "value": false
+        "value": true
       }
     },
     {
-      "id": "SEED-00000005",
+      "id": "SEED-00000007",
       "description": "7 layer(s) found",
       "check": {
         "path": "completeness.found_layers",
@@ -51,12 +71,42 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000008",
       "description": "Alignment is False",
       "check": {
         "path": "alignment.aligned",
         "op": "equals",
         "value": false
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Via holes ~53 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.vias.count",
+        "op": "range",
+        "min": 47,
+        "max": 59
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Component holes ~25 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.component_holes.count",
+        "op": "range",
+        "min": 22,
+        "max": 28
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Mounting holes ~14 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.mounting_holes.count",
+        "op": "range",
+        "min": 12,
+        "max": 16
       }
     }
   ]

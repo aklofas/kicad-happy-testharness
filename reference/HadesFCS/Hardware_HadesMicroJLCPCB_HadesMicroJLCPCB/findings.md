@@ -34,3 +34,30 @@
 - JLCPCB edition likely has LCSC part numbers in BOM - good test case for MPN extraction after fix
 
 ---
+
+## FND-00000301: Gerber review: JLCPCB variant of HadesMicro. Same drill unit + smd + combined drill bugs
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: Hardware/HadesMicroJLCPCB/gerbers/
+- **Related**: KH-177, KH-183, KH-184
+- **Created**: 2026-03-18
+
+### Correct
+- Nearly identical to HadesMicro with 7 fewer vias (165 vs 172) -- expected production variant
+
+### Incorrect
+- Drill extent coordinates not normalized to mm -- values 1000x too large. Affects alignment.layer_extents for drill entries
+  (alignment.layer_extents)
+- pad_summary.smd_apertures=0 and smd_ratio=0.0 wrong -- F.Paste has hundreds of flashes
+  (pad_summary)
+- Combined PTH+NPTH drill file classified as 'unknown', has_pth_drill=false and has_npth_drill=false despite vias and press-fit holes
+  (completeness)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

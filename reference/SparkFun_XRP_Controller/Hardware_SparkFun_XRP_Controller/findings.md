@@ -58,3 +58,33 @@
 - Add QSPI bus detection
 
 ---
+
+## FND-00000305: Gerber review: beta (2L Eagle) vs production (6L KiCad 8). GKO misclassified as In4.Cu from conflicting X2 FileFunction
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: Hardware/Production/
+- **Related**: KH-178, KH-181, KH-185, KH-186
+- **Created**: 2026-03-18
+
+### Correct
+- Production 6-layer stackup correctly determined from X2 FileFunction (L1-L6) and drill MixedPlating,1,6
+- Production drill uses X2 attributes correctly: 3060 vias (0.3mm), 4 component hole sizes
+
+### Incorrect
+- Production .GKO has X2 FileFunction=Copper,L5,Inr but AperFunction=Profile with draw-only outline content. Classified as In4.Cu instead of Edge.Cuts. Cascades: Edge.Cuts missing, empty board_dimensions, broken alignment
+  (completeness)
+- Beta .TXT Excellon drill file not recognized -- 0 holes reported despite vias and THT connectors
+  (drill_classification)
+- Production front_side=0 despite 209 X2 component refs on front silk. back_side=13. Front/back derivation wrong
+  (component_analysis)
+- 24x 3.1mm NPTH holes classified as component_holes -- M3 chassis mounting for robotics controller
+  (drill_classification.mounting_holes)
+
+### Missed
+(none)
+
+### Suggestions
+- Cross-check: if AperFunction=Profile + draw-only content, classify as Edge.Cuts
+
+---

@@ -34,3 +34,29 @@
 - This board is a good regression test case for KH-016 fixes - expect dozens of signal detections once wiring works
 
 ---
+
+## FND-00000299: Gerber review: 4-layer flight controller (100x60mm). Drill unit bug + smd_apertures=0
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: Hardware/Hades/Hades gerbers/
+- **Related**: KH-177, KH-183
+- **Created**: 2026-03-18
+
+### Correct
+- All 11 layers present, 4-layer stackup correct from X2. Separate PTH/NPTH drill files correctly identified
+- 382 vias (0.3/0.4mm) correctly classified. 8 NPTH press-fit holes at 0.8mm identified
+
+### Incorrect
+- Drill extent coordinates not normalized to mm -- values 1000x too large. Affects alignment.layer_extents for drill entries
+  (alignment.layer_extents)
+- pad_summary.smd_apertures=0 and smd_ratio=0.0 wrong -- F.Paste has hundreds of flashes
+  (pad_summary)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

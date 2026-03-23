@@ -1,6 +1,6 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,050+ real-world open-source KiCad projects. Provides a 3-layer regression testing system with 110K+ machine-checkable assertions at 100% pass rate.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,050+ real-world open-source KiCad projects. Provides a 3-layer regression testing system with 203K+ machine-checkable assertions at 100% pass rate.
 
 For a deep dive into the architecture, reasoning, and design decisions, see [methodology.md](methodology.md).
 

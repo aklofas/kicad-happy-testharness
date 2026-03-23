@@ -36,3 +36,32 @@
 - Good test case for transistor circuit and buzzer/speaker detection once wiring is fixed
 
 ---
+
+## FND-00000302: Gerber review: 4-layer (80x50mm). False alignment failure from normal copper edge clearance
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: Hardware/HadesNT/gerbers/
+- **Related**: KH-177, KH-183, KH-184
+- **Created**: 2026-03-18
+
+### Correct
+- 4.3mm mounting holes (4x) correctly classified -- M4 for vibration-resistant flight controller
+
+### Incorrect
+- Drill extent coordinates not normalized to mm -- values 1000x too large. Affects alignment.layer_extents for drill entries
+  (alignment.layer_extents)
+- pad_summary.smd_apertures=0 and smd_ratio=0.0 wrong -- F.Paste has hundreds of flashes
+  (pad_summary)
+- Combined PTH+NPTH drill file classified as 'unknown', has_pth_drill=false and has_npth_drill=false despite vias and press-fit holes
+  (completeness)
+- Alignment=false with 3.2mm height variance, but copper edge clearance ~1.6mm/side is normal design practice, not misalignment
+  (alignment)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

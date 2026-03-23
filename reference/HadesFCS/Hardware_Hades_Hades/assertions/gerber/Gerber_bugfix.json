@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Gerber",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-183-01",
+      "description": "KH-183: drill_PTH width in mm (~97.7), not raw units (~97663)",
+      "issue": "KH-183",
+      "fix_type": "count_change_fix",
+      "check": {
+        "path": "alignment.layer_extents.drill_PTH.width",
+        "op": "range",
+        "min": 50,
+        "max": 200
+      }
+    }
+  ]
+}

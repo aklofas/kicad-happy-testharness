@@ -11,6 +11,136 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-03-23 — Batch 25: Last 2 LOW issues (KH-173, KH-176)
+
+Fixes the final 2 open issues. All KH-* issues are now closed.
+
+### KH-173 (LOW): SMD ratio uses incommensurate units
+
+- **File**: `analyze_gerbers.py` — `parse_gerber()`, `build_pad_summary()`
+- **Root cause**: `by_function` counted unique aperture definitions (shapes), not flash instances. A board with 13 unique SMDPad shapes but 113 placements on one layer got the same count as one with 13 placements. THT used actual hole instances, making the SMD ratio meaningless.
+- **Fix**: Track aperture selection state (`current_aperture`) and count flashes per D-code in `aperture_flash_counts`. Aggregate into `by_function_flashes` (instance counts per function). `build_pad_summary()` now prefers `by_function_flashes` over `by_function`, falling back for backward compatibility.
+- **Verified**: bitaxe SMD went from 45 (unique defs) to 364 (instances), ratio from 0.44 to 0.85 — correct for a BGA design. Full corpus 1048/1048 gerber pass, 203K assertions 0 failures.
+
+### KH-176 (LOW): DFM fab house capability thresholds not canonicalized
+
+- **File**: `references/standards-compliance.md`, `references/report-generation.md`, `analyze_pcb.py`
+- **Root cause**: No single authoritative fab capability table in reference files. LLM report author filled in thresholds from training data, which varied between runs.
+- **Fix**: Added canonical "Fab House Capabilities" table to `standards-compliance.md` with JLCPCB standard/advanced tiers and PCBWay standard tier, all with source and verification date. Added source comments to `LIMITS_STD`/`LIMITS_ADV` in `analyze_pcb.py` pointing to the canonical table. Updated `report-generation.md` DFM section to mandate citing from the canonical table.
+- **Verified**: All three files updated consistently. PCB full corpus 3491/3491 pass, 203K assertions 0 failures.
+
+---
+
+## 2026-03-23 — Batch 24: 4 LOW issues (KH-186, KH-166, KH-167, KH-175)
+
+Fixes 4 LOW severity issues across gerber, PCB, and schematic analyzers.
+
+### KH-186 (LOW): Large NPTH holes misclassified as component_holes via X2
+
+- **File**: `analyze_gerbers.py` — `classify_drill_tools()`
+- **Root cause**: KiCad labels all NPTH holes as `ComponentDrill` in X2 attributes regardless of diameter. The analyzer trusted this, so 3.0-3.5mm mounting holes were misclassified.
+- **Fix**: In both NPTH and general branches, NPTH holes with `ComponentDrill` aper_function and diameter >= 2.5mm are reclassified as mounting holes. Threshold is conservative (higher than the 2.0mm no-X2 heuristic) since we're overriding explicit X2 data.
+- **Verified**: SparkFun XRP mounting_holes 0→24. Full corpus 1048/1048 gerber pass, 203K assertions 0 failures.
+
+### KH-166 (LOW): False positive missing_revision silkscreen warning
+
+- **File**: `analyze_pcb.py` — `extract_silkscreen()`
+- **Root cause**: Revision check only scanned silkscreen text for keywords like "REV", "V1". Did not check the title block `rev` field, which is KiCad's canonical revision storage.
+- **Fix**: Check title block `rev` field first. If non-empty, skip warning. Also improved silkscreen regex to match patterns like `R3B7` via `[RV]\d`.
+- **Verified**: modular-psu aux-ps: missing_revision warning gone (rev=r3B7 from title block). Full corpus 3491/3491 PCB pass.
+
+### KH-167 (LOW): ESD/TVS protection devices in decoupling analysis
+
+- **File**: `analyze_pcb.py` — `analyze_decoupling_placement()`
+- **Root cause**: All U-prefix components were included in decoupling analysis. ESD/TVS devices (RCLAMP, PRTR, USBLC, etc.) use U-prefix but don't need bypass caps.
+- **Fix**: Added `_ESD_TVS_PREFIXES` tuple and value-based filter to exclude known ESD/TVS families from the IC selection list.
+- **Verified**: cnhardware radioset: U3 (RCLAMP0502N) no longer in decoupling. ~303 false positives removed across corpus.
+
+### KH-175 (LOW): Sleep current total includes conditional pull-up paths
+
+- **File**: `analyze_schematic.py` — `analyze_sleep_current()` summary loop
+- **Root cause**: `total_estimated_sleep_uA` summed all paths equally, including pull-up resistors at worst-case I=V/R. Pull-ups are conditional on signal state — during sleep they typically draw zero current.
+- **Fix**: Split into `total_estimated_sleep_uA` (always-on only: dividers, LEDs, regulator Iq) and `conditional_pull_up_uA` (pull-ups). Added per-rail `always_on_uA`/`conditional_uA` breakdowns.
+- **Verified**: No test corpus repos produce sleep_current_audit output (requires specific power topology). Code review confirmed correct type-based classification.
+
+---
+
+## 2026-03-22 — Batch 23: 3 MEDIUM gerber issues (KH-183–KH-185)
+
+Fixes 3 MEDIUM severity gerber analyzer bugs. All fixes in analyze_gerbers.py.
+
+### KH-183 (MEDIUM): Drill extent coordinates not normalized to mm
+
+- **File**: `analyze_gerbers.py` — `parse_drill()`
+- **Root cause**: Drill files with integer coordinates (no decimal point, e.g. `X40123Y-40386` meaning 40.123mm) were stored as raw integers. Gerber layer extents are in mm, so drill extents were 1000x too large for metric 3:3 format files.
+- **Fix**: Detect integer vs decimal coordinate format on first coordinate line. Parse `; FORMAT={X:Y/...}` comment for decimal digits. Apply divisor (1000 for metric, 10000 for inch) for integer-format files, then convert inch to mm.
+- **Verified**: HadesFCS Hades drill_PTH width: 97663→97.663mm. Full corpus 1048/1048 gerber pass, 8970 gerber assertions 0 failures.
+
+### KH-184 (MEDIUM): Combined PTH+NPTH drill file → has_pth/npth both false
+
+- **File**: `analyze_gerbers.py` — `analyze_gerbers()`
+- **Root cause**: `has_pth_drill`/`has_npth_drill` only true when drill type is explicitly "PTH"/"NPTH"/"mixed". Combined drill files without X2 FileFunction header got type "unknown", so both flags were false even with 189+ vias.
+- **Fix**: After `classify_drill_tools()`, infer PTH from via presence — if vias exist and drill type is "unknown", set type to "PTH". Moved `classify_drill_tools()` before `check_completeness()` so inferred types are available.
+- **Verified**: HadesFCS (3 boards) and glasgow (5 revisions) all report has_pth_drill=true. 8970 gerber assertions 0 failures.
+
+### KH-185 (MEDIUM): front_side/back_side component counts wrong
+
+- **File**: `analyze_gerbers.py` — `build_component_analysis()`
+- **Root cause**: Component side assignment used only F.Cu/B.Cu layers, but KiCad's X2 export doesn't include TO.C attributes on copper layers. TO.C attributes are on mask/silk/paste layers.
+- **Fix**: Expanded layer matching to include F.Mask/F.SilkS/F.Paste (and back equivalents) in addition to F.Cu/B.Cu.
+- **Verified**: bitaxe front_side 0→124, SparkFun XRP front_side 0→227. 8970 gerber assertions 0 failures.
+
+---
+
+## 2026-03-22 — Batch 22: 6 HIGH gerber issues (KH-177–KH-182)
+
+Fixes 6 HIGH severity gerber analyzer bugs discovered during first gerber Layer 3
+reviews (Batch 21). All fixes in analyze_gerbers.py.
+
+### KH-177 (HIGH): pad_summary.smd_apertures always zero
+
+- **File**: `analyze_gerbers.py` — `build_pad_summary()`
+- **Root cause**: `smd_apertures` counted unique aperture definitions with X2 `SMDPad` function. KiCad 5 outputs lack X2 aperture function tags, so count was always 0.
+- **Fix**: Added paste layer flash count fallback — when X2 smd count is 0, count flash instances on F.Paste/B.Paste layers (paste only contains SMD pad openings). Added `smd_source` field to indicate data source.
+- **Verified**: HadesFCS Hades: 0 → 716 smd_apertures (paste_layer_flashes). Full corpus 1048/1048 pass. 203,179 assertions, 0 failures.
+
+### KH-178 (HIGH): Eagle .TXT Excellon drill files not recognized
+
+- **File**: `analyze_gerbers.py` — `analyze_gerbers()`, new `_is_excellon_file()`
+- **Root cause**: File glob only matched `*.drl`/`*.DRL`. Eagle CAM exports drill files with `.TXT` extension.
+- **Fix**: Added `.TXT`/`.txt` glob with M48 header validation to avoid false positives on non-drill text files. Also filter `.txt` from gerber file list.
+- **Verified**: modular-psu aux-ps Eagle: drill_files 0→1, total_holes 0→258.
+
+### KH-179 (HIGH): Eagle .G2L/.G3L inner copper layers not discovered
+
+- **File**: `analyze_gerbers.py` — `identify_layer_type()`, `analyze_gerbers()`
+- **Root cause**: Protel inner layer regex `\.g(\d+)$` didn't match `.g2l`/`.G2L`. Glob patterns didn't include `.G2L` etc.
+- **Fix**: Changed regex to `\.g(\d+)l?$`. Added `*.G2L`/`*.G3L`/`*.G4L`/`*.G5L`/`*.G6L`/`*.GTP`/`*.GBP` to uppercase globs.
+- **Verified**: modular-psu DCP405: layer_count 2→4, inner layers In2.Cu/In3.Cu found.
+
+### KH-180 (HIGH): Eagle board dimensions in inches mislabeled as mm
+
+- **File**: `analyze_gerbers.py` — `compute_board_dimensions()`
+- **Root cause**: Edge.Cuts coordinate range stored in raw file units without checking gerber's `units` field.
+- **Fix**: Check `g.get("units") == "inch"` and multiply by 25.4 before returning.
+- **Verified**: modular-psu aux-ps Eagle: 9.07x2.36 "mm" → 230.5x60.0mm (correct).
+
+### KH-181 (HIGH): GKO misclassified when X2 FileFunction conflicts with AperFunction=Profile
+
+- **File**: `analyze_gerbers.py` — `identify_layer_type()`
+- **Root cause**: KiCad 8 Pcbnew sometimes assigns wrong FileFunction (Copper) to .GKO board outline. Analyzer trusted X2 FileFunction without cross-checking filename.
+- **Fix**: In the X2 copper branch, check if filename extension is `.gko` — if so, return `Edge.Cuts` since .gko is unambiguously the board outline.
+- **Verified**: SparkFun XRP production: GKO layer_type In4.Cu→Edge.Cuts, board_dimensions restored, missing_required empty, complete=true.
+
+### KH-182 (HIGH): %TD*% does not clear current_component
+
+- **File**: `analyze_gerbers.py` — `parse_gerber()`
+- **Root cause**: `%TD*%` handler only cleared `pending_aper_function`. Per Gerber X2 spec, it should clear ALL object attributes including component and net.
+- **Fix**: Also set `current_component = None` and `current_net = None` on `%TD*%`.
+- **Verified**: bitaxe J2: 203 pads → 2 pads (correct for 2-pin connector).
+
+---
+
 ## 2026-03-17 — Batch 19: 5 MEDIUM issues (KH-160, KH-163, KH-164, KH-165, KH-174)
 
 Fixes remaining 5 MEDIUM issues across schematic and PCB analyzers. All independent

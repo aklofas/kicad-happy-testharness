@@ -89,6 +89,61 @@
       "repo": "HadesFCS",
       "project": "Hardware_HadesNT_HadesNT",
       "created": "2026-03-14T07:23:47.431688+00:00"
+    },
+    {
+      "id": "FND-00000302",
+      "repo": "HadesFCS",
+      "project": "Hardware_HadesNT_HadesNT",
+      "created": "2026-03-18T04:16:33.304866+00:00",
+      "status": "new",
+      "analyzer_type": "gerber",
+      "source_file": "Hardware/HadesNT/gerbers/",
+      "summary": "Gerber review: 4-layer (80x50mm). False alignment failure from normal copper edge clearance",
+      "correct": [
+        {
+          "type": "drill_classification",
+          "description": "4.3mm mounting holes (4x) correctly classified -- M4 for vibration-resistant flight controller",
+          "analyzer_section": "drill_classification.mounting_holes"
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "unit_conversion",
+          "description": "Drill extent coordinates not normalized to mm -- values 1000x too large. Affects alignment.layer_extents for drill entries",
+          "analyzer_section": "alignment.layer_extents",
+          "severity": "major",
+          "related_issue": "KH-183"
+        },
+        {
+          "type": "pad_summary",
+          "description": "pad_summary.smd_apertures=0 and smd_ratio=0.0 wrong -- F.Paste has hundreds of flashes",
+          "analyzer_section": "pad_summary",
+          "severity": "major",
+          "related_issue": "KH-177"
+        },
+        {
+          "type": "drill_type",
+          "description": "Combined PTH+NPTH drill file classified as 'unknown', has_pth_drill=false and has_npth_drill=false despite vias and press-fit holes",
+          "analyzer_section": "completeness",
+          "severity": "major",
+          "related_issue": "KH-184"
+        },
+        {
+          "type": "alignment",
+          "description": "Alignment=false with 3.2mm height variance, but copper edge clearance ~1.6mm/side is normal design practice, not misalignment",
+          "analyzer_section": "alignment",
+          "severity": "minor"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "should_become_assertion": true,
+      "related_issues": [
+        "KH-177",
+        "KH-183",
+        "KH-184"
+      ],
+      "datasheets_used": []
     }
   ]
 }

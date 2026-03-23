@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-03-17
+Last updated: 2026-03-22
 
 ---
 
@@ -17,15 +17,22 @@ Last updated: 2026-03-17
 | Checked out in repos/ | 1,044 |
 | Repos with baselines | 1,035 |
 | Repos with assertions | 1,035 |
-| Total assertion files | ~10,000 |
-| Total assertions (schematic) | 64,066 |
-| Total assertions (PCB) | 42,786 |
-| Total assertions (gerber) | 9,088 |
-| Total assertions | 115,940 |
+| Total assertion files | 18,060 |
+| SEED assertions (schematic) | 64,089 |
+| SEED assertions (PCB) | 42,947 |
+| SEED assertions (gerber) | 8,965 |
+| STRUCT assertions (schematic) | 45,833 |
+| STRUCT assertions (PCB) | 40,831 |
+| FND assertions (required) | 443 |
+| FND assertions (aspirational) | 211 |
+| BUGFIX assertions | 67 |
+| **Total assertions** | **203,179** |
 | Assertion pass rate | 100.0% |
-| Layer 3 reviewed (schematic) | 158 |
-| Layer 3 reviewed (PCB) | 5 |
-| Total findings | 324 |
+| Bugfix registry entries | 58 |
+| Layer 3 reviewed repos | 155 |
+| Total findings | 295 |
+| Open KH-* issues | 9 (3 MEDIUM, 6 LOW) |
+| Closed KH-* issues | 177 |
 
 ---
 
@@ -135,6 +142,54 @@ Gerber assertions verified: 9,088 at 100%. Total: 115,940 assertions at 100%.
 Key fixes: copper layer filter changed from type-based to name-based ("Cu" in name),
 paste-only/no-net pads excluded from thermal detection, drill-weighted via adequacy,
 per-net zone stitching aggregation. 0 open KH-* issues remain.
+
+### Batch 19 — 5 MEDIUM fixes + re-seed (KH-160, KH-163–165, KH-174) (2026-03-17)
+
+5 MEDIUM issues fixed across analyze_schematic.py (1) and analyze_pcb.py (4):
+- KH-160: Removed over-aggressive PWR_FLAG name-based skip for connector-powered designs
+- KH-164: Broadened IC regex `^U\d` → `^(U|IC)\d` in decoupling analysis
+- KH-165: Lowered thermal pad thresholds + area-ratio EP detection for small DFN/QFN
+- KH-163: Expanded thermal pad via containment margin from 1.1x to 1.5x
+- KH-174: Added raw_adequacy field and small_via_note for small-drill thermal vias
+
+Full corpus re-run and re-seed. 5 aspirational assertions promoted to required.
+PCB structural assertions bootstrapped: 40,831 STRUCT-* assertions across 2,178 files.
+Bugfix registry expanded from 29 to 58 entries (67 assertions).
+Total: 203,300 assertions at 100% pass rate.
+
+### Batch 20 — Documentation refresh (2026-03-17)
+
+Updated CLAUDE.md, status.md, and memory files to reflect current state (203K assertions,
+18K assertion files, 155 reviewed repos, 287 findings, 58 bugfix entries, 5 LOW issues).
+
+### Batch 21 — First Gerber Layer 3 reviews (2026-03-17)
+
+5 repos reviewed for gerber analysis quality: bitaxe, HadesFCS (4 boards), glasgow
+(6 revisions), modular-psu (16 gerber sets), SparkFun_XRP_Controller (beta + production).
+8 gerber findings filed (FND-00000298 through FND-00000305). 10 new KH-* issues discovered
+(KH-177 through KH-186), all in analyze_gerbers.py:
+
+- 6 HIGH: smd_apertures always zero, .TXT drill not recognized, .G2L/.G3L inner layers
+  not discovered, inch-to-mm unit conversion, GKO misclassification from X2 conflict,
+  %TD*% attribute clearing incomplete
+- 3 MEDIUM: drill extent units, combined drill has_pth/npth, front/back component counts
+- 1 LOW: large NPTH mounting hole misclassification
+
+Key theme: analyzer works well for modern KiCad X2 gerbers but has significant gaps with
+Eagle/Protel format gerbers and X2 attribute edge cases.
+
+### Batch 22 — 6 HIGH gerber fixes (KH-177–KH-182) (2026-03-22)
+
+All 6 HIGH gerber issues fixed in analyze_gerbers.py:
+- KH-177: Paste layer flash fallback for smd_apertures when no X2 data
+- KH-178: .TXT drill file discovery with M48 header validation
+- KH-179: .G2L/.G3L inner layer glob + regex fix
+- KH-180: Inch-to-mm conversion for Edge.Cuts board dimensions
+- KH-181: .gko filename override when X2 FileFunction says copper
+- KH-182: %TD*% clears current_component and current_net per X2 spec
+
+Full corpus re-run: 1048/1048 pass. Gerber assertions re-seeded: 8,965 SEED-*.
+Total: 203,179 assertions at 100% pass rate. 9 open issues remain (3 MEDIUM, 6 LOW).
 
 ---
 

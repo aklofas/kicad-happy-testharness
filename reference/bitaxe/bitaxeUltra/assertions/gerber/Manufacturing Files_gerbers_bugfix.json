@@ -1,0 +1,18 @@
+{
+  "file_pattern": "Manufacturing Files_gerbers",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-185-01",
+      "description": "KH-185: bitaxe front_side >= 100 (was 0 before fix)",
+      "issue": "KH-185",
+      "fix_type": "count_change_fix",
+      "check": {
+        "path": "component_analysis.front_side",
+        "op": "min_count",
+        "value": 100
+      }
+    }
+  ]
+}

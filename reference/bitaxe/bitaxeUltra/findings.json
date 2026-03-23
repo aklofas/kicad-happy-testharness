@@ -117,6 +117,62 @@
       "should_become_assertion": false,
       "related_issues": [],
       "datasheets_used": []
+    },
+    {
+      "id": "FND-00000298",
+      "repo": "bitaxe",
+      "project": "bitaxeUltra",
+      "created": "2026-03-18T04:16:33.304866+00:00",
+      "status": "new",
+      "analyzer_type": "gerber",
+      "source_file": "Manufacturing Files/gerbers/",
+      "summary": "Gerber review: 4-layer BGA ASIC miner. TD clearing bug, front/back count wrong, smd_apertures misleading",
+      "correct": [
+        {
+          "type": "layer_completeness",
+          "description": "Layer completeness, alignment, board dimensions (56.5x99.8mm) all accurate for 4-layer KiCad 7 output",
+          "analyzer_section": "completeness"
+        },
+        {
+          "type": "drill_classification",
+          "description": "Via drill classification exact: 201 vias across 3 tool sizes",
+          "analyzer_section": "drill_classification.vias"
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "x2_attribute_clearing",
+          "description": "%TD*% does not reset current_component -- J2 inflated to 203 pads because subsequent inner layer flashes still attributed to it",
+          "analyzer_section": "component_analysis",
+          "severity": "major",
+          "related_issue": "KH-182"
+        },
+        {
+          "type": "component_count",
+          "description": "front_side=0, back_side=1 wrong (actual ~117 front, ~20 back). Wrong data source for side assignment",
+          "analyzer_section": "component_analysis",
+          "severity": "major",
+          "related_issue": "KH-185"
+        },
+        {
+          "type": "pad_summary",
+          "description": "smd_apertures=0 and smd_ratio misleading -- counts unique aperture defs not instances. Board is SMD-dominant",
+          "analyzer_section": "pad_summary",
+          "severity": "minor",
+          "related_issue": "KH-177"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Fix %TD*% to clear current_component/current_net per Gerber X2 spec"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "KH-177",
+        "KH-182",
+        "KH-185"
+      ],
+      "datasheets_used": []
     }
   ]
 }
