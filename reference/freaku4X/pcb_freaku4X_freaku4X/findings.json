@@ -1,0 +1,50 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_freaku4X_pcb_freaku4X_freaku4X.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Key matrix correctly detected as 8x5 with 41 switches and 40 diodes; OLED display (OL1) on I2C bus not listed as I2C device; I2C bus missing pullup resistors correctly flagged",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies the keyboard matrix as 8 rows x 5 columns with 41 switches. It also correctly notes only 40 diodes (SW44 shares diode D33 with SW36 via the same unnamed row net, giving it no dedicated diode). The 44 total switches are fully accounted for: 41 in matrix + 1 rotary encoder (SW1 with padA/padB/encoder_switch nets) + 2 reset switches (SW42 with kbd:ResetSW_4, SW43 with kbd:ResetSW).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices[0].diodes_on_matrix",
+            "op": "equals",
+            "value": 40
+          }
+        },
+        {
+          "description": "The SDA and SCL nets have no pullup resistors detected (has_pullup: false, pullup_resistor: null). This is accurate \u2014 the schematic has no explicit I2C pullup resistors. In a QMK ProMicro design driving an OLED, pullups are typically required unless the OLED module provides them on-board.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations[?category=='i2c_bus'].has_pullup",
+            "op": "equals",
+            "value": false
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "OL1 (lib_id: kbd:OLED, footprint: kbd:OLED_v2) is connected to both SDA and SCL nets alongside U1 (ProMicro). The I2C bus observation lists only U1 as an I2C device; OL1 is absent. The root cause is that OL1 is classified as type='other' (not 'ic') because its lib_id uses a custom keyboard library prefix rather than a standard Display: or Opto: prefix. As a result it is excluded from ic_pin_analysis and from the I2C device enumeration.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "contains_match",
+            "value": "/OL1/"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "freaku4X",
+      "project": "pcb_freaku4X_freaku4X",
+      "created": "2026-03-24T07:52:24.242818+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002071"
+    }
+  ]
+}

@@ -94,26 +94,46 @@
       "repo": "moteus",
       "project": "hw_c1_moteus_c1",
       "created": "2026-03-17T18:11:48.072700+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "pcb",
       "source_file": "hw_c1_moteus_c1.kicad_pcb.json",
       "summary": "moteus motor controller PCB: copper_layers_used misses In1.Cu (zone-only layer), zone stitching via density inflated by per-polygon area calculation, V+ power net current capacity misleading without zone copper area",
       "correct": [
         {
           "description": "Footprint count and SMD/THT breakdown consistent with compact motor controller design",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Routing completeness correctly detected",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DFM analysis present with appropriate tier",
-          "analyzer_section": "dfm"
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Decoupling placement analysis correctly identifies bypass cap associations",
-          "analyzer_section": "decoupling_placement"
+          "analyzer_section": "decoupling_placement",
+          "check": {
+            "path": "decoupling_placement",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

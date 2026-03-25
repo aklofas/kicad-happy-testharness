@@ -1,0 +1,39 @@
+{
+  "file_pattern": "MM1_EEPROM_32k_A.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000871",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000871-AST-01",
+      "description": "EEPROM: 4 components (1 connector, 2 capacitors, 1 IC), FLASH: 6 components (connector, 2 caps, IC, jumper, resistor), SRAM: 9 components (connector, 5 ICs, 3 caps). All correctly typed and extracted with proper reference designators.",
+      "created_from": "FND-00000871",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000871-AST-02",
+      "description": "All three boards: 100nF bypass caps on +3.3V correctly reported, has_bulk=false and has_bypass=true is accurate. SRAM correctly shows 3 caps (0.3uF total). +5V rail has no decoupling caps which is correct \u2014 it's a pass-through supply on the module.",
+      "created_from": "FND-00000871",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000871-AST-03",
+      "description": "signal_analysis.memory_interfaces is empty [] for all three boards despite each having a clearly identified memory IC (AT28BV256 EEPROM, SST39LF010 Flash, IS61LV256AL SRAM) with address/data/control signals on named nets. The detector should recognize these as parallel memory bus interfaces.",
+      "created_from": "FND-00000871",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

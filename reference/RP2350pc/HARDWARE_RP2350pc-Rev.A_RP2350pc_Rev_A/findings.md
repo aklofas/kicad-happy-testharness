@@ -62,7 +62,7 @@
 
 ## FND-00000297: RP2350pc PCB: copper_layers_used includes F.Mask (non-copper layer), connector shield pads misidentified as thermal pads, zone stitching via areas inflated by per-polygon calculation
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: pcb
 - **Source**: HARDWARE_RP2350pc-Rev.A_RP2350pc_Rev_A.kicad_pcb.json
 - **Related**: KH-154, KH-157, KH-159

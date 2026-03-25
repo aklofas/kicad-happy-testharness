@@ -1,0 +1,58 @@
+{
+  "file_pattern": "SparkFun_USB_RFID_Reader.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001517",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001517-AST-01",
+      "description": "Board correctly identified as 2-copper-layer (F.Cu, B.Cu). copper_layers_used=2 accurate.",
+      "created_from": "FND-00001517",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001517-AST-02",
+      "description": "Board dimensions 44.45 x 31.75 mm (1.75\" x 1.25\") correct from edge cuts. 191 track segments, 25 vias, routing_complete=true, unrouted_net_count=0, net_count=42 all match the design.",
+      "created_from": "FND-00001517",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001517-AST-03",
+      "description": "footprint_count=67 is correct and accounts for 28 board-only kibuzzard artwork footprints (logos, corner marks) plus 39 real electrical components. smd_count=28 and tht_count=7 refer to real components only, which is consistent internal accounting.",
+      "created_from": "FND-00001517",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 67
+      }
+    },
+    {
+      "id": "FND-00001517-AST-04",
+      "description": "Single GND zone spanning F.Cu and B.Cu correctly detected as is_filled=true. fill_ratio=1.47 is physically correct: filled_area=2074.4mm2 is the sum of copper fill on F.Cu (949.94mm2) and B.Cu (1124.46mm2), against outline_area=1411.29mm2 (the 2D polygon area). Values > 1 are expected and correct for dual-layer zones.",
+      "created_from": "FND-00001517",
+      "check": {
+        "path": "zones",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001517-AST-05",
+      "description": "Net count=42 matches schematic exactly. All 42 nets have copper pads in the PCB.",
+      "created_from": "FND-00001517",
+      "check": {
+        "path": "statistics.net_count",
+        "op": "equals",
+        "value": 42
+      }
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "CH330.sch.json",
+      "status": "promoted",
+      "summary": "Net 'D+' incorrectly contains U1 pin 4 (RTS) instead of U1 pin 1 (UD+); Net 'D-' incorrectly contains U1 pin 3 (GND) instead of U1 pin 2 (UD-); Decoupling analysis misses C2 on V3 rail; Differentia...",
+      "correct": [
+        {
+          "description": "The schematic has a label 'D+' connected to U1 pin 1 (UD+, bidirectional USB data+). The JSON places U1 pin 4 (RTS, output) into the 'D+' net instead. The analyzer has mis-mapped U1's pin positions, assigning the wrong schematic pins to the D+ net.",
+          "analyzer_section": "nets",
+          "check": {
+            "path": "nets.D+.pins[?(@.component=='U1')].pin_name",
+            "op": "contains_match",
+            "value": "UD+"
+          }
+        },
+        {
+          "description": "The schematic has a label 'D-' connected to U1 pin 2 (UD-, bidirectional USB data-). The JSON places U1 pin 3 (GND, power_in) into the 'D-' net instead. This is a pin-mapping error caused by incorrect position-to-pin resolution for mirrored components in KiCad 5 legacy format.",
+          "analyzer_section": "nets",
+          "check": {
+            "path": "nets.D-.pins[?(@.component=='U1')].pin_name",
+            "op": "contains_match",
+            "value": "UD-"
+          }
+        },
+        {
+          "description": "The erc_warnings section flags net 'V3' as having no output driver. However, U1 pin 8 (V3) has pin_type 'power_out' \u2014 it IS the driver for the V3 net. The V3 net in the JSON only contains U1 pin 5 (VCC, power_in) and C2 pin 2, omitting U1 pin 8 (power_out) which is the actual driver. This is a consequence of the broader pin-mapping error affecting U1.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.erc_warnings[?(@.net=='V3')]",
+            "op": "not_exists",
+            "value": null
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The differential_pairs entry for D+/D- reports has_esd: true and lists U1 as the esd_protection device. U1 is the CH330 USB-UART bridge IC, not an ESD suppressor. There is no TVS, ESD diode array, or protection component in this design. This contradicts the usb_data design_observation on the same net which correctly reports has_esd_protection: false.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.differential_pairs[0].has_esd",
+            "op": "equals",
+            "value": false
+          }
+        },
+        {
+          "description": "V3 is the output of U1's internal 3.3V linear regulator (pin 8, type power_out). It powers U1's VCC (pin 5) and is bypassed by C2. It should be classified as a power domain rail. The net_classification assigns it 'signal', and the power_domains section omits it as a standalone rail even though U1 pin 8 (V3, power_out) drives it.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.net_classification.V3",
+            "op": "equals",
+            "value": "power"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "C2 (100n) is connected between the V3 rail (U1 pin 8, internal 3.3V regulator output) and GND, serving as a decoupling capacitor for the V3 power domain. The decoupling_analysis only reports C1 on VBUS; C2 on V3 is entirely absent from the decoupling_analysis section.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis[?(@.rail=='V3')]",
+            "op": "exists",
+            "value": null
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix: Net 'V3' classified as 'signal' but is a power rail (U1 internal 3.3V regulator output)"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "CH330_Hardware",
+      "project": "CH330",
+      "created": "2026-03-23T19:39:03.252337+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000421"
+    }
+  ]
+}

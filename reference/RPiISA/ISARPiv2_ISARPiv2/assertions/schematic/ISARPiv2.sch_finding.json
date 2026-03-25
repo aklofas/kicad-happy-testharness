@@ -1,0 +1,29 @@
+{
+  "file_pattern": "ISARPiv2.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001202",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001202-AST-01",
+      "description": "Component count and types (3 connectors, 8 resistors, 1 crystal) are correct. The 8 resistors (R10-R17, value 100 ohm) are bus termination/pull-up resistors consistent with ISA bus design.",
+      "created_from": "FND-00001202",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001202-AST-02",
+      "description": "Same issue as the v2 schematic \u2014 14.318MHz crystal oscillator Y1 is present but crystal_circuits is empty.",
+      "created_from": "FND-00001202",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

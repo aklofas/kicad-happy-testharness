@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ad4858.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000351",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000351-AST-01",
+      "description": "The AD4858 ADC uses a serial peripheral interface for configuration and readback with nets named CS (chip select), CSCK (serial clock), CSDIO (bidirectional data I/O), and CSD0 (data output). These nets are present in the schematic and connected to U1 (AD4858BBCZ), but bus_analysis.spi=[] and no SPI interface is detected. The signal names use the AD4858-specific naming convention rather than generic MOSI/MISO/SCLK/SS names, which causes the SPI detector to miss this interface. Additionally, the bus_topology.detected_bus_signals only picks up the SDO0..SDO7 parallel output bus prefix, not the actual config interface.",
+      "created_from": "FND-00000351",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_value",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "file_pattern": "ICE40-ADC_Rev_A.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002141",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002141-AST-01",
+      "description": "The PCB analyzer correctly identifies 52 footprints (all SMD), 2 copper layers, and flags the 0.075mm annular ring as below the advanced process minimum of 0.1mm, requiring the 'challenging' fabrication tier. Net count is 53 in the PCB vs 85 in the schematic \u2014 the discrepancy arises because many schematic nets are unnamed bus signals that are wired by position in the legacy .sch format rather than by net label.",
+      "created_from": "FND-00002141",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "op": "equals",
+        "value": "challenging"
+      }
+    }
+  ]
+}

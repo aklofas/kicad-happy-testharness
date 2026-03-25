@@ -1,0 +1,258 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "",
+      "status": "promoted",
+      "summary": "",
+      "correct": [
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 17
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_nets",
+            "op": "equals",
+            "value": 15
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": "/AP7335/"
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 18
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "op": "equals",
+            "value": true
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 50
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "contains_match",
+            "value": "/ROW_/"
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.ic",
+            "op": "equals",
+            "value": 1
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 59
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "op": "equals",
+            "value": 44
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 92
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "contains_match",
+            "value": "/estimated_keys/"
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.diode",
+            "op": "equals",
+            "value": 42
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 60
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "op": "equals",
+            "value": 44
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "op": "equals",
+            "value": 0
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_holes",
+            "op": "equals",
+            "value": 346
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "contains_match",
+            "value": "/regulator_voltage/"
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.relay",
+            "op": "equals",
+            "value": 0
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "contains_match",
+            "value": "/switches_on_matrix/"
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "bus_topology",
+          "check": {
+            "path": "bus_topology.detected_bus_signals",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices[0].diodes_on_matrix",
+            "op": "equals",
+            "value": 42
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "contains_match",
+            "value": "/single_pin_nets/"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "charybdis-pmw3610-breakout",
+      "project": "sensor",
+      "created": "2026-03-24T07:07:14.662813+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001997"
+    }
+  ]
+}

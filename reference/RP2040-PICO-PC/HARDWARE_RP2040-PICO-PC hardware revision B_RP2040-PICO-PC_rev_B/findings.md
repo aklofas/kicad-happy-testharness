@@ -1,0 +1,122 @@
+# Findings: RP2040-PICO-PC / HARDWARE_RP2040-PICO-PC hardware revision B_RP2040-PICO-PC_rev_B
+
+## FND-00001160: I2C bus detector false-fires on GND, PWM_L, PICO_CK-, VSYS and other non-I2C nets; FET3 (BSS138 level-shifter) transistor circuit shows drain_net and source_net both as +3.3V; FET2 (BSS138) correct...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: RP2040-PICO-PC_rev_B.sch
+- **Created**: 2026-03-23
+
+### Correct
+- FET2 transistor_circuit entry correctly identifies load_type='level_shifter', gate_net='+3.3V', drain_net='I2C1A_SCL_33', source_net='I2C1A_SCL_5', consistent with the standard bidirectional I2C level-shifter topology using gate tied to the high-voltage rail.
+- hdmi_dvi_interfaces section correctly identifies HDMI1 (HDMI-SWM-19) as an HDMI connector. The design uses a RP2040 Pico driving HDMI via DVI-compatible differential pairs (PICO_D0+/-, PICO_D1+/-, PICO_D2+/-, PICO_CK+/-) through series 270R resistors to the HDMI connector.
+- The real I2C0 bus (I2C0_SCL and I2C0_SDA) is correctly detected with pull-up resistors R27 and R15 (both 2.2K to +3.3V), consistent with the PCB net data showing these resistors pulling to +3V3.
+- U1 (BL4054B) is correctly identified in subcircuits with neighbors BAT_CON1 (battery connector), R1 (1.5K charge current resistor), and R4 (2K). The power domains correctly show +BATT and +5V rails associated with U1.
+
+### Incorrect
+- The bus_analysis i2c section lists GND, PWM_L, PWM_R, +3.3V, PICO_CK-, PICO_D0+, PICO_CK+, VSYS, PICO_D1-, PICO_D1+, PICO_D2-, PICO_D2+, etc. as I2C lines (SDA/SCL). These are RP2040 GPIO pins whose alt-function names include I2C0_SDA/SCL, but they are not used as I2C in this design. The analyzer is matching partial pin-name substrings against the I2C detector for multiplexed GPIO symbols, producing many spurious I2C bus entries.
+  (signal_analysis)
+- In transistor_circuits, FET3 (BSS138) has drain_net='+3.3V' and source_net='+3.3V', which is wrong. FET3 is part of a bidirectional I2C level-shifter with gate=I2C1A_SDA_33, drain-side=+3.3V (via R28 pullup), source-side=I2C1A_SDA_5. The PCB net data confirms these are distinct nets. The legacy .sch parser likely misreads the pin-to-net mapping for this component (possibly mirrored placement confuses gate/drain/source assignment).
+  (signal_analysis)
+- The decoupling_analysis only finds C2 (1uF) on +5V and C1 (10uF) on +3.3V. However C5 (100nF, bypass for U3 VCC on +3.3V) is connected to +3V3/GND in the PCB data — this and C4, C6 (100nF caps) on intermediate audio/VSYS rails are not captured in the decoupling analysis. The +3.3V rail report is incomplete (should include C5 as a bypass cap).
+  (signal_analysis)
+- The VSYS net (RP2040 system voltage input) has no decoupling capacitors reported in decoupling_analysis, and the design_observations note 'rails_without_caps: [VSYS]' for U2. However, C3 (47uF) and C4 (100nF) appear in the PCB connected to an audio/PWM filter network rather than VSYS. The VSYS decoupling concern reported for U2 is legitimate — no decoupling cap was placed directly on VSYS.
+  (signal_analysis)
+
+### Missed
+- The design has a clear SPI0 bus (SPI0_CLK, SPI0_MOSI, SPI0_MISO, SPI0_CSn0, SPI0_CSn1) connecting U2 (RP2040), MICRO_SD1 (SD card), and UEXT1 (10-pin expansion). The memory_interfaces list is empty, and there is no SPI bus entry in bus_analysis. The SD card connected via SPI should be detected.
+  (signal_analysis)
+- USB1 (labeled USB-MINI but with MISB-SWMM-5B_LF footprint — appears to be micro-USB) provides +5V input via VBUS. No USB bus interface is detected in the signal_analysis (ethernet_interfaces, memory_interfaces all empty). This is only the power input, not USB data (USB1 D+ is connected to GND per the net data, D- is floating), so the USB data path is not truly active — but the power path via USB should be noted as a power source.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001161: PCB statistics correctly extracted: 2-layer, 70x38.5mm, 67 footprints, 86 vias, 72 nets; Component footprint net assignments match schematic nets for key components
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: RP2040-PICO-PC_rev_B.kicad_pcb
+- **Created**: 2026-03-23
+
+### Correct
+- Board dimensions (70.0mm x 38.5mm), layer count (2: F.Cu/B.Cu), footprint count (67), via count (86), net count (72), and routing_complete=true all match the gerber data (which also shows 2-layer, 70x38.5mm board).
+- Spot-checked: HDMI1 pad assignments (D0+/D0-/D1+/D1-/D2+/D2-/CK+/CK- correctly mapped), UEXT1 SPI/I2C/UART nets correct, U2 RP2040 Pico pad-to-net correct, FET2/FET3 level-shifter nets correct (+3V3/I2C1A_SCL_33/I2C1A_SCL_5 and +3V3/I2C1A_SDA_33/I2C1A_SDA_5).
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001162: drill_tools aggregation assigns NPTH type to mixed PTH/NPTH drill sizes (0.6mm, 0.8mm, 1.0mm); Gerber completeness correctly verified: all 9 required layers present, PTH and NPTH drill files present
+
+- **Status**: promoted
+- **Analyzer**: gerber
+- **Source**: Gerbers
+- **Created**: 2026-03-23
+
+### Correct
+- All standard 2-layer layers found (F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, Edge.Cuts), both PTH and NPTH drill files present, complete=true. Alignment checks pass (all layers within board extents).
+
+### Incorrect
+- In drill_tools, the 0.6mm entry shows count=120, type='NPTH' — but the actual breakdown is NPTH=2, PTH=118. Similarly 0.8mm shows NPTH (count 6) and 1.0mm shows NPTH (count 45). The aggregation keeps the NPTH type when both PTH and NPTH holes exist at the same diameter. The type field in drill_tools should be 'mixed' or the dominant type (PTH) for these cases.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001163: Rev D drill_tools includes 0.8001mm entry with count=0 (ghost tool from Excellon file)
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: HARDWARE_RP2040-PICO-PC hardware revision D_Gerbers
+- **Created**: 2026-03-23
+
+### Correct
+(none)
+
+### Incorrect
+- The drill_tools for Rev D contains an entry '0.8001mm' with count=0 and type='PTH'. This is a tool defined in the Excellon drill file (T3) with no holes drilled using it — an artifact of the file listing all defined tools even if unused. Having a zero-count tool in the summary is misleading. The classifier likely kept it from the raw tool table without filtering out unused tools.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001164: Rev C correctly detects 4 vias (0.3988mm diameter) distinct from component holes
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: HARDWARE_RP2040-PICO-PC hardware revision C_Gerbers
+- **Created**: 2026-03-23
+
+### Correct
+- The drill_classification correctly categorizes the 4 small-diameter (0.3988mm) PTH holes as vias, separate from the larger component and mounting holes. This matches what would be expected for a 2-layer board with a few signal vias.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "SensoresForward.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001214",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001214-AST-01",
+      "description": "All 6 CNY70 sensors correctly parsed with subcircuit neighbor analysis showing the 82-ohm LED driver resistors and 10k pull-up resistors. The 4053 triple analog mux with sensor inputs and line select outputs is correctly mapped. Component count (17), net count (28), and BOM all correct.",
+      "created_from": "FND-00001214",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001214-AST-02",
+      "description": "The CD4053 (triple 2:1 analog mux) driving a 6-sensor array into 3 multiplexed output lines is a recognizable sensor multiplexing pattern. The analyzer has no mux/switch IC detector, so it only appears in subcircuits. Not a critical gap but a missed opportunity for a more informative output.",
+      "created_from": "FND-00001214",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

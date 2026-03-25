@@ -1,0 +1,45 @@
+# Findings: i2c-moisture-sensor / i2c-moist-sensor
+
+## FND-00002137: IC1 power pins reported on wrong nets due to Y-mirror parsing bug in legacy KiCad 5 parser; Crystal load cap C2 (value '33pp') excluded from crystal_circuits due to unparseable capacitance value; C...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_i2c-moisture-sensor_i2c-moist-sensor.sch.json.json
+- **Created**: 2026-03-24
+
+### Correct
+- The analyzer correctly identifies all 21 components: ATtiny441-SSU, 16MHz crystal, thermistor (NCP18XH103F03RB), two BAT54 Schottky diodes, resistive divider network (4x 1M for AC moisture sensing), LED indicator, ISP/I2C programming header (P1), and decoupling capacitors. The subcircuit groups all components around IC1. The SENSE_LOW and MISO/SENSE_HIGH nets correctly show the AC soil moisture electrode measurement topology with 1M bias resistors and 1nF filter caps.
+
+### Incorrect
+- The analyzer reports IC1 pin 1 (named 'VCC' in library) on the GND net, and IC1 pin 14 (named 'GND') on the VCC net. The KiCad-generated .net file confirms the actual connections are correct: pin 1 is on VCC and pin 14 is on GND. The bug occurs because the legacy KiCad 5 schematic parser incorrectly resolves pin positions for components with Y-mirror transform ([1 0 0 -1]), swapping which power symbol endpoint hits which pin. The ATtiny441-SSU is drawn Y-mirrored (mirror_x: true in output), and the parser picks up GND power symbol position as matching pin 1 (VCC) and VCC symbol as matching pin 14 (GND).
+  (nets)
+
+### Missed
+- The crystal X1 (16MHz) has two load capacitors C1 (33p) and C2 (33pp). Only C1 is listed in the crystal_circuits load_caps array. C2 has value '33pp' which is a typo for '33pF' (double p). The capacitance parser cannot interpret '33pp' as a valid value, so C2's farads is null and it is excluded from the crystal circuit entry. A balanced crystal circuit requires two equal load caps; the output only shows one. The analyzer should ideally still list C2 as a crystal load cap even without a parseable capacitance value, or note that a second crystal cap was detected but its value was unparseable.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002138: Correctly identifies the 18x149mm 4-layer sensor probe PCB and flags its unusual dimensions
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: pcb_i2c-moisture-sensor_i2c-moist-sensor.kicad_pcb.json.json
+- **Created**: 2026-03-24
+
+### Correct
+- The PCB analyzer correctly identifies 4 copper layers (F.Cu, In1.Cu, In2.Cu, B.Cu) for this narrow sensor probe board. The DFM correctly flags the 18x149mm board dimensions as exceeding the 100x100mm threshold (higher pricing tier). It also identifies 24 footprints including 2 logo graphics (G***) and P2 (an extra 4-pin connector present on the PCB but absent from the schematic). Net count (16) matches the schematic exactly. Routing is complete with 40 vias across 4 layers.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

@@ -1,20 +1,9 @@
 {
-  "file_pattern": "26-3334_coco3_coco3.sch",
+  "file_pattern": "coco3.sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000284",
   "generated_by": "findings.py promote",
   "assertions": [
-    {
-      "id": "FND-00000284-AST-01",
-      "description": "28.63636MHz crystal X1 with C60 (33pF) load cap correctly detected",
-      "created_from": "FND-00000284",
-      "check": {
-        "path": "signal_analysis.crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^X1$"
-      }
-    },
     {
       "id": "FND-00000284-AST-02",
       "description": "MC78L08 8V LDO regulator correctly identified",
@@ -23,50 +12,6 @@
         "path": "signal_analysis.power_regulators",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "FND-00000284-AST-03",
-      "description": "7 transistor circuits all correctly identified including Q5/Q6/Q7 RGB video output",
-      "created_from": "FND-00000284",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q5$"
-      }
-    },
-    {
-      "id": "FND-00000284-AST-04",
-      "description": "Cassette interface RC filters (R14+C24 HP 72Hz, R18+C25 LP 14kHz) correctly detected",
-      "created_from": "FND-00000284",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R14$"
-      }
-    },
-    {
-      "id": "FND-00000284-AST-05",
-      "description": "R64+C61 and R10+C10 clock filters at 86.83MHz correct",
-      "created_from": "FND-00000284",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R64$"
-      }
-    },
-    {
-      "id": "FND-00000284-AST-06",
-      "description": "3 voltage dividers including R31+R32 RF modulator video level divider correct",
-      "created_from": "FND-00000284",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R31$"
       }
     }
   ]

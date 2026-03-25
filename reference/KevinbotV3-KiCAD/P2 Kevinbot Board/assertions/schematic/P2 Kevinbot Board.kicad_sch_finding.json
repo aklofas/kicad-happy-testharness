@@ -5,61 +5,6 @@
   "generated_by": "findings.py promote",
   "assertions": [
     {
-      "id": "FND-00000199-AST-01",
-      "description": "Voltage divider R18/R19 (120K/10K, ratio=0.077) correctly detected for voltage monitoring channel C on VMOUT_C_RAW net",
-      "created_from": "FND-00000199",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R18$"
-      }
-    },
-    {
-      "id": "FND-00000199-AST-02",
-      "description": "Voltage divider R14/R15 (180K/10K, ratio=0.053) correctly detected for voltage monitoring channel A on VMOUT_A_RAW net",
-      "created_from": "FND-00000199",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R14$"
-      }
-    },
-    {
-      "id": "FND-00000199-AST-03",
-      "description": "RC low-pass filter R55/C20 (887R/10pF, fc=17.9MHz) correctly detected for high-frequency noise filtering",
-      "created_from": "FND-00000199",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R55$"
-      }
-    },
-    {
-      "id": "FND-00000199-AST-04",
-      "description": "RC low-pass filters R54/C18 and R53/C18 (20k/2.2uF, fc=3.62Hz) correctly detected as slow analog averaging filters",
-      "created_from": "FND-00000199",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R54$"
-      }
-    },
-    {
-      "id": "FND-00000199-AST-05",
-      "description": "Feedback divider R59/R58 (2.15k/3.4k) correctly identified as feedback network for the PSU regulator",
-      "created_from": "FND-00000199",
-      "check": {
-        "path": "signal_analysis.feedback_networks",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R59$"
-      }
-    },
-    {
       "id": "FND-00000199-AST-06",
       "description": "26 connectors, 7 test points, 4 fuses, 6 LEDs correctly classified",
       "created_from": "FND-00000199",

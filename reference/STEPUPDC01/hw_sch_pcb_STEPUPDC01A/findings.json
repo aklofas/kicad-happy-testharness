@@ -1,0 +1,119 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "STEPUPDC01A.kicad_sch",
+      "status": "promoted",
+      "summary": "MAX5026 step-up output_rail incorrectly identified as 'Vin' instead of 'Vout'; Feedback voltage divider R2(140k)/R3(6k49) from Vout to FB to GND not detected; Missing footprints for U1 and D2 corre...",
+      "correct": [
+        {
+          "description": "missing_footprint lists U1 and D2, which are rescue-library symbols without assigned footprints in this legacy KiCad 5 project. This is accurate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "power_regulators sets output_rail='Vin' for U1=MAX5026. This is a step-up (boost) converter: Vin is the input and Vout is the output. The analyzer appears to have confused input and output rails, likely due to net naming in this legacy KiCad 5 schematic.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The MAX5026 datasheet shows the feedback network sets Vout. R2=140k connects Vout to FB, R3=6k49 connects FB to GND \u2014 a classic 2-resistor voltage divider. voltage_dividers is empty.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "STEPUPDC01",
+      "project": "hw_sch_pcb_STEPUPDC01A",
+      "created": "2026-03-24T00:10:56.982990+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001300"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "hw_cam_profi",
+      "status": "promoted",
+      "summary": "smd_apertures=0 and smd_ratio=0.0 is wrong \u2014 board has 12 SMD components; Alignment issue correctly detected in old KiCad 5 gerbers; Missing F.Paste layer correctly flagged as recommended-only (not...",
+      "correct": [
+        {
+          "description": "aligned=false with 'Height varies by 2.2mm across copper/edge layers' is a real observation for this 2018-era gerber set where layer extents differ.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "missing_recommended includes F.Paste but complete=true. This is correct \u2014 the old-style KiCad 5 export omits the F.Paste layer. The distinction between required and recommended is handled correctly.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The old KiCad 5 gerbers lack X2 aperture function attributes, so smd_source='x2_aperture_function' yields 0 SMD apertures. The PCB has 12 SMD parts (U1, D1, D2, C1-C6, R1-R4). The analyzer should fall back to diameter heuristics for SMD detection when X2 data is absent.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "STEPUPDC01",
+      "project": "hw_sch_pcb_STEPUPDC01A",
+      "created": "2026-03-24T00:10:56.983012+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001301"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "STEPUPDC01A.kicad_pcb",
+      "status": "promoted",
+      "summary": "PCB correctly parsed: 20 footprints, 2-layer, 19.8x40.1mm, routing complete with 52 vias; same_layer_foreign_zones reports C5/C6/R3 pads near GND zone as potential issue, but these are Vout capacit...",
+      "correct": [
+        {
+          "description": "Statistics match the design (step-up converter on a narrow card-edge form factor). via_count=52 is high for a small board but consistent with the dense routing shown in the net_lengths.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "C5=100nF, C6=1uF/50V, and R3=6k49 pad 1 (FB node) are flagged as having foreign GND zones nearby. For a step-up converter, output caps and feedback resistors intentionally have their negative pin on GND \u2014 this is correct design practice, not a problem.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "STEPUPDC01",
+      "project": "hw_sch_pcb_STEPUPDC01A",
+      "created": "2026-03-24T00:10:56.983015+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001302"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "SparkFun_Red_Vision_Camera_Board_HM01B0.kicad_sch.json",
+      "status": "promoted",
+      "summary": "HM01B0 camera board (46 components, KiCad 9); RT9080 LDO and active oscillator correctly identified; I2C bus missed despite SCL/SDA/CAM_SCL/CAM_SDA nets with R1/R2 pull-ups through JP1 solder jumper",
+      "correct": [
+        {
+          "description": "Total 46 components correctly identified: 9 resistors, 6 capacitors, 6 jumpers, 4 test points, 4 fiducials, 4 NMOS transistors (Q1-Q4 RE1C002UNTCL), 2 ICs (U1 HM01B0, U2 RT9080), 2 mounting holes, 1 LED, 1 active oscillator (Y1), 3 other. All counts match the schematic.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 46
+          }
+        },
+        {
+          "description": "U2 (RT9080-2.8V) correctly identified as LDO regulator with input_rail=3.3V and output_rail=2.8V. vref_source=fixed_suffix is appropriate since output voltage is encoded in part name. Decoupling capacitors on 2.8V (C8, C2, C7, C5) correctly attributed.",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": {
+              "ref": "U2",
+              "topology": "LDO"
+            }
+          }
+        },
+        {
+          "description": "Y1 (24MHz, SparkFun-Clock:Oscillator_24MHz_3.2x2.5mm) correctly classified as active_oscillator. It is a 4-pin package with pins GND/VDD/OUT/EN \u2014 an active MEMS/clock oscillator, not a passive crystal. No load_caps reported which is correct: active oscillators have internal load caps.",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "value": {
+              "reference": "Y1",
+              "type": "active_oscillator"
+            }
+          }
+        },
+        {
+          "description": "Q1-Q4 (RE1C002UNTCL NMOS) all 4 correctly detected. Q1 (gate=2.8V, drain=SDA, source=CAM_SDA) and Q2 (gate=2.8V, drain=SCL, source=CAM_SCL) are bidirectional I2C level shifters. Q3/Q4 are camera power/control switches (PWDN, RST). All captured in transistor_circuits.",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "Power rails correctly identified: 3.3V (host-supplied input), 2.8V (from RT9080 LDO), 1.5V (camera supply rail), GND. All four domains present. Decoupling analysis covers all three voltage rails accurately.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 4
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "I2C bus not detected despite two I2C buses present: SCL/SDA (3.3V host domain, J1/J2/J3 connectors) and CAM_SCL/CAM_SDA (2.8V camera domain, J4 connector) bridged by Q1/Q2 level-shift MOSFETs. R1/R2 (2.2k) are pull-ups for SDA/SCL connected through JP1 (SolderJumper_3_Bridged123, center pin B = 3.3V). bus_analysis.i2c is empty.",
+          "analyzer_section": "design_analysis.bus_analysis.i2c",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "I2C pull-ups R1/R2 (2.2k) not recognized because they connect to 3.3V through JP1 solder jumper (SolderJumper_3_Bridged123). The pull-up path is: R1/R2 pin 2 -> unnamed net -> JP1 pin C -> JP1 pin B -> 3.3V. The analyzer does not trace through solder jumpers to find pull-up supply rails.",
+          "analyzer_section": "signal_analysis.pull_up_resistors",
+          "check": {
+            "path": "signal_analysis.pull_up_resistors",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Detect I2C buses by matching net names containing SCL/SDA (case-insensitive) even when prefixed with domain names like CAM_SCL/CAM_SDA",
+        "Trace pull-up resistor supply rails through solder jumpers (SolderJumper_* parts) to identify the pull-up voltage, enabling correct pull-up detection for solder-jumper-configurable pull-ups"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SparkFun_Red_Vision_Camera_Board_HM01B0",
+      "project": "Hardware_SparkFun_Red_Vision_Camera_Board_HM01B0",
+      "created": "2026-03-23T00:00:00.000000+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001518"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "SparkFun_Red_Vision_Camera_Board_HM01B0.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "HM01B0 camera board PCB (4-layer); board outline missing (edge_count=0, bounding_box=null) though board is physically defined; layer stackup, routing, and multi-layer zone fill ratio all correct",
+      "correct": [
+        {
+          "description": "4-layer stackup correctly identified: F.Cu, In1.Cu, In2.Cu, B.Cu. copper_layers_used=4 accurate. Stackup shows prepreg-core-prepreg layering with correct KiCad 9 layer numbering (0=F.Cu, 4=In1.Cu, 6=In2.Cu, 2=B.Cu).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.copper_layers_used",
+            "op": "equals",
+            "value": 4
+          }
+        },
+        {
+          "description": "33 nets match schematic exactly. routing_complete=true, unrouted_net_count=0 correct. The 4-layer board is fully routed.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "op": "equals",
+            "value": 33
+          }
+        },
+        {
+          "description": "GND zone spanning F.Cu, B.Cu, and In1.Cu (3 copper layers) correctly detected as is_filled=true. fill_ratio=2.125 is physically correct: filled_area=1727.43mm2 is the sum of F.Cu (487.71) + B.Cu (532.79) + In1.Cu (706.93) fill areas, against outline_area=812.9mm2. Values > 1 are expected for multi-layer zones.",
+          "analyzer_section": "zones",
+          "check": {
+            "path": "zones",
+            "op": "contains_match",
+            "value": {
+              "net_name": "GND",
+              "is_filled": true
+            }
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Board outline not detected: board_outline.edge_count=0 and bounding_box=null, resulting in board_width_mm=null and board_height_mm=null. The Camera Board is a physically defined PCB but its Edge.Cuts layer data was not parsed. Board area and dimension calculations are unavailable.",
+          "analyzer_section": "board_outline",
+          "check": {
+            "path": "board_outline.bounding_box",
+            "op": "exists"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Investigate why Edge.Cuts arcs or the specific graphic primitives used in this board's outline are not being parsed into the board_outline section"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SparkFun_Red_Vision_Camera_Board_HM01B0",
+      "project": "Hardware_SparkFun_Red_Vision_Camera_Board_HM01B0",
+      "created": "2026-03-23T00:00:00.000000+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001519"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad-schematic-lib_hagzey_schematics_mcu_mcu_STM32F041RCT6.kicad_sch.json",
+      "status": "promoted",
+      "summary": "STM32F041RCT6 MCU schematic parsed as empty (0 components, 0 nets)",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The analyzer produced zero components, zero nets, and zero wires for this schematic. The file is a KiCad 9.0 (.kicad_sch) format schematic that contains an STM32F041RCT6 MCU with supporting circuitry. This is most likely a schematic that uses a custom symbol library (hagzey_symbols) and the analyzer failed to extract any components from it. The STM32 MCU, its decoupling caps, crystal, and connectors should all be present but nothing was captured.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "greater_than",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad-schematic-lib",
+      "project": "hagzey_schematics_mcu_mcu_STM32F041RCT6",
+      "created": "2026-03-24T08:33:53.463102+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002264"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad-schematic-lib_hagzey_schematics_memory_eeprom_eeprom_M24C02_WMN6TP.kicad_sch.json",
+      "status": "promoted",
+      "summary": "M24C02 EEPROM (CR1) misclassified as 'diode' due to 'CR' reference prefix; I2C bus not detected despite explicit I2C.SCL and I2C.SDA net names",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The M24C02-WMN6TP 8-pin I2C EEPROM is assigned reference 'CR1' by the designer and is classified as type 'diode' throughout the output (component_types shows 'diode: 1', BOM type is 'diode', category is 'diode'). The component is clearly an EEPROM IC with 8 pins (VCC, GND, SCL, SDA, E0-E2, WC). The 'CR' prefix is non-standard but the device is categorically an integrated circuit or memory device, not a diode. The misclassification propagates to the assembly_complexity section which counts it as 'other_SMD' and simulation_readiness which treats it as simulatable. The component type should be determined by the symbol's pin structure and lib_id ('hagzey_symbols:eeprom_M24C02-WMN6TP') rather than just the reference prefix.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.ic",
+            "op": "greater_than",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The nets 'I2C.SCL' and 'I2C.SDA' are present and correctly identified in net_classification (as 'clock' and 'data' respectively). The M24C02 EEPROM's SCL and SDA pins are connected to these nets. However, design_analysis.bus_analysis.i2c is empty \u2014 no I2C bus was detected. The analyzer should recognize this as an I2C bus based on the net names and the device's pin names. The single_pin_nets warning for I2C.SCL and I2C.SDA is correct (they're hierarchical labels connecting outward), but the I2C interface itself should still be detected.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad-schematic-lib",
+      "project": "hagzey_schematics_mcu_mcu_STM32F041RCT6",
+      "created": "2026-03-24T08:33:53.463123+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002265"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad-schematic-lib_hagzey_schematics_power_ldo_ldo_3v3_TCR2EF33_LMCT.kicad_sch.json",
+      "status": "promoted",
+      "summary": "LDO output rail reported as '__unnamed_0' rather than '+3V3' due to ferrite bead on output",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The TCR2EF33 LDO VOUT pin connects to an unnamed internal net (the junction between VOUT, C2, and FB1 pin 1). The named '+3V3' power rail is on the other side of FB1. The analyzer correctly identifies the LDO topology and estimates Vout=3.3V from the part suffix, but reports output_rail as '__unnamed_0' in power_regulators. The design_observations also flag a missing output cap because C2 is on the unnamed net, not on '+3V3'. In reality C2 is the output decoupling cap \u2014 just separated from the '+3V3' label by the ferrite bead. The analyzer should trace through ferrite beads to associate the output rail with the named net.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": "/\\+3V3/"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad-schematic-lib",
+      "project": "hagzey_schematics_mcu_mcu_STM32F041RCT6",
+      "created": "2026-03-24T08:33:53.463126+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002266"
+    }
+  ]
+}

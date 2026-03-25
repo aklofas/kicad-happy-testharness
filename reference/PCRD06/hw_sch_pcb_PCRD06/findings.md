@@ -1,0 +1,44 @@
+# Findings: PCRD06 / hw_sch_pcb_PCRD06
+
+## FND-00001056: TS3021ILT comparator correctly identified as comparator_or_open_loop despite wrong lib_id (AD8691); Component and net counts match PCB: 33 components, 13 nets in both schematic and PCB
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: PCRD06.kicad_sch
+- **Created**: 2026-03-23
+
+### Correct
+- U1 value is TS3021ILT (a voltage comparator) but lib_id is MLAB_IO:AD8691 (op-amp symbol reuse). The analyzer correctly identifies the open-loop/comparator configuration from circuit topology. No false inverting/buffer classification.
+- Perfect agreement between schematic and PCB on component count and net count.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001057: PCRD06 gerber complete and aligned, 2 layers, drill classification correct
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: hw_cam_profi
+- **Created**: 2026-03-23
+
+### Correct
+- 8 gerber layers all present and aligned. 72 vias (0.4mm) and 26 component holes correctly classified via X2 attributes. Component distribution (11F/22B) matches PCB output.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

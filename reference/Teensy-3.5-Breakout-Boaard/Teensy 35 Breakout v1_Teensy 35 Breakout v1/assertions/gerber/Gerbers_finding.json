@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001743",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001743-AST-01",
+      "description": "The Gerbers directory contains 20 gerber files covering F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, and Edge.Cuts \u2014 all required layers are present. PTH drill file exists with 319 holes total. Layer completeness is correctly reported as True.",
+      "created_from": "FND-00001743",
+      "check": {
+        "path": "completeness.complete",
+        "value": true,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001743-AST-02",
+      "description": "INCORRECT: The analyzer reports aligned=False with 'Width varies by 12.7mm across copper/edge layers' and 'Height varies by 12.7mm'. The 12.7mm (0.5 inch) difference is consistent with the THT pin-header connectors not extending to the very edge of the board outline \u2014 the copper pads sit 6.35mm inside each board edge as typical for PCB pin-header breakout designs with mounting clearance. All copper layers share the same bounding box (86.36x93.98mm) and the board outline is 99.06x106.68mm. This is a bounding-box extent mismatch, not a coordinate misalignment, and does not indicate a fabrication issue.",
+      "created_from": "FND-00001743",
+      "check": {
+        "path": "alignment.aligned",
+        "value": false,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "file_pattern": "STM32.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000668",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000668-AST-01",
+      "description": "Regulator topology (LDO, 3.3V output), I2C2 SCL/SDA with 1K5 pull-ups to +3.3V, UART1 TX/RX, and SWD debug connector J3 are all correctly identified.",
+      "created_from": "FND-00000668",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000668-AST-02",
+      "description": "vbus_esd_protection: fail is correct \u2014 there is no dedicated VBUS ESD diode or TVS. The 1K5 D+ series resistor (R5) is found but D- has no series resistor (R2/R3 are I2C pull-ups, not USB), which is correctly marked as informational.",
+      "created_from": "FND-00000668",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000668-AST-03",
+      "description": "U1 (AMS1117-3.3) with VBUS input and +3.3V output, and the +3.3VA analog domain via FB1 ferrite bead, are all correctly detected.",
+      "created_from": "FND-00000668",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

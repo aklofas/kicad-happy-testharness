@@ -1,0 +1,29 @@
+{
+  "file_pattern": "FlexSpinner.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000557",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000557-AST-01",
+      "description": "Q1 N-MOSFET is correctly identified with gate_net=VTrig, gate_pulldown=Rpd1(1M), and drain/source nets identified. The detection of gate resistors and pulldown is accurate.",
+      "created_from": "FND-00000557",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000557-AST-02",
+      "description": "DHold1 (Schottky) + CHold1 (47nF) form a peak-hold/sample circuit off VSense, but neither voltage_dividers nor rc_filters detects this. The snubbers list is also empty. This is a meaningful signal path that the analyzer misses.",
+      "created_from": "FND-00000557",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

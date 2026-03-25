@@ -1,0 +1,29 @@
+{
+  "file_pattern": "my-keyboard.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002470",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002470-AST-01",
+      "description": "The analyzer reports an SPI bus detected via ISP1 (bus_id: pin_ISP1) with MISO/MOSI/SCK signals connected to U1 (ATmega32U4). The ISP1 connector is a 6-pin AVR ICSP programming header, not an operational SPI bus. The MISO/MOSI/SCK lines are shared with the AVR's SPI peripheral, but labeling the programming header as an active SPI bus is misleading. The ATmega32U4 does not use SPI as its primary USB-HID interface; this is purely for firmware programming. The chip_select_count of 0 also indicates the detector did not find a proper CS line, which is a further indicator this is a programming connector not a real SPI bus.",
+      "created_from": "FND-00002470",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002471-AST-02",
+      "description": "The analyzer correctly identifies 68 MX switch footprints (confirmed by 68 unique MX* refs in source), 67 key-matrix diodes plus 2 Zener ESD diodes (D86/D87 at 3.6V on D+/D-), a 500mA polyfuse (F1), 16MHz crystal (Y1), USB_B_Micro connector, and the ATmega32U4-AU microcontroller. The differential pair detector correctly identifies D+/D- with series resistors R1, R2, R7 and notes has_esd: false (the Zeners are on the bus side, not strictly ESD diodes to ground, which is an acceptable edge case). ERC warnings for no_driver on D+/D- are expected for a USB device topology where the host drives the bus.",
+      "created_from": "FND-00002471",
+      "check": {
+        "path": "statistics.component_types.switch",
+        "op": "equals",
+        "value": 68
+      }
+    }
+  ]
+}

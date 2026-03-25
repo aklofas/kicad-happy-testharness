@@ -1,0 +1,19 @@
+{
+  "file_pattern": "vco.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000849",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000849-AST-01",
+      "description": "In all sub-schematics (vco, vclpf, lfo, etc.), B+ and B- carry the analog supply rails but are classified only as 'signal' in net_classification. There are no power symbols for them (they use hierarchical labels instead), so power_rails in statistics is empty for these sheets. The analyzer correctly picks up GND via the power:GND symbol but misses the positive and negative supply nets entirely, leaving IC power rail analysis incomplete for the LM324 and other ICs.",
+      "created_from": "FND-00000849",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

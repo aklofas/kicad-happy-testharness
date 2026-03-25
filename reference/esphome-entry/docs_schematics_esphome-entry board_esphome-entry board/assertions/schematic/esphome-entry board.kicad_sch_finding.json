@@ -1,0 +1,19 @@
+{
+  "file_pattern": "esphome-entry board.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002058",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002058-AST-01",
+      "description": "U2 is a PC817 optocoupler connecting the remote button input (J2) to the ESP32-C3 GPIO21 via the TRIGGER_REMOTE net. The input side has the LED (anode via R1 to J2 pin 1, cathode to GND) and the output side connects to the microcontroller GPIO. This is a textbook galvanic isolation circuit. The isolation_barriers section is empty, and the signal_analysis.isolation_barriers list contains no entries. The PC817 is classified as a generic 'ic' type rather than being recognized as an optocoupler.",
+      "created_from": "FND-00002058",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

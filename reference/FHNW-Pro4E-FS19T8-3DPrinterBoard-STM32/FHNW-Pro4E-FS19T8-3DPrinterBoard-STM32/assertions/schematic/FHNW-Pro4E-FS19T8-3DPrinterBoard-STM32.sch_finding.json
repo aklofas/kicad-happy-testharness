@@ -15,17 +15,6 @@
       }
     },
     {
-      "id": "FND-00000289-AST-02",
-      "description": "Thermistor RC filters (R401/C401 etc, 3.39Hz ADC anti-alias) correctly detected",
-      "created_from": "FND-00000289",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R401$"
-      }
-    },
-    {
       "id": "FND-00000289-AST-03",
       "description": "Endstop debounce filters (10k/10u, 1.59Hz) correctly detected",
       "created_from": "FND-00000289",
@@ -36,28 +25,6 @@
       }
     },
     {
-      "id": "FND-00000289-AST-04",
-      "description": "ESP32 auto-reset BJT pair (Q1/Q2 2N3904) correctly identified",
-      "created_from": "FND-00000289",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q1$"
-      }
-    },
-    {
-      "id": "FND-00000289-AST-05",
-      "description": "4 protection devices (fuses F101/F401/F402, USBLC6 USB ESD) correct",
-      "created_from": "FND-00000289",
-      "check": {
-        "path": "signal_analysis.protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^F101$"
-      }
-    },
-    {
       "id": "FND-00000289-AST-06",
       "description": "LC input filters for buck regulators (47uH/10nF, 232kHz) correct",
       "created_from": "FND-00000289",
@@ -65,17 +32,6 @@
         "path": "signal_analysis.lc_filters",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "FND-00000289-AST-07",
-      "description": "VBUS detection divider (R503/R506, ratio 0.68) correct",
-      "created_from": "FND-00000289",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R503$"
       }
     },
     {

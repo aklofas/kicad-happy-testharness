@@ -1,0 +1,52 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Pico-Carrier-Relay.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Spurious PWR_FLAG warning for GND \u2014 PWR_FLAG symbol is present on the net; Flyback protection diodes (D2, D4, D6) across relay coils not detected as protection_devices; Transistor circuits (Q1, Q2,...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The analyzer emits a pwr_flag_warnings entry stating 'Power rail GND has power_in pins but no power_out or PWR_FLAG'. However, the schematic contains a power:PWR_FLAG symbol (#FLG01) placed at (97.79, 107.95) that is connected to the GND net via a GND power symbol at the same location. The PWR_FLAG is present and the warning should not fire.",
+          "analyzer_section": "pwr_flag_warnings",
+          "check": {
+            "path": "pwr_flag_warnings",
+            "op": "equals",
+            "value": []
+          }
+        },
+        {
+          "description": "All three MMBT3904 transistor circuits have their collector connected directly to a relay coil pin (K1 pin 2, K2 pin 2, K3 pin 2 respectively). The analyzer correctly identifies the base resistors but reports load_type as 'other'. The load should be classified as 'relay' or 'inductive' since the collector load is a relay coil, which is the defining characteristic of this circuit.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits[0].load_type",
+            "op": "equals",
+            "value": "relay"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "D2, D4, D6 (US1A ultra-fast rectifiers) are placed as freewheeling/flyback protection diodes across each relay coil (K1, K2, K3 respectively). Their cathode (K pin) connects to VBUS and their anode connects to the transistor collector/relay coil pin, which is the standard anti-kickback topology. The signal_analysis.protection_devices list is empty \u2014 these should be detected as flyback or inductive-load protection diodes.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 3
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix: Transistor circuits (Q1, Q2, Q3) driving relay coils classified as load_type 'other' instead of a relay/inductive load"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Capitulo136",
+      "project": "Pico-Carrier-Relay",
+      "created": "2026-03-23T19:39:03.384950+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000422"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Kicad files_DAC_ADACUS_sch.kicad_sch.json",
+      "status": "promoted",
+      "summary": "RC filter detector incorrectly groups C403 and C405 as parallel capacitors; RC filter R404/C405 misidentified: opamp output node labeled as 'ground_net'",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "In the DAC anti-aliasing filter network, rc_filters[0] reports R403 with 'C403+C405 parallel' (1.15nF). However C403 (150p) is on net __unnamed_0 (R403 output side) while C405 (1n) is on net __unnamed_1 (R403 input side). These are shunt capacitors at different nodes of a 2-stage RC ladder, not in parallel. The parallel-cap detection is grouping capacitors that share R403 as a neighbor but are on opposite terminals.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters[0].capacitor.parallel_caps",
+            "op": "eq",
+            "value": null
+          }
+        },
+        {
+          "description": "rc_filters[2] reports R404 as an 'RC-network' with ground_net='OUT_AA_BUF_OUT'. In the actual circuit, C405 pin2 connects to OUT_AA_BUF_OUT which is the MCP6001 opamp output (feedback node in a Sallen-Key-style active filter). This is not a ground node. Additionally, C405 and C404 are incorrectly grouped as parallel (C404 pin2 goes to GND; C405 pin2 goes to OUT_AA_BUF_OUT \u2014 they are not in parallel). The topology is an active low-pass filter where C405 is the feedback capacitor.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters[2].ground_net",
+            "op": "eq",
+            "value": "GND"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Adacus",
+      "project": "Kicad files_ADACUS",
+      "created": "2026-03-23T18:54:56.388211+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000360"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Kicad files_BACK_UP_ADACUS_DAC_ADACUS_sch.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Same RC filter parallel-cap and ground_net misclassifications in backup DAC file",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The backup DAC schematic (Kicad files_BACK_UP_ADACUS_DAC_ADACUS_sch) has identical RC filter misclassifications: rc_filters[0] groups C405+C403 as parallel across different nodes, and rc_filters[2] reports ground_net='OUT_AA_BUF_OUT' for the active filter feedback capacitor. This is the same circuit duplicated in the backup directory.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters[2].ground_net",
+            "op": "eq",
+            "value": "GND"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Adacus",
+      "project": "Kicad files_ADACUS",
+      "created": "2026-03-23T18:54:56.388227+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000361"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Kicad files_ADACUS.kicad_sch.json",
+      "status": "promoted",
+      "summary": "U102 opamp (VCOM voltage reference buffer) incorrectly attributed input_resistor R304 (2.2 MOhm)",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "In the top-level ADACUS.kicad_sch, opamp U102 (MCP6001-E/OT, VCOM buffer) is reported with input_resistor={ref:R304, ohms:2200000}. R304 (2M2) is a resistor in the ADC sub-sheet that connects VCOM (U102 output) to IN_BUF (ADC input buffer signal net). R304 is not on the non-inverting input path of U102 \u2014 it is downstream of U102's output. The standalone Power schematic correctly reports U102 without any input_resistor. This spurious attribution occurs because the top-level merges all nets and R304 appears adjacent to VCOM.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.opamp_circuits[1].input_resistor",
+            "op": "eq",
+            "value": null
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Adacus",
+      "project": "Kicad files_ADACUS",
+      "created": "2026-03-23T18:54:56.388231+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000362"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Kicad files_BACK_UP_ADACUS_ADC_ADACUS_sch.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Multiple RC filters in ADC schematic misidentify signal nodes as ground_net; REF3033 precision voltage reference (U301) not detected in power_regulators or any dedicated voltage reference section",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The ADC schematic contains 4 RC filters classified as 'RC-network' with non-GND ground_net values: (1) R302/C309 with ground_net='IN_BUF' \u2014 C309 pin2 connects to the opamp non-inverting input, not ground; (2) R304/C309 with ground_net='RF_IN' \u2014 an input signal net; (3) R309/C315 with ground_net='ADC_IN+' \u2014 a differential signal node (C315 is a differential capacitor across ADC_IN+ and ADC_IN-); (4) R307/C313 with ground_net='IN_AA_BUF_OUT' \u2014 the opamp output feedback node. These are active filter and differential-input topologies where the capacitor's second terminal is a signal node, not ground.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters[0].ground_net",
+            "op": "eq",
+            "value": "GND"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "U301 is a TI REF3033 precision voltage reference that provides ADC_VREF for the ADC141S626. The ic_pin_analysis correctly identifies it with function='voltage reference', but it does not appear in signal_analysis.power_regulators or any voltage_reference detector output. The power_regulators list is empty for the ADC schematic despite U301 being a dedicated reference IC. Users of the analyzer output would need to inspect ic_pin_analysis to find this component rather than having it surface in the signal path analysis.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Adacus",
+      "project": "Kicad files_ADACUS",
+      "created": "2026-03-23T18:54:56.388233+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000363"
+    }
+  ]
+}

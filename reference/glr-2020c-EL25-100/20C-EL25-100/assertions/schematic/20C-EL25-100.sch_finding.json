@@ -1,0 +1,19 @@
+{
+  "file_pattern": "20C-EL25-100.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002102",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002102-AST-01",
+      "description": "CHECK_NEEDS_FIX: The 6-component relay board (3x JSM1-12V-5, 1x LED, 1x resistor, 1x connector) is correctly classified. The power_rails list contains only GND, which is accurate: the 12V and 12V_SW1 nets are local labels, not power symbols \u2014 there are 7 GND power symbols but no 12V power symbol in the schematic. The relay type detection is correct. The ERC warning about net SW having no driver is a valid observation (SW is an input label driven by external connector).",
+      "created_from": "FND-00002102",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": "/GND/"
+      },
+      "aspirational": true
+    }
+  ]
+}

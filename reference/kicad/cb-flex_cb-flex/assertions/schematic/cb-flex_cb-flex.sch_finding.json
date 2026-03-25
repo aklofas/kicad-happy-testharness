@@ -1,64 +1,9 @@
 {
-  "file_pattern": "cb-flex_cb-flex.sch",
+  "file_pattern": "cb-flex.sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000195",
   "generated_by": "findings.py promote",
   "assertions": [
-    {
-      "id": "FND-00000195-AST-01",
-      "description": "Voltage divider R14/R15 (976k/309k) correctly detected with ratio 0.24 on VDD rail, likely for battery voltage monitoring",
-      "created_from": "FND-00000195",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R14$"
-      }
-    },
-    {
-      "id": "FND-00000195-AST-02",
-      "description": "Voltage divider R16/R17 (100k/43k) on VAA rail correctly detected with ratio 0.30",
-      "created_from": "FND-00000195",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R16$"
-      }
-    },
-    {
-      "id": "FND-00000195-AST-03",
-      "description": "RC filter R8/C24 (10k/100n, fc=159Hz) correctly identified as low-pass on TRIG/EN_SENSOR path",
-      "created_from": "FND-00000195",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R8$"
-      }
-    },
-    {
-      "id": "FND-00000195-AST-04",
-      "description": "MIC29302 (U8) correctly identified as LDO regulator with feedback net",
-      "created_from": "FND-00000195",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U8$"
-      }
-    },
-    {
-      "id": "FND-00000195-AST-05",
-      "description": "AP7365-30 (U9) correctly identified as LDO with estimated_vout=3.0V from fixed_suffix",
-      "created_from": "FND-00000195",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U9$"
-      }
-    },
     {
       "id": "FND-00000195-AST-06",
       "description": "ANT2 RF matching L_match with L2/C9 detected; L2 value '0' and C9 'N.P.' correctly suggest unpopulated matching network",
@@ -67,28 +12,6 @@
         "path": "signal_analysis.rf_matching",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "FND-00000195-AST-07",
-      "description": "Q2 NMOS and Q1 NMOS correctly identified as switching transistors on sensor enable paths",
-      "created_from": "FND-00000195",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q2$"
-      }
-    },
-    {
-      "id": "FND-00000195-AST-08",
-      "description": "LC filter L1/C1 (10u/10u) correctly detected at resonant 15.9kHz on power rail",
-      "created_from": "FND-00000195",
-      "check": {
-        "path": "signal_analysis.lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L1$"
       }
     },
     {

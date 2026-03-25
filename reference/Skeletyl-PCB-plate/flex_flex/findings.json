@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "flex.kicad_sch",
+      "status": "promoted",
+      "summary": "Key matrix correctly detected as 4\u00d75 grid with 15 actual keys; Addressable LED chain detection reports 3 chains (one duplicate) instead of 2; Component counts (69 total, 15 switches, 15 diodes, 30 ...",
+      "correct": [
+        {
+          "description": "The key matrix detector identifies 4 row nets and 5 column nets, and correctly reports estimated_keys=15 (not the na\u00efve 4\u00d75=20), matching the actual 15 switches and 15 diodes on the matrix. This matches the Skeletyl 3\u00d75 layout (15-key per half) via net-name detection. The detection_method='net_name' is appropriate here since nets are labeled row2\u2013row5, col2\u2013col6.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices[0].estimated_keys",
+            "value": 15,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "BOM breakdown: 15 SK6812MINI LEDs per footprint variant (two variants \u00d7 15 = 30 total LEDs), 15 SOD-123 diodes, 15 MX switches, 2 capacitors, 2 resistors, 5 connectors. Total 69 matches the components list. The 4 extra footprints in the PCB (73 vs 69) are expected \u2014 they represent fiducials or additional mechanical elements not in the schematic.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 69,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer finds three addressable LED chains: two of length 15 and one of length 1 (D6 alone). The two 15-element chains both start at D5 and share only D5 in their component lists \u2014 they represent two parallel sub-chains branching from the same data input. D6 (also from the same input net) is reported as a degenerate single-element chain. Total unique LEDs across all chains = 30 which matches statistics.component_types.led=30, but the chain count and topology are misleading. This keyboard PCB has two parallel chains of 15 LEDs each (left/right halves), not 2 complete+1 degenerate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "value": 2,
+            "op": "max_count"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Skeletyl-PCB-plate",
+      "project": "flex_flex",
+      "created": "2026-03-24T00:24:55.827304+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001407"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "flex.kicad_pcb",
+      "status": "new",
+      "summary": "0.6 mm board thickness captured correctly for this thin PCB plate design",
+      "correct": [
+        {
+          "description": "The stackup specifies 0.6 mm (0.51 mm core + 2\u00d70.035 mm copper + 2\u00d70.01 mm mask), which is intentional for this flex keyboard plate adapter. The analyzer faithfully captures board_thickness_mm=0.6. DFM correctly flags the 104.8\u00d790.6 mm board as exceeding JLCPCB's 100\u00d7100 mm pricing boundary and the 0.1 mm annular ring as requiring an advanced process.",
+          "analyzer_section": "setup",
+          "check": {
+            "path": "setup.board_thickness_mm",
+            "value": 0.6,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Skeletyl-PCB-plate",
+      "project": "flex_flex",
+      "created": "2026-03-24T00:24:55.827321+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001408"
+    }
+  ]
+}

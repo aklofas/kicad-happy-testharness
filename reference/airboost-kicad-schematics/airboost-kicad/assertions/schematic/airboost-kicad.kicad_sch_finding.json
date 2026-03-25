@@ -1,0 +1,78 @@
+{
+  "file_pattern": "airboost-kicad.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001957",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001957-AST-01",
+      "description": "The analyzer correctly identifies all 8 components. A1 (Arduino Nano), U1 (OLED Display), and U2 (SCD30 CO2 sensor) are classified as 'ic'. R1 is a 150-ohm LED current limiting resistor, BZ1 is a buzzer, D1 is a dual-color LED (LED_Dual_AKA), SW1 and SW2 are push buttons. Component types match the actual schematic.",
+      "created_from": "FND-00001957",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 8
+      }
+    },
+    {
+      "id": "FND-00001957-AST-02",
+      "description": "The analyzer correctly identifies an I2C bus on I2C.SCL and I2C.SDA with devices U2 (SCD30), U1 (OLED Display), and A1 (Arduino Nano). The has_pullup=False detection is accurate: R1 (150 ohm) is an LED current limiter connected between D1 cathode and GND, not an I2C pull-up resistor. There are genuinely no I2C pull-up resistors in this design.",
+      "created_from": "FND-00001957",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "contains_match",
+        "value": {
+          "category": "i2c_bus",
+          "has_pullup": false
+        }
+      },
+      "aspirational": true,
+      "aspirational_reason": "contains_match does not support dict value matching"
+    },
+    {
+      "id": "FND-00001957-AST-03",
+      "description": "The analyzer correctly identifies that R1, BZ1, and D1 have no footprint assigned in the schematic. These three components are in missing_footprint, which matches the source: their footprint fields are empty strings in the .kicad_sch file.",
+      "created_from": "FND-00001957",
+      "check": {
+        "path": "statistics.missing_footprint",
+        "op": "equals",
+        "value": [
+          "R1",
+          "BZ1",
+          "D1"
+        ]
+      }
+    },
+    {
+      "id": "FND-00001957-AST-04",
+      "description": "BZ1 is driven directly from Arduino Nano D8 (pin 11) with no transistor or driver IC in between. The analyzer correctly reports has_transistor_driver=false and direct_gpio_drive=true. The driver_ic is listed as A1 (Arduino Nano).",
+      "created_from": "FND-00001957",
+      "check": {
+        "path": "signal_analysis.buzzer_speaker_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001957-AST-05",
+      "description": "The +5V rail is sourced from the Arduino Nano VIN pin (which in PCB net terms appears as a power_in pin type) with no explicit PWR_FLAG symbol. The GND rail similarly lacks a PWR_FLAG. KiCad ERC would flag these, and the analyzer correctly warns about both.",
+      "created_from": "FND-00001957",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001957-AST-06",
+      "description": "INCORRECT: The analyzer flags the I2C.SCL and I2C.SDA nets as needing level shifters because U2 (SCD30) is on the 3V3 domain and A1 (Arduino) is on +5V. However, in this design the SCD30 is powered from the Arduino's 3V3 output pin, and the SCD30 datasheet specifies its I2C pins are 5V tolerant (VIH max = VDD+0.5V is a common spec, but the SCD30 is actually 5V tolerant on I2C). The real concern is that SDA/SCL are pulled to neither 3V3 nor 5V (no pull-ups exist), making the level-shifter flag secondary to the missing pull-up issue. The cross-domain flag is technically conservative but misleading for this common Arduino+sensor topology.",
+      "created_from": "FND-00001957",
+      "check": {
+        "path": "design_analysis.cross_domain_signals",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

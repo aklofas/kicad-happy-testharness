@@ -1,0 +1,38 @@
+{
+  "file_pattern": "LION2CELL01.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000808",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000808-AST-01",
+      "description": "The BQ34Z100 uses HDQ/I2C. The analyzer correctly found the I2C bus with proper pull-up resistors R35 and R36 on SDA and SCL respectively.",
+      "created_from": "FND-00000808",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000808-AST-02",
+      "description": "Component classification is accurate: BQ24103 detected as 'battery management', correct subcircuit grouping, feedback divider (R25/R26) for LDO identified. Core component detection is working well despite missing MPNs.",
+      "created_from": "FND-00000808",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000808-AST-03",
+      "description": "The rescue library uses 'unspecified' pin types throughout, so the analyzer cannot determine that U5 TPS76601 provides a power_out on +3V3. ERC would indeed flag these nets in KiCad. The warnings accurately reflect what KiCad ERC would report.",
+      "created_from": "FND-00000808",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

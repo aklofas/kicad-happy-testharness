@@ -1,0 +1,51 @@
+{
+  "file_pattern": "cm4-carrier-net.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002018",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002018-AST-01",
+      "description": "SDIO 4-bit bus detected with all 6 signals (CLK, CMD, D0-D3) on correctly named nets. I2C SCL/SDA found on CM4 module pins I2C_SCL0/I2C_SDA0 with no external pull-ups (accurate \u2014 template board). TPD2EUSB30 correctly identified as esd_ic protecting USB_D+/D-. PMOS Q1 (DMP2066LSN) detected with correct gate_net=SD_PWR_ON, drain_net=+3V3, source_net=SD_PWR. Schematic-to-PCB count matches at 45.",
+      "created_from": "FND-00002018",
+      "check": {
+        "path": "design_analysis.bus_analysis.sdio",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002018-AST-02",
+      "description": "INCORRECT: The design_observations USB_D- entry has has_esd_protection=false, but U6 (TPD2EUSB30) is present on the USB_D- net (pin 2). The bug is in signal_detectors.py line 3499: 'protected_nets = {p[\"protected_net\"] for p in results.get(\"protection_devices\", [])}' uses the singular protected_net field (which is only 'USB_D+'), not the plural protected_nets list (['USB_D+', 'USB_D-', '__unnamed_90']). The fix is to collect all protected_nets entries. Affects any multi-rail ESD protection device.",
+      "created_from": "FND-00002018",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "contains_match",
+        "value": "/\"has_esd_protection\":\\s*false/"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002018-AST-03",
+      "description": "INCORRECT: The transistor_circuit entry for Q1 (DMP2066LSN) includes a led_driver sub-object referencing D3 ('Activity LED') with power_rail='+3V3'. However D3 is on net PI_LED_nACT (driven directly by the CM4 module, not by Q1). The actual load on Q1's source net (SD_PWR) includes D4 ('SD ON' LED) and J2 (SD card connector). The load_type='led' is triggered by D4 on SD_PWR, but the led_driver association logic looks more broadly and picks up the unrelated D3. The primary load is the SD card (J2 connector), not an LED.",
+      "created_from": "FND-00002018",
+      "check": {
+        "path": "signal_analysis.transistor_circuits[0].led_driver.led_ref",
+        "op": "equals",
+        "value": "D3"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002018-AST-04",
+      "description": "INCORRECT: The Raspberry Pi CM4 module U5 (Compute_Module_4_Functional) is split into 6 KiCad units. Each unit generates a separate subcircuit entry, resulting in 6 identical U5 entries in the subcircuits list. The bus_analysis correctly deduplicates via the KH-148 fix, but the subcircuits generation lacks the same deduplication. The correct output should have 1 U5 subcircuit entry (with the combined neighbor context). This affects any multi-unit part in a schematic.",
+      "created_from": "FND-00002018",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 7
+      },
+      "aspirational": true
+    }
+  ]
+}

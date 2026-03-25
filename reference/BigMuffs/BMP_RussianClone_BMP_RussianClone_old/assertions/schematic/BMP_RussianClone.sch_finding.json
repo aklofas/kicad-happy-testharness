@@ -1,0 +1,19 @@
+{
+  "file_pattern": "BMP_RussianClone.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000408",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000408-AST-01",
+      "description": "INCORRECT: The RussianClone has the same 3 POT components (SUSTAIN1, TONE1, VOLUME1) with lib_id='POT' as the BasicClone. One POT is misclassified as 'transformer' (component_types.transformer=1) and another as 'resistor', producing the same wrong counts: resistor=24 (should be 23), switch=2 (should be 4), transformer=1 (should be 0). There are no transformers in this guitar pedal design.",
+      "created_from": "FND-00000408",
+      "check": {
+        "path": "statistics.component_types.transformer",
+        "op": "not_exists",
+        "value": null
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "file_pattern": "ESProg_ESP8266_Template_Horizontal.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000505",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000505-AST-01",
+      "description": "The statistics report 10 total components across 6 unique parts: 1 IC (U1 ESP-12E), 1 connector (P1), 3 resistors (R1 4.7k, R2 10k, R3 10k), 1 switch (SW1), and 4 mounting holes (MH1-MH4). All references match the schematic source exactly.",
+      "created_from": "FND-00000505",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000505-AST-02",
+      "description": "The schematic has exactly 14 NoConn markers (lines 188-201 in source). The JSON reports total_no_connects: 14, matching the source.",
+      "created_from": "FND-00000505",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000505-AST-03",
+      "description": "The schematic contains five +3V3 power symbols (#PWR02, #PWR03, #PWR05, #PWR07 at the top of various net branches) and four GND symbols (#PWR01, #PWR04, #PWR06, #PWR08). The JSON correctly identifies exactly two power rails: +3V3 and GND.",
+      "created_from": "FND-00000505",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000505-AST-04",
+      "description": "R2 (10k) connects between +3V3 and the GPIO0 net. This is a classic boot-mode pull-up: GPIO0 must be pulled high for normal boot on ESP8266. R2 performing a pull-up function on GPIO0 is a meaningful signal path observation but the signal_analysis section is empty (no pull-up/pull-down resistor detection). Whether or not pull-up detection is in scope for the analyzer, the voltage_dividers list is also empty, which is correct since R2 has only one leg to a signal net (the other is +3V3 directly, not a divider).",
+      "created_from": "FND-00000505",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000505-AST-05",
+      "description": "R1 (4.7k) connects between +3V3 and the RST/~RST node (via wire from R1 pin 2 at 3700,3550 \u2192 +3V3 and R1 pin 1 at 3800,3350 \u2192 RST net). The EN pin of U1 also has its own pull-up (the 3700/3550 wire goes to EN via 4500,3550). In the actual schematic, wire 3700,3550\u21924500,3550 connects the +3V3 rail through R1 to U1 EN (chip enable), making this a standard EN pull-up. This pull-up connection is not reflected in the net assignments (U1 EN appears on isolated __unnamed_13) and is not flagged in signal_analysis.",
+      "created_from": "FND-00000505",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001746",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001746-AST-01",
+      "description": "INCORRECT: The Gerbers/ subdirectory contains gerber files for both 'Arduino_Mega' and 'TeensyMegaIoShield' board designs, each with their own F.Cu and B.Cu. The analyzer sees 40 gerber files with two sets of copper layers and reports layer_count=4. The actual TeensyMegaIoShield PCB is 2-layer. This is a false positive caused by the Gerbers/ folder being a combined export of two different PCBs, not a 4-layer board.",
+      "created_from": "FND-00001746",
+      "check": {
+        "path": "layer_count",
+        "value": 2,
+        "op": "greater_than"
+      },
+      "aspirational": true
+    }
+  ]
+}

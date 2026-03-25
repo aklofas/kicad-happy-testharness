@@ -1,0 +1,29 @@
+{
+  "file_pattern": "OPamp-inverting.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002202",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002202-AST-01",
+      "description": "The OPamp-inverting schematic is correctly detected as 'inverting' configuration. The gain is reported as -10.0 (gain_dB=20.0), matching the actual R2/R1 ratio of 10k/1k = 10. The feedback_resistor (R2=10k) and input_resistor (R1=1k) are correctly identified.",
+      "created_from": "FND-00002202",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002202-AST-02",
+      "description": "INCORRECT: The OPamp-inverting schematic has 6 components: U1 (OPAMP), R1, R2, V1 (VDC=15V), V2 (VDC=-15V), V3 (VSIN). The simulation_readiness section reports only 3 as 'likely_simulatable' (50%) and flags V1, V2, V3 as 'needs_model'. However, all three are from the Simulation_SPICE library (Simulation_SPICE:VDC, Simulation_SPICE:VSIN) which are built-in ngspice primitives requiring no external model files. The same issue affects many schematics in this corpus: OPamp-freerunning shows 20% (4 of 5 flagged including VDC/VSIN sources plus LM741 from Amplifier_Operational, not Simulation_SPICE), OPamp-adding shows 37.5%, and others. The detector should recognize Simulation_SPICE:VDC and Simulation_SPICE:VSIN as inherently simulatable.",
+      "created_from": "FND-00002202",
+      "check": {
+        "path": "simulation_readiness.simulatable_percent",
+        "op": "equals",
+        "value": 100.0
+      },
+      "aspirational": true
+    }
+  ]
+}

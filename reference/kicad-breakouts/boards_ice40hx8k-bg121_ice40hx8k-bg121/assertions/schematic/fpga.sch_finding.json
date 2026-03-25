@@ -1,0 +1,30 @@
+{
+  "file_pattern": "fpga.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002242",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002242-AST-01",
+      "description": "INCORRECT: signal_analysis.isolation_barriers lists three ground domains (GND, GNDPLL0, GNDPLL1) and flags VCCIO_B as an isolated_power_rail, yet isolation_components is an empty list. GNDPLL0 and GNDPLL1 are legitimate iCE40 PLL ground pins that are named separately per the iCE40 datasheet to reduce PLL noise, but they connect to the same physical ground plane through the PCB \u2014 they are not truly isolated. Flagging them as isolated domains without any barrier components (ferrite beads, inductors, transformers) is misleading.",
+      "created_from": "FND-00002242",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002242-AST-02",
+      "description": "U4 (LE25U20AMB SPI flash, SST25VF080B footprint) connects to the iCE40 FPGA via FLASH_SDI, FLASH_SDO, FLASH_SCK, and PROG_SS_B. The bus_analysis reports no SPI buses. Inspection of the components list shows U4.pins is an empty array \u2014 pin connectivity was not extracted for this component in the KiCad 5 legacy .sch parser. Because U4 has no pins, none of its nets appear in the net graph, and SPI detection cannot fire. The FLASH_SDI net only shows C19 (decoupling cap) rather than both U3 and U4. This is a systematic legacy .sch pin-extraction failure for at least one multi-unit IC.",
+      "created_from": "FND-00002242",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

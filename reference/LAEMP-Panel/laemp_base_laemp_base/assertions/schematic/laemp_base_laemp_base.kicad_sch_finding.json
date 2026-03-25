@@ -1,0 +1,28 @@
+{
+  "file_pattern": "laemp_base.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000762",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000762-AST-01",
+      "description": "AMS1117-3.3 (VBUS\u2192+3V3) detected as LDO. USB-C J3 CC pulldown resistors pass, VBUS ESD fail is real (no TVS). Four 100k/100n RC filters on PWM_R/G/B/PWM_1 correctly classified as low-pass. SK6812 chain=1 in this schematic is correct since remaining LEDs are on the LED board.",
+      "created_from": "FND-00000762",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000762-AST-02",
+      "description": "VBUS is supplied by USB-C connector J3. GND and VBUS both lack PWR_FLAG symbols. The warnings are accurate and expected for a USB-powered design without explicit PWR_FLAG placement.",
+      "created_from": "FND-00000762",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

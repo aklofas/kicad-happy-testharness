@@ -1,0 +1,31 @@
+{
+  "file_pattern": "Noise Toaster PCB.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000851",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000851-AST-01",
+      "description": "137 footprints (133 THT, 0 SMD), 2 copper layers, 132x69mm board, correct DFM violation flagged for exceeding 100x100mm JLCPCB threshold. Routing reported complete with 507 track segments. All values match expectations for a through-hole analog synthesizer board.",
+      "created_from": "FND-00000851",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000851-AST-02",
+      "description": "The PCB uses B+ (F.Cu zone) and B- (B.Cu zone) as full-board copper pours \u2014 the entire front copper layer is the B+ supply and the entire back copper layer is B-. These are correctly identified in zones[], but power_net_routing only reports GND. B+ and B- are clearly major power distribution nets (B-: 129mm, B+: 42mm of routed segments plus the fill zones) and should appear in power net routing analysis.",
+      "created_from": "FND-00000851",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

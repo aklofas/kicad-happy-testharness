@@ -1,0 +1,30 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002447",
+      "source_file": "repos/mcu-imprint-charybdis/adapter/adapter.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "False positive I2C bus detection on Elite-C SCL/SDA GPIO alias pins",
+      "details": "The analyzer detected 4 I2C bus entries (SDA/SCL on __unnamed_0 through __unnamed_3 nets) for U1 and U2. These pins are named 'SCL' and 'SDA' in the Elite-C symbol definition because the AVR microcontroller's hardware I2C peripheral shares those GPIO pins, but in this design the pins connect to unnamed/floating nets with no I2C devices. The actual bus usage is SPI (mosi/miso/ss/sc nets), which is also correctly detected. The I2C detection is triggered purely by pin name matching on the symbol without verifying any connected I2C peripheral or pull-up resistors.",
+      "check": {
+        "path": "bus_analysis.i2c",
+        "op": "equals",
+        "value": 0
+      }
+    },
+    {
+      "id": "FND-00002448",
+      "source_file": "repos/mcu-imprint-charybdis/adapter/adapter.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "SPI bus correctly detected with mosi/miso/ss/sc nets on both Elite-C MCUs",
+      "details": "The analyzer correctly identified two SPI buses: bus_id '0' on U1 (mosi/miso nets, chip_select_count=2, full_duplex) and bus_id '2' on U2 (mosi2/miso2 nets, chip_select_count=1, full_duplex). These match the global label names in the schematic (mosi, miso, ss, sc, mosi2, miso2, ss2, sc2) connecting through TRRS audio jacks J1/J2 to the SPI sensor connectors.",
+      "check": {
+        "path": "bus_analysis.spi",
+        "op": "equals",
+        "value": 2
+      }
+    }
+  ]
+}

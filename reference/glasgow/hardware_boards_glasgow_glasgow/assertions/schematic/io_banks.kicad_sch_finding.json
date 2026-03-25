@@ -1,0 +1,19 @@
+{
+  "file_pattern": "io_banks.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002098",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002098-AST-01",
+      "description": "INCORRECT: The glasgow io_banks sheet instantiates io_buffer.kicad_sch twice (IO_Buffer_A and IO_Buffer_B). Each instance contains a TPS73101 adjustable LDO: U31 in IO_Buffer_A and U14 in IO_Buffer_B. The physical feedback divider resistor in io_buffer is tagged as R34 (59k) in instance A and R28 (59k) in instance B, and R35 (24k3) in instance A / R29 (24k3) in instance B. The analyzer reports both U31 and U14 using R34/R35 as their feedback divider \u2014 it always picks the IO_Buffer_A instance reference and applies it to both regulators. The estimated_vout of 2.057V is only valid for one of the two instance interpretations; the actual VIO output depends on which R28/R29 values are correct. This is a hierarchical multi-instance ref resolution bug.",
+      "created_from": "FND-00002098",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

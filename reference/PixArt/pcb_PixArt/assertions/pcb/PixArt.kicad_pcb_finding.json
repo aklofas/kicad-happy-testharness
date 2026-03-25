@@ -1,0 +1,43 @@
+{
+  "file_pattern": "PixArt.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001090",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001090-AST-01",
+      "description": "All 5 vias have 0.1mm annular ring. Correctly classified as advanced tier DFM requirement.",
+      "created_from": "FND-00001090",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001090-AST-02",
+      "description": "Zone covers full board on B.Cu, fill_ratio 0.898, all 4 components in ground domain.",
+      "created_from": "FND-00001090",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001090-AST-03",
+      "description": "U1 is an SMD footprint with 20 pads, yet pad_summary.smd_apertures = 0 and smd_ratio = 0.0. The smd_source is 'x2_aperture_function' which relies on gerber data not PCB data, so the PCB analyzer should derive SMD counts from footprint type directly.",
+      "created_from": "FND-00001090",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "WIFI.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000981",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000981-AST-01",
+      "description": "The WIFI sheet contains CK-W-R189ETV-SM (RTL8189ETV WiFi module IC) with an antenna connector (ANT1). rf_chains and rf_matching both return empty. This is a WiFi SoC with RF output - it should trigger rf_chain or at minimum an ethernet/wireless interface detection.",
+      "created_from": "FND-00000981",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

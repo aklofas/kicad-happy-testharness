@@ -1,0 +1,71 @@
+{
+  "file_pattern": "Teensy_Ethernet.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001583",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001583-AST-01",
+      "description": "The schematic correctly reports 21 total components: 3 capacitors, 4 resistors (75 ohm), 2 connectors (J1 SWD, J2 RJ45), 1 IC (U1 B10601S magnetics), 4 standoffs, 4 fiducials, 3 logos/graphics, 1 no-connect. BOM groupings match source schematic. Power rail GND-only is correct for an adapter board powered externally by the Teensy.",
+      "created_from": "FND-00001583",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 21
+      }
+    },
+    {
+      "id": "FND-00001583-AST-02",
+      "description": "The signal_analysis correctly identifies four differential pairs: RD+/RD-, TD+/TD-, TX+/TX-, RX+/RX-. These correspond to the 10BASE-T magnetics module interface. The pairs share J1 and J2 with U1 as expected. The esd_protection attribution to U1 is reasonable since the magnetics provide galvanic isolation.",
+      "created_from": "FND-00001583",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001583-AST-03",
+      "description": "Four RC low-pass filters are detected (R5, R6, R7, R8 each 75 ohm with C1 1nF, fc=2.12 MHz). Topologically correct: R7/R8 connect TXCT/RXCT pins to a node with C1, and R5/R6 connect unused RJ45 pairs (4,5 and 7,8) to the same center-tap node. While these are better described as Ethernet center-tap terminators than generic RC filters, the topology detection is valid.",
+      "created_from": "FND-00001583",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001583-AST-04",
+      "description": "The subcircuits list correctly groups U1 (B10601S) with neighbors C2 (0.1uF TCT decoupling), C4 (0.1uF RCT decoupling), J1 (SWD/device-side connector), J2 (RJ45), R7 (75 ohm RXCT terminator), and R8 (75 ohm TXCT terminator). R5 and R6 (unused pair termination resistors) are not in the subcircuit which is acceptable.",
+      "created_from": "FND-00001583",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001583-AST-05",
+      "description": "INCORRECT: The bus_analysis.uart section detects TX+, TX-, RX+, RX- as UART signals. These are Ethernet magnetics signals from the B10601S 10BASE-T transformer module (TX and RX differential pairs at the line side). The pin names on U1 are explicitly 'TX+', 'TX-', 'RX+', 'RX-' and connect to an RJ45 connector (J2), not to any UART-capable device. This is a false positive triggered by the TX/RX net name pattern matching.",
+      "created_from": "FND-00001583",
+      "check": {
+        "path": "signal_analysis.bus_analysis.uart",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001583-AST-06",
+      "description": "ethernet_interfaces is empty ([]) even though U1 (B10601S) is a 10BASE-T Ethernet magnetics module with TX+, TX-, RX+, RX- (line-side differential pairs) and TD+, TD-, RD+, RD- (device-side connections to Teensy SWD header), plus TXCT/RXCT center-tap pins. The RJ45 connector J2 with TX+/TX-/RX+/RX- should trigger Ethernet interface detection.",
+      "created_from": "FND-00001583",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

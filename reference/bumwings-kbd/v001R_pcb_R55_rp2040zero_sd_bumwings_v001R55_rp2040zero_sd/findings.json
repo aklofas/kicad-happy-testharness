@@ -1,0 +1,42 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_bumwings-kbd_v001_pcb_rp2040zero_bumwings_v001.kicad_sch.json",
+      "status": "promoted",
+      "summary": "RZ1 (RP2040-Zero MCU module) misclassified as type 'resistor' instead of 'ic'; Key matrix correctly detected as 8x14 with 54 switches and 54 diodes",
+      "correct": [
+        {
+          "description": "The analyzer accurately identified the split keyboard matrix topology via net analysis: 8 row nets (row_up, row_dn, row_home, row_mod plus 4 unnamed) and 14 column nets (col_Lt, col_Lr, col_Li1/Li2, col_Lm, col_Lp1/Lp2, col_Rt, col_Rr, col_Ri1/Ri2, col_Rm, col_Rp1/Rp2), with 54 switches and 54 diodes on the matrix. The detection_method 'topology' is appropriate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The RP2040-Zero (ref RZ1) is a microcontroller module and should be classified as type 'ic'. The analyzer assigns type 'resistor' because the reference prefix 'RZ' is not in the standard IC prefix list (U, IC, etc.) and the value 'RP2040-Zero' doesn't match IC value heuristics. This also means it is counted in component_types.resistor (1) rather than ic, and appears in statistics with type mismatch. The missing_footprint list correctly flags it for missing footprint.",
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom",
+            "op": "contains_match",
+            "field": "references",
+            "pattern": "RZ1"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "bumwings-kbd",
+      "project": "v001R_pcb_R55_rp2040zero_sd_bumwings_v001R55_rp2040zero_sd",
+      "created": "2026-03-24T09:02:02.081224+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002345"
+    }
+  ]
+}

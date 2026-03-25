@@ -57,7 +57,13 @@
         },
         {
           "description": "F1 6V/2A fuse correctly identified for circuit protection",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^F1$"
+          }
         },
         {
           "description": "3 decoupling rails (3.3V with 13 caps/46.3uF, 5V with 4 caps/22uF, VUSB2 with 1 cap) correctly analyzed",

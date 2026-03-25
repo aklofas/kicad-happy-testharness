@@ -1,0 +1,19 @@
+{
+  "file_pattern": "jasmine.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002150",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002150-AST-01",
+      "description": "INCORRECT: jasmine_jasmine.sch.json lists two false positives in crystal_circuits: U1 (MCP73831T, a single-cell LiPo battery charger controller) and U4 (PCA9674, an 8-bit I2C I/O expander). Neither IC has any oscillator functionality. The crystal_circuits detector appears to match on any IC that has an output pin connected to certain net patterns, regardless of whether it is actually an oscillator. These are clear misclassifications.",
+      "created_from": "FND-00002150",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

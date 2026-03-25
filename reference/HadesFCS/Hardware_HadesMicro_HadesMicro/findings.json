@@ -13,7 +13,12 @@
         {
           "type": "drill_classification",
           "description": "172 vias all at 0.4mm, consistent single-via-size design",
-          "analyzer_section": "drill_classification"
+          "analyzer_section": "drill_classification",
+          "check": {
+            "path": "drill_classification",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

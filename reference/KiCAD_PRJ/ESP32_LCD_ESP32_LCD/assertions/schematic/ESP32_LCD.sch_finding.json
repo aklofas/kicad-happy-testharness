@@ -1,0 +1,29 @@
+{
+  "file_pattern": "ESP32_LCD.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001681",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001681-AST-01",
+      "description": "The NodeMCU-32S has SCK and MOSI pins connected to named nets (SCK and MOSI), and the analyzer correctly identifies a half-duplex SPI bus with chip-select count=1.",
+      "created_from": "FND-00001681",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001681-AST-02",
+      "description": "INCORRECT: The raw ESP32_LCD.sch contains 4 non-power components: Conn_01x04 (J?), Conn_01x07 (J?), Conn_02x05_Odd_Even (J?), NodeMCU-32S (U?). The output reports total_components=2 and the BOM only shows Conn_01x04 (missing Conn_01x07 and Conn_02x05_Odd_Even), because unannotated duplicate J? references are collapsed to the first encountered value. The component_types also only shows connector=1 when there are actually 3 connectors.",
+      "created_from": "FND-00001681",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 2,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

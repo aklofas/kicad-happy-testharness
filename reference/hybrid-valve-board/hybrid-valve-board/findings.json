@@ -1,0 +1,41 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_hybrid-valve-board_hybrid-valve-board.kicad_sch.json.json",
+      "status": "promoted",
+      "summary": "False half-bridge detection: independent high-side PMOS and low-side NMOS switches are not a half-bridge; Optocoupler isolation barriers (LTV-817S x4) not detected in isolation_barriers",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The analyzer reported one half-bridge circuit with Q5 (NMOS) as high-side and Q4 (PMOS) as low-side, output_net=GND, low_gate=GND. This is incorrect. The design is a solenoid/pyrotechnic valve driver board with 7 independent MOSFET switches: 3 high-side PMOS (Q1, Q2, Q3, each named FQD5P20TM) driving separate XV_PWR loads, and 3 low-side NMOS (Q5, Q6, Q7, value NMOS/BSH105) as small signal switches. None are half-bridges. The output_net=GND and low_gate=GND for the supposed 'bridge' are dead giveaways that the topology is wrong. The driver_ics list incorrectly includes ATtiny85 (the MCU) alongside the LTV-817S optocouplers.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.bridge_circuits",
+            "op": "max_count",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The design uses 4x LTV-817S DC optocouplers (U1 is ATtiny85, U2\u2013U4 are LTV-817S) from the Isolator library to galvanically isolate MCU control signals from the 24V solenoid valve driving side. The schematic notes explicitly say 'Optocoupler MOSFET drivers'. Despite the components being from the Isolator library and having CTR/optocoupler semantics, isolation_barriers is an empty list. The MCU_GND and VBAT/VSYS separate ground domains are also present. This is a significant missed feature given that isolation is the primary safety feature of this design.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "hybrid-valve-board",
+      "project": "hybrid-valve-board",
+      "created": "2026-03-24T08:04:04.633566+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002136"
+    }
+  ]
+}

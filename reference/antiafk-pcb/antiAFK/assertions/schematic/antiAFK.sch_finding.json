@@ -1,0 +1,60 @@
+{
+  "file_pattern": "antiAFK.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001939",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001939-AST-01",
+      "description": "The analyzer correctly identifies 18 total components: 1 IC (ATMEGA16U4), 5 resistors, 5 capacitors, 2 diodes (ZENER), 1 inductor, 1 crystal, 1 switch, 2 connectors (J1=USB, P1=ISP). Power rails +5V and GND are correct.",
+      "created_from": "FND-00001939",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 18
+      }
+    },
+    {
+      "id": "FND-00001939-AST-02",
+      "description": "The crystal_circuits section correctly identifies X1 (16MHz) with load capacitors C2 (18pF) and C3 (18pF), computing effective_load_pF=12.0 using the series formula (18*18)/(18+18)+3pF stray. The frequency is correctly parsed as 16000000 Hz.",
+      "created_from": "FND-00001939",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001939-AST-03",
+      "description": "The differential_pairs section correctly identifies USB_DP and USB_DM with series resistors R4 and R5 (both 22\u03a9). The design also correctly notes has_esd=false (the Zener diodes D1/D2 are connected to the raw USB lines before the 22\u03a9 resistors, but the analyzer may not have recognized D1/D2 as ESD devices in this configuration).",
+      "created_from": "FND-00001939",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001939-AST-04",
+      "description": "INCORRECT: D1 and D2 are Zener diodes connected from the raw USB data lines (N-0000022/N-0000023 = the USB connector's D+/D- pads) to GND. This is a classic low-cost USB ESD protection scheme using 3.6V Zeners (standard for 5V USB EAP protection). The USB data observation reports has_esd_protection=false for both USB_DP and USB_DM, and protection_devices is empty []. D1 and D2 should be detected as TVS/Zener protection devices for the USB lines.",
+      "created_from": "FND-00001939",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001939-AST-05",
+      "description": "The power_domains section shows IC1 (ATMEGA16U4) with power_rails as unnamed nets (__unnamed_13, __unnamed_32\u201335). The +5V rail is present but not connected to IC1 in the power domain analysis, even though IC1 has multiple VCC pins connected to +5V. This is because the KiCad 5 legacy format uses unnamed nets heavily, and the analyzer cannot always resolve them to named power rails. The design_analysis should ideally report IC1 as powered by +5V.",
+      "created_from": "FND-00001939",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": "/\\+5V/"
+      },
+      "aspirational": true
+    }
+  ]
+}

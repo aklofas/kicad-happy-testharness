@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Matrix.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000443",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000443-AST-01",
+      "description": "INCORRECT: Matrix.sch has 91 MX keyboard switches (K_* refs) and 68 diodes. When analyzed standalone, the key_matrix detector finds switches_on_matrix=0 because the keyboard switches connect to unnamed junction nets rather than directly to ROW/COL-labeled nets (the labels are hierarchical ports on the sheet boundary). The estimated_keys=68 is derived from the diode count, which is less than the actual 91 switches. The correct switch count for this sheet is 91.",
+      "created_from": "FND-00000443",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "file_pattern": "SparkFun_Red_Vision_Touch_Display_for_Pico.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001520",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001520-AST-01",
+      "description": "Total 55 components correctly identified: 22 jumpers, 12 resistors, 6 connectors, 4 fiducials, 4 other, 2 ICs (U1 LCD-TFT, U2 PCA9534PW), 2 capacitors, 1 LED, 1 switch, 1 transistor (Q1). All counts match the design.",
+      "created_from": "FND-00001520",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 55
+      }
+    },
+    {
+      "id": "FND-00001520-AST-02",
+      "description": "I2C bus correctly detected with two entries for SDA/GPIO4 and SCL/GPIO5 connected to U2 (PCA9534PW I2C GPIO expander). Detection is accurate \u2014 PCA9534PW is an I2C-addressed device.",
+      "created_from": "FND-00001520",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001520-AST-03",
+      "description": "Q1 (RE1C002UNTCL NMOS) correctly detected as backlight driver switch. Gate driven by DISP_BL signal from U2 (PCA9534PW), source=GND, drain connects to backlight. gate_resistors includes R2 (100k) pull-down.",
+      "created_from": "FND-00001520",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "value": {
+          "reference": "Q1",
+          "type": "mosfet"
+        }
+      }
+    },
+    {
+      "id": "FND-00001520-AST-04",
+      "description": "3.3V rail decoupling correctly identified: C1 (10uF bulk) + C2 (0.1uF bypass), total 10.1uF, has_bulk=true, has_bypass=true \u2014 accurate.",
+      "created_from": "FND-00001520",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001520-AST-05",
+      "description": "INCORRECT: I2C bus entries report has_pullup=False for both SDA/GPIO4 and SCL/GPIO5. However R3 (2.2k) pulls up SDA through JP1 pin C -> JP1 pin B -> 3.3V, and R4 (2.2k) pulls up SCL similarly. Both are genuine I2C pull-ups connected to 3.3V through JP1 (SolderJumper_3_Bridged123, value='I2C'). has_pullup should be True and pullup_resistor should reference R3/R4.",
+      "created_from": "FND-00001520",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "contains_match",
+        "value": {
+          "has_pull_up": true
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001520-AST-06",
+      "description": "SPI bus not detected despite clear SPI signal nets: GPIO18/SCK (clock), GPIO19/PICO (MOSI), GPIO16/POCI/DC (MISO/DC), GPIO17/DISP_CS (display CS), GPIO7/SD_CS (SD card CS). J6 (microSD connector) has CLK/SCK, CMD/SDI, DAT0/SDO pins. Both an SPI LCD display interface and SPI SD card interface should be detected. bus_analysis.spi is empty.",
+      "created_from": "FND-00001520",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

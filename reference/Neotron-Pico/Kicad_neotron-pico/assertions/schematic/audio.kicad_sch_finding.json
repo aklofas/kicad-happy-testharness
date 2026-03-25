@@ -1,0 +1,19 @@
+{
+  "file_pattern": "audio.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001015",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001015-AST-01",
+      "description": "The audio CODEC (U801, TLV320AIC23BPW) has I2S signals BCLK, LRCIN, LRCOUT, DIN, DOUT connected via hierarchical labels AUDIO_BIT_CLK, AUDIO_DAC_LR, AUDIO_ADC_LR, AUDIO_DAC_DAT, AUDIO_ADC_DATA. These are reported as 'single_pin_nets' in design_observations rather than being identified as an I2S bus. The I2C interface (SDIN/SCLK) is detected as an i2c_bus, but the I2S interface is missed entirely.",
+      "created_from": "FND-00001015",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

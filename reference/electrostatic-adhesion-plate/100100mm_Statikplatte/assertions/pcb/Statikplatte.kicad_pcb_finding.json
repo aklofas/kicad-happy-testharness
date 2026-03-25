@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Statikplatte.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002036",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002036-AST-01",
+      "description": "INCORRECT: thermal_analysis.zone_stitching lists the GND and HV copper zones (each 2382 mm2, F.Cu only, 2 vias each at 0.1 via/cm2). In an electrostatic adhesion plate, these interdigitated copper zones ARE the functional elements \u2014 the electrodes that generate the adhesion force. They are not thermal or electrical stitching planes. The 2 vias per zone are for connectivity, not thermal management. The zone_stitching classification implies thermal intent that does not apply to this design type. The via density of 0.1/cm2 is far below any thermal stitching standard, which should have disqualified these as stitching zones.",
+      "created_from": "FND-00002036",
+      "check": {
+        "path": "thermal_analysis.zone_stitching",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "midi.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000452",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000452-AST-01",
+      "description": "Source has U2 (74LCX07), J2 (DIN-5_180degree MIDI_IN connector), OC1 (optocoupler), MIDI_IN2 (MIDI out connector), D1 (1n4148), R9/R10/R11/R12 (resistors), C15 (15pF), C16 (0.1uF). Output reports total_components=11, ic=1, connector=2, optocoupler=1, resistor=4, capacitor=2, diode=1. All component types are correctly categorized. The 74LCX07 is a hex open-drain buffer used for 5V-to-3.3V level shifting on MIDI lines. 16 no_connects correctly counted. Power rails +3.3V and GND detected.",
+      "created_from": "FND-00000452",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000452-AST-02",
+      "description": "The rc_filters entry shows R10 (10k) and C15 (15pF) with input_net='+3.3V', output_net='MIDI_RX', ground_net='GND', cutoff=1.06 MHz. However R10 is the MIDI input current-limiting resistor, and C15 is an EMI suppression capacitor across the MIDI input. The input_net of '+3.3V' is incorrect \u2014 R10 pin 2 and C15 pin 1 are on the MIDI_RX net, while R10 pin 1 connects to the optocoupler anode network, not +3.3V. The '+3.3V' attribution is likely a misidentification of the pull-up rail on the optocoupler output side being conflated with the input side.",
+      "created_from": "FND-00000452",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

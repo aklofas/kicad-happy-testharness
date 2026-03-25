@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_esp32-lifepo4-board_esp32-lifepo4.sch.json.json",
+      "status": "promoted",
+      "summary": "TPS709 LDO regulator (U3) not detected in power_regulators; Seven false-positive no_driver ERC warnings for ESP32 I/O nets; CN3058E LiFePO4 charger correctly identified in power_regulators with top...",
+      "correct": [
+        {
+          "description": "U2 (CN3058E) is a LiFePO4 battery charger IC. The analyzer found it in power_regulators with topology='unknown', which is appropriate since it does not follow a standard linear or switching regulator pin topology. The associated FB and ISET nets were also correctly captured.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[0].ref",
+            "op": "equals",
+            "value": "U2"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U3 is a TPS709 LDO with a power_out pin (VOUT) and is clearly a power regulator, but it does not appear in signal_analysis.power_regulators. Only U2 (CN3058E battery charger) was detected. The TPS709 has a non-standard lib_id ('tps709:TPS709') and pin names VI/VO/GND rather than standard IN/OUT names, which likely caused the regulator detector to miss it. The 3V3 output rail is also misclassified as 'signal' rather than 'power' because there is no power symbol for it in this KiCad 5 schematic.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "The design_analysis.erc_warnings section reports 7 'no_driver' warnings for nets named IO26, IO25, IO33, IO32, IO35, IO34, and BAT+. In this KiCad 5 schematic the ESP32-WROOM-32 module is used, and the net names reflect the external header (J1/J2) pin numbering. Nets named IO26/IO25 actually carry U1 pins 3V3 and EN respectively \u2014 they are mislabeled because KiCad 5 nets are named from labels on the wire, not pin names. The 'no_driver' firing here is a side effect of the net-naming artifact, not actual missing drivers. BAT+ has pin type power_out on U2 (CN3058E) which should satisfy the driver check.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.erc_warnings",
+            "op": "max_count",
+            "value": 2
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "esp32-lifepo4-board",
+      "project": "esp32-lifepo4",
+      "created": "2026-03-24T07:52:22.467542+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002047"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_esp32-lifepo4-board_esp32-lifepo4.kicad_pcb.json.json",
+      "status": "promoted",
+      "summary": "PCB stats correctly reported: 14 footprints, 2 copper layers, fully routed",
+      "correct": [
+        {
+          "description": "The PCB analyzer accurately reports 14 footprints (13 real components + 1 REF*** marker matching the schematic), 2-layer design (F.Cu/B.Cu), 68 vias, 495 track segments, and routing_complete=true with 0 unrouted nets. Board dimensions match the gerbers (22.86 x 50.8 mm).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 14
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "esp32-lifepo4-board",
+      "project": "esp32-lifepo4",
+      "created": "2026-03-24T07:52:22.467560+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002048"
+    }
+  ]
+}

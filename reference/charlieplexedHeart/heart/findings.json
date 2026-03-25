@@ -1,0 +1,68 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_charlieplexedHeart_heart.kicad_sch.json.json",
+      "status": "promoted",
+      "summary": "Charlieplexed LED topology not detected for 20-LED ATtiny13 design; Power net summary misses ATtiny13A VCC pin; only 3 components on VCC",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The connectivity_issues.power_net_summary reports VCC with pin_count=3 and components=[BT1, SW2, TP7]. The ATtiny13A (U1) has a VCC pin (pin 8) that should also be on this net. U1 appears only on the GNDREF net in the summary. This indicates U1's unnamed power pin is connected to a different net or the VCC pin is connected through an unnamed net and not recognized as the VCC rail.",
+          "analyzer_section": "connectivity_issues",
+          "check": {
+            "path": "connectivity_issues.power_net_summary.VCC.pin_count",
+            "op": "greater_than",
+            "value": 3
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The design is explicitly a 'Charlieplexed LED sequencer' (per README and repo name). An ATtiny13A drives 20 LEDs via 5 GPIO pins through 5 resistors using charlieplexing (5 pins \u00d7 (5-1) = 20 LEDs). The analyzer produces empty signal_analysis.key_matrices and no charlieplex observation anywhere in the output. The topology is recognizable: a single MCU with N outputs driving N\u00d7(N-1) LEDs. This is a missed detection.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "charlieplexedHeart",
+      "project": "heart",
+      "created": "2026-03-24T08:48:29.837931+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002304"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_charlieplexedHeart_heartLED.kicad_pcb.json.json",
+      "status": "new",
+      "summary": "Correctly detects heartLED.kicad_pcb as a bare footprint placement with no routing",
+      "correct": [
+        {
+          "description": "heartLED.kicad_pcb is a separate PCB file containing only 20 LED THT footprints with no nets, no tracks, and no zones \u2014 apparently a placement reference or panel for the LED positions. The analyzer correctly reports track_segments=0, via_count=0, zone_count=0, net_count=0, and copper_layers_used=0, and reports routing_complete=true (correct since there is nothing to route).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.track_segments",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "charlieplexedHeart",
+      "project": "heart",
+      "created": "2026-03-24T08:48:29.837949+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002305"
+    }
+  ]
+}

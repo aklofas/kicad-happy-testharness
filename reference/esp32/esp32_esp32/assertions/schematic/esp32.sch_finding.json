@@ -1,0 +1,29 @@
+{
+  "file_pattern": "esp32.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002042",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002042-AST-01",
+      "description": "The two S8050 NPN transistors (Q1, Q2) forming the standard ESP32 auto-reset circuit (DTR/RTS from CP2102N driving EN and IO0) are correctly identified as transistor_circuits with their base resistors (R21, R22 at 12K). The CP2102N USB-UART bridge (U3) and NCP1117-3.3 LDO regulator (U2) are also correctly identified in the subcircuits and signal_analysis.power_regulators sections.",
+      "created_from": "FND-00002042",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00002042-AST-02",
+      "description": "INCORRECT: Components R15, R19, R20, R25, R7, and C23 all have '(NC)' in their value strings (e.g., '5K(1%)(NC)', '0R(1%)(NC)'), indicating they are not to be placed. The analyzer reports dnp_parts=0 and dnp=false for all of them. This is a common convention in KiCad 5 designs where the DNP flag did not exist, and the (NC) suffix in the value field was used instead. The analyzer should recognize this pattern and count/flag them as DNP.",
+      "created_from": "FND-00002042",
+      "check": {
+        "path": "statistics.dnp_parts",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

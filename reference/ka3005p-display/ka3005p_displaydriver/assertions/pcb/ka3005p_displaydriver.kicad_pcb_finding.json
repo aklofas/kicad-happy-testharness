@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ka3005p_displaydriver.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002226",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002226-AST-01",
+      "description": "The PCB contains 47 footprints but the schematic has 43 components. Four of the PCB footprints have reference designator 'REF**' (unassigned placeholders). The analyzer reports footprint_count=47 without any note of the mismatch or the presence of unnamed REF** footprints. These typically indicate footprints placed during PCB layout that were never back-annotated to a schematic component, and should be flagged as a potential error.",
+      "created_from": "FND-00002226",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 47
+      },
+      "aspirational": true
+    }
+  ]
+}

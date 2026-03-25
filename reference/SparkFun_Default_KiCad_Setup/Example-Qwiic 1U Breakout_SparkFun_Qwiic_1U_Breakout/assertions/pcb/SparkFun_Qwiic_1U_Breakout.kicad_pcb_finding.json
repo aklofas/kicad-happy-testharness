@@ -1,0 +1,39 @@
+{
+  "file_pattern": "SparkFun_Qwiic_1U_Breakout.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001393",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001393-AST-01",
+      "description": "The PCB has footprint_count=67 while the schematic has 37 components. The component_groups in the PCB output reveals a 'kibuzzard' group with 29 references \u2014 these are PCB-only decorative annotation footprints (version badge, creative commons license, silkscreen artwork) not present in the schematic. The remaining 38 real footprints correspond to the 37 schematic components plus one extra (likely the OSHW/Qwiic logo footprint placed board-only).",
+      "created_from": "FND-00001393",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 67,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001393-AST-02",
+      "description": "board_width_mm=25.4, board_height_mm=25.4. This is the standard SparkFun Qwiic 1U form factor (1 inch square). The bounding_box shows a rectangular outline from (123.266, 85.406) to (148.666, 110.806), confirming 25.4mm on each side. The Edge.Cuts layer has edge_count=1 (a single rectangle), correctly parsed.",
+      "created_from": "FND-00001393",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "value": 25.4,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001393-AST-03",
+      "description": "INCORRECT: The 1U Breakout PCB reports routing_complete=false with unrouted_net_count=16 and track_segments=0. This board is presented as a finished SparkFun example design (rev v10). Either the board genuinely has no copper traces routed (only a GND zone) and relies entirely on copper pours, or the analyzer is failing to detect ratsnest completion in a zone-routed design. Given that the Micro Breakout (a similar template) is fully routed with 90 track segments, the 1U Breakout appears to be a design-in-progress template rather than a finished board.",
+      "created_from": "FND-00001393",
+      "check": {
+        "path": "statistics.routing_complete",
+        "value": false,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -167,7 +167,7 @@
       "repo": "glasgow",
       "project": "hardware_boards_glasgow_glasgow",
       "created": "2026-03-18T04:16:33.304866+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "gerber",
       "source_file": "hardware/boards/glasgow/",
       "summary": "Gerber review: 6 revisions (revA-C3) of 4-layer FPGA board. Cross-revision progression correctly tracked",
@@ -175,17 +175,32 @@
         {
           "type": "layer_count",
           "description": "All 6 revisions correctly 4-layer. Alignment progression accurate: revA-C1 misaligned, revC2-C3 aligned. Via evolution (0.3mm-only to 0.3+0.2mm BGA escape) captured",
-          "analyzer_section": "layer_count"
+          "analyzer_section": "layer_count",
+          "check": {
+            "path": "layer_count",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "type": "drill_classification",
           "description": "revC3 correctly uses X2 classification (KiCad 7) while revA-C2 use diameter heuristic (KiCad 5.x). Correctly adapts across versions",
-          "analyzer_section": "drill_classification"
+          "analyzer_section": "drill_classification",
+          "check": {
+            "path": "drill_classification",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "type": "completeness",
           "description": "Growing file count handled: 11 (revA) to 15 (revC3, adds Fab+Courtyard). Extra layers not false-flagged",
-          "analyzer_section": "completeness"
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -222,6 +237,96 @@
         "KH-186"
       ],
       "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_glasgow_hardware_boards_glasgow_io_banks.kicad_sch.json",
+      "status": "promoted",
+      "summary": "TPS73101 feedback divider uses wrong resistor refs for second instance (U14 gets R34/R35 instead of R28/R29)",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The glasgow io_banks sheet instantiates io_buffer.kicad_sch twice (IO_Buffer_A and IO_Buffer_B). Each instance contains a TPS73101 adjustable LDO: U31 in IO_Buffer_A and U14 in IO_Buffer_B. The physical feedback divider resistor in io_buffer is tagged as R34 (59k) in instance A and R28 (59k) in instance B, and R35 (24k3) in instance A / R29 (24k3) in instance B. The analyzer reports both U31 and U14 using R34/R35 as their feedback divider \u2014 it always picks the IO_Buffer_A instance reference and applies it to both regulators. The estimated_vout of 2.057V is only valid for one of the two instance interpretations; the actual VIO output depends on which R28/R29 values are correct. This is a hierarchical multi-instance ref resolution bug.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 2
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "glasgow",
+      "project": "hardware_boards_glasgow_glasgow",
+      "created": "2026-03-24T08:04:01.813344+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002098"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_glasgow_hardware_boards_glasgow_glasgow.kicad_sch.json",
+      "status": "promoted",
+      "summary": "USB-C compliance check correctly identifies VBUS ESD and decoupling failures; Memory interfaces correctly detect dual EEPROMs connected to both USB MCU and FPGA",
+      "correct": [
+        {
+          "description": "The analyzer detects J1 (USB_C_USB2.0) and runs 7 compliance checks. CC1/CC2 5.1k pull-downs pass, USB ESD IC passes, but vbus_esd_protection and vbus_decoupling fail. DP/DM series resistors are informational. The summary reports 3 pass, 2 fail, 2 info. This is an accurate characterization of a USB-C device-only (sink) implementation that has ESD protection IC but lacks a dedicated VBUS ESD TVS diode and bulk decoupling on the VBUS rail at the connector.",
+          "analyzer_section": "usb_compliance",
+          "check": {
+            "path": "usb_compliance.summary.fail",
+            "op": "equals",
+            "value": 2
+          }
+        },
+        {
+          "description": "The analyzer detects U2 (CAT24M01X, 1Mbit EEPROM) and U3 (BL24C256A, 256kbit EEPROM) as memory interfaces. Both are correctly identified as connected to both U1 (CY7C68013A USB MCU) and U30 (ICE40HX8K FPGA) via 2 shared signal nets (I2C SDA/SCL). This is the Glasgow debug tool's I2C bus architecture where the MCU and FPGA share access to both configuration EEPROMs.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 2
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "glasgow",
+      "project": "hardware_boards_glasgow_glasgow",
+      "created": "2026-03-24T08:04:01.813364+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002099"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber_glasgow_hardware_boards_glasgow_revC3.json",
+      "status": "promoted",
+      "summary": "Mounting holes misclassified as component holes in revC3 due to X2 attribute tagging",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "RevC3 gerbers use X2 attributes (classification_method: x2_attributes) and report 0 mounting holes. However the drill file contains 4 holes at 3.5mm diameter tagged as PTH,ComponentDrill rather than MountingHole. Earlier revisions (revA\u2013revC2) use diameter_heuristic classification and correctly report 4-6 mounting holes. The 3.5mm PTH holes are almost certainly board mounting holes (consistent with M3 screws), but KiCad tagged them as ComponentDrill in the X2 attributes. The analyzer faithfully follows the X2 attribute classification, resulting in zero mounting holes shown for revC3 while revC2 (identical board with heuristic classification) shows 4 mounting holes.",
+          "analyzer_section": "drill_classification",
+          "check": {
+            "path": "drill_classification.mounting_holes.count",
+            "op": "greater_than",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "glasgow",
+      "project": "hardware_boards_glasgow_glasgow",
+      "created": "2026-03-24T08:04:01.813368+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002100"
     }
   ]
 }

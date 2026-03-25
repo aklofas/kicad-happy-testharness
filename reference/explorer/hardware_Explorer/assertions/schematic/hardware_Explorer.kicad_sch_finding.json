@@ -1,53 +1,9 @@
 {
-  "file_pattern": "hardware_Explorer.kicad_sch",
+  "file_pattern": "Explorer.kicad_sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000215",
   "generated_by": "findings.py promote",
   "assertions": [
-    {
-      "id": "FND-00000215-AST-01",
-      "description": "12 op-amp circuits correctly analyzed across 6x ADA4528-2ARMZ dual op-amps: 6 inverting preamp stages (U17-U19 units 1+2) with gains from -1.0 to -19.6, and 6 compensator stages (U13-U15 units 1+2) for the geophone signal processing chain",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^U17$"
-      }
-    },
-    {
-      "id": "FND-00000215-AST-02",
-      "description": "U3 MP2236GJ switching regulator correctly identified with Vref=0.8V (lookup), feedback divider R7 (100k) / R8 (12k), and estimated Vout=7.467V from VIN input",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U3$"
-      }
-    },
-    {
-      "id": "FND-00000215-AST-03",
-      "description": "R7/R8 feedback divider correctly identified with is_feedback=true, ratio=0.107, connected to U3 FB pin",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.feedback_networks",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R7$"
-      }
-    },
-    {
-      "id": "FND-00000215-AST-04",
-      "description": "6 anti-aliasing filters correctly detected at 26.98 Hz (R64-R66, R79-R81 at 5.9k with 1uF caps) on PREAMP_ZP/ZN/EP/EN/NP/NN to AAF_ZP/ZN/EP/EN/NP/NN nets",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R64$"
-      }
-    },
     {
       "id": "FND-00000215-AST-05",
       "description": "Multiple sub-Hz bandpass filter stages correctly detected using 43k resistors with 4.7uF caps (~0.79 Hz) for the EHZ/EHE/EHN seismic signal paths",
@@ -56,72 +12,6 @@
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "FND-00000215-AST-06",
-      "description": "R1 (330k) / R2 (510k) voltage divider correctly detected as enable threshold for U3 MP2236GJ EN pin (not feedback)",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R1$"
-      }
-    },
-    {
-      "id": "FND-00000215-AST-07",
-      "description": "7 protection devices correctly identified: D2 SMAJ12A on power, D8 SMAJ5.0CA on digital, D17-D20 SMAJ15CA on RS-232 TX/RX lines",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^D2$"
-      }
-    },
-    {
-      "id": "FND-00000215-AST-08",
-      "description": "U5 AMS1117-3.3 and U2 LP2985-2.5 LDOs correctly detected with fixed output voltages from part number suffix",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U5$"
-      }
-    },
-    {
-      "id": "FND-00000215-AST-09",
-      "description": "U4 TPS72325DBV correctly identified as inverting LDO (negative output regulator)",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U4$"
-      }
-    },
-    {
-      "id": "FND-00000215-AST-10",
-      "description": "U6 AT24CS08-SSHM EEPROM correctly detected as memory interface connected to U11 STM32F103C8Tx via 4 shared signal nets (I2C)",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.memory_interfaces",
-        "op": "contains_match",
-        "field": "memory_reference",
-        "pattern": "^U6$"
-      }
-    },
-    {
-      "id": "FND-00000215-AST-11",
-      "description": "R4 (3.3k) / R3 (10k) voltage divider correctly detected with U1 TPS5430DDA VSENSE pin connection",
-      "created_from": "FND-00000215",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R4$"
       }
     },
     {

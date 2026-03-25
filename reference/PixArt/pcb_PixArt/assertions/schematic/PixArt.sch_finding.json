@@ -1,0 +1,50 @@
+{
+  "file_pattern": "PixArt.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001089",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001089-AST-01",
+      "description": "4 components (1 IC, 2 caps, 1 connector), 3 power rails, 13 no-connects all match the design. Legacy KiCad 5 unnamed nets handled correctly.",
+      "created_from": "FND-00001089",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001089-AST-02",
+      "description": "Both I2C interfaces identified with has_pull_up: false, which is accurate \u2014 no pull-up resistors exist in the schematic.",
+      "created_from": "FND-00001089",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001089-AST-03",
+      "description": "The decoupling_analysis section is empty. C1 and C2 are on net __unnamed_20 (their positive pins) while their negative pins go to GND. No decoupling relationship to VCC was detected \u2014 possibly because caps connect to an unnamed net rather than VCC directly in the legacy netlist.",
+      "created_from": "FND-00001089",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001089-AST-04",
+      "description": "Pins 14 (VSSD), 17 (VDDMA), 20 (VSSD_LED) have power_in type but sit on unnamed single-pin nets (__unnamed_14, __unnamed_17, __unnamed_10). These look like floating power pins \u2014 a real design concern not flagged in erc_warnings or design_observations.",
+      "created_from": "FND-00001089",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

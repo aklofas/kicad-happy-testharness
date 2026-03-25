@@ -1,0 +1,40 @@
+# Findings: ESP32-board / esp32_board
+
+## FND-00000497: Net named 'SENSOR_VP' incorrectly maps to U3 pin 2 (3.3V supply); the +3.3V net carries U3 pin 4 labeled SENSOR_VP; Many named GPIO nets (IO34, IO35, IO32, IO33, IO25-IO27, IO12-IO14, SD0-SD3, CLK,...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: esp32_board.sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- All 49 components (3 ICs, 11 capacitors, 12 resistors, 2 switches, 12 connectors, 2 fuses, 3 diodes, 4 LEDs) match the schematic source. BOM groupings are correct: C10/C11 = 47p, C5/C2/C9/C8/C3/C1/C7 = 0.1u, C6/C4 = 100u, R10/R11 = 27 ohm, R3/R4/R2/R5/R9 = 1k, R8/R1/R12 = 10k, R6/R7 = 0 ohm, D5/D6/D3/D7 = LED, D1/D2 = generic diode, D4 = Schottky. Power rails correctly identified: +3.3V, +3.3VP, +5V, +5VD, GND. Total component count of 49 is correct.
+- C2 and C4 are connected to the +5V rail as bypass and bulk capacitors respectively. The decoupling_analysis entry for '+5V' correctly lists both with has_bulk=true and has_bypass=true. Total capacitance 100.1 uF is accurate.
+- R10 and R11 are 27 ohm series resistors on the USB D+/D- lines, and C10/C11 are 47pF caps to GND. The RC low-pass filter calculations (fc = 125.42 MHz) are mathematically correct. While the semantic context (USB line termination/ESD protection) is not labeled as such, the electrical characterization is accurate.
+
+### Incorrect
+- In the nets section, the net 'SENSOR_VP' contains U3 pin_number='2' with pin_name='3.3V'. But ESP-WROOM-32 pin 2 is the 3.3V power supply, not SENSOR_VP. Meanwhile the '+3.3V' net contains U3 pin_number='4' with pin_name='SENSOR_VP'. The pin assignments in the net table are swapped: U3 pin 2 (3.3V supply) ended up in the SENSOR_VP net, and U3 pin 4 (SENSOR_VP signal) ended up in the +3.3V net. This is a net-to-pin resolution error — the schematic clearly labels net 'SENSOR_VP' connecting to U3 pin 4 (SENSOR_VP), not to U3 pin 2 (power).
+  (signal_analysis)
+- The schematic uses Text GLabel labels to name U3's GPIO pins. For example, 'IO34' labels connect both to U3 pin 6 (IO34) and to P12 pin 15 via matched label names. In the analyzer output, net 'IO34' only appears in the global labels list but U3 pin 6 is assigned to '__unnamed_0' (a 1-pin unnamed net). The named net IO34 carries only P12 pin 15. This pattern repeats for IO35, IO32, IO33, IO25-IO27, IO12-IO14, SD0-SD3, CLK, CMD, IO0, IO2, IO4, IO5, IO13-IO23 — all U3 GPIO pins are isolated in __unnamed_* nets instead of being connected to their matching named global-label nets. The analyzer is failing to resolve KiCad 5 legacy Text GLabel connections between pin positions and matching net names.
+  (signal_analysis)
+- The schematic has Text GLabel labels connecting U2 FT231X pins (RTS pin 2, CTS pin 9, DSR pin 7, DCD pin 8, RI pin 5) to matching labels at test pads P5-P10. In the output, nets RTS, CTS, DSR, DCD, RI all show 'pins': [] with point_count 5. The FT231X pins (e.g., U2 pin 2 RTS, U2 pin 5 RI) appear as __unnamed_39, __unnamed_41, __unnamed_43, __unnamed_44, __unnamed_45 — completely disconnected from their named nets. The test pads also fail to appear. This is the same global-label resolution failure as for U3 GPIO pins.
+  (signal_analysis)
+- The schematic contains U1 (LT1963A_3.3V), a linear regulator with IN on +5V and OUT feeding the +3.3V rail, with a Schottky diode D4 for reverse protection. The 'power_regulators' array in signal_analysis is empty. The analyzer should detect this as a linear voltage regulator topology (input +5V, output +3.3V). The LT1963A part name and 3.3V value in the component name are strong hints. This is a missed detection.
+  (signal_analysis)
+- The bus_analysis.uart section lists ESP_TXD and ESP_RXD nets each with only [U3] as devices and pin_count 3. But U2 (FT231X) is a USB-to-UART bridge whose TXD pin drives ESP_RXD and RXD pin receives ESP_TXD. The FT231X should appear in both UART net device lists. Furthermore pin_count 3 is suspicious — with only global labels and no direct pin connections tracked (due to the global label resolution failure), this count is likely understated. The UART link between U2 and U3 is the central feature of the design.
+  (signal_analysis)
+- The R8 (10k) / C8 (0.1u) network is on the EN (enable/reset) pin of U3 with SW1 push-button, forming an EN pin debounce/reset circuit — not a signal processing low-pass filter. The R5 (1k) / C7 (0.1u) network connects the DTR signal from FT231X through C7 to U3's EN net — this is the standard ESP32 auto-reset circuit (DTR/RTS driving EN/IO0 via RC for automatic bootloader entry). Classifying these as generic RC filters (low-pass 159 Hz and high-pass 1.59 kHz) is technically not wrong as a circuit topology, but the semantic context (reset circuitry) is completely missed. The rc_filters section shows them without any indication they are reset/boot circuits.
+  (signal_analysis)
+- C5 (0.1u) has its top pin connected to the LT1963A OUT line (the same net that feeds the +3.3V regulator output) and its bottom pin to GND. In the output's nets section, C5 pin 2 appears in net '__unnamed_35' along with D4 pin 2 (anode). This suggests the LT1963A OUT pin is not being resolved as the same +3.3V node — the output rail of U1 is floating as an unnamed net rather than being resolved to the +3.3V rail. Consequently C5 is absent from the +3.3V decoupling analysis. The +3.3V rail decoupling shows only C6 (100u) and C9 (0.1u) but should also include C5.
+  (signal_analysis)
+- The subcircuits section for U1 (LT1963A_3.3V) shows neighbor_components: []. The regulator has multiple immediately connected passives: C2 and C4 (100u bulk and 0.1u bypass on input +5V rail), C5 and C6 (0.1u bypass and 100u bulk on output +3.3V rail), and D4 (Schottky on the output for reverse protection). None of these appear as U1 neighbors. By contrast, U3 shows C7, P11, P12, R6, R7 as neighbors. The subcircuit neighbor detection appears to fail because U1's pins are on unnamed nets that don't carry back to recognized components.
+  (signal_analysis)
+
+### Missed
+- The design has two USB connectors: P1 is a USB_A host connector (likely for power input), and P2 is a USB_OTG Mini-B connector feeding F1/D1/FT231X (U2) for USB-to-UART. The FT231X USBDP/USBDM pins (pin 11/12) connect to P2 D+/D- through R10/R11 (27 ohm series resistors) and C10/C11 (47pF caps to GND) — a classic USB line termination scheme. Neither USB connector nor the USB differential pair is detected. The differential_pairs and ethernet_interfaces lists are empty.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---

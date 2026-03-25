@@ -1,0 +1,30 @@
+{
+  "file_pattern": "mainboard_smd.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002115",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002115-AST-01",
+      "description": "INCORRECT: The design has three I2C buses on the Teensy-LC (ports 0 and 1 plus a third). The analyzer reports 6 individual I2C line detections (3 SDA + 3 SCL entries) rather than pairing them into 2-3 complete buses. Two of the six entries lack pull-up resistors (SCL1 on 22_A8_SCL1 and SDA1 on 23_A9_SDA1) while their paired lines do have pull-ups; this pairing relationship is lost in the flat list output.",
+      "created_from": "FND-00002115",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "max_count",
+        "value": 4
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002115-AST-02",
+      "description": "The design uses a Teensy-LC (U1) with two SPI buses. Nets are named with Teensy pin numbers prepended to the signal name (e.g., '11_MOSI0', '13_LED_SCK0', '10_CS0', '12_MISO0'). The SPI bus detector returned zero results. The issue is that the detector does not recognise signal names where a numeric prefix precedes the canonical name (MOSI, MISO, SCK, CS). The SPI LCD connector J9 is wired to these nets, making this a clear miss.",
+      "created_from": "FND-00002115",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

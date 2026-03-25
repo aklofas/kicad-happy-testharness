@@ -1,0 +1,80 @@
+{
+  "file_pattern": "SparkFun_AS7343_Qwiic.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001494",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001494-AST-01",
+      "description": "footprint_count=64 (29 board-only + 29 SMD + 2 THT + 1 exclude_from_pos + 3 allow_soldermask_bridges), board dimensions 25.4x25.4mm, 2-layer design with F.Cu and B.Cu, 187 track segments, 77 vias, 1 GND copper zone, net_count=21, routing_complete=true, unrouted=0. All values verified against source PCB file.",
+      "created_from": "FND-00001494",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 64
+      }
+    },
+    {
+      "id": "FND-00001494-AST-02",
+      "description": "The single copper zone is on GND net, spans both F.Cu and B.Cu, with zone area 645.16mm2 (matching 25.4x25.4mm board), is filled, and has 56 GND stitching vias. Thermal analysis correctly identifies the via stitching at 8.7 vias/cm2.",
+      "created_from": "FND-00001494",
+      "check": {
+        "path": "zones",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001494-AST-03",
+      "description": "All 77 vias are through-hole type with size 0.56mm / 0.3mm drill, giving 0.13mm annular ring on each side. The analyzer correctly identifies uniform via sizing and reports them in the size_distribution. The current capacity estimate of 7.9A at 0.3mm drill is consistent with published via current tables.",
+      "created_from": "FND-00001494",
+      "check": {
+        "path": "statistics.via_count",
+        "op": "equals",
+        "value": 77
+      }
+    },
+    {
+      "id": "FND-00001494-AST-04",
+      "description": "U1 has closest cap at 3.17mm (C1), U2 has closest cap at 3.42mm (C3). Both are correctly identified as having shared nets with decoupling caps. The analysis correctly notes that C3 (1.0uF) on __unnamed_1 (U2-VDD) is the dedicated local decoupling for U2's filtered supply rail via R1.",
+      "created_from": "FND-00001494",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001494-AST-05",
+      "description": "156 segments at 0.2032mm, 14 at 0.4064mm, and 17 at 0.5588mm, with F.Cu having 133 segments and B.Cu having 54 segments. Total track length 295.16mm. These match the expected SparkFun design style with different widths for power vs signal traces.",
+      "created_from": "FND-00001494",
+      "check": {
+        "path": "tracks.segment_count",
+        "op": "equals",
+        "value": 187
+      }
+    },
+    {
+      "id": "FND-00001494-AST-06",
+      "description": "INCORRECT: The fill_ratio is computed as filled_area_mm2 / outline_area_mm2 = 822.06 / 645.16 = 1.274. However, filled_area is the sum of both F.Cu (364.28mm2) and B.Cu (457.78mm2) fill areas, which correctly total 822.06mm2 for a dual-layer zone, but this sum exceeds the single-layer board footprint of 645.16mm2. The fill_ratio should be computed per-layer or against the total possible fill area (2 * 645.16 = 1290.32mm2), giving approximately 0.637 per-side. The current value misleadingly implies more than 100% fill of a single-layer area.",
+      "created_from": "FND-00001494",
+      "check": {
+        "path": "zones",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001494-AST-07",
+      "description": "INCORRECT: The via_in_pad analysis flags J2.NC2 and J1.NC1 NC (no-connect) pads as having nearby vias with same_net=false. The Qwiic connector (JST 1.0mm) has NC mechanical pads and the vias are placed nearby in the PCB layout. Since NC pads have no electrical connection, placing a via near them is not a DFM issue. The same_net=false flag and the NC designation indicate these are intentional layout choices, not violations. This is a false positive for via-in-pad classification.",
+      "created_from": "FND-00001494",
+      "check": {
+        "path": "vias.via_analysis.via_in_pad",
+        "op": "min_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

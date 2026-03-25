@@ -1,0 +1,29 @@
+{
+  "file_pattern": "I2C_StemmaQT.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000456",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000456-AST-01",
+      "description": "Output reports total_components=14 (resistor=4, capacitor=3, transistor=1, test_point=3, connector=2, ic=1). U1 AP2112K-3.3 LDO detected with input_rail=I2C_VCC, output_rail=+3.3V, estimated_vout=3.3. BSS138BKS (Q1) dual NMOS used as bidirectional I2C level shifter between I2C_VCC domain (5V logic) and +3.3V domain. STEMMA_QT_I2C1 and STEMMA_QT_I2C2 both captured as JST_SH_SM04 connectors. Test points I2C_VCC_IN1 and others captured. Decoupling caps C1/C3 on +3.3V and C2 on I2C_VCC correctly analyzed.",
+      "created_from": "FND-00000456",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000456-AST-02",
+      "description": "The design contains two I2C bus pairs: SCL/SDA (high-voltage side, I2C_VCC domain) with 10K pull-ups R1/R2, and SCL_3V/SDA_3V (3.3V side) with 10K pull-ups R3/R4. Both pairs have standard I2C net names and matched pull-up resistors on the appropriate power rails. Neither pair appears in bus_analysis.i2c \u2014 the only entry is the false positive on I2C_VCC. The actual level-shifted I2C buses with pull-ups are missed entirely.",
+      "created_from": "FND-00000456",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "led-controller-esp32.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002258",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002258-AST-01",
+      "description": "U2 is the MP1584 'Mini360' buck converter module with pin names '+Vin', '+Vout', '-Vin', '-Vout' and a description explicitly stating '6.5-24V input, 5V 1.8A output'. The signal_analysis.power_regulators list is empty. The analyzer only flagged a decoupling warning noting '+Vin' lacks capacitors but missed detecting the converter topology entirely. Given the pin names and description, this should be detectable as a switching regulator converting +Vin to +5V.",
+      "created_from": "FND-00002258",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

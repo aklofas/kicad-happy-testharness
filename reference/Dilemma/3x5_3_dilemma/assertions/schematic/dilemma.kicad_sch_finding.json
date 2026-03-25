@@ -1,0 +1,60 @@
+{
+  "file_pattern": "dilemma.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000471",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000471-AST-01",
+      "description": "The RP2040 (U1) power domain analysis correctly identifies three rails: +3.3V (I/O supply), +1V1 (internal VREG output), and VBUS_DET (USB detection). The XC6210B332MR-G LDO (U3) is correctly shown supplying +3.3V from +5V. This matches the RP2040 hardware design guide architecture where VREG outputs 1.1V core supply.",
+      "created_from": "FND-00000471",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000471-AST-02",
+      "description": "Y1 and Y5001 (Crystal_GND24) are each correctly paired with two 15pF load capacitors (C3/C4 for Y1, C5005/C5008 for Y5001). The effective load capacitance is correctly computed as 10.5pF (series combination 15*15/(15+15) + ~3pF stray). Frequency is null because the Crystal_GND24 symbol does not expose frequency as a parseable property \u2014 this is a correct absence rather than an error.",
+      "created_from": "FND-00000471",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000471-AST-03",
+      "description": "All four USBLC6-2P6 ESD arrays are detected (U4 on D+/D-, U5003 on D+_L/D-_L, U5005 on SERIAL, U5006 on SERIAL_L) and both Polyfuse parts (F1, F5001) are detected as protection devices. The detection method and protected nets are accurate.",
+      "created_from": "FND-00000471",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000471-AST-04",
+      "description": "The 3x5_3 contains 36 SK6805-EC15 addressable RGB LEDs arranged in two chains of 18 (one per keyboard half), driven from separate GPIO pins. Despite each SK6805-EC15 having DIN and DOUT pins and forming a clear daisy-chain topology, the addressable_led_chains detector finds only the two SK6812MINI chains (18 each). All 36 SK6805-EC15 refs (e.g. D19, D5017 through D5030) appear in no detected chain. The root cause is the type='diode' misclassification: the chain detector only traverses components classified as type='led'. The missing chains have data_in pins on nets connected to RP2040 GPIO, distinct from the SK6812MINI chain signals.",
+      "created_from": "FND-00000471",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000471-AST-05",
+      "description": "The SERIAL net connects U1:GPIO1 (RP2040 TX) through USBLC6-2P6 ESD protection (U5005) to AudioJack4 connector J102. The SERIAL_L mirror connects U5002:GPIO1 through U5006 to J5003. This is a UART-over-TRRS half-duplex serial link for QMK/ZMK split-keyboard communication. The design_analysis.bus_analysis.uart array is empty. The UART detector does not match this topology because the RP2040 symbol uses generic pin names 'GPIO1' rather than 'TX'/'RX', so the pin-name heuristic fails. The same issue applies identically to 4x6_4.",
+      "created_from": "FND-00000471",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

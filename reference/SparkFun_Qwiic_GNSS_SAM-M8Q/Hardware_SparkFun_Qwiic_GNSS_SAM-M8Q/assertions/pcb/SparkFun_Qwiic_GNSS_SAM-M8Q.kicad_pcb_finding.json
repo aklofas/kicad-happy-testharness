@@ -1,0 +1,118 @@
+{
+  "file_pattern": "SparkFun_Qwiic_GNSS_SAM-M8Q.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001454",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001454-AST-01",
+      "description": "The PCB reports 73 footprints total: 51 front-side, 22 back-side. This includes 24 kibuzzard logo/graphic footprints (board_only, exclude_from_bom) plus the schematic-linked components. The actual electrical components placed match the schematic, including U1 on B.Cu, front-side components U4/U6/J4/etc., and rear-side jumpers JP1-JP5.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 73
+      }
+    },
+    {
+      "id": "FND-00001454-AST-02",
+      "description": "The PCB correctly identifies 4 copper layers. Two copper zone fills are detected: a GND zone spanning F.Cu, B.Cu, and In2.Cu (filled_area=1133.53 mm\u00b2), and a 3.3V zone on In1.Cu only (filled_area=456.63 mm\u00b2). This correctly reflects the power-plane arrangement for this dense GNSS breakout board.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001454-AST-03",
+      "description": "The board_outline correctly reports a 25.4 x 25.4 mm (1\" x 1\") rectangle, which is consistent with the SparkFun Qwiic mini form factor. Routing is complete (0 unrouted nets), and all 45 nets are accounted for.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "op": "equals",
+        "value": 25.4
+      }
+    },
+    {
+      "id": "FND-00001454-AST-04",
+      "description": "The via analysis correctly identifies U1 (SAM-M8Q, 100-pad LCC module on B.Cu) as requiring extensive fanout vias (57 vias for 17 unique nets). All vias are through-hole 0.56/0.3 mm (0.3 mm drill), with 0.13 mm annular ring. This is accurate for the u-blox SAM-M8Q 10x10 mm module.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "vias.via_analysis.fanout_patterns",
+        "op": "contains_match",
+        "value": {
+          "component": "U1",
+          "fanout_vias": 57
+        }
+      }
+    },
+    {
+      "id": "FND-00001454-AST-05",
+      "description": "The analyzer detects 5 via-in-pad instances. The U1 GND pad has a via_in_pad with same_net=true (correct, GND thermal via). BT1 has 2 vias near its negative pad with same_net=false, which may be flagged due to GND pour proximity rather than a true electrical via-in-pad issue. TP3 pad 1 also has a via with same_net=true.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "vias.via_analysis.via_in_pad",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001454-AST-06",
+      "description": "The track width analysis shows 5 unique widths: 0.1778 mm (signal, 262 segments), 0.2616 mm (14 segments), 0.3048 mm (21 segments), 0.3490 mm (11 segments), and 0.4064 mm (26 segments, power). The minimum signal trace is 0.1778 mm (7 mil), appropriate for this dense board.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "tracks.width_distribution",
+        "op": "exists",
+        "value": null
+      }
+    },
+    {
+      "id": "FND-00001454-AST-07",
+      "description": "Both the schematic and PCB analyzers report 45 total nets, confirming correct cross-tool net list consistency. The PCB connectivity shows 29 routed nets (nets with actual copper traces) and 0 unrouted connections.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "statistics.net_count",
+        "op": "equals",
+        "value": 45
+      }
+    },
+    {
+      "id": "FND-00001454-AST-08",
+      "description": "U1 is correctly identified as residing on B.Cu with layer='B.Cu' and type='smd'. The SAM-M8Q module in this SparkFun design is placed on the bottom of the 25.4x25.4 mm board with its integrated patch antenna facing outward, which is the correct orientation.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "footprints",
+        "op": "contains_match",
+        "value": {
+          "reference": "U1",
+          "layer": "B.Cu"
+        }
+      }
+    },
+    {
+      "id": "FND-00001454-AST-09",
+      "description": "The zones section correctly identifies a GND zone on F.Cu+B.Cu+In2.Cu (filled_area_mm2=1133.53, outline_area=645.16, fill_ratio=1.757 which accounts for multiple layers) and a 3.3V zone on In1.Cu only (filled_area=456.63 mm\u00b2). The fill_ratio>1 for GND is correct since filled_area sums across multiple layers.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "zones",
+        "op": "contains_match",
+        "value": {
+          "net_name": "GND",
+          "is_filled": true
+        }
+      }
+    },
+    {
+      "id": "FND-00001454-AST-10",
+      "description": "INCORRECT: ST1, ST2, ST3, ST4 are SparkFun-Hardware:Standoff footprints for mechanical mounting screws. They have a single pad (a NPTH drill hole) but are classified as type='smd' in the PCB output. A standoff with a drill hole should be classified as 'through_hole' or 'npth'. This is a misclassification \u2014 standoff holes are not SMD pads.",
+      "created_from": "FND-00001454",
+      "check": {
+        "path": "component_groups.ST.count",
+        "op": "equals",
+        "value": 4
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "file_pattern": "Pong.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001118",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001118-AST-01",
+      "description": "Correctly identifies Y1 with C1 and C2 (both 30pF) as load caps, effective CL=18pF, in typical range.",
+      "created_from": "FND-00001118",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001118-AST-02",
+      "description": "Control panel connector J2 (14-pin Molex) drives AY-3-8500 input pins through named nets. These pins have no active driver in the schematic (connector passive pins drive IC inputs), which KiCad ERC would flag. Accurate observation.",
+      "created_from": "FND-00001118",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001118-AST-03",
+      "description": "All three ICs draw from VCC rail with no decoupling caps placed. This is a real design gap correctly identified.",
+      "created_from": "FND-00001118",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001118-AST-04",
+      "description": "Unlike Pong-1976 which has an LM7805, PongPCB has no regulator. The design uses VCC directly from the barrel jack. The analyzer correctly outputs zero power_regulators. However, it also produces no power_budget warning about unregulated VCC driving the AY-3-8500 \u2014 that observation would be useful.",
+      "created_from": "FND-00001118",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

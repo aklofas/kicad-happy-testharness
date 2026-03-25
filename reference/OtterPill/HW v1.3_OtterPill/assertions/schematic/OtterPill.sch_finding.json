@@ -1,0 +1,29 @@
+{
+  "file_pattern": "OtterPill.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001799",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001799-AST-01",
+      "description": "KiCad 5 .sch parser correctly extracts all 43 component references matching the source file. Type breakdown matches v1.4: resistor=16, capacitor=12, connector=6, ic=4, led=2, switch=1, inductor=1, test_point=1. The v1.3 and v1.4 schematics are equivalent designs.",
+      "created_from": "FND-00001799",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 43,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001799-AST-02",
+      "description": "INCORRECT: The KiCad 5 legacy parser also produces components with 'reference' key (not 'ref'). All 43 component entries have .get('ref') == None. The correct values are accessible via .get('reference'). The same schema inconsistency is present across both parsers.",
+      "created_from": "FND-00001799",
+      "check": {
+        "path": "components",
+        "value": "reference",
+        "op": "contains_match"
+      },
+      "aspirational": true
+    }
+  ]
+}

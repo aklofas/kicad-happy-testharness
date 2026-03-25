@@ -1,0 +1,128 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "kicad_column_board_column_driver.sch.json",
+      "status": "promoted",
+      "summary": "Component counts correct: 104 total, 12 ICs (8x TPIC6B595 + 4x TBD62783), 32 resistors, 8 caps, 47 diodes, 5 connectors; Shift register chain not detected: 8x TPIC6B595 power shift registers with R...",
+      "correct": [
+        {
+          "description": "Multi-unit BAV70W and BAV70W pairs counted correctly by de-duplicating unit-2 entries. BOM grouping by value+footprint is accurate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "All 4 power rails found. Decoupling correctly identifies 8 bypass caps on +5V (0.8uF total). Correctly notes no bulk capacitance.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The column driver uses 8 TPIC6B595 power shift registers chained via RC_DATA, RC_SHIFT_CLK, COL_REG_CLK, and ~RC_CLEAR signals. These form a classic daisy-chain shift register bus (similar to SPI). The bus_analysis.spi and signal_analysis sections are both empty \u2014 the analyzer failed to identify this shift register topology. TPIC6B595 is a common power shift register and the net names are unambiguous.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "4x TBD62783 (Toshiba 7-ch sink driver, rated 50V) are present but subcircuit descriptions are empty strings. The +24V rail supplies the flip-dot coils. No high-voltage driver or open-drain driver topology is noted anywhere in the output.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "AnnaxFlipdotDriver",
+      "project": "kicad_column_board_column_driver",
+      "created": "2026-03-23T20:38:50.681421+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000544"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "kicad_row_board_row_driver.sch.json",
+      "status": "promoted",
+      "summary": "Component counts correct: 80 total, 11 ICs, 24 resistors, 6 caps, 27 diodes, 7 connectors, 2 transistors, 2 LEDs, 1 jumper; Voltage divider false positive: R23+R28/R24 are a transistor Q1 (2N3904) ...",
+      "correct": [
+        {
+          "description": "The analyzer correctly handled multi-unit BAV70W components (8 units = 16 pins but 8 physical packages). Component type breakdown matches source file contents.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Correctly identifies separate decoupling domains for +5V and +3V3 rails. Cap values and counts match source.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer detects a voltage divider with top_net=SENSE_EN, top resistors R23 (1K) + R28 (470), bottom R24 (2K2) to GND. In reality, R23 is the base resistor driving Q1 (2N3904), and R24 is a pull-down/bias resistor. The mid-node connects to Q1's base, not a tap output. Since transistor_circuits is empty (Q1 not detected), the circuit is misclassified. This is a known pattern: resistor-to-transistor-base networks trigger voltage divider false positives.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Row driver has Q1 (2N3904 NPN for column presence sense) and Q2 (FQP47P06 P-channel MOSFET for power switching from 24V). Both are present in the schematic but transistor_circuits array is empty. Q2 is a high-current PMOS power switch \u2014 a significant circuit element.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "U7 is a Wurth WE-FDSM isolated 5V DC/DC converter module, which is a power regulator. power_regulators is empty. The component has 'DC/DC' in its name/value. This is a missed detection for a power conversion stage.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "U13 is a TXB0108 8-channel bidirectional level translator between 3.3V signals (from WeMos/Arduino) and 5V logic for the TPIC6B595 shift registers. Signals like RC_DATA_3v3, RC_SHIFT_CLK_3v3 vs RC_SHIFT_CLK show the voltage domain crossing. This is an important architectural feature (mixed 3.3V/5V system) that is undetected. The net classification does identify _3v3 suffixed signals but does not connect them to the level-shift context.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "AnnaxFlipdotDriver",
+      "project": "kicad_column_board_column_driver",
+      "created": "2026-03-23T20:38:50.681442+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000545"
+    }
+  ]
+}

@@ -113,26 +113,46 @@
       "repo": "Neo6502pc",
       "project": "HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B",
       "created": "2026-03-17T18:11:48.072700+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "pcb",
       "source_file": "HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_pcb.json",
       "summary": "Neo6502pc PCB: copper_layers_used includes F.SilkS (non-copper layer), 15 of 19 thermal_pad_vias are paste-only false positives from stencil aperture pads",
       "correct": [
         {
           "description": "Footprint count and SMD/THT mix consistent with retro computer board with DIP ICs",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Board dimensions match Neo6502pc form factor",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Routing completeness correctly detected",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DFM analysis present and reasonable",
-          "analyzer_section": "dfm"
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

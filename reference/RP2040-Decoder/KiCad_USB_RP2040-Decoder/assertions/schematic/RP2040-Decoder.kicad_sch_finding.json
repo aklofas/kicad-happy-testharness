@@ -1,0 +1,28 @@
+{
+  "file_pattern": "RP2040-Decoder.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001157",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001157-AST-01",
+      "description": "J3 USB_C_Receptacle_USB2.0_16P: cc1_pulldown_5k1 and cc2_pulldown_5k1 pass (R2/R3 = 5k1), dm/dp series resistors pass (R6/R7 = 27\u03a9). VBUS decoupling fail and VBUS ESD fail are accurate \u2014 no decoupling cap on VBUS rail and no TVS present. usb_esd_ic info (optional) is appropriate.",
+      "created_from": "FND-00001157",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001157-AST-02",
+      "description": "protection_devices correctly shows D1 as reverse_polarity type, protected_net=VDC, clamp_net=VBUS. D2 (KMB24F flyback/TVS) is in the diode BOM but not flagged as protection \u2014 acceptable since KMB24F is a TVS/flyback for the motor driver output and classification as protection would also be reasonable.",
+      "created_from": "FND-00001157",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

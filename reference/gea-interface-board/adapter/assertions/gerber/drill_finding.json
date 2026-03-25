@@ -1,0 +1,19 @@
+{
+  "file_pattern": "drill",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002079",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002079-AST-01",
+      "description": "INCORRECT: The gea-interface-board repo splits gerbers into two directories: drill/ (Excellon drill files only) and plots/ (all Gerber layers). When analyzing drill/ in isolation, the analyzer correctly finds 0 Gerber files but reports missing_required=['B.Cu','B.Mask','Edge.Cuts','F.Cu','F.Mask'] and complete=false. This is technically accurate for the drill/ subdirectory alone, but misleading at the project level since the full fabrication package is present across both directories. The plots/adapter gerber correctly reports complete=true with all 9 layers found.",
+      "created_from": "FND-00002079",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    }
+  ]
+}

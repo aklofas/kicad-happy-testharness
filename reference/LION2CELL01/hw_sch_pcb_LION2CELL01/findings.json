@@ -1,0 +1,120 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hw_sch_pcb_LION2CELL01.kicad_sch.json",
+      "status": "promoted",
+      "summary": "LDO output voltage estimated at 1.58V for TPS76601 instead of ~3.19V; BAT-MIDPOINT net classified as 'interrupt' in net_classification; Assembly complexity reports 0 THT components, but PCB shows 2...",
+      "correct": [
+        {
+          "description": "The BQ34Z100 uses HDQ/I2C. The analyzer correctly found the I2C bus with proper pull-up resistors R35 and R36 on SDA and SCL respectively.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Component classification is accurate: BQ24103 detected as 'battery management', correct subcircuit grouping, feedback divider (R25/R26) for LDO identified. Core component detection is working well despite missing MPNs.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The rescue library uses 'unspecified' pin types throughout, so the analyzer cannot determine that U5 TPS76601 provides a power_out on +3V3. ERC would indeed flag these nets in KiCad. The warnings accurately reflect what KiCad ERC would report.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TPS76601 has Vref=1.21V but analyzer used 0.6V heuristic. With R25=270k/R26=165k feedback divider: correct Vout = 1.21*(1+270k/165k) = 3.19V. Analyzer estimates 0.6*(1+270k/165k) = 1.58V, which is wrong by 2x. The power_budget also reports output_voltage=1.582V for this rail.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The net named BAT-MIDPOINT (midpoint voltage tap between two Li-ion cells for the BQ34Z100 fuel gauge) is classified as 'interrupt'. The name heuristic appears to match '-MIDPOINT' suffix incorrectly. It is a voltage sensing signal, not an interrupt.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The schematic assembly_complexity says smd_count=100, tht_count=0. The PCB analyzer correctly reports tht_count=28. The schematic analyzer cannot detect THT from custom Mlab library footprint names (Straight_1x02, Straight_2x04, WAGO256, Drzak_2410) since it lacks a footprint keyword lookup for non-standard libraries.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "design_analysis.power_domains lists U3 (BQ34Z100), U4 (SN74HC164D), and U5 (TPS76601) all on +3V3, but power_budget only includes U4 with 10mA estimate. U3 and U5 are omitted from the load calculation. ic_count=1 is wrong; should be at least 2.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "LION2CELL01",
+      "project": "hw_sch_pcb_LION2CELL01",
+      "created": "2026-03-23T22:43:30.836082+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000808"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "hw_sch_pcb_LION2CELL01.kicad_pcb.json",
+      "status": "new",
+      "summary": "Board dimensions (80.77x60.45mm), layer count (2), component counts (100 total, 28 THT, 72 SMD) all correct",
+      "correct": [
+        {
+          "description": "Statistics are consistent with the gerber output dimensions and layer set. Routing reported complete with 0 unrouted nets. Thermal pad detection for U1/U2 is appropriate for VSON/VQFN packages.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "LION2CELL01",
+      "project": "hw_sch_pcb_LION2CELL01",
+      "created": "2026-03-23T22:43:30.836097+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000809"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "hw_cam_profi_gbr.json",
+      "status": "new",
+      "summary": "2-layer gerber set complete and aligned, board dimensions 80.87x60.55mm consistent with PCB",
+      "correct": [
+        {
+          "description": "All 9 expected layers present (F.Cu, B.Cu, F/B Mask, F/B Paste, F/B SilkS, Edge.Cuts) plus PTH/NPTH drills. Layer extents aligned. Dimensions from gbrjob match PCB analysis within rounding. Gerber generated by KiCad 8.0.3.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "LION2CELL01",
+      "project": "hw_sch_pcb_LION2CELL01",
+      "created": "2026-03-23T22:43:30.836099+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000810"
+    }
+  ]
+}

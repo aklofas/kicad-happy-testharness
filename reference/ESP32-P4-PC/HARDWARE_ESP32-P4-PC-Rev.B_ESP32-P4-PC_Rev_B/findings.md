@@ -66,7 +66,7 @@
 
 ## FND-00000295: ESP32-P4-PC PCB: paste-only stencil aperture pads misidentified as thermal pads (15/19 false positives), via adequacy formula ignores drill size, connector structural/shield pads misidentified as thermal pads
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: pcb
 - **Source**: HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B.kicad_pcb.json
 - **Related**: KH-156, KH-157, KH-158

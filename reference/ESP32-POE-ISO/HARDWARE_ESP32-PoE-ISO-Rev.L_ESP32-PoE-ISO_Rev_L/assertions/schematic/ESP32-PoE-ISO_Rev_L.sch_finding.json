@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ESP32-PoE-ISO_Rev_L.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000540",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000540-AST-01",
+      "description": "The Rev L output shows power_regulators: 0 items, while the same design in M1 kicad_sch format detects both U7 and U5 as switching regulators. The legacy .sch parser is not extracting enough pin/net information to trigger regulator detection. The crystal circuit (Q1) is correctly detected in Rev L.",
+      "created_from": "FND-00000540",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

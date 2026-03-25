@@ -1,0 +1,41 @@
+{
+  "file_pattern": "bread power supply schematic.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000428",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000428-AST-01",
+      "description": "INCORRECT: The nets JSON shows C1 pin 2 is on Vin (C1 is a polarized cap, pin 2 is the positive terminal) and C2 pin 2 is on Vout1. Both U1's input and output rails therefore have filter capacitors. Two design_observations fire incorrectly: one 'decoupling' observation listing Vin in rails_without_caps and one 'regulator_caps' observation claiming both input and output capacitors are missing for U1/LM7805.",
+      "created_from": "FND-00000428",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000428-AST-02",
+      "description": "INCORRECT: The net named 'V-' carries the bridge rectifier's negative output: it connects D2 cathode, D4 cathode, C1 negative, C2 negative, LED anodes, and all output connector ground pins. This is structurally the ground/return rail of the PSU. It is classified as 'signal' in design_analysis.net_classification. It should be classified as 'ground' or 'power_internal'. Similarly, Vout1 and Vout2 are regulated/switched power outputs but are classified as 'signal'.",
+      "created_from": "FND-00000428",
+      "check": {
+        "path": "design_analysis.net_classification.V-",
+        "op": "equals",
+        "value": "ground"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000428-AST-03",
+      "description": "D1, D2, D3, D4 (all 1N4007) form a full-wave bridge rectifier: D1A/D3A join at Vin (positive DC rail), D2K/D4K join at V- (negative rail), D1K/D2A and D3K/D4A join the AC input terminals. The signal_analysis.bridge_circuits array is empty. This is a clear bridge rectifier topology that the analyzer should detect.",
+      "created_from": "FND-00000428",
+      "check": {
+        "path": "signal_analysis.bridge_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

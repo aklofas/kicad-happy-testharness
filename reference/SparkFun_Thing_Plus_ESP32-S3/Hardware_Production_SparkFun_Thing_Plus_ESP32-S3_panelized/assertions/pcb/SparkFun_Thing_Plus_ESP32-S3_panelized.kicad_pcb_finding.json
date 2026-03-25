@@ -1,0 +1,30 @@
+{
+  "file_pattern": "SparkFun_Thing_Plus_ESP32-S3_panelized.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001573",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001573-AST-01",
+      "description": "INCORRECT: The panelized PCB file begins with '(kicad_pcb (version 20221018) (generator pcbnew)'. Version 20221018 corresponds to KiCad 7. The analyzer outputs kicad_version='unknown' instead of '7' or '20221018'. This is a version-mapping gap for the KiCad 7 file format epoch.",
+      "created_from": "FND-00001573",
+      "check": {
+        "path": "kicad_version",
+        "op": "equals",
+        "value": "7"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001573-AST-02",
+      "description": "INCORRECT: The panelized board has routing_complete=False and unrouted_net_count=19. This arises because panel rails, tooling strips, and fiducials added during panelization create net stubs that are intentionally not connected in the panel layout. The underlying individual boards are fully routed. The analyzer should indicate this is a panelized design or suppress routing completeness for panel files.",
+      "created_from": "FND-00001573",
+      "check": {
+        "path": "connectivity.routing_complete",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    }
+  ]
+}

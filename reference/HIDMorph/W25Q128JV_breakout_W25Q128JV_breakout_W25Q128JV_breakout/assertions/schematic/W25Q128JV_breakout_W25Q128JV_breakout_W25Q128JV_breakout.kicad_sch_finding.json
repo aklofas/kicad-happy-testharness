@@ -1,0 +1,29 @@
+{
+  "file_pattern": "W25Q128JV_breakout.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000581",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000581-AST-01",
+      "description": "This is a bare breakout schematic with U1 (W25Q128JVE flash) and all pins on unnamed single-pin nets. The analyzer correctly shows no memory_interfaces, no bus analysis, and no signal analysis features \u2014 all expected for an isolated breakout schematic.",
+      "created_from": "FND-00000581",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000581-AST-02",
+      "description": "The breakout's U1 has no LCSC or MPN, even though the same W25Q128JVE in the main schematic has lcsc=C401662. This is a sourcing data gap in the breakout schematic itself, not an analyzer error \u2014 the analyzer correctly reports missing_mpn=[U1]. Noted for completeness.",
+      "created_from": "FND-00000581",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

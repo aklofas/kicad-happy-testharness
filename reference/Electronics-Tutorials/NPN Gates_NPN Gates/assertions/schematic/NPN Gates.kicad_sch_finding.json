@@ -1,0 +1,28 @@
+{
+  "file_pattern": "NPN Gates.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000508",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000508-AST-01",
+      "description": "All 85 components are present: 48 resistors (24x10K base resistors + 14x1K emitter/collector resistors + 10x390 LED current-limit resistors), 24 NPN BC547 transistors (Q1-Q24), 10 LEDs (D1-D10 representing gate outputs A, ~A, B, AND, NAND, OR, NOR, XOR, XNOR, and duplicate A on D3), 1 connector (J1), 2 SPDT switches (SW1 'A', SW2 'B'). Component counts match exactly.",
+      "created_from": "FND-00000508",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000508-AST-02",
+      "description": "The design uses global labels 'A' and 'B' distributed across multiple gate sections (AND, NAND, OR, NOR, XOR, XNOR, NOT-A). The net extraction correctly unifies all 'A'-labeled points into a single 'A' net (connected to SW1 SPDT switch pin 1/A and numerous base resistors R14, R29, R40, R36, R10, etc.) and all 'B'-labeled points into net 'B' (connected to SW2 and other base resistors). The global label resolution is correct.",
+      "created_from": "FND-00000508",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

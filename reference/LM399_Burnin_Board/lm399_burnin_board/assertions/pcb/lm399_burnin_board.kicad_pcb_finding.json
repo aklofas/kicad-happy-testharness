@@ -1,0 +1,56 @@
+{
+  "file_pattern": "lm399_burnin_board.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000820",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000820-AST-01",
+      "description": "PCB is a 4-layer board (F.Cu, In1.Cu power plane, In2.Cu power plane, B.Cu) with verified complete routing (0 unrouted), 87 vias, 1923 track segments, and ENIG surface finish. All match design intent for a precision analog burn-in board.",
+      "created_from": "FND-00000820",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000820-AST-02",
+      "description": "J1 (DIN41612 connector) courtyard x=[161-183.85], y=[75.88-144.12] on F.Cu overlaps with all L-series inductors positioned at x\u2248163mm on F.Cu. The 48.1mm2 overlap area calculation is mathematically correct. These are genuine courtyard violations requiring review.",
+      "created_from": "FND-00000820",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000820-AST-03",
+      "description": "The 160mm board width does exceed JLCPCB's 100x100mm standard pricing tier, requiring a larger board tier. This is a correct observation.",
+      "created_from": "FND-00000820",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000820-AST-04",
+      "description": "The design intentionally uses per-reference-block isolated ground domains (GND_heater, GND_zener) to prevent ground-loop interference between the 20 LM399 voltage references. The analyzer correctly identifies 11 domains with no zones (isolated routing), reflecting the precision analog design intent.",
+      "created_from": "FND-00000820",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

@@ -37,7 +37,7 @@
 
 ## FND-00000299: Gerber review: 4-layer flight controller (100x60mm). Drill unit bug + smd_apertures=0
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: gerber
 - **Source**: Hardware/Hades/Hades gerbers/
 - **Related**: KH-177, KH-183

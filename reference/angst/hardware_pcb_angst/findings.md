@@ -1,0 +1,53 @@
+# Findings: angst / hardware_pcb_angst
+
+## FND-00001935: Component counts and types correctly identified for 86-component STM32 motor controller; Three STSPIN233 motor driver ICs detected with correct bridge circuit grouping; RSH1/RSH2/RSH3 shunt resisto...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: angst.sch
+- **Created**: 2026-03-24
+
+### Correct
+- The analyzer correctly reports 86 total components (35 resistors, 26 caps, 7 ICs, 9 connectors, 4 diodes, 1 transistor, 1 inductor, 1 crystal, 1 LED, 1 switch). Power rails (+3.3V, +3V3, +5V, +5VD, +BATT, GND, GNDA) are all captured. Two LDO regulators (TLV1117-33 and TLV1117-50) are detected with correct topology and output voltages.
+- The analyzer correctly identified three STSPIN233 3-phase motor driver ICs (U3, U4, U6) and grouped them under bridge_circuits analysis. The RSH1/RSH2/RSH3 shunt resistors (1Ω 0.5W) are found associated with these motor drivers.
+- The bus_analysis.i2c section correctly identifies the I2C bus on net PA9 (SCL) connecting U1 (STM32F303RETx) and U2 (M24C02-RDW EEPROM), with 4.7kΩ pull-up R10 to +3V3. The memory_interfaces section also correctly records the U2 EEPROM connected to U1.
+- The differential_pairs section correctly identifies the DP/DM pair with D1 (USBLC6-4SC6 ESD protection IC) and the protection_devices section correctly lists D1 as esd_ic protecting DM, DP, PC4, and PC5 lines. The usb_data design_observations also correctly note ESD on DM.
+
+### Incorrect
+- The RSH1, RSH2, and RSH3 components are 1Ω 0.5W resistors used as current-sense shunts for the three STSPIN233 motor drivers. The analyzer detected them as voltage_dividers (ratio 0.000999) because R_top=1k (from R16/R23/R29) and R_bottom=1Ω match the voltage divider topology heuristic. However, these are clearly current-sense shunts: the 1Ω resistor is in the motor current path with a dedicated reference 'RSH' prefix (shunt resistor), 0.5W power rating, and are paired one-to-one with motor driver ICs. current_sense is reported as empty []. The analyzer should identify these as current sense resistors rather than voltage dividers.
+  (signal_analysis)
+- The analyzer reports an rf_matching entry with 'antenna': 'C1' (value 100n) and L1 (BK1608HS601-T ferrite bead) as the matching network component. C1 is a 100nF decoupling capacitor and L1 is a ferrite bead used for USB power filtering (+5V → +5VD via L1 and C1 to ground), not an RF antenna matching network. The BK1608HS601-T is a power-line ferrite bead, not an RF matching component. This is a false positive.
+  (signal_analysis)
+- Q1 is an IRLML6401TRPBF, which is a P-channel MOSFET (indicated by the 'P' in the part number and confirmed by Infineon datasheet). The analyzer reports is_pchannel: false, which is wrong. Additionally, the gate_net and source_net are both reported as '+BATT', which would suggest the MOSFET is always off (gate = source) — this is likely a net connectivity parsing error for the gate. The load_type is 'connector' which is plausible if the drain connects to a motor connector.
+  (signal_analysis)
+
+### Missed
+- The crystal_circuits entry for Y1 reports frequency: null. The component value is 'Crystal_GND24', which is a KiCad library part name rather than a frequency value. However, in the KiCad 5 legacy .sch format the schematic title block shows a 32kHz oscillator name pattern. The analyzer should attempt frequency extraction from the lib_id name ('Crystal_GND24' suggests a 24MHz or ground-referenced 2-pad crystal) but cannot, so frequency remains null. This is an expected limitation for legacy parts without explicit frequency values, but worth noting.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001936: PCB statistics correctly capture 90 footprints, 2-layer board, 89 nets, complete routing; Component count discrepancy between schematic (86) and PCB (90) is expected due to split-unit ICs
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: angst.kicad_pcb
+- **Created**: 2026-03-24
+
+### Correct
+- The PCB analyzer correctly reports 90 footprints (matching schematic's 86 real components plus power symbols/mechanical), all on front side, 78 SMD and 8 THT, 2 copper layers, 902 track segments, 228 vias, 2 zones, 89 nets, and routing_complete=true. Board dimensions 50.8×50.8mm match the 2-inch square layout.
+- The schematic reports 86 components while the PCB shows 90 footprints. The difference of 4 extra footprints is consistent with multi-unit ICs like the STM32 being represented as multiple schematic units that map to a single PCB footprint, or power symbols becoming test points. This is normal design behavior and not an analyzer error.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

@@ -1,0 +1,58 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_fourier_fourier_fourier-left_fourier-left.sch.json",
+      "status": "promoted",
+      "summary": "Key matrix topology detector misclassifies rows as columns and vice versa, overcounts switches 54 vs actual 34",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The Fourier left keyboard has 4 actual row nets (rowA, rowB, rowC, rowD) and 6 column nets (col1\u2013col6), for 34 actual key switches (excluding SW_RST1). The topology-based detector reports 5 rows and 13 columns, placing 'col2' in row_nets and 'rowB', 'rowC' in col_nets \u2014 mixing up rows and columns. The reported switches_on_matrix=54 and diodes_on_matrix=54 are ~59% higher than the actual 34 key switches.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+            "op": "less_than",
+            "value": 40
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "fourier",
+      "project": "fourier_fourier-left_fourier-left-top",
+      "created": "2026-03-24T08:12:58.644815+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002180"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_fourier_fourier_fourier-right_fourier-right.sch.json",
+      "status": "promoted",
+      "summary": "'rowA' appears in both row_nets and col_nets simultaneously; switch count overcounted 56 vs actual 39",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Fourier right has 39 actual key switches and 4 named row nets (rowA\u2013rowD). The topology detector reports 5 rows and 18 columns but places 'rowA' in both row_nets and col_nets \u2014 a net cannot be both a row and column driver. switches_on_matrix=56 and diodes_on_matrix=56 significantly exceed the 39 actual switches (44% overcount). This is the same topology detection failure as the left half.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+            "op": "less_than",
+            "value": 45
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "fourier",
+      "project": "fourier_fourier-left_fourier-left-top",
+      "created": "2026-03-24T08:12:58.644833+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002181"
+    }
+  ]
+}

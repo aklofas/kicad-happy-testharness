@@ -1,0 +1,29 @@
+{
+  "file_pattern": "MVCU_F407.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001042",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001042-AST-01",
+      "description": "design_observations correctly identifies I2C buses on I2C3_SCL/I2C_SDA with pullups (R8, R7 to +3.3V) and I2C1 without pullups. MCP2551 CAN transceiver captured in subcircuits. AMS1117 regulator caps observation correctly flags missing caps.",
+      "created_from": "FND-00001042",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001042-AST-02",
+      "description": "U9 XB24CDMPIT-001 is an 802.15.4 RF transceiver module. The rf_chains and rf_matching arrays are both empty. The analyzer has subcircuits for this IC but fails to classify it as an RF device, missing an important design feature.",
+      "created_from": "FND-00001042",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

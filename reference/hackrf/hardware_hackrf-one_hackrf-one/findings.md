@@ -2,7 +2,7 @@
 
 ## FND-00000293: hackrf-one PCB: copper_layers_used includes F.SilkS (non-copper layer), SMD count may be slightly inflated, no RF/impedance analysis for this RF-heavy board
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: pcb
 - **Source**: hardware_hackrf-one_hackrf-one.kicad_pcb.json
 - **Related**: KH-154

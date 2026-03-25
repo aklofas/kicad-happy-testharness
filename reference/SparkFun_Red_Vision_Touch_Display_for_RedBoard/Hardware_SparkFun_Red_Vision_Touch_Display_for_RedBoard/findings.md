@@ -1,0 +1,53 @@
+# Findings: SparkFun_Red_Vision_Touch_Display_for_RedBoard / Hardware_SparkFun_Red_Vision_Touch_Display_for_RedBoard
+
+## FND-00001475: Component count of 34 and type breakdown correctly reported; NMOS transistor Q1 (backlight switch) correctly detected as transistor_circuit; I2C pull-up resistors R3/R4 (2.2k to 3.3V) not detected ...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: SparkFun_Red_Vision_Touch_Display_for_RedBoard.kicad_sch
+- **Created**: 2026-03-24
+
+### Correct
+- The schematic has 34 total components: 2 ICs (U1, U2), 2 connectors (J1, J4), 11 resistors, 5 other (logos/shield), 7 jumpers, 1 LED, 1 capacitor, 1 transistor, 4 fiducials. The analyzer output matches all these counts and types accurately.
+- Q1 (RE1C002UNTCL N-MOSFET) is correctly identified in signal_analysis.transistor_circuits as a MOSFET with gate_net=DISP_BL, source_net=GND, gate_driver_ics=[U2], load_type=connector. The MOSFET is used to switch display backlight via the I2C expander IO0.
+- U2 is correctly identified as an IC with function='I2C interface', 16 pins all connected, decoupling cap C2=0.1uF on 3.3V rail correctly reported, and all 8 I/O pin mappings (DISP_BL, DISP_RST, TP_INT, TP_RST, CAM_PWDN, CAM_RST plus 2 unused) are correctly resolved.
+- The design operates from 3.3V (from Arduino shield B1) and GND. The analyzer correctly reports power_rails=['3.3V','GND'] with no spurious power rails.
+- The analyzer correctly finds C2=0.1uF as the only decoupling capacitor on the 3.3V rail, correctly notes absence of bulk capacitance, and flags has_bypass=true. This matches the schematic where C2 is the only bypass cap placed near U2.
+
+### Incorrect
+- R2 (100k) is the gate resistor for Q1 NMOS. In ic_pin_analysis for U2 pin IO0, R2 is classified as direction='series' to_net='3.3V'. However, R2 connects U2 IO0 to Q1 gate — it is a gate series resistor, not a pull-up or connection to 3.3V. The 'to_net: 3.3V' annotation is incorrect; R2 sits between DISP_BL and Q1.G with no direct 3.3V connection.
+  (signal_analysis)
+
+### Missed
+- The design_observations for the I2C bus (SCL, SDA) both report has_pullup=false with pullup_resistor=null. However, R3 and R4 are 2.2k resistors connecting SDA and SCL respectively to 3.3V (via JP1 solder jumper), constituting standard I2C pull-up resistors. The analyzer failed to resolve the pull-up path through the jumper JP1.
+  (signal_analysis)
+- The design uses SPI to communicate with the LCD display (U1): SCK connects to B1 D13/SCK and J4 pin 9; PICO to D11 and J4 pin 11; POCI/DC to D12 and J4 pin 12; DISP_CS to D10 and J4 pin 13. These are clearly SPI bus signals but bus_analysis.spi is empty. The signals do appear in net_classification as clock/signal but no SPI bus is assembled.
+  (design_analysis)
+
+### Suggestions
+- Fix: R2 gate resistor misclassified as series resistor 'to_net: 3.3V' in transistor circuit analysis
+
+---
+
+## FND-00001476: 4-layer PCB stackup correctly identified with F.Cu, In1.Cu, In2.Cu, B.Cu; PCB footprint count of 115 and component groups correctly enumerated; Routing reported complete with 50 nets, 281 track seg...
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: SparkFun_Red_Vision_Touch_Display_for_RedBoard.kicad_pcb
+- **Created**: 2026-03-24
+
+### Correct
+- The PCB uses a 4-layer stackup. The analyzer correctly reports copper_layers_used=4 with layer names [B.Cu, F.Cu, In1.Cu, In2.Cu] and the stackup shows prepreg/core construction. Board dimensions 59.69mm x 53.34mm are also correctly extracted.
+- The PCB has 115 footprints in total including real components (B1, C2, D1, FID1-4, G logos, J1, J4, JP1/13-16/21-22, Q1, R1-12, U1, U2) plus board-only kibuzzard graphics and REF markers. The component_groups correctly separate B, C, D, FID, G, J, JP, Q, R, REF, and kibuzzard groups.
+- The analyzer correctly reports routing_complete=true, unrouted_count=0. The 50-net count matches the PCB netlist. 281 track segments and 90 vias on a moderately complex 4-layer shield design is plausible.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

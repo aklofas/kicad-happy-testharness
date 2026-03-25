@@ -1,0 +1,30 @@
+{
+  "file_pattern": "BMP_BasicClone.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000407",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000407-AST-01",
+      "description": "INCORRECT: The schematic has 3 POT components (SUSTAIN1, TONE1, VOLUME1) with lib_id='POT'. One of these is classified as 'transformer' in component_types, which is completely incorrect for a guitar pedal. This inflates transformer count to 1 (there are no transformers in this design). The same pot that becomes 'transformer' is also causing 'switch' to read 2 instead of the expected 4 (SW_EN1 + 3 pots). This same misclassification pattern appears identically in the RussianClone output.",
+      "created_from": "FND-00000407",
+      "check": {
+        "path": "statistics.component_types.transformer",
+        "op": "not_exists",
+        "value": null
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000407-AST-02",
+      "description": "INCORRECT: The schematic has exactly 23 resistors (R1\u2013R23). The analyzer reports component_types.resistor=24. The extra count comes from one of the three POT components (SUSTAIN1, TONE1, VOLUME1) being incorrectly classified as a resistor. The BOM section correctly groups all resistors as R1\u2013R23 totalling 23, confirming the component_types count is wrong. Same issue exists in RussianClone.",
+      "created_from": "FND-00000407",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "equals",
+        "value": 23
+      },
+      "aspirational": true
+    }
+  ]
+}

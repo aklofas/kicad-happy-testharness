@@ -1,0 +1,39 @@
+{
+  "file_pattern": "hw_voltmod.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002289",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002289-AST-01",
+      "description": "The hw_voltmod schematic uses two TL074 quad op-amps (U3, U4) to buffer and invert 8 cell voltage measurements. All 8 functional units are correctly identified as inverting configuration with gain=-1.0 (Rf=Rin from equal-value 56k or 100k resistor pairs). The two power supply units (unit 5 on each IC) are correctly reported as config=unknown since they have no analog signal connections. Total opamp_circuits=10 matches 8 functional + 2 power units.",
+      "created_from": "FND-00002289",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "FND-00002289-AST-02",
+      "description": "The hw_voltmod schematic is a work-in-progress with many unannotated components (D?, J?, JP?, R?, U?). The analyzer correctly reports annotation_issues with unannotated=['D?','J?','JP?','R?','U?'] and duplicate_references=['D?','R?']. This accurately reflects the design state. The isolation barrier (ADuM6000, ADuM5411, ISO7331C) in the RS485iso sub-sheet is also correctly detected.",
+      "created_from": "FND-00002289",
+      "check": {
+        "path": "annotation_issues.unannotated",
+        "op": "min_count",
+        "value": 5
+      }
+    },
+    {
+      "id": "FND-00002289-AST-03",
+      "description": "INCORRECT: The hw_voltmod.kicad_sch file_version is 20230121, which corresponds to KiCad 7.0. The analyzer outputs kicad_version='unknown' instead of the expected '7'. The version mapping for date-stamped KiCad 6+ file versions appears to be missing the 20230121 entry (KiCad 7 shipped in February 2023 with file_version 20230121). This affects display and any version-conditional analysis paths.",
+      "created_from": "FND-00002289",
+      "check": {
+        "path": "kicad_version",
+        "op": "contains_match",
+        "value": "/7/"
+      },
+      "aspirational": true
+    }
+  ]
+}

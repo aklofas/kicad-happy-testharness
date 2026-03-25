@@ -8,7 +8,13 @@
       "correct": [
         {
           "description": "AP63357DV-7 (U5) correctly identified as switching regulator with L3 inductor, bootstrap cap, and feedback divider R19=220k/R20=41.2k producing 3.804V on VDD rail",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U5$"
+          }
         },
         {
           "description": "RT9080-3.3 (U10, U11) correctly identified as fixed 3.3V LDO regulators via value suffix parsing",

@@ -1,0 +1,51 @@
+{
+  "file_pattern": "battery_ups.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001965",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001965-AST-01",
+      "description": "total_components=16 matches the schematic. Batteries (BT1/BT2 18650 cells), diodes (D1/D2 for power ORing and protection), fuse (F1 5A), switch (SW1 SPDT), connectors (J1/J2 barrel jacks, J3 battery tester header), ICs (U1 XL4015, U2 HX-2S-JH20 BMS, U3 step-up), and 4 mounting holes (H3-H6) are all correctly identified.",
+      "created_from": "FND-00001965",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 16
+      }
+    },
+    {
+      "id": "FND-00001965-AST-02",
+      "description": "INCORRECT: connectivity_issues.multi_driver_nets reports GND as having two power_out drivers: U1 pin 4 (OUT-) and U3 pin 4 (OUT-). These are custom module footprints (power converters) where the OUT- terminal is naturally connected to board GND \u2014 it is the ground reference of each module's output. This is not a multi-driver conflict but rather two ground-referenced outputs sharing the common ground plane. The alert is a false positive caused by power converter module pins being typed as power_out.",
+      "created_from": "FND-00001965",
+      "check": {
+        "path": "connectivity_issues.multi_driver_nets",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001965-AST-03",
+      "description": "The design has U1 (footprint XL4015_StepDown, a 5A buck converter module) and U3 (footprint StepUp12V, a boost module) that form the power conversion chain. signal_analysis.power_regulators is empty. The analyzer lacks sufficient context from the custom module footprint names and blank values ('~') to identify these as power regulators. These are module-level regulators that lack schematic symbol pin names like EN/FB/SW, making detection difficult without value/footprint heuristics.",
+      "created_from": "FND-00001965",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001965-AST-04",
+      "description": "statistics.power_rails only contains ['GND']. The design operates at 2S Li-ion battery voltage (~8.4V max from two 18650 cells) plus has a step-down output and a step-up output (12V). The power nets Net-(D1-A), Net-(U2-P+), etc. represent these voltage rails but are unnamed (no global power symbols for the positive rails). While the KiCad 8 design uses local nets rather than global power symbols for positive rails, the analyzer could flag this as lacking clear VCC/V+ power rail definitions.",
+      "created_from": "FND-00001965",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

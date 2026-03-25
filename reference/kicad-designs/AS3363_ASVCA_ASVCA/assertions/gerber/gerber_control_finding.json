@@ -1,0 +1,19 @@
+{
+  "file_pattern": "gerber_control",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002247",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002247-AST-01",
+      "description": "INCORRECT: alignment.aligned is false with 'Width varies by 7.1mm across copper/edge layers'. The discrepancy comes from comparing F.SilkS (37.698mm wide) against F.Cu (31.498mm). Silkscreen graphics and text routinely extend beyond the copper keepout region and even beyond the board edge \u2014 this is normal and expected. The analyzer should exclude paste/silkscreen layers from the copper-vs-edge alignment check, or at minimum not count zero-size layers (B.Paste: 0, B.SilkS: 0) in the variance calculation. The same false positive appears in bindec_gerber-bindec.json.",
+      "created_from": "FND-00002247",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    }
+  ]
+}

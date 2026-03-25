@@ -1,0 +1,50 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "AbacusPCB_AbacusPCB.sch.json",
+      "status": "promoted",
+      "summary": "KEYSW keyboard switches misclassified as type 'relay' instead of 'switch'; key_matrices switches_on_matrix=0 despite 45 KEYSW switches present on matrix nets; decoupling_analysis is empty despite 1...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "All 45 keyboard_parts:KEYSW components (K1\u2013K45) are assigned type 'relay' in the output JSON. The correct type should be 'switch'. This misclassification is triggered because the component value is 'KEYSW' and the library is 'keyboard_parts', yet the analyzer's type-detection heuristic maps it to 'relay'. The downstream effect is that key_matrices detection reports switches_on_matrix=0, because the matrix detector counts type='switch' components on matrix nets \u2014 none are found, even though all 45 KEYSW components sit on the ROW/COL matrix nets.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.relay",
+            "op": "eq",
+            "value": "0"
+          }
+        },
+        {
+          "description": "The key_matrices detector correctly identifies a 4-row \u00d7 12-col matrix with 45 diodes, but reports switches_on_matrix=0. This is a direct consequence of the KEYSW misclassification: K1\u2013K45 are typed 'relay' so they are never counted as switch components on the matrix. The 45 key switches (K1\u2013K45) are all wired to COL0\u2013COL11 and ROW0\u2013ROW3 nets, so the correct value for switches_on_matrix is 45.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+            "op": "eq",
+            "value": "45"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "17 \u00d7 100nF capacitors (C1\u2013C17) are placed as local bypass capacitors for the 17 WS2812B addressable LEDs (W1\u2013W17). Each capacitor bridges the +5V and GND rails at the LED location. The signal_analysis.decoupling_analysis array is empty, indicating the analyzer did not associate these capacitors with the WS2812B LED power supply decoupling. Expected: at least one decoupling_analysis entry covering the LED power domain.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_value",
+            "value": "1"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Abacus_Rev2",
+      "project": "AbacusPCB_AbacusPCB",
+      "created": "2026-03-23T18:54:56.260220+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000359"
+    }
+  ]
+}

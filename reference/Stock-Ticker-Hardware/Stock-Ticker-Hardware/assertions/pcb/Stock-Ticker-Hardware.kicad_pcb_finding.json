@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Stock-Ticker-Hardware.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001592",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001592-AST-01",
+      "description": "PCB correctly reports: 19 footprints (all front side), 1 SMD (A1 Pico_W module), 14 THT, 4 mounting holes excluded from pos. 2-layer board (F.Cu, B.Cu), 145 track segments, 6 vias, 1 GND zone, board 60\u00d750 mm, routing complete (0 unrouted), 41 nets. These match the schematic exactly.",
+      "created_from": "FND-00001592",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 19
+      }
+    },
+    {
+      "id": "FND-00001592-AST-02",
+      "description": "INCORRECT: The placement_analysis reports 3 courtyard overlaps: U1+R2 (26.535 mm\u00b2), U1+R1 (15.538 mm\u00b2), and C1+C3 (0.0 mm\u00b2). The C1+C3 entry has zero area, indicating the courtyards merely touch at a point or share a single edge rather than truly overlap. This is a false positive \u2014 zero-area overlaps should not be flagged as violations.",
+      "created_from": "FND-00001592",
+      "check": {
+        "path": "placement_analysis.overlap_count",
+        "op": "less_than",
+        "value": 3
+      },
+      "aspirational": true
+    }
+  ]
+}

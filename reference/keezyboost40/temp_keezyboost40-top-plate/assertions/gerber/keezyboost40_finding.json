@@ -1,0 +1,19 @@
+{
+  "file_pattern": "keezyboost40",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002233",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002233-AST-01",
+      "description": "INCORRECT: The analyzer flags alignment=false with 'Width varies by 36.9mm across copper/edge layers'. F.Cu width is 180.725mm vs Edge.Cuts 217.586mm. For this keyboard PCB, Kailh hotswap sockets are placed on the back side (B.Cu=212.375mm, much closer to edge). The front copper legitimately does not extend to the full board width since the MCU and display connections are concentrated in one region. B.Cu is only 5.2mm narrower than Edge.Cuts (well within normal variance), so the board is not truly misaligned.",
+      "created_from": "FND-00002233",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    }
+  ]
+}

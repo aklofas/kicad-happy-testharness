@@ -266,6 +266,22 @@ def _find_finding(finding_id):
     return None, None, None, None
 
 
+def _strip_project_prefix(safe, repo, proj):
+    """Strip the project_path prefix from a safe filename."""
+    meta_file = data_dir(repo, proj, "baselines") / "metadata.json"
+    if meta_file.exists():
+        try:
+            meta = json.loads(meta_file.read_text())
+            pp = meta.get("project_path", "")
+            if pp and pp != ".":
+                pp_prefix = pp.replace("/", "_").replace("\\", "_") + "_"
+                if safe.startswith(pp_prefix):
+                    return safe[len(pp_prefix):]
+        except Exception:
+            pass
+    return safe
+
+
 def promote_to_assertion(finding_id, dry_run=False):
     """Generate assertion files from a finding's check fields.
 
@@ -355,10 +371,63 @@ def promote_to_assertion(finding_id, dry_run=False):
     if not assertions:
         return 0, 0
 
-    # Build a safe filename from the source file
-    safe = source.replace("/", "_").replace("\\", "_")
-    if safe.endswith(".json"):
-        safe = safe[:-5]
+    # Build file_pattern from source_file.
+    # source_file is like "schematic/repo/projprefix_file.kicad_sch.json"
+    # file_pattern should be just "file.kicad_sch" (no type/repo prefix, no project prefix)
+    # because find_output_file() prepends project_prefix automatically.
+    source_stripped = source
+    if source_stripped.endswith(".json"):
+        source_stripped = source_stripped[:-5]
+    # Strip {type}/{repo}/ prefix if present
+    parts = source_stripped.replace("\\", "/").split("/")
+    if len(parts) >= 3 and parts[0] == atype and parts[1] == repo:
+        safe = "_".join(parts[2:])
+    else:
+        safe = source_stripped.replace("/", "_").replace("\\", "_")
+    # Strip project prefix if present (output files include it but file_pattern shouldn't).
+    # First try the current project, then check all projects in case it's cross-project.
+    target_proj = proj
+    safe = _strip_project_prefix(safe, repo, proj)
+    # If safe still doesn't resolve, check if it matches a different project
+    from pathlib import Path as _P
+    _outputs_dir = _P("results/outputs") / atype / repo
+    if _outputs_dir.exists():
+        meta_file = data_dir(repo, proj, "baselines") / "metadata.json"
+        pp_prefix = ""
+        if meta_file.exists():
+            try:
+                meta = json.loads(meta_file.read_text())
+                pp = meta.get("project_path", "")
+                if pp and pp != ".":
+                    pp_prefix = pp.replace("/", "_").replace("\\", "_") + "_"
+            except Exception:
+                pass
+        expected = _outputs_dir / (pp_prefix + safe + ".json")
+        if not expected.exists():
+            # Try to find the correct project by matching output files
+            repo_dir = DATA_DIR / repo
+            if repo_dir.is_dir():
+                for pdir in sorted(repo_dir.iterdir()):
+                    if not pdir.is_dir() or pdir.name == proj:
+                        continue
+                    pmeta = pdir / "baselines" / "metadata.json"
+                    if not pmeta.exists():
+                        continue
+                    try:
+                        pm = json.loads(pmeta.read_text())
+                    except Exception:
+                        continue
+                    ppp = pm.get("project_path", "")
+                    if ppp and ppp != ".":
+                        p_prefix = ppp.replace("/", "_").replace("\\", "_") + "_"
+                    else:
+                        p_prefix = ""
+                    candidate_fp = _strip_project_prefix(safe, repo, pdir.name)
+                    candidate = _outputs_dir / (p_prefix + candidate_fp + ".json")
+                    if candidate.exists():
+                        target_proj = pdir.name
+                        safe = candidate_fp
+                        break
 
     if dry_run:
         print(f"  {finding_id}: {len(assertions)} assertions "
@@ -374,7 +443,8 @@ def promote_to_assertion(finding_id, dry_run=False):
     }
 
     # Write to data/{repo}/{project}/assertions/{type}/
-    out_dir = data_dir(repo, proj, "assertions") / atype
+    # Use target_proj which may differ from proj for cross-project assertions
+    out_dir = data_dir(repo, target_proj, "assertions") / atype
     out_dir.mkdir(parents=True, exist_ok=True)
     # Use _finding suffix to avoid collision with seed assertions
     out_file = out_dir / f"{safe}_finding.json"
@@ -486,6 +556,8 @@ def main():
         print(f"{'ID':<12s} {'Status':<12s} {'Type':<12s} {'Repo':<20s} File")
         print("-" * 85)
         for f in findings:
+            if "id" not in f:
+                continue
             source = f.get("source_file", "?")
             if len(source) > 30:
                 source = "..." + source[-27:]

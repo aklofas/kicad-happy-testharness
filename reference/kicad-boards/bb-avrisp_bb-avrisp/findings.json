@@ -1,0 +1,25 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002487",
+      "source_file": "schematic/kicad-boards/dev-uusb-psu_dev-uusb-psu.sch.json",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "LM1117-3.3 detected as power regulator but topology='unknown' and vout=null despite value encoding voltage",
+      "details": "VREG1 (LM1117-3.3, lib: Regulator_Linear:LM1117-3.3) is correctly identified as a power_regulator but topology is 'unknown', estimated_vout is null, and input_rail/output_rail are both null. The component value 'LM1117-3.3' explicitly encodes the output voltage (3.3V) and the lib_id confirms it is a fixed linear regulator. The analyzer should parse the '-3.3' suffix and emit topology='fixed_linear' with estimated_vout=3.3. Additionally, pins=[] for VREG1 in the KiCad 5 legacy format means pin-to-net connectivity was not parsed, which is why input/output rails could not be traced \u2014 this is a secondary root cause.",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002488",
+      "source_file": "schematic/kicad-boards/dev-uusb-psu_dev-uusb-psu.sch.json",
+      "analyzer_type": "schematic",
+      "category": "missed",
+      "summary": "LM1117-3.3 input (+5V) and output (+3.3V) rails not inferred despite power symbols present on same sheet",
+      "details": "Both +5V and +3.3V power rails are present on the sheet (visible in power_symbols and decoupling_analysis), and the design context clearly shows USB -> +5V -> LM1117-3.3 -> +3.3V. The analyzer emits decoupling_coverage observations for both +5V and +3.3V but fails to associate either rail with the regulator (input_rail=null, output_rail=null). Even without pin-level connectivity (pins=[] due to KiCad 5 legacy parsing), the analyzer could heuristically infer input/output rails by matching a fixed 3.3V regulator to the +5V and +3.3V rails present on the schematic."
+    }
+  ]
+}

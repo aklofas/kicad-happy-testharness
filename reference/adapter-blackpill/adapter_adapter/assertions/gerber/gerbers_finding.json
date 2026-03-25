@@ -1,0 +1,60 @@
+{
+  "file_pattern": "gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001976",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001976-AST-01",
+      "description": "Gerber reports completeness.complete:true with 9 found layers (B.Cu, B.Mask, B.Paste, B.SilkS, Edge.Cuts, F.Cu, F.Mask, F.Paste, F.SilkS) and missing_required:[]. This is correct for a 2-layer THT+connector board.",
+      "created_from": "FND-00001976",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001976-AST-02",
+      "description": "The board has no front-side SMD pads (all SMD pads are on the back for the through-hole connectors' SMD footprints). F.Paste layer_extents show width:0/height:0, consistent with an empty paste layer. The pad_summary shows smd_ratio:0.14 with SMD pads on back only.",
+      "created_from": "FND-00001976",
+      "check": {
+        "path": "pad_summary.smd_ratio",
+        "op": "less_than",
+        "value": 0.5
+      }
+    },
+    {
+      "id": "FND-00001976-AST-03",
+      "description": "45 vias at 0.305mm, 10\u00d70.6mm PTH, 128\u00d71.0mm PTH, 4\u00d74.0mm PTH (mounting holes), and 4\u00d71.5mm NPTH (panel holes). The 4.0mm PTH holes correspond to the 4 M4 mounting holes in the schematic.",
+      "created_from": "FND-00001976",
+      "check": {
+        "path": "drill_classification.mounting_holes.count",
+        "op": "min_count",
+        "value": 4
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001976-AST-04",
+      "description": "Gerber reports board_dimensions width_mm:88.94, height_mm:67.38 from Edge.Cuts. This is consistent with a compact split keyboard adapter board housing two 40-pin Blackpill breakout modules side by side.",
+      "created_from": "FND-00001976",
+      "check": {
+        "path": "board_dimensions.width_mm",
+        "op": "greater_than",
+        "value": 50
+      }
+    },
+    {
+      "id": "FND-00001976-AST-05",
+      "description": "The alignment section shows B.SilkS width:0/height:0 yet there are 24 SMD pads on the back side. A real back silkscreen is expected for component identification. This may indicate the back silkscreen Gerber file is empty or the analyzer is not detecting the back silkscreen content.",
+      "created_from": "FND-00001976",
+      "check": {
+        "path": "alignment.layer_extents.B\\.SilkS.width",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

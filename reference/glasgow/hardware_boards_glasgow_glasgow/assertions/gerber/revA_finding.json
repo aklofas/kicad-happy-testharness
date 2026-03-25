@@ -1,0 +1,38 @@
+{
+  "file_pattern": "revA",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00000303",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000303-AST-01",
+      "description": "All 6 revisions correctly 4-layer. Alignment progression accurate: revA-C1 misaligned, revC2-C3 aligned. Via evolution (0.3mm-only to 0.3+0.2mm BGA escape) captured",
+      "created_from": "FND-00000303",
+      "check": {
+        "path": "layer_count",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000303-AST-02",
+      "description": "revC3 correctly uses X2 classification (KiCad 7) while revA-C2 use diameter heuristic (KiCad 5.x). Correctly adapts across versions",
+      "created_from": "FND-00000303",
+      "check": {
+        "path": "drill_classification",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000303-AST-03",
+      "description": "Growing file count handled: 11 (revA) to 15 (revC3, adds Fab+Courtyard). Extra layers not false-flagged",
+      "created_from": "FND-00000303",
+      "check": {
+        "path": "completeness",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

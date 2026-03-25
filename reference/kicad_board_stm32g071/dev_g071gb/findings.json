@@ -1,0 +1,43 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002494",
+      "source_file": "schematic/kicad_board_stm32g071/dev_g071gb.sch.json",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "Analyzer correctly detected VDD/SWCLK net swap schematic error in STM32G071 design",
+      "details": "The analyzer correctly reports that U2 pin 26 (VDD, power_in) is connected to the 'swclk' net rather than +3.3V, and that U2 pin 8 (SWCLK(PA14)) is on the +3.3V net instead. This appears to be a genuine wiring error in the source schematic \u2014 the VDD supply pin and the SWCLK debug signal are swapped. The analyzer surfaces this both as a single_pin_net observation (only VDD is on swclk) and as an ERC warning about missing driver on swdio. The ERC warning is slightly mislabeled (it flags swdio when the root issue is on swclk), but the underlying detection is correct.",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "contains_match",
+        "value": null
+      }
+    },
+    {
+      "id": "FND-00002495",
+      "source_file": "schematic/kicad_board_stm32g071/dev_g071gb.sch.json",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "ERC warning misidentifies swdio as the problematic net instead of swclk for VDD misconnection",
+      "details": "The ERC warning states that net 'swdio' has input pins but no output driver, listing U2 pin 25 (named 'GNG', a likely library typo for GND, type power_in) and J1 pin 1 (passive). However the real wiring anomaly is on the 'swclk' net, which has only U2 pin 26 (VDD, power_in) \u2014 a power supply pin left floating on a signal net with no driving source. The analyzer chose to flag the wrong net in the ERC warning. The swdio net actually has two passive/power_in connections, which is less alarming than VDD sitting alone on swclk.",
+      "check": {
+        "path": "design_analysis.erc_warnings",
+        "op": "contains_match",
+        "value": null
+      }
+    },
+    {
+      "id": "FND-00002496",
+      "source_file": "pcb/kicad_board_stm32g071/dev_g071gb.kicad_pcb.json",
+      "analyzer_type": "pcb",
+      "category": "correct",
+      "summary": "Analyzer correctly handles a dummy/empty .kicad_pcb file without crashing",
+      "details": "The source .kicad_pcb file is a single-line stub: '(kicad_pcb (version 4) (host kicad \"dummy file\"))'. The PCB analyzer correctly returns zero footprints, zero nets, and reports routing_complete=true (vacuously true with nothing to route). The statistics all read 0 or None as expected. No error was raised \u2014 the .err file simply contains the output path, confirming clean handling of this degenerate case.",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 0
+      }
+    }
+  ]
+}

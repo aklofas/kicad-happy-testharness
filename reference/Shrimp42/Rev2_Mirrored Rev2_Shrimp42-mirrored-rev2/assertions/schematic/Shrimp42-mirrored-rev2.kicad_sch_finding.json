@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Shrimp42-mirrored-rev2.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001356",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001356-AST-01",
+      "description": "statistics.total_components=46 with 21 switches, 21 diodes, 1 ProMicro (U1), 1 TRRS connector (U2), and 2 connectors (J1, J2). Power rails GND and VCC are correctly identified. This is consistent with a 21-key left or right half of a 42-key split keyboard.",
+      "created_from": "FND-00001356",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 46,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001356-AST-02",
+      "description": "signal_analysis.key_matrices is empty for the Rev2 Mirrored half-board schematic which has nets CL0-CL5 and RL0-RL3 with 21 KEYSW switches and 21 diodes \u2014 a standard 3-or-4-row \u00d7 6-column keyboard half matrix. The TRRS connector (U2) and ProMicro (U1) confirm it is a split half PCB. The matrix detector fails to trigger even with canonical row/column net names.",
+      "created_from": "FND-00001356",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

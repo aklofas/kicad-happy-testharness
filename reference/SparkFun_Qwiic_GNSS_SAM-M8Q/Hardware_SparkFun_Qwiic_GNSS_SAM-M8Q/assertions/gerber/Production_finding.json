@@ -1,0 +1,82 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001455",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001455-AST-01",
+      "description": "All 8 required non-Edge-Cuts gerber layers are present: F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS. The drill file is present with 1350 holes total. The layer_count=4 and drill classification (1065 via holes at 0.3mm, 225 component holes, 60 mounting holes at 3.1mm NPTH) is correct for this panelized design.",
+      "created_from": "FND-00001455",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "FND-00001455-AST-02",
+      "description": "The gerber drill file reports 1065 via holes at 0.3mm diameter. The PCB analyzer reports 71 vias at 0.56/0.3mm. The panelized gerber contains 15 copies of the board (1065 / 71 = 15), which is consistent with a panelized gerber set. The component hole counts (225 PTH, 60 NPTH at 3.1mm) are also consistent with a 15-up panel (15 boards x 4 mounting holes = 60).",
+      "created_from": "FND-00001455",
+      "check": {
+        "path": "drill_classification.vias.count",
+        "op": "equals",
+        "value": 1065
+      }
+    },
+    {
+      "id": "FND-00001455-AST-03",
+      "description": "The alignment check correctly reports aligned=true with no alignment issues. The copper layer extents (B.Cu and F.Cu both 81.375 x 143.288 mm) are correctly matched, reflecting the panelized board dimensions. The silkscreen and paste layers have smaller extents (expected, as they don't cover the entire panel outline).",
+      "created_from": "FND-00001455",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001455-AST-04",
+      "description": "The drill file has a T2 tool (0.6mm diameter, 0 holes) which is unused. T3 (1.016mm, 180 holes) are PTH component holes, T4 (0.65mm, 30 holes) and T5 (2.3mm, 15 holes) are NPTH component holes, T6 (3.1mm, 60 holes) are NPTH mounting holes. The classification_method='x2_attributes' is correct. The 2.3mm NPTH holes are likely the edge castellations on the board.",
+      "created_from": "FND-00001455",
+      "check": {
+        "path": "drill_classification.classification_method",
+        "op": "equals",
+        "value": "x2_attributes"
+      }
+    },
+    {
+      "id": "FND-00001455-AST-05",
+      "description": "The pad_summary reports smd_apertures=1806, via_apertures=2130, tht_holes=225, smd_ratio=0.89. The high SMD ratio is correct for this board dominated by SMD components. In the panel, the SAM-M8Q 100-pad LCC contributes heavily to the B.Paste flash count (1200 flashes on B.Paste from U1's 100 pads x 15 panels... wait, 1200/15=80, but U1 has 100 pads). The B.Paste only shows 1200 flashes with 2 apertures, suggesting the GNSS module pads use 2 aperture sizes on the bottom paste layer.",
+      "created_from": "FND-00001455",
+      "check": {
+        "path": "pad_summary.smd_ratio",
+        "op": "greater_than",
+        "value": 0.8
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected > 0.8, got 0"
+    },
+    {
+      "id": "FND-00001455-AST-06",
+      "description": "INCORRECT: The completeness check reports missing_required=['Edge.Cuts'] and complete=false. However, there is a file 'SparkFun_Qwiic_GNSS_SAM-M8Q_panelized.GKO' in the gerber set. GKO is the legacy Altium/KiCad extension for board outline (Edge.Cuts). The analyzer correctly parses this file (758 draw_count, Profile aperture function), but the layer type is incorrectly mapped to 'B.Mask' instead of 'Edge.Cuts'. Because it is mis-identified as B.Mask rather than Edge.Cuts, the completeness check concludes Edge.Cuts is missing. This is a layer-type classification error in the gerber analyzer.",
+      "created_from": "FND-00001455",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001455-AST-07",
+      "description": "INCORRECT: The file SparkFun_Qwiic_GNSS_SAM-M8Q_panelized.GKO has x2_attributes FileFunction='Soldermask,Bot' which would indicate B.Mask, but this is actually the board outline file. The .GKO extension is the standard KiCad extension for the board outline (Edge.Cuts). The x2 attribute 'Soldermask,Bot' appears to be incorrect metadata in the file itself, or the analyzer is failing to use the file extension as a fallback hint. The Profile aperture function in the aperture_analysis is correctly detected, but the layer_type assignment is wrong.",
+      "created_from": "FND-00001455",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    }
+  ]
+}

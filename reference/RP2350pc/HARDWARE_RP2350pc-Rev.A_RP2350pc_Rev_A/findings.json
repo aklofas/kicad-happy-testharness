@@ -181,26 +181,46 @@
       "repo": "RP2350pc",
       "project": "HARDWARE_RP2350pc-Rev.A_RP2350pc_Rev_A",
       "created": "2026-03-17T18:11:48.072700+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "pcb",
       "source_file": "HARDWARE_RP2350pc-Rev.A_RP2350pc_Rev_A.kicad_pcb.json",
       "summary": "RP2350pc PCB: copper_layers_used includes F.Mask (non-copper layer), connector shield pads misidentified as thermal pads, zone stitching via areas inflated by per-polygon calculation",
       "correct": [
         {
           "description": "Footprint count and board dimensions consistent with RP2350 SBC",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SMD/THT breakdown reasonable for modern mixed-technology board",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DFM analysis present with appropriate tier",
-          "analyzer_section": "dfm"
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power net routing analysis covers supply rails",
-          "analyzer_section": "power_net_routing"
+          "analyzer_section": "power_net_routing",
+          "check": {
+            "path": "power_net_routing",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

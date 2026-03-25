@@ -1,0 +1,18 @@
+{
+  "file_pattern": "emberone.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002039",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002039-AST-01",
+      "description": "power_sequencing detects U1's EN2 pin connected to an unnamed floating net and generates a floating_en_warnings entry. The main schematic correctly aggregates 395 components across hierarchical sheets (power, data, asics, and four asic-3up-* instances), with 338 nets and correct power rail identification of GND, VDD, VIN, VIN_M. The USB-C Type-C connector J6 passes cc1/cc2 pulldown, D+/D- series resistor, and VBUS decoupling checks, only failing VBUS ESD protection.",
+      "created_from": "FND-00002039",
+      "check": {
+        "path": "power_sequencing.floating_en_warnings",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

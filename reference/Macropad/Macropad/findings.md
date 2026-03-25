@@ -1,0 +1,99 @@
+# Findings: Macropad / Macropad
+
+## FND-00000940: Key matrix 4x3 with 12 switches and 12 diodes correctly detected; SK6812 addressable LED chain of 12 correctly detected with NeoPixelControls net; FALSE POSITIVE: pwr_flag_warnings incorrectly repo...
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: Macropad.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- key_matrices correctly identifies 4 rows (ROW0-ROW3), 3 columns (COL0-COL2), 12 switches, 12 diodes via net_name detection.
+- addressable_led_chains finds chain_length=12, LED1 to LED12, protocol=single-wire (WS2812), led_type=SK6812, data_in_net=NeoPixelControls, estimated_current_mA=720. All correct.
+- All component counts match expected design. BOM grouping is correct. MCU1 as 'ic' for the Feather module connector is acceptable classification.
+
+### Incorrect
+- Two PWR_FLAG symbols exist: one is wired to the +3V3 power symbol at (35.56,34.29) and one to the Earth symbol at (35.56,39.37). Both are properly connected via wire to their respective rails. The analyzer reports both nets as lacking PWR_FLAG — the net assignment logic is failing to resolve these wire connections. The statistics section even correctly lists 'PWR_FLAG' in power_rails, contradicting the warnings.
+  (signal_analysis)
+- The ic_pin_analysis section shows MCU1 pin 2 (3V3) has 12 capacitors connected on the +3V3 net and pin 4/16 (GND) has 12 capacitors on the Earth net. Yet design_observations contradicts this with rails_without_caps=[Earth, +3V3] and rails_with_caps=[]. The decoupling detection logic in design_observations is using a different (broken) code path from ic_pin_analysis.
+  (signal_analysis)
+- The MCU1 (Adafruit Feather RP2040 connector) has all its GPIO pins typed as 'input' in the KiCad symbol library. In reality these are bidirectional GPIOs driving the matrix rows and LED data. The warning is technically correct at the symbol type level but is a false positive in practice — these signals ARE driven by the MCU at runtime.
+  (signal_analysis)
+- The design uses 'Earth' as the ground net name instead of the conventional 'GND'. The ground_domains analyzer returns ground_nets={} and multiple_domains=false, failing to identify Earth as a ground net. This causes downstream issues in power domain analysis.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000941: Legacy KiCad 5 schematic parsed correctly, same BOM, key matrix and LED chain detected; Legacy .sch output missing pwr_flag_warnings, ground_domains, connectivity_issues sections
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: Macropad.sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- Both key matrix (4x3, 12 switches, 12 diodes) and SK6812 chain (12 LEDs, NeoPixelControls) are correctly found. MCU is J1 (connector type) in this version, which is correct for legacy format. 60 nets vs 52 in kicad6 is expected due to different net numbering.
+
+### Incorrect
+(none)
+
+### Missed
+- The legacy parser produces a much smaller output: no pwr_flag_warnings, no ground_domains, no label_shape_warnings, no ic_pin_analysis, no annotation_issues. Some of these missing sections represent reduced analysis capability for KiCad 5 format — this is an expected limitation but worth noting.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000942: FALSE POSITIVE: courtyard overlaps between LED1-12 and SW1-12 are intentional design; Board dimensions, routing completeness, and DFM check are correct; tht_count discrepancy: PCB reports 14 THT vs...
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: Macropad.kicad_pcb.json
+- **Created**: 2026-03-23
+
+### Correct
+- Board 59.944x119.888mm is fully routed (0 unrouted), 100 vias, 330 tracks. DFM correctly flags the board as exceeding JLCPCB 100x100mm pricing tier. Earth ground fill with 23 stitching vias on both layers is correctly reported.
+
+### Incorrect
+- The SK6812MINI-E reverse-mount footprint (MX_SK6812MINI-E_REV) is specifically designed to sit through/under hotswap switch sockets. The 30.4mm2 overlap between each LED and its paired switch is by design. Reporting 12 courtyard violations for this common keyboard LED arrangement is a false positive.
+  (signal_analysis)
+- PCB correctly identifies 12 SK6812 LEDs (MX_SK6812MINI-E_REV) + MCU1 connector + RLED1 resistor = 14 through-hole footprints. The schematic assembly_complexity counts only RLED1 as THT (tht_count=1), missing the 12 reverse-mount LEDs and MCU connector which have THT pads in the PCB. The schematic-side assembly complexity significantly underestimates THT component count.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000943: Gerber analyzer attempts to parse .git directory and non-gerber files as gerbers; Drill file analysis is accurate: 196 total holes, via/component/mounting classification correct
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: _home_aklofas_Projects_kicad-happy-testharness_repos_Macropad.json
+- **Created**: 2026-03-23
+
+### Correct
+- PTH drill (100 vias at 0.4mm + 2+28 component holes) and NPTH drill (24+6+24+12 mounting/switch holes) are correctly classified. X2 attribute-based classification method is properly used. Total 196 holes matches expected 100 vias + 30 component + 66 NPTH.
+
+### Incorrect
+- The analyzer was run on the repo root where no copper/mask gerber files exist (only .drl files). It attempts to parse .git (directory), .gitignore, and .gitmodules as gerber files. While it handles the .git error gracefully, it then falsely reports completeness.found_layers=[] and all standard copper/mask layers as missing_required. This is a file-discovery false positive — the analyzer should filter for known gerber extensions before attempting to parse.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

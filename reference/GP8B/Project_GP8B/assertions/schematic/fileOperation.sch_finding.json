@@ -1,0 +1,18 @@
+{
+  "file_pattern": "fileOperation.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000569",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000569-AST-01",
+      "description": "fileOperation.sch analyzed in isolation finds only the 19 components physically in that sheet (IC1 CPLD, J1/J4/J5 connectors, U28/U30/U32 level shifters/LDO, 12 decoupling caps) and correctly identifies +3.3V, +1V8, GND as the local power rails \u2014 no +5V which belongs to other sheets.",
+      "created_from": "FND-00000569",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

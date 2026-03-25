@@ -1,0 +1,155 @@
+{
+  "file_pattern": "Hardware_SparkFun_XRP_Controller.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001892",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001892-AST-01",
+      "description": "total_components=184 correctly counts unique physical parts (the components list has 188 entries because Q1/Q3/Q5/Q7 are dual-unit BCM857BS BJTs appearing as 2 units each; 188-4=184). Component types are all classified correctly: 49 resistors, 45 capacitors, 9 transistors, 9 ICs, 14 jumpers, 19 connectors, etc. Power rails (1.1V, 3.3V, 5V, GND, VBATT, VIN, VRAW, VSYS, VUSB) are all correctly identified.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 184,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001892-AST-02",
+      "description": "Crystal Y1 (12MHz) detected with C17=15pF and C18=15pF as load caps. Effective load capacitance computed as 10.5pF (7.5pF series + 3pF stray), which is within the typical RP2350 crystal specification range. The 'in_typical_range': True flag is correct.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "signal_analysis.crystal_circuits[0].reference",
+        "value": "Y1",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001892-AST-03",
+      "description": "D4 (WS2812B) detected as a single-element addressable LED chain on GPIO37/NEOPIXEL, protocol 'single-wire (WS2812)', estimated 60mA current. Data input net correctly identified.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains[0].first_led",
+        "value": "D4",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001892-AST-04",
+      "description": "J2 (USB_C_Receptacle) checks: CC1 5.1k pull-down (R29) pass, CC2 5.1k pull-down (R28) pass, DP/DM series resistors (R4/R5 27ohm each) pass, USB ESD IC (D5 DT1042-04SO) pass, VBUS ESD protection pass. One expected fail: VBUS decoupling (no bulk cap directly on VUSB rail at connector). All 6 passes and 1 fail are correct.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "usb_compliance.summary.pass",
+        "value": 6,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001892-AST-05",
+      "description": "U5 (RT9080-3.3, lib SparkFun-Regulator:RT9080-3.3) detected as LDO, input_rail=VSYS, output_rail=3.3V, estimated_vout=3.3, vref_source=fixed_suffix. All fields are accurate per the RT9080 datasheet (600mA LDO, 3.3V fixed output).",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].ref",
+        "value": "U5",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001892-AST-06",
+      "description": "protection_devices correctly lists D5 as type=esd_ic protecting USB_D+ and USB_D- nets. F1 (16V/2.5A PTC fuse) protecting VBATT and F2 (6V/0.75A PTC fuse) protecting VUSB are also correctly categorized.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "signal_analysis.protection_devices[0].type",
+        "value": "esd_ic",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001892-AST-07",
+      "description": "All 9 transistors in the power management circuit are detected: Q2, Q4, Q6, Q8, Q9 (DMG2305UX P-MOSFET) and Q1, Q3, Q5, Q7 (BCM857BS dual-PNP BJT). Each has correct gate/base nets, source/drain/emitter/collector nets, and associated gate resistors. This is a complex multi-MOSFET power multiplexer with BJT gate drivers.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "value": 9,
+        "op": "count_eq"
+      },
+      "aspirational": true,
+      "aspirational_reason": "unknown operator count_eq not supported by checks engine"
+    },
+    {
+      "id": "FND-00001892-AST-08",
+      "description": "The feedback divider R8=180k (top) / R9=33k (bottom) from 5V to FB pin of U4 is correctly detected as a feedback network with ratio=0.155. Back-calculating: Vout = Vref/ratio = 0.8V/0.155 = 5.16V, which matches the 5V rail. The is_feedback=True flag and FB pin connection to U4 pin 3 are correct.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "signal_analysis.feedback_networks[0].mid_point_connections[1].component",
+        "value": "U4",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001892-AST-09",
+      "description": "INCORRECT: U4 (AP63357DV-7, 3.5A adjustable buck regulator, lib_id=SparkFun-IC-Power:AP63357DV-7) is NOT listed in signal_analysis.power_regulators, which contains only U5 (LDO). U4 converts VRAW to 5V via the detected feedback network. The regulator detector appears to match only the 'SparkFun-Regulator:' library prefix, missing the 'SparkFun-IC-Power:' prefix used for this buck regulator. U5 uses 'SparkFun-Regulator:RT9080-3.3' and is found; U4 uses 'SparkFun-IC-Power:AP63357DV-7' and is missed.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 2,
+        "op": "count_eq"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001892-AST-10",
+      "description": "INCORRECT: design_analysis.bus_analysis.i2c reports has_pull_up=False for all four I2C buses (GPIO4/SDA0, GPIO5/SCL0, GPIO38/SDA1, GPIO39/SCL1). In reality, pull-ups are present but routed through solder jumpers: R16 (2.2k) on SDA0 and R17 (2.2k) on SCL0 pass through JP6 (I2C0 jumper) to 3.3V; R14 (2.2k) on SDA1 and R15 (2.2k) on SCL1 pass through JP5 (I2C1 jumper) to 3.3V. The bus analyzer requires a direct resistor connection from I2C net to power net and cannot trace one hop through a 3-pin jumper.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c[0].has_pull_up",
+        "value": false,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001892-AST-11",
+      "description": "INCORRECT: design_analysis.differential_pairs reports the USB_D+/USB_D- pair with has_esd=False even though D5 (DT1042-04SO) appears in shared_ics=['D5', 'J2'] for that pair. Separately, usb_compliance.connectors[0].checks.usb_esd_ic='pass' and signal_analysis.protection_devices correctly identifies D5 as an ESD IC protecting USB_D+. The differential_pairs detector shares the component list but fails to check whether any shared IC is an ESD type, creating an internal inconsistency.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "design_analysis.differential_pairs[0].has_esd",
+        "value": false,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001892-AST-12",
+      "description": "U2 (W25Q128JVPIM, 16MB QSPI Flash) and U3 (APS6404L-3SQR-ZR, 8MB QSPI PSRAM) are connected to U1 (RP2350B) via a shared QSPI bus (nets QSPI_D0, QSPI_D1, QSPI_D2, QSPI_D3, QSPI_CLK, FLASH_CS). The memory_interfaces list is empty in all schematic outputs including core.kicad_sch where these ICs reside. Both ICs appear in subcircuits with appropriate descriptions but the SPI/QSPI memory interface topology is not detected.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "value": 0,
+        "op": "count_eq"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001892-AST-13",
+      "description": "design_analysis.bus_analysis.spi is empty in all schematic outputs. The RP2350B (U1) drives U2 (W25Q128) and U3 (APS6404L) via QSPI with nets named QSPI_CLK, QSPI_D0-D3, FLASH_CS. The LSM6DSOX (U6) has optional SPI aux port (pins SDO_Aux, CS). The SPI detector appears to not match these net naming conventions.",
+      "created_from": "FND-00001892",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "value": 0,
+        "op": "count_eq"
+      },
+      "aspirational": true
+    }
+  ]
+}

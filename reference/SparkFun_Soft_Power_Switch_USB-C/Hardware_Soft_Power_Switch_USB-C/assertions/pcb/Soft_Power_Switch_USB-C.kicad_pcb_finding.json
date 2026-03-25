@@ -1,0 +1,51 @@
+{
+  "file_pattern": "Soft_Power_Switch_USB-C.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001490",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001490-AST-01",
+      "description": "The analyzer correctly reports 61 total footprints (42 front-side, 19 back-side). The board dimensions are 25.4\u00d725.4mm (1 inch square), consistent with a compact SparkFun breakout. The layer count of 2 is correct (F.Cu and B.Cu). Track count 284 and via count 55 are consistent with a compact 2-layer USB power switch design.",
+      "created_from": "FND-00001490",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 61
+      }
+    },
+    {
+      "id": "FND-00001490-AST-02",
+      "description": "The PCB analyzer correctly identifies 35 SMD and 3 THT footprints from the actual footprint assignments. J1 and J2 are USB-C through-hole connectors, J3 is a 6-pin through-hole header. The remaining 3 footprints not in SMD/THT counts (61 total vs 35+3=38) are likely board_only/fabrication footprints such as Kibuzzard decorative artwork elements that have no pads.",
+      "created_from": "FND-00001490",
+      "check": {
+        "path": "statistics.tht",
+        "op": "equals",
+        "value": 3
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected 3, got None"
+    },
+    {
+      "id": "FND-00001490-AST-03",
+      "description": "The analyzer correctly identifies 1 copper zone (GND net pour covering the board). The fill_ratio of 1.125 is slightly above 1.0, which is physically valid since copper pours can have slightly more surface area than the zone boundary due to thermal relief spokes extending beyond zone edges. The zone is on a copper layer and is filled.",
+      "created_from": "FND-00001490",
+      "check": {
+        "path": "statistics.zone_count",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001490-AST-04",
+      "description": "INCORRECT: The via_in_pad detection flags C2 pad 1 with same_net=False. C2 is the 47\u00b5F filter capacitor. If a via is placed within C2's pad footprint keepout zone or physical pad area, same_net=False would indicate a different net via intruding on the pad \u2014 a genuine DFM concern. However, same_net=False could also arise from a GND-connected pad and a GND-named via having slightly different net name representations (e.g., 'GND' vs '/GND'). This finding should be verified against the actual PCB layout.",
+      "created_from": "FND-00001490",
+      "check": {
+        "path": "connectivity.via_in_pad",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

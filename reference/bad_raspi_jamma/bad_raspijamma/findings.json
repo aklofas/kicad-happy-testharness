@@ -1,0 +1,223 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "bad_raspijamma.kicad_sch.json.json",
+      "status": "new",
+      "summary": "Component counts and types are accurate for bad_raspi_jamma; I2C bus detected with missing pull-up resistors; RC low-pass filters on PWM audio paths correctly detected; pwr_flag_warnings incorrectl...",
+      "correct": [
+        {
+          "description": "39 total components, 23 resistors (R, RB, RG, RR prefix groups), 8 capacitors, 4 connectors, 3 ICs (MCP23017 x2, LM4952TS), 1 switch, 1 potentiometer \u2014 all verified against the .kicad_sch source. BOM correctly identifies U2 (LM4952TS/NOPB) as the only component with an MPN.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 39,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "I2C_SCL and I2C_SDA nets are correctly identified as I2C signals driven by U1 and U3 (both MCP23017), and has_pull_up=False is correct \u2014 the schematic explicitly notes 'No pullup on I2C' as one of its design errors.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "value": {
+              "net": "I2C_SCL",
+              "has_pull_up": false
+            },
+            "op": "contains_match"
+          }
+        },
+        {
+          "description": "R3/C2/C4 and R4/C1/C3 form RC low-pass filters for PWM_LEFT and PWM_RIGHT audio signals. The analyzer detects 4 RC filter instances (two true low-pass and two RC-network pairs) which correctly reflects the two symmetric filter channels in the schematic.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "value": 4,
+            "op": "min_count"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The schematic contains 4 PWR_FLAG power symbols placed adjacent to +12V, +3.3V, +5V, and GND rails and connected to them by wires. The analyzer treats PWR_FLAG as its own isolated net (visible as 'PWR_FLAG' in power_rails) rather than recognizing it is wired to the adjacent power rail. This causes false positive warnings that +12V, +3.3V, +5V, and GND lack PWR_FLAG, when in fact all four rails are flagged.",
+          "analyzer_section": "pwr_flag_warnings",
+          "check": {
+            "path": "pwr_flag_warnings",
+            "value": 0,
+            "op": "max_count"
+          }
+        },
+        {
+          "description": "Nets B2..B7 form a 6-signal Blue bus, G2..G7 a 6-signal Green bus, and R2..R7 a 6-signal Red bus (GPIO outputs driving R-2R DAC ladders for JAMMA RGB video). The range field correctly shows e.g. 'B2..B7' but width=12 for each, which appears to count total pin-connections across all nets in the bus (6 nets \u00d7 2 pins each = 12) rather than the number of signal lines. Standard bus width should be 6.",
+          "analyzer_section": "bus_topology",
+          "check": {
+            "path": "bus_topology.detected_bus_signals",
+            "value": {
+              "prefix": "B",
+              "width": 6
+            },
+            "op": "contains_match"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "bad_raspi_jamma",
+      "project": "bad_raspijamma",
+      "created": "2026-03-24T01:48:21.560004+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001849"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "bat-detector.sch.json.json",
+      "status": "new",
+      "summary": "Component counts, IC types, and transistor circuits correctly identified; MK1 (Microphone_Ultrasound) classified as 'fiducial' instead of a sensor/transducer type",
+      "correct": [
+        {
+          "description": "26 total components: 3 ICs (NE555, TL072, LM386), 12 resistors, 7 capacitors, 2 BC548 transistors, 1 speaker, 1 microphone/fiducial, 1 potentiometer. Transistor circuits for Q1 and Q2 are correctly detected with their base resistors and bias networks. RC filters (7 instances) around the ultrasound amplifier chain are accurate.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 26,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "MK1 uses lib_id 'Device:Microphone_Ultrasound' and value 'Microphone_Ultrasound' \u2014 it is an ultrasonic transducer (microphone) used as the bat detector's sensor input. The analyzer classifies it as 'fiducial' which is incorrect; it should be classified as a sensor, transducer, or microphone type. This causes the component_types count to show fiducial=1 rather than the correct category.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.fiducial",
+            "value": 0,
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Fix: MK1 (Microphone_Ultrasound) classified as 'fiducial' instead of a sensor/transducer type"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "bad_raspi_jamma",
+      "project": "bad_raspijamma",
+      "created": "2026-03-24T01:48:21.560026+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001850"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "bat-detector.kicad_pcb.json.json",
+      "status": "new",
+      "summary": "PCB analyzer correctly handles stub KiCad v4 dummy file with zero content",
+      "correct": [
+        {
+          "description": "The bat-detector.kicad_pcb file contains only '(kicad_pcb (version 4) (host kicad \"dummy file\") )' \u2014 a one-line placeholder. The analyzer returns all zero statistics, empty footprint list, and no routing data, which accurately reflects the file's content. The silkscreen section correctly flags missing_board_name and missing_revision.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 0,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "bad_raspi_jamma",
+      "project": "bad_raspijamma",
+      "created": "2026-03-24T01:48:21.560029+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001851"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "battery_ups.kicad_sch.json.json",
+      "status": "new",
+      "summary": "Component count of 16 is correct including 4 non-BOM mounting holes; HX-2S-JH20 BMS protection IC (U2) not detected as a BMS system; multi_driver_nets false positive: U1 and U3 OUT- both on GND is ...",
+      "correct": [
+        {
+          "description": "16 total_components matches the schematic: 2 batteries (BT1/BT2), 2 diodes (D1/D2), 1 fuse (F1), 4 mounting holes (H3-H6, in_bom=false), 3 connectors (J1/J2/J3), 1 switch (SW1), 3 ICs (U1/U2/U3). BOM correctly lists 12 components (excludes mounting holes). The split is verified against the source .kicad_sch.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 16,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "connectivity_issues.multi_driver_nets flags GND as having two 'power_out' drivers (U1 pin 4 OUT- and U3 pin 4 OUT-). These are custom VoltageConverter modules (XL4015 step-down and a step-up module) where the OUT- pin is a power return/ground. Two power converters sharing the same GND return is completely normal and not a real conflict. The flag occurs because the custom symbols define OUT- as power_out type rather than power_in/passive.",
+          "analyzer_section": "connectivity_issues",
+          "check": {
+            "path": "connectivity_issues.multi_driver_nets",
+            "value": 0,
+            "op": "max_count"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "U2 uses lib_id 'MySymbols:HX-2S-JH20', value '~', and connects to BT1 (B-), BT1/BT2 midpoint (BM), BT2 (B+), a fuse (P+), and GND (P-) \u2014 a classic 2-cell lithium battery management/protection circuit topology. The bms_systems list is empty and protection_devices is also empty. The analyzer does not detect BMS ICs from custom/non-standard library names, and the generic value '~' provides no clue. This should be flagged as a BMS or protection device.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.bms_systems",
+            "value": 1,
+            "op": "min_count"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "bad_raspi_jamma",
+      "project": "bad_raspijamma",
+      "created": "2026-03-24T01:48:21.560033+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001852"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "battery_ups.kicad_pcb.json.json",
+      "status": "new",
+      "summary": "PCB footprint counts, layer distribution, and board dimensions are accurate; Via-in-pad correctly detected for J3 battery tester connector",
+      "correct": [
+        {
+          "description": "footprint_count=16 (14 on F.Cu + 2 on B.Cu), tht_count=12 (real THT), exclude_from_pos_files=4 (mounting holes H3-H6). Board is 85.5\u00d7122.0mm matching the Edge.Cuts rect. 2 copper layers (F.Cu, B.Cu). 78 track segments, 2 vias, 1 GND zone. All verified against the source .kicad_pcb file.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 16,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "J3 uses a custom 'BattTester' footprint that places two through-hole vias (drill 0.5mm and 0.6mm) within the courtyard bounds of the connector pads. The analyzer correctly identifies both via-in-pad instances on pad 1 and pad 2 of J3, with same_net=true confirming they are intentionally connected.",
+          "analyzer_section": "vias",
+          "check": {
+            "path": "vias.via_analysis.via_in_pad",
+            "value": 2,
+            "op": "min_count"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "bad_raspi_jamma",
+      "project": "bad_raspijamma",
+      "created": "2026-03-24T01:48:21.560036+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001853"
+    }
+  ]
+}

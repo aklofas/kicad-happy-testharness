@@ -1,0 +1,41 @@
+{
+  "file_pattern": "BandSelector.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000397",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000397-AST-01",
+      "description": "INCORRECT: C10 has value '2.2' (aluminum electrolytic, CP_Radial_D5.0mm footprint \u2014 clearly 2.2uF). The inrush_analysis section treats this as 2.2 Farads, giving total_output_capacitance_uF: 2200000.0 and estimated_inrush_A: 22000.0. These values are physically impossible for a small THT electrolytic capacitor. The correct capacitance is 2.2 uF.",
+      "created_from": "FND-00000397",
+      "check": {
+        "path": "inrush_analysis.rails[0].total_output_capacitance_uF",
+        "op": "less_than",
+        "value": 1000
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000397-AST-02",
+      "description": "INCORRECT: Capacitors C9 and C10 have value '2.2' and C8 has value '220'. These are aluminum electrolytic capacitors (CP_Radial footprints) and the bare numeric convention for this component class is microfarads (2.2uF and 220uF). In signal_analysis.decoupling_analysis the farads values are 2.2e-12 and 2.2e-10 (picofarad range \u2014 wrong), causing total_capacitance_uF: 0.0 for +12V and +5V rails. In pdn_impedance the same caps are parsed as 2.2F and 220F (Farad range \u2014 also wrong). Neither interpretation is correct.",
+      "created_from": "FND-00000397",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+        "op": "greater_than",
+        "value": 0.1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000397-AST-03",
+      "description": "INCORRECT: U2 (L7805) is a classic fixed positive linear voltage regulator from the 78xx series. It is NOT an LDO \u2014 it requires a dropout voltage of ~2V. The signal_analysis.power_regulators entry reports topology: 'LDO', which is incorrect. The correct classification is 'linear' or 'fixed_linear'. This also propagates to power_budget and inrush_analysis which also show topology: 'LDO'.",
+      "created_from": "FND-00000397",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].topology",
+        "op": "equals",
+        "value": "LDO"
+      },
+      "aspirational": true
+    }
+  ]
+}

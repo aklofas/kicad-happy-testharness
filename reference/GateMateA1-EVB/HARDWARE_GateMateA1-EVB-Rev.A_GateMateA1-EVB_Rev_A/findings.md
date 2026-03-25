@@ -1,0 +1,35 @@
+# Findings: GateMateA1-EVB / HARDWARE_GateMateA1-EVB-Rev.A_GateMateA1-EVB_Rev_A
+
+## FND-00000596: Component classification correct across all categories; 5 TPS62A02A switching regulators correctly detected with proper inductor associations; Memory interface correctly detected: LY68S3200SLT SPI ...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: HARDWARE_GateMateA1-EVB-Rev.C_GateMateA1-EVB_Rev_C.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- 286 total components (Rev.C) with correct type breakdown: 122 caps, 73 resistors, 13 ICs, 5 inductors, 2 ferrite beads, 1 oscillator (CR1 = MEMS SX5M10), 1 crystal (Q1 = 12MHz XTAL), 22 DNP parts. BOM type assignments are accurate throughout.
+- U11-U15 (TPS62A02ADRLR) each correctly identified as switching topology with inductors L3-L7 respectively, input rail +5V_USB, and estimated output voltages (1.1V, 1.2V, 1.8V, 2.5V, 3.3V) matching the design rails for the GateMate1 FPGA power domains.
+- U8 (LY68S3200SLT SOIC-8 SPI PSRAM) linked to U10 (RP2040) via 6 shared signal nets. This is correct — the RP2040 manages FPGA configuration via SPI and uses the PSRAM for buffering.
+- Analyzer flags C11, C36, R33, R34, R46, R48, U8 as duplicate references. Inspection confirms these are genuine schematic annotation errors: C11 appears 3× with different UUIDs (same value, true dupe), R33 appears 2× with different values (866R and 2.2k — different components with same ref), U8 appears 3× including once with W25Q16BV lib_id that should be U3.
+- TVS1-TVS5 (GG0402052R542P) all have NA(...) value prefix indicating DNP status. The analyzer correctly returns protection_devices=0 since none are installed. Not a missed detection — the parts are intentionally unpopulated.
+- USB-C1 connector CC1/CC2 resistor checks pass (5.1k pull-downs present for UFP). VBUS ESD protection is correctly flagged as fail — no TVS on VBUS is present (TVS diodes are all DNP). USB data lines lack ESD protection (R55/R56 are series resistors, no dedicated ESD device).
+- Q1 spec is 20pF load capacitance. C110 and C111 are 18pF each in series = 9pF effective, plus stray yields ~12pF reported. This is a slight under-estimation (typical stray ~3-5pF would give 12-14pF vs 20pF spec), but the calculation methodology is sound and the under-load observation is worth noting.
+- 4 voltage dividers detected (R67/R71, R60/R64, R68/R72, R61/R65) matching the regulator feedback resistor pairs for VOUT sense networks on U11-U15. These are legitimately classified as both voltage_dividers and feedback_networks, which is accurate for regulator feedback topology.
+
+### Incorrect
+- The file uses (version 20230121) which corresponds to KiCad 7.x. The analyzer reads file_version correctly as '20230121' but reports kicad_version as 'unknown'. The kicad_version field should map file format versions to app version strings (20230121 = KiCad 7.x). This affects all three revisions identically.
+  (signal_analysis)
+- Six power rails (+1V8, +3V3, +1V2, +5V_USB, +2V5, GND) are flagged as missing PWR_FLAG. However, all FPGA supply rails are directly driven by TPS62A02A switching regulator outputs (power_out pins) — these do not need PWR_FLAGs. The +5V_USB is sourced from USB-C connector. The warnings appear because the analyzer checks for PWR_FLAG symbols but the regulator output pins may not be recognized as power drivers on those nets. This is a high-confidence false positive for this design topology.
+  (signal_analysis)
+
+### Missed
+- Each TPS62A02A regulator (U11-U15) has a 1.0uH power inductor (L3-L7) in series with the output followed by large bulk capacitors (22uF + 47uF). These are classic LC output filter topologies. The lc_filters detector returns 0 results. The detector likely only looks for passive LC networks not associated with a regulator, missing this important class of LC filter entirely.
+  (signal_analysis)
+- The GateMate FPGA has JTAG configuration pins and the board includes a JTAG_LED1 indicator and JTAG-related labels (TCK, TDI, TDO, TMS visible in bus signals and global labels). The analyzer does not report any JTAG interface detection. Bus signal detector does find CFG_MD[0..3] and clock signals, but a dedicated JTAG bus protocol detector is absent.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---

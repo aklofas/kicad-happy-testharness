@@ -1,0 +1,41 @@
+{
+  "findings": [
+    {
+      "type": "text",
+      "text": "I'll analyze the schematic analyzer output for the 2ch-4-20mA-converter repo. Let me read all the relevant files.",
+      "status": "new"
+    },
+    {
+      "source_file": "/home/aklofas/Projects/kicad-happy-testharness/repos/2ch-4-20mA-converter/hardware/1ch-4-20mA/1ch-4-20mA.sch",
+      "output_file": "/home/aklofas/Projects/kicad-happy-testharness/results/outputs/schematic/2ch-4-20mA-converter/hardware_1ch-4-20mA_1ch-4-20mA.sch.json",
+      "repo": "2ch-4-20mA-converter",
+      "analyzer_type": "schematic",
+      "category": "false_negative",
+      "severity": "medium",
+      "summary": "Current-sense amplifier circuit not detected for U1 (LMP8640) with shunt R2",
+      "details": "U1 is a TI LMP8640 high-side current shunt monitor (lib: Amplifier_Current:LMP8640). R2 (4.99\u03a9) is the shunt resistor connected across U1's + (pin 3) and - (pin 4) differential inputs. This is a canonical current-sense circuit \u2014 the IC is explicitly classed as a current amplifier and the shunt is directly across its sense inputs. The analyzer reports 0 current_sense detections. The subcircuits section correctly identifies U1 with neighbors R1, R2, JP1, J2 but does not classify the function. A current_sense detection should be generated for U1/R2.",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "min_value",
+        "value": 1
+      },
+      "status": "new"
+    },
+    {
+      "source_file": "/home/aklofas/Projects/kicad-happy-testharness/repos/2ch-4-20mA-converter/hardware/1ch-4-20mA/1ch-4-20mA.sch",
+      "output_file": "/home/aklofas/Projects/kicad-happy-testharness/results/outputs/schematic/2ch-4-20mA-converter/hardware_1ch-4-20mA_1ch-4-20mA.sch.json",
+      "repo": "2ch-4-20mA-converter",
+      "analyzer_type": "schematic",
+      "category": "false_positive",
+      "severity": "low",
+      "summary": "Decoupling observation incorrectly reports VDDA has no bypass capacitor",
+      "details": "The design_observations entry for U1 (LMP8640) lists VDDA in rails_without_caps and rails_with_caps as empty. However, C1 (100nF) is present and its pin 2 is connected to VDDA (confirmed in the nets section: VDDA net includes C1 pin 2). R3 (0\u03a9 jumper) is placed in series between C1 and GNDA, so C1 is effectively bypassing VDDA to GNDA. The analyzer failed to recognize C1 as a decoupling capacitor on VDDA, likely because the intermediate unnamed net (__unnamed_3) connecting C1 pin 1 through R3 to GNDA breaks the direct VDDA\u2192cap\u2192GND topology the detector expects.",
+      "check": {
+        "path": "signal_analysis.design_observations[0].rails_without_caps",
+        "op": "not_contains",
+        "value": "VDDA"
+      },
+      "status": "new"
+    }
+  ]
+}

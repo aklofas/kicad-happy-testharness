@@ -1,0 +1,90 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Chessboard Hardware.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Bus width for COM bus reported as 24 instead of 8; 12 cross-domain signal warnings are false positives caused by misidentifying Arduino VIN as a power domain; Analog multiplexer chain (64 Hall sens...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The detected_bus_signals entry for the COM bus reports width=24 with range=COM0..COM7. There are exactly 8 unique COM net signals (COM0 through COM7) in the design, confirmed by the nets dictionary. The width of 24 equals 8 signals \u00d7 3 label occurrences per signal in the root sheet, meaning the analyzer is counting total label occurrences rather than the number of unique parallel bus signals. The correct width should be 8.",
+          "analyzer_section": "bus_topology",
+          "check": {
+            "path": "bus_topology.detected_bus_signals[0].width",
+            "op": "equals",
+            "value": 8
+          }
+        },
+        {
+          "description": "design_analysis.cross_domain_signals reports 12 entries, all claiming signals cross between the 'VCC' domain and '__unnamed_11'. However, __unnamed_11 is a single-pin net containing only A1 pin 30 (VIN \u2014 the Arduino Nano's unconnected power input). VIN is floating/unconnected and is not a real power domain. Both the Arduino (A1) and all mux ICs (U5, U14, U23, U32, U41, U50, U59, U68) are powered solely by VCC. All COM0\u2013COM7, A, B, C, and INH signals are intra-domain connections within VCC and should not trigger cross-domain warnings.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.cross_domain_signals",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The design implements a clear sensor-to-ADC readout chain: 64 SS49E Hall sensors are grouped 8-per-mux, feeding 8 SN74HC4851N 8:1 analog multiplexers, whose COM outputs (COM0\u2013COM7) connect to the Arduino Nano analog inputs (A0\u2013A7 implied through J1 connector). The address bus (A, B, C) and inhibit (INH) from the Arduino select which sensor is read. Signal analysis produces no entries for this analog mux topology \u2014 no detector fires for the analog switching network. The design_observations section also has no entry describing this architecture.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Chessboard-Hardware",
+      "project": "Chessboard Hardware",
+      "created": "2026-03-23T19:44:25.398113+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000438"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Chessboard Eighth.kicad_sch.json",
+      "status": "promoted",
+      "summary": "5 single-pin-net warnings for hierarchical label ports in sub-sheet standalone analysis; SS49E Hall-effect sensors classified as generic 'ic' type instead of 'sensor'",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "When the Eighth sub-sheet is analyzed standalone, connectivity_issues.single_pin_nets reports 5 single-pin nets: A, B, C, COM, and INH on U23 (SN74HC4851N). These nets are driven by hierarchical labels (confirmed: hierarchical_label_count=5) that connect to parent sheet pins. In the flat/hierarchical context (Chessboard Hardware.kicad_sch), these signals are fully driven by the Arduino Nano (A, B, C, INH as address/control lines) and produce COM as the mux output. The warnings are an artifact of sub-sheet isolation and do not represent real connectivity gaps.",
+          "analyzer_section": "connectivity_issues",
+          "check": {
+            "path": "connectivity_issues.single_pin_nets",
+            "op": "equals",
+            "value": []
+          }
+        },
+        {
+          "description": "All 64 SS49E instances (8 per sub-sheet \u00d7 8 sheets in main, and 8 in standalone Eighth) are classified as type='ic' and category='ic'. The SS49E is a linear Hall-effect sensor (description: 'SENSOR HALL ANALOG RADIAL LEAD', datasheet confirms it). While ic_pin_analysis correctly identifies function='sensor IC', the top-level component type classification misses the sensor category. This causes the statistics.component_types to report 73 ICs in the main schematic instead of a mix of 64 sensors + 9 logic ICs, obscuring the design's primary function as a Hall-sensor chessboard.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "contains_match",
+            "value": {
+              "sensor": 64
+            }
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Fix: SS49E Hall-effect sensors classified as generic 'ic' type instead of 'sensor'"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Chessboard-Hardware",
+      "project": "Chessboard Hardware",
+      "created": "2026-03-23T19:44:25.398134+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000439"
+    }
+  ]
+}

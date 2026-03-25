@@ -1,0 +1,77 @@
+{
+  "file_pattern": "CH330.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000421",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000421-AST-01",
+      "description": "The schematic has a label 'D+' connected to U1 pin 1 (UD+, bidirectional USB data+). The JSON places U1 pin 4 (RTS, output) into the 'D+' net instead. The analyzer has mis-mapped U1's pin positions, assigning the wrong schematic pins to the D+ net.",
+      "created_from": "FND-00000421",
+      "check": {
+        "path": "nets.D+.pins[?(@.component=='U1')].pin_name",
+        "op": "contains_match",
+        "value": "UD+"
+      },
+      "aspirational": true,
+      "aspirational_reason": "KiCad 5 legacy pin-mapping error for mirrored components"
+    },
+    {
+      "id": "FND-00000421-AST-02",
+      "description": "The schematic has a label 'D-' connected to U1 pin 2 (UD-, bidirectional USB data-). The JSON places U1 pin 3 (GND, power_in) into the 'D-' net instead. This is a pin-mapping error caused by incorrect position-to-pin resolution for mirrored components in KiCad 5 legacy format.",
+      "created_from": "FND-00000421",
+      "check": {
+        "path": "nets.D-.pins[?(@.component=='U1')].pin_name",
+        "op": "contains_match",
+        "value": "UD-"
+      },
+      "aspirational": true,
+      "aspirational_reason": "KiCad 5 legacy pin-mapping error for mirrored components"
+    },
+    {
+      "id": "FND-00000421-AST-03",
+      "description": "The erc_warnings section flags net 'V3' as having no output driver. However, U1 pin 8 (V3) has pin_type 'power_out' \u2014 it IS the driver for the V3 net. The V3 net in the JSON only contains U1 pin 5 (VCC, power_in) and C2 pin 2, omitting U1 pin 8 (power_out) which is the actual driver. This is a consequence of the broader pin-mapping error affecting U1.",
+      "created_from": "FND-00000421",
+      "check": {
+        "path": "design_analysis.erc_warnings[?(@.net=='V3')]",
+        "op": "not_exists",
+        "value": null
+      },
+      "aspirational": true,
+      "aspirational_reason": "KiCad 5 legacy pin-mapping error causes false ERC warning"
+    },
+    {
+      "id": "FND-00000421-AST-04",
+      "description": "INCORRECT: The differential_pairs entry for D+/D- reports has_esd: true and lists U1 as the esd_protection device. U1 is the CH330 USB-UART bridge IC, not an ESD suppressor. There is no TVS, ESD diode array, or protection component in this design. This contradicts the usb_data design_observation on the same net which correctly reports has_esd_protection: false.",
+      "created_from": "FND-00000421",
+      "check": {
+        "path": "design_analysis.differential_pairs[0].has_esd",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000421-AST-05",
+      "description": "INCORRECT: V3 is the output of U1's internal 3.3V linear regulator (pin 8, type power_out). It powers U1's VCC (pin 5) and is bypassed by C2. It should be classified as a power domain rail. The net_classification assigns it 'signal', and the power_domains section omits it as a standalone rail even though U1 pin 8 (V3, power_out) drives it.",
+      "created_from": "FND-00000421",
+      "check": {
+        "path": "design_analysis.net_classification.V3",
+        "op": "equals",
+        "value": "power"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000421-AST-06",
+      "description": "C2 (100n) is connected between the V3 rail (U1 pin 8, internal 3.3V regulator output) and GND, serving as a decoupling capacitor for the V3 power domain. The decoupling_analysis only reports C1 on VBUS; C2 on V3 is entirely absent from the decoupling_analysis section.",
+      "created_from": "FND-00000421",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis[?(@.rail=='V3')]",
+        "op": "exists",
+        "value": null
+      },
+      "aspirational": true
+    }
+  ]
+}

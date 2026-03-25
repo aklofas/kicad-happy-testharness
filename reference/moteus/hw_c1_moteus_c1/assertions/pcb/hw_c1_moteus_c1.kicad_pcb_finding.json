@@ -1,0 +1,59 @@
+{
+  "file_pattern": "moteus_c1.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000294",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000294-AST-01",
+      "description": "Footprint count and SMD/THT breakdown consistent with compact motor controller design",
+      "created_from": "FND-00000294",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000294-AST-02",
+      "description": "Routing completeness correctly detected",
+      "created_from": "FND-00000294",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000294-AST-03",
+      "description": "DFM analysis present with appropriate tier",
+      "created_from": "FND-00000294",
+      "check": {
+        "path": "dfm",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000294-AST-04",
+      "description": "Decoupling placement analysis correctly identifies bypass cap associations",
+      "created_from": "FND-00000294",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000294-AST-05",
+      "description": "INCORRECT: copper_layers_used does not count In1.Cu which has zone fills but no tracks. The board uses In1.Cu as a ground/power plane via zone fills, but since there are no track segments on that layer, it is not counted",
+      "created_from": "FND-00000294",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 4
+      },
+      "aspirational": true
+    }
+  ]
+}

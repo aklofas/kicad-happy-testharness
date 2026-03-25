@@ -1,0 +1,67 @@
+{
+  "file_pattern": "SparkFun_Qwiic_Directional_Pad.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001503",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001503-AST-01",
+      "description": "The schematic correctly identifies 43 components: 15 resistors, 8 jumpers, 4 connectors, 4 fiducials, 4 mounting holes, 3 aesthetic logos, 2 LEDs (D1 red, D2 RGB), 1 switch (SW2 5-way nav switch), 1 capacitor (C1), and 1 IC (U4 PCA9554PW). The 5-way navigation switch is correctly counted as a single component (SW2).",
+      "created_from": "FND-00001503",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 43
+      }
+    },
+    {
+      "id": "FND-00001503-AST-02",
+      "description": "U4 (PCA9554PW) is correctly identified as the I2C device on SDA/SCL. Address pins A0/A1/A2 are connected through jumpers JP1/JP2/JP3 with pull-down resistors R1/R2/R3 (10k). The 5 directional switch inputs (SW_Up/Down/Left/Right/Center) correctly connect SW2 pins to U4 GPIO pins IO0-IO4.",
+      "created_from": "FND-00001503",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "contains_match",
+        "value": {
+          "net": "SDA",
+          "devices": [
+            "U4"
+          ]
+        }
+      }
+    },
+    {
+      "id": "FND-00001503-AST-03",
+      "description": "SW2 (SparkFun-Switch:Navigation_5Way_SMD_9.9x9.9mm) is a single physical package containing 5 directional buttons. The analyzer correctly identifies switch_count=1, consistent with one schematic symbol representing the 5-way switch. All 5 direction outputs (Up/Down/Left/Right/Center) are correctly routed to U4 GPIO pins IO0-IO4.",
+      "created_from": "FND-00001503",
+      "check": {
+        "path": "statistics.component_types.switch",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001503-AST-04",
+      "description": "The analyzer correctly identifies led=2 in component_types: D1 (Red, LED_Red_0603) and D2 (LED_RGB, LED_RGB_1205_Bottom). D1 is a power/status indicator with current-limiting series resistor R14 (2.2k). D2 is an RGB LED driven from PCA9554PW GPIO outputs. Both are correctly classified as 'led' type.",
+      "created_from": "FND-00001503",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001503-AST-05",
+      "description": "The I2C bus analysis reports has_pullup=false for both SDA and SCL. However, R13 (2.2k) connects SDA to JP6 pin 1(A), and R7 (2.2k) connects SCL to JP6 pin 3(B). JP6 is a SolderJumper_3_Bridged123 (all pins bridged by default) with its center pin 2(C) on the 3.3V rail, making the pull-ups active by default. This is the same jumper-mediated pull-up pattern seen on the ADS1219 board.",
+      "created_from": "FND-00001503",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "not_contains_match",
+        "value": {
+          "net": "SDA",
+          "has_pull_up": true
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

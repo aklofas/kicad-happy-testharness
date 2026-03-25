@@ -1,0 +1,29 @@
+{
+  "file_pattern": "power_module.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000519",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000519-AST-01",
+      "description": "All 16 component references are correctly parsed: C501-C506, D501, FL501, J501, J502, PS501, PS502, R501, RV501, TH501, U501. The AMS1117-3.3 (U501) is correctly identified as an LDO regulator with +5V input and +3V3 output. The RV501 (varistor 10D561) is correctly classified as a varistor and listed in protection_devices. The isolated DC/DC converter PS501 (B0505S-1WR3, Mornsun) correctly outputs ISO_5V/ISO_GND as single_pin_nets (not connected to anything else in this sub-sheet \u2014 they connect via global labels to the CAN module). The HLK-5M05 AC/DC module PS502 is correctly parsed with its MPN. EMI filter FL501 (10mH) is correctly typed as 'filter'. The power supply tree (+5V from HLK-5M05 \u2192 AMS1117 \u2192 +3V3) is correctly captured.",
+      "created_from": "FND-00000519",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000519-AST-02",
+      "description": "The power_regulators section only contains U501 (AMS1117-3.3 LDO). PS502 (HLK-5M05) is a 220VAC-to-5VDC isolated switching power supply module and PS501 (B0505S-1WR3) is a 5V-in, 5V-out isolated DC/DC converter \u2014 neither is detected in power_regulators or any other signal_analysis section. These are major power conversion elements in the design. The design_observations also incorrectly flags U501 as missing decoupling capacitors on +5V and +3V3 rails when C501/C503 are present on +5V and C504/C505/C506 are on +3V3 \u2014 this is likely a net-topology traversal issue where the capacitors are not attributed to the correct rail.",
+      "created_from": "FND-00000519",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

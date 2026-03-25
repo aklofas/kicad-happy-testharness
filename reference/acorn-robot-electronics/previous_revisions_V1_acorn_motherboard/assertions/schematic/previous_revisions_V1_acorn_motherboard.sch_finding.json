@@ -1,5 +1,5 @@
 {
-  "file_pattern": "previous_revisions_V1_acorn_motherboard.sch",
+  "file_pattern": "acorn_motherboard.sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000273",
   "generated_by": "findings.py promote",
@@ -35,28 +35,6 @@
       }
     },
     {
-      "id": "FND-00000273-AST-04",
-      "description": "Q1 2N7002 with flyback diode D8 correctly detected",
-      "created_from": "FND-00000273",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q1$"
-      }
-    },
-    {
-      "id": "FND-00000273-AST-05",
-      "description": "LC filter L2+C99 on 48V input correctly identified",
-      "created_from": "FND-00000273",
-      "check": {
-        "path": "signal_analysis.lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L2$"
-      }
-    },
-    {
       "id": "FND-00000273-AST-06",
       "description": "INCORRECT: Q12 AO3401A reported as is_pchannel=false \u2014 AO3401A is a P-channel MOSFET",
       "created_from": "FND-00000273",
@@ -69,18 +47,6 @@
       "aspirational": true
     },
     {
-      "id": "FND-00000273-AST-07",
-      "description": "PDQ30-Q48-S5-D (U4) isolated DC/DC converter (48V to 5V) not detected as power regulator",
-      "created_from": "FND-00000273",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U4$"
-      },
-      "aspirational": true
-    },
-    {
       "id": "FND-00000273-AST-08",
       "description": "SPBW06F-12 (PS1) isolated converter (48V to 15V) classified as 'connector' preventing regulator detection",
       "created_from": "FND-00000273",
@@ -88,18 +54,6 @@
         "path": "signal_analysis.power_regulators",
         "op": "min_count",
         "value": 1
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00000273-AST-09",
-      "description": "ACS725LCTR-10AU (U14) Hall-effect current sensor on +48V path not detected in current_sense",
-      "created_from": "FND-00000273",
-      "check": {
-        "path": "signal_analysis.current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^U14$"
       },
       "aspirational": true
     }

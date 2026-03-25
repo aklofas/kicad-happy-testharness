@@ -1,0 +1,29 @@
+{
+  "file_pattern": "new3_new3.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000685",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000685-AST-01",
+      "description": "The analyzer correctly identifies R2 as the feedback resistor with ohms=9000 and correctly traces the output, inverting input, and non-inverting input nets.",
+      "created_from": "FND-00000685",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000685-AST-02",
+      "description": "new3 has no voltage divider on the non-inverting input (J2 goes directly to + pin), so this is not missed. However, the 1k+9k resistor network (R1 as input resistor to GND, R2 as feedback) is not detected as a voltage_divider even though it forms the gain-setting resistor network.",
+      "created_from": "FND-00000685",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

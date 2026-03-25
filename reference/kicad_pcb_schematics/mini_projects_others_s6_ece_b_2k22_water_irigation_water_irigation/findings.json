@@ -1,0 +1,68 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad_pcb_schematics_mini_projects_others_s6_ece_b_2k22_water_irigation_water_irigation.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Solenoid valves (U4, U5) and relay (U2) classified as 'ic' instead of actuator/other; Power rails 12v, 9v, 5v_Vin+, and 3.3v not recognized as power rails in statistics",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "U4 and U5 use lib_id 's6_projects:Solenoid_Valve', and U2 uses 's6_projects:Realy s6 ec' (a relay). These are electromechanical actuators, not ICs. The analyzer assigns them type 'ic', inflates the ic count (10 vs actual ~2 true ICs: ESP32 + DHT11), and causes both solenoid valves to appear as having 2 unconnected pins each in ic_pin_analysis. The BJT transistors Q1/Q2 that drive them have load_type='ic' as well \u2014 a secondary misclassification. The relay U2 is also contributing a single-pin-net for '9v DC-'.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.ic",
+            "op": "less_than",
+            "value": 10
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The design uses multiple named voltage nets: '12v', '9v DC+', '5v_Vin+', and '3.3v'. The statistics.power_rails list contains only ['GND'] \u2014 none of the voltage supply nets are recognized. The design_analysis.net_classification also labels '12v', '3.3v', '5v_Vin+', and '9v DC+' as 'signal' rather than 'power'. The power_budget key is entirely absent from the output. This is a missed detection for a multi-rail design (ESP32 3.3V logic, DC motor 12V, solenoid valves 9V).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 3
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad_pcb_schematics",
+      "project": "mini_projects_others_s6_ece_b_2k22_water_irigation_water_irigation",
+      "created": "2026-03-24T09:02:03.137899+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002363"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_kicad_pcb_schematics_mini_projects_others_s6_ece_b_2k22_water_irigation_water_irigation.kicad_pcb.json",
+      "status": "new",
+      "summary": "Empty PCB layout correctly reported with zero footprints and no board outline",
+      "correct": [
+        {
+          "description": "The water irrigation .kicad_pcb file is an empty stub (KiCad 9.0, file version 20241229) with no placed footprints, no tracks, no vias, no zones, and no board outline. The analyzer correctly reports footprint_count=0, net_count=0, track_segments=0, board_width=null, and routing_complete=true (vacuously). The copper_presence warning about unfilled zones is appropriate context.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "kicad_pcb_schematics",
+      "project": "mini_projects_others_s6_ece_b_2k22_water_irigation_water_irigation",
+      "created": "2026-03-24T09:02:03.137921+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002364"
+    }
+  ]
+}

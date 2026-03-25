@@ -1,0 +1,90 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "pong.kicad_sch",
+      "status": "promoted",
+      "summary": "Crystal circuit detection correct: Y1 2MHz with 30pF load caps, CL_eff=18pF; LM7805 classified as 'LDO' topology \u2014 it is a standard linear regulator; VCC PWR_FLAG warning correct \u2014 VCC is external ...",
+      "correct": [
+        {
+          "description": "Correctly identifies Y1 with C1 and C4 (both 30pF) as crystal load caps, calculates effective load capacitance of 18pF and reports it is within typical range.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "VCC connects directly to the battery connector J3 and LM7805 input. No PWR_FLAG symbol present. Warning is accurate for ERC purposes.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "R7 (330\u03a9), R8 (220\u03a9), R9 (1.2k\u03a9) form a resistor mixing network for video signal output. Two divider relationships correctly identified with ratios 0.40 and 0.155.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "4 ICs on VCC rail identified; +5V has LM7805 output regulator. Decoupling coverage observations (has bulk 100\u00b5F + bypass 0.1\u00b5F on VCC, only bypass on +5V) are accurate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "LM7805 is a fixed positive linear regulator with ~2V dropout (not an LDO, which typically has <0.5V dropout). The analyzer categorizes it as 'LDO' which is technically incorrect. Should be 'linear' or 'series_linear'.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Pong-1976",
+      "project": "pong_pong",
+      "created": "2026-03-23T23:44:21.498357+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001116"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pong.kicad_pcb",
+      "status": "new",
+      "summary": "PCB stats correct: 51 footprints (46 THT components + 4 mounting holes + 1 logo), 48 nets, fully routed",
+      "correct": [
+        {
+          "description": "tht_count=46 matches schematic exactly. Extra 5 footprints are HOLE1-4 (MountingHole_3.2mm_M3) + REFLOGO (OSHW logo). GND copper fill on B.Cu correctly identified. Net count 48 matches schematic.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Pong-1976",
+      "project": "pong_pong",
+      "created": "2026-03-23T23:44:21.498375+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001117"
+    }
+  ]
+}

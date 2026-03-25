@@ -1,0 +1,58 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_glr-2020c-EL25-100_20C-EL25-100.kicad_pcb.json.json",
+      "status": "promoted",
+      "summary": "All 3 relays and connector correctly detected as extending outside the board boundary",
+      "correct": [
+        {
+          "description": "The board edge runs from (0,0) to (83.82,-23.5)mm. The three JSM1-12V-5 relays (RLY1-3) are placed at Y\u2248-3.05mm rotated 90\u00b0, and their footprint courtyard extends approximately +2.85mm above Y=0 (the board top edge). J1 (Molex Mega-Fit connector) similarly extends outside. The analyzer reports edge_clearance_mm values of -17.2mm for each relay and -11.27mm for J1. The REF** logo footprint at (76.25, 43.61)mm is also flagged (-43.61mm clearance). This is a genuine design characteristic of through-board-edge connectors/relays that overhang the PCB.",
+          "analyzer_section": "placement_analysis",
+          "check": {
+            "path": "placement_analysis.edge_clearance_warnings",
+            "op": "min_count",
+            "value": 3
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "glr-2020c-EL25-100",
+      "project": "20C-EL25-100",
+      "created": "2026-03-24T08:04:01.961249+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002101"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_glr-2020c-EL25-100_20C-EL25-100.sch.json.json",
+      "status": "promoted",
+      "summary": "Simple relay board component classification correct; 12V net correctly not classified as power rail",
+      "correct": [
+        {
+          "description": "The 6-component relay board (3x JSM1-12V-5, 1x LED, 1x resistor, 1x connector) is correctly classified. The power_rails list contains only GND, which is accurate: the 12V and 12V_SW1 nets are local labels, not power symbols \u2014 there are 7 GND power symbols but no 12V power symbol in the schematic. The relay type detection is correct. The ERC warning about net SW having no driver is a valid observation (SW is an input label driven by external connector).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "contains_match",
+            "value": "/GND/"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "glr-2020c-EL25-100",
+      "project": "20C-EL25-100",
+      "created": "2026-03-24T08:04:01.961269+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002102"
+    }
+  ]
+}

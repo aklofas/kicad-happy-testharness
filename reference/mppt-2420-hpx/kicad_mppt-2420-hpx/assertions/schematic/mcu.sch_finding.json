@@ -1,0 +1,19 @@
+{
+  "file_pattern": "mcu.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002412",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002412-AST-01",
+      "description": "bus_analysis reports a second SPI bus (bus_id: 'pin_J7') with SCK=USART3_TX and MOSI=USART3_RX. J7 is a UEXT multiplex connector - USART3 is the UART portion.",
+      "created_from": "FND-00002412",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "max_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

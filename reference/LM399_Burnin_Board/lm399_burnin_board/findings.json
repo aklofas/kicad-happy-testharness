@@ -1,0 +1,186 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "lm399_burnin_board.kicad_sch.json",
+      "status": "promoted",
+      "summary": "LT1085-ADJ regulator voltage estimated as -0.664V with inverting=true; actual output is ~13V positive; 25 opamp circuits (OPA4202 quad) detected with correct inverting configuration and gain=-0.05/...",
+      "correct": [
+        {
+          "description": "Each OPA4202 unit is configured as an inverting amplifier with Rf=49.9 ohm and Ri=1k ohm. Gain=-Rf/Ri=-0.0499 (reported -0.05) and gain_dB=20*log10(0.0499)=-26.04 dB (reported -26.0). The feedback capacitor (C47 etc.) is also captured. Power units (unit 5) correctly reported as 'unknown' configuration.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The main board is a hierarchical design with 5 copies of reference_circuit (4 opamps + 1 LM399 each) plus the top-level power/connector sheet. The component counts match the PCB footprint counts (287 footprints), confirming cross-file consistency.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Each of the 20 LM399 reference channels has a differential output pair (Vout+/Vout-). The analyzer correctly identifies 20 differential pairs corresponding to the 20 LM399 voltage reference channels (4 reference blocks x 5 channels per block).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The schematic has PWR_FLAG symbols placed on their own 'PWR_FLAG' net, not connected to GND. The GND net lacks a power_out driver or PWR_FLAG, so the warning is a genuine ERC issue (KiCad ERC would flag this in practice).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer reports estimated_vout=-0.664, inverting=true for U21 (LT1085-ADJ). The LT1085 is a positive adjustable LDO. With R16=160 ohm (OUT to ADJ) and R15=1500 ohm (ADJ to GND), the correct Vout = 1.25*(1 + 1500/160) = 12.97V. The analyzer appears to have applied a negative/inverting formula: -Vref/ratio = -0.6/0.9036 = -0.664. The 'inverting: true' flag is also wrong \u2014 this is a standard positive LDO.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "LM399_Burnin_Board",
+      "project": "lm399_burnin_board",
+      "created": "2026-03-23T22:54:01.097200+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000818"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "reference_circuit.kicad_sch.json",
+      "status": "promoted",
+      "summary": "reference_circuit sub-sheet: 14 components, correct BOM including OPA4202 (unit 1), LM399, coupled inductor, bypass caps; Decoupling capacitors (C7, C8, C47, C52, C57) near OPA4202 and LM399 not de...",
+      "correct": [
+        {
+          "description": "The sub-sheet analysis is accurate: 5 resistors, 5 capacitors, 2 ICs (U22 OPA4202 unit 1 and U7 LM399), 1 inductor (L_Coupled), 1 net-tie. The LM399 is correctly identified as IC type with 4 pins. The coupled inductor (L_Coupled/EPCOS B82790 common-mode filter) is correctly typed as 'inductor'.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The reference_circuit sub-sheet contains bypass capacitors (100n on LM399 heater supply, 100n on OPA4202 power rails) but decoupling_analysis=[] for all three schematics. This is a known limitation of flat sub-sheet analysis where power rails come in via hierarchical labels rather than explicit power symbols.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "LM399_Burnin_Board",
+      "project": "lm399_burnin_board",
+      "created": "2026-03-23T22:54:01.097222+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000819"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "lm399_burnin_board.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "Board stats correct: 4-layer, 160x100mm, 287 footprints, 260 nets, fully routed, ENIG finish; 24 courtyard overlaps between Lx inductors and J1 connector are real on-layer conflicts; J2 edge_cleara...",
+      "correct": [
+        {
+          "description": "PCB is a 4-layer board (F.Cu, In1.Cu power plane, In2.Cu power plane, B.Cu) with verified complete routing (0 unrouted), 87 vias, 1923 track segments, and ENIG surface finish. All match design intent for a precision analog burn-in board.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "J1 (DIN41612 connector) courtyard x=[161-183.85], y=[75.88-144.12] on F.Cu overlaps with all L-series inductors positioned at x\u2248163mm on F.Cu. The 48.1mm2 overlap area calculation is mathematically correct. These are genuine courtyard violations requiring review.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The 160mm board width does exceed JLCPCB's 100x100mm standard pricing tier, requiring a larger board tier. This is a correct observation.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The design intentionally uses per-reference-block isolated ground domains (GND_heater, GND_zener) to prevent ground-loop interference between the 20 LM399 voltage references. The analyzer correctly identifies 11 domains with no zones (isolated routing), reflecting the precision analog design intent.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "J2 (DIN41612_C_2x32 connector) at y=149.37mm has a courtyard extending to y=236.24mm, 76.24mm past the board edge at y=160mm. This is physically correct: DIN41612 backplane connectors are designed to hang off the board edge for mating. Flagging this as a clearance violation is a false positive for this known connector type.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "LM399_Burnin_Board",
+      "project": "lm399_burnin_board",
+      "created": "2026-03-23T22:54:01.097226+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000820"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": ".json",
+      "status": "promoted",
+      "summary": "No Gerber files in repository; gerber analysis not run (no output produced)",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The LM399_Burnin_Board repo contains no Gerber files (.gbr, .gtl, .drl etc.). No gerber output file was generated. This is expected behavior \u2014 the analyzer correctly did not produce output for a missing input.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "LM399_Burnin_Board",
+      "project": "lm399_burnin_board",
+      "created": "2026-03-23T22:54:01.097228+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000821"
+    }
+  ]
+}

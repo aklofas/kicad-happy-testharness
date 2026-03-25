@@ -1,0 +1,187 @@
+{
+  "file_pattern": "board.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001597",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001597-AST-01",
+      "description": "Unit 1 (inverting, Rf=R12 10k, Ri=R10 1k): gain=\u221210, 20 dB. Unit 2 (inverting, Rf=R2 30k, Ri=R1 100k): gain=\u22120.3, \u221210.5 dB. Unit 3 (inverting, Rf=R6 30k, Ri=R5 100k): gain=\u22120.3, \u221210.5 dB. Unit 4 (buffer, inv=out, non-inv=GND): gain=1.0. All verified by manual calculation.",
+      "created_from": "FND-00001597",
+      "check": {
+        "path": "signal_analysis.opamp_circuits[?unit==`1`].gain",
+        "op": "equals",
+        "value": -10.0
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected -10.0, got None"
+    },
+    {
+      "id": "FND-00001597-AST-02",
+      "description": "total_components=50 is correct (50 unique reference designators). component_types: resistor=15 (R1\u2013R12, R14, R15, RV1), led=2 (D1, D4), ic=4 (U1\u2013U4), capacitor=19 (C1\u2013C19), connector=5 (J1, J3, J4, J6, PS1 \u2014 though PS1 is misclassified), ferrite_bead=2 (FB1, FB2), diode=2 (D2, D3), speaker=1 (LS1). Sum = 50. The components list has 55 entries due to U3 appearing 5 times (4 op-amp units + power unit) and RV1 twice (dual-gang pot), both correctly deduplicated in statistics.",
+      "created_from": "FND-00001597",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001597-AST-03",
+      "description": "INCORRECT: PS1 is a CUI V78E05-500-SMT non-isolated DC-DC converter (6.5\u201336 V in \u2192 5 V/500 mA out). Its symbol has a power_out pin and its description explicitly reads 'Dc-Dc Converter', yet the analyzer assigns type='connector' in both the BOM and component records. It should be classified as a power supply or regulator. This causes the component_types count to show 5 connectors (4 real + 1 misclassified) and masks the real connector count of 4.",
+      "created_from": "FND-00001597",
+      "check": {
+        "path": "bom[?value=='V78E05-500-SMT'].type",
+        "op": "not_contains_match",
+        "value": {
+          "type": "connector"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001597-AST-04",
+      "description": "INCORRECT: The board-level analysis merges nets across all sub-sheets. Three of the four detected RC filters have net assignments that do not represent real signal paths: (1) R14+C9 shows output_net='+5V' and ground_net='__unnamed_27' with input_net='/\u2026/IN_L' \u2014 a 1.59 Hz RC-network with a power rail as output is physically incorrect; (2) R15+C16 shows C16 as '2 caps parallel' (C16 + C9) but C9 is in a different sub-sheet; (3) R7+C9 shows ground_net='/\u2026/IN_L' (an audio signal net used as ground). Only the R15+C16 low-pass entry in the headphone-amp sub-sheet (fc=15.92 Hz, input=SWITCHED_L, ground=GND) is correctly identified.",
+      "created_from": "FND-00001597",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "max_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001597-AST-05",
+      "description": "INCORRECT: The analyzer warns that '+12V' and '-12V' have 'power_in pins but no power_out or PWR_FLAG'. However, J1 is an Eurorack 10-pin power header that provides these rails from an external power supply. In Eurorack designs the power connector itself supplies these rails and KiCad's ERC does not actually require a PWR_FLAG when the source is a connector with passive pins. The warning is an over-aggressive heuristic for connector-powered designs.",
+      "created_from": "FND-00001597",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001597-AST-06",
+      "description": "INCORRECT: The design_analysis.differential_pairs entry for SPEAKER+/SPEAKER- sets has_esd=true and esd_protection=['U4']. U4 is the MAX9717x bridge-tied-load (BTL) mono speaker amplifier that drives SPEAKER+ and SPEAKER- as its outputs. It is the signal source, not an ESD protection device. There is no actual ESD protection on the speaker lines.",
+      "created_from": "FND-00001597",
+      "check": {
+        "path": "design_analysis.differential_pairs[?positive=='SPEAKER+'].has_esd",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001890-AST-01",
+      "description": "U3 unit 1 (leds): inverting, gain=-10.0 (R12=10k / R10=1k), correct. U3 units 2 and 3 (inputs): inverting, gain=-0.3 (R2=30k / R1=100k and R6=30k / R5=100k), with 22pF feedback capacitors C18/C19 captured as feedback_capacitor, correct. U3 unit 4: buffer (output=inverting_input, GND on +), correct.",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "signal_analysis.opamp_circuits[0].gain",
+        "value": -10.0,
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001890-AST-02",
+      "description": "-12V rail decoupling shows has_bulk=false, cap_count=1 (only C11=100n). +12V has bulk (C2=22u) and bypass (C10=100n). +5V has good coverage. This is accurate and represents a real design asymmetry.",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis[?rail=='-12V'].has_bulk",
+        "value": false,
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "JSONPath filter expression not supported by checks engine"
+    },
+    {
+      "id": "FND-00001890-AST-03",
+      "description": "The sourcing_audit correctly shows 26/50 MPN coverage. The 24 missing-MPN components are all generic passives (most capacitors and some resistors) where the designer intentionally omitted MPNs. The components with MPNs are fully identified: all ICs (U1\u2013U4), diodes (D2/D3), LEDs (D1/D4), ferrite beads (FB1/FB2), connectors (J1/J3/J4), PS1, and some resistors.",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "sourcing_audit.mpn_coverage",
+        "value": "26/50",
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001890-AST-04",
+      "description": "INCORRECT: The power.kicad_sch sheet contains two PWR_FLAG symbols: #FLG01 at (81.28, 100.33) placed on the +12V net, and #FLG02 at (81.28, 104.14) placed on the -12V net. Both flags are at the same Y coordinates as their respective power symbols. Despite this, pwr_flag_warnings reports both '+12V' and '-12V' as missing PWR_FLAG. The analyzer is failing to resolve the PWR_FLAG connections in the sub-sheet context.",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001890-AST-05",
+      "description": "INCORRECT: The signal_analysis.rc_filters output includes an entry pairing R14 (100k) with C9 (1u), reporting type='RC-network' with cutoff=1.59 Hz and output_net='+5V'. In the actual circuit, R14 is a pull-up/bias resistor from SWITCHED_L to +5V; C9 is a decoupling/signal capacitor in the speaker amp sheet. They are not topologically connected as an RC filter pair. This is a cross-sheet net name collision artifact. The real RC filter on the headphone side is R15+C16 (correctly reported in the headphone-amp sub-sheet output as low-pass at 15.92 Hz).",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "value": 1,
+        "op": "max_count"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001890-AST-06",
+      "description": "INCORRECT: The V78E05-500-SMT is a CUI 500mA non-isolated DC-DC step-down converter producing +5V from the +12V Eurorack rail. It is classified as type='connector' because the symbol lib_id is a custom winterbloom library entry. It should be 'ic' or 'regulator'. Consequently, the power_regulators section of signal_analysis is empty \u2014 the +12V\u2192+5V conversion is not detected.",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": [],
+        "op": "neq"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001890-AST-07",
+      "description": "INCORRECT: LS1 (speaker) is driven by MAX9717x (U4), a class-D BTL audio power amplifier. The output reports has_transistor_driver=false and direct_gpio_drive=true, but U4 is an IC amplifier, not a GPIO. The SPEAKER+ and SPEAKER- nets both connect from U4 to LS1, indicating a differential/BTL topology that is not captured. direct_gpio_drive=true is incorrect.",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "signal_analysis.buzzer_speaker_circuits[0].direct_gpio_drive",
+        "value": false,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001890-AST-08",
+      "description": "INCORRECT: TL074 is a quad op-amp: units 1\u20134 are op-amp sections, unit 5 is the VCC/VEE power pin unit. The output lists unit 5 under opamp_circuits with configuration='unknown'. This unit should not appear as an op-amp circuit entry; it is the power supply connectivity unit for the IC. This produces noise in the opamp_circuits list.",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "value": 4,
+        "op": "max_count"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001890-AST-09",
+      "description": "The leds sub-sheet uses a back-to-back anti-parallel LED arrangement: D1 (cathode) and D4 (anode) share net __unnamed_1 (U3A output), while D1 (anode) and D4 (cathode) share net __unnamed_2 (to GND via R8). This is a bidirectional LED peak indicator driven by the opamp output. The analyzer does not detect or label this as an anti-parallel / peak indicator LED circuit; it appears only in the raw ic_pin_analysis without functional characterization.",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "signal_analysis.led_circuits",
+        "value": null,
+        "op": "exists"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001890-AST-10",
+      "description": "U2 (74LVC1G04 NOT gate) in headphone-amp inverts the ~HEADPHONE_PRESENT signal (from J6 normalling contact) through an R15+C16 debounce RC filter, producing SHDN to mute the speaker amplifier U4 when headphones are inserted. This is the core analog headphone detect / speaker mute circuit. The analyzer does not connect these pieces into a signal path description. The signal U2 output (~{HEADPHONE_PRESENT}) appears as a single_pin_net design_observation rather than being characterized as an enable/disable control path.",
+      "created_from": "FND-00001890",
+      "check": {
+        "path": "signal_analysis.design_observations[?category=='single_pin_nets'].nets[0].net",
+        "value": "~{HEADPHONE_PRESENT}",
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

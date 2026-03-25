@@ -28,7 +28,13 @@
         },
         {
           "description": "RC filter C95/R163-R164-R165 correctly detected as 240 Hz low-pass on Vin-Sense line, with C95=10nF forming the filter",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R163$"
+          }
         },
         {
           "description": "Voltage divider R169/R170 (442k/100k) for battery charger input voltage sensing correctly identified",

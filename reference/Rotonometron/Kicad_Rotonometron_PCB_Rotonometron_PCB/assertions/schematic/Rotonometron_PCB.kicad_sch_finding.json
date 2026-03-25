@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Rotonometron_PCB.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001218",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001218-AST-01",
+      "description": "Board has 44 switches routed via PCA9506BS I2C I/O expanders (not a direct row/col net pattern), so key_matrices=[] is understandable \u2014 but worth noting. Separately, 'Antenna_Dipole' (ref AE1) is typed as 'ic' instead of 'connector' or 'other'. The addressable LED chain (31x SK6812) is correctly detected.",
+      "created_from": "FND-00001218",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

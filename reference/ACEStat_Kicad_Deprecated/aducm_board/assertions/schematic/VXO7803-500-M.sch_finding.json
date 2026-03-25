@@ -1,0 +1,31 @@
+{
+  "file_pattern": "VXO7803-500-M.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000335",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000335-AST-01",
+      "description": "In the source schematic, PS1 pin 1 is named '+VIN' (type=input) and pin 2 is named 'GND' (type=power_in). However the JSON nets show: net 'GND' contains PS1 pin_number='1' (pin_name='+VIN') and net '+VIN' contains PS1 pin_number='2' (pin_name='GND'). The pin-to-net assignment is inverted \u2014 the +VIN pin is placed on the GND net and the GND pin is placed on the +VIN net. This is a pin-coordinate resolution error for the custom SIB_Footprint:VXO7803-500-M symbol. Additionally, PS1's +VO output pin (pin 3) is on '__unnamed_0' which is not connected to +VOUT (the +VOUT net only has L1 pin 1), confirming the output path of the converter is also not correctly traced.",
+      "created_from": "FND-00000335",
+      "check": {
+        "path": "nets.+VIN.pins[0].pin_name",
+        "op": "equals",
+        "value": "+VIN"
+      },
+      "aspirational": true,
+      "aspirational_reason": "describes known analyzer limitation not yet fixed"
+    },
+    {
+      "id": "FND-00000335-AST-02",
+      "description": "PS1 (CUI VXO7803-500-M) is a 3.3V/500mA isolated DC-DC converter module. It is classified as type='connector' because it uses a custom lib_id 'SIB_Footprint:VXO7803-500-M' with no keyword matching. signal_analysis.power_regulators is empty. The component has +VIN input, GND, +VO output, and ON/OFF control pins \u2014 a clear switching power supply topology. The output LC filter (L1 10-47uH with C36/C37 22uF output caps) is also not detected under lc_filters. The component should be classified as ic/power_converter rather than connector, and power_regulators should include an entry for PS1.",
+      "created_from": "FND-00000335",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_value",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

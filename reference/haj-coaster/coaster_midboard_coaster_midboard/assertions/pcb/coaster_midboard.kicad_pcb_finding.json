@@ -1,0 +1,18 @@
+{
+  "file_pattern": "coaster_midboard.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002113",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002113-AST-01",
+      "description": "The midboard is a 93x93mm mechanical inter-board connector plate containing only 6 THT connectors (J1-J6) with no copper traces, no vias, and no copper zones. The analyzer correctly reports copper_layers_used=0, track_segments=0, via_count=0. Net count of 6 with routing_complete=True is consistent with the footprint pad assignments carrying through even though there are no routed tracks.",
+      "created_from": "FND-00002113",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "file_pattern": "Desktop_50_Pin_TopConn.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000413",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000413-AST-01",
+      "description": "INCORRECT: RP1 (value: PicoWModule, lib_id: New_Library:PicoWModule) is a Raspberry Pi Pico W MCU module. It is classified as 'resistor' because its reference starts with 'R'. The resistor count is reported as 47 instead of 46 actual discrete resistors. The USB_DM/USB_DP design observations correctly reference RP1 as a USB-capable device, which highlights the inconsistency \u2014 it is treated as MCU-like for USB detection but as a resistor for component type statistics.",
+      "created_from": "FND-00000413",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "equals",
+        "value": 47
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000413-AST-02",
+      "description": "INCORRECT: SD1 (value: SOFNG_SD-001, lib_id: custom_symbols:SOFNG_SD-001) is a MicroSD card socket classified as 'switch'. The SPI interface nets (SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS) are present but memory_interfaces is empty, same as the other three schematics.",
+      "created_from": "FND-00000413",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    }
+  ]
+}

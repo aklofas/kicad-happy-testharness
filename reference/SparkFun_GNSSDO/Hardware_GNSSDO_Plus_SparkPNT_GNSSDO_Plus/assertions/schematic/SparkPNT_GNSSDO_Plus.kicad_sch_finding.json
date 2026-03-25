@@ -1,0 +1,61 @@
+{
+  "file_pattern": "SparkPNT_GNSSDO_Plus.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001813",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001813-AST-01",
+      "description": "8 transistor circuits correctly identified as PMOS MOSFETs (DMG2305UX). Q2/Q4 driven by U26 (LTC4418), Q6/Q8 driven by U27 (LTC4418) are correctly attributed. Q3/Q5/Q7/Q9 have unnamed gate nets (internal LTC4418 analog control) \u2014 no gate_driver_ic is listed for these but this is expected since they are driven by unnamed intermediate nodes. The transistor count of 9 (including Q1 from PowerPath) is consistent with the design.",
+      "created_from": "FND-00001813",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "value": 8,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001813-AST-02",
+      "description": "Statistics reports total_components=353, dnp_parts=9. The 9 DNP parts are all 1.0nF bypass capacitors (C51, C64, C66, C67, C75, C76, C82, C87, C88) populated optionally. The GNSSDO original has dnp_parts=0. Both are confirmed correct by cross-referencing BOM entries.",
+      "created_from": "FND-00001813",
+      "check": {
+        "path": "statistics.dnp_parts",
+        "value": 9,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001813-AST-03",
+      "description": "INCORRECT: In the top-level flat hierarchical analysis, U5 output_rail is detected as '3.3V' instead of the correct '3.3V_P'. The Power sub-schematic (analyzed in isolation) correctly identifies U5 output as '3.3V_P'. The GNSSDO original (same topology) also correctly identifies U5 output as '3.3V_P'. The error is introduced by the hierarchical flattening process in the Plus design, likely due to net scope resolution differences between the two AP7361C instances.",
+      "created_from": "FND-00001813",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 4,
+        "op": "min_count"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001813-AST-04",
+      "description": "INCORRECT: U7 (DP5305) is a USB Power Delivery protocol controller IC, not a power regulator. It negotiates USB-PD voltage profiles rather than regulating voltage directly. Classifying it as a power_regulator with topology=unknown is imprecise. However, since the topology is clearly 'unknown' rather than LDO/buck/boost, the practical impact is limited to the regulator list being inflated by 1 non-regulator entry.",
+      "created_from": "FND-00001813",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 4,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001813-AST-05",
+      "description": "crystal_circuits is empty (0 items) in the GNSSDO Plus top-level schematic and in the Oscillator sub-schematic. U13 (STP3593LF) is an oven-controlled crystal oscillator (OCXO) module \u2014 a high-precision active oscillator. The analyzer fails to recognize STP3593LF as an oscillator, likely because the part name does not match known oscillator patterns (e.g., no 'OSC', 'TCXO', 'SiT', 'XTAL' in the name). It should be detected similarly to the SiT5358 in the GNSSDO original.",
+      "created_from": "FND-00001813",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

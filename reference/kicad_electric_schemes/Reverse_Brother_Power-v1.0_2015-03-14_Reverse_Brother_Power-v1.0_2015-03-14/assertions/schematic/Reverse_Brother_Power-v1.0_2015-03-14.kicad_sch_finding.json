@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Reverse_Brother_Power-v1.0_2015-03-14.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002359",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002359-AST-01",
+      "description": "The design is a 220VAC switched-mode power supply (J1 labeled '220~', with transformer T1, rectifier diodes, filter caps, and transistor switches). statistics.power_rails=[] and all 18 nets are unnamed (__unnamed_0 through __unnamed_17). The schematic does not use KiCad power symbols (PWR_FLAG, GND, VCC, etc.) \u2014 it uses direct wire connections only. Since the power rail detector relies on KiCad power symbols rather than inferred topology, no rails are found. The analyzer could potentially identify AC_LINE and rectified DC rails from the transformer/rectifier topology but does not attempt this.",
+      "created_from": "FND-00002359",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "equals",
+        "value": 18
+      },
+      "aspirational": true
+    }
+  ]
+}

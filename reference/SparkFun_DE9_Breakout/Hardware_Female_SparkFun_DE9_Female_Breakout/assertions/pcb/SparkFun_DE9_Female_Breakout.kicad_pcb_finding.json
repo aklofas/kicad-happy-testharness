@@ -1,0 +1,51 @@
+{
+  "file_pattern": "SparkFun_DE9_Female_Breakout.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001387",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001387-AST-01",
+      "description": "The 22.86 x 31.75mm board (~0.9\" x 1.25\") is consistent with SparkFun's standard small breakout form factor. 2-layer copper (F.Cu + B.Cu) is correct. All 27 track segments use a uniform 0.3048mm width (12 mil \u2014 standard SparkFun design rule). The GND copper zone covers both layers (725.8mm2) with 16 stitching vias. routing_complete=true and unrouted_count=0 confirm fully routed design. The DFM tier of 'standard' with min_track_width=0.3048mm is correctly classified.",
+      "created_from": "FND-00001387",
+      "check": {
+        "path": "statistics.routing_complete",
+        "value": true,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001387-AST-02",
+      "description": "INCORRECT: The PCB contains 36 board_only kibuzzard decorative silkscreen footprints plus 1 exclude_from_bom OSHW logo, inflating footprint_count to 43. Only 6 footprints are electrical: J1 (DE9 Female, SMD, 11 pads), J2 (Conn_01x09, THT, 9 pads), J3/J4 (Conn_01x01, THT, 1 pad each), ST1/ST2 (Stand_off, SMD, 1 pad each). The statistics.footprint_count=43 with front_side=20, back_side=23 all reflect all footprints including decorative ones. front_side/back_side are computed from layer attribute rather than a dedicated 'side' field (footprints all show side=null in the output). The count is technically correct but potentially misleading when compared to the 9 schematic components.",
+      "created_from": "FND-00001387",
+      "check": {
+        "path": "statistics.tht_count",
+        "value": 3,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001387-AST-03",
+      "description": "INCORRECT: The placement_analysis reports G3 (OSHW_Logo, exclude_from_bom) with edge_clearance_mm=-82.93, implying it extends 82.93mm beyond the board edge. This is almost certainly the bounding box of the Creative_Commons_License footprint's courtyard being measured from a reference point far outside the board outline. G3 is a purely decorative/IP silkscreen graphic with no copper pads. Similarly J2 (header, -15.88mm) and J1 (DE9 connector, -5.2mm) also show negative clearance, likely because these components intentionally overhang the board edge. The same pattern appears on the Male PCB (G3 at -76.83mm). These should not be treated as DFM errors.",
+      "created_from": "FND-00001387",
+      "check": {
+        "path": "placement_analysis.edge_clearance_warnings",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001387-AST-04",
+      "description": "INCORRECT: The placement_analysis reports 4 courtyard overlaps: J3/J1 (6.452mm2), J1/J4 (6.452mm2), J1/ST1 (0.0mm2), J1/ST2 (0.0mm2). The two zero-area overlaps for ST1/ST2 (standoffs) are spurious: a zero-area overlap is not a real overlap and should not be counted. The non-zero overlaps between J3, J1, and J4 (the GND header pins flanking the DE9) may also be intentional tight placement in a compact board, though they warrant flagging. The Male PCB shows the same pattern. The overlap_count=4 is inflated by the zero-area entries.",
+      "created_from": "FND-00001387",
+      "check": {
+        "path": "placement_analysis.overlap_count",
+        "value": 2,
+        "op": "max_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

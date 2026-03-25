@@ -1,0 +1,39 @@
+{
+  "file_pattern": "integration.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001651",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001651-AST-01",
+      "description": "The integration.sch contains 18 real components (H1-H4, J3, J6, J9, Q1, Q2, R6, R7, R8, R9, R11, R23, R24, R29, U2). The analyzer correctly counts all 18 including DNP parts (R7, R9, R11) and reports dnp_parts=3.",
+      "created_from": "FND-00001651",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 18,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001651-AST-02",
+      "description": "Three resistors (R7, R9, R11) have value 'DNP' and are marked dnp=true in the source schematic. The analyzer correctly reports dnp_parts=3 and flags them in the BOM with dnp=true.",
+      "created_from": "FND-00001651",
+      "check": {
+        "path": "statistics.dnp_parts",
+        "value": 3,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001651-AST-03",
+      "description": "The CAT24C32 is an I2C EEPROM connected via nets ID_SD_EEPROM (SDA) and ID_SC_EEPROM (SCL), with 3.9K pull-up resistors R6 and R8 to P3V3. The analyzer does not detect an I2C bus here because the net names use non-standard RPi HAT naming (ID_SD/ID_SC instead of SDA/SCL) and the KiCad 5 legacy component has no pin connectivity data. This is an inherent limitation for non-standard net naming in KiCad 5 format.",
+      "created_from": "FND-00001651",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "file_pattern": "board.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001891",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001891-AST-01",
+      "description": "Board correctly identified as 4-layer (F.Cu, In1.Cu, In2.Cu, B.Cu), 30\u00d753.5mm (standard Eurorack 6HP), 54 footprints (50 BOM + 4 board-only graphics/logos), 306 track segments, 98 vias, 1 GND zone, routing_complete=true, unrouted=0. Stackup details including dielectric thicknesses and FR4 properties are correctly parsed.",
+      "created_from": "FND-00001891",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "value": 4,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001891-AST-02",
+      "description": "U4 TDFN-8 thermal pad (9, 3.82mm\u00b2, GND net) has 5 standalone vias (effective 8.9 with GND pour fill), density 2.33/mm\u00b2, adequacy='adequate'. The tenting warning (5 untented vias may cause solder wicking) is also correctly flagged. The recommended minimum of 5 vias is met.",
+      "created_from": "FND-00001891",
+      "check": {
+        "path": "thermal_pad_vias[0].adequacy",
+        "value": "adequate",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001891-AST-03",
+      "description": "The 4 non-BOM footprints (OSHW-Logo, Winterbloom LOGO, 2\u00d7 Graphics) are all flagged with board_only=true, exclude_from_bom=true, exclude_from_pos=true, pad_count=0. The BOM footprint count is 50, matching the schematic's 50 components.",
+      "created_from": "FND-00001891",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 54,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001891-AST-04",
+      "description": "The placement_analysis reports 14 courtyard overlaps. The largest (70.09mm\u00b2) between RV1 (dual potentiometer) and PS1 (DC-DC converter) is verified as real by coordinate calculation: RV1 courtyard [75.84\u201388.56, 115.1\u2013131.35] vs PS1 [72.65\u201385.35, 123.98\u2013139.72] gives x_overlap=9.51mm, y_overlap=7.37mm = 70.1mm\u00b2. These are design-intentional overlaps common in Eurorack modules where 3D clearances are managed manually.",
+      "created_from": "FND-00001891",
+      "check": {
+        "path": "placement_analysis.overlap_count",
+        "value": 14,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001891-AST-05",
+      "description": "PCB has 43 nets total, 40 with routing segments, 3 without: unconnected-(PS1-Adj-Pad6), unconnected-(PS1-EN-Pad10), and unconnected-(U2-NC-Pad1). These are intentional no-connect pads: PS1's Adj and EN pins are unused on the V78E05-500-SMT, and U2's (74LVC1G04) NC pin is by definition unconnected. routing_complete=true is correctly reported.",
+      "created_from": "FND-00001891",
+      "check": {
+        "path": "connectivity.routing_complete",
+        "value": true,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001891-AST-06",
+      "description": "INCORRECT: The connectivity block reports total_nets_with_pads=43, routed_nets=40, unrouted_count=0. The discrepancy (43-40=3) is because 3 nets have only one pad each (the no-connect stubs above). These are not unrouted but rather single-pad nets. The field name 'routed_nets' is misleading \u2014 it counts nets that have routing segments, excluding single-pad nets. The combination of unrouted_count=0 and routed_nets\u2260total_nets is confusing but not strictly wrong given the single-pad explanation.",
+      "created_from": "FND-00001891",
+      "check": {
+        "path": "connectivity.routed_nets",
+        "value": 43,
+        "op": "max_count"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001891-AST-07",
+      "description": "The board is a standard Eurorack 3U module (30mm width = 6HP, 53.5mm height \u2248 3U). The PCB analyzer reports the raw dimensions but does not classify this as a Eurorack module or verify against the expected Eurorack PCB profile (standard is 30mm wide, height typically 53.5\u201360mm for 3U modules). The board_metadata section does not contain form-factor classification.",
+      "created_from": "FND-00001891",
+      "check": {
+        "path": "board_metadata.form_factor",
+        "value": "eurorack",
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

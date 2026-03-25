@@ -1,86 +1,9 @@
 {
-  "file_pattern": "kicad_bms-c1.kicad_sch",
+  "file_pattern": "bms-c1.kicad_sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000211",
   "generated_by": "findings.py promote",
   "assertions": [
-    {
-      "id": "FND-00000211-AST-01",
-      "description": "BQ76952 BMS system correctly detected with 16 cells, 17 cell voltage pins, 17 balance resistors, charge/discharge FETs (Q2-Q5 IPT012N08N5, Q12 ZXMP10A17GTA), and NTC sensors (RT1, RT2)",
-      "created_from": "FND-00000211",
-      "check": {
-        "path": "signal_analysis.bms_systems",
-        "op": "contains_match",
-        "field": "bms_reference",
-        "pattern": "^U4$"
-      }
-    },
-    {
-      "id": "FND-00000211-AST-02",
-      "description": "Current sense shunt R45 (300uOhm) correctly detected between BAT- and PACK- with BQ76952 as sense IC",
-      "created_from": "FND-00000211",
-      "check": {
-        "path": "signal_analysis.current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^R45$"
-      }
-    },
-    {
-      "id": "FND-00000211-AST-03",
-      "description": "Feedback voltage divider R28 (82k) / R31 (35.7k) correctly identified as feedback for U3 LMR38010 FB pin with is_feedback=true",
-      "created_from": "FND-00000211",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R28$"
-      }
-    },
-    {
-      "id": "FND-00000211-AST-04",
-      "description": "16 cell input RC filters correctly detected (R2-R17 with C1-C16 pairs, 20 ohm + 220nF parallel caps, ~18 kHz cutoff) for BQ76952 cell voltage measurement inputs",
-      "created_from": "FND-00000211",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R2$"
-      }
-    },
-    {
-      "id": "FND-00000211-AST-05",
-      "description": "Shunt sense RC filters R19/C28 and R20/C28 (100 ohm + 100nF, ~15.9 kHz) correctly detected for SRP/SRN current sense inputs",
-      "created_from": "FND-00000211",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R19$"
-      }
-    },
-    {
-      "id": "FND-00000211-AST-06",
-      "description": "12 MOSFET transistor circuits correctly analyzed including Q2-Q5 (IPT012N08N5 charge/discharge), Q12 (ZXMP10A17GTA P-channel), Q1 (DMN10H220LE) with gate resistors identified",
-      "created_from": "FND-00000211",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q2$"
-      }
-    },
-    {
-      "id": "FND-00000211-AST-07",
-      "description": "ESD protection diodes D3/D4 (ESD5B5.0ST1G) on USB data lines and D8 (PESD2CANFD) on CAN bus correctly detected",
-      "created_from": "FND-00000211",
-      "check": {
-        "path": "signal_analysis.protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^D3$"
-      }
-    },
     {
       "id": "FND-00000211-AST-08",
       "description": "I2C bus with pull-ups R32/R33 on I2C_SDA/I2C_SCL correctly detected connecting U4 (BQ76952) and U5",

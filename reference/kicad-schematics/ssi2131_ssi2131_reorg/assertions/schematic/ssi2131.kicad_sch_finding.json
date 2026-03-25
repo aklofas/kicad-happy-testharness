@@ -1,0 +1,29 @@
+{
+  "file_pattern": "ssi2131.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002348",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002348-AST-01",
+      "description": "The analyzer found 2 RC filters in the SSI2131 eurorack VCO schematic (R4/C1 high-pass at 1591 Hz, and another RC pair), along with decoupling analysis for the +5V and -12V rails. The design uses split power rails (+5V, -12V, +2V5) and the analyzer correctly reports all three power domains.",
+      "created_from": "FND-00002348",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00002348-AST-02",
+      "description": "U2 is an LM4040DBZ-2.5 precision shunt voltage reference providing a +2V5 reference rail to the SSI2131 VCO. The analyzer classifies it generically as 'ic' and finds no power_regulators. The +2V5 power rail exists in the design but no voltage reference or regulator is reported for U2. The analyzer should recognize LM4040 as a shunt reference device.",
+      "created_from": "FND-00002348",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "rs232usb.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002174",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002174-AST-01",
+      "description": "The design is a USB-to-RS232 adapter: USB-C -> CH340N (USB-UART IC) -> unnamed nets __unnamed_5/6 -> MAX232 (UART-RS232 IC) -> DE-9 socket. The ic_pin_analysis correctly identifies U1 (CH340N) as 'USB interface' and U2 (MAX232) as 'UART interface', and the pin connections are traced correctly (CH340N TXD pin 6 on __unnamed_5 connects to MAX232 T1IN pin 11). However, design_analysis.bus_analysis.uart is empty because the UART net names are anonymous (__unnamed_5, __unnamed_6), not labeled TX/RX.",
+      "created_from": "FND-00002174",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

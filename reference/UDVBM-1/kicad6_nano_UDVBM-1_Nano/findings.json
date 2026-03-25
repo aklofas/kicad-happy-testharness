@@ -1,0 +1,470 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "kicad6_pro-mini_UDVBM-1.kicad_sch",
+      "status": "promoted",
+      "summary": "kicad_version reported as 'unknown' instead of '6' for all three schematics; Capacitor value '0.10' parsed as 0.1 Farads (100 MF) instead of 100 nF (0.1 uF); LM7805 classified as topology='LDO' but...",
+      "correct": [
+        {
+          "description": "pro-mini: 37 total components (3 IC, 13 connector, 14 cap, 1 diode, 1 resistor, 1 inductor, 4 mounting holes), 35 nets, 3 no-connects \u2014 all confirmed correct from source. Nano: 39 total components (3 IC, 14 connector, 15 cap, 1 diode, 1 resistor, 1 inductor, 4 mounting holes), 37 nets \u2014 correct. Xiao: 29 total components (4 IC, 8 connector, 10 cap, 1 diode, 1 resistor, 1 inductor, 4 mounting holes), 26 nets, 4 no-connects \u2014 correct. BOM excludes mounting holes in all three: 33, 35, and 25 BOM entries respectively.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 37
+          }
+        },
+        {
+          "description": "All three designs have I2C (SDA/SCL) without pull-up resistors \u2014 only R1=10 ohm exists in each design and it is used as a power filter resistor, not an I2C pull-up. The bus_analysis correctly reports has_pull_up=false and pull_ups=[] for both SDA and SCL in all three designs. Pro-mini: U1+U2 on I2C. Nano: U1+U2 on I2C. Xiao: U1+U3+U4 on I2C (correctly including M24C08 EEPROM).",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c.has_pull_up",
+            "op": "equals",
+            "value": false
+          }
+        },
+        {
+          "description": "All three designs are missing PWR_FLAG symbols on GND (and additionally +3.3V, +5V for xiao). The pwr_flag_warnings correctly identifies these missing flags. Pro-mini and nano report GND only. Xiao reports +3.3V, +5V, and GND \u2014 all correct since no PWR_FLAG symbols are placed in any of the designs. These will cause KiCad ERC errors.",
+          "analyzer_section": "pwr_flag_warnings",
+          "check": {
+            "path": "pwr_flag_warnings",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "All three schematic files contain '(kicad_sch (version 20211123) (generator eeschema)'. The file_version field correctly captures '20211123', but kicad_version is set to 'unknown' instead of deriving '6' from the generator/version combination. This applies to pro-mini, nano, and xiao variants.",
+          "analyzer_section": "kicad_version",
+          "check": {
+            "path": "kicad_version",
+            "op": "not_equals",
+            "value": "unknown"
+          }
+        },
+        {
+          "description": "C1, C3, C4, C6-C10, C12-C14 all have value='0.10' with footprint Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm \u2014 a disc ceramic/film capacitor. The analyzer parses '0.10' as 0.1 Farads, yielding parsed_value=0.1, farads=0.1 in decoupling_analysis and pdn_impedance. The correct interpretation is 100 nF (0.1 uF = 1e-7 F). This causes downstream errors: total_capacitance_uF=1100000 (should be ~1.1 uF for 11 caps), self_resonant_hz=15915 Hz (should be ~15.9 MHz for ceramic), and caps are classified as 'electrolytic/tantalum' in PDN analysis instead of 'ceramic'. The same error affects nano (12 caps, total_capacitance_uF=1200000) and xiao (7 caps, total_capacitance_uF=600000).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis.total_capacitance_uF",
+            "op": "less_than",
+            "value": 10.0
+          }
+        },
+        {
+          "description": "U3 (LM7805) in pro-mini and nano designs is reported as power_regulators[].topology='LDO'. The LM7805 is a 78xx-series fixed positive voltage regulator with ~2V minimum input-output differential \u2014 it is explicitly NOT an LDO (Low Dropout Regulator, which requires <1V dropout). The correct topology label should be 'linear' or 'fixed_linear'. This also propagates to the power_budget regulator entry. The AZ1117-3.3 in xiao is correctly identified as 'LDO'.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators.topology",
+            "op": "not_equals",
+            "value": "LDO"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "All three designs include a '1wire' net and connectors labeled 'One-Wire Port 1' and 'One-Wire Port 2' (pro-mini: J5, J13; nano: J5, J13; xiao: '1wire' net). The bus_analysis section contains i2c, spi, uart, and can keys but has no one_wire entry. The net_classification maps '1wire' to 'signal' rather than recognizing it as a 1-Wire bus signal. This is a missed detection across all three schematic variants.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "exists",
+            "value": "one_wire"
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix: LM7805 classified as topology='LDO' but it is a standard 78xx linear regulator"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T01:12:36.216048+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001609"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "UDVBM-1_Nano.kicad_sch",
+      "status": "promoted",
+      "summary": "Cross-domain signals SCL/SDA incorrectly flagged as crossing +3.3V and +5V power domains",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "design_analysis.cross_domain_signals reports SCL and SDA as crossing +3.3V and +5V domains between U1 (Si5351A) and U2 (Arduino_Nano). However, U1's VCC is on +5V (confirmed via ic_pin_analysis: pin 6 Vin connects to +5V net), and U2 operates its I2C at 5V. The +3.3V appears in U2's power_rails because the Arduino Nano has a 3.3V power_out pin (pin '3.3V', type=power_out) \u2014 it generates +3.3V as an output, not as its I/O supply. The analyzer includes power_out pins when building IC domain membership, causing the false cross-domain detection. The connectivity_issues correctly reports +3.3V as a single_pin_net connected only to U2's output pin.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.cross_domain_signals",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T01:12:36.216069+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001610"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "kicad6_xiao_UDVBM-1_Xiao.kicad_sch",
+      "status": "promoted",
+      "summary": "Xiao design correctly identifies 4 ICs including AZ1117-3.3 LDO, M24C08 EEPROM, Si5351A clock gen, and Seeed XIAO module; LC power supply filter correctly detected at 339 Hz resonance for 1mH + 220...",
+      "correct": [
+        {
+          "description": "U1=Si5351A_Adafruit (7-pin clock generator), U2=AZ1117-3.3 (3.3V LDO, correctly detected with estimated_vout=3.3, input_rail and output_rail=+3.3V), U3=M24C08-RMN (EEPROM, function='EEPROM', correctly placed on I2C bus with SDA/SCL), U4=Seeed_XIAO (MCU module). Power domain correctly shows all on +3.3V. AZ1117 LDO topology correctly identified. M24C08 EEPROM function detection is correct.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.ic",
+            "op": "equals",
+            "value": 4
+          }
+        },
+        {
+          "description": "The power supply CLC filter consisting of L1=1.0mH and C5/C11=220uF each is correctly analyzed. Resonant frequency f = 1/(2\u03c0\u221a(LC)) = 1/(2\u03c0\u221a(0.001\u00d70.000220)) = 339.32 Hz is mathematically correct. Impedance at resonance = \u221a(L/C) = \u221a(0.001/0.000220) = 2.13 ohms is also correct. Two LC filter instances are reported (L1+C11 and L1+C5) sharing the inductor, which correctly models the pi-filter topology.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.lc_filters.resonant_hz",
+            "op": "equals",
+            "value": 339.32
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "In pdn_impedance.rails.+3.3V (and +5V), capacitors C1, C2, C6, C7, C9, C10, C11 with value='0.10' and footprint Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm are assigned type='electrolytic/tantalum' with esr_ohm=0.1, esl_nH=7.5, and srf_hz=5812 Hz. Disc capacitors are ceramic or film, not electrolytic/tantalum. The misclassification appears to stem from the same root cause as finding #2: the parser treats '0.10' as 0.1 Farads (a value more consistent with electrolytic caps), triggering the wrong cap-type heuristic. A true 100nF ceramic disc cap would have esr<0.1 ohm, esl~1nH, and SRF~15 MHz.",
+          "analyzer_section": "pdn_impedance",
+          "check": {
+            "path": "pdn_impedance.rails.type",
+            "op": "not_equals",
+            "value": "electrolytic/tantalum"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T01:12:36.216073+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001611"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "kicad6_xiao_UDVBM-1_Xiao.kicad_pcb",
+      "status": "promoted",
+      "summary": "Xiao PCB statistics are accurate: 35 footprints (3 SMD, 25 THT), 2-layer board, fully routed; Xiao PCB has C8 but the xiao schematic has C9 \u2014 schematic-PCB net list is out of sync",
+      "correct": [
+        {
+          "description": "PCB source confirms 35 footprints: U2 (TO-252-2 SMD), U3 (SO-8 SMD), U4 (Seeed_XIAO, attr=smd) = 3 SMD; U1 (Si5351A, attr=through_hole), all THT passives and connectors = 25 THT; 6 graphics logos (G*** refs) and 1 footprint unaccounted. Board dimensions 86.944x39.751mm, fully routed (0 unrouted), GND pour on both layers with thermal vias for U2 correctly detected.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The xiao schematic lists capacitors C1, C2, C3, C4, C5, C6, C7, C9, C10, C11 (no C8). The xiao PCB has C1, C2, C3, C4, C5, C6, C7, C8, C10, C11 (no C9). This is a genuine schematic-PCB mismatch \u2014 a capacitor was renumbered in one file but not the other. The analyzer does not flag this cross-file discrepancy. This is a design documentation issue, not an analyzer parsing error, but worth noting as an observation about the design state.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 35
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T01:12:36.216077+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001612"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "kicad6_pro-mini_UDVBM-1.kicad_pcb",
+      "status": "new",
+      "summary": "Pro-mini PCB correctly analyzed as a multi-instance panel board with 266 footprints and 3 unrouted nets",
+      "correct": [
+        {
+          "description": "The pro-mini PCB is a template/panel board with multiple copies of circuit blocks: 42 capacitors (C1-C42), 9 U-refs, 12 H-refs, 18 G*** graphics. The 266-footprint count correctly reflects the actual PCB file (confirmed: 266 footprint instances in source). The 3 unrouted nets (Net-(U1-Pad0/1/2) corresponding to Si5351A clock outputs with 3 instances each: U1/U4/U7) are correctly identified.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 266
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T01:12:36.216079+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001613"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "UDVBM-1_Nano.kicad_pcb",
+      "status": "new",
+      "summary": "Nano PCB DFM correctly flags board size exceeding 100x100mm JLCPCB threshold",
+      "correct": [
+        {
+          "description": "Nano PCB is 126.9x51.2mm, which correctly triggers a DFM violation: 'Board size 126.9x51.2mm exceeds 100x100mm \u2014 higher fabrication pricing tier at JLCPCB'. The dfm_tier='standard' and violation_count=1 are correct. The xiao board (86.944x39.751mm) has no DFM violations, which is also correct.",
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm.violation_count",
+            "op": "equals",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T01:12:36.216082+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001614"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos_UDVBM-1_kicad6_pro-mini_UDVBM-1.kicad_sch",
+      "status": "promoted",
+      "summary": "Component count, bus detection (I2C, SPI), and power regulator detection all correct; LM7805 incorrectly classified as topology='LDO'; should be 'linear' (standard fixed regulator); Capacitor value...",
+      "correct": [
+        {
+          "description": "37 components correctly parsed. LM7805 (U3) correctly identified as power regulator. I2C bus on SDA/SCL with devices U2 (ArduinoPro_Mini) and U1 (Si5351A) correctly detected. SPI bus with MOSI/MISO/SCK detected on U2. Missing I2C pull-up resistors correctly flagged (no pull-up R on SDA/SCL in this schematic \u2014 the design relies on module-level pull-ups). Reset pin observation for U2.RST is substantively correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[0].ref",
+            "value": "U3",
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U3 (value='LM7805', lib_id='UDVBM-1-rescue:LM7905_TO220-Regulator_Linear') is classified as topology='LDO'. The LM7805 is a classic 3-terminal fixed positive voltage regulator with a minimum dropout of ~2V \u2014 it is definitively NOT a low-dropout regulator. LDO refers to regulators with dropout <1V (e.g., LM1117, AZ1117, MCP1700). The correct topology for LM7805 is 'linear'. Note also the lib_id references 'LM7905' (negative voltage version) while the value is 'LM7805' \u2014 this discrepancy in the source is not flagged.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[0].topology",
+            "value": "LDO",
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The schematic uses '0.10' as the value string for disc ceramic capacitors (C1, C3, C4, C6\u2013C10, C12\u2013C14), meaning 0.10 \u00b5F = 100 nF. The value parser interprets '0.10' as a bare decimal = 0.1 F (farads), then converts to 1.0\u00d710\u2075 \u00b5F per cap. With 11 such caps on +5V, total_capacitance_uF = 1,100,000 \u00b5F (\u22481.1 F). The self_resonant_hz of 15,915 Hz (instead of ~15.9 MHz for 100 nF) confirms the wrong unit interpretation. The correct total should be ~1.1 \u00b5F. Same bug affects nano (1,200,000 \u00b5F for 12 caps) and xiao variants.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+            "value": 1100000.0,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "design_observations includes {category: 'regulator_caps', component: 'U3', missing_caps: {input: '__unnamed_0'}}. However, C2 (10 \u00b5F electrolytic) appears in the nets dict for '__unnamed_0' alongside U3 and R1. The false positive occurs because U3 and C2 have pins=None in the parsed output (net membership is known but pin-level connections are not), so the cap-checking logic cannot confirm that C2 is a bypass cap for U3. Same false positive appears in nano variant for U3, and xiao for U2 (AZ1117-3.3).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations[0].category",
+            "value": "regulator_caps",
+            "op": "equals"
+          }
+        },
+        {
+          "description": "signal_analysis.design_observations contains two identical entries for {category: 'reset_pin', component: 'U2', value: 'ArduinoPro_Mini', pin: 'RST', net: 'RST', has_pullup: False, has_filter_cap: False, connected_components: [{ref: 'J3'}, {ref: 'J2'}]}. The same duplication occurs in the nano variant. The substance of the observation (no pull-up, no filter cap, reset connected to breakout headers) is correct, but it should appear only once.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "value": 2,
+            "op": "count_where_category_eq_reset_pin"
+          }
+        },
+        {
+          "description": "All .kicad_sch (file_version 20211123 = KiCad 6.0) and .kicad_pcb (file_version 20211014 = KiCad 6.0) files report kicad_version='unknown'. The file version numbers are sufficient to determine the KiCad generation: 20211123 and 20211014 correspond to KiCad 6.0 release. Also affects .kicad_pcb files from KiCad 5 (file_version 20171130) \u2014 those also report 'unknown'. Only legacy .sch files get correct version detection ('5 (legacy)'). The PCB analyzer should map known file_version ranges to KiCad major versions (e.g., 20171130=KiCad5, 20211014=KiCad6).",
+          "analyzer_section": "kicad_version",
+          "check": {
+            "path": "kicad_version",
+            "value": "unknown",
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T06:19:38.294696+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001929"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "repos_UDVBM-1_kicad6_pro-mini_UDVBM-1.kicad_pcb",
+      "status": "new",
+      "summary": "Routing incompleteness correctly detected; 3 unrouted nets identified with pad-level detail; PCB footprint count (266) reflects panelized multi-module design",
+      "correct": [
+        {
+          "description": "routing_complete=false with unrouted_net_count=3 correctly identified. Unrouted nets are Net-(U1-Pad0), Net-(U1-Pad1), Net-(U1-Pad2), each connecting 3 pads across U1/U4/U7. This is correct \u2014 the pro-mini design is a panelized board with multiple module placeholders and the design was never fully routed. Board dimensions 135.6\u00d7180.3mm correctly reported; DFM correctly flags the board as exceeding 100\u00d7100mm pricing threshold.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "value": false,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The pro-mini PCB contains 266 footprints vs 37 in the schematic. This is a multi-module panel: 9 U references (U1\u2013U9), multiple REF markers (96), graphic elements. The PCB is a combination of the main board with repeated module areas. The analyzer correctly processes the file without error.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 266,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T06:19:38.294717+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001930"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "repos_UDVBM-1_kicad6_nano_UDVBM-1_Nano.kicad_pcb",
+      "status": "new",
+      "summary": "Nano PCB fully routed, correct dimensions and layer usage",
+      "correct": [
+        {
+          "description": "74 footprints, 2-layer board, routing_complete=true, 0 unrouted nets. Board 126.9\u00d751.2mm. 252 track segments, 167 vias, 3 zones. Mix of 32 SMD + 39 THT footprints (consistent with THT capacitors and connectors visible in schematic). The nano variant is a compact single-row form factor.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "value": true,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T06:19:38.294721+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001931"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos_UDVBM-1_kicad6_xiao_UDVBM-1_Xiao.kicad_sch",
+      "status": "new",
+      "summary": "Xiao variant correctly identifies AZ1117-3.3 LDO with estimated output voltage",
+      "correct": [
+        {
+          "description": "U2 (AZ1117-3.3) correctly identified: topology='LDO', output_rail='+3.3V', estimated_vout=3.3, vref_source='fixed_suffix'. The Xiao uses both +5V and +3.3V rails. 4 ICs detected: Si5351A (clock gen), AZ1117-3.3 (LDO), Seeed_XIAO (MCU module), M24C08-RMN (EEPROM). I2C bus on SDA/SCL with 3 devices (U1/U4/U3) correctly found.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[0].estimated_vout",
+            "value": 3.3,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T06:19:38.294723+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001932"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "repos_UDVBM-1_kicad6_xiao_UDVBM-1_Xiao.kicad_pcb",
+      "status": "new",
+      "summary": "Xiao PCB: compact fully-routed 2-layer board with correct stats",
+      "correct": [
+        {
+          "description": "35 footprints, 2-layer board, routing_complete=true. Board 86.9\u00d739.8mm. 198 tracks, 117 vias, 5 zones. 3 SMD + 25 THT footprints (Seeed_XIAO is SMD module, rest THT). Net count 23 consistent with Xiao schematic 26 nets (small differences due to PCB-only power nets).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "value": true,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T06:19:38.294726+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001933"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "repos_UDVBM-1_kicad6_xiao_UDVBM-1_Nano.kicad_pcb",
+      "status": "new",
+      "summary": "Analyzer correctly processes UDVBM-1_Nano.kicad_pcb copy stored in xiao/ directory",
+      "correct": [
+        {
+          "description": "The xiao subdirectory contains a copy of UDVBM-1_Nano.kicad_pcb (identical content to nano/UDVBM-1_Nano.kicad_pcb, 74 footprints, 126.9\u00d751.2mm). The analyzer processes the file at its actual path without error. This is a design repo artifact, not an analyzer issue.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 74,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "UDVBM-1",
+      "project": "kicad6_nano_UDVBM-1_Nano",
+      "created": "2026-03-24T06:19:38.294728+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001934"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "hotdoggu_smolSlimeVR.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002128",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002128-AST-01",
+      "description": "The I2C bus detection finds SDA and SCL nets connecting U2 (LSM6DSV16X IMU) to U1 (ESP32-C3-MINI-1) with R13/R14 (10k) pull-ups to +3V3 \u2014 all correct. The power_regulators detector identifies U4 (LP5907MFX-3.3) as an LDO with input_rail=VIN and output_rail=+3V3, correctly estimating 3.3V output from the part name suffix. The power_budget correctly estimates 250mA load on +3V3 (ESP32-C3 at 240mA + LSM6DSV at 10mA). The MCP73831 is correctly identified as a battery management IC with function='battery management'.",
+      "created_from": "FND-00002128",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00002128-AST-02",
+      "description": "INCORRECT: R2 and R3 are wired as CC1 and CC2 pulldowns to GND on the USB-C connector J1 (TYPE-C-31-M-12). Their values are '5.1k, 1%'. The component parser returns parsed_value=None for this format (comma+tolerance suffix not handled), while R5 with value '5.1k' correctly parses to 5100.0. As a result the usb_compliance check reports cc1_pulldown_5k1: fail and cc2_pulldown_5k1: fail when the pulldowns are actually present and correct. This is a false negative \u2014 the device is USB-C power delivery compliant for device/sink role.",
+      "created_from": "FND-00002128",
+      "check": {
+        "path": "usb_compliance.summary.fail",
+        "op": "equals",
+        "value": 4
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+# Findings: ergo-snm-keyboard / EC56_rotary_encoder_pcb_EC56_rotary_encoder_pcb
+
+## FND-00002185: Bus width counts label instances instead of unique signal names, systematically overcounting; Key matrix correctly detected in rev1 flat schematic (5 rows x 7 cols, 35 keys with 35 diodes)
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_ergo-snm-keyboard_ErgoSNM_Keyboard_rev1_ErgoSNM_keyboard.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- The rev1 flat schematic (no hierarchy, no MCU on-sheet, uses Pro Micro connectors J5/J6) correctly detects the 5x7 key matrix with ROW_0..ROW_4 and COL_0..COL_6, counting exactly 35 switch and 35 diode components all on the matrix. The 4 PWR_FLAG warnings (VCC, GND, VBUS, +BATT have no PWR_FLAG or power_out driver) are accurate—rev1 uses Pro Micro connectors without explicit power flags. The 17 label_shape_warnings for ROW/COL global labels shaped as 'input' with no driver are correctly flagged since the MCU is external.
+
+### Incorrect
+- The bus_topology 'width' field reports the total number of label placements on the sheet rather than the number of unique signal names. In the rev1 schematic, COL_0..COL_6 (7 unique nets) produces width=18 because each global label appears 2-3 times in the schematic. Similarly, ROW_0..ROW_4 (5 unique nets) gives width=20. This is a bug in analyze_bus_topology() at line 4109: `'width': len(members)` where 'members' is the un-deduplicated list of label occurrences. The fix is `len(set(members))` or deduplication before counting.
+  (bus_topology)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002186: MISO_nRF5 and SCK_nRF5 are falsely detected as bus signals due to duplicate label placement; SPI interface between Pro Micro (M2) and Adafruit Bluefruit LE SPI Friend (M3) not detected
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_ergo-snm-keyboard_ErgoSNM_Keyboard_prototype_left_prototype_1_ErgoSNM_Keyboard_Left_Prototype_1.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- The schematic has a single net named 'MISO_nRF5' (the '5' refers to the nRF5x chip family, not a bus index). This label is placed 3 times in the schematic. The bus detector sees 3 instances matching prefix 'MISO_nRF' with suffix '5', and because len(members)=3 meets the threshold of >=3, it reports a spurious bus 'MISO_nRF' with width=3 and range 'MISO_nRF5..MISO_nRF5'. Same issue for 'SCK_nRF5'. The root cause is the same as the width-counting bug: label instances are not deduplicated before grouping into bus patterns.
+  (bus_topology)
+
+### Missed
+- The prototype left schematic has explicit SPI nets: MISO_Bluefruit, MOSI_Bluefruit, SCK_Bluefruit, CS_Bluefruit connecting M2 (Pro_Micro) to M3 (Adafruit_Bluefruit_LE_SPI_Friend). Despite these clearly named SPI signals, signal_analysis.spi_interfaces is empty. The root cause is that M1 (nRF51822_Core_board), M2 (Pro_Micro), and M3 (Adafruit_Bluefruit_LE_SPI_Friend) all use custom library identifiers from 'ErgoSNM_Keybaord_Library' and receive component_type='?' (unknown). The SPI detector likely requires at least one recognized 'ic' type component on the bus. M-prefixed module components with non-standard lib_ids are excluded from IC-based detection.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002187: W25Q128JVS QSPI flash memory interface correctly detected and linked to RP2040
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_ergo-snm-keyboard_ErgoSNM_Keyboard_rev2_left_RP2040.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- The analyzer correctly identifies U3 (W25Q128JVS, a 128Mbit SPI NOR flash) connected to U4 (RP2040) with 6 shared signal nets. The memory_interfaces detection properly reports total_pins=8 and the connected processor. The QSPI bus signals (QSPI_D0..D3, QSPI_CLK, QSPI_CS) are also reflected in bus_topology.detected_bus_signals for QSPI_D. The 12MHz crystal circuit (Y1 with 20pF load caps) is correctly detected with calculated effective load of 13pF.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002188: Key matrix correctly detected across the hierarchical schematic (6x8, estimated 29 keys); USB-C CC pulldown check incorrectly reports 'fail' for J2 which may be a host-side port requiring different...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_ergo-snm-keyboard_ErgoSNM_Keyboard_rev2_left_left.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- The hierarchical rev2 left schematic correctly aggregates all sub-sheets and detects the 6-row x 8-column key matrix using ROW_0..ROW_5 and COL_0..COL_7 net names. The matrix count shows 29 switches (matching actual KEY1..KEY29) and 29 diodes (matching D1..D29). The power regulator (RT9013-33GB LDO converting +5V to +3V3) and the 12MHz crystal circuit are also correctly detected. Total component count of 110 matches the PCB footprint count exactly.
+
+### Incorrect
+- J2 (USB_C_Receptacle_USB2.0, HRO TYPE-C-31-M-12) fails cc1_pulldown_5k1 and cc2_pulldown_5k1 checks. The CC pins (A5/B5) of J2 show no 5.1k pulldown resistors in the schematic. The design has two USB-C ports: J1 (passes CC checks, passes D+/D- series resistor checks) and J2 (fails). J2 appears to be used as a power-only or secondary port where CC resistors are omitted—a known design tradeoff for device-to-device connections. The analyzer does not contextually distinguish between primary data ports (requiring CC pulldowns) and auxiliary power-only USB-C ports.
+  (usb_compliance)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002189: TPS61220 boost converter feedback network correctly analyzed with accurate Vout estimate
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_ergo-snm-keyboard_ErgoSNM_Keyboard_rev3_left_ErgoSNM_v3_left.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- The rev3 left schematic uses U2 (TPS61220DCK) as a boost converter for battery voltage (+BATT) to VDD. The analyzer correctly identifies the feedback divider R3=1.2M (top) and R4=220k (bottom) on the FB pin, computes ratio=0.155, and estimates Vout=3.87V using a 0.6V reference (heuristic). The actual TPS61220 Vref is 0.5V which gives ~3.2V, but the output is labeled as 'heuristic' which is honest. The RT9013-33GB LDO (+5V to VDD at 3.3V) is also correctly identified. Both regulators sharing the VDD output rail is correctly captured.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002190: EC1 rotary encoder switch counted as matrix key, inflating switches_on_matrix to 7 instead of 6
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_ergo-snm-keyboard_ErgoSNM_Keyboard_rev2_thumb_cluster_thumb_cluster.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- The thumb cluster has KEY1..KEY6 (6 true matrix keys each with a 1N4148 diode) plus EC1 (Alps EC11 rotary encoder with integrated push switch). EC1's S1 pin connects to COL_7, but its S2 pin connects to an unnamed net (a direct MCU input, not a ROW net). The key matrix detector counts EC1 as a matrix switch because S1 touches COL_7, resulting in switches_on_matrix=7 and diodes_on_matrix=6. The true key matrix has only 6 switches. EC1's click function is wired as a direct input, not through the row-column diode matrix. The mismatch (7 switches, 6 diodes) is numerically correct but logically misleading—EC1 is not a matrix key.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002191: E73-2G4M08S1C (nRF52840 module) not classified as IC, preventing BLE/wireless interface detection
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_ergo-snm-keyboard_ErgoSNM_Keyboard_rev3_receiver_receiver.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+(none)
+
+### Missed
+- The rev3 receiver uses U3 (E73-2G4M08S1C), an nRF52840-based BLE/Bluetooth 5.0 module, as the central wireless controller. This module is in a custom library (ErgoSNM_Keyboard_Library:E73-2G4M08S1C) and receives component_type='?' in the output. The statistics correctly count it as 'ic: 1' (via category field), but signal_analysis finds no wireless interfaces, no SPI/I2C buses, and no power sequencing observations. The 25 single-pin nets flagged in design_observations represent GPIO pins going to external connectors (ROW/COL/SERIAL etc.) that should trigger observations about unconnected keyboard matrix signals.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002192: PCB DFM correctly flags board exceeding 100x100mm JLCPCB pricing tier for all rev2/rev3 boards; Courtyard overlaps correctly detected: KEY1/LD2 on F.Cu (LED placed inside key switch courtyard)
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: pcb_ergo-snm-keyboard_ErgoSNM_Keyboard_rev2_left_left.kicad_pcb.json
+- **Created**: 2026-03-24
+
+### Correct
+- All rev2 and rev3 keyboard PCBs (left, right, receiver, thumb cluster at 115.57x106.68mm) correctly trigger the board_size DFM violation noting the JLCPCB pricing tier boundary. The keyboard plate PCBs (116.25x111.5mm) are also correctly flagged. The routing is reported as complete (routing_complete=true, unrouted_count=0) for all boards. The 2-layer stackup (F.Cu/B.Cu) is correctly identified, and GND+3V3 zone stitching with via density analysis is correctly reported.
+- The analyzer correctly identifies a courtyard overlap between KEY1 (key switch) and LD2 (status LED) on F.Cu with 1.776mm2 overlap, and between J3 and D12 on B.Cu with 0.343mm2 overlap. The KEY1/LD2 overlap is noteworthy in a keyboard design—it suggests the LED is intentionally placed within the key switch footprint area, which is a common technique for per-key RGB but requires careful 3D verification. The 22 tombstoning risk flags for 0402 capacitors with GND pour on one pad are also correctly identified.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002193: Keyboard switch plate PCB (mechanical only, no copper) correctly analyzed as zero-net board
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: pcb_ergo-snm-keyboard_ErgoSNM_Keyboard_rev2_plate_ergosnm_plate.kicad_pcb.json
+- **Created**: 2026-03-24
+
+### Correct
+- The rev2 plate PCB is a pure mechanical switch plate with 11 footprints (switch cutout shapes and mounting holes), zero copper layers used, zero tracks, zero vias, and zero nets. The analyzer correctly reports all these as zero and routing_complete=true (vacuously, no nets to route). Board dimensions 116.25x111.5mm are correctly computed from the edge cuts. The DFM board_size violation is correctly triggered. This demonstrates the analyzer handles purely mechanical PCBs without false errors.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

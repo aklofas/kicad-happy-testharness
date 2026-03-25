@@ -1,0 +1,86 @@
+{
+  "file_pattern": "SparkFun_Portability_Shield.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001472",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001472-AST-01",
+      "description": "The SparkFun_Portability_Shield.kicad_sch correctly reports 63 components with the correct breakdown of 17 R, 16 C, 6 IC, 5 JP, 4 ST (mounting holes), 4 FID, 4 connectors, 2 SW, 2 LED, 3 other. Power rails 3.3V_P, 5V, GND, VBATT are all correctly identified.",
+      "created_from": "FND-00001472",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 63
+      }
+    },
+    {
+      "id": "FND-00001472-AST-02",
+      "description": "The power_regulators section correctly identifies U1 (AP2112K-3.3) as LDO with input_rail 5V and output_rail 3.3V_P. The design_observations also include the regulator_voltage category for U1. The decoupling_analysis for 3.3V_P shows 7 capacitors totaling 22.3 uF, correctly pulling in C7, C2, C13, C1, C8, C10, C16.",
+      "created_from": "FND-00001472",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "value": {
+          "ref": "U1",
+          "topology": "LDO",
+          "output_rail": "3.3V_P"
+        }
+      }
+    },
+    {
+      "id": "FND-00001472-AST-03",
+      "description": "The rc_filters section correctly identifies R1 (10k) and C6 (1.0uF) as a low-pass filter on the OLED reset line (input_net 3.3V_P, output_net OLED_~{RESET}, ground_net GND), with cutoff_hz 15.92 Hz and time_constant_s 0.01. The design_observations also correctly identifies the reset_pin observation for U5 with has_pullup: true and has_filter_cap: true.",
+      "created_from": "FND-00001472",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "value": {
+          "type": "low-pass",
+          "resistor": {
+            "ref": "R1"
+          },
+          "output_net": "OLED_~{RESET}"
+        }
+      }
+    },
+    {
+      "id": "FND-00001472-AST-04",
+      "description": "The bus_analysis.spi is empty despite SHLD_SCK, SHLD_POCI, SHLD_PICO, and SHLD_~{CS} being present as net labels \u2014 classic SPI clock, POCI (MISO), PICO (MOSI), and chip select signals for an SD card (J1 microSD connector). The net SHLD_~{CS} is correctly classified as chip_select in net_classification, and SHLD_SCK as clock, but these are not aggregated into an SPI bus detection. This is a missed detection of the SPI bus used for microSD card access.",
+      "created_from": "FND-00001472",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001472-AST-05",
+      "description": "The bus_analysis.i2c reports has_pull_up: false for both SDA and SCL. However, R15 (2.2k) has pin 2 on SCL and R16 (2.2k) has pin 2 on SDA. Their pin 1 ends connect through JP4 (I2C pullup jumper) to an unnamed net that leads to 3.3V_P. The pullup detector fails because the resistors are not directly connected to a named power rail \u2014 the JP4 jumper interrupts the trace from power to the resistor. This is the same class of issue as the OpenScale SDA/SCL missed detection.",
+      "created_from": "FND-00001472",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "contains_match",
+        "value": {
+          "net": "SCL",
+          "has_pull_up": false
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001472-AST-06",
+      "description": "The bus_analysis.i2c SDA net lists devices ['U4', 'U5', 'U5', 'U2'] with U5 (OLED) appearing twice. The OLED (SSD1306-compatible display) has two SDA-capable pins (D1/MOSI/SDA on pin 19 and D2/SDA on pin 20), causing the duplicate. While this is technically correct that both pins connect to SDA, listing U5 twice gives the misleading impression of two separate devices. This minor reporting artifact could be filtered by using unique device references.",
+      "created_from": "FND-00001472",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "contains_match",
+        "value": {
+          "net": "SDA"
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

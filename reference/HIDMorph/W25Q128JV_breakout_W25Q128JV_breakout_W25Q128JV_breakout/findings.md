@@ -1,0 +1,54 @@
+# Findings: HIDMorph / W25Q128JV_breakout_W25Q128JV_breakout_W25Q128JV_breakout
+
+## FND-00000580: Component inventory accurately parsed: 42 total, correct breakdown by type; LDO regulator U1 (SPX1117M3-L-3-3/TR) detected with correct topology, input/output rails; False positive: regulator_caps ...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: electrical_HIDMorph_HIDMorph.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- 5 ICs (U1 SPX1117M3 LDO, U2/U5 W25Q128JVE flash, U3 ESP32-S3, U4 RP2040), 14 capacitors, 6 resistors, 4 ESD diodes, 3 LEDs, 4 switches, 1 crystal all correctly identified with proper categorization.
+- Correctly identified as LDO with input_rail=USB_VOUT, output_rail=3.3V. The regulator and its rail connections are accurate.
+- Correctly identified crystal Y1 with both load capacitors, computed effective load of 10.5 pF, and flagged it as in-typical-range. The XIN_rp/XOUT_rp crystal nets are properly traced to RP2040 (U4).
+- R1 pulls ESP_EN to 3.3V; C2 is to GND, forming a power-on-reset RC network. The analyzer identifies this as a low-pass RC filter at 15.92 Hz, which is a valid characterization of the EN pin RC delay circuit.
+- All four ESD9B5.0ST5G diodes are correctly placed in protection_devices: D3/D4 on USB_OUT_D+/D-, D1/D2 on USB_VOUT. Correct clamp to GND.
+- The schematic has no I2C pull-up resistors on these lines (presumably on the display module). Analyzer correctly reports has_pull_up=false for both SDA and SCL.
+- Both USB pairs correctly identified with ESD protection flagged on each. The design has two USB interfaces — one for RP2040 (USB device) and one for ESP32-S3 (USB host/HID output).
+- U2 (flash) primarily connected to U3 (ESP32-S3, 7 shared nets), U5 (flash) primarily connected to U4 (RP2040, 7 shared nets). The QSPI nets for each MCU's internal flash are also correctly traced. memory_interfaces correctly reports both flash ICs.
+
+### Incorrect
+- The design_observations entry at regulator_caps claims U1 is missing caps on USB_VOUT (input) and 3.3V (output). In reality, C3 (47uF) and C7 (47uF) are on USB_VOUT, and C1/C5/C6/C8/C9/C10/C13/C14 are on 3.3V. The analyzer fails to associate decoupling caps connected via named labels to the LDO input/output rails when they aren't directly adjacent in the netlist subcircuit.
+  (signal_analysis)
+- The design has named net labels '3.3V' and 'USB_VOUT' used as power distribution nets but not as KiCad power symbols (PWR_FLAG-style). The statistics.power_rails only lists 'GND' which was a power symbol. The 3.3V and USB_VOUT supply nets are present in the full nets/signal_analysis sections but are omitted from the statistics summary — a known limitation when power is distributed via named labels rather than power symbols.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000581: Breakout schematic with single W25Q128JVE correctly parsed; all pins isolated (no connections to other ICs); Missing MPN for U1 (W25Q128JVE) despite having LCSC C401662 in the main schematic equiva...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: W25Q128JV_breakout_W25Q128JV_breakout_W25Q128JV_breakout.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- This is a bare breakout schematic with U1 (W25Q128JVE flash) and all pins on unnamed single-pin nets. The analyzer correctly shows no memory_interfaces, no bus analysis, and no signal analysis features — all expected for an isolated breakout schematic.
+
+### Incorrect
+(none)
+
+### Missed
+- The breakout's U1 has no LCSC or MPN, even though the same W25Q128JVE in the main schematic has lcsc=C401662. This is a sourcing data gap in the breakout schematic itself, not an analyzer error — the analyzer correctly reports missing_mpn=[U1]. Noted for completeness.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---

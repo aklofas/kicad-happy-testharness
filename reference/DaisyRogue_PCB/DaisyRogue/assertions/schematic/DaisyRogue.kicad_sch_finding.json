@@ -1,0 +1,38 @@
+{
+  "file_pattern": "DaisyRogue.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000468",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000468-AST-01",
+      "description": "The DaisyRogue.kicad_sch is the hierarchical top-level sheet containing 3 sub-sheets (Daisy.kicad_sch, Interfaces.kicad_sch, Audio.kicad_sch). The analyzer correctly flattens and combines all sub-sheet components: 74 total (40 Audio + 20 Daisy + 10 Interfaces + 4 mounting holes at top level = 74). The component_types breakdown (mounting_hole: 4, resistor: 23, capacitor: 30, ic: 8, connector: 6, diode: 1, ferrite_bead: 2) matches the union of all sub-sheets. The sheets list at the end correctly enumerates all 4 processed files.",
+      "created_from": "FND-00000468",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000468-AST-02",
+      "description": "The top-level DaisyRogue JSON correctly aggregates bus detections from all sub-sheets: I2C SCL/SDA (A1 + pull-ups R3/R4), SPI bus MEM (A1 \u2194 U6 AT25DF256), SDIO bus SD 4-bit (A1 with pull-ups), UART TX/RX (A1). USB differential pair DP/DM with ESD (U1) is also present. This comprehensive bus detection is correct.",
+      "created_from": "FND-00000468",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000468-AST-03",
+      "description": "R14 in Daisy.kicad_sch uses the old-style value='DNP' marker (not the KiCad 7+ (dnp yes) attribute). The analyzer correctly detects this as DNP through value-field inspection. Both the Daisy.kicad_sch and DaisyRogue.kicad_sch outputs show dnp_parts=1, correctly identifying R14.",
+      "created_from": "FND-00000468",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

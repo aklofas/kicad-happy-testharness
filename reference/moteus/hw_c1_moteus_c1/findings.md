@@ -69,7 +69,7 @@
 
 ## FND-00000294: moteus motor controller PCB: copper_layers_used misses In1.Cu (zone-only layer), zone stitching via density inflated by per-polygon area calculation, V+ power net current capacity misleading without zone copper area
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: pcb
 - **Source**: hw_c1_moteus_c1.kicad_pcb.json
 - **Related**: KH-155, KH-159

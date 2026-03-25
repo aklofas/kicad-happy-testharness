@@ -1,0 +1,56 @@
+{
+  "file_pattern": "PowerReplay.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001062",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001062-AST-01",
+      "description": "14 footprints (13 front/1 back), 2 copper layers, 1335 track segments, 54 vias, 4 zones, 76 nets, routing_complete=true with 0 unrouted nets all match expected values for this design.",
+      "created_from": "FND-00001062",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001062-AST-02",
+      "description": "9 courtyard overlaps reported including J2/SW1 (88.6mm2), U4/U2 (38.2mm2), and others. These are artifacts of the schematic coordinates being used \u2014 the PCB layout is separate and the overlap detection appears to work from schematic placement coordinates, not PCB. The PCB footprint overlaps reflect actual PCB placement data from courtyard fields in the PCB file.",
+      "created_from": "FND-00001062",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001062-AST-03",
+      "description": "GND zone on both B.Cu and F.Cu (2918mm2, 2 stitching vias) and VCC zone on B.Cu (203.4mm2, 3 vias) correctly identified in thermal_analysis.",
+      "created_from": "FND-00001062",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001062-AST-04",
+      "description": "min_track_width=0.2mm, min_spacing~0.22mm, min_drill=0.3mm \u2014 all within standard DFM tolerances. Correctly assigned dfm_tier='standard'.",
+      "created_from": "FND-00001062",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

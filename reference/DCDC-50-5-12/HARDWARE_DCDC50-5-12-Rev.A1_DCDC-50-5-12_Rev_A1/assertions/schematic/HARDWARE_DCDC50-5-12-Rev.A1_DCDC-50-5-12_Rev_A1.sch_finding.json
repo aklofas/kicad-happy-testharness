@@ -1,0 +1,99 @@
+{
+  "file_pattern": "DCDC-50-5-12_Rev_A1.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000457",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000457-AST-01",
+      "description": "All 38 components are correctly identified including references, values, footprints, and types. The count breakdown (7 caps, 3 diodes, 6 fiducials, 9 resistors, 1 IC, 2 LEDs, 1 connector, 4 mounting holes, 1 inductor, 4 'other') matches the schematic. U1 TX4138(ESOIC-8) with its 9-pin symbol is correctly parsed. All BOM entries have the right footprints.",
+      "created_from": "FND-00000457",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000457-AST-02",
+      "description": "The four named nets Vin, Vout, Vfb, SW, ILIM, GND, and PWR_FLAG are all correctly identified. Net memberships are consistent with the schematic's wire routing and text labels. The Vin label at coordinates (3800,3500), (1600,3500), (1600,2900) all resolve to the same net, as do the Vout labels at (8500,3900), (10300,2900), and (10300,4200).",
+      "created_from": "FND-00000457",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000457-AST-03",
+      "description": "All 9 pins of U1 are correctly extracted: pin 1 (SW, output) on net SW; pin 2 (ILIM, input) on net GND; pin 3 (Vin, power_in) on an unnamed isolated net __unnamed_8; pin 4 (GND, power_in) on __unnamed_9; pin 5 (FB, input) on __unnamed_7; pin 6 (EN, input) on net ILIM; pin 7 (POK, open_collector) on net Vin; pin 8 (BS, passive) on net Vfb; pin 9 (ILIM, input) on net ILIM. This matches the schematic wiring.",
+      "created_from": "FND-00000457",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000457-AST-04",
+      "description": "The power_regulators section correctly identifies U1 TX4138 as a switching regulator with inductor L1, output_rail Vout, and notes has_bootstrap: false. The design_observations section correctly flags the missing decoupling cap on the input rail for U1 (the isolated __unnamed_8 pin). The decoupling analysis on Vout (C6+C7, 470 uF + 100 nF) and Vin (C1+C2, 100 uF + 100 nF) is correct.",
+      "created_from": "FND-00000457",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000457-AST-05",
+      "description": "D1 is correctly classified in protection_devices with protected_net: 'Vin' and clamp_net: 'GND'. SMAJ58A is a 58V transient voltage suppressor diode protecting the Vin rail \u2014 this is exactly correct. D2 (SS510 Schottky) is on the SW net serving as the freewheeling diode and is correctly connected between SW (anode) and GND (cathode), though it is not listed as a protection device (appropriate since it is a functional switching element).",
+      "created_from": "FND-00000457",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000457-AST-06",
+      "description": "Two no-connect markers are present at coordinates (4600, 4100) and (4600, 4000) in the source schematic (lines 1226 and 3225). These correspond to U1 pins at that x-coordinate, which aligns with U1's left-side pins. The analyzer reports total_no_connects: 2, which matches. However, the analyzer reports U1 pin 6 (EN) is on the ILIM net via a wire at (4400, 4100) \u2192 (3600, 4100), and the NoConn is at (4600, 4100). This means the EN pin actually has a NoConn on one end and a wire on the other \u2014 which in KiCad 5 legacy format means the NoConn is placed near the pin but the pin is actually wired. The two NoConns are on different U1 pins.",
+      "created_from": "FND-00000457",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000457-AST-07",
+      "description": "The schematic contains a text note: 'When Input Voltage is in the range Vin=8-50VDC, Vout=5VDC/1.5A; When Input Voltage is in range Vin=17-50VDC, Vout=12VDC/1.5A. By default Vout=5VDC. To change to Vout=12VDC, close 12V_E1 jumper.' The analyzer does correctly identify the 12V_E1 jumper as a connector and connects it to the feedback network, but does not extract or report the dual output voltage configuration in the design_observations. This is expected behavior \u2014 text notes are not parsed for design intent.",
+      "created_from": "FND-00000457",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000457-AST-08",
+      "description": "LED_5V1 (green, pin 1 K on __unnamed_10, pin 2 A on GND) with R8 (10K) from Vout to LED cathode is correctly extracted. LED_12V1 (red, K on __unnamed_16, A on GND) with R9 (1K) from the Vout rail to LED cathode is also correct. The Zener D3 (BZV55C6V2) clamping the R9/LED_12V1 node is captured. The LED anode-on-GND orientation means these are reverse-polarity LEDs being driven from the Vout side, consistent with open-drain/POK-style indicators.",
+      "created_from": "FND-00000457",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000457-AST-09",
+      "description": "The buck converter output filter is L1 (SW\u2192Vout, 33 uH) combined with output capacitors C6 (470 uF, Vout\u2192GND) and C7 (100 nF, Vout\u2192GND). This is the functional output filter with L1 and the Vout-referenced capacitors. The analyzer's lc_filter detection picked up L1+C4 (false) but missed the actual L1+C6 output filter topology. An LC filter with L1 and C6 sharing the Vout/SW interface would be the correct detection.",
+      "created_from": "FND-00000457",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

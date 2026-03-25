@@ -1,0 +1,17 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002391",
+      "source_file": "mikroBUS/LoRa_Click_LoRa_Click.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "SPI bus deduplication failure: 4 buses reported for 2 physical SPI buses",
+      "details": "The bus_analysis reports 4 SPI buses for a single-IC (U1) design that has two physical SPI interfaces (SCK/MOSI/MISO and vSCK/vMOSI/vMISO). Each physical bus is detected twice: bus_id '0' and 'pin_J0' both reference the SCK/MOSI/MISO nets, and bus_id 'V' and 'pin_M1' both reference vSCK/vMOSI/vMISO. This appears to be a deduplication bug where the same signal group is matched from different starting anchor points.",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "max_count",
+        "value": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Encoder.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001708",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001708-AST-01",
+      "description": "U1 is correctly identified as an IC (type='ic'). The design_observations correctly flags that U1's +5V rail lacks decoupling capacitors, which is accurate \u2014 the Encoder board has no bypass caps for the buffer IC. Net count of 12 matches the PCB exactly.",
+      "created_from": "FND-00001708",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001708-AST-02",
+      "description": "INCORRECT: The EE-SX1105 is an Omron optical slot sensor (photointerrupter) containing an infrared LED and phototransistor in a housing \u2014 not a discrete transistor. The library reference 'Q1' and 'Q2' with lib_id '2021-04-25_18-55-55:EE-SX1105' are classified as type='transistor', which leads to them appearing under component_types.transistor=2. They should be classified as 'sensor' or 'optical_sensor'. The transistor_circuits array is correctly empty (since the IC can't be analyzed as a discrete BJT switch topology), but the type label is wrong.",
+      "created_from": "FND-00001708",
+      "check": {
+        "path": "statistics.component_types.transistor",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

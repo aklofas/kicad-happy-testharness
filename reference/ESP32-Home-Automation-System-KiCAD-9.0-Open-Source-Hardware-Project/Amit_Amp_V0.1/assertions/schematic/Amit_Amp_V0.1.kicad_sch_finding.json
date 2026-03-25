@@ -1,0 +1,151 @@
+{
+  "file_pattern": "Amit_Amp_V0.1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000511",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000511-AST-01",
+      "description": "The analyzer reports 62 total components with correct type breakdowns (19 resistors, 12 capacitors, 8 diodes, 6 LEDs, 5 ICs, 4 relays, 4 connectors, 2 transistors, 2 switches). All 62 component entries in the components list match the schematic. The 82-net count matches the actual schematic. BOM groupings by value/footprint are correct, including the 0E resistors (R1, R9, R12), the 10K pull-ups, the 2K2 LED/relay resistors, and the separate 10k (lowercase) vs 10K (uppercase) groupings.",
+      "created_from": "FND-00000511",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000511-AST-02",
+      "description": "The analyzer correctly identifies two UART nets: RXD (U2 TXD-output pin 2 to U4 RXD0/IO3 pin 34) and TXD (U2 RXD-input pin 3 to U4 TXD0/IO1 pin 35). Both are shown with pin_count=2. The cross_domain_signals section correctly identifies these as crossing between the +3.3V (U2) and ESP_3V3 (U4) domains with needs_level_shifter=false, which is correct since both are nominally 3.3V domains.",
+      "created_from": "FND-00000511",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000511-AST-03",
+      "description": "J1 is a USB_C_Receptacle_USB2.0_16P. The analyzer correctly finds R2 and R3 (both 5.1K) on CC1 and CC2 respectively for downstream-facing port compliance. VBUS ESD protection passes (D1 LESD5D5.0CT1G on VBUS-GND). VBUS decoupling fails correctly \u2014 no bulk capacitor is present directly on the VBUS net. The dp_series_resistor and dm_series_resistor are correctly marked 'info' (D+ and D- connect directly from USB connector to CH340C without explicit series resistors). The usb_esd_ic pass for D2/D4 TVS diodes on D+/D- is correct.",
+      "created_from": "FND-00000511",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000511-AST-04",
+      "description": "The SDA net connects U4 pin 33 (IO21) to J4 pin 2, and SCL connects U4 pin 36 (IO22) to J4 pin 3. The analyzer correctly identifies both as I2C lines with has_pull_up=false and pullup_resistor=None. This is an accurate observation \u2014 no pull-up resistors are present on these nets in the schematic, which is a genuine design concern for I2C operation.",
+      "created_from": "FND-00000511",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000511-AST-05",
+      "description": "The design_observations entry {category: 'decoupling', component: 'U2', value: 'CH340C', rails_without_caps: ['+3.3V'], rails_with_caps: []} is accurate. The +3.3V net has only U2 VCC and a power symbol \u2014 no decoupling capacitor is placed on this net. The AMS1117 output decoupling caps C7 and C8 are on the separate +3V3 net, not on +3.3V. This is both a real design issue and a correctly detected observation.",
+      "created_from": "FND-00000511",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000511-AST-06",
+      "description": "The power_regulators entry correctly identifies U3 as an LDO with topology='LDO', output_rail='+3V3', estimated_vout=3.3, vref_source='fixed_suffix'. The regulator_caps observation correctly flags missing_caps={input: '__unnamed_13'} \u2014 the AMS1117 input net (__unnamed_13, bridged from +5V via R9 0E) has C5 (10uF) as its only capacitor but the analyzer considers the named rail incomplete. Output side has C7 (10uF) and C8 (0.1uF) on the +3V3 net, which is correctly noted as having bulk and bypass coverage.",
+      "created_from": "FND-00000511",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000511-AST-07",
+      "description": "RELAY_1 net connects K1 coil pin 2, D6 cathode, D10 anode, and U1 pin 13 (O4). RELAY_2 connects K2 coil pin 2, D7 cathode, D11 anode, and U1 pin 12 (O5). RELAY_3 connects K3 coil pin 2, D8 cathode, D12 anode, and U1 pin 11 (O6). RELAY_4 connects K4 coil pin 2, D13 anode, and U1 pin 10 (O7). All these pin_type assignments (open_collector for ULN2003A outputs, passive for relay/diode pins) are correct. The RELAY_5V net correctly groups all four relay coil pin 1 connections plus the ULN2003A COM pin (pin 9) and the LED anode supply resistors.",
+      "created_from": "FND-00000511",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000511-AST-08",
+      "description": "U1 (ULN2003A) drives relay coils K1\u2013K4 via its open-collector outputs (O4/O7 on RELAY_1\u2013RELAY_4 nets), with snubber diodes D10\u2013D13 (SS34 Schottky) across each coil. Each relay output also has an LED indicator (D6\u2013D9) with a 2K2 series resistor (R5\u2013R8) connected from RELAY_5V to the relay coil node. The ESP32 (U4) drives U1 inputs via SIG_1/IO25 through SIG_4/IO18 nets. The analyzer does not produce a structured relay-driver observation \u2014 no 'relay_driver' category appears in design_observations, and the subcircuit for U1 lists neighbors correctly but does not summarise the functional pattern (Darlington array driving relay coils with flyback diodes and coil-parallel LED indicators).",
+      "created_from": "FND-00000511",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000512-AST-01",
+      "description": "All 62 components correctly parsed with right types: 19 resistors, 12 caps, 8 diodes, 6 LEDs, 4 relays, 5 ICs (including HLK-PM01, CH340C, AMS1117-3.3, ULN2003A, ESP32-WROOM-32), 2 transistors, 4 connectors, 2 switches.",
+      "created_from": "FND-00000512",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000512-AST-02",
+      "description": "Regulator correctly identified as LDO, output_rail='+3V3', estimated_vout=3.3, vref_source='fixed_suffix'. Decoupling caps C7 (10uF) and C8 (0.1uF) on output rail correctly found.",
+      "created_from": "FND-00000512",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000512-AST-03",
+      "description": "Both SDA and SCL nets show has_pull_up: false with no pull_ups listed. Confirmed in source: these nets only connect to U4 (ESP32) and J4 (I2C header), no pull-up resistors present.",
+      "created_from": "FND-00000512",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000512-AST-04",
+      "description": "cc1_pulldown_5k1: pass, cc2_pulldown_5k1: pass. Confirmed: R2 and R3 are 5.1K on CC1/CC2 lines. vbus_decoupling: fail is also correct since VBUS has no dedicated decoupling cap.",
+      "created_from": "FND-00000512",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000512-AST-05",
+      "description": "The design uses a ULN2003A (Darlington array) driving 4 HF46F relay coils via RELAY_1\u2013RELAY_4 nets, with flyback diodes (SS34 Schottky D3/D10/D11/D12/D13). No relay_driver signal path or Darlington array detection is reported in the signal_path_detectors or design_analysis sections.",
+      "created_from": "FND-00000512",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000512-AST-06",
+      "description": "The design has AC Line ('P' net) and AC Neutral ('N' net) connected to PS1 (HLK-PM01 AC/DC) and relay switch contacts (K1-K4 pins 3/4) on J2. This is mains voltage (240V/120V AC) on a PCB with 3.3V logic. No high-voltage safety warning is generated in erc_warnings, design_analysis, or any other section.",
+      "created_from": "FND-00000512",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

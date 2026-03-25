@@ -1,0 +1,39 @@
+{
+  "file_pattern": "test-project-nccm.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000956",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000956-AST-01",
+      "description": "3 components (R1, BT1, D1), 3 nets (GND + 2 unnamed), 8 wires all correctly parsed. BOM entries match source symbols. Net connectivity is accurate.",
+      "created_from": "FND-00000956",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000956-AST-02",
+      "description": "GND net has power_in pin (#PWR01) and passive pins but no PWR_FLAG symbol, so ERC would flag it. The warning is accurate for this schematic.",
+      "created_from": "FND-00000956",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000956-AST-03",
+      "description": "The schematic contains 3 KiCad 9 netclass_flag items (BAT+, BAT-, LED) used to assign net classes to nets. The analyzer produces no output field for these \u2014 they are silently ignored. This is a key feature of KiCad 9 and is the entire point of the NCCM test project.",
+      "created_from": "FND-00000956",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

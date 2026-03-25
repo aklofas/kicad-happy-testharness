@@ -1,0 +1,64 @@
+{
+  "file_pattern": "Single_PCB",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001460",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001460-AST-01",
+      "description": "The Production_Single_PCB drill file shows 57 total holes: 47 via drills at 0.3mm, 6 component drills at 1.016mm (J3 is a 6-pin 0.1\" header), and 4 NPTH holes at 3.1mm (corner standoffs). All tool types are correctly classified using X2 aperture function attributes. The 1.016mm (40-mil) drill matches standard 0.1\" pitch through-hole header pads.",
+      "created_from": "FND-00001460",
+      "check": {
+        "path": "statistics.total_holes",
+        "op": "equals",
+        "value": 57
+      }
+    },
+    {
+      "id": "FND-00001460-AST-02",
+      "description": "Both copper layers (F.Cu, B.Cu), all solder mask layers (F.Mask, B.Mask), silk layers (F.SilkS, B.SilkS), paste layers (F.Paste, B.Paste), and the board outline file (GKO misidentified as B.Mask) are all present. No recommended layers are missing. The 9 gerber files + 1 drill file constitute a complete fabrication package for a standard 2-layer board.",
+      "created_from": "FND-00001460",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "FND-00001460-AST-03",
+      "description": "The pad_summary reports 84 SMD apertures, 94 via apertures, 6 THT holes, and an smd_ratio of 0.93. This accurately reflects a design dominated by SMD components with only J3 as through-hole. The smd_ratio calculation (84/(84+6) = 0.933) is correct.",
+      "created_from": "FND-00001460",
+      "check": {
+        "path": "pad_summary.smd_ratio",
+        "op": "range",
+        "min": 0.9,
+        "max": 0.96
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected 0.9-0.96, got 0"
+    },
+    {
+      "id": "FND-00001460-AST-04",
+      "description": "Both the single PCB and panelized gerbers show B.Paste with 0 apertures, 0 flashes, and 0 draws. This is correct \u2014 all SMD components are on the front side (F.Cu), and the back-side components (JP1, JP2 solder jumpers, FID2, FID3, kibuzzard annotations) either do not require paste (jumpers/fiducials) or are graphical-only. The F.Paste layer correctly shows 17 apertures with 76 flashes (single PCB) covering the front-side SMD pads.",
+      "created_from": "FND-00001460",
+      "check": {
+        "path": "statistics.total_flashes",
+        "op": "greater_than",
+        "value": 300
+      }
+    },
+    {
+      "id": "FND-00001460-AST-05",
+      "description": "INCORRECT: The same issue occurs in the single-PCB gerber set: Soft_Power_Switch.GKO is listed as layer_type='B.Mask' with FileFunction='Soldermask,Bot', but contains Profile aperture functions. The missing_required=['Edge.Cuts'] false alarm applies here as well. The GKO X2 attributes in both production sets appear to have been generated with an incorrect FileFunction tag, but the file content and extension confirm it is Edge.Cuts.",
+      "created_from": "FND-00001460",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "equals",
+        "value": [
+          "Edge.Cuts"
+        ]
+      },
+      "aspirational": true
+    }
+  ]
+}

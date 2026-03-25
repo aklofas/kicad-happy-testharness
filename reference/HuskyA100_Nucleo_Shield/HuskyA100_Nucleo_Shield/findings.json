@@ -1,0 +1,50 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "HuskyA100_Nucleo_Shield.sch.json",
+      "status": "promoted",
+      "summary": "Component count, connector types, and BOM accurate for a connector-heavy Nucleo shield; Decoupling analysis empty \u2014 C1\u2013C8 on 3.3V rail not detected because 3.3V uses global labels, not power symbol...",
+      "correct": [
+        {
+          "description": "All 18 components correctly identified: 8 connectors (CN7\u2013CN10, J1\u2013J4), 8 capacitors (C1\u2013C8), 1 LED, 1 resistor. The 106 nets are plausible given the four large Nucleo headers (CN7\u2013CN10 total 100 pins). No false positives in component classification.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The 3.3V net (from global_label text) has C1\u2013C8 capacitors (4\u00d7 10 nF + 4\u00d7 100 nF) connected between it and GND, but decoupling_analysis returns []. The analyzer only identifies power rails from KiCad power symbols (PWR_FLAG, +3V3 etc.), not from global labels named '3.3V' or '5V'. Similarly, power_rails only lists 'GND' (from a power symbol), not '3.3V' or '5V'. This is a systematic gap for label-based power distribution (common in KiCad 5 legacy designs).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "D1 (LED, 5V-powered via global label) has R1 (66.5 \u03a9) as a series current-limiting resistor to GND. This is a textbook LED circuit that should appear in design_observations. Instead, subcircuits is empty and design_observations is empty. The absence of power_symbols (no PWR_FLAG, no power ICs) prevents the analysis engine from anchoring the topology.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "HuskyA100_Nucleo_Shield",
+      "project": "HuskyA100_Nucleo_Shield",
+      "created": "2026-03-23T20:51:18.859113+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000605"
+    }
+  ]
+}

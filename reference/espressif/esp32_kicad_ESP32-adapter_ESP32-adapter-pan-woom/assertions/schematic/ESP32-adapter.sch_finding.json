@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ESP32-adapter.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002085",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002085-AST-01",
+      "description": "INCORRECT: In the ESP32-adapter schematic, 5V is used as a net label (Text Label, not a power symbol) connecting the USB/input voltage rail across two locations on the schematic. Despite '5V' being an unambiguous power rail name, the net_classification assigns it 'signal'. The statistics section lists only GND as a power rail, omitting the 5V supply. This is a net-name-heuristic miss for voltage-labelled nets that use wire labels instead of KiCad power symbols.",
+      "created_from": "FND-00002085",
+      "check": {
+        "path": "design_analysis.net_classification.5V",
+        "op": "equals",
+        "value": "power"
+      },
+      "aspirational": true
+    }
+  ]
+}

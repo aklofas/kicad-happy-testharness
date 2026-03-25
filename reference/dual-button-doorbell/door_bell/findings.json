@@ -1,0 +1,95 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_dual-button-doorbell_door_bell.kicad_sch.json.json",
+      "status": "promoted",
+      "summary": "UART bus not detected despite MAX3232 RS-232 transceiver and UART debug connector; Cross-domain level-shifter warnings correctly identified for I2S signals",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies that ~{SD_MODE}, BCLK, LRCLK, and DOUT signals cross between the 3.3V domain (ESP32-WROVER-B U6) and the 5V domain (MAX98357A audio amplifier U2), flagging all four with needs_level_shifter: true. The MAX98357A datasheet confirms it is a 5V part with I2S inputs accepting 3.3V logic, so whether a level shifter is strictly needed depends on the I2S input threshold, but the cross-domain detection itself is accurate.",
+          "analyzer_section": "signal_paths",
+          "check": {
+            "path": "signal_paths.cross_domain_signals",
+            "op": "min_count",
+            "value": 4
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The schematic contains a MAX3232 RS-232 transceiver (U5) with RXD0/TXD0 signals connecting to the ESP32-WROVER-B (U6), and a dedicated UART debug connector (J4) labeled 'UART'. Despite the debug connector being found in test_coverage.debug_connectors, signal_paths.bus_analysis.uart is empty. The analyzer should detect the UART bus formed by the MAX3232 and ESP32.",
+          "analyzer_section": "signal_paths",
+          "check": {
+            "path": "signal_paths.bus_analysis.uart",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "dual-button-doorbell",
+      "project": "door_bell",
+      "created": "2026-03-24T08:58:59.378862+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002335"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_dual-button-doorbell_door_bell.kicad_pcb.json.json",
+      "status": "new",
+      "summary": "Thermal via adequacy correctly assessed for both LDO regulators",
+      "correct": [
+        {
+          "description": "The PCB analyzer correctly identifies thermal pad vias for both NCP1117 LDOs (U1 on +5V, U3 on +3V3) with 33-34 vias each against recommended minimum of 9 and ideal of 16, grading them 'good'. The custom SOT-223 footprint with extra thermal pads and via stitching is accurately characterized. The analyzer also notes 1 untented via on U1 with appropriate solder-wicking warning.",
+          "analyzer_section": "thermal_pad_vias",
+          "check": {
+            "path": "thermal_pad_vias",
+            "op": "min_count",
+            "value": 2
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "dual-button-doorbell",
+      "project": "door_bell",
+      "created": "2026-03-24T08:58:59.378888+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002336"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber_dual-button-doorbell_gerber.json.json",
+      "status": "new",
+      "summary": "4-layer Gerber set correctly validated as complete with all inner copper layers",
+      "correct": [
+        {
+          "description": "The gerber analyzer correctly finds all 9 expected layers (F.Cu, B.Cu, In1.Cu, In2.Cu, F.Mask, B.Mask, F.SilkS, B.SilkS, Edge.Cuts) with zero missing or extra layers, using the .gbrjob file as the completeness source. Board dimensions match the PCB output (68.81x68.8mm). Alignment is confirmed good.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "dual-button-doorbell",
+      "project": "door_bell",
+      "created": "2026-03-24T08:58:59.378893+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002337"
+    }
+  ]
+}

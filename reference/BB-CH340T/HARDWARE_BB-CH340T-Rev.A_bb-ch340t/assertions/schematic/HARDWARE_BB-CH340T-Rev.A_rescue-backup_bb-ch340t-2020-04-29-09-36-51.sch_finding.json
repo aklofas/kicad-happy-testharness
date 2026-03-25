@@ -1,0 +1,30 @@
+{
+  "file_pattern": "rescue-backup_bb-ch340t-2020-04-29-09-36-51.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000401",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000401-AST-01",
+      "description": "INCORRECT: The rescue-backup schematic is byte-for-byte identical in component layout to the Rev.A main schematic, yet the analyzer extracts only 8 nets instead of 26. U1 (CH340H/T), USB1, D1 (Schottky diode), and 3.3/5V1 (JUMPER3) all have empty 'pins' arrays in the rescue-backup output. This is because the rescue-backup file uses only the project-local 'bb-ch340t-cache' library and the analyzer cannot resolve pin positions for components defined solely in that cache. The consequence is that all U1, USB1, D1, and jumper pin connections are invisible to the net tracer, collapsing the net graph from 26 to 8 entries.",
+      "created_from": "FND-00000401",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "greater_than",
+        "value": 20
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000401-AST-02",
+      "description": "Because U1, USB1, D1, and the voltage-select jumper all have empty pin arrays (cache library lookup failure), the subcircuit detection for U1 finds zero neighbor components. The actual circuit has C1, C2, C3, C4, C5, Y1, USB1, and POUT1 all connected to or near U1. The subcircuits entry shows neighbor_components: [] when it should list at least the crystal, load capacitors, and USB connector.",
+      "created_from": "FND-00000401",
+      "check": {
+        "path": "subcircuits[0].neighbor_components",
+        "op": "min_count",
+        "value": 3
+      },
+      "aspirational": true
+    }
+  ]
+}

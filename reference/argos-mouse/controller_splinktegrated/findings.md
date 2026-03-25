@@ -1,0 +1,52 @@
+# Findings: argos-mouse / controller_splinktegrated
+
+## FND-00001942: Component count, BOM, and power rails correctly extracted for RP2040 mouse controller; Crystal circuit with correct 15pF load caps identified for RP2040; LDO regulator U3 (XC6210B332MR-G) correctly...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: splinktegrated.kicad_sch
+- **Created**: 2026-03-24
+
+### Correct
+- The analyzer correctly identifies 42 total components across 10 types (14 capacitors, 9 resistors, 9 connectors, 4 ICs, 1 crystal, 1 fuse, 1 ferrite bead, 1 diode, 1 LED, 1 jumper), 5 power rails (+1V1, +3V3, +5V, GND, Vbus_mother), and extracts the full BOM with LCSC part numbers where present.
+- Y1 (Crystal_GND24) is correctly detected with its two 15pF load capacitors (C3 and C4), yielding effective load capacitance of 10.5pF (series combination + ~3pF stray). This is the standard RP2040 crystal oscillator configuration.
+- U3 is detected as an LDO with +5V input rail and +3V3 output rail, estimated Vout 3.3V via fixed_suffix recognition. The XC6210B332MR-G is indeed a fixed 3.3V LDO.
+- The SPI bus is detected with NCS and QSPI_~{CS} as two separate chip selects, U1 (RP2040) as the controller, and bus_mode full_duplex. This matches the design: one SPI bus serves the Cirque trackpad (J7) via NCS, and QSPI is used for the flash (U5).
+- U5 (W25Q128JVS) is linked to U1 (RP2040) with 6 shared signal nets (QSPI_D0/D1/D2/D3/SCLK/CS). This is the correct QSPI flash connection for RP2040 designs.
+- F1 (Polyfuse) is detected as a fuse on the Vbus path, and U4 (USBLC6-2P6) is detected as an ESD IC protecting D+_daughter and D-_daughter USB lines. Both are correct.
+
+### Incorrect
+(none)
+
+### Missed
+- The I2C SDA and SCL nets have devices (U1 only) but no pull-up resistors are detected (has_pullup: false). The design_observations flags the missing pull-ups as individual i2c_bus observations, but does not raise an ERC warning about missing I2C pull-ups. An ERC warning or design observation should flag this as a potential reliability issue since I2C requires pull-up resistors.
+  (design_analysis)
+- The design has D1 (LED, footprint LED_0402_1005Metric, type 'led') connected to an 'LED' net which is driven from GPIO on U1. The output also has a 'RGB' net present in the PCB. The addressable_led_chains section is empty despite the design having an LED output. While D1 appears to be a simple indicator LED (not WS2812-type), the 'RGB' net label and the SK6812-type LEDs in the companion flex PCB suggest this connection drives an LED chain. The schematic should at minimum note the LED/RGB signal paths.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001943: PCB statistics correctly reflect 49 footprints on 2-layer board with 63 nets; Board thickness correctly read as 1.2mm (non-standard, intentional for flex-compatible design)
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: splinktegrated.kicad_pcb
+- **Created**: 2026-03-24
+
+### Correct
+- The PCB has 49 footprints (41 front, 8 back), 684 track segments, 77 vias, 4 zones, and 63 nets matching the schematic net count. Board dimensions 26.02 x 46.574mm and routing_complete=true are correct.
+- The stackup shows a 1.2mm board thickness (not the standard 1.6mm). This is a correct read of the design parameter — thin PCBs are used in mouse controllers to reduce weight.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

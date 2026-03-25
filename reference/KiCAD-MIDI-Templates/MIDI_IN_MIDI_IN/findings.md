@@ -1,0 +1,96 @@
+# Findings: KiCAD-MIDI-Templates / MIDI_IN_MIDI_IN
+
+## FND-00000677: statistics.total_components reports 7 but there are 27 actual component instances on the sheet; 6N137 optocoupler not detected in isolation_barriers; Protection diodes (D? = 1N4148/1N400x) not dete...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: MIDI_IN_MIDI_IN.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- All three schematics correctly report duplicate_references and unannotated for all refs ending in '?'. This is appropriate for design templates where component annotation is intentionally deferred.
+- pwr_flag_warnings correctly identifies GND has no PWR_FLAG. label_shape_warnings correctly flags 'MCU VCC' as an undriven input-shaped label. Both are real design issues in this template.
+
+### Incorrect
+- The analyzer counts unique BOM rows (grouped by ref prefix, all '?') rather than actual placed instances. MIDI_IN has 27 component instances (8x C?, 2x D?, 2x FB?, 3x J?, 2x Q?, 8x R?, 2x U?) but total_components=7 and unique_parts=7. This is misleading for any actual count-based assertion. These schematics are design templates showing multiple circuit variants on a single sheet with all references left unannotated.
+  (signal_analysis)
+- MIDI_IN has 2 Q? instances (NMOS transistors, UUIDs 7606cbd0 and dbdba231) but transistor_circuits only contains 1 entry. This is likely caused by duplicate reference collision: when multiple components share the same '?' reference, the net resolver merges or loses connectivity for the duplicate, causing the second transistor to be skipped.
+  (signal_analysis)
+
+### Missed
+- MIDI_IN is the canonical MIDI IN circuit which uses a 6N137 high-speed optocoupler (U?, lib_id: Isolator:6N137) as the core isolation barrier between the MIDI cable and the MCU. isolation_barriers=[] in the output. The 6N137 should be detectable by its lib_id prefix 'Isolator:' or its keywords 'optically coupled'.
+  (signal_analysis)
+- MIDI_IN has two D? diodes (value: '1N4148/1N400x') used as protection diodes on the MIDI input. protection_devices=[] in the output. These should be identifiable as protection/clamping diodes given their placement on the input signal path.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000678: statistics.total_components reports 5 but there are 31 actual component instances; Transistor circuit detected with gate_net == drain_net (__unnamed_16), indicating net resolution error from duplic...
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: MIDI_OUT_MIDI_OUT.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+(none)
+
+### Incorrect
+- Same BOM-dedup undercounting as MIDI_IN. MIDI_OUT has 31 instances (6x U?, 6x J?, 2x Q?, 13x R?, 4x FB?) collapsed to 5 BOM rows. This is a systematic issue: the analyzer uses BOM dedup row count (grouped by value+footprint) as total_components rather than len(components list).
+  (signal_analysis)
+- The single detected Q? transistor circuit in MIDI_OUT shows gate_net='__unnamed_16' and drain_net='__unnamed_16' — the same unnamed net for both, which is electrically impossible in the actual design. This is caused by net merging when multiple components share the same '?' reference, producing incorrect connectivity data for the transistor. MIDI_OUT has 2 Q? instances but only 1 is in transistor_circuits.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000679: statistics.total_components reports 5 but there are 28 actual component instances
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: MIDI_THRU_MIDI_THRU.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+(none)
+
+### Incorrect
+- Same BOM-dedup undercounting. 28 instances collapsed to 5 BOM rows due to all refs being unannotated (all end in '?'). Analyzer counts unique BOM-dedup groups as total_components.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000680: Empty PCB files (50-byte stubs) correctly parsed as boards with no footprints, no tracks, no layers
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: MIDI_IN_MIDI_IN.kicad_pcb.json
+- **Created**: 2026-03-23
+
+### Correct
+- All three .kicad_pcb files are minimal 50-byte stubs containing only '(kicad_pcb (version 20211014) (generator pcbnew))'. The analyzer correctly reports footprint_count=0, track_segments=0, zero layers, and routing_complete=true (vacuously). The copper_presence warning about unfilled zones is appropriate noise for a stub board.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

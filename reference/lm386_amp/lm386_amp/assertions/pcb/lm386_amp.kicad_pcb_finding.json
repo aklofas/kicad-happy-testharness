@@ -1,0 +1,19 @@
+{
+  "file_pattern": "lm386_amp.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002437",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002437-AST-01",
+      "description": "The placement_analysis lists a courtyard overlap between U1 and C1 with overlap_mm2=0.0. A zero-area overlap is a boundary-touching condition, not an actual overlap, and should not be flagged as a courtyard violation. The three real overlaps (U1/R2 at 26.16mm\u00b2, C5/R1 at 7.41mm\u00b2, J3/U1 at 3.895mm\u00b2) are plausible given the compact 45.72\u00d733.02mm board, but the 0.0mm\u00b2 entry is a false positive.",
+      "created_from": "FND-00002437",
+      "check": {
+        "path": "placement_analysis.overlap_count",
+        "op": "equals",
+        "value": 3
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -92,7 +92,7 @@
 
 ## FND-00000298: Gerber review: 4-layer BGA ASIC miner. TD clearing bug, front/back count wrong, smd_apertures misleading
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: gerber
 - **Source**: Manufacturing Files/gerbers/
 - **Related**: KH-177, KH-182, KH-185

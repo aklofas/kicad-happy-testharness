@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Clean.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002093",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002093-AST-01",
+      "description": "INCORRECT: The Clean and Protoboard schematics are Flipper Zero backpack pass-through boards consisting entirely of single-pin connectors that route Ext_+3.3V, Ext_+5V, and GND signals from the Flipper Zero header. The analyzer generates PWR_FLAG warnings for all three rails, but these are false positives: power enters via connectors (passive pins), and KiCad ERC would not flag these in practice because the power source is on the parent board. The same pattern appears in Protoboard. Connecting-piece correctly has no warnings.",
+      "created_from": "FND-00002093",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

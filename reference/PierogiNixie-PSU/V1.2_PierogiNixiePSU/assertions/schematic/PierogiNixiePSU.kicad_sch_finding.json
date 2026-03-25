@@ -1,0 +1,29 @@
+{
+  "file_pattern": "PierogiNixiePSU.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001129",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001129-AST-01",
+      "description": "V1.2 correctly identifies: RV1+R4 voltage divider on FB net, R1=50m current sense shunt to U2, Q2 MOSFET with inductive load and flyback diode D1, decoupling caps on +12V (110.2uF total) and VCC (4.9uF) rails. These are accurate for the boost PSU design.",
+      "created_from": "FND-00001129",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001129-AST-02",
+      "description": "Same issue as V1.1: MAX1771xSA is a boost DC-DC controller but topology='unknown'. V1.2 has the same boost topology (L1, D1, Q2, output cap C2). The transistor circuit correctly identifies gate driver and inductive load but the overall regulator topology is not identified.",
+      "created_from": "FND-00001129",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "file_pattern": "4drum.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002245",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002245-AST-01",
+      "description": "INCORRECT: The schematic has 31 non-power symbol instances (RV?\u00d74, R?\u00d714, D?\u00d75, J?\u00d75, SW?\u00d71, Q?\u00d71, U?\u00d71), but statistics.total_components reports 7 \u2014 the number of unique unannotated reference groups (D?, J?, Q?, R?, RV?, SW?, U?). The analyzer deduplicates by reference string, collapsing all 'R?' instances into one, making the board appear to have only 7 parts. The true count is 31. This also causes component_types to undercount: resistor:2 instead of 14, led:1 instead of 5, etc.",
+      "created_from": "FND-00002245",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "greater_than",
+        "value": 7
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002245-AST-02",
+      "description": "INCORRECT: design_analysis.bus_analysis reports 6 I2C entries including TRIG1 (as SCL) and TRIG2 (as SDA). These are trigger signal names on connector pins J?/TRIG1-4, not I2C bus lines. The Teensy 4.1 does have I2C pins named SDA/SCL in its KiCad library, but the matching is done against net names containing the pin names rather than confirming both a controller and peripheral IC are present on the same net pair. With all refs unannotated (U?), there is no confirmed I2C topology \u2014 just coincidental pin name matches.",
+      "created_from": "FND-00002245",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

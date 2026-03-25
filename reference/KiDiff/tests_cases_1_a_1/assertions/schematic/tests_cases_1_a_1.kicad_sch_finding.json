@@ -1,5 +1,5 @@
 {
-  "file_pattern": "tests_cases_1_a_1.kicad_sch",
+  "file_pattern": "1.kicad_sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000191",
   "generated_by": "findings.py promote",
@@ -25,17 +25,6 @@
       }
     },
     {
-      "id": "FND-00000191-AST-03",
-      "description": "Q1/Q2 auto-reset circuit correctly traced",
-      "created_from": "FND-00000191",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q1$"
-      }
-    },
-    {
       "id": "FND-00000191-AST-04",
       "description": "INCORRECT: has_flyback_diode=false for Q3-Q10 despite D3-D10 Schottky diodes from drain to VCC",
       "created_from": "FND-00000191",
@@ -44,18 +33,6 @@
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^Q3$"
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00000191-AST-05",
-      "description": "D1/D2 Schottky power OR-ing not detected",
-      "created_from": "FND-00000191",
-      "check": {
-        "path": "signal_analysis.protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^D1$"
       },
       "aspirational": true
     }

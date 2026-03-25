@@ -1,0 +1,41 @@
+{
+  "file_pattern": "SofleKeyboard.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001365",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001365-AST-01",
+      "description": "The legacy .sch version of the design includes R1 and R2 as I2C pull-up resistors on SDA and SCL respectively. The analyzer correctly reports has_pullup=true, pullup_resistor='R2'/'R1', pullup_rail='VCC' for both I2C lines. This version predates the wireless redesign that removed the pull-ups.",
+      "created_from": "FND-00001365",
+      "check": {
+        "path": "signal_analysis.design_observations[1].has_pullup",
+        "value": true,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001365-AST-02",
+      "description": "INCORRECT: The legacy KiCad 5 schematic reports a 5x5 matrix (col_nets=[col0..col4]) with estimated_keys=54. However, the .sch file also contains col5 net labels (found at lines 9681-9690 in the .sch JSON), which means the matrix is actually 5x6. The kicad_sch version correctly reports 5x6. The legacy parser appears to miss col5 in the matrix reconstruction. The 54-key estimate is also implausible for one half of a split keyboard (should be ~31).",
+      "created_from": "FND-00001365",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].columns",
+        "value": 6,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001365-AST-03",
+      "description": "INCORRECT: Same misclassification as in the kicad_sch version: TH1-TH7 mounting holes (value='HOLE', footprints 'M2_HOLE_PCB' and 'HOLE_M2_TH') are typed as 'thermistor'. The legacy .sch file has 84 components but component_types shows thermistor=7 when the actual count should be 0 thermistors. RSW1 (SW_RST) is also misclassified as type='resistor', inflating the resistor count from 2 (R1, R2) to 3.",
+      "created_from": "FND-00001365",
+      "check": {
+        "path": "statistics.component_types.thermistor",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

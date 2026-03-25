@@ -1,0 +1,114 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "mcu_stm32_1.sch.json",
+      "status": "promoted",
+      "summary": "CAN bus detection misses two of three CAN buses (U5=CAN3, U6=CAN1); Crystal load capacitors C79/C80 have schematic value '20pF' but MPN is a 36pF part",
+      "correct": [
+        {
+          "description": "In mcu_stm32_1.sch, the 8MHz crystal Y2 load capacitors C79 and C80 carry value='20pF' but MPN=CL10C360JB8NNNC whose description reads 'CAP CER 36PF 50V C0G/NP0 0603'. The analyzer faithfully reports the schematic value (20pF) in the crystal_circuits effective load calculation (CL_eff = 13pF based on 20pF). The actual capacitors are 36pF (CL_eff = 21pF). This is a schematic data inconsistency (design note, not an analyzer bug) but the 20pF value is used in the crystal load calculation, making the reported CL_eff inaccurate relative to what will be built.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.crystal_circuits[0].load_caps[0].farads",
+            "op": "eq",
+            "value": 3.6e-11
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The sheet has 3 SN65HVD234 CAN transceivers: U5 (nets CAN3+/CAN3-/CAN3_TX/CAN3_RX), U6 (nets CAN1+/CAN1-/CAN1_TX/CAN1_RX), and U7 (nets CAN2+/CAN2-/CAN2_TX/CAN2_RX). bus_analysis.can reports only one entry with net='CAN' and transceiver=U7. The net 'CAN' has zero pins in the nets dict \u2014 it is a phantom net. The real per-channel nets CAN1/CAN2/CAN3 are not represented. U5 and U6 are completely absent from bus_analysis.can. The differential_pairs section correctly finds all three CAN pairs.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.can",
+            "op": "min_value",
+            "value": 3
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "AVB_Ethernet_switch_with_CAN_bus",
+      "project": "AVB switch with Can gateway",
+      "created": "2026-03-23T18:54:56.006384+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000356"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "switch.sch.json",
+      "status": "promoted",
+      "summary": "20 Ethernet MII port signal nets misidentified as UART signals in switch.sch; AVDDH power supply rail misidentified as I2C SDA bus",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The KSZ8567 7-port Ethernet switch uses differential net names TX1+, TX1-, RX1+, RX1-, TX2+, TX2-, RX2+, RX2-, TX3+, TX3-, RX3+, RX3-, TX4+, TX4-, RX4+, RX4-, TX5+, TX5-, RX5+, RX5-. All 20 of these are reported in bus_analysis.uart as UART signal candidates solely because of the TX/RX prefix. These are 100BaseT Ethernet differential-pair port signals, not UART. The UART detector should exclude nets that are Ethernet differential pairs (e.g., if they also appear as differential_pairs entries with a non-CAN type).",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "eq",
+            "value": 0
+          }
+        },
+        {
+          "description": "bus_analysis.i2c reports {net: 'AVDDH', line: 'SDA', devices: 11x IC1}. AVDDH is a KSZ8567 analog supply rail (Analog VDD High), confirmed by the many bypass capacitors (C52-C59) on this net and the AVDDL/AVDDH power rail naming convention. The false match occurs because IC1 pin 98 is named 'SDI/SDA/MDIO' \u2014 a multiplexed name containing the substring 'SDA'. The I2C detector is matching on pin-name substring rather than net-name semantics, producing a spurious I2C bus with 11 devices and no pull-ups.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "eq",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "AVB_Ethernet_switch_with_CAN_bus",
+      "project": "AVB switch with Can gateway",
+      "created": "2026-03-23T18:54:56.006403+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000357"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "AVB switch with Can gateway.sch.json",
+      "status": "promoted",
+      "summary": "RJ45 MagJack connectors not recognized as integrated Ethernet magnetics; 22 Ethernet MII port signal nets misidentified as UART signals in multi-sheet output",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The multi-sheet top-level JSON inherits the same UART false positives as switch.sch: RX1+, RX1-, RX2+, RX2-, RX3-, RX3+, RX4+, RX4-, RX5+, RX5-, TX1+, TX1-, TX2+, TX2-, TX3-, TX3+, TX4+, TX4-, TX5+, TX5- are all Ethernet port differential nets from the KSZ8567 switch, reported as UART candidates. Only UART8_TX and UART8_RX are genuine UART signals. Total 22 entries instead of 2.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "eq",
+            "value": 2
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The Ethernet interface for IC1 (KSZ8567) correctly identifies J4, J6, J7, J8 as connectors with value 'RJ45_Magjack_Connector'. However, the magnetics list is empty. MagJack (magnetics+jack) connectors have integrated transformers and should be classified as 'integrated_magnetics' in the magnetics list rather than plain connectors. The design has no separate discrete magnetics because the RJ45 MagJack connectors include them. The current output implies no magnetics are present, which is misleading for design review.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces[0].magnetics",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "AVB_Ethernet_switch_with_CAN_bus",
+      "project": "AVB switch with Can gateway",
+      "created": "2026-03-23T18:54:56.006406+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000358"
+    }
+  ]
+}

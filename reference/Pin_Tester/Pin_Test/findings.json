@@ -1,0 +1,81 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Pin_Test.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Component count and types correct: 61 components (26 LEDs, 26 resistors, 9 connectors); False positive differential pair M0+/M0- on J8 connector; Single-pin nets correctly flagged: 10 nets with iso...",
+      "correct": [
+        {
+          "description": "BOM extraction accurate. Missing MPN flag correct \u2014 all parts lack MPN fields. No complex circuits detected (correct \u2014 design is only LEDs+resistors+connectors).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Nets C4, C6, C8, C10, C12, C14, C16, C18, C20, VM+ each have only one schematic pin. The LED cathodes connect to the test connector (J8/J1) physically but the schematic net routing leaves some stubs. Correctly reported.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "VCC is supplied by J2 (battery connector) and no PWR_FLAG symbol placed; ERC would flag this. Correct observation.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Analyzer detects {'type':'differential','positive':'M0+','negative':'M0-','shared_ics':['J8']} but M0+/M0- are test connector pin labels on a pin tester, not an active differential signal pair. J8 is a passive connector with LED cathodes. The +/- naming convention in the detector fires on arbitrary net names.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Pin_Tester",
+      "project": "Pin_Test",
+      "created": "2026-03-23T23:44:21.363987+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001114"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Pin_Test.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB stats correct: 61 footprints (54 SMD + 7 THT), 2-layer, fully routed",
+      "correct": [
+        {
+          "description": "footprint_count=61 matches schematic, smd_count=54 (LEDs and resistors in 0603), tht_count=7 (connectors), routing_complete=True, 12 vias. All accurate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Pin_Tester",
+      "project": "Pin_Test",
+      "created": "2026-03-23T23:44:21.364005+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001115"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "file_pattern": "Nucleo32TNC.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000994",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000994-AST-01",
+      "description": "Board is 66x99mm, 2-layer (F.Cu + B.Cu), fully routed with 52 nets, 1012mm total track length. All correct for a THT-dominant TNC board on a Nucleo32 carrier.",
+      "created_from": "FND-00000994",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000994-AST-02",
+      "description": "The board is a THT-dominant design (48 THT, 1 SMD, 5 virtual) packed in 66x99mm. Overlapping courtyards are expected when manually placing THT components tightly. The overlaps reported (U1/R16, C12/C13, etc.) are consistent with a hand-designed amateur radio TNC.",
+      "created_from": "FND-00000994",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000994-AST-03",
+      "description": "The thermal analysis correctly finds the +3V3 zone on F.Cu with 5640mm2 area and 1 stitching via. Board metadata (title, revision, company) all correctly extracted.",
+      "created_from": "FND-00000994",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

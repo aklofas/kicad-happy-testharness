@@ -1,0 +1,19 @@
+{
+  "file_pattern": "fourier-left.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002180",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002180-AST-01",
+      "description": "INCORRECT: The Fourier left keyboard has 4 actual row nets (rowA, rowB, rowC, rowD) and 6 column nets (col1\u2013col6), for 34 actual key switches (excluding SW_RST1). The topology-based detector reports 5 rows and 13 columns, placing 'col2' in row_nets and 'rowB', 'rowC' in col_nets \u2014 mixing up rows and columns. The reported switches_on_matrix=54 and diodes_on_matrix=54 are ~59% higher than the actual 34 key switches.",
+      "created_from": "FND-00002180",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "op": "less_than",
+        "value": 40
+      },
+      "aspirational": true
+    }
+  ]
+}

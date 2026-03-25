@@ -1,0 +1,41 @@
+{
+  "file_pattern": "haxophone001.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002122",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002122-AST-01",
+      "description": "INCORRECT: The haxophone schematic has two separate global labels 'SDA' and 'SCL' used at two locations each (connecting J3 Pi HAT connector to U2 MCP3221 ADC). The schematic analyzer fails to create a 'SDA' net and instead places all four I2C pins (J3.SDA/GPIO2, J3.SCL/GPIO3, U2.SDA, U2.SCL) and both pull-up resistors (R1, R2) on a single 'SCL' net. This is a net extraction bug in the KiCad 6+ parser where nearby global labels with different names get merged. The consequence is that the I2C bus_analysis lists U2 twice in devices (once for its SDA pin, once for its SCL pin, both on the merged net) and both pull-up resistors appear associated with a single line. The PCB analyzer correctly maintains separate SDA and SCL nets, confirming the schematic parser is at fault.",
+      "created_from": "FND-00002122",
+      "check": {
+        "path": "nets.SDA",
+        "op": "equals",
+        "value": null
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002122-AST-02",
+      "description": "INCORRECT: The analyzer detects one 8x3 matrix using ROW0-ROW7 and COL0-COL2 nets, estimating 16 keys. However, the haxophone has three separate switch matrices: the main matrix (8 rows, 3 cols) plus a Left Hand Palm key sub-matrix (ROW0/1/2_LHP x COL2_LHP, 3 keys) and a Right Hand Keys sub-matrix (ROW1/2/3_RHK x COL0_RHK, 3 keys). The PCB has 22 MX footprints confirming 22 total switch positions. The net naming convention using _LHP and _RHK suffixes for the sub-matrices prevents the detector from recognizing them as distinct matrices. The estimated_keys=16 is significantly lower than the actual switch count of 22.",
+      "created_from": "FND-00002122",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "op": "equals",
+        "value": 22
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002122-AST-03",
+      "description": "The haxophone routes I2S_BCLK, I2S_DOUT, and I2S_LRC nets from J3 (Raspberry Pi HAT connector, 40-pin) to U4 (MAX98357 I2S audio amplifier/DAC). The analyzer has no I2S detector, so these three named nets are not classified as a digital audio bus. The signal_analysis.memory_interfaces list is empty and there is no I2S-specific section. The design observation about U4 only notes decoupling coverage; no audio interface topology is reported.",
+      "created_from": "FND-00002122",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -204,26 +204,46 @@
       "repo": "ESP32-P4-PC",
       "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
       "created": "2026-03-17T18:11:48.072700+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "pcb",
       "source_file": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B.kicad_pcb.json",
       "summary": "ESP32-P4-PC PCB: paste-only stencil aperture pads misidentified as thermal pads (15/19 false positives), via adequacy formula ignores drill size, connector structural/shield pads misidentified as thermal pads",
       "correct": [
         {
           "description": "Footprint count and board dimensions consistent with ESP32-P4-PC dev kit",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Copper layer count and routing statistics reasonable for 4-layer SBC",
-          "analyzer_section": "statistics"
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DFM analysis correctly identifies manufacturing constraints",
-          "analyzer_section": "dfm"
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power net routing analysis covers major supply rails",
-          "analyzer_section": "power_net_routing"
+          "analyzer_section": "power_net_routing",
+          "check": {
+            "path": "power_net_routing",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

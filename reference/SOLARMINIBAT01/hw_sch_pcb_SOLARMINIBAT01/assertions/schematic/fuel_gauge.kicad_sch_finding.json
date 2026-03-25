@@ -1,0 +1,29 @@
+{
+  "file_pattern": "fuel_gauge.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001257",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001257-AST-01",
+      "description": "design_observations correctly identifies I2C_SCL and I2C_SDA with pull-up resistors R3 and R1 to +3V3 rail, and bus_analysis.i2c lists U1.",
+      "created_from": "FND-00001257",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001257-AST-02",
+      "description": "U1 is a BQ34Z100 battery fuel gauge IC with a dedicated 10m\u03a9 precision shunt R8 across Battery+ and Battery- for coulomb counting. Both bms_systems and current_sense are empty. The R8 value '0R01 75PPM' is unusual notation (0.01\u03a9) and the analyzer evidently doesn't parse this or match BQ34Z100 as a BMS/fuel-gauge part.",
+      "created_from": "FND-00001257",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

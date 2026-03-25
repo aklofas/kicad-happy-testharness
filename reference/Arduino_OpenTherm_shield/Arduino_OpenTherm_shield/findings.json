@@ -1,0 +1,59 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Arduino_OpenTherm_shield.kicad_sch.json",
+      "status": "promoted",
+      "summary": "isolation_barriers empty despite two LTV-817S optocouplers providing galvanic isolation; L1 (10uH inductor) misclassified as ferrite_bead due to legacy symbol name containing 'Ferrite'; TPS61040 Vo...",
+      "correct": [
+        {
+          "description": "L1 uses symbol 'DIN-DIO-Relay-controller-rescue:L_Core_Ferrite-Device' which has 'Ferrite' in the name from a KiCad library rescue. However L1 is a 10uH shielded power inductor (LCSC C5349663, footprint Inductor_4.2x4.4mm) used as the switching element in the TPS61040 boost converter. The statistics section reports 'ferrite_bead: 1' and no inductor count. The BOM also lists L1 as an inductor with footprint 'Inductor_4.2x4.4mm'. The analyzer should classify components by value/footprint context when the symbol lib_id is from a rescue library with misleading names.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.ferrite_bead",
+            "op": "eq",
+            "value": 0
+          }
+        },
+        {
+          "description": "The analyzer uses assumed_vref=0.6 (heuristic) for U1 (TPS61040DBV), computing estimated_vout = 0.6*(1 + 240k/13k) = 11.677V. The TPS61040 datasheet specifies Vref=0.5V, so actual Vout = 0.5*(1 + 240k/13k) \u2248 9.73V. OpenTherm boiler protocol operates at 15-24V bus, and this 24V boost from 5V VCC is used to drive the boiler interface side. The ~20% error in Vout estimation (11.7V vs 9.7V) is caused by the heuristic Vref being too high. The TPS61040 lib_id 'Regulator_Switching:TPS61040DBV' is a known part that could be looked up for the correct 0.5V reference.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[0].estimated_vout",
+            "op": "eq",
+            "value": 9.731
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The design uses U2 and U3 (LTV-817S, lib_id=Isolator:LTV-817S) as galvanic isolation barriers between the boiler/OpenTherm side (+24V domain) and the Arduino side (VCC domain). This is the core purpose of the OpenTherm shield. The signal_analysis.isolation_barriers array is empty, missing both optocouplers. They are classified only as generic 'ic' and appear only in transistor_circuits (as base_driver_ics for Q1/Q5). The cross_domain_signals section correctly identifies that SLAVE IN crosses power domains and 'needs_level_shifter: true', confirming the analyzer sees isolation is needed but fails to attribute it to U2/U3.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_value",
+            "value": 2
+          }
+        },
+        {
+          "description": "Three Zener diodes are used for voltage clamping/protection on the OpenTherm interface signal lines: D6 (4.7V zener, lib_id=archive:D_Zener_ALT-Device), D7 (13V zener), and D8 (4.3V zener). These protect against transients from the boiler bus. The signal_analysis.protection_devices array is empty, and the diodes are classified only as generic 'diode' type in statistics. Zener diodes with lib_ids containing 'Zener' in their symbol name should be detected as protection devices.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Arduino_OpenTherm_shield",
+      "project": "Arduino_OpenTherm_shield",
+      "created": "2026-03-23T19:02:00.077808+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000372"
+    }
+  ]
+}

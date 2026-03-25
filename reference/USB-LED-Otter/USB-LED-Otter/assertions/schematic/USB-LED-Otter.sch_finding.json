@@ -1,0 +1,55 @@
+{
+  "file_pattern": "USB-LED-Otter.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001647",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001647-AST-01",
+      "description": "The analyzer correctly extracted 14 components: U1 (MCP1700 LDO), U2 (STM32F072), 5 capacitors, 1 resistor, 1 switch, 5 connectors (J1-J5). The legacy .sch parsing is accurate.",
+      "created_from": "FND-00001647",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 14,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001647-AST-02",
+      "description": "The analyzer correctly identified USB_P and USB_N as a USB differential pair connected to J1. The pair is detected with has_esd: false, which is correct since there is no ESD protection IC on this board.",
+      "created_from": "FND-00001647",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001647-AST-03",
+      "description": "The three power rails are correctly extracted from the schematic. Decoupling analysis shows +5V has 1 cap (C1, 100nF) and +3.3V has 4 caps (C2-C5, 100nF each, total 0.4\u00b5F).",
+      "created_from": "FND-00001647",
+      "check": {
+        "path": "statistics.power_rails",
+        "value": [
+          "+3.3V",
+          "+5V",
+          "GND"
+        ],
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001647-AST-04",
+      "description": "U1 is an MCP1700-3302E LDO regulator. Its lib_id is 'Regulator_Linear:MCP1700-3302E_SOT23'. The schematic shows it powered from +5V and outputting +3.3V, but the analyzer reports input_rail: null, output_rail: null, topology: 'unknown'. The MCP1700 pin connections (IN\u2192+5V, GND\u2192GND, OUT\u2192+3.3V) are traceable from the net data but the regulator pin mapping was not resolved.",
+      "created_from": "FND-00001647",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": {
+          "input_rail": "+5V"
+        },
+        "op": "contains_match"
+      },
+      "aspirational": true
+    }
+  ]
+}

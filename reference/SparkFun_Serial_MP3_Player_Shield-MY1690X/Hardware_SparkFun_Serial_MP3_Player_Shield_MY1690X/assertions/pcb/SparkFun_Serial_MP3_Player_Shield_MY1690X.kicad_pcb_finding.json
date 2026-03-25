@@ -1,0 +1,72 @@
+{
+  "file_pattern": "SparkFun_Serial_MP3_Player_Shield_MY1690X.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001486",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001486-AST-01",
+      "description": "The board is correctly reported as 2-layer (F.Cu and B.Cu), 53.34mm x 59.69mm, fully routed (unrouted_net_count=0), 252 track segments, 45 vias, 1 GND copper zone. The 105 total footprints include 62 decorative board_only kibuzzard items, 7 jumpers with allow_soldermask_bridges, 1 exclude_from_bom, 31 SMD, and 4 through_hole electrical components.",
+      "created_from": "FND-00001486",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001486-AST-02",
+      "description": "The PCB output correctly shows routing_complete=true and unrouted_net_count=0. The 78 nets match the schematic net count. The net_count=78 in the PCB matches the schematic's total_nets=78.",
+      "created_from": "FND-00001486",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001486-AST-03",
+      "description": "The thermal_analysis correctly identifies a GND zone on F&B.Cu (both layers) covering 3183.9 mm\u00b2, with 18 stitching vias at 0.3mm drill. The copper_presence warning about unfilled zones is appropriate as is_filled=false in the zone data \u2014 the zone outline is present but fill polygons were not generated before saving.",
+      "created_from": "FND-00001486",
+      "check": {
+        "path": "statistics.zone_count",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001486-AST-04",
+      "description": "The decoupling_placement correctly shows U2 (MY1690X) with four nearby caps: C8 (1.0uF, 5.08mm), C7 (2.2uF, 6.35mm), C1 (2.2uF, 6.35mm), C4 (47uF, 8.78mm), all on the same front side. The closest cap at 5.08mm is reasonable for decoupling. All caps share relevant nets (3.3V_P, GND).",
+      "created_from": "FND-00001486",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001486-AST-05",
+      "description": "The DFM analysis reports standard tier with min_track_width=0.1524mm (6mil), approx_min_spacing=0.1796mm, min_drill=0.3mm, and zero violations. These values are consistent with the track data showing 0.1524mm as minimum width and 0.3mm via drill. The board uses lead-free HASL finish at 1.6mm thickness, consistent with fab notes on F.Fab layer.",
+      "created_from": "FND-00001486",
+      "check": {
+        "path": "dfm.violation_count",
+        "op": "equals",
+        "value": 0
+      }
+    },
+    {
+      "id": "FND-00001486-AST-06",
+      "description": "INCORRECT: The schematic shows R5 as '330' (330 ohm, from SparkFun-Resistor:330_0603) while the PCB file has R5 as '1k'. The PCB output correctly reports R5 value as '1k' per the PCB source file, and the schematic output correctly reports '330' per the schematic source. This is a genuine divergence between the schematic and PCB \u2014 the PCB was updated to 1k but the schematic was not updated, or vice versa. The analyzer correctly reflects each file's actual content.",
+      "created_from": "FND-00001486",
+      "check": {
+        "path": "footprints",
+        "op": "contains_match",
+        "value": {
+          "reference": "R5",
+          "value": "1k"
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

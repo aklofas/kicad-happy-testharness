@@ -1,0 +1,69 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Apple1Expander.sch.json",
+      "status": "promoted",
+      "summary": "44-pin edge connectors misclassified as transformer and ic; Power rails 5V, 12V, -12V not detected in power_rails list; APPLE1_EDGE1 connector pins all unresolved to named nets; -12V net has zero p...",
+      "correct": [
+        {
+          "description": "All 44 pins of APPLE1_EDGE1 appear in unnamed nets (__unnamed_23 through __unnamed_66), each with only 1 pin connected and point_count=1. The schematic has global labels at X=9250 (RF, RES, NMI, IRQ, RDY, D6..D0, DMA, S, A15..A0, GND1/GND2, R, 5V, 12V, -12V, PHI0-PHI2, BA, VMA, T, RW, D1..D7, PHI1) which are wired from 9250 to 9350. These same net names connect via global labels to APPLE1_EDGE1's pins, but the analyzer did not resolve those global label connections into named nets for APPLE1_EDGE1. The net should show APPLE1_EDGE1 pins on the same named nets as TO_APPLE1 and PORT1/PORT2, since global labels with identical names are connected.",
+          "analyzer_section": "nets",
+          "check": {
+            "path": "nets.RES.pins",
+            "op": "min_value",
+            "value": 4
+          }
+        },
+        {
+          "description": "The '-12V' net entry shows an empty pins array with point_count=8, meaning the net was detected via wiring but none of its component pin connections were resolved. The schematic labels '-12V' at both PORT1 (pin 4950,4650) and PORT2 (pin 7800,4650) sides, and the global labels on TO_APPLE1 (line 94) also reference -12V. All three connectors should have a pin on this net. The empty pins array means the net topology was partially parsed but pin association failed.",
+          "analyzer_section": "nets",
+          "check": {
+            "path": "nets.-12V.pins",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TO_APPLE1 (44pin_edge) is classified as type 'transformer' and APPLE1_EDGE1 (44pin_edge) as type 'ic'. Both are 44-pin edge connectors for the Apple 1 expansion bus. The BOM entry also inherits type 'transformer' for both. They should both be type 'connector', matching PORT1/PORT2 which are correctly typed. The misclassification likely stems from heuristics triggering on the alphanumeric pin names (A-Z) used by the edge connector symbol.",
+          "analyzer_section": "components",
+          "check": {
+            "path": "components[0].type",
+            "op": "eq",
+            "value": "connector"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The statistics.power_rails array is empty despite the schematic carrying Apple 1 bus power rails: 5V, 12V, and -12V. These are named nets on the bus and distributed to expansion connectors PORT1 and PORT2. The net_classification correctly identifies GND1/GND2 as 'ground' but classifies 5V, 12V, and -12V all as 'signal'. A named net '-12V' is especially unambiguous as a power rail. The missing_mpn list is also missing power flags or power symbols because this design uses global labels for power rather than PWR_FLAG symbols.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_value",
+            "value": 1
+          }
+        },
+        {
+          "description": "The '5V' net has only one pin (TO_APPLE1 pin 21), but the schematic distributes 5V via global labels to PORT1 and PORT2 as well. The global label '5V' at lines 268/541 connects to PORT1 pin row and PORT2 pin row respectively. The net should have 3 component pins (TO_APPLE1, PORT1, PORT2). Only TO_APPLE1 is resolved. This is consistent with the broader APPLE1_EDGE1 net resolution issue but also affects PORT1/PORT2 side for the 5V rail.",
+          "analyzer_section": "nets",
+          "check": {
+            "path": "nets.5V.pins",
+            "op": "min_value",
+            "value": 2
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Apple1ExpanderPcb",
+      "project": "Apple1Expander",
+      "created": "2026-03-23T19:01:19.297101+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000368"
+    }
+  ]
+}

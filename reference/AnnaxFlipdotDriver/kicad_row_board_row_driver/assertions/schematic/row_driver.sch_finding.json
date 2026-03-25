@@ -1,0 +1,61 @@
+{
+  "file_pattern": "row_driver.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000545",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000545-AST-01",
+      "description": "The analyzer correctly handled multi-unit BAV70W components (8 units = 16 pins but 8 physical packages). Component type breakdown matches source file contents.",
+      "created_from": "FND-00000545",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000545-AST-02",
+      "description": "Correctly identifies separate decoupling domains for +5V and +3V3 rails. Cap values and counts match source.",
+      "created_from": "FND-00000545",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000545-AST-03",
+      "description": "Row driver has Q1 (2N3904 NPN for column presence sense) and Q2 (FQP47P06 P-channel MOSFET for power switching from 24V). Both are present in the schematic but transistor_circuits array is empty. Q2 is a high-current PMOS power switch \u2014 a significant circuit element.",
+      "created_from": "FND-00000545",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000545-AST-04",
+      "description": "U7 is a Wurth WE-FDSM isolated 5V DC/DC converter module, which is a power regulator. power_regulators is empty. The component has 'DC/DC' in its name/value. This is a missed detection for a power conversion stage.",
+      "created_from": "FND-00000545",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000545-AST-05",
+      "description": "U13 is a TXB0108 8-channel bidirectional level translator between 3.3V signals (from WeMos/Arduino) and 5V logic for the TPIC6B595 shift registers. Signals like RC_DATA_3v3, RC_SHIFT_CLK_3v3 vs RC_SHIFT_CLK show the voltage domain crossing. This is an important architectural feature (mixed 3.3V/5V system) that is undetected. The net classification does identify _3v3 suffixed signals but does not connect them to the level-shift context.",
+      "created_from": "FND-00000545",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

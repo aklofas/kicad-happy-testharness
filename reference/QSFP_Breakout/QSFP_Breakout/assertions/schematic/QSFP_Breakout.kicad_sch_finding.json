@@ -1,0 +1,28 @@
+{
+  "file_pattern": "QSFP_Breakout.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001125",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001125-AST-01",
+      "description": "All 8 QSFP differential pairs (TX1_P/N, TX2_P/N, TX3_P/N, TX4_P/N, RX1_P/N, RX2_P/N, RX3_P/N, RX4_P/N) are correctly identified with has_esd=True referencing U1 (SRV05-4 equivalent). Pair naming matches the U.FL connector net names exactly.",
+      "created_from": "FND-00001125",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001125-AST-02",
+      "description": "U2 (TPS562201) identified as switching topology with input=+12V, output=+3V3, R1=33k2/R2=10k feedback divider, estimated Vout=2.592V (close to 3.3V with Vref=0.6V). C9 DNP compensation cap on FB net correctly noted in mid_point_connections.",
+      "created_from": "FND-00001125",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

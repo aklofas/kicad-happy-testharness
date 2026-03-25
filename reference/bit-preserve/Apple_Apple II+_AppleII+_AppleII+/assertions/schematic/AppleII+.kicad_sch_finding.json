@@ -1,0 +1,19 @@
+{
+  "file_pattern": "AppleII+.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002343",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002343-AST-01",
+      "description": "INCORRECT: The Apple II+ schematic is a valid KiCad 6 file (version 20230121) with 172 components, 417 nets and 2570 wires successfully parsed. However sheets_parsed is null and sheet_files is null, while kicad_version is reported as 'unknown' despite file_version 20230121 being KiCad 8. The component data was extracted correctly but the sheet metadata fields are not populated, suggesting the sheet tracking logic has a bug for KiCad 6+ single-file schematics.",
+      "created_from": "FND-00002343",
+      "check": {
+        "path": "kicad_version",
+        "op": "equals",
+        "value": "unknown"
+      },
+      "aspirational": true
+    }
+  ]
+}

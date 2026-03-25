@@ -1,0 +1,101 @@
+{
+  "file_pattern": "VGA2HDMI_Rev_C.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001786",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001786-AST-01",
+      "description": "The schematic contains 86 unique reference designators. Multi-unit symbols (e.g., R12 \u00d7 4, CHARGING1 \u00d7 3, L4 \u00d7 2) appear multiple times in the components list but are correctly de-duplicated to 86 in statistics.total_components.",
+      "created_from": "FND-00001786",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 86,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001786-AST-02",
+      "description": "The schematic contains HDMI_OUT1 (HDMI-SWM-19 connector) which is correctly detected as an HDMI interface.",
+      "created_from": "FND-00001786",
+      "check": {
+        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001786-AST-03",
+      "description": "Q1 uses the OLIMEX_Devices:Crystal library and has value 'Q24.576MHz/20pF/20ppm/2P/5x3.2mm'. The analyzer correctly identifies it as a crystal with load capacitors C18 and C19 (33 pF each), calculating 19.5 pF effective load within typical range.",
+      "created_from": "FND-00001786",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001786-AST-04",
+      "description": "Three identical RC high-pass networks (R=75\u03a9, C=47nF, fc=45.15 kHz) on RED_IN, GREEN_IN, BLUE_IN are correctly detected. These are DC-blocking/termination networks for VGA analog signals.",
+      "created_from": "FND-00001786",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "value": 3,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001786-AST-05",
+      "description": "VR1 LD1117AG-33 is correctly identified as a fixed 3.3V LDO with +5V_USB input and +3.3V output, voltage inferred from the '-33' suffix.",
+      "created_from": "FND-00001786",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 2,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001786-AST-06",
+      "description": "VR2 LD1117AG-AD is an adjustable LDO. With R29=220\u03a9 (output to ADJ) and R26=100\u03a9 (ADJ to GND), Vout = 1.25\u00d7(1+220/100) = 4.0V, but the net is named +1.8V. The analyzer correctly flags a 122% mismatch. This appears to be a real design error or a net naming mistake in the VGA2HDMI schematic.",
+      "created_from": "FND-00001786",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001786-AST-07",
+      "description": "INCORRECT: Three LED components (CHARGING1 \u00d7 3, UUIDs: 54065cbc, 67a1df4e, d1aea1fe) all share the reference CHARGING1 in the schematic. De-duplication by reference yields led=1 in statistics, but there are 3 distinct placed instances (confirmed by matching PCB footprints LED_VGA1, LED_PWR1, LED_HDMI1 linking to the same 3 UUIDs). This is a schematic design error (duplicate refs), but the count underreports actual LEDs.",
+      "created_from": "FND-00001786",
+      "check": {
+        "path": "statistics.component_types.led",
+        "value": 1,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001786-AST-08",
+      "description": "INCORRECT: Two inductor symbols both named L4 (UUIDs 5ce7ffe1 and b40318a9) appear in the schematic, both with unit=1 (not different units of a single multi-unit component). The PCB assigns them as L3 and L4 respectively. The statistics correctly count unique refs (inductor=1) but the schematic has duplicate reference designators for 2 physically distinct components.",
+      "created_from": "FND-00001786",
+      "check": {
+        "path": "statistics.component_types.inductor",
+        "value": 1,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001786-AST-09",
+      "description": "The schematic has 5 ESD protection arrays (TVS1-TVS5, OLIMEX_Diodes:GG0402052R542P). They are classified as 'diode' in component_types but are absent from signal_analysis.protection_devices. Only FUSE1 is detected. The TVS reference prefix and GG0402 library name should trigger TVS/ESD protection detection.",
+      "created_from": "FND-00001786",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "value": 5,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

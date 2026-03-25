@@ -1,0 +1,85 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "555_555.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Source file and output both missing \u2014 project not in test harness",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The repos/KiCad/ directory contains only keyboard-related projects (GH60-Alps, Matt3o, etc.). The projects 555, USB-C-PD, charge-controller, esp32-devkit, servo-driver, and wireless-speaker are not listed in repos.md and have never been checked out. No analyzer output exists to review.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "KiCad",
+      "project": "GH-MXAlps-mini_GH-MXAlps-mini",
+      "created": "2026-03-23T22:24:27.354477+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000681"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "USB-C-PD_USB-C-PD.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Source file and output both missing \u2014 project not in test harness",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "Same as above \u2014 this KiCad org project (likely from kicad.com demo library) is absent from repos.md. The path pattern repos/KiCad/<project> implies a GitHub org named 'KiCad' but no such repos are tracked.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "KiCad",
+      "project": "GH-MXAlps-mini_GH-MXAlps-mini",
+      "created": "2026-03-23T22:24:27.354495+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000682"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "USB-C-PD_USB-C-PD.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "Source file and output both missing \u2014 project not in test harness",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "All 12 requested file pairs (6 schematics + 6 PCBs) are absent. The repos/KiCad directory exists but contains only keyboard PCBs from a different 'KiCad' folder that happens to share the name. None of the requested projects (555, USB-C-PD, charge-controller, esp32-devkit, servo-driver, wireless-speaker) are present anywhere on the filesystem.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "KiCad",
+      "project": "GH-MXAlps-mini_GH-MXAlps-mini",
+      "created": "2026-03-23T22:24:27.354498+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000683"
+    }
+  ]
+}

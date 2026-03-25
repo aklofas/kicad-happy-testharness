@@ -1,0 +1,42 @@
+{
+  "file_pattern": "TS4231-BOB.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001628",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001628-AST-01",
+      "description": "statistics reports total_components=6 (C1, C2, D1, J1, R1, U1), unique_parts=6, total_nets=8, power_rails=[+3.3V, GND]. This is accurate. U1 is the TS4231 IC, D1 is the BPW34S photodiode (Device:D_Photo, classified as 'diode'), C1=100 nF and C2=1 \u00b5F are the supply bypass caps.",
+      "created_from": "FND-00001628",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "FND-00001628-AST-02",
+      "description": "The TS4231 schematic has no PWR_FLAG symbols at all (confirmed by searching the source file). The warnings that '+3.3V' and 'GND' have power_in pins but no power_out or PWR_FLAG are accurate and match what KiCad ERC would report.",
+      "created_from": "FND-00001628",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001628-AST-03",
+      "description": "C2 (1 \u00b5F) has pin 1 connected to __unnamed_0 (the AVDD power-in pin of U1) and pin 2 to GND. The net is classified 'power_internal' rather than a named rail, so the decoupling_analysis only reports C1 (100 nF) on +3.3V with cap_count=1, total=0.1 \u00b5F. C2's role as AVDD decoupling for the TS4231's analog supply is not captured. The design_observations correctly notes that +3.3V has no bulk capacitor, but doesn't account for AVDD decoupling.",
+      "created_from": "FND-00001628",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "contains_match",
+        "value": {
+          "rail": "+3.3V",
+          "cap_count": 1
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -123,7 +123,7 @@
       "repo": "bitaxe",
       "project": "bitaxeUltra",
       "created": "2026-03-18T04:16:33.304866+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "gerber",
       "source_file": "Manufacturing Files/gerbers/",
       "summary": "Gerber review: 4-layer BGA ASIC miner. TD clearing bug, front/back count wrong, smd_apertures misleading",
@@ -131,12 +131,22 @@
         {
           "type": "layer_completeness",
           "description": "Layer completeness, alignment, board dimensions (56.5x99.8mm) all accurate for 4-layer KiCad 7 output",
-          "analyzer_section": "completeness"
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "type": "drill_classification",
           "description": "Via drill classification exact: 201 vias across 3 tool sizes",
-          "analyzer_section": "drill_classification.vias"
+          "analyzer_section": "drill_classification.vias",
+          "check": {
+            "path": "drill_classification.vias",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

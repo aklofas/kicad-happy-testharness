@@ -1,0 +1,28 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002431",
+      "source_file": "muon-kbd/pcb/muon.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "Crystal frequency correctly reported as null when value field contains a symbol name",
+      "details": "Y1 has Value='Crystal_GND24_Small' (a KiCad symbol name, not a frequency). The analyzer correctly reports frequency=null. Load caps C5 and C1 (both 5pF) are identified."
+    },
+    {
+      "id": "FND-00002432",
+      "source_file": "muon-kbd/pcb/muon.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "Addressable LED chains correctly detected: SK6812MINI-E (3) and WS2812B (2) chains identified separately",
+      "details": "The analyzer correctly identifies two distinct chains with appropriate protocol, correct chain lengths (3 and 2), and current estimates (180mA and 120mA)."
+    },
+    {
+      "id": "FND-00002433",
+      "source_file": "muon-kbd/pcb/muon.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "USB-C VBUS compliance failures correctly flagged: no decoupling cap and no TVS",
+      "details": "VBUS_ connects only to J2 (USB-C) and FB1 (ferrite bead). No decoupling capacitor or TVS on VBUS_. The USB compliance checker correctly reports vbus_esd_protection=fail and vbus_decoupling=fail."
+    }
+  ]
+}

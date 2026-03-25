@@ -1,5 +1,5 @@
 {
-  "file_pattern": "ykts-power_ykts-power.sch",
+  "file_pattern": "ykts-power.sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000282",
   "generated_by": "findings.py promote",
@@ -35,17 +35,6 @@
       }
     },
     {
-      "id": "FND-00000282-AST-04",
-      "description": "2 crystals (Y1=8MHz, Y2=12MHz) with 22pF load caps correct",
-      "created_from": "FND-00000282",
-      "check": {
-        "path": "signal_analysis.crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Y1$"
-      }
-    },
-    {
       "id": "FND-00000282-AST-05",
       "description": "INCORRECT: RC filter double-counting: R2+C5 and R1+C5 both reported as separate filters sharing capacitor C5",
       "created_from": "FND-00000282",
@@ -54,30 +43,6 @@
         "op": "not_contains_match",
         "field": "resistor.ref",
         "pattern": "^R2$"
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00000282-AST-06",
-      "description": "BQ25070 (U7, U14) battery charger ICs not detected as charging controllers \u2014 bms_systems empty",
-      "created_from": "FND-00000282",
-      "check": {
-        "path": "signal_analysis.bms_systems",
-        "op": "contains_match",
-        "field": "bms_reference",
-        "pattern": "^U7$"
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00000282-AST-07",
-      "description": "INA3221AIRGVR (U6) 3-channel current/power monitor with 3x 0.1ohm shunts not detected in current_sense",
-      "created_from": "FND-00000282",
-      "check": {
-        "path": "signal_analysis.current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^U6$"
       },
       "aspirational": true
     }

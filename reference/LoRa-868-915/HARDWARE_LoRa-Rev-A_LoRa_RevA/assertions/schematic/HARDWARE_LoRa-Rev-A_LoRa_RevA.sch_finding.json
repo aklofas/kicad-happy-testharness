@@ -1,0 +1,28 @@
+{
+  "file_pattern": "LoRa_RevA.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000825",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000825-AST-01",
+      "description": "Crystal circuit detection is accurate: X1 at 32.000MHz_10ppm with two 15pF load caps (C1, C2) giving effective CL=10.5pF (typical for TCXO/crystal). Consistent across all three schematics.",
+      "created_from": "FND-00000825",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000825-AST-02",
+      "description": "Rev-A: 33 total components (1 IC, 20 caps, 6 inductors, 3 connectors, 1 crystal, 2 test points) with correct values and footprints. 0R and n.a. values preserved faithfully. Consistent with schematic content.",
+      "created_from": "FND-00000825",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

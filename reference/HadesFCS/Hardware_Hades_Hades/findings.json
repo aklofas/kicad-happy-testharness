@@ -85,7 +85,7 @@
       "repo": "HadesFCS",
       "project": "Hardware_Hades_Hades",
       "created": "2026-03-18T04:16:33.304866+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "gerber",
       "source_file": "Hardware/Hades/Hades gerbers/",
       "summary": "Gerber review: 4-layer flight controller (100x60mm). Drill unit bug + smd_apertures=0",
@@ -93,12 +93,22 @@
         {
           "type": "layer_completeness",
           "description": "All 11 layers present, 4-layer stackup correct from X2. Separate PTH/NPTH drill files correctly identified",
-          "analyzer_section": "completeness"
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "type": "drill_classification",
           "description": "382 vias (0.3/0.4mm) correctly classified. 8 NPTH press-fit holes at 0.8mm identified",
-          "analyzer_section": "drill_classification"
+          "analyzer_section": "drill_classification",
+          "check": {
+            "path": "drill_classification",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

@@ -1,0 +1,87 @@
+{
+  "file_pattern": "Soft_Power_Switch_USB-C.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001489",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001489-AST-01",
+      "description": "The schematic analyzer correctly reports 42 total_components, 39 total_nets, and 0 total_no_connects. The 0 no-connect count is confirmed accurate \u2014 the 5 occurrences of 'no_connect' in the source file are all inside symbol pin type declarations (library definitions), not placed NC cross symbols on the schematic. The 10 NC-only nets arise from pins typed no_connect in their symbol definitions.",
+      "created_from": "FND-00001489",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 42
+      }
+    },
+    {
+      "id": "FND-00001489-AST-02",
+      "description": "total_no_connects=0 is correct. Verified by inspecting the source .kicad_sch: all 5 occurrences of 'no_connect' appear as '(pin no_connect line' inside symbol definitions, which are library pin type annotations, not placed NC cross symbols. The design intentionally has no unconnected pins.",
+      "created_from": "FND-00001489",
+      "check": {
+        "path": "statistics.total_no_connects",
+        "op": "equals",
+        "value": 0
+      }
+    },
+    {
+      "id": "FND-00001489-AST-03",
+      "description": "The analyzer correctly identifies two RC filters: R5 (100\u03a9) + C2 (47\u00b5F) giving ~33.86 Hz cutoff (output supply filtering), and R2 (200k\u03a9) + C2 (47\u00b5F) giving ~0.017 Hz cutoff (very slow timing RC). Both are real RC filter pairs. The frequency calculations are accurate.",
+      "created_from": "FND-00001489",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001489-AST-04",
+      "description": "The analyzer correctly identifies F1 (Polyfuse/resettable fuse) as a protection device in protection_devices. This is the only protection device on the schematic. The value and footprint are consistent with a standard SMD resettable fuse protecting the output.",
+      "created_from": "FND-00001489",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "count_matches",
+        "field": "reference",
+        "pattern": "F1",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected exactly 1 matches, got 0"
+    },
+    {
+      "id": "FND-00001489-AST-05",
+      "description": "INCORRECT: Q3 is a SIL2308 dual MOSFET with two schematic units: unit 1 is an N-channel MOSFET (gate=EN via R9, drain=R10/gate drive) and unit 2 is a P-channel MOSFET (gate=CTRL, source=VIN, drain=VOUT). The transistor_circuits list only captures unit 2 (P-channel). Unit 1 (N-channel) performs the gate-drive enable function and is a separate circuit element that should be independently analyzed. The N-channel unit is part of the power switch control path.",
+      "created_from": "FND-00001489",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "count_matches",
+        "field": "reference",
+        "pattern": "Q3",
+        "value": 2
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001489-AST-07",
+      "description": "INCORRECT: The design_analysis.erc_warnings list includes PWR_FLAG warnings. This is a connector-powered design (power enters through J1 USB-C, no on-board regulator generating power nets). KiCad ERC requires PWR_FLAG symbols on nets that have no driver, but in a pass-through power switch topology this is common and expected. These are not real electrical errors. The analyzer correctly surfaces ERC warnings but lacks context to classify them as expected/benign.",
+      "created_from": "FND-00001489",
+      "check": {
+        "path": "design_analysis.erc_warnings",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001489-AST-08",
+      "description": "INCORRECT: The schematic analyzer reports assembly_complexity.tht=0 and assembly_complexity.smd=45, but the PCB confirms J1 and J2 (USB-C connectors) and J3 (6-pin header) are through-hole components with PTH drilled holes. The schematic analyzer cannot determine footprint mounting type (SMD vs THT) because this information is in the footprint assignment, not the symbol definition. All components are being counted as SMD. Additionally, total assembly_complexity=45 exceeds the schematic's 42 total_components by 3, suggesting power symbols or other non-component elements are being counted.",
+      "created_from": "FND-00001489",
+      "check": {
+        "path": "assembly_complexity.tht",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

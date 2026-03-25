@@ -1,0 +1,25 @@
+# Findings: Automatic-LED-Glower / P1_P1
+
+## FND-00000367: PWR_FLAG warnings fire despite explicit PWR_FLAG symbols on both rails; LDR/resistor voltage divider not detected in signal_analysis; sleep_current_audit misclassifies LED series resistor R3 as a p...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: P1_P1.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- R3 (330 ohm) is a current-limiting resistor in series between +5V and the LED cathode (D1 pin K). It is not a pull-up — there is no signal net being held high. The sleep_current_audit reports R3 as type 'pull_up' with 15151.52 uA conditional current (worst-case signal driven low), which is physically incorrect for this topology. The LED path is also reported separately and correctly as 'led_indicator' at 9090.91 uA. The double-reporting inflates the conditional_pull_up_uA figure to 15.15 mA, which does not correspond to any real circuit condition.
+- The assembly_complexity section reports smd_count=1 and package_breakdown 'other_SMD': 1. All five components are THT: R1 uses OptoDevice:R_LDR_10x8.5mm_P7.6mm_Vertical (vertical THT optodevice), D1 uses LED_THT:LED_D5.0mm, R2 and R3 use Resistor_THT footprints, and Q1 uses TO-92_Inline. The LDR vertical footprint is being misclassified as SMD, likely because the footprint library name 'OptoDevice' is not recognized as a THT library.
+
+### Incorrect
+- The schematic contains two PWR_FLAG symbols: one at (142.24, 62.23) on the +5V rail and one at (142.24, 91.44) on the GND rail, properly placed at the rail junctions. The pwr_flag_warnings section incorrectly reports both '+5V' and 'GND' as missing PWR_FLAG coverage. The analyzer lists both PWR_FLAG symbols in power_symbols but fails to recognize they satisfy the ERC requirement for these rails. This appears to be the same root-cause as existing KH PWR_FLAG detection issues.
+  (pwr_flag_warnings)
+
+### Missed
+- R1 (LDR03) and R2 (10k) form a classic voltage divider: +5V -> R1 -> base_node -> R2 -> GND. The midpoint drives Q1's base. The transistor_circuits detector does correctly identify R1 and R2 as base_resistors and R2 as base_pulldown, but voltage_dividers is empty. This LDR-plus-fixed-resistor divider is the active sensing element of the design and its omission from voltage_dividers means the design's core light-sensing mechanism goes unreported.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---

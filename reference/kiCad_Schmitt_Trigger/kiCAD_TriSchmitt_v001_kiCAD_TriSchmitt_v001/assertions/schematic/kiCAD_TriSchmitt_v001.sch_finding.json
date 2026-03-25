@@ -1,0 +1,19 @@
+{
+  "file_pattern": "kiCAD_TriSchmitt_v001.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002486",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002486-AST-01",
+      "description": "The schematic statistics report total_components=16 matching unique reference count. However, the components list contains 18 entries because U1 (74LVC3G14, a 3-gate IC) is listed three times \u2014 once per gate unit. The statistic total_components=16 correctly counts physical components by unique reference designator. However, this multi-unit representation is potentially confusing: unique_parts=8 (by value grouping) and total_components=16 (unique refs) are both reported, but the number of component entries in the list (18) does not match total_components (16). This inconsistency could mislead downstream consumers of the JSON.",
+      "created_from": "FND-00002486",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 16
+      },
+      "aspirational": true
+    }
+  ]
+}

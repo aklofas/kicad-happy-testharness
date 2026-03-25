@@ -1,0 +1,30 @@
+{
+  "file_pattern": "mppt-2420-hpx.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002410",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002410-AST-01",
+      "description": "The HPX board defines layers in KiCad 5 unquoted format. The analyzer reports copper_layers_used=0 and copper_layer_names=[] because its layer-parsing regex expects quoted names used in KiCad 6+ format.",
+      "created_from": "FND-00002410",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002411-AST-02",
+      "description": "Both mppt-2420-hpx and mppt-2420-lc report front_side=0 and back_side=0 despite HPX having 184 front-side and 7 back-side components.",
+      "created_from": "FND-00002411",
+      "check": {
+        "path": "statistics.front_side",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

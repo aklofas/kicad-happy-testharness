@@ -1,0 +1,29 @@
+{
+  "file_pattern": "power.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000454",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000454-AST-01",
+      "description": "Source has D2 (B5819W Schottky), Powerpins1 (Conn_01x02 terminal block), U1 (TLV1117-50 5V LDO), 5VOUTPINS1 (Conn_01x02 5V output), C7/C1/C8/C5 (10uF/16V caps), Q1 (DMP2045U P-MOSFET), Q2 (DMG2305UX N-MOSFET) = 10 components. Output reports total_components=10, diode=1, connector=2, ic=1, capacitor=4, transistor=2. LDO U1 detected with topology=LDO, input_rail=MOTOR_PWR, output_rail=REGULATED_MOTORPWR, estimated_vout=5.0V. Both MOSFETs detected in transistor_circuits. Schottky diode D2 is present in components.",
+      "created_from": "FND-00000454",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000454-AST-02",
+      "description": "The signal_analysis.decoupling_analysis list is empty, yet C7, C1, C8, and C5 (all 10uF/16V, Capacitor_SMD:CP_Elec_5x5.7) exist in the schematic and are connected to the power rails. The regulator observation notes missing input/output caps for U1 (TLV1117-50), which contradicts the capacitors being present. The decoupling analyzer likely fails because the capacitors are on unnamed nets (MOTOR_PWR, REGULATED_MOTORPWR) that don't match standard +xV power rail naming patterns.",
+      "created_from": "FND-00000454",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

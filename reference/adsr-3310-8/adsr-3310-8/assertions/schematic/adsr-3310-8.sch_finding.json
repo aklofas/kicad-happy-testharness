@@ -1,0 +1,92 @@
+{
+  "file_pattern": "adsr-3310-8.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001977",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001977-AST-01",
+      "description": "Analyzer reports sheets_parsed:2 with both sheet files listed. The 43 total components include components from both the top-level sheet (TL074 op-amp sections, connectors, pots) and the sub-sheet (AS3310 ADSR IC with timing caps). This is correct.",
+      "created_from": "FND-00001977",
+      "check": {
+        "path": "sheets_parsed",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001977-AST-02",
+      "description": "Analyzer reports power_rails: ['+12V', '-12V', 'GND']. This correctly reflects the Eurorack standard \u00b112V power supply. U1 (TL074) uses both rails as V+ and V-, while U2 (AS3310) uses +12V and a filtered -12V via R20/C10.",
+      "created_from": "FND-00001977",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": "/-12V/"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001977-AST-03",
+      "description": "The analyzer correctly detects R20(680\u03a9)/C10(100nF) as a 2.34kHz low-pass filter on the -12V rail (power supply filtering for AS3310 VEE), and R19(10k\u03a9)/C6(10nF) as a 1.59kHz high-pass. Both are real signal conditioning filters in this ADSR design.",
+      "created_from": "FND-00001977",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001977-AST-04",
+      "description": "signal_analysis.decoupling_analysis correctly identifies +12V with 3 caps (100nF+100uF+100nF, total 100.2uF) and -12V with 2 caps (100nF+100uF, total 100.1uF). Both rails have bulk and bypass capacitors, matching the IDC Eurorack power header layout.",
+      "created_from": "FND-00001977",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001977-AST-05",
+      "description": "Analyzer reports ic:2, resistor:21 (includes RV1/RV2/RV3 trim pots counted as resistors and RV8 TIME pot), capacitor:10, connector:6 (J1-J6), test_point:4 (TP1-TP4 for A/D/S/R). Counts are accurate.",
+      "created_from": "FND-00001977",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001977-AST-06",
+      "description": "INCORRECT: The analyzer detects three voltage dividers (3k9/1k pairs) producing ratio ~0.204 on ATTACK, DECAY, RELEASE nets. These are resistor dividers that scale CV modulation inputs for the TL074 op-amp summing inputs driving the AS3310. While structurally they are dividers, functionally they are input attenuators for mixing. The detection is technically correct but context is useful.",
+      "created_from": "FND-00001977",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 3
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001977-AST-07",
+      "description": "INCORRECT: In design_analysis.power_domains, U2 (AS3310) shows power_rails: ['+12V', '__unnamed_23']. The '__unnamed_23' net is actually the filtered -12V supply (R20/C10 low-pass filter output). The analyzer names it as an anonymous net instead of associating it with the -12V rail. The power rail should trace back to -12V.",
+      "created_from": "FND-00001977",
+      "check": {
+        "path": "design_analysis.power_domains.ic_power_rails.U2.power_rails",
+        "op": "contains_match",
+        "value": "/\\+12V/"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001977-AST-08",
+      "description": "U1 (TL074) has 4 op-amp sections used as summing/inverting amplifiers for ATTACK, DECAY, SUSTAIN, RELEASE control. signal_analysis.opamp_circuits is empty []. The TL074 has explicit +/- input and output pins (pins 3/2/1, 5/6/7, 10/9/8, 12/13/14 visible in nets). These should be detected as op-amp circuits.",
+      "created_from": "FND-00001977",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

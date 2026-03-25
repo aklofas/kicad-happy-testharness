@@ -1,0 +1,137 @@
+{
+  "file_pattern": "SparkFun_AS7343_Qwiic.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001493",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001493-AST-01",
+      "description": "The analyzer correctly extracted all 38 components from the schematic. Component type breakdown matches: C1-C6 (6 caps), R1-R5/R7/R8 (7 resistors with R6 absent by design), Q1-Q2 (2 NMOS), D1-D3 (3 LEDs), J1-J3 (3 connectors), JP1-JP3 (3 jumpers), FID1-FID4 (4 fiducials), ST1-ST4 (4 mounting holes), U1-U2 (2 ICs), G1-G4 (4 aesthetic symbols). DNP count of 1 (D3) is correct.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 38
+      }
+    },
+    {
+      "id": "FND-00001493-AST-02",
+      "description": "The analyzer correctly identifies U1 as an LDO regulator with input_rail=3.3V and output_rail=1.8V. The estimated_vout=1.8 derived from the part value suffix is correct. Decoupling caps C5/C2 on the input and C6/C4/C1 on the output are correctly identified.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "value": {
+          "ref": "U1",
+          "topology": "LDO",
+          "input_rail": "3.3V",
+          "output_rail": "1.8V"
+        }
+      }
+    },
+    {
+      "id": "FND-00001493-AST-03",
+      "description": "The analyzer correctly identifies both 1.8V-side I2C lines (SDA_1V8 and SCL_1V8) as I2C buses with their respective 2.2k pull-up resistors R7 and R8 to the 1.8V rail. The level-shifted side connecting to U2 (AS7343) is correctly mapped.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001493-AST-04",
+      "description": "R1 is a series 22-ohm resistor between the 1.8V LDO output and U2's VDD pin, with C3 (1.0uF) decoupling U2's VDD. The analyzer correctly computes the RC low-pass filter with fc = 7.23 kHz. The input_net=1.8V and output_net=__unnamed_1 (U2-VDD net) are correctly traced.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001493-AST-05",
+      "description": "The analyzer correctly identifies three power rails (1.8V, 3.3V, GND) and reports total_nets=21. The net classification correctly labels 1.8V and 3.3V as power, GND as ground, SDA/SCL/SDA_1V8/SCL_1V8 as data/clock signals, GPIO as signal, and ~{INT} as interrupt.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "equals",
+        "value": 21
+      }
+    },
+    {
+      "id": "FND-00001493-AST-06",
+      "description": "D3 is a 5mm PTH red LED marked Do Not Populate (DNP=true) in the schematic. The analyzer correctly reports dnp_parts=1 and identifies D3 as dnp=true in the components list. All other 37 components are dnp=false.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "statistics.dnp_parts",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001493-AST-07",
+      "description": "G1 and G3 are schematic-only aesthetic symbols with empty footprint strings. The analyzer correctly identifies them in missing_footprint. G2 has a valid footprint (SparkFun_Logo_8mm) and G4 has a Creative_Commons_License footprint, so neither is in missing_footprint.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "statistics.missing_footprint",
+        "op": "contains_match",
+        "value": "G1"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items"
+    },
+    {
+      "id": "FND-00001493-AST-08",
+      "description": "The 1.8V rail has C6 (4.7uF), C4 (4.7uF), C1 (0.1uF) for 9.5uF total; the 3.3V rail has C5 (4.7uF) and C2 (0.1uF) for 4.8uF total. Both have bulk and bypass caps correctly flagged. The absence of a high-frequency cap (e.g. 10nF or 100pF) is correctly noted as has_high_freq=false.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001493-AST-09",
+      "description": "The schematic title block states 'SparkFun Spectral Sensor Breakout AS7353 Qwiic' but the component is AS7343. This is a typo in the source schematic. The analyzer faithfully extracts the title as written. The mismatch between the title and U2's actual value 'AS7343' is a noteworthy design metadata inconsistency.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "title_block.title",
+        "op": "equals",
+        "value": "SparkFun Spectral Sensor Breakout AS7353 Qwiic"
+      }
+    },
+    {
+      "id": "FND-00001493-AST-10",
+      "description": "The analyzer correctly identifies U2's VDD connected through R1 (22 ohm) to the 1.8V filtered supply (__unnamed_1 net) with C3 local decoupling, SCL and SDA on the 1.8V level-shifted bus via Q1/Q2 BSS138 MOSFETs, INT with 10k pull-up (R2) to 1.8V, GPIO directly exposed to J3, and LDR (LED driver output) connected to D2/D3 via JP3 jumper. The subcircuit neighbor detection for U2 correctly includes R1, R2, R7, R8, Q1, Q2, C3, D3, JP3, J3.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001493-AST-11",
+      "description": "INCORRECT: Q1 and Q2 are BSS138 N-MOSFETs used as bidirectional I2C level shifters. Their gates are tied directly to the 1.8V rail. R8 (for Q1) and R7 (for Q2) are 2.2k pull-up resistors on the SDA_1V8/SCL_1V8 nets (source side), not gate resistors. The analyzer incorrectly classifies them as gate_resistors because they share the 1.8V net with the gate, but they are electrically on the source/level-translated side. Similarly, U1 (LDO) is falsely listed as gate_driver_ic for Q1/Q2 \u2014 it merely provides the 1.8V rail that powers the gate bias.",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 2
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001493-AST-12",
+      "description": "The design uses R4 (2.2k) on the SDA net and R5 (2.2k) on the SCL net, both connected through solder jumper JP2 to 3.3V. When JP2 is closed (default), R4 and R5 are 3.3V I2C pull-ups for the host-facing side. The bus_analysis.i2c only shows the 1.8V side (SDA_1V8, SCL_1V8); the 3.3V side SDA and SCL nets with their pull-ups are not detected as I2C bus segments. This is a missed detection since SDA and SCL nets connect to J1, J2 (Qwiic connectors) and J3 (PTH header).",
+      "created_from": "FND-00001493",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 4
+      },
+      "aspirational": true
+    }
+  ]
+}

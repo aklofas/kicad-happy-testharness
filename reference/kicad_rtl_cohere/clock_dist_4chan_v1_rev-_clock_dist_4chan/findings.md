@@ -1,0 +1,46 @@
+# Findings: kicad_rtl_cohere / clock_dist_4chan_v1_rev-_clock_dist_4chan
+
+## FND-00002370: RF chain not detected in 4-way active RF splitter with BGA2815 amplifier and TCP-2-25X+ splitter ICs; LDO regulator (LP2985-3.3) correctly identified and annotation issue (J0 zero-indexed) correctl...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_kicad_rtl_cohere_rf_split_v2_rev-_active_rf_split_4way.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- The analyzer correctly identifies U2 (LP2985-3.3) as an LDO with input_rail=+12V in power_regulators. It also correctly flags J0 in annotation_issues.zero_indexed_refs — the RF input connector is named J0 while outputs are J1-J4, which is a KiCad annotation convention violation. Both are accurate findings.
+
+### Incorrect
+(none)
+
+### Missed
+- The schematic is explicitly titled '4 Channel Active RF Splitter, V2' and contains a BGA2815 RF amplifier (NXP broadband gain stage), three TCP-2-25X+ RF splitter ICs (Mini-Circuits), and five 50-ohm UMC coaxial connectors. The signal_analysis.rf_chains and rf_matching arrays are both empty. The BGA2815 and TCP-2-25X splitters should trigger rf_chain or rf_matching detection given their known RF component values and 50-ohm coaxial connectors. This is a clear false negative for a purpose-built RF distribution board.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002371: RF chain not detected in 4-channel clock distribution board with 5PB1104 50-ohm clock buffer; KiCad version reported as 'unknown' for a valid KiCad 6.0 schematic (file_version 20211123)
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_kicad_rtl_cohere_clock_source_v1_rev-A_clock_source_4chan.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- The source file header is '(kicad_sch (version 20211123) (generator eeschema))', which is KiCad 6.0 format (released December 2021). The analyzer outputs kicad_version: 'unknown' for this file. Version 20211123 falls within the KiCad 6.x version range and should be mapped to 'KiCad 6.0' or '6 (KiCad 6.x)' consistent with how the analyzer handles other KiCad 6 files.
+  (kicad_version)
+
+### Missed
+- The clock_source_4chan design uses a 5PB1104PGxx clock buffer IC (IDT, nominal 50-ohm input/output) to distribute a TCXO signal to four outputs via 50-ohm UMC coaxial connectors. The schematic notes explicitly state '5PB1104 is nominal 50 Ohm input/output impedance'. The rf_chains and rf_matching arrays are empty. A clock buffer with 50-ohm coaxial outputs is effectively an RF distribution chain and should be detected as such, or at minimum as a clock distribution network.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---

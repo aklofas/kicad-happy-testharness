@@ -1,0 +1,30 @@
+{
+  "file_pattern": "4Layers_trl-board.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002365",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002365-AST-01",
+      "description": "INCORRECT: The TRL calibration board uses KiCad 5 legacy layer names 'Top' and 'Bottom' instead of 'F.Cu'/'B.Cu'. The PCB analyzer reports copper_layers_used=2 with only ['In1.Cu', 'In2.Cu'] in copper_layer_names, missing the outer signal layers entirely. The board is actually 4-layer (Top, In1.Cu, In2.Cu, Bottom). Additionally, front_side=0 and back_side=0 are reported even though all 18 footprints are placed on layer 'Top', because the analyzer does not recognize the legacy 'Top' name as the front copper layer.",
+      "created_from": "FND-00002365",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 4
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002365-AST-02",
+      "description": "INCORRECT: The PCB analyzer reports front_side=0 and back_side=0, with smd_count=6 and tht_count=12. The source PCB file shows all module entries use '(layer Top)', which is the KiCad 5 legacy name for the front copper layer. Because 'Top' is not mapped to the front side, the side-classification logic assigns no footprints to front or back, making the counts wrong. The total of 18 footprints is correctly reported but split as 6 SMD and 12 THT \u2014 the THT coaxial connectors are correct but the side assignments are not.",
+      "created_from": "FND-00002365",
+      "check": {
+        "path": "statistics.front_side",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

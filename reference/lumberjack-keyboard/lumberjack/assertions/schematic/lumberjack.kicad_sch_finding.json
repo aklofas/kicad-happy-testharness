@@ -1,0 +1,30 @@
+{
+  "file_pattern": "lumberjack.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002423",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002423-AST-01",
+      "description": "The analyzer raises pwr_flag_warnings for both +5V and GND, saying they have no power_out or PWR_FLAG. In fact, two PWR_FLAG symbols are present and properly wired.",
+      "created_from": "FND-00002423",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002424-AST-02",
+      "description": "The analyzer reports switches_on_matrix=63 but diodes_on_matrix=60. The 2 extra counted switches are optional 2u keycap alternate footprints, not additional matrix entries.",
+      "created_from": "FND-00002424",
+      "check": {
+        "path": "signal_analysis.key_matrices.0.diodes_on_matrix",
+        "op": "equals",
+        "value": 60
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "file_pattern": "flex.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000463",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000463-AST-01",
+      "description": "The schematic contains D1\u2013D26 (26 diodes in the main switch area) plus D27\u2013D32 (6 thumb-cluster diodes) = 32 total diodes, SW1\u2013SW26 + SW27\u2013SW32 = 32 switches, and J1\u2013J15 = 15 connectors. The analyzer reports component_types: {diode: 32, connector: 15, switch: 32} and total_components: 79. All correct.",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000463-AST-02",
+      "description": "The analyzer reports a key_matrices entry with rows=7, columns=6, row_nets=[row0..row6], col_nets=[col1..col6], switches_on_matrix=32, diodes_on_matrix=32, estimated_keys=32, detection_method='net_name'. The 32 switches and 32 diodes on the matrix are accurately counted. The col1\u2013col6 and row0\u2013row5 nets all carry actual switches; this is confirmed by net membership in the schematic.",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000463-AST-03",
+      "description": "Verified by inspection: col1 net includes D27 pin K, D1 pin K, D2 pin K, D3 pin K, D4 pin K plus connector pins on J9, J14 pin 1, and J1 pin 1. Each column net carries the cathode (pin 1, K) of 4\u20136 diodes. Each row net (row0\u2013row5) carries pin 1 of the corresponding switch group. The SW-diode-A (anode) connections are correctly captured as unnamed nets (e.g., __unnamed_0 = D27 pin A + SW27 pin 2). Net tracing is accurate.",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000463-AST-04",
+      "description": "The schematic contains no PWR_FLAG, VCC, GND, or any other power symbols. The analyzer reports power_rails: [] and power_domains: {ic_power_rails: {}, domain_groups: {}}. This is correct. The schematic is purely a keyboard matrix with connectors to an external MCU board.",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000463-AST-05",
+      "description": "The schematic has only passive components (diodes, switches) and connectors with no analog circuits, bus interfaces, or power conversion. The analyzer correctly returns empty arrays for voltage_dividers, rc_filters, lc_filters, power_regulators, crystal_circuits, bus_analysis (i2c, spi, uart, can), and all other signal path detectors.",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000463-AST-06",
+      "description": "The schematic defines: J1 and J14 as Conn_01x06_Female (6 pins each), J2 as Conn_01x07_Female (7 pins), and J3\u2013J13 + J15 as Conn_01x02_Female (2 pins each, 12 total). The analyzer correctly reflects these in both the BOM (quantities 2, 1, and 12) and the component list with correct pin_uuids counts per reference.",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000463-AST-07",
+      "description": "The schematic uses global_label (not local net_label) for row0\u2013row5 (at x=30.48), col1\u2013col6 (at x=43\u2013128), row0\u2013row6 and col1\u2013col6 in the MCU connector area (x=158.75), row6 in thumb connector area, and additional connector labels at x=203.2. The analyzer captures all of these in the labels array with type='global_label', correct x/y coordinates, and shape='input'. The total_nets=45 includes both named nets (col1\u2013col6, row0\u2013row6 = 13) and the 32 unnamed SW-diode anode nets.",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000463-AST-08",
+      "description": "No component in the schematic has an MPN, manufacturer, DigiKey, Mouser, LCSC, or Element14 field populated. The analyzer correctly lists all 79 references (D1\u2013D32, J1\u2013J15, SW1\u2013SW32) in the missing_mpn list and reports missing_footprint as empty (all footprints are assigned).",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000463-AST-09",
+      "description": "The connectivity_issues section reports all empty: unconnected_pins=[], single_pin_nets=[], multi_driver_nets=[]. This is correct. Every connector pin and component pin in the schematic is wired to at least one other pin. The Conn_01x02 dual-pin connectors on single nets each contribute 2 pins to a shared net, so no single-pin nets result.",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000463-AST-10",
+      "description": "J3\u2013J13 and J15 are Conn_01x02_Female components with footprint 'customs2:SolderWire-0.15sqmm_1x01_D0.5mm_OD1.5mm'. Both pins of each connector are tied to the same net (e.g., both pins of J3 are on 'row0'). This is a solder-wire loopback/jumper pattern used to route wires from this flex PCB to an external controller. The analyzer notes the connection (both pins appear in the net) but does not flag this as a design observation or unusual pattern. This could be a design_observation noting 'duplicate-pin connectors used as wire attachment points'.",
+      "created_from": "FND-00000463",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

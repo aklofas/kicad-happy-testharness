@@ -1,0 +1,78 @@
+# Findings: Electronics-Tutorials / Astable Multivibrator_Astable Multivibrator
+
+## FND-00000506: All components, nets, and pin mappings are correctly extracted; PWR_FLAG warning incorrectly fired for GND rail despite PWR_FLAG symbol being present; PWR_FLAG appears as a spurious power rail in s...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: Astable Multivibrator_Astable Multivibrator.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- All 11 components (R1-R4, C1-C2, D1-D2, Q1-Q2, J1) are present with correct references, values, and footprints. The 8 nets are correctly reconstructed from the wire graph. Transistor circuits are correctly identified: Q1 and Q2 are NPN BJT switches with LED collector loads and 100K base resistors. RC timing networks R3/C1 (tau=1.0s) and R2/C2 (tau=1.0s) are detected.
+
+### Incorrect
+- The schematic has two PWR_FLAG symbols: #FLG01 on the VCC rail (at 92.71, 33.02, connected via wire to the VCC bus at y=35.56) and #FLG02 on the GND rail (at 92.71, 76.2, connected via wire to the GND bus at y=78.74). The pwr_flag_warnings section reports GND as missing a PWR_FLAG, but #FLG02 (power:PWR_FLAG, pin type power_out) is correctly connected to the GND net. The analyzer is failing to recognize the PWR_FLAG as satisfying the GND rail. This is a net-tracing or flag-recognition bug.
+  (signal_analysis)
+- The output lists 'PWR_FLAG' in statistics.power_rails alongside 'GND'. PWR_FLAG is a KiCad ERC annotation symbol (power:PWR_FLAG), not an actual power supply rail. Including it alongside GND/VCC in the power_rails list is misleading. Power rails should only enumerate genuine supply net names. This pattern appears identically in all three schematics reviewed.
+  (signal_analysis)
+- R3/C1 and R2/C2 form the timing networks of an astable multivibrator oscillator, not conventional signal-path RC low-pass filters. The analyzer reports them in rc_filters[] with cutoff_hz=0.16 Hz and calculates an input_net/output_net/ground_net topology. While the RC time constant calculation is arithmetically correct (tau=RC=100K*10uF=1s), classifying these as RC filters is misleading — their function is oscillator timing, not signal filtering. No oscillator circuit detection fires.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000507: All 19 components correctly extracted with proper references, values, and net connectivity; PWR_FLAG warnings incorrectly fired for both GND and VCC rails; Custom tactile switch symbol correctly cl...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: SR Latch_SR Latch.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- All components are correctly identified: 10 resistors (R1-R10), 4 transistors (Q1-Q4 BC547), 2 LEDs (D1 'Q', D2 '~Q'), 1 connector (J1), 2 switches (SW1 'SET', SW2 'RESET'). Named nets Q, ~Q, A, B, VCC, GND are correctly extracted. The cross-coupled latch topology is reflected in the net graph: Q net connects Q1 collector + D1 anode + R6-pin2 + R1-pin2; ~Q net connects Q3 collector + D2 anode + R3-pin2 + R4-pin2.
+- SW1 and SW2 use the custom lib symbol XS:Tactile-Omron-B3W-900X-X1X, which has ki_keywords 'LED diode' and ki_description 'Light emitting diode' — these are copy-paste errors in the symbol definition. The analyzer correctly classifies SW1 and SW2 as type 'switch' (not led) based on the SW reference prefix, which is the right approach. The BOM also correctly groups them separately from the LEDs.
+- The SR latch uses two stacked NPN pairs: Q4 (bottom, E→GND) drives Q3 (top, E→Q4 collector) forming a series switch stack. The nets correctly show Q4 emitter on GND, Q3 emitter on __unnamed_7 (which is also Q4 collector), and Q3 collector on ~Q. Similarly Q2 emitter is on GND and Q1 emitter on __unnamed_2 (Q2 collector). The transistor_circuits section correctly reports emitter_is_ground=false for Q3 and Q1 (upper transistors).
+
+### Incorrect
+- The schematic contains PWR_FLAG symbols (power:PWR_FLAG) connected to both GND (at 85.09, 99.06 and 85.09, 101.6) and VCC (at 97.79, 93.98). Despite this, pwr_flag_warnings fires for both GND and VCC. The power_symbols section correctly lists two PWR_FLAG entries on the GND net and one on VCC, confirming the symbols are parsed. The analyzer is not correctly cross-referencing the PWR_FLAG power_out pins with the net membership to suppress the warning.
+  (signal_analysis)
+- The schematic uses global labels with 'input' arrow shape on the Q and ~Q nets, which are collector outputs. The warnings 'Net Q has input-shaped label(s) but no driver pins on the net' are technically correct per KiCad ERC rules — passive pin transistor collectors are not driver pins, and the label shape is input-pointing. These warnings are accurate ERC observations rather than analyzer errors, and are informative for the user. Marking as incorrect only because the label_shape_warnings do not distinguish between output-signal nets that use input-shape labels (design intent) vs. genuinely undriven inputs.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000508: All 85 components correctly extracted with proper references, values, and component types; Common-collector (emitter-follower) transistors misclassified with load_type 'connector'; PWR_FLAG warning...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: NPN Gates_NPN Gates.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- All 85 components are present: 48 resistors (24x10K base resistors + 14x1K emitter/collector resistors + 10x390 LED current-limit resistors), 24 NPN BC547 transistors (Q1-Q24), 10 LEDs (D1-D10 representing gate outputs A, ~A, B, AND, NAND, OR, NOR, XOR, XNOR, and duplicate A on D3), 1 connector (J1), 2 SPDT switches (SW1 'A', SW2 'B'). Component counts match exactly.
+- The design uses global labels 'A' and 'B' distributed across multiple gate sections (AND, NAND, OR, NOR, XOR, XNOR, NOT-A). The net extraction correctly unifies all 'A'-labeled points into a single 'A' net (connected to SW1 SPDT switch pin 1/A and numerous base resistors R14, R29, R40, R36, R10, etc.) and all 'B'-labeled points into net 'B' (connected to SW2 and other base resistors). The global label resolution is correct.
+
+### Incorrect
+- Multiple transistors (Q8, Q11, Q21, Q7, Q23, Q3, Q15, Q12) show collector_net='VCC' and load_type='connector'. In this design, collector-to-VCC transistors are common-collector (emitter-follower) configurations used to implement OR and AND gates; the load is on the emitter, not the collector. The load_type='connector' is wrong — the load seen on the emitter is a resistor or subsequent transistor stage, not a connector. The load_type logic appears to be looking at what is connected to the net seen through J1 (the power connector), and incorrectly propagating 'connector' as the load type. The correct load_type for emitter-follower stages would be 'resistive' or 'transistor' based on the emitter-side component.
+  (signal_analysis)
+- The schematic contains multiple power:PWR_FLAG symbols connected to both GND and VCC nets (confirmed in power_symbols list). Despite this, pwr_flag_warnings fires for both rails. This is the same bug as in the other two schematics in this set: the analyzer parses PWR_FLAG symbols correctly into power_symbols[] but fails to cross-reference their power_out pins when evaluating whether a rail is covered.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

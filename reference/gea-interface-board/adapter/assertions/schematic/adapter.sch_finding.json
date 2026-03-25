@@ -1,0 +1,41 @@
+{
+  "file_pattern": "adapter.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002078",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002078-AST-01",
+      "description": "INCORRECT: U1201 is an AMS1117-5.0 LDO regulator. The analyzer reports topology='unknown', input_rail=null, output_rail=null. In the schematic, U1201 is powered by +5V (supply side) and its output drives the +5V rail for downstream circuits \u2014 the component has a fixed 5.0V output so the output rail should be identifiable as +5V. The LM78M05 in the fuel_capacity_sensor design is correctly identified as 'LDO' with input/output rails, suggesting this is a library-id recognition gap for AMS1117.",
+      "created_from": "FND-00002078",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].topology",
+        "op": "equals",
+        "value": "LDO"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002078-AST-02",
+      "description": "INCORRECT: R102 and R202 are 120-ohm resistors used as CAN bus termination resistors on the GEA bus differential lines (the GEA appliance bus uses a CAN-like physical layer). The analyzer classified each as a low-pass RC filter paired with C103/C203 (100nF bypass caps), reporting a 13.26 kHz cutoff. These 120-ohm resistors are bus terminations, not filter elements \u2014 the 100nF caps are decoupling, not filter capacitors. This is a false positive RC filter detection.",
+      "created_from": "FND-00002078",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002078-AST-03",
+      "description": "J1201 is a 20-pin 2.54mm header connector whose value field is literally 'UART' and whose schematic context is a GEA (General Electric Appliance) bus interface with UART signaling. The bus_analysis.uart list is empty. The analyzer should detect this UART interface either by the connector's value string or by tracing the TX/RX pin names through the net. This is a missed detection of an obvious protocol connector.",
+      "created_from": "FND-00002078",
+      "check": {
+        "path": "signal_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

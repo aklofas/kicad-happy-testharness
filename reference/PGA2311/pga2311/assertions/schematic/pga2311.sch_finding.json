@@ -1,0 +1,29 @@
+{
+  "file_pattern": "pga2311.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001037",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001037-AST-01",
+      "description": "22 components extracted (1 IC, 6 caps, 8 connectors, 3 LEDs, 3 resistors, 1 jumper). Power rails with analog/digital split (+5V/+5VD, GNDA/GNDD) correctly identified. KiCad 5 legacy format parsed without errors.",
+      "created_from": "FND-00001037",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001037-AST-02",
+      "description": "The PGA2311 is an SPI-controlled stereo volume control. Nets SCLK, SDI, CS, SDO are present and individually classified as clock/data/chip_select/data, but bus_analysis.spi is empty []. The analyzer correctly classifies net types but fails to aggregate them into an SPI bus topology.",
+      "created_from": "FND-00001037",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

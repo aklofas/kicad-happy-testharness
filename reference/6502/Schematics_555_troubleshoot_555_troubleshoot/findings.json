@@ -1,0 +1,98 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Schematics_DB6502_v002_DB6502_v002.sch.json",
+      "status": "promoted",
+      "summary": "total_components and unique_parts drastically undercounted due to unannotated references; Net resolution corrupted: unannotated refs cause cross-component pin merging; memory_interfaces: 0 detected...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The schematic has 13 physical components: 1x 65C02S, 2x 62256, 1x 28C256, 1x 22V10C, 1x 74HCT574, 1x 74AC138, 1x 10uF CP, and 7x 100nF capacitors. Because all components are unannotated (all ICs use ref 'U?' and all caps use ref 'C?'), the statistics block reports total_components=2 and unique_parts=2. The BOM collapses to only 2 lines (one for C?=10uF, one for U?=65C02S), losing 62256, 28C256, 22V10C, 74HCT574, 74AC138, and the six 100nF capacitors. The components array correctly contains 13 entries but the summary statistics are wrong.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "min_value",
+            "value": 10
+          }
+        },
+        {
+          "description": "Because all IC components share the reference 'U?', the net resolution logic cannot distinguish which device's pin is on which net. As a result, address bus nets (a0-a15) and data bus nets (d0-d7) are resolved with pins from multiple physically distinct devices mixed together incorrectly. For example, net 'a10' shows 65C02S pin '~VP' connected to 62256 pins '~OE' \u2014 these are on entirely different chips. Net 'a14' shows 65C02S pin '~SO' (type input) connected to 62256 GND pins (type power_in), which is nonsensical. This makes all net-level analysis unreliable for unannotated schematics.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_nets",
+            "op": "min_value",
+            "value": 30
+          }
+        },
+        {
+          "description": "The net '~UART' is pin O3 (output) of the 74AC138 3-to-8 decoder (U?), which demuxes the IOCS signal to select individual I/O devices. '~UART' is a chip-select signal that would enable a UART peripheral \u2014 it is not a UART data/control signal itself. The bus_analysis UART detector incorrectly identifies it as a UART interface based on the name substring match. This is a false positive; no actual UART TX/RX signal pairs are present in this schematic.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "eq",
+            "value": []
+          }
+        },
+        {
+          "description": "The design_observations lists 18 'single_pin_nets' including SYNC, ~NMI, ~ML, ~IRQ, RDY, ~VP, ~6502_RES, ~SO, BE, ~VIA1, ~VIA2, ~UART, ~IOCS0-~IOCS3, ~LATCH, a08, a09. In reality these are all global labels that connect to pins on multiple components. They appear as single-pin nets in the output because the unannotated ref collision causes the net builder to misroute most connections. For example, SYNC is a 65C02S output that goes to the rest of the system \u2014 it has a meaningful destination, not a dangling pin.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations[0].count",
+            "op": "max_value",
+            "value": 5
+          }
+        },
+        {
+          "description": "The decoupling_analysis for the +5V rail reports has_bulk=false, but the schematic includes a Device:CP 10uF electrolytic capacitor (C?) connected between +5V and GND. This capacitor should qualify as a bulk decoupling capacitor. The 8 capacitors listed in the analysis are all 100nF ceramics \u2014 the 10uF CP is missing from the capacitor list entirely, suggesting the analyzer failed to include it because it uses the 'Device:CP' symbol (polarized capacitor) rather than 'Device:C'.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis[0].has_bulk",
+            "op": "eq",
+            "value": true
+          }
+        },
+        {
+          "description": "The decoupling_analysis for the +5V rail lists 8 capacitors, all 100nF. However the schematic has one additional 10uF electrolytic (Device:CP) also on the +5V/GND rails. The total bypass capacitor count should be 9. The Device:CP symbol type appears to be excluded from the decoupling analysis capacitor detection logic.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis[0].cap_count",
+            "op": "min_value",
+            "value": 9
+          }
+        },
+        {
+          "description": "The BOM contains only 2 entries: 'C?' (10uF, qty 1) and 'U?' (65C02S, qty 1). It omits 62256 (2 instances), 28C256, 22V10C, 74HCT574, 74AC138, and six 100nF capacitors. This is a consequence of the unannotated schematic \u2014 all U? refs collapse to the first component's value (65C02S), losing all other IC types. The analyzer should ideally report the annotation issue prominently and note that BOM data is unreliable for unannotated schematics.",
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom",
+            "op": "min_value",
+            "value": 5
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The schematic contains two 62256 32KB SRAM chips and one 28C256 32KB EEPROM connected to the 65C02S CPU via full 15-bit address bus (a0-a14), 8-bit data bus (d0-d7), and individual chip-select signals (RAM1_~CS, RAM2_~CS, ROM_~CS) with shared ~OE and ~WE controls. This is a textbook parallel memory interface. The analyzer reports 0 memory_interfaces detected. The failure is likely caused by the unannotated refs preventing the analyzer from recognizing the 62256/28C256 memory devices.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix: ~UART misclassified as UART interface; it is a chip-select output from 74AC138 decoder",
+        "Fix: decoupling_analysis: has_bulk=false despite 10uF electrolytic capacitor on +5V rail"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "6502",
+      "project": "Schematics_555_troubleshoot_555_troubleshoot",
+      "created": "2026-03-23T18:27:22.430547+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000321"
+    }
+  ]
+}

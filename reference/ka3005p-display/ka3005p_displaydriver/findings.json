@@ -1,0 +1,99 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_ka3005p-display_ka3005p_displaydriver.sch.json.json",
+      "status": "promoted",
+      "summary": "AZ1117-3.3 regulator reported with input_rail '+3V3' \u2014 input and output rails appear reversed; 74HC595 shift-register SPI bus not detected despite two chained devices with shared clock/data; Q7 col...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The analyzer reports U18 (AZ1117-3.3) with input_rail='+3V3' and output_rail='__unnamed_69'. In the source schematic (KiCad 5 legacy), the +3V3 power symbol connects to both the U18 VI (input) pin and to the U1/U3 74HC595 logic pins, while the VO (output) drives an unnamed net with no downstream loads. This means the analyzer correctly reads the netlist as drawn, but the power rail topology implies the 3.3V-labeled net is the regulator's input \u2014 which is physically nonsensical for a 3.3V LDO (input must exceed 3.3V). The design_observations only note a missing output cap and do not flag the suspicious naming or the fact that the regulator output feeds no components.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "U1 and U3 are 74HC595 8-bit shift registers \u2014 a classic SPI-peripheral topology. They share clock (SRCLK) and latch (RCLK) signals, with serial data chained (QH' of U1 to SER of U3). However, all inter-IC nets are unnamed (__unnamed_N) in this KiCad 5 schematic, so the SPI bus analyzer finds no matches by net name. No SPI entry appears in bus_analysis. The design would benefit from named nets (SRCLK, MOSI, LATCH) to enable detection, but the analyzer should also consider 74HC595 lib_id or pin-name pattern matching.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "equals",
+            "value": []
+          }
+        },
+        {
+          "description": "In the source schematic, Q7 (MMBT3904) has its collector (pin 3) and emitter (pin 2) both drawn at nearly identical coordinates and both land on net __unnamed_55. This results in a C-E short circuit for Q7, which is almost certainly a schematic drawing error (wires placed at adjacent 50-mil grid points that accidentally merge). The analyzer faithfully reflects the netlist (collector_net == emitter_net == '__unnamed_55') but emits no warning about a transistor with its collector and emitter tied to the same net.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ka3005p-display",
+      "project": "ka3005p_displaydriver",
+      "created": "2026-03-24T08:33:51.259923+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002225"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_ka3005p-display_ka3005p_displaydriver.kicad_pcb.json.json",
+      "status": "promoted",
+      "summary": "4 REF** unnamed footprints in PCB not reported as anomalous vs 43-component schematic",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The PCB contains 47 footprints but the schematic has 43 components. Four of the PCB footprints have reference designator 'REF**' (unassigned placeholders). The analyzer reports footprint_count=47 without any note of the mismatch or the presence of unnamed REF** footprints. These typically indicate footprints placed during PCB layout that were never back-annotated to a schematic component, and should be flagged as a potential error.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 47
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ka3005p-display",
+      "project": "ka3005p_displaydriver",
+      "created": "2026-03-24T08:33:51.259944+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002226"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber_ka3005p-display_gerbers.json.json",
+      "status": "new",
+      "summary": "F.Paste layer absence correctly identified as missing_recommended (not missing_required)",
+      "correct": [
+        {
+          "description": "The gerber set lacks an F.Paste (front solder paste) layer. The analyzer correctly classifies this as missing_recommended rather than missing_required, and still marks the set as complete=true. The board has SMD components on the front side (30 SMD footprints), so the missing paste layer is a real omission but not a fabrication blocker.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.missing_recommended",
+            "op": "contains_match",
+            "value": "/F\\.Paste/"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "ka3005p-display",
+      "project": "ka3005p_displaydriver",
+      "created": "2026-03-24T08:33:51.259948+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002227"
+    }
+  ]
+}

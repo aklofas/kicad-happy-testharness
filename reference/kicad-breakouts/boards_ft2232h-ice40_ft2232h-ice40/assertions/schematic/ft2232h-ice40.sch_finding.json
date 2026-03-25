@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ft2232h-ice40.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002244",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002244-AST-01",
+      "description": "The ft2232h-ice40 schematic connects an FT2232H USB bridge to an iCE40 FPGA via nets SCK, MOSI, MISO (plus /CS). net_classification correctly identifies SCK as 'clock' and MOSI/MISO as 'data'. However, bus_analysis.spi is empty \u2014 no SPI bus was detected. This is a missed detection: the analyzer has the right net-type classifications but does not assemble them into an SPI bus instance when the devices involved are not standard SPI controller/peripheral library entries.",
+      "created_from": "FND-00002244",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

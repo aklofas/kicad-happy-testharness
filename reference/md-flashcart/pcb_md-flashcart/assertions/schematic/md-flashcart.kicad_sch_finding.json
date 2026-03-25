@@ -1,0 +1,18 @@
+{
+  "file_pattern": "md-flashcart.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002449",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002449-AST-01",
+      "description": "The analyzer correctly identified USART_RX and USART_TX nets shared between U3 (STM32G081RBT6) and U4 (CP2102N-A02-GQFN24). This is the primary debug/programming UART between the MCU and the USB-to-serial bridge. The USB differential pair (USB_D+/USB_D-) detection with ESD protection (U2=USBLC6-2SC6, U4=CP2102N) is also correct.",
+      "created_from": "FND-00002449",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "equals",
+        "value": 2
+      }
+    }
+  ]
+}

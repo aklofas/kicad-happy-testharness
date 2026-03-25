@@ -1,0 +1,41 @@
+{
+  "file_pattern": "display-board.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000398",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000398-AST-01",
+      "description": "INCORRECT: U1 has lib_id 'New_Library:NHD-0220FZ-FSW-GBW-P-33V3' and footprint 'Library:NHD-0220FZW-GBW-P-33V3'. This is a 2x20 character LCD module with HD44780 controller. The analyzer classifies it as type 'ic' and component_types shows ic: 1. A display module is not an IC. No display-specific detection is triggered.",
+      "created_from": "FND-00000398",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000398-AST-02",
+      "description": "INCORRECT: RV1 uses lib_id 'Device:R_Potentiometer_US' with keywords 'resistor variable'. The analyzer assigns type: 'resistor' and it appears under component_types.resistor count (2). A potentiometer has three terminals and serves a different function from a fixed resistor. It is used here as a contrast adjustment voltage divider for the LCD.",
+      "created_from": "FND-00000398",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "equals",
+        "value": 2
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000398-AST-03",
+      "description": "The display board interfaces a 2x20 HD44780-compatible LCD (U1) with a 4-bit parallel bus: RS, RW, E, D4, D5, D6, D7 signals are wired from J1 (the inter-board connector) to the LCD. The signal_analysis.memory_interfaces array is empty and bus_analysis shows no detected buses. The parallel HD44780 interface could be recognized as a character LCD protocol with the classic RS/RW/E control plus D4-D7 data lines.",
+      "created_from": "FND-00000398",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    }
+  ]
+}

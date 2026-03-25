@@ -1,0 +1,132 @@
+{
+  "file_pattern": "ESP32_mini_8Port_WLED.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000523",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000523-AST-01",
+      "description": "All 25 real components (25 = 27 symbol instances minus 2 power symbols #PWR01/#PWR02) are correctly identified and categorized: 8 WS2812B LEDs, 4 polarized capacitors, 1 relay (SANYOU_SRD_Form_C), 1 1N4001 diode, 6 connectors, 1 resistor, 1 switch, 2 ICs (mini_esp32 + TSOP382xx), 1 BC547 transistor. Wire count (179), no-connect count (23), net count (53) all verified correct against source. Pin-to-net mappings verified correct for all major nets including GND bus (21 components), +5V bus (7 components plus PWR symbol), and all signal nets.",
+      "created_from": "FND-00000523",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000523-AST-02",
+      "description": "The design intentionally drives each of the 8 WS2812B LEDs (D1\u2013D8) from a separate ESP32 GPIO pin (IO_00, IO_02, IO_04, IO_16, IO_18, IO_19, IO_23, IO_26). Each LED's DOUT connects to a separate output terminal (J1 or J2 screw terminal pins), not to another LED's DIN. The analyzer correctly reports 8 chains of chain_length=1. This is a valid 8-independent-port WLED controller topology, not a single daisy chain. The estimated_current_mA=60 per chain (20mA \u00d7 3 channels) is correct for WS2812B.",
+      "created_from": "FND-00000523",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000523-AST-03",
+      "description": "Q1 (BC547 NPN) is correctly identified as a transistor circuit with: base_net=__unnamed_12, collector_net=__unnamed_3, emitter_net=GND (emitter_is_ground: true), and base_resistors=[R1]. The collector load (K1 relay coil) is correctly connected: K1 coil from +5V (pin1) through the relay to Q1 collector (pin2), with D9 (1N4001) as a flyback diode (K at +5V, A at Q1 collector node \u2014 correct polarity). K1 contact pin3 (COM) connects to the WS2812B VDD bus, pin5 (NO) connects to +5V, so relay energization powers the LED array. load_type='other' is acceptable given there is no dedicated 'relay' load type.",
+      "created_from": "FND-00000523",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000523-AST-04",
+      "description": "U1 (mini_esp32) has three GND pins: pin 1 (GND, net __unnamed_46, 1 component), pin 22 (GND, net __unnamed_30, 1 component), and pin 33 (GND, net GND, connected to main ground). Pins 1 and 22 are electrically isolated from the main GND net \u2014 this is a real design issue where the schematic author left two ESP32 ground pins unconnected. The net classification correctly labels __unnamed_30 and __unnamed_46 as 'power_internal', and the analyzer does not falsely merge them with GND. However, these are not flagged in connectivity_issues.single_pin_nets (that list is empty), which means the analyzer silently misses isolated power_in pins.",
+      "created_from": "FND-00000523",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000523-AST-05",
+      "description": "The design_observations entry correctly notes that U2 (TSOP382xx) has its Vs (+5V) power pin without a dedicated decoupling capacitor. The schematic shows no cap between +5V and GND near U2, while C1\u2013C4 are all connected to the WS2812B VDD bus (net __unnamed_0), not +5V. The observation is accurate per the TSOP382xx datasheet recommendation for a 100nF bypass cap on Vs.",
+      "created_from": "FND-00000523",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000523-AST-06",
+      "description": "The schematic uses custom power symbols from library 'PCM_4ms_Power-symbol' (not the standard KiCad power library). The analyzer correctly identifies that neither the GND nor +5V rails have a PWR_FLAG or power_out pin to satisfy ERC, and issues pwr_flag_warnings for both. This is a real ERC issue in the design.",
+      "created_from": "FND-00000523",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000523-AST-07",
+      "description": "U1 pin 21 (TXD) connects to J4 pin 2 via net __unnamed_29, and U1 pin 23 (RXD) connects to J4 pin 3 via net __unnamed_31. These form a clearly paired UART TX/RX breakout to connector J4 (a 4-pin socket with +5V, TXD, RXD, GND). Despite the pin names containing 'TXD' and 'RXD', the bus_analysis.uart section is empty. The analyzer detected I2C from 'SCL'/'SDA' substrings but failed to apply the same logic to 'TXD'/'RXD' \u2014 an inconsistency. The UART interface to J4 should have been detected.",
+      "created_from": "FND-00000523",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000523-AST-08",
+      "description": "The transistor_circuits entry for Q1 lists base_resistors=[R1] but base_driver_ics=[]. In fact U1 (mini_esp32) pin 25 (IO_22) drives net __unnamed_13, which connects to R1 pin2; R1 pin1 connects to Q1 base. U1 is the IC driving Q1's base through the base resistor. The analyzer stops at the resistor and does not follow the signal back to the driving IC. This means the ESP32-to-relay signal path is incomplete \u2014 U1 should appear as a base_driver_ic for Q1.",
+      "created_from": "FND-00000523",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000525-AST-01",
+      "description": "All 25 components parsed correctly with right types, values, and footprints. BOM grouping is correct.",
+      "created_from": "FND-00000525",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000525-AST-02",
+      "description": "Each WS2812B DIN is driven directly from a unique ESP32 GPIO. No DOUT-to-DIN chaining between LEDs. The 8 chains of length 1 match the circuit topology.",
+      "created_from": "FND-00000525",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000525-AST-03",
+      "description": "D9 cathode is on +5V and anode is on the collector net with K1 coil \u2014 this is a classic flyback/freewheeling diode protecting Q1 from the relay inductive kick. protection_devices is empty and snubbers is empty.",
+      "created_from": "FND-00000525",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000525-AST-04",
+      "description": "The power_budget only accounts for U2 TSOP382xx at 10 mA on +5V. The 8 WS2812B LEDs are powered from +5V (via J1/J2 screw terminals) and together can draw ~480 mA at full brightness. The power budget dramatically underestimates +5V load.",
+      "created_from": "FND-00000525",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

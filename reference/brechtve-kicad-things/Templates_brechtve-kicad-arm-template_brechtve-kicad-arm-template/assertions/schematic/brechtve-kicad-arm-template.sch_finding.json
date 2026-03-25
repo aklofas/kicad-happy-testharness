@@ -1,0 +1,29 @@
+{
+  "file_pattern": "brechtve-kicad-arm-template.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002290",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002290-AST-01",
+      "description": "The ARM template includes a UART debug header (J3=DebugHeader_UART_4p) with TXD and RXD nets. The analyzer correctly identifies them in bus_analysis.uart and classifies TXD as 'data' in net_classification. The RC filter on ~RESET (R5=1k\u03a9, C1=100nF, fc=1.59kHz) is correctly detected as a low-pass filter for debounce/noise filtering on the ARM reset pin.",
+      "created_from": "FND-00002290",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002290-AST-02",
+      "description": "The design has a Cortex-M SWD debug header (J1) with SWDIO and SWCLK nets, both correctly classified in net_classification as 'debug' and 'clock'. However, bus_analysis shows no SWD entry \u2014 the analyzer only looks for I2C, SPI, UART, and CAN buses. SWD/JTAG debug interfaces are a common pattern in ARM MCU designs and should be detected.",
+      "created_from": "FND-00002290",
+      "check": {
+        "path": "design_analysis.net_classification.SWDIO",
+        "op": "equals",
+        "value": "debug"
+      },
+      "aspirational": true
+    }
+  ]
+}

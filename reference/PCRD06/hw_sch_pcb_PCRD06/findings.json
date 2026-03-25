@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "PCRD06.kicad_sch",
+      "status": "new",
+      "summary": "TS3021ILT comparator correctly identified as comparator_or_open_loop despite wrong lib_id (AD8691); Component and net counts match PCB: 33 components, 13 nets in both schematic and PCB",
+      "correct": [
+        {
+          "description": "U1 value is TS3021ILT (a voltage comparator) but lib_id is MLAB_IO:AD8691 (op-amp symbol reuse). The analyzer correctly identifies the open-loop/comparator configuration from circuit topology. No false inverting/buffer classification.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Perfect agreement between schematic and PCB on component count and net count.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "PCRD06",
+      "project": "hw_sch_pcb_PCRD06",
+      "created": "2026-03-23T23:31:35.573757+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001056"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "hw_cam_profi",
+      "status": "new",
+      "summary": "PCRD06 gerber complete and aligned, 2 layers, drill classification correct",
+      "correct": [
+        {
+          "description": "8 gerber layers all present and aligned. 72 vias (0.4mm) and 26 component holes correctly classified via X2 attributes. Component distribution (11F/22B) matches PCB output.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "PCRD06",
+      "project": "hw_sch_pcb_PCRD06",
+      "created": "2026-03-23T23:31:35.573775+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001057"
+    }
+  ]
+}

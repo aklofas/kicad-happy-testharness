@@ -1,0 +1,32 @@
+{
+  "file_pattern": "gerber",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001308",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001308-AST-01",
+      "description": "In1.Cu and In2.Cu correctly detected, all required layers found, no missing_required entries.",
+      "created_from": "FND-00001308",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001308-AST-02",
+      "description": "Width varies 4.5mm and height 4.1mm across copper vs edge layers; this is expected for a design with keepout margins but correctly flagged as aligned=false.",
+      "created_from": "FND-00001308",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

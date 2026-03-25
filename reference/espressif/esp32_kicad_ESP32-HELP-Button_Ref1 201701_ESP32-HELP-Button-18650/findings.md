@@ -1,0 +1,202 @@
+# Findings: espressif / esp32_kicad_ESP32-HELP-Button_Ref1 201701_ESP32-HELP-Button-18650
+
+## FND-00002082: I2C SCL bus analysis shows only U3 connected, missing U2, U4, U5; INA219 current sense IC not detected in current_sense section; I2C bus correctly detected on SDA with all four devices and pull-up ...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_espressif_esp32_kicad_ESP32-li-ion-cell-monitor_ESP32-li-ion-cell-monitor.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- The analyzer correctly identifies the SDA bus with devices ['U2', 'U4', 'U3', 'U5'] (ESP-WROOM-32, Si7060-00, INA219, Si7060-01) and correctly identifies pull-up resistor R10 (10k) to the +3V rail. The bus_analysis entry has has_pull_up: true. The design_observations also flag the i2c_bus category with the same correct data. This is accurate per the source schematic.
+- U1 (NCP186B) is correctly detected as an LDO with input_rail='VCC', output_rail='+3V', and fb_net='+3V'. The decoupling analysis correctly associates C4 (100n), C2 (1u), C5 (1u), C6 (100n) and others with the +3V rail. The total capacitance of 2.5 uF across 7 caps is correctly summed.
+
+### Incorrect
+- The SCL net has four Text Label occurrences in the source schematic connecting to U2 (ESP-WROOM-32) via the ESP32 IO block, U3 (INA219) at position 10000 1950, U4 (Si7060-00) at position 8300 4300, and U5 (Si7060-01) at position 8650 5500. The bus_analysis I2C entry for SCL reports only ['U3'] as the connected device. The SDA bus correctly shows all four devices ['U2', 'U4', 'U3', 'U5']. The SCL label-to-pin tracing is failing for ICs whose SCL pin is on the left side of the symbol (pin labels pointing right-to-left).
+  (design_analysis)
+
+### Missed
+- U3 (INA219_SOT23-8) is a dedicated current-sense amplifier with shunt resistor inputs. The current_sense list is empty ([]) for both the original and Ref1.3 versions despite the INA219 and INA226 being standard current-sense ICs. The analyzer correctly identifies U3 as an 'ic' type and includes it in decoupling analysis, but never fires the current_sense detector for it.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002083: SCL bus analysis shows only U3 connected in Ref1.3 version as well; same bug as original version; LDO regulator U1 (XC6220B281MR-G) shows input_rail: null
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_espressif_esp32_kicad_ESP32-li-ion-cell-monitor Ref1.3_ESP32-li-ion-cell-monitor.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- In the Ref1.3 version the SCL net appears four times in the source schematic connecting U2 (ESP-WROOM-32), U3 (INA226), U4 (Si7060-00), and U5 (Si7060-01). The analyzer SCL bus entry reports only ['U3']. This is the same label-tracing defect as the original version; it persists across schematic revisions.
+  (design_analysis)
+- In the Ref1.3 schematic, U1 (XC6220B281MR-G, substituted into a TLV71209 SOT23-5 footprint) is an LDO with its VIN pin connected via a wire to VCC (power symbol #PWR03 at position 1500 1200, close to U1's VIN pin). The analyzer output shows input_rail: None and output_rail: '__unnamed_40'. The input connection to VCC is not being traced correctly. The Ref1.1 original correctly shows input_rail: 'VCC' for its equivalent NCP186B LDO.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002084: VCCEPD power net misclassified as chip_select instead of power
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_espressif_esp32_kicad_ESP32-epaper-adapter_ESP32-epaper-adapter.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- VCCEPD is the e-paper display power supply rail, fed from the boost converter inductor L1 output. The net drives the VCC pin of the display and multiple bypass capacitors (C2, C4, etc.). Despite being a power distribution net, the analyzer classifies it as 'chip_select' — apparently because the name begins with 'VCC' and contains 'EPD' which may pattern-match to a chip-enable or select signal. All three occurrences of this net name (VCCEPD, VCCEPD_16) receive the same incorrect chip_select classification.
+  (design_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002085: 5V power net classified as signal rather than power
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_espressif_esp32_kicad_ESP32-adapter_ESP32-adapter.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- In the ESP32-adapter schematic, 5V is used as a net label (Text Label, not a power symbol) connecting the USB/input voltage rail across two locations on the schematic. Despite '5V' being an unambiguous power rail name, the net_classification assigns it 'signal'. The statistics section lists only GND as a power rail, omitting the 5V supply. This is a net-name-heuristic miss for voltage-labelled nets that use wire labels instead of KiCad power symbols.
+  (design_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002086: .GML extension not recognized as Edge.Cuts (board outline) layer; falsely reported as missing
+
+- **Status**: promoted
+- **Analyzer**: gerber
+- **Source**: gerber_espressif_esp32_kicad_ESP32-HELP-Button_Ref1 201701_gerber-ESP32-HELP-Button-18650.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- The gerber directory contains ESP32-HELP-Button-18650.GML with header 'TF.FileFunction,Profile,NP' — the standard Gerber X2 attribute identifying an Edge.Cuts (board outline) layer. The analyzer does not parse .GML files at all: it reports gerber_files=9 when 10 gerber files exist (excluding drill), the GML file does not appear in the gerbers list, and completeness reports missing_required=['Edge.Cuts']. This false negative affects all espressif gerber sets (gerber-18650, gerber-CR2032, gerber, and all three Gerber-ESP32-Mix sets), all of which use the .GML extension for the board outline.
+  (completeness)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002087: .GML Edge.Cuts not recognized in ESP32-adapter gerber sets; same bug confirmed across multiple repos
+
+- **Status**: promoted
+- **Analyzer**: gerber
+- **Source**: gerber_espressif_esp32_kicad_ESP32-adapter_Gerber-ESP32-Mix1.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- Gerber-Mix1, Mix2, and Mix3 all contain an ESP32-adapter-pan.GML file with TF.FileFunction=Profile,NP (Edge.Cuts). The analyzer parses 7 of the 8 gerber files in each set, excludes the GML entirely, and falsely reports Edge.Cuts as missing. The GBR file (FileFunction=Other,User) is parsed but correctly classified as 'unknown'. This confirms the .GML recognition gap is systemic, not repo-specific.
+  (completeness)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002088: Q5 P-MOSFET shows drain_net and source_net as the same net (__unnamed_3), indicating incorrect net resolution; Component counts and type classification correct for bat-monitor-latch (KiCad 5 legacy...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_espressif_esp32_kicad_ESP32-bat-monitor-latch_ESP32-bat-monitor-latch.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- The statistics correctly identify 28 total components: 2 ICs (DIO6809 supervisor, ESP-WROOM-32), 5 transistors (AO3401 P-MOS x3, 2N7002 N-MOS x2), 6 connectors, 5 capacitors, 6 resistors, 4 test points. The power_rails correctly list GND, PWR_FLAG, and VCC. All 24 components correctly flagged as missing_mpn (KiCad 5 designs rarely populate the MPN field).
+
+### Incorrect
+- Q5 (AO3401 P-channel MOSFET) in the latch circuit is reported with drain_net='__unnamed_3' and source_net='__unnamed_3' — the same unnamed net for both pins. The source schematic places Q5 at position 4850 2050 with orientation (0 -1 -1 0), which is a mirrored orientation compared to Q2 and Q4 (0 1 -1 0). The gate of Q5 connects to R6 and the RC filter, while its source connects to Q2's gate and its drain connects to the output side. The identical drain/source assignment indicates the net-to-pin mapping fails when the symbol is mirrored vertically.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002089: PCB correctly reports fully routed board with DFM standard tier and no violations
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: pcb_espressif_esp32_kicad_ESP32-li-ion-cell-monitor_ESP32-li-ion-cell-monitor.kicad_pcb.json
+- **Created**: 2026-03-24
+
+### Correct
+- The li-ion cell monitor PCB (78x26mm, 2-layer) is correctly reported as routing_complete=True with 0 unrouted nets. The DFM analysis correctly grades it 'standard' tier with min_track_width=0.2mm, min_drill=0.4mm, and 0 violations. The thermal analysis correctly identifies the ESP-WROOM-32 module thermal pad (U2 pad 39, 6x6mm, 36mm²) with 25 nearby thermal vias.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002090: ESP-WROOM-32 thermal pad GND slug reported as an unrouted net with 26 duplicate pad references
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: pcb_espressif_esp32_kicad_ESP32-HELP-Button_Ref1 201701_ESP32-HELP-Button.kicad_pcb.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- Net-(U1-Pad39) is reported as unrouted with 26 pads all listed as 'U1.39'. The ESP-WROOM-32 module pad 39 is the exposed copper thermal slug on the bottom of the module, which KiCad represents with multiple sub-pads (thermal relief vias). The connectivity algorithm counts each sub-pad as a separate instance, sees they share the same footprint.pad reference, and incorrectly treats the set as an unrouted ratsnest. The same false positive appears in ESP32-adapter (U2-Pad39, 26 pads). This is a false routing-completeness failure for boards using ESP32 module footprints.
+  (statistics)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

@@ -1,0 +1,25 @@
+# Findings: TBK-Mini-PCB-thumb-cluster / flex_flex
+
+## FND-00001620: assembly_complexity reports all 18 components as SMD; PCB shows 14 are THT; multi_driver_nets flags DOUT pins of paired reversible SK6812MINI LEDs
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: TBK-Mini-PCB-thumb-cluster_flex_flex.kicad_sch
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- The schematic analyzer reports smd_count=18, tht_count=0 in assembly_complexity. The PCB file confirms smd_count=4, tht_count=14. The 14 THT components include: 3 diodes (D5, D14, D19) with custom:Diode_TH_SOD123 footprint, 3 switches (SW5, SW14, SW19) with custom:SW_MX_reversible footprint, 2 connectors (J1, J2) with PinHeader_2.54mm footprint, and 6 SK6812MINI LEDs (D7, D8, D10, D11, D12, D13) whose YS-SK6812MINI-E_REVERSE custom footprints are tagged through_hole in the PCB. The schematic analyzer cannot determine THT vs SMD from custom library footprint names and defaults all to SMD.
+  (assembly_complexity)
+- connectivity_issues.multi_driver_nets reports two nets where multiple SK6812MINI DOUT pins share a net: __unnamed_1 (D10.DOUT + D11.DOUT + D12.DIN + D13.DIN) and __unnamed_2 (D8.DOUT + D7.DOUT + D10.DIN + D11.DIN). This is a reversible flex PCB design where D7/D8 and D10/D11 are paired SK6812MINI LEDs placed in reverse orientations (YS-SK6812MINI-E_REVERSE) for a flex PCB that works both ways up. The schematic models both orientations, creating apparent multi-driver nets that are intentional in this reversible design pattern.
+  (connectivity_issues)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

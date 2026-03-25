@@ -1,0 +1,29 @@
+{
+  "file_pattern": "pcb.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002060",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002060-AST-01",
+      "description": "The analyzer detects the I2C bus on SDA and SCL nets routed through J1 (OLED header) and J2. It correctly notes has_pull_up=false for both lines and flags them in design_observations, since the schematic contains no pull-up resistors on SDA or SCL. The XIAO-ESP32 module's internal pull-ups are relied upon here.",
+      "created_from": "FND-00002060",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "contains_match",
+        "value": "/i2c_bus/"
+      }
+    },
+    {
+      "id": "FND-00002060-AST-02",
+      "description": "INCORRECT: The test_coverage section lists J2 (Conn_02x06_Odd_Even) in debug_connectors with connected_nets=['+3.3V', '+5V', 'GND', 'GND', 'SDA', 'SCL', 'CSn', 'TX', 'MOSI', 'MISO', 'SCK', 'RX']. Despite this, covered_nets=[] and uncovered_key_nets includes SDA, SCL, TX, MOSI, MISO, SCK, RX, +3.3V, +5V \u2014 all of which are present in J2's connected_nets. The algorithm populates debug_connectors correctly but fails to update covered_nets from the connector's exposed nets, making the coverage report entirely misleading.",
+      "created_from": "FND-00002060",
+      "check": {
+        "path": "test_coverage.covered_nets",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

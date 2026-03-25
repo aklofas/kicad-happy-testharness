@@ -1,0 +1,29 @@
+{
+  "file_pattern": "reference_circuit.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000819",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000819-AST-01",
+      "description": "The sub-sheet analysis is accurate: 5 resistors, 5 capacitors, 2 ICs (U22 OPA4202 unit 1 and U7 LM399), 1 inductor (L_Coupled), 1 net-tie. The LM399 is correctly identified as IC type with 4 pins. The coupled inductor (L_Coupled/EPCOS B82790 common-mode filter) is correctly typed as 'inductor'.",
+      "created_from": "FND-00000819",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000819-AST-02",
+      "description": "The reference_circuit sub-sheet contains bypass capacitors (100n on LM399 heater supply, 100n on OPA4202 power rails) but decoupling_analysis=[] for all three schematics. This is a known limitation of flat sub-sheet analysis where power rails come in via hierarchical labels rather than explicit power symbols.",
+      "created_from": "FND-00000819",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

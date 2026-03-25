@@ -1,0 +1,21 @@
+{
+  "file_pattern": "Tortoise-Relay-4up.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001639",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001639-AST-01",
+      "description": "INCORRECT: KiCad v3 .kicad_pcb format stores vias as '(via (at x y) (size 0.889) (layers F.Cu B.Cu) (net N))' without an explicit drill field. The analyzer reports all vias with drill=0 (size_distribution key '0.889/0') and omits min_drill_mm and min_annular_ring_mm from DFM metrics as a result. The actual via drill size is unspecified in the source file; the report should note this rather than silently using 0.",
+      "created_from": "FND-00001639",
+      "check": {
+        "path": "vias.size_distribution",
+        "op": "not_contains_match",
+        "value": {
+          "key": "0.889/0"
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "file_pattern": "namii65.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000984",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000984-AST-01",
+      "description": "signal_analysis.key_matrices reports 8 rows, 10 columns, 73 switches on matrix using net_name detection method. Stats show 79 switches total (73 matrix keys + stabilizers S1-S5 + reset RST1), which is consistent.",
+      "created_from": "FND-00000984",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000984-AST-02",
+      "description": "Row0-Row7 and Col0-Col9 nets use input-shaped global labels routed to ProMicro I/O pins. The KiCad ERC would flag these in isolation. Warnings are technically accurate per the label type.",
+      "created_from": "FND-00000984",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

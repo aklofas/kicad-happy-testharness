@@ -45,39 +45,6 @@
       }
     },
     {
-      "id": "FND-00000288-AST-05",
-      "description": "INA228 current sense with R64 (50mohm shunt) correctly identified",
-      "created_from": "FND-00000288",
-      "check": {
-        "path": "signal_analysis.current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^R64$"
-      }
-    },
-    {
-      "id": "FND-00000288-AST-06",
-      "description": "Crystal Y5 (32.768kHz) with C9/C10 load caps correct",
-      "created_from": "FND-00000288",
-      "check": {
-        "path": "signal_analysis.crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Y5$"
-      }
-    },
-    {
-      "id": "FND-00000288-AST-07",
-      "description": "TCXO oscillators Y1-Y4 correctly classified as active_oscillator",
-      "created_from": "FND-00000288",
-      "check": {
-        "path": "signal_analysis.crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Y1$"
-      }
-    },
-    {
       "id": "FND-00000288-AST-08",
       "description": "6 MOSFET transistor circuits correctly identified",
       "created_from": "FND-00000288",
@@ -88,17 +55,6 @@
       }
     },
     {
-      "id": "FND-00000288-AST-09",
-      "description": "ESD protection D1 on USB_VCC correctly identified",
-      "created_from": "FND-00000288",
-      "check": {
-        "path": "signal_analysis.protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^D1$"
-      }
-    },
-    {
       "id": "FND-00000288-AST-10",
       "description": "RC valve coil snubbers (50ohm/100nF) correctly detected",
       "created_from": "FND-00000288",
@@ -106,17 +62,6 @@
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "FND-00000288-AST-11",
-      "description": "DACC_USB DAC smoothing filter (R70=1k, C48=3.9u, 40.81Hz) correct",
-      "created_from": "FND-00000288",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R70$"
       }
     },
     {

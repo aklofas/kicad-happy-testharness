@@ -1,0 +1,44 @@
+{
+  "file_pattern": "PCB.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000972",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000972-AST-01",
+      "description": "routing_complete=false, unrouted_net_count=20. This is correct \u2014 the RP2040 template has components placed but routing not started, as expected for a PCB template.",
+      "created_from": "FND-00000972",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000972-AST-02",
+      "description": "The RP2040 requires fine-pitch vias (0.3mm drill, 0.1mm annular ring). The analyzer correctly identifies this as requiring advanced process and flags the single annular ring violation.",
+      "created_from": "FND-00000972",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000972-AST-03",
+      "description": "edge_count=0 and bounding_box=null, indicating no Edge.Cuts outline. board_width_mm and board_height_mm are null. This is expected for a template that has not been shaped yet.",
+      "created_from": "FND-00000972",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

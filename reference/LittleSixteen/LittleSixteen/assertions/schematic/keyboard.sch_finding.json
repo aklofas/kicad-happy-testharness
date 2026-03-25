@@ -1,0 +1,19 @@
+{
+  "file_pattern": "keyboard.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000823",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000823-AST-01",
+      "description": "keyboard.sch contains 8 diodes (keyboard matrix protection), 2 ICs, and a connector in a pattern consistent with a Commodore Plus/4 keyboard matrix. The analyzer returns key_matrices=[] both for the sub-sheet and the full hierarchical parse. This is a missed detection for a clear keyboard matrix circuit.",
+      "created_from": "FND-00000823",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "file_pattern": "flex.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001595",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001595-AST-01",
+      "description": "The schematic correctly identifies 81 components: 18 switches (SW_MX_reversible), 54 diodes (18 SOD-123 matrix diodes + 36 SK6812MINI-E LEDs split as 'diode:18, led:36'), 5 connectors, 2 capacitors, 2 resistors. Key matrix detected: 4 rows \u00d7 6 columns, 18 switches, 18 matrix diodes \u2014 correct for an 18-key compact keyboard PCB. Two addressable LED chains of 18 LEDs each (36 total) correctly identified as SK6812MINI WS2812-protocol LEDs.",
+      "created_from": "FND-00001595",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 81
+      }
+    },
+    {
+      "id": "FND-00001595-AST-02",
+      "description": "INCORRECT: The assembly_complexity section reports smd_count=81 (all components) and tht_count=0. In reality, the 18 key switches (custom:SW_MX_reversible) and 18 matrix diodes (custom:Diode_TH_SOD123, named with 'TH_' prefix) are through-hole, along with 5 connectors (PinHeader_2.54mm THT). Only the 36 SK6812MINI-E LEDs, 2 SMD capacitors, and 2 SMD resistors are SMD (~40 SMD). The analyzer fails to classify custom library footprints with 'TH_' prefix as THT, defaulting them to SMD. The PCB analyzer correctly reports 4 SMD and 77 THT.",
+      "created_from": "FND-00001595",
+      "check": {
+        "path": "assembly_complexity.tht_count",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001595-AST-03",
+      "description": "INCORRECT: The signal_analysis.addressable_led_chains reports 3 chains: two with chain_length=18 (both starting at D28 on net __unnamed_35) and one chain_length=1 starting at D3. Total LEDs across chains = 18+18+1 = 37 but the schematic has exactly 36 LEDs. The 1-LED chain for D3 appears to be the start of one of the two 18-LED chains detected via a different traversal path, not a separate chain. Two physical chains of 18 LEDs each (one per side of the reversible PCB) is the correct topology.",
+      "created_from": "FND-00001595",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "max_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

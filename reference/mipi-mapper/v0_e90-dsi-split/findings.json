@@ -1,0 +1,33 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002393",
+      "source_file": "v0/e90-dsi-split.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "missed",
+      "summary": "MIPI DSI data lane differential pairs not detected",
+      "details": "The schematic has 4 MIPI DSI data lanes with named net pairs DATAP0/DATAN0, DATAP1/DATAN1, DATAP2/DATAN2, DATAP3/DATAN3, but the differential pair detector only identified CLK_P/CLK_N. All four data lane pairs share the same naming convention (_P/_N suffix) used to detect the clock pair and should have been detected.",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 5
+      }
+    },
+    {
+      "id": "FND-00002394",
+      "source_file": "v0/e90-dsi-split.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "LTC3638 regulator output voltage and output rail wrong due to floating-GND topology",
+      "details": "The LTC3638 (U3) is used in a floating-GND negative-supply configuration: its GND pin (pin 8) is tied to the -6V net rather than system GND, and VIN=+5V. The analyzer computes estimated_vout=0.692V using the standard Vout=Vref*(1+Rtop/Rbottom) formula against system GND, but the actual regulated output is -6V referenced to system GND."
+    },
+    {
+      "id": "FND-00002396",
+      "source_file": "v0/e90-dsi-split.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "LTC3638 switching regulator topology and feedback network correctly identified",
+      "details": "The analyzer correctly identifies U3 as a switching regulator (topology=switching), associates inductor L1, input rail +5V, and resolves the feedback divider (R2 20k top, R1 130k bottom). The structural identification is correct even though the Vout estimate is wrong."
+    }
+  ]
+}

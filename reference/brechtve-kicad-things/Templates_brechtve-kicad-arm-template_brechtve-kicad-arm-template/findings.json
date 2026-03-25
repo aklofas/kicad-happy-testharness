@@ -1,0 +1,68 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_brechtve-kicad-things_Templates_brechtve-kicad-arm-template_brechtve-kicad-arm-template.sch.json",
+      "status": "promoted",
+      "summary": "SWD interface not detected in bus_analysis despite SWDIO/SWCLK nets present; UART nets (TXD/RXD) correctly detected and classified",
+      "correct": [
+        {
+          "description": "The ARM template includes a UART debug header (J3=DebugHeader_UART_4p) with TXD and RXD nets. The analyzer correctly identifies them in bus_analysis.uart and classifies TXD as 'data' in net_classification. The RC filter on ~RESET (R5=1k\u03a9, C1=100nF, fc=1.59kHz) is correctly detected as a low-pass filter for debounce/noise filtering on the ARM reset pin.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The design has a Cortex-M SWD debug header (J1) with SWDIO and SWCLK nets, both correctly classified in net_classification as 'debug' and 'clock'. However, bus_analysis shows no SWD entry \u2014 the analyzer only looks for I2C, SPI, UART, and CAN buses. SWD/JTAG debug interfaces are a common pattern in ARM MCU designs and should be detected.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.net_classification.SWDIO",
+            "op": "equals",
+            "value": "debug"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "brechtve-kicad-things",
+      "project": "Templates_brechtve-kicad-arm-template_brechtve-kicad-arm-template",
+      "created": "2026-03-24T08:48:28.950930+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002290"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_brechtve-kicad-things_Templates_brechtve-kicad-arm-template_brechtve-kicad-arm-template.kicad_pcb.json",
+      "status": "new",
+      "summary": "Empty PCB template correctly reported with zero footprints and tracks",
+      "correct": [
+        {
+          "description": "The ARM template PCB file is intentionally blank (it is a starting template). The analyzer correctly reports footprint_count=0, track_segments=0, net_count=0, routing_complete=true, and board dimensions as null. The board_metadata title 'KiCad Project ARM Template' is correctly extracted from the PCB title block.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "brechtve-kicad-things",
+      "project": "Templates_brechtve-kicad-arm-template_brechtve-kicad-arm-template",
+      "created": "2026-03-24T08:48:28.950950+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002291"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001429",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001429-AST-01",
+      "description": "The F.Cu (GTL) layer correctly identifies HeatsinkPad aperture function with 9 flashes \u2014 matching the LG580P module's large thermal pad (U3, 3\u00d73 via array). The x2_net_count=100 on the F.Cu layer matches the schematic's total_nets=99 (within 1, likely due to net 0 / no-net pads). The 154 unique component refs in the panelized gerber with 72 kibuzzard items leaves 80 real components matching the LG580P's 77 schematic components (plus 3 extra for multi-part or mechanical items).",
+      "created_from": "FND-00001429",
+      "check": {
+        "path": "statistics.layer_count",
+        "value": 4,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001429-AST-02",
+      "description": "INCORRECT: The SparkFun_GNSS_LG580P_panelized.GKO file has X2 FileFunction='Soldermask,Bot' and layer_type='B.Mask' in the output, while its aperture_analysis shows Profile=1 confirming it is the board outline (Edge.Cuts). This is the same bug as in the other two repos. The GKO extension is a recognized KiCad/RS-274X convention for Edge.Cuts, and the Profile aperture function attribute is the definitive indicator. The analyzer should prioritize the Profile aperture function or .GKO extension over the X2 FileFunction for layer type classification.",
+      "created_from": "FND-00001429",
+      "check": {
+        "path": "completeness.complete",
+        "value": false,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

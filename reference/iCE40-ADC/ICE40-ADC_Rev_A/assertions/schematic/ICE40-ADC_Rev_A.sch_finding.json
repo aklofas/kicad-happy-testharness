@@ -1,0 +1,30 @@
+{
+  "file_pattern": "ICE40-ADC_Rev_A.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002139",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002139-AST-01",
+      "description": "INCORRECT: SR1 has lib_id 'TLV431BSN1T1G(SOT23-3)' and value 'NA(TLV431BSN1T1G(SOT23-3))'. The TLV431 is a precision programmable shunt voltage reference (3-pin: REF, CATHODE, ANODE), used here to set the ADC reference voltage. It is classified as type 'switch' because the library ID does not match any recognized IC or reference voltage patterns, and it falls through to the switch category. SIG_IN1 (BNC-JD11-50-LF) is the RF input connector for the ADC signal input, but is also classified as 'switch'. Both should be classified as 'connector' or a dedicated 'voltage_reference' type.",
+      "created_from": "FND-00002139",
+      "check": {
+        "path": "components[?reference=='SR1'].type",
+        "op": "contains_match",
+        "value": "/switch/"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002139-AST-02",
+      "description": "U1 (ADC08100CIMTCX) is an 8-bit 100MSPS ADC with multiple supply pins (VA, AGND, DRVD, DRGND) all connecting to unnamed nets (__unnamed_2, __unnamed_4, __unnamed_7, __unnamed_8, etc.) that are filtered from the main +3.3V and GND rails by ferrite beads L1 and L2. Decoupling caps C3, C5, C6, C7 are correctly placed on these supply nets in the schematic, but the decoupling_analysis array is empty because the detector only searches for caps by matching named rail names. No decoupling coverage warning is generated for U1, and the design_observations only warn about U2 (buffer IC). This is a systematic limitation when ferrite-bead power filtering creates unnamed local supply domains.",
+      "created_from": "FND-00002139",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

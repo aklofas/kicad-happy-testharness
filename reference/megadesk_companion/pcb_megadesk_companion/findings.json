@@ -1,0 +1,33 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002402",
+      "source_file": "megadesk-companion.kicad_pcb",
+      "analyzer_type": "pcb",
+      "category": "incorrect",
+      "summary": "Edge.Cuts counted as a copper layer, inflating copper_layers_used to 5",
+      "details": "statistics.copper_layers_used is 5 and copper_layer_names includes 'Edge.Cuts', but Edge.Cuts is a type='user' non-copper layer. The real copper layers are F.Cu, In1.Cu, In2.Cu, and B.Cu (4 layers).",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00002403",
+      "source_file": "megadesk-companion.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "USB CC1 5k1 pulldown incorrectly reported as failing",
+      "details": "usb_compliance reports cc1_pulldown_5k1: fail and cc2_pulldown_5k1: pass, but both CC1 and CC2 each connect to a separate R5 (5k1) resistor to GND. The compliance checker appears to de-duplicate by reference name and only matches the 5k1 check to one CC line."
+    },
+    {
+      "id": "FND-00002404",
+      "source_file": "megadesk-companion.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "sourcing_audit reports 0% MPN coverage but all components have LCSC part numbers",
+      "details": "sourcing_audit.mpn_coverage is '0/23' and mpn_percent is 0.0, because the 'mpn' field is empty on all components. However, all 23 BOM components have LCSC numbers. The sourcing audit should recognise LCSC coverage as a valid sourcing metric."
+    }
+  ]
+}

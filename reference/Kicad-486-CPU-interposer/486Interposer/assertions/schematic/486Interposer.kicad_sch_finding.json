@@ -1,0 +1,29 @@
+{
+  "file_pattern": "486Interposer.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000777",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000777-AST-01",
+      "description": "Correctly identified 5 components (4 connectors + 486 socket), 119 nets including full address/data/control bus naming, and 2 power rails (VCC, GND). Net names with tilde/slash escaping handled correctly.",
+      "created_from": "FND-00000777",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000777-AST-02",
+      "description": "The net list includes /TCK, /TDI, /TDO, /TMS \u2014 classic JTAG signals. bus_analysis shows i2c/spi/uart/can all empty. A JTAG protocol detector would flag this as a JTAG interface routed through the interposer.",
+      "created_from": "FND-00000777",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

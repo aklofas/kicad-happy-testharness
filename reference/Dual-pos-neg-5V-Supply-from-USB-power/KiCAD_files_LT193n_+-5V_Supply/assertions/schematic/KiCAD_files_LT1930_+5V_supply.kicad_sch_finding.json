@@ -1,0 +1,60 @@
+{
+  "file_pattern": "LT1930_+5V_supply.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000484",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000484-AST-01",
+      "description": "The source file uses local annotation (C1, C2, ... U1, R1, R2, ...) in its symbol_instances section, but the hierarchical parent (LT193n_+-5V_Supply.kicad_sch) remaps these to the 200-series sheet namespace (C201, C202, U201, R201, etc.). The analyzer correctly reads the symbol_instances table and reports all references with their sheet-qualified numbers (C201\u2013C205, D201\u2013D202, J202, L201\u2013L202, R201\u2013R204, U201). All 15 components are correctly enumerated with matching values.",
+      "created_from": "FND-00000484",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000484-AST-02",
+      "description": "The ic_pin_analysis for U201 correctly maps all five pins. Pin 1 (SW) connects to L201 pin 2 and C203 pin 1 (switch node). Pin 2 (GND) to Earth rail with decoupling caps C201/C202/C204/C205. Pin 3 (FB) connects to R201 pin 2 and R202 pin 1 (feedback divider between +5V_unfiltered_output and Earth). Pin 4 (*SHDN) connects to C205, D202, R204. Pin 5 (VIN) connects to +5V_input_+side with L201 pin 3, D202 pin 1 (K), R204. All net assignments verified against source wiring.",
+      "created_from": "FND-00000484",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000484-AST-03",
+      "description": "The power_regulators detector identifies U201 as a 'switching' topology regulator using L201 (CLS62NP-100NC) as the coupled inductor, with input_rail '+5V_input_+side' and output_rail '__unnamed_0' (the switch node net connecting D201 anode, L201 pin 1, C203 pin 2). This is correct: the LT1930 is a boost converter and the CLS62NP-100NC is a coupled inductor (EMI filter + inductor combined). L202 (10uH) is the output filter choke between +5V_unfiltered_output and +5V_filtered_output.",
+      "created_from": "FND-00000484",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000484-AST-04",
+      "description": "L202 (10uH) connects between +5V_unfiltered_output (L202 pin 1) and +5V_filtered_output (L202 pin 2). C204 (30uF) is on +5V_filtered_output (C204 pin 1) to Earth (C204 pin 2). This forms a classic LC post-filter on the boost converter output. The lc_filters list in signal_analysis is empty for this file. The analyzer found LC filters in LT1931_-5V_supply.kicad_sch (L302+C303 and L302+C306) but missed the equivalent L202+C204 in LT1930_+5V_supply.kicad_sch. This is because L202 (Device:L style, 2-pin) shares no net directly with C204 \u2014 they share '+5V_filtered_output' \u2014 and the LC filter detector may require a shared net between the inductor output pin and capacitor pin 1, which is satisfied here. The failure may relate to how the Inductor_SMD L_Taiyo-Yuden part's pin type ('input') differs from CLS62NP-100NC's 'unspecified' pins.",
+      "created_from": "FND-00000484",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000484-AST-05",
+      "description": "R201 (243K) connects from +5V_unfiltered_output (pin 1) to the FB node (pin 2). R202 (82.5K) connects from the FB node (pin 1) to Earth (pin 2). This is a classic resistive feedback divider setting the output voltage of U201. The voltage_dividers list is empty. The analyzer does detect these resistors in the ic_pin_analysis for U201 pin 3 (FB), correctly noting R201 as 'pull-up' to '+5V_unfiltered_output' and R202 as 'series' to Earth, but does not synthesize this into a voltage_divider signal_analysis entry. The feedback_networks list is also empty.",
+      "created_from": "FND-00000484",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

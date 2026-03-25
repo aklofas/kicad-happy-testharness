@@ -1,0 +1,18 @@
+{
+  "file_pattern": "lora-module.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002446",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002446-AST-01",
+      "description": "The PCB analyzer correctly reports 2 unrouted nets (Net-(C11-Pad1) between C11 and U5.3, and Net-(L11-Pad1) between U2.21 and L11.1). The 13 courtyard overlaps on this highly dense 27.3x24.5mm 4-layer RF board are a real layout concern, as components including decoupling caps and RF inductors are placed very tightly. The unrouted and overlap detection is accurate.",
+      "created_from": "FND-00002446",
+      "check": {
+        "path": "connectivity.unrouted_count",
+        "op": "equals",
+        "value": 2
+      }
+    }
+  ]
+}

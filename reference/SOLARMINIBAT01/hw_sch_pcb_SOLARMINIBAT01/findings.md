@@ -1,0 +1,159 @@
+# Findings: SOLARMINIBAT01 / hw_sch_pcb_SOLARMINIBAT01
+
+## FND-00001256: TPS63060 (X1) misclassified as 'connector' instead of 'ic' or 'regulator'; TPS63060 switching regulator not detected in power_regulators despite feedback network found
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: power_output.kicad_sch
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- X1 has lib_id 'Regulator_Switching:TPS63060' and is a buck-boost switching regulator. The analyzer typed it as 'connector', propagating to the BOM component_types count. As a result, power_regulators is empty in this sheet even though a feedback network and inductor are present. The assembly complexity also incorrectly scores X1 as a connector.
+  (signal_analysis)
+
+### Missed
+- signal_analysis.power_regulators is empty. The feedback divider (R25/R26 to X1 FB pin) and inductor L2 are present on this sheet, and the feedback_networks list correctly captures the divider. However the regulator itself is not classified, likely because the component type is 'connector'. If X1 were typed as 'ic', the regulator detector would likely trigger.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001257: BQ34Z100 fuel gauge not detected in bms_systems; current-sense shunt R8 (10mΩ, 75PPM) not detected in current_sense; R4 (10K NTC thermistor) incorrectly treated as a fixed resistor in RC-filter cal...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: fuel_gauge.kicad_sch
+- **Created**: 2026-03-24
+
+### Correct
+- design_observations correctly identifies I2C_SCL and I2C_SDA with pull-up resistors R3 and R1 to +3V3 rail, and bus_analysis.i2c lists U1.
+
+### Incorrect
+- R4 value is '10K NTC' — an NTC thermistor for temperature sensing. The analyzer pairs it with C2 to form a low-pass RC filter (cutoff 15.92 Hz), but this is not a designed filter; R4 is a thermistor feeding the BQ34Z100's temperature measurement input. The RC filter detection is a false positive here.
+  (signal_analysis)
+
+### Missed
+- U1 is a BQ34Z100 battery fuel gauge IC with a dedicated 10mΩ precision shunt R8 across Battery+ and Battery- for coulomb counting. Both bms_systems and current_sense are empty. The R8 value '0R01 75PPM' is unusual notation (0.01Ω) and the analyzer evidently doesn't parse this or match BQ34Z100 as a BMS/fuel-gauge part.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001258: SPV1040 MPPT switching regulator with L1 inductor correctly detected; regulator_caps observation incorrectly flags SPV1040 output as missing caps
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: power_input.kicad_sch
+- **Created**: 2026-03-24
+
+### Correct
+- power_regulators correctly identifies U3 (SPV1040) as a switching regulator with L1 as its inductor. Protection TVS D10 (SMBJ5.0A) is also correctly classified. LC filter on PV+ input (L1/C8) is detected.
+
+### Incorrect
+- design_observations reports missing output caps for U3 (SPV1040) on net '__unnamed_2', but C13 (10uF/6V3), C14 (47uF/6V3), and C15 (47uF) are present on this sheet and decoupled to GND. The analyzer likely fails to associate unnamed nets with the regulator output when caps are nearby but not on the same explicit named net.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001259: Battery+/Battery-/NTC1/NTC2 flagged as 'undriven input label' — false positives for hierarchical sheet ports; Battery+/Battery- pair incorrectly detected as a differential pair
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: battery_pack.kicad_sch
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- label_shape_warnings reports 'undriven input label' for Battery+, Battery-, NTC1, NTC2. These are hierarchical labels (shape=input) that are driven by the parent sheet's hierarchy — the input shape is normal convention for bidirectional or output-from-child labels. No actual ERC issue exists since they connect to BT1's passive pins.
+  (signal_analysis)
+- design_analysis.differential_pairs reports Battery+ and Battery- as a differential pair connected via BT1. These are simply the positive and negative supply terminals of a LTO battery pack — not a differential signal pair. The naming pattern (+/-) triggers a false differential pair classification.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001260: Top-level aggregated stats (79 components, 50 nets, power rails, component types) look correct
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: SOLARMINIBAT01.kicad_sch
+- **Created**: 2026-03-24
+
+### Correct
+- Total component count, unique parts, DNP count (1), power rails (+3V3/GND), and component type breakdown all appear consistent with the sub-sheets combined.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001261: PCB stats (79 footprints, 2-layer, 363 tracks, 392 vias, 1 unrouted net) look correct; GND copper pour zone stitching with 350 thermal vias correctly detected; Gerber component count (front=23, bac...
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: SOLARMINIBAT01.kicad_pcb
+- **Created**: 2026-03-24
+
+### Correct
+- Layer configuration (F.Cu/B.Cu), board dimensions (~80.8x70.6mm), footprint count, via count, track segment count, and routing_complete=false with 1 unrouted net all appear accurate.
+- thermal_analysis.zone_stitching correctly identifies GND pour on both F.Cu and B.Cu with 13,215mm² area and 350 stitching vias. TPS63060 thermal pad (X1 pad 11) with 6 nearby thermal vias is also detected.
+
+### Incorrect
+- The PCB JSON statistics report front_side=14, back_side=65, but the gerber component_analysis reports front_side=23, back_side=56. One of these counts is wrong. The gerber count (79 total on both) matches but the front/back split differs significantly, suggesting a layer attribution discrepancy between analyzers.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001262: Gerber set complete (9 layers + 2 drill files), all layers present, aligned, correct board size; Trace widths (0.2–1.0mm, 6 unique widths) and drill sizes accurately extracted
+
+- **Status**: new
+- **Analyzer**: gerber
+- **Source**: hw_cam_profi
+- **Created**: 2026-03-24
+
+### Correct
+- All expected 2-layer gerber files present (F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, Edge.Cuts) plus PTH and NPTH drill files. Board dimensions (80.87x70.71mm) match PCB. Alignment passes. 392 via holes + 67 component holes + 8 NPTH mounting holes correctly classified.
+- Drill classification correctly uses X2 attributes to separate vias (392 × 0.5mm), component holes (67 across 5 tool sizes), and NPTH mounting holes (8 × 2.7mm). Min trace 0.2mm is reasonable for this design.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

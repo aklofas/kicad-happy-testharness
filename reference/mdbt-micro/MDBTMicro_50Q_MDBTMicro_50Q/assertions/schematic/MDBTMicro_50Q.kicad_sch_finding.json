@@ -1,0 +1,30 @@
+{
+  "file_pattern": "MDBTMicro_50Q.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002451",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002451-AST-01",
+      "description": "Three LEDs using the KiCad standard library symbol Device:LED (refs LD1, LD2, LD3 with values Red, Blue, Green) are classified as type 'inductor' in both the components array and the statistics section (statistics.component_types reports 3 inductors, 0 LEDs). This causes downstream cascade errors: the rf_matching detector flags LD2 and LD3 as antenna matching network inductors for the Raytac MDBT50Q-x1MV2 BLE module, producing two false-positive RF matching entries. The misclassification likely stems from 'LD' reference prefix being matched to 'inductor' heuristic rather than using the lib_id 'Device:LED' to determine component category.",
+      "created_from": "FND-00002451",
+      "check": {
+        "path": "statistics.component_types.inductor",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002452-AST-02",
+      "description": "signal_analysis.rf_matching contains two spurious entries. The first associates R4 (1k resistor) as an antenna with LD2 ('Blue' LED, mistyped as inductor) as a matching component targeting U2 (MDBT50Q-x1MV2). The second associates R5 (1k) with LD3 ('Green' LED). In reality these resistors are LED current-limiting resistors and the LD components are status LEDs, not RF matching components. The false positives are a direct consequence of LD1-3 being misclassified as inductors.",
+      "created_from": "FND-00002452",
+      "check": {
+        "path": "signal_analysis.rf_matching",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

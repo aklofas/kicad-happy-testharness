@@ -1,0 +1,89 @@
+{
+  "file_pattern": "Project_OAK_MAIN_BRD_V0.1.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001720",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001720-AST-01",
+      "description": "The analyzer correctly identifies 112 components: 1 battery, 3 switches, 2 ICs (ATmega328PB-MU + RV-8263-C7 RTC), 16 capacitors, 33 resistors, 13 test points, 37 LEDs, 7 BC547 transistors. All component types are correctly classified.",
+      "created_from": "FND-00001720",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 112
+      }
+    },
+    {
+      "id": "FND-00001720-AST-02",
+      "description": "The analyzer correctly identifies the I2C bus between U1 (ATmega328PB) and U2 (RV-8263 RTC) with 4.7K pull-up resistors on both SCL (R10) and SDA (R11) to +3V0. The primary i2c nets RTC_SCL and RTC_SDA are correctly captured.",
+      "created_from": "FND-00001720",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001720-AST-03",
+      "description": "Despite the RV-8263-C7-32.768KHZ-20PPM-TA-QC being in the Crystal footprint library and having 'crystal' in its name, the analyzer correctly classifies it as type 'ic' (it is an integrated RTC module with I2C interface, not a passive crystal). crystal_circuits is correctly empty.",
+      "created_from": "FND-00001720",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001720-AST-04",
+      "description": "All 37 LEDs (D1\u2013D37) and all 7 BC547 NPN transistors (Q1\u2013Q7) are identified. Transistor circuit analysis correctly shows 6 transistors with LED loads (Q2\u2013Q7) and Q1 with a resistive load. emitter_is_ground=False is correct because emitter nets connect through 120E/1K resistors to +3V0, not GND directly.",
+      "created_from": "FND-00001720",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "FND-00001720-AST-05",
+      "description": "The analyzer correctly identifies 4 RC low-pass filters: R4/C3 (DWN_BTN), R3/C2 (UP_BTN), R2/C1 (LGT_ON_BTN), and R17/C13 (MCU_RSTn), all with 10k resistors and 0.1uF capacitors giving ~159 Hz cutoff. These are correct debounce/reset filter identifications.",
+      "created_from": "FND-00001720",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001720-AST-06",
+      "description": "The 50% voltage divider (R14=10k top, R15=10k bottom) feeding the +3V0_VOL_MON net is correctly identified. This is used for battery voltage monitoring on an analog ADC pin of the ATmega328PB.",
+      "created_from": "FND-00001720",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001720-AST-07",
+      "description": "The ICSP SPI programming interface (MISO, MOSI, SCK) on U1 is correctly detected as a full-duplex SPI bus with chip_select_count=3, consistent with the ATmega's ICSP header.",
+      "created_from": "FND-00001720",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001720-AST-08",
+      "description": "INCORRECT: The analyzer reports three I2C nets: RTC_SCL (U1+U2), RTC_SDA (U1 only), and __unnamed_27 (U2 SDA pin only). This third entry is caused by U2's SDA pin (pin 8) being disconnected from the RTC_SDA net label in the V0.1 schematic \u2014 U2's SDA wire was not labeled. The analyzer is faithfully reporting the source connectivity, but presenting it as a third I2C bus segment without a pull-up is misleading. The real I2C bus has both SCL and SDA, but the SDA analysis is split incorrectly into two entries.",
+      "created_from": "FND-00001720",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "max_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

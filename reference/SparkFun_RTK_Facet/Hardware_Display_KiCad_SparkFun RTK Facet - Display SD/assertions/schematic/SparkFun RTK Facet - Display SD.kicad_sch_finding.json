@@ -1,0 +1,70 @@
+{
+  "file_pattern": "SparkFun RTK Facet - Display SD.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001523",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001523-AST-01",
+      "description": "Display schematic correctly identifies 27 total components (26 in-BOM + G2 which is in_bom=false), 3 power rails (3.3V, GND, VUSB), 38 nets, 8 capacitors, 5 resistors, 4 connectors, 4 fiducials, 1 IC, 1 LED, 1 switch, 1 jumper, 2 other.",
+      "created_from": "FND-00001523",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "equals",
+        "value": 8
+      }
+    },
+    {
+      "id": "FND-00001523-AST-02",
+      "description": "The RC low-pass filter formed by R2 (10k) and C7 (1.0uF) connected to the RESET net of U1 (SSD1306 OLED) is correctly detected. Cutoff frequency of 15.92 Hz (1/(2\u03c0\u00d710k\u03a9\u00d71\u03bcF)) is correct. Input net is 3.3V, output net is RESET, ground net is GND.",
+      "created_from": "FND-00001523",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001523-AST-03",
+      "description": "The OLED U1 is correctly identified as an I2C device with connections on ESP_21/SDA and ESP_22/SCL. The has_pullup=false flag is correct since no pull-up resistors appear in this sub-board schematic (they reside on the main board).",
+      "created_from": "FND-00001523",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001523-AST-04",
+      "description": "The decoupling_analysis correctly identifies C4 (1.0uF), C6 (1.0uF), and C16 (0.1uF) as decoupling capacitors for the 3.3V rail, totaling 2.1uF. has_bulk=true, has_bypass=true, has_high_freq=false is accurate. C1 (2.2uF) is correctly omitted as it connects to U1's VCC pin separately.",
+      "created_from": "FND-00001523",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001523-AST-05",
+      "description": "INCORRECT: G2 (OSHW_Logo) in the Display schematic has in_bom=no and on_board=yes. The analyzer includes it in components and counts it in total_components=27 although it is a board-only graphic with no electrical function. The true BOM component count is 26. This is the same issue as the Connector schematic with G3.",
+      "created_from": "FND-00001523",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 27
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001523-AST-06",
+      "description": "The microSD connector J2 is connected via SPI signals SD_COPI, SD_CIPO, SD_SCK, and SD_~{CS} (global labels). These constitute a clear SPI interface. The bus_analysis.spi list is empty and no memory_interfaces are detected. The absence is because no SPI controller IC is present in this sub-schematic\u2014the signals enter via global labels from the main board. While structurally understandable, the SPI bus topology is unobserved.",
+      "created_from": "FND-00001523",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "exists",
+        "value": null
+      },
+      "aspirational": true
+    }
+  ]
+}

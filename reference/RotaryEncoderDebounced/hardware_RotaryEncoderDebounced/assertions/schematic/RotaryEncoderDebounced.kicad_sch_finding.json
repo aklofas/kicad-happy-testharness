@@ -1,0 +1,39 @@
+{
+  "file_pattern": "RotaryEncoderDebounced.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001181",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001181-AST-01",
+      "description": "Each encoder channel (A, B) and the push-button switch has an RC filter feeding into the 74HC14 Schmitt trigger. The analyzer correctly identifies all three, computes the correct time constant (100 \u00b5s) and cutoff frequency.",
+      "created_from": "FND-00001181",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001181-AST-02",
+      "description": "The pull-ups on /Rotary_A, /Rotary_B, and /Rotary_SW to +3V3 are all detected with the correct 10k values and 3.3 V rail voltage.",
+      "created_from": "FND-00001181",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001181-AST-03",
+      "description": "The design uses three of the six HC14 inverters as Schmitt triggers (one per channel) to clean up the RC-filtered signals. The signal_analysis section has no entry for Schmitt-trigger usage despite the part being a 74HC14. There is no 'schmitt_trigger_circuits' or equivalent field in the output. This is a meaningful design pattern that should be reported.",
+      "created_from": "FND-00001181",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

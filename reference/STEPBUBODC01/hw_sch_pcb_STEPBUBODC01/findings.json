@@ -1,0 +1,104 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "STEPBUBODC01.kicad_sch",
+      "status": "promoted",
+      "summary": "TPS631000 buck-boost correctly detected as switching regulator with L1, V_in/V_out rails; design_observations incorrectly flags missing input and output caps for TPS631000; Feedback voltage divider...",
+      "correct": [
+        {
+          "description": "power_regulators correctly identifies U1=TPS631000DRLR as switching, with inductor L1, input_rail=V_in, output_rail=V_out, and fb_net=FB.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The 'regulator_caps' observation claims input (V_in) and output (V_out) caps are missing, but the schematic has C1=22uF (input), C2=47uF (output), C3=10uF. The analyzer failed to associate these caps with the correct rails.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "V_in and V_out are driven by external connectors J2/J5/J6 (header pins typed as 'input' in the library). These rails are externally driven; the ERC warning is a false positive caused by connector pin types, not a real design error.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "R1=91k, R2=511k, R3=806k form output feedback dividers for the TPS631000. voltage_dividers is empty. These are standard switching regulator feedback networks.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "STEPBUBODC01",
+      "project": "hw_sch_pcb_STEPBUBODC01",
+      "created": "2026-03-24T00:10:56.845329+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001297"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "STEPBUBODC01.kicad_pcb",
+      "status": "new",
+      "summary": "PCB stats correct: 23 footprints, 2-layer, 30x30mm, routing complete",
+      "correct": [
+        {
+          "description": "Component count (23), board dimensions (~30x30mm), via_count=6, routing_complete=true all appear accurate for this small buck-boost module.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "STEPBUBODC01",
+      "project": "hw_sch_pcb_STEPBUBODC01",
+      "created": "2026-03-24T00:10:56.845348+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001298"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "hw_cam_profi_gbr",
+      "status": "new",
+      "summary": "Gerber set complete, all 9 layers present, aligned, correct component count",
+      "correct": [
+        {
+          "description": "completeness=true, aligned=true. B.Mask x2_component_count=23 matches PCB footprint count. F.Paste empty is expected (all front-side pads are THT connectors).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "STEPBUBODC01",
+      "project": "hw_sch_pcb_STEPBUBODC01",
+      "created": "2026-03-24T00:10:56.845351+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001299"
+    }
+  ]
+}

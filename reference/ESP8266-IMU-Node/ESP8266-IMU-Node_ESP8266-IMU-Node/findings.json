@@ -1,0 +1,130 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ESP8266-IMU-Node_ESP8266-IMU-Node.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Component inventory correct: 24 components across 7 types, all references and values match source; Net connectivity is accurately captured for all named nets (SDA, SCL, WAKE, BUTON, LED_KIRMIZI, LE...",
+      "correct": [
+        {
+          "description": "All 24 components are correctly identified: 11 resistors, 5 capacitors, 2 LEDs, 1 inductor, 1 battery, 1 switch, 3 ICs (U1=ESP-12F, U2=MPU-6050, U3=MCP1640x-xCHY). Values match (953kR, 549kR, 330R, 10kR, 4.7kR, 0.1uF, 2.2nF, 4.7uF, 10uF, 4.7uH, LED, Battery_Cell, SW_Push). Power rails +3.3V and GND are correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "All named nets have the correct pin memberships. SDA net correctly contains U1/GPIO4 and R8/pin2. SCL net correctly contains U1/GPIO5 and R9/pin2. WAKE net correctly shows U1/RST, U1/GPIO16, and R3/pin1. BUTON net correctly maps to U1/GPIO14 and SW1/pin2. LED_KIRMIZI maps U1/GPIO13 through R10 to D1. LED_YESIL maps U1/GPIO12 through R11 to D2. Power rail memberships are accurate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "R8 (4.7kR) sits between U1/GPIO4 (SDA) and U2/SDA, and R9 (4.7kR) sits between U1/GPIO5 (SCL) and U2/SCL. Neither has a connection to +3.3V \u2014 they are in-line isolation resistors. The schematic has no dedicated I2C pull-up resistors to VCC on the bus lines, so has_pullup=false is accurately reported. The I2C bus is relying on the ESP8266's internal pull-ups.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "U1 (ESP-12F) has 22 pins all correctly extracted with their names (RST, EN, VCC, GND, IO9, IO10, GPIO12\u201316, TXD, RXD, GPIO0, GPIO2, GPIO4, GPIO5, ADC, MISO, MOSI, SCLK, CS0). Pin numbers match the symbol definition (e.g., RST=pin1, EN=pin3, VCC=pin8, GND=pin15). Net assignments are accurate: GPIO4 is on SDA, GPIO5 is on SCL, GPIO14 is on BUTON, GPIO16 is on WAKE, GPIO13 is on LED_KIRMIZI, GPIO12 is on LED_YESIL, VCC and GND to correct rails.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "U2 (MPU-6050) has all 24 pins correctly extracted. SDA (pin24) on __unnamed_0, SCL (pin23) on __unnamed_21, AD0 (pin9) and FSYNC (pin11) and CLKIN (pin1) correctly on GND, VDD (pin13) and VLOGIC (pin8) on +3.3V, GND (pin18) on GND, CPOUT (pin20) on __unnamed_7 (connected to C3=2.2nF), REGOUT (pin10) on __unnamed_36 (connected to C2=0.1uF), INT (pin12) unconnected, AUX_DA/AUX_CL (pins 6,7) unconnected. All NC/RESV pins correctly flagged.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "U3 pin assignments: SW (pin1) on __unnamed_2 (to L1/pin2), GND (pin2) on GND, EN (pin3) on __unnamed_1 (same as VIN \u2014 always-on configuration), VFB (pin4) on __unnamed_6 (R1=953kR to +3.3V, R2=549kR to GND voltage divider), VOUT (pin5) on +3.3V, VIN (pin6) on __unnamed_1 (battery positive + L1/pin1). This correctly represents the boost converter topology: battery -> L1 -> U3 switching node, output +3.3V.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The ic_pin_analysis correctly identifies C1 (0.1uF) and C5 (10uF) as decoupling caps on the +3.3V rail for U1, U2, and U3. The design_observations correctly flags that U3's V_IN pin (__unnamed_1, the battery rail) has no decoupling cap. C4 (4.7uF) is on the BT1 negative rail (__unnamed_20) which is separate from the main battery positive rail, so the observation that the V_IN net lacks a cap is accurate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The bus_analysis.spi correctly identifies U1's MISO (pin10), MOSI (pin13), SCLK (pin14) as an SPI bus fragment. CS0 (pin9) is tracked separately in the net map. These pins are unconnected in this design (all on isolated single-pin nets __unnamed_15/16/17/18) which is accurately reflected with connected_to:[] and chip_select_count:0.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The power_domains.ic_power_rails correctly assigns +3.3V to U3 (boost output), U1 (ESP-12F VCC), and U2 (MPU-6050 VDD/VLOGIC). The domain_groups show all three ICs in the +3.3V group. The battery supply (__unnamed_1) is not shown as a named power rail domain, which is reasonable since it has no named net label.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "In signal_analysis.power_regulators, U3 (MCP1640x-xCHY) is listed with output_rail='__unnamed_1', but __unnamed_1 is the input rail (BT1+, L1/pin1, U3/VIN, U3/EN all connect there). The actual output is U3/pin5 (V_OUT) which is on the '+3.3V' net. This is the primary power rail for the entire design. The error also propagates to design_observations[3] which flags 'missing_caps output: __unnamed_1' \u2014 incorrect because the output IS +3.3V and it does have decoupling capacitors (C1=0.1uF, C5=10uF). The design_observations[2] ('switching_regulator') also carries the wrong output_rail='__unnamed_1'.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The I2C bus analysis in bus_analysis.i2c lists four separate entries: SDA net with only U1, __unnamed_0 net with only U2, SCL net with only U1, __unnamed_21 net with only U2. In reality R8 bridges 'SDA' (ESP8266 side) to '__unnamed_0' (MPU-6050 side) and R9 bridges 'SCL' to '__unnamed_21'. These are two segments of the same I2C bus separated by series isolation resistors. The analyzer should recognise this as a single unified I2C bus containing both U1 and U2, rather than four disconnected half-buses. As a consequence the I2C bus topology analysis is incomplete.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The schematic source defines 10 no_connect pins in the MPU-6050 (U2) symbol: NC pins 2,3,4,5,14,15,16,17 and RESV pins 19,21,22. These are hidden no_connect type pins in the lib_symbols definition. The JSON correctly assigns them to individual unnamed nets (__unnamed_22 through __unnamed_35), and they appear in U2's pin list with pin_type='no_connect', but the top-level statistics.total_no_connects and the no_connects array remain at 0/empty. KiCad's no_connect markers in the source (explicit 'no_connect' elements placed on the schematic) may be absent since these are hidden pins, but the no-connect count should still reflect the 10 no_connect-typed pins from the placed symbol.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "R1 (953kR) connects from +3.3V to the V_FB node (__unnamed_6), and R2 (549kR) connects from V_FB to GND. This is a classic resistor voltage divider setting the output voltage of the MCP1640 boost converter via the feedback pin. The signal_analysis.voltage_dividers array is empty ([]), meaning the detector missed this divider. It is correctly noted in ic_pin_analysis for U3/V_FB with R1 as pull-up and R2 as pull-down, but it is not promoted to the voltage_divider detector list.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "U1 (ESP-12F) has TXD (pin22) and RXD (pin21) which are UART pins. These are unconnected in this design (on isolated single-pin nets __unnamed_12 and __unnamed_13), but the UART detector should still identify these as a UART bus instance on U1, similar to how the SPI bus is detected on the same chip's MISO/MOSI/SCLK pins. The bus_analysis.uart array is empty.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ESP8266-IMU-Node",
+      "project": "ESP8266-IMU-Node_ESP8266-IMU-Node",
+      "created": "2026-03-23T20:25:23.436606+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000504"
+    }
+  ]
+}

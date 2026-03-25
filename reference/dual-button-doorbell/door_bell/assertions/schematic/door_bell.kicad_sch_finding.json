@@ -1,0 +1,30 @@
+{
+  "file_pattern": "door_bell.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002335",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002335-AST-01",
+      "description": "The analyzer correctly identifies that ~{SD_MODE}, BCLK, LRCLK, and DOUT signals cross between the 3.3V domain (ESP32-WROVER-B U6) and the 5V domain (MAX98357A audio amplifier U2), flagging all four with needs_level_shifter: true. The MAX98357A datasheet confirms it is a 5V part with I2S inputs accepting 3.3V logic, so whether a level shifter is strictly needed depends on the I2S input threshold, but the cross-domain detection itself is accurate.",
+      "created_from": "FND-00002335",
+      "check": {
+        "path": "signal_paths.cross_domain_signals",
+        "op": "min_count",
+        "value": 4
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002335-AST-02",
+      "description": "The schematic contains a MAX3232 RS-232 transceiver (U5) with RXD0/TXD0 signals connecting to the ESP32-WROVER-B (U6), and a dedicated UART debug connector (J4) labeled 'UART'. Despite the debug connector being found in test_coverage.debug_connectors, signal_paths.bus_analysis.uart is empty. The analyzer should detect the UART bus formed by the MAX3232 and ESP32.",
+      "created_from": "FND-00002335",
+      "check": {
+        "path": "signal_paths.bus_analysis.uart",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "usb-communications.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002220",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002220-AST-01",
+      "description": "The USB differential pair (USB_P / USB_N) is correctly detected in both the sub-sheet and top-level analysis, but 'has_esd' is false in both cases. F2 (ESDUSB) is physically connected to USB_N and GND, and is a TVS diode array specifically designed for USB ESD protection. Because F2 is classified as 'fuse' instead of an ESD device, the has_esd check fails. The USB pair should show has_esd: true.",
+      "created_from": "FND-00002220",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

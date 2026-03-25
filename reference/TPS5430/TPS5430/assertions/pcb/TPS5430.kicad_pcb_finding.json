@@ -1,0 +1,42 @@
+{
+  "file_pattern": "TPS5430.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001626",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001626-AST-01",
+      "description": "thermal_pad_vias reports U1 pad 9 (2.6\u00d73.1 mm solder pad) with 8 footprint via-pads (thermal vias embedded in footprint), via density 0.993/mm\u00b2, and adequacy='adequate'. The recommended minimum is 5 vias and ideal is 9; 8 meets the threshold. The PCB file confirms 8 thru-hole via-pads plus additional standalone vias in the vicinity.",
+      "created_from": "FND-00001626",
+      "check": {
+        "path": "thermal_pad_vias",
+        "op": "contains_match",
+        "value": {
+          "component": "U1",
+          "adequacy": "adequate"
+        }
+      }
+    },
+    {
+      "id": "FND-00001626-AST-02",
+      "description": "statistics reports board 55\u00d720 mm, 2 copper layers, routing_complete=true (0 unrouted nets). Gerber confirms Edge.Cuts extents 55\u00d720 mm matching PCB. DFM tier=standard with no violations, min track 0.25 mm, min drill 0.4 mm.",
+      "created_from": "FND-00001626",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "op": "equals",
+        "value": 55.0
+      }
+    },
+    {
+      "id": "FND-00001626-AST-03",
+      "description": "INCORRECT: The schematic assembly_complexity reports smd_count=41 and tht_count=0. The PCB correctly identifies J2 (TerminalBlock_Phoenix, through-hole screw terminal) as tht_count=1, smd_count=30. The discrepancy in the schematic analyzer is because footprint technology type (THT/SMD) is stored in the footprint library, not the schematic S-expression, so the schematic analyzer cannot distinguish them and classifies everything as SMD.",
+      "created_from": "FND-00001626",
+      "check": {
+        "path": "statistics.tht_count",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

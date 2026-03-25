@@ -1,0 +1,84 @@
+{
+  "file_pattern": "SparkFun RTK Facet - External Connector.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001522",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001522-AST-01",
+      "description": "The Connector schematic correctly identifies 17 components (16 in-BOM + G3 which is in_bom=false), 4 power rails (3.3V, GND, V_BATT, V_USB), 31 nets, 2 fuses, 2 resistors, 8 connectors, 1 diode, 1 jumper, 3 other. BOM correctly has 12 unique parts, excluding G3 (in_bom=false).",
+      "created_from": "FND-00001522",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "equals",
+        "value": 31
+      }
+    },
+    {
+      "id": "FND-00001522-AST-02",
+      "description": "F1 (6V/0.5A/1A on V_BATT) and F3 (6V/2.0A/4.0A on V_USB) are correctly identified as fuse-type protection devices. Their clamp nets are correctly assigned: F3 clamp=V_USB, F1 clamp=V_BATT.",
+      "created_from": "FND-00001522",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001522-AST-03",
+      "description": "The USB_DP/USB_DM differential pair is correctly identified as type=USB with D1, J3, J5 as shared components. The 5.1k CC pull-down resistors (R16, R17) are correctly classified as resistors and not confused with dividers or filters.",
+      "created_from": "FND-00001522",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001522-AST-04",
+      "description": "All four UART-named nets are detected in bus_analysis.uart. The lack of devices: [] for each is appropriate since this schematic only routes the signals through connectors without a UART IC present.",
+      "created_from": "FND-00001522",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001522-AST-05",
+      "description": "INCORRECT: G3 (OSHW_Logo, SparkFun-Aesthetic:Creative_Commons_License footprint) has in_bom=no and on_board=yes in the KiCad source. The analyzer includes it in the components list and counts it in total_components (17) even though it is a board-only graphic element. The BOM and missing_mpn list correctly exclude G3. This inflates total_components by 1 versus the actual BOM-populated component count of 16.",
+      "created_from": "FND-00001522",
+      "check": {
+        "path": "statistics.unique_parts",
+        "op": "equals",
+        "value": 12
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001522-AST-06",
+      "description": "INCORRECT: The design_observations reports USB_DM has has_esd_protection=true but USB_DP has has_esd_protection=false. D1 (DT1042-04SO) is a 4-data-line ESD IC that explicitly connects to both USB_DM (pin 4) and USB_DP (pin 6), as confirmed by the protection_devices entry which lists protected_nets: [USB_DM, USB_DP, ...]. The differential_pairs analysis also reports has_esd=false for the USB pair even though D1 appears in shared_ics. Both USB_DP and the USB differential pair should report ESD protection as true.",
+      "created_from": "FND-00001522",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "value": {
+          "ref": "D1",
+          "type": "esd_ic"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001522-AST-07",
+      "description": "The Connector board routes I2C signals ESP_22/SCL and ESP_21/SDA through J4 (Qwiic 4-pin JST 1mm connector). The bus_analysis.i2c list is empty. Since the signals traverse only connectors with no driving IC on this sub-board, the detector does not recognize the I2C bus. This is a structural limitation but still a missed observation for the net classification which correctly identifies ESP_22/SCL as a clock net.",
+      "created_from": "FND-00001522",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

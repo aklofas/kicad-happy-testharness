@@ -107,11 +107,23 @@
         },
         {
           "description": "TP4056 (U2) no longer detected in bms_systems (was previously detected with NTC sensor TH1)",
-          "analyzer_section": "signal_analysis.bms_systems"
+          "analyzer_section": "signal_analysis.bms_systems",
+          "check": {
+            "path": "signal_analysis.bms_systems",
+            "op": "contains_match",
+            "field": "bms_reference",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "LC filter L1/C2+C3+C4 at 16.37 kHz on BOOST net no longer detected (boost converter output filter)",
-          "analyzer_section": "signal_analysis.lc_filters"
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "contains_match",
+            "field": "inductor.ref",
+            "pattern": "^L1$"
+          }
         }
       ],
       "suggestions": [

@@ -1,0 +1,105 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Pcb-Files_Keyboard.kicad_sch.json",
+      "status": "new",
+      "summary": "Key matrix detection is accurate: 5 rows, 14 columns, 61 switches, 61 diodes; assembly_complexity misclassifies 62 MX keyboard switches as SMD; reports 123 SMD + 1 THT instead of ~62 SMD + 62 THT; ...",
+      "correct": [
+        {
+          "description": "The signal_analysis correctly identifies the keyboard matrix topology using net names (Row1-5, Col1-14), correctly excludes SW62 (reset button) from the matrix count, and reports 61 estimated_keys matching the actual keyboard switch count.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Correctly identifies 61 diodes (1N4148W, SOD-123), 62 switches (61 MX + 1 push button reset), and 1 IC (Raspberry Pi Pico). BOM groups by footprint variant correctly. Type classification (diode/switch/ic) is accurate.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The schematic reports smd_count=123, tht_count=1, but all 62 MX switches (marbastlib-mx:SW_MX_1u/1.25u/1.5u/1.75u) are through-hole PCB-mount. Only the 61 diodes (Diode_SMD:D_SOD-123) are SMD. The analyzer appears to classify SW_MX footprints as SMD because the library name 'marbastlib-mx' doesn't contain 'THT'. The PCB analyzer correctly identifies 61 SMD and 68 THT.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "There are 7 distinct footprints in the design (D_SOD-123, SW_MX_1u, SW_MX_1.25u, SW_MX_1.5u, SW_MX_1.75u, SW_PUSH_6mm, RPi_Pico_SMD_TH), but the analyzer reports only 2. This likely means it is only counting unique footprint package families rather than distinct footprint identifiers.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "mpn_coverage=0/124 and mpn_percent=0.0 only counts the 'mpn' field and ignores LCSC part numbers. All 61 diodes have lcsc='C81598', a valid sourcing identifier. The missing_lcsc field correctly shows 63 components lack LCSC codes, but the headline metric is misleading \u2014 49% of components (61/124) are sourceable via LCSC.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Mechanical-Keyboard-Pcb",
+      "project": "Pcb-Files_Keyboard",
+      "created": "2026-03-23T23:04:10.105696+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000907"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Pcb-Files_Keyboard.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB SMD/THT classification is accurate: 61 SMD (diodes), 68 THT (switches + Pico + reset + mechanical); Courtyard overlaps and edge clearance violation for U1 (Pico) are real and correctly reported...",
+      "correct": [
+        {
+          "description": "The PCB analyzer correctly identifies component pad types using PCB footprint data, giving smd_count=61 and tht_count=68 that properly reflect the actual assembly technology mix.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "U1 courtyard overlaps SW1 (196mm2), SW2 (196mm2), SW3 (152mm2) and U1 has -0.44mm edge clearance (outside board). This is a genuine design concern: the Pico footprint extends into the keyboard switch area and past the board edge, likely an intentional USB overhang or courtyard library error.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "A keyboard PCB at 285.853x95.528mm requires non-standard (larger) panel pricing. This is a genuine fabrication cost consideration accurately detected.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Mechanical-Keyboard-Pcb",
+      "project": "Pcb-Files_Keyboard",
+      "created": "2026-03-23T23:04:10.105717+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000908"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "Gbr's.json",
+      "status": "new",
+      "summary": "B.SilkS extends 317x158mm vs board 285x95mm \u2014 silkscreen extends far beyond board outline but alignment reports no issues; Layer completeness and drill classification are accurate; 3.988mm NPTH hol...",
+      "correct": [
+        {
+          "description": "All expected layers present (complete=True). B.Paste correctly shows 122 flashes (61 diodes x 2 pads = 122, SMD on back). F.Paste is empty (no front-side SMD). Via count of 2 is correct. PTH/NPTH drill files correctly identified.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The 71 NPTH holes at 3.988mm are the MX switch LED/stabilizer holes integral to the keyboard switch footprint, not generic board mounting holes. The 3.0mm NPTH (3 count) may be the actual mounting holes. Classification as 'mounting_holes' is semantically inaccurate for keyboard switch footprint holes, though the underlying data is correct.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "B.SilkS layer extents are 317.473x158.778mm while Edge.Cuts is 285.853x95.528mm \u2014 the silkscreen is ~32mm wider and ~63mm taller than the board. This indicates significant silk content outside the board boundary (likely key legends or large graphical art on back side). The analyzer reports aligned=True with no issues, missing this notable overextension.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Mechanical-Keyboard-Pcb",
+      "project": "Pcb-Files_Keyboard",
+      "created": "2026-03-23T23:04:10.105721+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000909"
+    }
+  ]
+}

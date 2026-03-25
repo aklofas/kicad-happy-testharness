@@ -1,0 +1,49 @@
+{
+  "file_pattern": "SolarPanelTracker_Gartenhaus.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000638",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000638-AST-01",
+      "description": "The bus_topology detected CS, MISO, MOSI, SCK prefixes indicating SPI. I2C signals SCL0/SDA0 are present in nets and design_analysis classifies SCL0 as 'clock' and SDA0 as 'data'. BOM and component data are faithfully extracted.",
+      "created_from": "FND-00000638",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000638-AST-02",
+      "description": "The USB-C connector HRO-TYPE-C-31-M-12 has no 5.1k CC pulldown resistors, no VBUS decoupling cap, and no explicit ESD IC. All four checks failing is accurate \u2014 the design appears to use USB-C only for mechanical/power connection without proper USB-C sink configuration.",
+      "created_from": "FND-00000638",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000638-AST-03",
+      "description": "D6 (P6SMB6.8CA TVS diode) is correctly identified as a protection device with protected_net='+5V' and clamp_net='GND'. The decoupling analysis correctly notes only one 0.1\u00b5F cap on +3V3 and flags U1/U2 as lacking decoupling on +5V and +BATT.",
+      "created_from": "FND-00000638",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000638-AST-04",
+      "description": "U3 is an SP3485EN (RS-485 transceiver) \u2014 identifiable from both its value and LCSC/datasheet. The signal_analysis.protection_devices correctly found D6 as TVS, but no RS-485 bus detection occurred. The design has /A, /B nets (RS-485 differential pair) and /DE (direction enable), /RO (receiver output), /DI (driver input) which are classic RS-485 signals. This is a missed detection.",
+      "created_from": "FND-00000638",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

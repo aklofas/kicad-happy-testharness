@@ -1,0 +1,45 @@
+{
+  "file_pattern": "CAN2Serial.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000403",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000403-AST-01",
+      "description": "The analyzer correctly identifies 38 non-power components: 4 ICs, 2 crystals, 13 capacitors, 7 resistors, 6 connectors, 2 jumpers, 4 mounting holes. Counts match source schematic exactly.",
+      "created_from": "FND-00000403",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 38
+      },
+      "aspirational": true,
+      "aspirational_reason": "double-prefix output path resolution bug"
+    },
+    {
+      "id": "FND-00000403-AST-02",
+      "description": "INCORRECT: U2 MCP2515 pin assignments are incorrectly mapped: the GND net receives pin 18 (VDD) instead of VSS, +5V net receives pin 9 (VSS) instead of VDD, RXCAN net maps to pin 17 (~RESET) instead of pin 2 (RXCAN), SCK net maps to pin 8 (OSC1) instead of pin 13 (SCK), SS_MCP maps to pin 3 (CLKOUT/SOF) instead of pin 16 (~CS), TXCAN maps to pin 6 (~TX2RTS) instead of pin 1 (TXCAN). For U4 (TJA1050T from custom CAN2Serial library): GND has pin 1 (TXD) and pin 3 (VCC), +5V has pin 2 (GND), CANH net has pin 6 named 'CANL' and CANL net has pin 7 named 'CANH'. These are pin coordinate resolution errors for components whose library pins do not match the expected absolute positions after applying the component placement transform.",
+      "created_from": "FND-00000403",
+      "check": {
+        "path": "nets.+5V.pins",
+        "op": "not_contains_match",
+        "value": {
+          "component": "U2",
+          "pin_name": "VSS"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000403-AST-03",
+      "description": "The schematic connects ATmega328P (U1) to MCP2515 (U2) via SPI: MOSI, MISO, SCK, and SS_MCP nets are all present and named. The memory_interfaces (or equivalent SPI bus detector) reports no SPI bus detected. The MOSI/MISO nets also partially fail to include U2 pins due to the pin coordinate mismatch described separately.",
+      "created_from": "FND-00000403",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

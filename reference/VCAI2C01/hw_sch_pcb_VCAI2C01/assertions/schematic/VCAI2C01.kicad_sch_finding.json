@@ -1,0 +1,60 @@
+{
+  "file_pattern": "VCAI2C01.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001762",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001762-AST-01",
+      "description": "The schematic has 74 components (diodes 9, capacitors 12, resistors 24, connectors 21, ICs 3, inductor 1, other 4) and 31 nets. These match the KiCad source file and the PCB/gerber data.",
+      "created_from": "FND-00001762",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 74,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001762-AST-02",
+      "description": "The board has four identical 180K/33K voltage dividers (R4/R7, R6/R8, R14/R17, R16/R18), one per differential input channel, each feeding the positive input of a TLC27L2ID opamp. All four are detected with correct ratios (0.155) and mid-point connections.",
+      "created_from": "FND-00001762",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "value": 4,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001762-AST-03",
+      "description": "The design_observations correctly identify the SDA and SCL lines with pull-up resistors R23 and R24 on the VCC rail, serving U3 (MCP3424 ADC).",
+      "created_from": "FND-00001762",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "value": 2,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001762-AST-04",
+      "description": "INCORRECT: The four detected RC networks (R3/C6, R5/C7, R13/C10, R15/C11) each have ground_net=OUT1, OUT2, OUT3, OUT4 respectively. These are opamp output signals, not ground. The topology is a feedback integrator (R in series with the negative input, C from input to opamp output), not a standard low-pass RC to GND. The filter type should not be 'RC-network' classified as a frequency filter; it is a feedback path element.",
+      "created_from": "FND-00001762",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "value": 4,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001762-AST-05",
+      "description": "U1 and U2 are TLC27L2ID dual opamps (4 opamp units total) used as instrumentation amplifier stages. They are stored under the rescue library (VCAI2C01A-rescue:TLC27L2ID) rather than a standard Amplifier_Operational:* lib_id. The opamp_circuits detector returns an empty list, missing all four opamp circuit instances.",
+      "created_from": "FND-00001762",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

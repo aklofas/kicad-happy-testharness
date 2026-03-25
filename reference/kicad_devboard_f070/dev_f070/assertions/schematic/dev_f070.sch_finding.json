@@ -1,0 +1,30 @@
+{
+  "file_pattern": "dev_f070.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002355",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002355-AST-01",
+      "description": "INCORRECT: statistics.total_components=7 and statistics.component_types shows one entry per type (ic:1, connector:1, capacitor:1, etc.) but the components array has 24 entries: ic:3, connector:8, capacitor:6, resistor:4, crystal:1, led:1, switch:1. The bug is that the statistics deduplicate by reference prefix \u2014 all 'C?' collapse to one count, all 'J?' to one, etc. \u2014 rather than counting each component instance. This affects total_components, unique_parts, and component_types counts.",
+      "created_from": "FND-00002355",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 20
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002355-AST-03",
+      "description": "The schematic contains an AMS1117-3.3 (SOT-223) linear LDO regulator converting +5V USB to +3.3V. signal_analysis.power_regulators is empty. The regulator is correctly placed in a subcircuit (center_ic U? AMS1117-3.3) but the detector fails to classify it. This likely fails because the component reference is 'U?' (unannotated) rather than a numbered ref like 'U2', confusing the regulator recognition heuristic.",
+      "created_from": "FND-00002355",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

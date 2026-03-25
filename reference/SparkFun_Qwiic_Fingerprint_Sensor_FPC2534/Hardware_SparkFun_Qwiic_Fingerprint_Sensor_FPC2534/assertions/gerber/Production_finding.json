@@ -1,0 +1,93 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001451",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001451-AST-01",
+      "description": "The gerber set includes F.Cu (L1,Top) and B.Cu (L4,Bot) confirmed via x2_attributes, correctly reporting layer_count=4. This matches the PCB stackup.",
+      "created_from": "FND-00001451",
+      "check": {
+        "path": "layer_count",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001451-AST-02",
+      "description": "1425 via holes at 0.3mm via drill tool T1 (PTH, ViaDrill), 350 component holes at 1.016mm (T3), 100 at 3.1mm (T4), 50 NPTH at 0.65mm (T5), 25 NPTH at 2.3mm (T6). Total 1950 holes correctly reported.",
+      "created_from": "FND-00001451",
+      "check": {
+        "path": "drill_classification.vias.count",
+        "op": "equals",
+        "value": 1425
+      }
+    },
+    {
+      "id": "FND-00001451-AST-03",
+      "description": "alignment.aligned=true with no issues. All copper layers (B.Cu and F.Cu) have identical extents (133.175\u00d7143.288mm), confirming the panelized board has consistent layer registration. The SilkS, Paste, and Mask layers have slightly smaller extents as expected.",
+      "created_from": "FND-00001451",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001451-AST-04",
+      "description": "Total 13,237 flashes and 436,410 draws across 9 gerber files reflect a panelized board with 25 copies of the 25.4mm\u00d725.4mm board. The high via count (1425 via flashes per copper layer) confirms this is a panel.",
+      "created_from": "FND-00001451",
+      "check": {
+        "path": "statistics.total_flashes",
+        "op": "greater_than",
+        "value": 10000
+      }
+    },
+    {
+      "id": "FND-00001451-AST-05",
+      "description": "trace_widths.min_trace_mm=0.1524mm with 5 unique widths (0.1524, 0.1778, 0.2616, 0.3048, 0.4064mm). These conductor widths are correctly identified from x2 aperture attributes in both B.Cu and F.Cu gerbers.",
+      "created_from": "FND-00001451",
+      "check": {
+        "path": "trace_widths.min_trace_mm",
+        "op": "equals",
+        "value": 0.1524
+      }
+    },
+    {
+      "id": "FND-00001451-AST-06",
+      "description": "pad_summary.smd_ratio=0.86 with 3206 SMD apertures vs 525 THT holes. The board is primarily SMD with some THT connectors and standoffs, which matches the design.",
+      "created_from": "FND-00001451",
+      "check": {
+        "path": "pad_summary.smd_ratio",
+        "op": "range",
+        "min": 0.8,
+        "max": 0.95
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected 0.8-0.95, got 0"
+    },
+    {
+      "id": "FND-00001451-AST-07",
+      "description": "INCORRECT: The file SparkFun_Qwiic_Fingerprint_Sensor_FPC2534_panelized.GKO has layer_type='B.Mask' and x2_attributes showing FileFunction='Soldermask,Bot'. The .GKO extension conventionally denotes Edge.Cuts/board outline, and the aperture_analysis shows 'Profile' aperture function indicating this is the board outline. The layer_type and x2 attributes are likely being read from the previous file's x2 context or the GKO file contains incorrect x2 data. This causes Edge.Cuts to appear in missing_required incorrectly.",
+      "created_from": "FND-00001451",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "not_contains_match",
+        "value": "Edge.Cuts"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001451-AST-08",
+      "description": "INCORRECT: drill_tools shows '0.6mm' with count=0. The drill file defines tool T2 with diameter=0.6mm but zero actual hole placements. This is likely a tool defined in the Excellon header but never used, or it maps to a different tool after the 0.65mm NPTH tool was added. This anomaly should be flagged but the analyzer accepts it silently.",
+      "created_from": "FND-00001451",
+      "check": {
+        "path": "drill_classification.component_holes.count",
+        "op": "equals",
+        "value": 525
+      },
+      "aspirational": true
+    }
+  ]
+}

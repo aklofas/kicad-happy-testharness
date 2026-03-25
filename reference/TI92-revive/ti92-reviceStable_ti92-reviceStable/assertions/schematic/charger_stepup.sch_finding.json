@@ -1,0 +1,30 @@
+{
+  "file_pattern": "charger_stepup.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001606",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001606-AST-01",
+      "description": "INCORRECT: The charger_stepup schematic uses global labels 'IN+' and 'IN-' as power input terminals for a LiPo battery charger (connected to TP4056 VCC and power capacitors). The differential_pairs detector classifies them as a differential signal pair with ESD protection and series resistors. These are single-ended DC power rails (battery positive/negative terminals), not a differential signal pair. R14/R15 are charge current programming resistors, not differential termination. The has_esd=true claim (attributing U3 TP4056 as ESD device) is also incorrect.",
+      "created_from": "FND-00001606",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001606-AST-02",
+      "description": "The charger_stepup schematic contains DW01 (LiPo battery protection IC with overcharge/overdischarge/overcurrent protection) and FS8205A (dual N-channel MOSFET for battery protection cutoff). Both are canonical battery protection devices. The protection_devices detector returns []. The DW01 has its CS (current sense) pin connected to a sense resistor R16, which is a typical protection topology. These should be detected as BMS/protection components.",
+      "created_from": "FND-00001606",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

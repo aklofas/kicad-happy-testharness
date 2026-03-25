@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ADACUS.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000362",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000362-AST-01",
+      "description": "INCORRECT: In the top-level ADACUS.kicad_sch, opamp U102 (MCP6001-E/OT, VCOM buffer) is reported with input_resistor={ref:R304, ohms:2200000}. R304 (2M2) is a resistor in the ADC sub-sheet that connects VCOM (U102 output) to IN_BUF (ADC input buffer signal net). R304 is not on the non-inverting input path of U102 \u2014 it is downstream of U102's output. The standalone Power schematic correctly reports U102 without any input_resistor. This spurious attribution occurs because the top-level merges all nets and R304 appears adjacent to VCOM.",
+      "created_from": "FND-00000362",
+      "check": {
+        "path": "signal_analysis.opamp_circuits[1].input_resistor",
+        "op": "eq",
+        "value": null
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "file_pattern": "DRV10987V01.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000462",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000462-AST-01",
+      "description": "The analyzer correctly enumerates all 30 components: IC1, R1-R7, C1-C8, D1-D2, L1, J2, J3, J5, J6, J10-J12, M1-M4. Values match the schematic exactly (e.g., R3/R1/R2=4k7, R6=160R, R7=100R, R4/R5=DNF, L1=47uH DE0703-47, C1/C6/C7=10uF, C2=10nF, C3/C8=100nF, C4/C5=1uF, D1=BZV55C-5,6V, D2=GREEN, IC1=DRV10987DPWPR). Types are correctly assigned (ic, resistor, capacitor, led, diode, inductor, connector, other).",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-02",
+      "description": "All 25 IC1 (DRV10987DPWPR) pins are correctly mapped. Pins 23,24 (VCC_1, VCC_2) -> +12V; pin 6 (VREG) -> +5V; pins 5,8,15,16,25 (SWGND, GND_1, PGND_1, PGND_2, GND_2) -> GND; pin 9 (V3P3) -> V3P3; pins 10,11 (SCL, SDA) -> SCL/SDA; pin 12 (FG) -> FG; pin 13 (SPEED) -> STEP; pin 14 (DIR) -> DIR; pins 17-22 (U_1,U_2,V_1,V_2,W_1,W_2) -> U/V/W motor phase nets; pin 4 (SW) -> SW inductor net; pins 1,2,3 (VCP, CPP, CPN) -> charge pump nets; pin 7 (V1P8) -> 1.8V bypass net. Zero unconnected pins reported, matching the schematic.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-03",
+      "description": "The analyzer correctly identifies an I2C bus with SCL (R1=4k7 pull-up to VDD) and SDA (R2=4k7 pull-up to VDD). IC1 is identified as the I2C device on both lines. Both lines have pull_up correctly attributed. The pull-up rail (VDD) is correctly identified.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-04",
+      "description": "All five power rails are present and correctly named. +12V feeds IC1 VCC pins (motor drive); +5V is the VREG rail (internal buck converter output); GND is the common ground; V3P3 is the IC1 internal 3.3V LDO output; VDD is derived from V3P3 via R7 (100R) and serves as the I2C pull-up rail. Net counts are correct: 19 total nets (13 named + 6 unnamed local nodes).",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-05",
+      "description": "+5V decoupling: C7 (10uF), C8 (100nF), C1 (10uF) = 20.1uF total, 3 caps. +12V decoupling: C6 (10uF) = 10uF. V3P3 decoupling: C4 (1uF). All correct and consistent with schematic net assignments. VDD rail has no decoupling cap (by design, since R7 provides isolation from V3P3). C5 (1uF) and C2 (10nF) are correctly not listed as power rail decoupling because they sit on unnamed local nets (V1P8 and charge pump nodes).",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-06",
+      "description": "Net U carries IC1 pins 17 (U_1) and 18 (U_2), connected to J6 pins 1,2 and J12 pin 3. Net V carries IC1 pins 19 (V_1) and 20 (V_2), connected to J6 pins 3,4 and J12 pin 2. Net W carries IC1 pins 21 (W_1) and 22 (W_2), connected to J6 pins 5,6 and J12 pin 1. This is consistent with the MLAB dual-connector motor output scheme.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-07",
+      "description": "The analyzer correctly identifies IC1 as an 'ic_with_internal_regulator' topology with L1 (47uH) as the external inductor and +5V as the output rail. This reflects the DRV10987's integrated buck converter: +12V VCC input -> internal switch -> SW pin (pin 4) -> L1 -> VREG (pin 6, +5V net). This is accurately captured even though IC1 is primarily a 3-phase BLDC motor controller, not a standalone regulator IC.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-08",
+      "description": "The schematic uses a net label named 'STEP' which connects to IC1 pin 13 (named 'SPEED' in the symbol). The analyzer correctly preserves the schematic net name 'STEP' and records the pin_name as 'SPEED'. The net 'STEP' contains IC1 pin 13 (SPEED), R5 (DNF, optional direction resistor), and J5 connector pins 3,4. This is correct schematic tracing.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-09",
+      "description": "Net FG connects IC1 pin 12 (FG, open-drain frequency generator output) to R3 (4k7, pulled to VDD via pin 1) and exits on J5 pins 5,6 (AUX connector). R3 pin 1 is on VDD and pin 2 is on FG. This is the correct open-drain tachometer output with pull-up resistor topology.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-10",
+      "description": "The pwr_flag_warnings section correctly identifies that +12V, +5V, GND, and VDD have no power_out driver or PWR_FLAG symbol. These rails are powered externally (via J10/J11 connectors) or derived internally, and the schematic lacks explicit PWR_FLAG symbols. The warnings are accurate KiCad ERC behavior. VDD is correctly included since R7 (passive) does not qualify as a power source.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-11",
+      "description": "IC1 pins 1 (VCP), 2 (CPP), 3 (CPN) form the internal gate driver charge pump circuit. C2 (10nF) bridges CPP (__unnamed_3) and CPN (__unnamed_2). C3 (100nF) bridges VCP (__unnamed_4) to +12V. These are correctly assigned to unnamed nets since they are local nodes with no net labels, and they are correctly excluded from the named-rail decoupling analysis. The charge pump capacitor function is preserved in the component-to-net mapping.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000462-AST-12",
+      "description": "D1 is a BZV55C-5.6V Zener diode with its cathode (pin 1) on the +5V net and anode (pin 2) on GND. This is a transient voltage clamp protecting the +5V rail at 5.6V. The signal_analysis.protection_devices array is empty. The analyzer detects D2 (GREEN LED) correctly as an LED but misses D1 as a Zener/TVS protection element. The lib_id 'ISM02A-rescue:D_ZENER-MLAB_D' clearly indicates a Zener diode.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000462-AST-13",
+      "description": "R4 and R5 both have value 'DNF' (Do Not Fit), which is a common schematic convention indicating these parts are not installed. The analyzer reports dnp=false for both and statistics.dnp_parts=0. In the BOM, they are listed as real parts with type='resistor'. The analyzer should detect the 'DNF' value string and either flag these as DNP or note them as optional/omitted components. This affects BOM accuracy for assembly.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000462-AST-14",
+      "description": "IC1 (DRV10987DPWPR) is a 12V, 3-phase sensorless BLDC motor controller from Texas Instruments. The ic_pin_analysis entry for IC1 has function='' (empty string). The ki_description in the lib symbol for the DRV10975PWPR template reads '12-V, 3-Phase, Sensorless BLDC Motor Controller'. The function/classification of IC1 as a motor controller is not surfaced in any section of the output (no motor_controller category, no BLDC detection). The power_regulator detection captures only the internal buck converter aspect.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000462-AST-15",
+      "description": "L1 (47uH) between IC1.SW (pin 4) and the +5V/VREG node, combined with C7 (10uF) and C8 (100nF) on the +5V rail, forms the LC output filter of the integrated buck regulator. The signal_analysis.lc_filters array is empty. While the power_regulator entry captures 'IC1 with L1 as inductor and +5V as output', the detailed LC filter characteristics (L=47uH, C=20.1uF total on output) are not surfaced. This limits the ability to evaluate the regulator's output filter design.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000462-AST-16",
+      "description": "IC1 pin 9 outputs V3P3 (3.3V internal LDO), which feeds through R7 (100R) to the VDD bus used for I2C pull-ups and the I2C connector (J2 pins 5,6). This resistor-filtered power supply from V3P3 to VDD is not described anywhere in the output (not in power_regulators, design_analysis, or subcircuits). The VDD rail has no decoupling cap and appears as a floating 'power' net with no source in the power domain analysis, despite being derived from V3P3 via R7.",
+      "created_from": "FND-00000462",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

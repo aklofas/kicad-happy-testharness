@@ -1,0 +1,51 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001817",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001817-AST-01",
+      "description": "alignment.aligned=True with no issues reported. The layer extents show consistent board dimensions across B.Cu, B.Mask, B.Paste, B.SilkS, F.Cu, F.Mask, F.Paste, F.SilkS. This is correct \u2014 the panelized gerbers are properly registered.",
+      "created_from": "FND-00001817",
+      "check": {
+        "path": "alignment.aligned",
+        "value": true,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001817-AST-02",
+      "description": "The 4-layer panelized gerber set includes SparkPNT_GPSDO_panelized.GL2 (TF.FileFunction=Copper,L2,Inr) and SparkPNT_GPSDO_panelized.GL3 (TF.FileFunction=Copper,L3,Inr), but completeness.found_layers only lists the 8 outer layers [B.Cu, B.Mask, B.Paste, B.SilkS, F.Cu, F.Mask, F.Paste, F.SilkS]. The inner copper layers are not mapped to In1.Cu/In2.Cu in the found_layers list, causing the gerber analyzer to report only 2 copper layers for a confirmed 4-layer board. This is a gerber analyzer bug where GL2/GL3 extensions with Copper,L2,Inr and Copper,L3,Inr TF.FileFunction are not being translated to KiCad layer names.",
+      "created_from": "FND-00001817",
+      "check": {
+        "path": "completeness.found_layers",
+        "value": "In1.Cu",
+        "op": "contains_match"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001817-AST-03",
+      "description": "The drill_report.rpt in the production folder documents 816 plated through-holes (T1-T10 with sizes from 0.3mm to 1.7mm) plus additional NPTH holes. The gerber analyzer reports drills=[] (0 drill files), total_holes=0. The production folder only contains a .drl file referenced in the drill report but no .drl file is physically present \u2014 the gerbers were exported without drill files. The analyzer correctly reports has_pth_drill=False and has_npth_drill=False since no Excellon drill files exist in the directory, which is accurate. However, completeness.complete=False with missing_required=['Edge.Cuts'] is partially misattributed \u2014 the real completeness issue is missing drill files, not just Edge.Cuts.",
+      "created_from": "FND-00001817",
+      "check": {
+        "path": "completeness.has_pth_drill",
+        "value": false,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001817-AST-04",
+      "description": "SparkPNT_GPSDO_panelized.GKO contains board profile/edge cuts data (apertures have TA.AperFunction=Profile) but its TF.FileFunction attribute was incorrectly set to 'Soldermask,Bot' by the panelizer tool. The gerber analyzer correctly reads TF.FileFunction and cannot distinguish the wrong metadata from the actual aperture function. This is a panelizer tool bug (not an analyzer bug), but results in Edge.Cuts being listed as missing_required and completeness.complete=False. The board outline IS present in the file content.",
+      "created_from": "FND-00001817",
+      "check": {
+        "path": "completeness.missing_required",
+        "value": "Edge.Cuts",
+        "op": "contains_match"
+      },
+      "aspirational": true
+    }
+  ]
+}

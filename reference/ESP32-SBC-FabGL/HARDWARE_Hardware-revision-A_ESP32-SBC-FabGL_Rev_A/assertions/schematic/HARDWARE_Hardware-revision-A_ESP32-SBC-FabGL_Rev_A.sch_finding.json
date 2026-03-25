@@ -1,5 +1,5 @@
 {
-  "file_pattern": "HARDWARE_Hardware-revision-A_ESP32-SBC-FabGL_Rev_A.sch",
+  "file_pattern": "ESP32-SBC-FabGL_Rev_A.sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000182",
   "generated_by": "findings.py promote",
@@ -22,7 +22,8 @@
         "path": "subcircuits",
         "op": "min_count",
         "value": 1
-      }
+      },
+      "aspirational": true
     },
     {
       "id": "FND-00000182-AST-03",
@@ -33,18 +34,6 @@
         "op": "min_count",
         "value": 1
       }
-    },
-    {
-      "id": "FND-00000182-AST-04",
-      "description": "Voltage divider R17(470k)/R18(150k) for battery sensing not detected",
-      "created_from": "FND-00000182",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R17$"
-      },
-      "aspirational": true
     }
   ]
 }

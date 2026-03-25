@@ -1,0 +1,28 @@
+{
+  "file_pattern": "LIGHTNING01.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000803",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000803-AST-01",
+      "description": "AS3935 supports both I2C and SPI. The schematic uses SCL and SDA_MOSI net labels; analyzer correctly detects I2C bus with R5 as pullup. I2C is the primary protocol signaled by the label naming.",
+      "created_from": "FND-00000803",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000803-AST-02",
+      "description": "The LIGHTNING01 schematic powers VCC/GND through connectors without PWR_FLAG symbols. The analyzer correctly flags both rails as lacking power_out or PWR_FLAG, which would cause ERC errors in KiCad.",
+      "created_from": "FND-00000803",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

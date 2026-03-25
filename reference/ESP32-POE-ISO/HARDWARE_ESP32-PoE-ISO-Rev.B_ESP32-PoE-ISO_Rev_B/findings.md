@@ -1,0 +1,74 @@
+# Findings: ESP32-POE-ISO / HARDWARE_ESP32-PoE-ISO-Rev.B_ESP32-PoE-ISO_Rev_B
+
+## FND-00000539: DCDC1 (F0505S-2WR2 isolated DC-DC module) misclassified as type 'diode'; isolation_barriers detector empty — DCDC1 (F0505S-2WR2) is a galvanic isolation barrier; U5 (TX4138 PoE buck converter) miss...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: HARDWARE_ESP32-PoE-ISO-Rev.M1_ESP32-PoE-ISO_Rev_M1.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- phy_reference=U4 (LAN8710A-EZC), connectors=[LAN_CON1 RJP-003TC1]. The magnetics list is empty, which is correct since this RJ45 has integrated magnetics (LPJ4112CNL). Accurate.
+- All three dividers correctly identified with accurate resistor values, ratios, and mid-point connections. The U7 feedback divider shows is_feedback=true and connects to U7 FB pin correctly.
+- The file_version 20230121 corresponds to KiCad 7. The analyzer outputs 'unknown' rather than '7'. This is a minor cosmetic gap — the file is parsed correctly, but the version string could be more informative. Not a functional accuracy issue.
+
+### Incorrect
+- The F0505S-2WR2 is a 5V-in/5V-isolated-out SIP-7 DC-DC converter module with explicit 'ISOLATION' text in its symbol. It has Vin+/Vin- and Vout+/Vout- pins and is used to provide galvanic isolation in this PoE ISO design. The analyzer assigns it type 'diode' (and category 'diode'), apparently misidentifying it from its library path prefix or symbol geometry. It should be classified as 'ic' or 'dc_dc_converter'.
+  (signal_analysis)
+- U7 (TPS62A02A) has output_rail '+3.3V' detected, but U5 (TX4138) is missing output_rail entirely. U5's SW pin feeds inductor L5 → 5V_DCDC net. The 5V_DCDC net is the output of the PoE isolated power stage. The regulator detector found the input_rail ('Spare1') but failed to resolve the output via the inductor network.
+  (signal_analysis)
+- R28 (0.03R, 1206 shunt) is a current-sense resistor in the PoE input path whose measured voltage goes to U5 ILIM pin. The ILIM pin on TX4138 is a current-limit configuration input, not a sense amp. Classifying this as a current-sense circuit with sense_ic=U5 (a buck converter) is incorrect — this is an ILIM programming network, not a closed-loop current measurement circuit.
+  (signal_analysis)
+
+### Missed
+- This board is called 'PoE-ISO' specifically because it uses a galvanic isolation module (DCDC1, F0505S-2WR2) between the PoE input (Earth ground domain) and the board GND domain. The isolation_barriers list is empty. The board has two distinct ground references: 'Earth' (PoE/Ethernet side) and 'GND' (MCU side) with the DCDC1 bridging them. The detector should identify DCDC1 as an isolation barrier.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000540: rf_chains detector classifies all 8 ICs as RF 'transceivers' in legacy .sch format; Rev L (legacy .sch): power regulators not detected — U7 (SY8089AAAC) and U5 (TX4138) missed
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: HARDWARE_ESP32-PoE-ISO-Rev.L_ESP32-PoE-ISO_Rev_L.sch.json
+- **Created**: 2026-03-23
+
+### Correct
+(none)
+
+### Incorrect
+- All ICs in the Rev L legacy .sch output appear in rf_chains.transceivers: U7 (SY8089AAAC voltage regulator), U3 (BL4054B LiPo charger), U2 (TPS2376D PoE controller), U1 (CH340T USB-UART), U8 (SN74LVC1G04 inverter), and others. None of these are RF components. The rf_chains detector is over-triggering on all IC components in legacy .sch format, likely due to how lib_id strings are matched. This false positive is absent in the M1 kicad_sch output (rf_chains=0 items there).
+  (signal_analysis)
+
+### Missed
+- The Rev L output shows power_regulators: 0 items, while the same design in M1 kicad_sch format detects both U7 and U5 as switching regulators. The legacy .sch parser is not extracting enough pin/net information to trigger regulator detection. The crystal circuit (Q1) is correctly detected in Rev L.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000541: Rev M shares the same key characteristics as M1 (same DCDC1 misclassification and empty isolation_barriers)
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: HARDWARE_ESP32-PoE-ISO-Rev.M_ESP32-PoE-ISO_Rev_M.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- Rev M output has identical issues: DCDC1 classified as 'diode', isolation_barriers empty, U5 missing output_rail. Component counts are nearly identical (137 total, same ICs). The findings for M apply directly to M.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

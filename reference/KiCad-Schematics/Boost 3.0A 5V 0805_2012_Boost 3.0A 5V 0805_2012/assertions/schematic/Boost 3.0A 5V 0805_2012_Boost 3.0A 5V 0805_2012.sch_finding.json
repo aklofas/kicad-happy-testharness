@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Boost 3.0A 5V 0805_2012.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000701",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000701-AST-01",
+      "description": "R? 30k and R? 10k form the standard adjustable boost regulator output voltage divider between BOOSTVOUT and GND with the midpoint at U? FB pin. voltage_dividers is empty. The power_regulators entry also has input_rail=null, missing the BATT+ input rail.",
+      "created_from": "FND-00000701",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

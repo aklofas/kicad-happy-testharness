@@ -1,0 +1,104 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_candleLight_candleLight.sch.json.json",
+      "status": "promoted",
+      "summary": "Power rail +3V3 falsely classified as I2C SDA bus; CAN_S (CAN transceiver silent pin) falsely classified as I2C SCL; CAN bus correctly detected with CAN_TX/CAN_RX (STM32) and CAN_TXD/CAN_RXD (TJA10...",
+      "correct": [
+        {
+          "description": "The top-level multi-sheet parse correctly identifies CAN bus nets: CAN_TX and CAN_RX connecting to STM32 U201, and CAN_TXD/CAN_RXD on the transceiver side, plus physical CAN_L and CAN_H. The MCP1754ST LDO (U301) is correctly identified as an LDO with +5V input and +3V3 output. The 8 MHz crystal circuit with 20 pF load caps for the STM32 is also correctly detected.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.can",
+            "op": "min_count",
+            "value": 4
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "bus_analysis.i2c lists net '+3V3' as an SDA line with devices U201, U301, and U401. This is a clear false positive: +3V3 is a power supply rail, not a data bus. The misclassification occurs because U201 (STM32F072) has a pin named 'PB11/I2C2_SDA/...' that happens to connect to the +3V3 rail (likely a power pin group or the schematic wires the pin to VCC). The analyzer is matching I2C bus membership based on partial pin-name substring rather than requiring the net to not be a power rail.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "max_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "bus_analysis.i2c lists net 'CAN_S' as an SCL line with device U201. CAN_S is the silent/standby control pin of the TJA1051 CAN transceiver (U401), not an I2C clock line. U201's PB6 pin name includes 'I2C1_SCL' among its alternate functions but the net is named CAN_S and carries a CAN bus signal. The analyzer should suppress I2C bus detection when the net name strongly indicates a different protocol (e.g. 'CAN_S').",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "max_count",
+            "value": 2
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "candleLight",
+      "project": "candleLight",
+      "created": "2026-03-24T08:48:29.689321+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002301"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_candleLight_power.sch.json.json",
+      "status": "promoted",
+      "summary": "MCP1754ST LDO regulator not detected in per-sheet power.sch analysis",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The power sub-sheet contains U301 (MCP1754ST-3302E/MB), a 3.3 V LDO regulator with +5V input and +3V3 output. When analyzed as a standalone sheet, signal_analysis.power_regulators is empty and all signal_analysis fields are empty. The regulator is only detected in the top-level candleLight.sch (multi-sheet parse). This is expected behavior \u2014 per-sub-sheet analysis misses regulators because the input/output nets (+5V, +3V3) are hierarchical labels that don't carry power context without the parent sheet. However, it means per-sheet outputs for sub-sheets are significantly incomplete for multi-sheet designs.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "candleLight",
+      "project": "candleLight",
+      "created": "2026-03-24T08:48:29.689338+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002302"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber_candleLight_export_v1.1_gerber_4x6.json.json",
+      "status": "new",
+      "summary": "Gerber set for 158x132 mm 4x6 panel correctly parsed as complete and aligned",
+      "correct": [
+        {
+          "description": "The v1.1 4x6 export (a larger panel/tiled version of the candleLight board) contains all required layers (F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, F.SilkS, B.SilkS, Edge.Cuts) plus PTH and NPTH drill files. The completeness check passes with no missing required or recommended layers, and alignment is confirmed across all layers. The 1176 via holes at 0.4 mm drill and 72 NPTH mounting holes are correctly classified.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "candleLight",
+      "project": "candleLight",
+      "created": "2026-03-24T08:48:29.689341+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002303"
+    }
+  ]
+}

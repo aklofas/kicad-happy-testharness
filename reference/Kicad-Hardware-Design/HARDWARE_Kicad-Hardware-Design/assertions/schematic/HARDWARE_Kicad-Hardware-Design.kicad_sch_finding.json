@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Kicad-Hardware-Design.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000785",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000785-AST-01",
+      "description": "Subcircuit detected: L7805 (U1) with C1/C2/C3 caps, D1-D4 diodes (bridge), R1 resistor, D5 LED, J1/J2 connectors. Component counts (12 total: 1 IC, 4 diodes, 1 resistor, 2 connectors, 3 caps, 1 LED) are correct.",
+      "created_from": "FND-00000785",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000785-AST-02",
+      "description": "D1-D4 form a full-wave bridge rectifier \u2014 a very common and recognizable pattern. The analyzer correctly identified them as diodes but did not call out the H-bridge/bridge-rectifier arrangement in any detector field (no 'bridge_rectifier' or similar subcircuit type).",
+      "created_from": "FND-00000785",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+# Findings: Gate-Access-Control-PCB / Gate Access Control
+
+## FND-00000574: kicad_version reported as 'unknown' for version 20230121 (KiCad 7); False positive I2C detection: 'SDA/SS' net is SPI SS, not I2C SDA; Crystal circuit with load caps correctly identified (Y1, 22pF ...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: Gate Access Control.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- Crystal Y1 detected with C1 and C2 as load caps (22pF each), series combination giving 11pF + ~3pF stray = 14pF effective load. Feedback resistor R1 (1M) across XTAL1/XTAL2 correctly identified. Standard AVR crystal oscillator circuit.
+- Power regulator PS1 with fuse F1 correctly detected. The TMLM04253 is an AC/DC converter (line-powered), and the design observation correctly flags missing output decoupling caps and missing +3.3V decoupling.
+- SPI bus identified with MOSI/MISO/SCK all connected between U1 (ATmega328), J3 (expansion header), and J8 (ISP programming header). Chip select count correctly reported as 1.
+
+### Incorrect
+- The file header is '(kicad_sch (version 20230121) (generator eeschema)'. The date-based version 20230121 corresponds to KiCad 7, but the analyzer outputs kicad_version: 'unknown'. The analyzer should map date-based schema versions to KiCad release strings (e.g. 20230121 → KiCad 7).
+  (signal_analysis)
+- The bus_analysis reports an I2C bus on net 'SDA{slash}SS' with no pull-up. The net name combines SDA and SS (Slave Select) — the ATmega328 PB2 pin is labeled SDA/SS in the datasheet, and this net connects to J3 (a general expansion header). There is no I2C device in this design; the SPI bus (MOSI/MISO/SCK) is correct and detected. The SDA part of the net name is triggering a false I2C match.
+  (signal_analysis)
+
+### Missed
+- J4 pin 2 (named 'GND' in the lib symbol) is connected to the +5V net, and pin 3 (named 'VCC') is connected to GND. The analyzer faithfully represents these connections but does not flag this as an ERC/connectivity issue. This is a real design error in the source schematic that could be caught by cross-referencing pin names against connected net names.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---

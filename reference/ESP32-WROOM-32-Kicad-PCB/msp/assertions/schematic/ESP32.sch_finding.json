@@ -1,0 +1,38 @@
+{
+  "file_pattern": "ESP32.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000495",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000495-AST-01",
+      "description": "The schematic has USB1 (Micro-B) D+ and D- lines going through text labels to CH340C (U3). The analyzer correctly identifies these as a differential pair. The has_esd: false is accurate \u2014 there is no explicit ESD protection device (TVS diode or similar) on these lines in the schematic.",
+      "created_from": "FND-00000495",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000495-AST-02",
+      "description": "The source schematic contains exactly: 7 capacitors (C1\u2013C7), 9 resistors (R1\u2013R9), 3 ICs (U1/U2/U3), 1 USB connector (USB1), 2 NPN transistors (Q1/Q2), 1 diode (D3), 2 buttons (B1/B2), 2 LEDs (D1/D2), 2 15-pin connectors (JP1/JP2). The JSON reports 29 total_components with capacitor:7, resistor:9, ic:3, connector:1, transistor:2, diode:1, switch:2, led:2, jumper:2 \u2014 all correct.",
+      "created_from": "FND-00000495",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000495-AST-03",
+      "description": "All 21 GPIO nets used in the schematic (IO0\u2013IO39 plus EN) are correctly listed in the nets section with their label positions. The empty pins: [] for IO nets is expected behavior for KiCad 5 legacy format since U1 (ESP32) pin definitions come from the external library symbol, not from the .sch file itself, so the analyzer cannot resolve which pins are on which nets.",
+      "created_from": "FND-00000495",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

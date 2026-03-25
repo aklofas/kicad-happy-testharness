@@ -1,0 +1,18 @@
+{
+  "file_pattern": "Raspberry.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002092",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002092-AST-01",
+      "description": "The crystal circuit analyzer detects Y1 (32.768kHz) connected to the PCF8523T RTC (U1) and reports load_caps=[] (empty). This is correct\u2014the PCF8523 has integrated crystal load capacitors internally, so no external load caps are needed or present in the schematic. The crystal connects directly to OSCI/OSCO pins of the PCF8523.",
+      "created_from": "FND-00002092",
+      "check": {
+        "path": "signal_analysis.crystal_circuits[0].load_caps",
+        "op": "max_count",
+        "value": 0
+      }
+    }
+  ]
+}

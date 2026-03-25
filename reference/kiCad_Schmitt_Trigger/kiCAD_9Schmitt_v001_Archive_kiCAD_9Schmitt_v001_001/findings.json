@@ -1,0 +1,43 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002484",
+      "source_file": "schematic/kiCad_Schmitt_Trigger/kiCAD_9Schmitt_v001_kiCAD_9Schmitt_v001.sch.json",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "RC input-conditioning filters correctly detected with accurate cutoff frequency",
+      "details": "All 9 channels of the 9-channel Schmitt trigger design have R2(18K2)+C(100nF) RC low-pass filters correctly identified with fc=87.45 Hz (verified: 1/(2*pi*18200*100e-9) = 87.45 Hz). The analyzer correctly identified R2 as the filter resistor and excluded the upstream series resistor R1(82K) that is isolated by diode D1.",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "FND-00002485",
+      "source_file": "schematic/kiCad_Schmitt_Trigger/kiCAD_9Schmitt_v001_kiCAD_9Schmitt_v001.sch.json",
+      "analyzer_type": "schematic",
+      "category": "missed",
+      "summary": "Subcircuit descriptions empty \u2014 Schmitt trigger input conditioning topology not classified",
+      "details": "The 9-Schmitt design uses 74LVC3G14 (Triple Schmitt-Trigger Inverter ICs) with per-channel R-D-RC conditioning networks. All 9 subcircuit entries have description='' \u2014 the analyzer failed to classify the topology as 'Schmitt trigger input conditioning' or any equivalent label. Given that the part name 74LVC3G14 explicitly identifies it as a Schmitt trigger and the RC filter + series diode + series resistor pattern is a textbook Schmitt trigger input conditioning circuit, this is a missed classification opportunity.",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002486",
+      "source_file": "schematic/kiCad_Schmitt_Trigger/kiCAD_TriSchmitt_v001_kiCAD_TriSchmitt_v001.sch.json",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "total_components=16 but components list has 18 entries due to multi-unit IC (74LVC3G14 U1 appears 3 times)",
+      "details": "The schematic statistics report total_components=16 matching unique reference count. However, the components list contains 18 entries because U1 (74LVC3G14, a 3-gate IC) is listed three times \u2014 once per gate unit. The statistic total_components=16 correctly counts physical components by unique reference designator. However, this multi-unit representation is potentially confusing: unique_parts=8 (by value grouping) and total_components=16 (unique refs) are both reported, but the number of component entries in the list (18) does not match total_components (16). This inconsistency could mislead downstream consumers of the JSON.",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 16
+      }
+    }
+  ]
+}

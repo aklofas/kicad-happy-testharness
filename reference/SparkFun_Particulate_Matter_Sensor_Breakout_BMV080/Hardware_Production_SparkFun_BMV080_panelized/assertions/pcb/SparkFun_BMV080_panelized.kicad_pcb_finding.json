@@ -1,0 +1,29 @@
+{
+  "file_pattern": "SparkFun_BMV080_panelized.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001507",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001507-AST-01",
+      "description": "The panelized board contains 54 copies of the single-board design, correctly reflected in the counts: 2869 footprints, 9558 track segments, 3240 vias, 54 zones, and 54 times the per-instance components. The board dimensions of 160.98 x 132.0 mm reflect the full panel.",
+      "created_from": "FND-00001507",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 2869
+      }
+    },
+    {
+      "id": "FND-00001507-AST-02",
+      "description": "INCORRECT: The panelized board reports routing_complete=false with unrouted_net_count=3. The 3 'unrouted' nets are: unconnected-(J1-NC-PadNC1), unconnected-(J1-NC-PadNC2), and unconnected-(U1-NC-Pad13). These are intentional no-connect pads that KiCad assigns to auto-generated nets; they are not actual routing failures. There are 54 instances of each NC net in the panelized board (because the panel contains 54 copies of the design). The board is fully routed \u2014 the NC pads do not need traces.",
+      "created_from": "FND-00001507",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    }
+  ]
+}

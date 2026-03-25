@@ -1,0 +1,28 @@
+{
+  "file_pattern": "Example_STM32F031K6.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000728",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000728-AST-01",
+      "description": "Identified U1 as LDO with input_rail '__unnamed_1' (VPP via Schottky D1) and output_rail '__unnamed_0' (to LED indicator D2). Topology, lib_id, and neighbor extraction are all accurate.",
+      "created_from": "FND-00000728",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000728-AST-02",
+      "description": "21 total components (2 ICs, 10 caps, 1 Schottky diode, 1 LED, 2 resistors, 1 crystal, 1 switch, 3 connectors) match the design. Power rails +3.3V, GND, VPP correctly identified.",
+      "created_from": "FND-00000728",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

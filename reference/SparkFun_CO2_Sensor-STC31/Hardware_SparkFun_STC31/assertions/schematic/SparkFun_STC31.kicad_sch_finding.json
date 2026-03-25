@@ -1,0 +1,63 @@
+{
+  "file_pattern": "SparkFun_STC31.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001381",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001381-AST-01",
+      "description": "The analyzer correctly identifies the I2C bus with two devices (U3=STC31, U4=SHTC3) on both SCL and SDA nets. The bus_analysis section accurately reflects the design \u2014 both Sensirion sensors share the I2C bus, which matches the schematic intent. The ADDR net for address selection is also captured.",
+      "created_from": "FND-00001381",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c[0].devices",
+        "value": "U3",
+        "op": "contains_match"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected None, got not a list"
+    },
+    {
+      "id": "FND-00001381-AST-02",
+      "description": "statistics.total_components=31 matches the BOM breakdown: 2 caps, 1 LED, 4 fiducials, 3 graphic/logo symbols (G1/G2/G3), 3 connectors (J3/J4/J5), 5 jumpers (JP1-JP5), 6 resistors (R1-R5/R9), 4 standoffs (ST1-ST4), 2 ICs (U3/U4). The type breakdown (resistor:6, mounting_hole:4, other:4 [incl. G4], connector:3, fiducial:4, jumper:5, led:1, ic:2, capacitor:2) is consistent. Note G4 (OSHW_Logo) is found only in the PCB footprints list, not the schematic components list, explaining the 4 'other' count.",
+      "created_from": "FND-00001381",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 31,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001381-AST-03",
+      "description": "decoupling_analysis shows rail '3.3V' with C1 and C3 both at 0.1uF, total 0.2uF. This matches the BOM exactly. The observation correctly notes has_bulk=false (no bulk cap like 10uF), has_bypass=true, has_high_freq=false \u2014 appropriate for a pure I2C sensor board powered externally via Qwiic.",
+      "created_from": "FND-00001381",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis[0].cap_count",
+        "value": 2,
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected 2, got None"
+    },
+    {
+      "id": "FND-00001381-AST-04",
+      "description": "assembly_complexity.smd_count=31 and tht_count=0. In reality J4 is a 4-pin PTH (through-hole) header (footprint SparkFun-Connector:1x04 and PCB type=smd is wrong for that footprint class). However the schematic analyzer does not have direct footprint type information, and standoffs (ST1-ST4) also have THT drill holes. The PCB analyzer correctly shows tht_count=1. This discrepancy is acceptable since the schematic analyzer works from symbol type heuristics, not actual footprint pads.",
+      "created_from": "FND-00001381",
+      "check": {
+        "path": "assembly_complexity.total_components",
+        "value": 31,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001381-AST-05",
+      "description": "INCORRECT: bus_analysis.i2c[0].has_pull_up and [1].has_pull_up are both false, and pull_ups arrays are empty. However, R2 (2.2k on SCL) and R3 (2.2k on SDA) are I2C pull-up resistors gated by JP2 (labeled 'I2C', described as 'Solder Jumper, 3-pole, pins 1+2+3 closed/bridged'). The schematic text explicitly labels this section 'I2C Pull-Ups'. The analyzer fails to trace the resistors through the jumper to the SCL/SDA nets. The design_observations section also reports has_pullup=false for both lines. This is a false negative on pull-up detection.",
+      "created_from": "FND-00001381",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c[0].has_pull_up",
+        "value": true,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

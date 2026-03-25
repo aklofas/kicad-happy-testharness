@@ -71,15 +71,25 @@ def evaluate_assertion(assertion, data):
     elif op == "min_count":
         count = _countable(val)
         threshold = check.get("value", 0)
-        result["passed"] = count >= threshold
-        result["actual"] = count
-        result["expected"] = f">= {threshold}"
+        if not isinstance(threshold, (int, float)):
+            result["passed"] = False
+            result["actual"] = count
+            result["expected"] = threshold
+        else:
+            result["passed"] = count >= threshold
+            result["actual"] = count
+            result["expected"] = f">= {threshold}"
     elif op == "max_count":
         count = _countable(val)
         threshold = check.get("value", 0)
-        result["passed"] = count <= threshold
-        result["actual"] = count
-        result["expected"] = f"<= {threshold}"
+        if not isinstance(threshold, (int, float)):
+            result["passed"] = False
+            result["actual"] = count
+            result["expected"] = threshold
+        else:
+            result["passed"] = count <= threshold
+            result["actual"] = count
+            result["expected"] = f"<= {threshold}"
     elif op == "equals":
         expected = check.get("value")
         # When comparing a list/dict to a number, compare count
@@ -102,15 +112,25 @@ def evaluate_assertion(assertion, data):
     elif op == "greater_than":
         count = _countable(val)
         threshold = check.get("value", 0)
-        result["passed"] = count > threshold
-        result["actual"] = count
-        result["expected"] = f"> {threshold}"
+        if not isinstance(threshold, (int, float)):
+            result["passed"] = False
+            result["actual"] = count
+            result["expected"] = threshold
+        else:
+            result["passed"] = count > threshold
+            result["actual"] = count
+            result["expected"] = f"> {threshold}"
     elif op == "less_than":
         count = _countable(val)
         threshold = check.get("value", 0)
-        result["passed"] = count < threshold
-        result["actual"] = count
-        result["expected"] = f"< {threshold}"
+        if not isinstance(threshold, (int, float)):
+            result["passed"] = False
+            result["actual"] = count
+            result["expected"] = threshold
+        else:
+            result["passed"] = count < threshold
+            result["actual"] = count
+            result["expected"] = f"< {threshold}"
     elif op == "field_equals":
         if not isinstance(val, list):
             result["actual"] = "not a list"

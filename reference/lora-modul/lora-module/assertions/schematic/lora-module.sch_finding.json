@@ -1,0 +1,41 @@
+{
+  "file_pattern": "lora-module.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002442",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002442-AST-01",
+      "description": "The component Q1 has value '32MHz' and is the crystal oscillator for the SX1276 LoRa transceiver. The BOM and crystal_circuits detector correctly identify it as a crystal with a 15pF load cap. However, the statistics.component_types reports 'crystal: 1' with Q1 as the reference, while Q1 should be classified under a 'crystal' type not using the Q prefix (BJT/FET convention). The Q prefix is causing a missing_mpn list inclusion for Q1 (it appears in missing_mpn), but critically the component_types correctly shows 'crystal: 1' and not 'transistor: 1', so the type classification is right. The main issue is that the crystal_circuits entry uses reference 'Q1' which could cause confusion, but reflects the actual schematic annotation.",
+      "created_from": "FND-00002442",
+      "check": {
+        "path": "statistics.component_types.crystal",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002443-AST-02",
+      "description": "The bus_analysis.spi section reports two separate SPI buses for the single SX1276 transceiver (U2): bus_id 'pin_U2' (SCK, MISO=CS net, MOSI) and bus_id '0' (MOSI, MISO with CS). The same physical SPI interface on U2 is being detected by two different detection paths and reported as two buses. Additionally, in bus 'pin_U2' the MISO signal is mapped to the net named 'CS', which is actually the chip-select net \u2014 this suggests a net naming collision where the MISO pin detection algorithm is confusing the net named 'CS' with a chip select signal. Only one SPI bus should be reported.",
+      "created_from": "FND-00002443",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002445-AST-03",
+      "description": "The design uses two power symbol names '+3.3V' and '+3V3' which are almost certainly the same physical net (common KiCad naming inconsistency). The analyzer correctly lists both in statistics.power_rails but treats them as separate power domains in design_analysis.power_domains, placing U2 on '+3.3V' and U5 on '+3V3'. This results in no cross-domain coupling being flagged, when in practice these are almost certainly the same supply. The analyzer should at minimum warn about similar-named power rails.",
+      "created_from": "FND-00002445",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "equals",
+        "value": 3
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "file_pattern": "VLFANT01B.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001790",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001790-AST-01",
+      "description": "VLFANT01B has 5 connectors (J1-J3 RJ45, J7 SMA, J9 2\u00d73 header) and 4 mounting holes (M1-M4), totaling 9. The analyzer reports total_components=9 matching the source schematic exactly.",
+      "created_from": "FND-00001790",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 9,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001790-AST-02",
+      "description": "VLFANT01B is a passive RF interconnect panel (VLF antenna signal router) with only connectors and mounting holes. All 21 signal path detectors correctly return empty arrays \u2014 no active components, no filters, no regulators, no protocols.",
+      "created_from": "FND-00001790",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 0,
+        "op": "max_count"
+      }
+    },
+    {
+      "id": "FND-00001790-AST-03",
+      "description": "INCORRECT: The four HOLE-type components (M1-M4, library VLFANT01B-rescue:HOLE) are classified as component_type='other' instead of 'mounting_hole'. Other designs with similar mounting hole footprints are classified correctly. The rescue library prefix may be preventing the type classifier from recognizing the HOLE symbol name.",
+      "created_from": "FND-00001790",
+      "check": {
+        "path": "statistics.component_types.other",
+        "value": 4,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

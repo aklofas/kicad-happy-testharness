@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Lora_Keypad2.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002276",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002276-AST-01",
+      "description": "design_analysis.bus_analysis.i2c correctly reports I2C_SCL and I2C_SDA each with two 4.7K pull-up resistors (R1/R3 on SCL, R2/R4 on SDA) referenced to +3.3V. The doubled pull-ups (parallel 4.7K = 2.35K effective) are a design decision for a two-device bus (Adafruit Feather + XBee), and the analyzer faithfully lists all four resistors across both lines.",
+      "created_from": "FND-00002276",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002276-AST-02",
+      "description": "INCORRECT: bus_topology.detected_bus_signals reports two false buses: prefix='C' (width=6, range='C1..C3') and prefix='R' (width=8, range='R1..R4'). In this schematic, C1/C2/C3 and R1/R2/R3/R4 are global labels representing video switch row/column signal lines on a GSCARTSW chip, not any kind of bus. There are zero bus wires or bus entries in the schematic. The detector is pattern-matching net name prefixes against component reference conventions (C=capacitor, R=resistor) yielding nonsensical bus detections.",
+      "created_from": "FND-00002276",
+      "check": {
+        "path": "bus_topology.detected_bus_signals",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

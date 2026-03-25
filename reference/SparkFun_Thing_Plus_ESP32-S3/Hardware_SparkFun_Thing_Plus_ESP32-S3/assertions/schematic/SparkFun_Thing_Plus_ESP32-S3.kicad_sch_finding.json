@@ -1,0 +1,88 @@
+{
+  "file_pattern": "SparkFun_Thing_Plus_ESP32-S3.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001571",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001571-AST-01",
+      "description": "signal_analysis.power_regulators correctly identifies both U6 (VIN\u21923.3V) and U1 (VIN\u21923.3V_P) as RT9080 LDO regulators with ldo topology. Output rails and input rails are accurately captured.",
+      "created_from": "FND-00001571",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001571-AST-02",
+      "description": "signal_analysis.addressable_led_chains correctly identifies D6 as a WS2812B single-LED chain, with the correct chain length of 1 and proper net connections.",
+      "created_from": "FND-00001571",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "contains_match",
+        "value": {
+          "ref": "D6"
+        }
+      }
+    },
+    {
+      "id": "FND-00001571-AST-03",
+      "description": "design_analysis.bus_analysis.i2c correctly identifies R15 as a 2.2k SDA pull-up and R12 as a 2.2k SCL pull-up. The pull-up values are appropriate for a 400kHz Qwiic I2C bus.",
+      "created_from": "FND-00001571",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "exists",
+        "value": null
+      }
+    },
+    {
+      "id": "FND-00001571-AST-04",
+      "description": "annotation_issues.duplicate_references correctly identifies [\"C3\",\"G3\",\"R1\"] as duplicates arising from the two-sheet hierarchical design (root sheet + Peripherals sheet each having their own C3, G3, R1 instances). This is accurate: separate sheet instances should use unique annotation.",
+      "created_from": "FND-00001571",
+      "check": {
+        "path": "annotation_issues.duplicate_references",
+        "op": "contains_match",
+        "value": "C3"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 3 items"
+    },
+    {
+      "id": "FND-00001571-AST-05",
+      "description": "pwr_flag_warnings correctly identifies that the VIN and GND power nets lack PWR_FLAG symbols to satisfy ERC. This is accurate for the schematic's power architecture where VBUS/VIN enters from a connector without an explicit PWR_FLAG.",
+      "created_from": "FND-00001571",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001571-AST-06",
+      "description": "subcircuits correctly captures U5 as an MCP73831 LiPo battery charger with its associated passive components (programming resistor, input/output filtering capacitors). The charger topology and battery/charging net connections are accurate.",
+      "created_from": "FND-00001571",
+      "check": {
+        "path": "subcircuits",
+        "op": "contains_match",
+        "value": {
+          "ref": "U5"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001571-AST-07",
+      "description": "The schematic contains U2, a DT1042-04SO USB ESD protection IC on the USB D+/D- lines. The signal_analysis.protection_devices array is empty. The DT1042-04SO is a 4-channel TVS array specifically for USB ESD protection and should be recognized as a protection device.",
+      "created_from": "FND-00001571",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "value": {
+          "ref": "U2"
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

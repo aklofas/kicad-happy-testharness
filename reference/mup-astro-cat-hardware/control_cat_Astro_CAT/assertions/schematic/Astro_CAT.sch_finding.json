@@ -1,0 +1,18 @@
+{
+  "file_pattern": "Astro_CAT.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002466",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002466-AST-01",
+      "description": "The analyzer correctly identified 4 ICs with proper types, 6 connectors, 33 total components on +12V/+5V/+3.3V power rails. UART nets (Rx/Tx/PI_RX/PI_TX) and I2C bus (unnamed SDA/SCL nets connected to 24C32 EEPROM) are both detected. 1-wire bus label is captured in the net list. The LM2576 buck regulator topology with L1 inductor and schottky diodes D2/D3 is present in BOM.",
+      "created_from": "FND-00002466",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "equals",
+        "value": 4
+      }
+    }
+  ]
+}

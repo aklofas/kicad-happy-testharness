@@ -1,0 +1,29 @@
+{
+  "file_pattern": "wireless_module.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000520",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000520-AST-01",
+      "description": "All 63 unique components are correctly identified. U201 (ESP32-S3-MINI-S3-WROOM-1) is correctly typed as IC. The 34 test points (TP201-TP234) are correctly typed and listed. SPI bus is detected with MISO/MOSI/SCK nets all attributed to U201, with chip_select_count=1 (SD_CS). UART signals UART0TX/UART0RX and UART1TX/UART1RX correctly attributed to U201. I2C SDA/SCL correctly detected on U201. USB differential pair (USB+/USB-) correctly detected with ESD protection via U201. The two NPN transistors Q201/Q202 (MMBT3904) are correctly typed. JP203-JP206 (SolderJumper_3_Open, in_bom=False) are correctly excluded from missing_mpn. J201 (Socket_01x02) has mpn='?' which is a placeholder non-empty value and is correctly excluded from missing_mpn. Global labels TX-485/RX-485/TX-CAN/RX-CAN are correctly captured for cross-sheet connectivity.",
+      "created_from": "FND-00000520",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000520-AST-02",
+      "description": "J205 is a Micro_SD_Card socket connected to U201's SPI bus (MOSI, MISO, SCK, SD_CS). The memory_interfaces list is empty. J205 is explicitly a Micro_SD_Card type but the analyzer does not add it to memory_interfaces. The SPI bus analysis correctly identifies the SD_CS chip select (count=1) but does not name J205 as the associated SPI device. Additionally, J205 is listed as missing_footprint (empty footprint field in schematic) which is a legitimate observation but the missing memory interface is the primary gap.",
+      "created_from": "FND-00000520",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

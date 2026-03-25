@@ -1,0 +1,29 @@
+{
+  "file_pattern": "single-col.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002325",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002325-AST-01",
+      "description": "The key_matrices detector correctly found a 6-row x 1-column matrix with 6 switches and 6 diodes using net_name detection (row1..row6, col0). The addressable_led_chains detector correctly identified 6 SK6812MINI LEDs (D7-D12) as a WS2812-protocol chain with Din/Dout signal flow and correctly estimated 360mA current draw.",
+      "created_from": "FND-00002325",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002325-AST-02",
+      "description": "INCORRECT: The bus_topology.detected_bus_signals reports {prefix: 'row', width: 18, range: 'row1..row6'}. There are only 6 unique row signals (row1 through row6), but each global_label appears 3 times in the schematic (once per sheet group), giving 18 label instances. The width field is counting label occurrences rather than unique signal names. The correct width should be 6. This would mislead a user into thinking there is an 18-bit bus when only 6 unique row signals exist.",
+      "created_from": "FND-00002325",
+      "check": {
+        "path": "bus_topology.detected_bus_signals",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

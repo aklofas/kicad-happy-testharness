@@ -1,0 +1,381 @@
+{
+  "findings": [
+    {
+      "id": "FND-00000306",
+      "repo": "FMU_schematic_design-from-STM32H743IIT6",
+      "project": "FMU_Base_board_Design_FMU_Base_board_Design",
+      "analyzer_type": "schematic",
+      "source_file": "FMU_Base_board_Design_FMU_Base_board_Design.kicad_sch.json",
+      "status": "promoted",
+      "created": "2026-03-23T00:00:00+00:00",
+      "datasheets_used": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "summary": "PX4-style FMU flight controller based on STM32H743IIT6 with 3-source power management (LTC4417+SIS903DN MOSFETs), 3x MIC5330 dual LDOs, 2x CAN (TJA1051T), 4x TXS0108 level shifters, IMU (ICM-20649), barometer (BMP388), magnetometer (BMM150), FRAM (FM25V05-G), microSD with EMIF06 filter, USB-C with ESD protection. Analyzer correctly identifies most subsystems but misses voltage dividers, only finds 1 of 2 CAN buses, and has incomplete regulator output mapping for dual-output LDOs.",
+      "correct": [
+        {
+          "description": "STM32H743IITx MCU correctly identified with internal regulator topology",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators[?(@.ref=='U6')].topology",
+            "op": "eq",
+            "value": "ic_with_internal_regulator"
+          }
+        },
+        {
+          "description": "3 I2C buses (I2C1-I2C3) correctly detected with pull-up resistors (1.5k to MCU_3V3)",
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations[?(@.category=='i2c_bus')]",
+            "op": "min_count",
+            "value": 6
+          }
+        },
+        {
+          "description": "SPI bus for IMU (ICM-20649) on SPI1 correctly detected with SCK/MOSI/MISO",
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi[?(@.bus_id=~'IMUSPI1')]",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "SPI bus for FRAM (FM25V05-G) on SPI5 correctly detected",
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi[?(@.bus_id=~'FRAMSPI5')]",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "SDMMC2 4-bit SD card bus correctly detected with EMIF06 filter IC",
+          "analyzer_section": "design_analysis.bus_analysis.sdio",
+          "check": {
+            "path": "design_analysis.bus_analysis.sdio[?(@.bus_width==4)]",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USBLC6-2 ESD protection on USB data lines correctly detected",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices[?(@.ref=='VD1')]",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USB Type-C connector (USB4105-GF-A) CC pull-down check passes",
+          "analyzer_section": "usb_compliance",
+          "check": {
+            "path": "usb_compliance.summary.pass",
+            "op": "gte",
+            "value": 3
+          }
+        },
+        {
+          "description": "RC filter on NRST pin (R7=10k, C8=100nF, fc=159 Hz) correctly detected",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Reset pin analysis identifies pullup, filter cap, switch, debug connector",
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations[?(@.category=='reset_pin')]",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "153 components across 26 hierarchical sheets correctly counted",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "gte",
+            "value": 150
+          }
+        },
+        {
+          "description": "FM25V05-G FRAM correctly detected in memory_interfaces with SPI to STM32",
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces[?(@.memory_reference=='U9')]",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USB differential pairs detected for both internal and external USB paths",
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs[?(@.type=='USB')]",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "FMU_PWM bus signal group correctly identified (PWM1..PWM8)",
+          "analyzer_section": "bus_topology",
+          "check": {
+            "path": "bus_topology.detected_bus_signals[?(@.prefix=='FMU_PWM')]",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "37 UART nets detected covering USART1-3, UART4-5, UART7, USART8",
+          "analyzer_section": "design_analysis.bus_analysis.uart",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "min_count",
+            "value": 30
+          }
+        },
+        {
+          "description": "9 decoupling rail analyses covering all major power rails",
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 9
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "I2C1_BMP388_DRDY net incorrectly classified as I2C SCL -- it is a data-ready interrupt from BMP388 to STM32, not an I2C clock",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "Only 1 CAN bus detected (U13/CAN2) but 2 exist -- U12/CAN1 with TJA1051T, CAN1_H/CAN1_L nets, and 120 ohm termination R27 completely missed",
+          "analyzer_section": "design_analysis.bus_analysis.can"
+        },
+        {
+          "description": "SIS903DN-T1-GE3 (U18/U19/U20) classified as 'ic' but are dual P-channel MOSFETs for power switching, lib_id contains 'MOSFET'",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "U14 (MIC5330) output_rail is __unnamed_9 (BYP pin) instead of MCU_3V3 (VOUT1 pin 8, the primary output)",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U14$"
+          }
+        },
+        {
+          "description": "U16 (MIC5330) output_rail is __unnamed_27 (VOUT2) instead of VDD_3V3_PWM (VOUT1 pin 8)",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U16$"
+          }
+        },
+        {
+          "description": "U15 (MIC5330) only reports SD_3V3 output but misses second output SENSOR_3V3 -- dual-output LDO",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U15$"
+          }
+        },
+        {
+          "description": "SPI bus for BMP388 (U8) and BMM150 (U10) misidentifies GND net as MOSI signal",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        }
+      ],
+      "missed": [
+        {
+          "description": "6 voltage dividers for LTC4417 UV/OV thresholds: R21(453k)/R22(56k), R23(105k)/R22, R34(453k)/R35(56k), R36(105k)/R35, R37(453k)/R38(56k), R39(105k)/R38",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 3
+          }
+        },
+        {
+          "description": "LTC4417CUF power path priority controller not classified as power management IC -- selects from 3 input sources to VDD_5V_IN",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "CAN bus termination resistors not reported: R27=120 ohm on CAN1, R28=120 ohm on CAN2",
+          "analyzer_section": "design_analysis.bus_analysis.can",
+          "check": {
+            "path": "design_analysis.bus_analysis.can",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "4x TXS0108ERGYR level shifter/buffer ICs not detected as level translation despite lib_id 'Level-Shifting:TXS0108ERGYR'",
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "EMIF06-MSD02N16 (U11) SD card EMI filter + ESD protection not flagged in protection_devices",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U11$"
+          }
+        },
+        {
+          "description": "Power path switch topology (LTC4417 + 3x SIS903DN P-FETs) not recognized as prioritized power selection circuit",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Voltage divider detector should examine resistor pairs connected to IC threshold/feedback pins",
+        "Dual-output LDO detection should report both VOUT1 and VOUT2 rails, prioritizing named rails",
+        "CAN bus detector should find all TJA1051T transceivers, not just one",
+        "I2C net classification should not flag DRDY/interrupt nets that happen to contain 'I2C' in the name",
+        "Components with 'MOSFET' in lib_id should be classified as transistor not IC",
+        "Level shifter ICs with 'Level-Shifting' in lib_id should be reported in an appropriate category",
+        "Power path controllers like LTC4417 should be distinctly classified from LDO regulators"
+      ]
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "FMU_Base_board_Design_FMU_Base_board_Design.kicad_sch.json",
+      "status": "new",
+      "summary": "STM32H743 flight controller: good IC/SPI/I2C/UART detection, but misses 6 voltage dividers (UV/OV monitoring), misclassifies I2C1_BMP388_DRDY interrupt as I2C SCL, CAN termination not detected, USBLC6-2 called varistor instead of ESD protection",
+      "correct": [
+        {
+          "description": "153 total components correctly counted",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 153
+          }
+        },
+        {
+          "description": "Multiple power regulators detected including LDOs and buck converters",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 3
+          }
+        },
+        {
+          "description": "SPI buses correctly detected with MOSI/MISO/SCK signals",
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "I2C buses detected with pull-ups",
+          "analyzer_section": "design_analysis.bus_analysis.i2c",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USBLC6-2 detected as protection device",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "RC filters on UART/sensor inputs correctly detected",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "I2C1_BMP388_DRDY net (data-ready interrupt from BMP388) misclassified as I2C SCL because net name contains 'I2C1'",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "USBLC6-2 (USB_ESD_Protection library) classified as varistor instead of ESD protection IC",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "missed": [
+        {
+          "description": "6 voltage dividers for UV/OV monitoring (R21/R22, R23/R22, R34/R35, R36/R35, R37/R38, R39/R38 feeding UV1/OV1/UV2/OV2/UV3/OV3 pins) not detected",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 6
+          }
+        },
+        {
+          "description": "CAN bus termination resistors (R27 120ohm CAN1_H-CAN1_L, R28 120ohm CAN2_H-CAN2_L) not detected",
+          "analyzer_section": "design_analysis.bus_analysis.can",
+          "check": {
+            "path": "design_analysis.bus_analysis.can",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "EMIF06-MSD02N16 SD card EMI/ESD filter not detected as protection device",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Net name heuristic for I2C should not classify _DRDY/_IRQ/_INT suffix nets as I2C even if they contain I2C in the name",
+        "Voltage divider detection should find dividers feeding UV/OV monitoring pins of power management ICs",
+        "CAN bus termination detection: 120ohm between CANH and CANL nets",
+        "ESD protection ICs from USB_ESD_Protection library should be classified as esd_protection, not varistor"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "FMU_schematic_design-from-STM32H743IIT6",
+      "project": "FMU_Base_board_Design_FMU_Base_board_Design",
+      "created": "2026-03-23T18:13:47.820434+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

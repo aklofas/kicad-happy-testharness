@@ -1,0 +1,40 @@
+{
+  "file_pattern": "Sharp-LV.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001439",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001439-AST-01",
+      "description": "The analyzer correctly reports a 4-layer board (F.Cu, In1.Cu, In2.Cu, B.Cu), 53 footprints with 49 SMD and 1 THT (J2 the programming header), board dimensions of 69.735 x 44.655mm, 649 track segments, 106 vias, and fully routed (0 unrouted). The stackup details (1.6mm total, 0.035mm copper) are also captured.",
+      "created_from": "FND-00001439",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001439-AST-02",
+      "description": "The via_in_pad analysis correctly identifies 3 vias near pads: J7/MP2 (different net, flagged), TP3/1 (same net, benign), and U1/T23 (same net, benign fanout via). The J7/MP2 detection is genuinely noteworthy as it is a different-net via near a mounting pad on the JST battery connector.",
+      "created_from": "FND-00001439",
+      "check": {
+        "path": "vias.via_analysis.via_in_pad[0].same_net",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001439-AST-03",
+      "description": "INCORRECT: The statistics report tht_count=1 (correctly J2, the pin header) and back_side=0 (all 53 footprints on front). However TP2 in the footprints list is type 'exclude_from_pos_files' and its pcb entry shows layer F.Cu with no exclude_from_bom flag, while TP1 and TP3 both correctly have exclude_from_bom=true. The TP2 footprint is missing the exclude_from_bom field that TP1/TP3 have, representing an inconsistency in test-point attribute extraction.",
+      "created_from": "FND-00001439",
+      "check": {
+        "path": "statistics.tht_count",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

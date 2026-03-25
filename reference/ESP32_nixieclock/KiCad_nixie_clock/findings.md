@@ -1,0 +1,102 @@
+# Findings: ESP32_nixieclock / KiCad_nixie_clock
+
+## FND-00000500: Component references, nets, and labels all correctly extracted for ESP32 sub-sheet
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: KiCad_ESP32.sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- U1 (ESP32-DevKitC) is correctly identified. All 19 global labels (nxecom0-5, nxea-d, led0-5, nxedot, nxecol0-1) are captured. Power rails (+3.3V, +5V, GND) are correct. 14 no-connects match the source. Net count of 22 is correct (3 power + 19 signal). Pins array for U1 is empty (legacy .sch limitation — expected for KiCad 5 format when lib data is missing). Net classification correctly marks led0-5 as 'output_drive'.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000501: IN-12B nixie tubes (NT1-NT6) and IN-3 tubes (NT7-NT10) are misclassified as 'net_tie' instead of a display/tube type; Nixie sub-sheet component counts, resistor values, optocoupler (TLP627-2 U2-U4,...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: KiCad_nixie.sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- All 49 components are extracted: 6x IN-12B (NT1-NT6), 4x IN-3 (NT7-NT10), 4x TLP627-2 (U2, U3, U4, U7), 1x TLP627 (U6), 1x SN74141 (U5), 6x 300-ohm R (R7-R12 optocoupler input resistors), 6x 300-ohm R (R13-R18 LED resistors), 3x 300-ohm R (R19-R20, R22 col/dot resistors), 6x 20k R (R1-R6 high-voltage cathode limiters), 2x 100k R (R21, R23), 6x LED (D1-D6), 4x CONN_02X05 (P1-P4). Values and footprints are accurate. Power rails (+3.3V, +5V, GND) and 85 nets are correct.
+
+### Incorrect
+- The source defines NT1-NT6 as 'IN-12B' (Nixie tube) and NT7-NT10 as 'IN-3' (separator Nixie tube). These are vacuum-fluorescent/gas-discharge display tubes, not net ties. The analyzer classifies them as 'net_tie' in both the BOM and components list. This is because the lib_id 'IN-12B' and 'IN-3' do not match any known display or tube pattern. A more appropriate type would be 'display' or a passthrough classification. This affects the component_types count (10 net_ties vs expected 0), and the component descriptions are misleading.
+  (signal_analysis)
+
+### Missed
+- The nixie sub-sheet (analyzed independently) contains 5 optocoupler ICs (U2, U3, U4, U6, U7 — TLP627-2 and TLP627) forming an isolation barrier between the 3.3V ESP32 domain and the high-voltage nixie cathode domain. The standalone nixie.sch JSON output shows signal_analysis.isolation_barriers as an empty array, while the top-level nixie_clock.sch correctly detects the isolation barrier. This confirms the per-sheet analysis misses cross-sheet context, which is expected, but users relying on per-sheet outputs will not see this important circuit feature.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000502: Top-level hierarchical schematic correctly aggregates all 4 sub-sheets with 72 components; NJM7805S (U9, 5V linear regulator) and NJM2360A (U8, boost switching controller) not detected in power_reg...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: KiCad_nixie_clock.sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- The top-level nixie_clock.sch correctly parses all 4 sub-sheets (nixie_clock.sch, ESP32.sch, nixie.sch, power.sch) and aggregates 72 total components. Component types are correct: 9 ICs (U1, U2, U3, U4, U5, U6, U7, U8, U9), 10 net_ties (NT1-NT10), 29 resistors, 6 LEDs, 5 connectors (P1-P4 + CON1), 2 transistors (Q1, Q2), 2 diodes (D7, D8), 7 capacitors (C1-C7), 1 inductor (L1), 1 varistor (VR1). Power rails correctly include +9V which appears only in power.sch. Total components 72 and unique_parts 29 match the source.
+- The isolation_barriers analysis correctly identifies the boundary between the main GND domain and the nixie cathode ground domain 'ngnd'. All 5 optocoupler instances (U2 unit1, U2 unit2, U3 unit1, U3 unit2, U4 unit1, U4 unit2, U7 unit1, U7 unit2, U6) are listed as isolation components. The ground_domains split between 'main: [GND]' and 'N: [ngnd]' is accurate.
+- U5 (SN74141, BCD-to-decimal decoder for Nixie tube driving) is correctly extracted with DIP-16 footprint. It appears in the subcircuits entry with neighbor P2 (CONN_02X05). The +5V and GND pins are correctly mapped. The BCD input signals nxea, nxeb, nxec, nxed are present as single-pin nets (listed in design_observations single_pin_nets), which is correct since the matching outputs are on the ESP32 side connected via global labels.
+
+### Incorrect
+- In the transistor_circuits entry for Q1 (2SK3234, N-MOSFET), the analyzer reports drain_net='GND' and source_net='__unnamed_97'. In the schematic (power.sch), Q1 has: G connected to U8 output (gate drive from NJM2360A), D connected to the switching node (L1 one side, D7 cathode), S connected to GND. So drain should be on the inductor/diode side (switching node) and source on GND. The output reports drain_net='GND' which is the source, and source_net='__unnamed_97' which is the switching node. The drain_is_power flag is also incorrectly set to true (GND is ground, not power). This indicates the analyzer swapped D/S pins for this MOSFET.
+  (signal_analysis)
+- Q2 is a 2SA1015 PNP transistor used as a driver for the NJM2360A's CT pin (oscillator capacitor discharge). In the schematic: E goes to the collector of Q1's side (not ground directly), C goes to the U8 timing capacitor control, B is driven by U8. The analyzer reports emitter_net='GND' and emitter_is_ground=true, but examining the schematic wire connections: Q2 E (pin 1) is actually at the +9V supply node (collector side of PNP should connect to +9V or the inductor side), while Q2 C (pin 2) connects to the NJM2360A gate drive output. The emitter_is_ground=true classification appears wrong for this PNP circuit.
+  (signal_analysis)
+- The net_classification maps VNXE to 'signal', but VNXE is the output of the NJM2360A boost converter — it is the nixie tube anode supply rail (approximately 170V DC). It connects to the anodes of all 6 IN-12B tubes through 20k current-limiting resistors R1-R6 and to the VNXE global label inputs in the nixie sub-sheet. It should be classified as 'power' (or a high-voltage power rail). The current 'signal' classification is incorrect and could mislead design analysis.
+  (signal_analysis)
+- U9 (NJM7805S) Vout pin (pin 3, type power_out) is on net __unnamed_103, which goes to C6. However, the actual +5V named power rail net already has C7 connected to it. The NJM7805S output (__unnamed_103) and the +5V net are separate unnamed/named nets in this analysis — suggesting the wire connecting U9 Vout directly to the +5V bus is not being netted correctly. In the schematic, C6 pin 2 (in parallel with C7) connects to the same node as C7 pin 2 which is on '+5V'. This means __unnamed_103 and +5V should be the same net. This is a net merging issue for the power.sch sub-sheet when analyzed in isolation.
+  (signal_analysis)
+
+### Missed
+- The power.sch sub-sheet contains U9 (NJM7805S, a 5V linear regulator in TO-252 package) and U8 (NJM2360A, a step-up/boost switching controller with L1=470uH inductor, Q1=2SK3234 N-MOSFET, D7=UF2010 Schottky diode, C2=10uF/400V output cap) forming a boost converter to generate the ~170V VNXE rail for the nixie tubes. The signal_analysis.power_regulators array is empty in both power.sch.json and nixie_clock.sch.json. The analyzer should detect at least the NJM7805S as a linear regulator (it has a named 'Vout' power_out pin on net __unnamed_103 going to +5V decoupled by C6 and C7). The NJM2360A boost circuit (U8 + L1 + Q1 + D7 + C2 + VR1) should be detected as a boost converter generating VNXE.
+  (signal_analysis)
+- In power.sch, L1 (LHL13NB471K, 470uH) and C2 (10uF/400V) form the output LC stage of the NJM2360A-based boost converter generating ~170V VNXE. The lc_filters array is empty. L1 is on a net connecting the +9V input side through the MOSFET switch (Q1 drain side) and D7 (UF2010 Schottky fly-back diode) to the VNXE output. C2 is connected across VNXE. This is a classic boost topology that the analyzer does not detect.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000503: All 22 components in power sub-sheet correctly extracted with proper types and values; VR1 (10k trim potentiometer) classified as 'varistor' instead of 'potentiometer' or 'resistor'; R24 (1 ohm, R_...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: KiCad_power.sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- U8 (NJM2360A boost controller), U9 (NJM7805S 5V LDO), Q1 (2SK3234 N-MOSFET), Q2 (2SA1015 PNP), D7 (UF2010 Schottky), D8 (1N4148W signal diode), R24 (1 ohm current sense), R25/R29 (1k), R26/R28 (470), R27 (470k feedback), C1 (470uF input bulk), C2 (10uF/400V output), C3 (330pF timing), C4/C7 (47uF SMD), C5/C6 (0.1uF decoupling), L1 (LHL13NB471K 470uH), VR1 (10k trim pot), CON1 (BARREL_JACK) all correctly identified. PWR_FLAG components correctly detected as power rail flags.
+- The signal_analysis.rc_filters entry correctly identifies R27 (470k) and C2 (10uF/400V) as a low-pass RC filter with cutoff 0.03 Hz and time constant 4.7s. This is actually the feedback/compensation network from VNXE output back to the NJM2360A INV pin through VR1 trim pot. The detection is technically correct as an RC low-pass filter topology, though contextually it is a feedback voltage divider for regulation. The calculated values are accurate.
+
+### Incorrect
+- In power.sch, VR1 has lib_id='VR_3P' (3-pin variable resistor/potentiometer from KiCad library) and value '10k'. It is used as an output voltage adjustment potentiometer for the NJM2360A boost converter. The analyzer classifies it as type 'varistor', which is incorrect — a varistor is a voltage-dependent resistor (MOV), not a potentiometer. The correct classification should be 'potentiometer' or at minimum 'resistor'. This propagates to the top-level nixie_clock.sch output as well.
+  (signal_analysis)
+
+### Missed
+- R24 is a 1-ohm resistor in an R_2512 (large power) footprint placed in series in the +9V input path to the boost converter (between C1 and the NJM2360A Cs/current-sense pin). This is the current-sense resistor for the NJM2360A's over-current protection. The current_sense array is empty. The combination of small value (1 ohm), large footprint (R_2512), and series placement in the switching circuit strongly indicates current sensing.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---

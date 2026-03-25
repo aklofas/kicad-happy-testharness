@@ -1,0 +1,59 @@
+{
+  "file_pattern": "FPGA_Board_BA.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001999",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001999-AST-01",
+      "description": "558 placed components across hierarchical sub-sheets (motor controller with Zynq7020 FPGA). Power rails +1V8, +3.3V, +5V, +5VA, +5VA_2, +5V_Zynq, GND, PWR_FLAG, Vin all correctly identified. Component breakdown (178 caps, 269 resistors, 47 ICs, 23 diodes, 18 connectors) consistent with this design.",
+      "created_from": "FND-00001999",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 558
+      }
+    },
+    {
+      "id": "FND-00001999-AST-02",
+      "description": "One H-bridge detected: Q5 (high-side MOSFET), Q6 (low-side MOSFET), with output net, power net, and gate control signals all correctly attributed. Consistent with motor controller topology.",
+      "created_from": "FND-00001999",
+      "check": {
+        "path": "signal_analysis.bridge_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001999-AST-03",
+      "description": "Five regulators detected: U8 (TPS61022, switching), U4 (LM70860RRXR, ic_with_internal_regulator, +5V_Zynq), U3 (LM5143, ic_with_internal_regulator), U48 and U9 (MCP1703AT-5002EDB, LDO, +5VA_2/+5VA). UUID-path input rails for hierarchical nets are expected and correct behavior.",
+      "created_from": "FND-00001999",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001999-AST-04",
+      "description": "All 13 instances of B72590D50H160 (Siemens TVS/varistors for motor phase protection) listed in signal_analysis.protection_devices with type=diode.",
+      "created_from": "FND-00001999",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 13
+      }
+    },
+    {
+      "id": "FND-00001999-AST-05",
+      "description": "INCORRECT: bus_analysis.uart reports 72 buses with devices U2 (Zynq7020), U26/U29/U32/U38/U46 (SN74LXCH8T245RHLR 8-bit bidirectional bus transceivers), and BoxHeader_24pin connectors. Net names like Ph_A_Tx1_5V and Rx_Ph1 reference motor phase signals (\"Ph\" = phase), not UART channels. No UART-specific ICs (RS-485 drivers, MAX232, etc.) exist in the BOM. The UART heuristic fires on Tx/Rx substrings in net names without verifying the device type.",
+      "created_from": "FND-00001999",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

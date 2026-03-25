@@ -1,0 +1,101 @@
+{
+  "file_pattern": "OtterPill.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001798",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001798-AST-01",
+      "description": "The v1.4 KiCad 6 schematic contains 43 components (C1-C12, D1-D2, J1-J7, L1, R1-R16, SW1, U1-U4), and the analyzer reports total_components=43 with correct type breakdown: resistor=16, capacitor=12, connector=6, ic=4, led=2, switch=1, inductor=1, test_point=1 (J7 via TestPoint footprint).",
+      "created_from": "FND-00001798",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 43,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001798-AST-02",
+      "description": "U3 (SY8201) detected as a switching regulator with L1, VIN input, +3V3 output. Feedback divider R6=100k\u03a9, R7=22k\u03a9 gives Vout = 0.6 \u00d7 (1 + 100k/22k) = 3.327V. Output shows estimated_vout=3.327 with vref_source='lookup'. This matches the SY8201 datasheet Vref=0.6V.",
+      "created_from": "FND-00001798",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001798-AST-03",
+      "description": "R6/R7 (100k/22k) forms the SY8201 feedback divider from +3V3 to GND (is_feedback=true), and R14/R15 (100k/22k) forms a VBUS monitoring divider into PA0/ADC. Both are correctly identified with proper top/bottom/mid net names and ratios (0.180328 each).",
+      "created_from": "FND-00001798",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "value": 2,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001798-AST-04",
+      "description": "U1 (USBLC6-4) is correctly identified as an ESD IC protecting CC1, CC2, USB_N, and USB_P. The vbus_esd_protection:fail result is also accurate\u2014VBUS itself has no dedicated ESD clamp device, only a decoupling capacitor.",
+      "created_from": "FND-00001798",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001798-AST-05",
+      "description": "Both SCL and SDA buses show devices U4 (FUSB302) and U2 (STM32F072), with R10 and R11 (3.3k\u03a9) pull-ups to +3.3V. The bus_analysis i2c section correctly identifies both lines, their devices, and pull-up values.",
+      "created_from": "FND-00001798",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "value": 2,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001798-AST-06",
+      "description": "The design uses both +3.3V (pull-up rail for I2C) and +3V3 (main 3.3V output) as separate net names. The analyzer correctly identifies both as distinct power rails in statistics.power_rails, and generates separate PWR_FLAG warnings for each.",
+      "created_from": "FND-00001798",
+      "check": {
+        "path": "statistics.power_rails",
+        "value": 5,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001798-AST-07",
+      "description": "INCORRECT: All 43 entries in the components[] array have ref=null (the 'ref' key is absent). Component reference designators are stored under the 'reference' key, which holds the correct values (R5, SW1, J1, etc.). Signal analysis items (power_regulators, protection_devices, etc.) correctly use 'ref'. This schema inconsistency means code consuming components[] via .get('ref') will silently get None for every component. The 'reference' key is present and correct. This affects both the KiCad 5 and KiCad 6 parsers.",
+      "created_from": "FND-00001798",
+      "check": {
+        "path": "components",
+        "value": "reference",
+        "op": "contains_match"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001798-AST-08",
+      "description": "INCORRECT: usb_compliance shows cc1_pulldown_5k1:fail and cc2_pulldown_5k1:fail. However, U4 (FUSB302BMPX) is a USB PD controller with integrated Rd (5.1k\u03a9) pull-down resistors on CC1 and CC2 that are configured in firmware. No external discrete CC resistors are needed or expected. The analyzer does not recognize that this IC class handles CC termination internally, causing two spurious failures.",
+      "created_from": "FND-00001798",
+      "check": {
+        "path": "usb_compliance.connectors",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001798-AST-09",
+      "description": "R14 (100k\u03a9) is connected in series between VBUS and PA0, while C12 (100nF) is connected from PA0 to GND, forming an RC low-pass filter for the VBUS ADC monitoring path. The signal_analysis.rc_filters list is empty (0 items). The divider topology (R14 in series, R15 and C12 in parallel to GND) may not match the filter detector's expected R-C topology.",
+      "created_from": "FND-00001798",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

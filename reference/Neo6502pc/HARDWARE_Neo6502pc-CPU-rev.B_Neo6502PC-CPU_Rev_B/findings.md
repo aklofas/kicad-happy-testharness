@@ -58,7 +58,7 @@
 
 ## FND-00000296: Neo6502pc PCB: copper_layers_used includes F.SilkS (non-copper layer), 15 of 19 thermal_pad_vias are paste-only false positives from stencil aperture pads
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: pcb
 - **Source**: HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_pcb.json
 - **Related**: KH-154, KH-156

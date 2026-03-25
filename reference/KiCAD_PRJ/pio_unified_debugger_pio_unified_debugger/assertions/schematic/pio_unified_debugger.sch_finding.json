@@ -1,0 +1,30 @@
+{
+  "file_pattern": "pio_unified_debugger.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001703",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001703-AST-01",
+      "description": "INCORRECT: pio_unified_debugger.sch has 8 non-power component instances: 1x AE-FT2232 (U?), 3x connectors (J? - Conn_01x06, Conn_01x07, Conn_02x05_Odd_Even), 1x additional J? connector, 2x 2SC945 (Q?), 2x 10k resistors (R?). The output reports total_components=4 (unique refs: U?, J?, Q?, R?) and shows connector=1 in component_types when there are 4 connectors. The BOM shows J? as Conn_01x06 qty=1, missing the Conn_01x07 and Conn_02x05 variants.",
+      "created_from": "FND-00001703",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 4,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001703-AST-02",
+      "description": "The pio_unified_debugger connects FT2232 to JTAG signals (TCK, TDI, TDO, TMS) and also has RX/TX for UART. The UART is detected (2 entries), but the JTAG/debug interface is not explicitly detected as a debug bus. The design nets 'TCK', 'TDI', 'TDO', 'TMS' are classified as 'debug' in net_classification but no dedicated debug bus detection fires. This is a missed detection opportunity for JTAG/SWD interfaces.",
+      "created_from": "FND-00001703",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "value": 2,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

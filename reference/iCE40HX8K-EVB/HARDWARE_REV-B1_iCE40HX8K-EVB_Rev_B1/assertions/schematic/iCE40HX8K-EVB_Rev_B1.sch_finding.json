@@ -1,0 +1,30 @@
+{
+  "file_pattern": "iCE40HX8K-EVB_Rev_B1.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002212",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002212-AST-01",
+      "description": "INCORRECT: Both SY8009AAAC regulators (U2, U3) report input_rail=null in power_regulators. Investigation shows U2's IN pin (pin 4, type=input) is parsed onto the GND net in the legacy KiCad 5 format \u2014 a net assignment error likely caused by the pin coordinate-to-net lookup in legacy .sch parsing. The +5V net does contain U2 and U3, but only their EN and GND pins are found there. The regulator input detection logic apparently looks for a specific input-type pin connection to a named power net, but the legacy format coordinates mislead the parser. The correct input rail for both SY8009s is +5V (5V input, stepping down to 3.3V and 1.2V).",
+      "created_from": "FND-00002212",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].input_rail",
+        "op": "equals",
+        "value": null
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002212-AST-02",
+      "description": "The iCE40HX8K-EVB schematic has an explicit JTAG connector component (JTAG1, a 6-pin CON6) and a JTAG option enable jumper (JTAG_E1, a JP1E component). The net names visible in the source .sch file include JTAG-related labels. The bus_analysis has keys for i2c, spi, uart, and can, but no jtag key. Neither JTAG1 nor JTAG_E1 appears in any detected bus or protocol section of the analyzer output. A JTAG detector would be a valuable addition, especially for FPGA development boards which commonly include JTAG programming interfaces.",
+      "created_from": "FND-00002212",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "contains_match",
+        "value": "/jtag/"
+      },
+      "aspirational": true
+    }
+  ]
+}

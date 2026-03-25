@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_buck-converter-kicad-design_buck converter.kicad_sch.json.json",
+      "status": "promoted",
+      "summary": "Trimmer1 (Device:R_Trim) misclassified as 'transformer' instead of 'resistor'; Feedback voltage divider (R1+R2 on LM2596 FB pin) not detected as feedback_network or voltage_divider; design_observat...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The component Trimmer1 uses lib_id 'Device:R_Trim' and has description 'Trimmable resistor (preset resistor)' with keywords 'R res resistor variable potentiometer trimmer'. The analyzer assigns it type='transformer' and category='transformer', which is wrong. It should be classified as a resistor or potentiometer. This also causes it to appear in component_types as 'mounting_hole: 1' (for HS1) and 'transformer: 1' (for Trimmer1) rather than the correct resistor count.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.transformer",
+            "op": "equals",
+            "value": null
+          }
+        },
+        {
+          "description": "The design_observations entry for 'regulator_caps' lists both input (__unnamed_3) and output (__unnamed_4) as missing caps. However, ic_pin_analysis for U1 pin VIN (__unnamed_3) shows has_decoupling_cap=true with C1 explicitly listed. The input cap is not missing. Additionally, the output_rail is misidentified as __unnamed_4 (the switching node between U1-OUT, D1, and L1) rather than the actual filtered output __unnamed_0 (where C2 actually lives), causing the output cap to also appear missing.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "max_count",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "R1 (1k) and R2 (3k) form the classic feedback resistor divider from the output to the FB pin of U1 (LM2596T-5), setting the output voltage. The ic_pin_analysis correctly identifies R1 and R2 as connected to the FB pin, but signal_analysis.feedback_networks is empty and signal_analysis.voltage_dividers is empty. This resistor divider is the primary feedback network of the switching regulator and should be detected.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.feedback_networks",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "buck-converter-kicad-design",
+      "project": "buck converter",
+      "created": "2026-03-24T08:48:29.246710+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002294"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_buck-converter-kicad-design_buck converter.kicad_pcb.json.json",
+      "status": "new",
+      "summary": "R3 footprint correctly flagged as outside board boundary (edge_clearance=-4.98mm)",
+      "correct": [
+        {
+          "description": "The placement_analysis.edge_clearance_warnings correctly identifies R3 with a negative edge clearance of -4.98mm, meaning the component courtyard extends ~5mm outside the board Edge.Cuts boundary. This is a genuine design issue the analyzer correctly caught. Input and output connectors are also flagged with marginal 0.9mm clearance.",
+          "analyzer_section": "placement_analysis",
+          "check": {
+            "path": "placement_analysis.edge_clearance_warnings",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "buck-converter-kicad-design",
+      "project": "buck converter",
+      "created": "2026-03-24T08:48:29.246729+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002295"
+    }
+  ]
+}

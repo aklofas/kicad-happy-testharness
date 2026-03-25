@@ -1,0 +1,58 @@
+{
+  "file_pattern": "lensmount-v1.1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000488",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000488-AST-01",
+      "description": "All component references (J1\u2013J10, U1\u2013U3, Q1\u2013Q5, R1\u2013R13, C1\u2013C7, P1) are correctly parsed with accurate values, lib_ids, footprints, and Mouser part numbers. All 41 nets are correctly constructed from wires and global labels. Net membership is accurate for all named nets including +3V3, VBUS, +BATT, GND, D+, D-, NRST, SWDIO, SWCLK, DCLK_3V3, DOUT_3V3, DIN_3V3, and the 5V-side SPI-equivalent signals.",
+      "created_from": "FND-00000488",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000488-AST-02",
+      "description": "D- is correctly assigned to U1 pin 17 (PA9/PA11) and D+ to U1 pin 18 (PA10/PA12). SWDIO maps to pin 19 (PA13), SWCLK to pin 20 (PA14). The level-shifted SPI signals are correct: DCLK_3V3 on pin 11 (PA5), DOUT_3V3 on pin 12 (PA6), DIN_3V3 on pin 13 (PA7). EN_VBAT on pin 2 (PF0), EN_VBUS on pin 3 (PF1).",
+      "created_from": "FND-00000488",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000488-AST-03",
+      "description": "All three 2N7002 FETs are correctly classified as level_shifter topology. Q1: gate=+3V3, drain=DIN_5V, source=DIN_3V3. Q2: gate=+3V3, drain=DOUT_5V, source=DOUT_3V3. Q3: gate=+3V3, drain=DCLK_5V, source=DCLK_3V3. Gate resistors R3/R4/R5 (5k1) correctly associated.",
+      "created_from": "FND-00000488",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000488-AST-04",
+      "description": "U2 is correctly classified as topology=LDO with input_rail=VBUS and output_rail=+3V3. Input decoupling C3 (1u) and output decoupling C4 (1u) are both present on their correct rails.",
+      "created_from": "FND-00000488",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000488-AST-05",
+      "description": "USB compliance reports cc1_pulldown_5k1=pass and cc2_pulldown_5k1=pass. R1 (5k1) is on the J9.A5 (CC1) net and R2 (5k1) on the J9.B5 (CC2) net. This correctly identifies the board as a USB device (not host), conforming to USB-C 2.0 Rd pulldown requirements.",
+      "created_from": "FND-00000488",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

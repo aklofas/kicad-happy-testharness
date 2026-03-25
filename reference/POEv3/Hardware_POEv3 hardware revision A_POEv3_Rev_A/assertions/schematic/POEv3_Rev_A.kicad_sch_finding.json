@@ -1,0 +1,81 @@
+{
+  "file_pattern": "POEv3_Rev_A.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002002",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002002-AST-01",
+      "description": "Analyzer reports 37 total_components with correct breakdown: 7 capacitors, 11 resistors, 2 diodes, 2 ICs, 8 fiducials, 4 mounting holes, 1 connector, 1 jumper, 1 ferrite_bead (L1). Verified against source: 37 unique placed references match exactly. The 10 unnumbered library template definitions (P, D, U, SJ, etc.) in the file are correctly excluded.",
+      "created_from": "FND-00002002",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 37
+      }
+    },
+    {
+      "id": "FND-00002002-AST-02",
+      "description": "U2 (TX4138) detected as topology=switching with input_rail=Spare1 (PoE bus), feedback divider R11(30.1k)/R10(5.23k). Vout estimate 4.053V uses heuristic Vref=0.6V; actual TX4138 Vref is ~0.795V which gives ~5.37V, but vref_source=heuristic correctly flags the uncertainty. Feedback network correctly attributed.",
+      "created_from": "FND-00002002",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002002-AST-03",
+      "description": "Two current sense circuits detected: R6 and R7 (both 0.03R/R1206) as shunts with U2 (TX4138) as sense IC. max_current_50mV_A=1.667A and max_current_100mV_A=3.333A accurately calculated from 0.03R values.",
+      "created_from": "FND-00002002",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00002002-AST-04",
+      "description": "The +5VP net contains only passive-type components and power_in power symbols (#PWR03, #PWR012), but no power_out driver or PWR_FLAG. The three placed PWR_FLAG instances (#FLG01-03) are on GND and Spare1 nets, not +5VP. The warning is a genuine ERC concern.",
+      "created_from": "FND-00002002",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002002-AST-05",
+      "description": "INCORRECT: L1 has lib_id \"OLIMEX_RCL:L\" (plain inductor symbol) and value \"33uH/2.1A/DCR=0.1R/20%/DBS135\" \u2014 this is a high-current power inductor used in the TX4138 switching regulator output stage, not a ferrite bead. statistics.component_types shows \"ferrite_bead: 1\" which should be \"inductor: 1\". The BOM entry also has type=\"ferrite_bead\" instead of \"inductor\".",
+      "created_from": "FND-00002002",
+      "check": {
+        "path": "statistics.component_types.inductor",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002002-AST-06",
+      "description": "INCORRECT: Cable-PoE1 has lib_id \"OLIMEX_OTHER:Cable-IDC\" and value \"CABLE-PH2-4-60-R\" \u2014 it is a cable/connector. The BOM entry records type=\"capacitor\" instead of \"connector\". This is a library name parsing error where an unknown lib_id falls through to an incorrect default type. The statistics.component_types.connector count of 1 (POE_PWR1) is correct, but Cable-PoE1 should add a second connector.",
+      "created_from": "FND-00002002",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002002-AST-07",
+      "description": "The TX4138 (U2) output stage uses L1 (33uH) as a series filter inductor with C6 (470uF) to GND on the +5VP rail. lc_filters is empty. This LC forms the standard output filter of the switching regulator and should be reported.",
+      "created_from": "FND-00002002",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

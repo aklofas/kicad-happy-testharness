@@ -1,0 +1,91 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Connector_panels_12HP_Connector_panel_12HP_Connector_panel.sch.json",
+      "status": "promoted",
+      "summary": "file_version reported as '4' but source header says 'EESchema Schematic File Version 2'; Empty schematic correctly produces zero components, nets, and signals",
+      "correct": [
+        {
+          "description": "The .sch file contains only a header and no component or wire records. The analyzer correctly reports total_components=0, total_nets=0, total_wires=0, and empty signal_analysis sections.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The .sch header line reads 'EESchema Schematic File Version 2', but the analyzer outputs file_version: '4'. The file is otherwise empty (no components), so this is a minor metadata error with no functional impact.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Eurorack_KiCAD_templates",
+      "project": "Connector_panels_12HP_Connector_panel_100mm_12HP_Connector_panel_100mm",
+      "created": "2026-03-23T20:38:50.951246+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000548"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Main_board_12HP_Main_board_12HP_Main_board.sch.json",
+      "status": "promoted",
+      "summary": "Component extraction correct: J1 (2x5 IDC connector), D1 and D2 (Schottky diodes) all parsed accurately; Reverse-polarity protection circuit (D1+D2 Schottky on \u00b112V rails) not detected in protectio...",
+      "correct": [
+        {
+          "description": "Correct counts (3 components, 2 unique parts), correct lib_ids, footprints, and BOM grouping. Power rails +12V, -12V, GND all identified. Net connectivity matches schematic wiring.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "net_classification correctly assigns 'power' to +12V and -12V, 'ground' to GND, and 'signal' to the two unnamed connector-to-diode intermediate nets.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "None of the components carry MPN/manufacturer fields. The analyzer correctly lists all three in missing_mpn while not including the power symbols (#PWR*), which is the expected behavior.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "D1 protects the +12V rail and D2 protects the -12V rail using series Schottky diodes \u2014 a textbook Eurorack reverse-polarity protection topology. The analyzer's protection_devices list is empty and design_observations is empty. This pattern (diode in series between IDC connector pin and named power rail) should be recognizable as protection.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Eurorack_KiCAD_templates",
+      "project": "Connector_panels_12HP_Connector_panel_100mm_12HP_Connector_panel_100mm",
+      "created": "2026-03-23T20:38:50.951271+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000549"
+    }
+  ]
+}

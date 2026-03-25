@@ -1,0 +1,29 @@
+{
+  "file_pattern": "PropShield_Uno.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001866",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001866-AST-01",
+      "description": "The PropShield PCB has 19 footprints vs 16 components in the schematic. The 3 extra (P5=CONN_01X01, P6=CONN_01X01, P7=CONN_02X03) have sch_paths (/56D71177, /56D71274, /588F92D4) that do not match any UUID in the .sch file. This indicates a schematic-PCB sync gap: these footprints were added to the PCB directly or the schematic was trimmed after PCB layout. The analyzer correctly reports all 19 footprints and does not falsely suppress them. The PCB analyzer does not currently flag this schematic-PCB ref mismatch.",
+      "created_from": "FND-00001866",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 19,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001866-AST-02",
+      "description": "P5, P6, P7 in the PCB have sch_path attributes that don't correspond to any component in PropShield_Uno.sch. The design_analysis is an empty dict (no design_issues list at all). A cross-reference check between PCB sch_path values and schematic component UUIDs would catch these orphan footprints, which can cause BOM errors and assembly confusion.",
+      "created_from": "FND-00001866",
+      "check": {
+        "path": "design_analysis",
+        "value": {},
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

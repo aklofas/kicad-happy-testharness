@@ -1,0 +1,41 @@
+{
+  "file_pattern": "esp32bb.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002051",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002051-AST-01",
+      "description": "INCORRECT: U2 is an NCP1117ST33T3G 3.3V LDO regulator \u2014 one of the most common linear regulators \u2014 but it does not appear in signal_analysis.power_regulators. The component uses a local rescue library ('esp32bb-rescue:NCP1117ST33T3G') and pin names VI/VO/GND rather than the standard IN/OUT naming, which prevents the regulator detector from recognizing it. power_regulators is empty despite a clear LDO being present.",
+      "created_from": "FND-00002051",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002051-AST-02",
+      "description": "INCORRECT: The RC filter (R3=10K, C1=1nF) is reported with input_net='EN' and output_net='+3.3V', but the actual topology is the reverse: +3.3V feeds through R3, the mid-node (EN rail) is the filtered output, and C1 connects from EN to GND. The analyzer used the resistor's pin1 net as 'input_net', but R3 pin1 connects to EN (the output node) while R3 pin2 connects to +3.3V (the source). The direction assignment is wrong.",
+      "created_from": "FND-00002051",
+      "check": {
+        "path": "signal_analysis.rc_filters[0].input_net",
+        "op": "equals",
+        "value": "+3.3V"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002051-AST-03",
+      "description": "INCORRECT: The same reset timing circuit topology (R to EN, C to GND, power rail as source) is labeled 'low-pass' in esp32-s3-testboard but 'RC-network' in esp32bb. Both use 10K resistor and microfarad-range capacitor on the EN pin of an ESP32 module. The inconsistency suggests the type classification depends on secondary factors (net classification, power rail detection) rather than topology, and may produce non-deterministic results.",
+      "created_from": "FND-00002051",
+      "check": {
+        "path": "signal_analysis.rc_filters[0].type",
+        "op": "equals",
+        "value": "low-pass"
+      },
+      "aspirational": true
+    }
+  ]
+}

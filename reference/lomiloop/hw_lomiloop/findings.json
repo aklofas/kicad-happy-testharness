@@ -1,0 +1,51 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002438",
+      "source_file": "schematic/lomiloop/hw_lomiloop.sch.json",
+      "analyzer_type": "schematic",
+      "category": "missed",
+      "summary": "TL072 op-amp (U2) not detected by opamp_circuits detector",
+      "details": "The schematic contains U2=TL072 with lib_id 'Amplifier_Operational:TL072', a classic dual op-amp. The opamp_circuits section is empty and feedback_networks is empty, meaning the analyzer failed to identify the op-amp and its feedback topology. This is a false negative for a clearly-annotated op-amp part.",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002439",
+      "source_file": "schematic/lomiloop/hw_lomiloop.sch.json",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "All 6 BJT transistors correctly detected with circuit roles",
+      "details": "The analyzer correctly identified Q1\u2013Q6 as BJT transistors (MMBT3904 and PZT3904), with base resistors noted. Q3 and Q4 are classified as 'transistor' load type while Q1/Q2/Q5/Q6 are 'other', which reflects the different circuit roles. The voltage divider formed by R13/R19 feeding Q6's collector is also correctly detected.",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "FND-00002440",
+      "source_file": "schematic/lomiloop/hw_lomiloop.sch.json",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "L78L10 linear regulator correctly identified with power rails",
+      "details": "The analyzer correctly detected U1 as an LDO voltage regulator (L78L10, topology: LDO) with input rail VCC and output rail +10V, and placed both ICs in the correct power domains."
+    },
+    {
+      "id": "FND-00002441",
+      "source_file": "pcb/lomiloop/hw_lomiloop.kicad_pcb.json",
+      "analyzer_type": "pcb",
+      "category": "correct",
+      "summary": "High via density (455 vias, 3.4/cm2) in GND pour correctly captured",
+      "details": "The thermal analysis correctly identifies 447 stitching vias in the GND copper pour on a 2-layer board (83.8x78.7mm), yielding 3.4 vias/cm2. This is unusually dense stitching for a predominantly analog audio design but is faithfully reported. The board is fully routed (unrouted_count=0) with 285 track segments.",
+      "check": {
+        "path": "statistics.via_count",
+        "op": "greater_than",
+        "value": 400
+      }
+    }
+  ]
+}

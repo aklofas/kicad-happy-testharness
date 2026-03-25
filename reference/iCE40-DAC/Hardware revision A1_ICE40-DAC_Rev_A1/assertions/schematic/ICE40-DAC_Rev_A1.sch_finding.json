@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ICE40-DAC_Rev_A1.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002143",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002143-AST-01",
+      "description": "INCORRECT: IOUT1 has value 'BNC-JD11-50-LF' and lib_id 'BNC-JD11-50-LF' \u2014 it is a BNC coaxial output connector for the DAC current output signal. IOUT2 has value 'NA(HN1x2)' and lib_id 'CON2' \u2014 it is a 2-pin header. Both are classified as type 'other' because their lib_ids do not match the connector pattern recognizer. BNC-JD11-50-LF should be recognizable as a connector type. The SIG_IN1 BNC in iCE40-ADC has the same misclassification as 'switch'. These are output signal connectors for an FPGA-driven DAC board.",
+      "created_from": "FND-00002143",
+      "check": {
+        "path": "statistics.component_types.other",
+        "op": "equals",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

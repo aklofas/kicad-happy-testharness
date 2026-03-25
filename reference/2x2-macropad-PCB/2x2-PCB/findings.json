@@ -1,0 +1,69 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "2x2-PCB.sch.json",
+      "status": "promoted",
+      "summary": "Key matrix estimated_keys and switches_on_matrix report 7 instead of 4; Key matrix estimated_keys reports 7 instead of 4; ERC no_driver warnings for D+/D- are false positives caused by broken net c...",
+      "correct": [
+        {
+          "description": "The ATmega32U4 has separate AVCC and VCC supplies. AVCC (pin 24) is on an unnamed floating net (__unnamed_12) with no decoupling capacitor detected. The UCAP pin (pin 6, internal USB regulator output) is on __unnamed_28 with no cap detected. The design also uses a VCC power symbol (separate from +5V) that carries the USB VBUS through the polyfuse F1, but no decoupling capacitors are assigned to VCC rail in the decoupling_analysis output. Only the +5V rail with C4-C7 is reported.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The schematic has a 2x2 key matrix (COL0/COL1 x ROW0/ROW1) with exactly 4 mechanical key switches (MX1-MX4) and 4 anti-ghosting diodes (D1-D4). The analyzer reports estimated_keys=7 and switches_on_matrix=7. SW1 is a tactile reset button (connected to ~RESET and GND via pull-up R1) and is not part of the key matrix. The matrix is straightforwardly 2 rows x 2 cols = 4 keys.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+            "op": "eq",
+            "value": 4
+          }
+        },
+        {
+          "description": "The 2x2 matrix has at most 4 keys (2 rows x 2 cols). The analyzer over-counts to 7, likely because SW1 (reset button) and extra LED/LEDGND pins on the MX switch footprint are being mistakenly included in the switch count. estimated_keys should equal 4.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices[0].estimated_keys",
+            "op": "eq",
+            "value": 4
+          }
+        },
+        {
+          "description": "The ATmega32U4 USB data pins (U1 pin 3=D-, pin 4=D+) are bidirectional and connect via global labels through R3/R2 (22ohm series resistors) to the USB connector. However, the analyzer places U1 D+/D- pins on unnamed nets (__unnamed_18 and __unnamed_26) instead of the named D+ and D- nets, severing the connection. The 'no_driver' ERC warnings on D+ and D- are a symptom of this broken net tracing for global labels in KiCad 5 legacy format. The real circuit is correct.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.erc_warnings",
+            "op": "eq",
+            "value": []
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The differential_pairs entry correctly identifies D+/D- with series resistors R2/R3 and USB1, but U1 D+/D- pins are not included in the shared_ics list because the ATmega32U4's D+ (pin 4, __unnamed_26) and D- (pin 3, __unnamed_18) are on unnamed nets instead of the labeled D+/D- nets. The global label wiring in the legacy .sch format connects U1 through the global labels to R2/R3, but the analyzer fails to trace through global labels to merge the nets.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.differential_pairs[0].shared_ics",
+            "op": "contains",
+            "value": "U1"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "2x2-macropad-PCB",
+      "project": "2x2-PCB",
+      "created": "2026-03-23T18:27:21.666653+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000315"
+    }
+  ]
+}

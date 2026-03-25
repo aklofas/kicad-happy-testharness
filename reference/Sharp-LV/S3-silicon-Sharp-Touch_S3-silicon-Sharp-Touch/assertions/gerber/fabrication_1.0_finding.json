@@ -1,0 +1,39 @@
+{
+  "file_pattern": "fabrication_1.0",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001440",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001440-AST-01",
+      "description": "The gerber analyzer correctly identifies 13 gerber files + 2 drill files, a 4-layer board (F.Cu=L1, In1.Cu=L2, In2.Cu=L3, B.Cu=L4), board dimensions of 79.85 x 44.65mm (edge cuts extents), no missing required layers, 163 total holes with 136 vias (22 at 0.2mm, 114 at 0.4mm) and 27 component holes. The completeness check correctly passes.",
+      "created_from": "FND-00001440",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001440-AST-02",
+      "description": "The drill_classification correctly identifies 136 via holes (all PTH), 27 component holes (4x0.6mm + 17x1.0mm PTH, 2x0.65mm + 4x2.2mm NPTH), and 0 mounting holes. The NPTH 2.2mm holes are likely the 4 board mounting holes. SMD ratio of 0.9 (233 SMD apertures vs 27 THT holes) correctly reflects an SMD-dominated design.",
+      "created_from": "FND-00001440",
+      "check": {
+        "path": "drill_classification.vias.count",
+        "op": "equals",
+        "value": 136
+      }
+    },
+    {
+      "id": "FND-00001440-AST-03",
+      "description": "INCORRECT: The analyzer reports aligned=false with issues citing 5.7mm width variation and 4.0mm height variation across layers. The differences observed are entirely expected: B.Paste is 0x0 (no back-side paste, all SMD is on front), mask layers are smaller than copper (no pads at board edge), and silkscreen is within bounds. No actual Gerber misalignment exists. The analyzer's threshold for flagging this is too aggressive for normal boards where component-free edges cause extents differences.",
+      "created_from": "FND-00001440",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    }
+  ]
+}

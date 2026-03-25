@@ -1,0 +1,95 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad-breakouts_boards_ice40hx8k-bg121_fpga.sch.json",
+      "status": "promoted",
+      "summary": "SPI bus to flash IC (U4 LE25U20AMB) not detected; U4 has zero pins extracted; isolation_barriers reports VCCIO_B as isolated but no isolation components found",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "signal_analysis.isolation_barriers lists three ground domains (GND, GNDPLL0, GNDPLL1) and flags VCCIO_B as an isolated_power_rail, yet isolation_components is an empty list. GNDPLL0 and GNDPLL1 are legitimate iCE40 PLL ground pins that are named separately per the iCE40 datasheet to reduce PLL noise, but they connect to the same physical ground plane through the PCB \u2014 they are not truly isolated. Flagging them as isolated domains without any barrier components (ferrite beads, inductors, transformers) is misleading.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "max_count",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "U4 (LE25U20AMB SPI flash, SST25VF080B footprint) connects to the iCE40 FPGA via FLASH_SDI, FLASH_SDO, FLASH_SCK, and PROG_SS_B. The bus_analysis reports no SPI buses. Inspection of the components list shows U4.pins is an empty array \u2014 pin connectivity was not extracted for this component in the KiCad 5 legacy .sch parser. Because U4 has no pins, none of its nets appear in the net graph, and SPI detection cannot fire. The FLASH_SDI net only shows C19 (decoupling cap) rather than both U3 and U4. This is a systematic legacy .sch pin-extraction failure for at least one multi-unit IC.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad-breakouts",
+      "project": "boards_atsamd21e18a_atsamd21e18a",
+      "created": "2026-03-24T08:33:52.287836+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002242"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_kicad-breakouts_boards_atsamd21e18a_atsamd21e18a.kicad_pcb.json",
+      "status": "new",
+      "summary": "Correctly identifies courtyard overlaps and below-spec annular rings on dense 4-layer board",
+      "correct": [
+        {
+          "description": "The ATSAMD21 breakout is a compact 15.24\u00d731.75mm 4-layer board. The analyzer correctly flags: (1) 43 vias with 0.1mm annular ring requiring advanced PCB tier, (2) multiple courtyard overlaps (Y1/U2, U2/FB1, D1/U2) indicating a very tight layout where the crystal, MCU, ferrite, and LED are packed together, and (3) approximate track spacing of 0.1225mm below the 0.127mm standard limit. These are all verifiable from the component placement coordinates.",
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm.dfm_tier",
+            "op": "equals",
+            "value": "advanced"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "kicad-breakouts",
+      "project": "boards_atsamd21e18a_atsamd21e18a",
+      "created": "2026-03-24T08:33:52.287856+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002243"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad-breakouts_boards_ft2232h-ice40_ft2232h-ice40.sch.json",
+      "status": "promoted",
+      "summary": "SPI bus (SCK/MOSI/MISO) not detected despite nets correctly classified as clock/data",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The ft2232h-ice40 schematic connects an FT2232H USB bridge to an iCE40 FPGA via nets SCK, MOSI, MISO (plus /CS). net_classification correctly identifies SCK as 'clock' and MOSI/MISO as 'data'. However, bus_analysis.spi is empty \u2014 no SPI bus was detected. This is a missed detection: the analyzer has the right net-type classifications but does not assemble them into an SPI bus instance when the devices involved are not standard SPI controller/peripheral library entries.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad-breakouts",
+      "project": "boards_atsamd21e18a_atsamd21e18a",
+      "created": "2026-03-24T08:33:52.287860+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002244"
+    }
+  ]
+}

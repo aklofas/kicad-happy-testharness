@@ -1,0 +1,52 @@
+{
+  "file_pattern": "Bangle-USB-SWD.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000385",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000385-AST-01",
+      "description": "INCORRECT: assembly_complexity reports smd_count=3 and tht_count=0. All three connectors use through-hole footprints: J1 uses USB_A_Molex_67643_Horizontal (THT), J2 uses PinHeader_2x05_P2.54mm_Vertical (THT), J3 uses PinHeader_1x02_P2.54mm_Vertical (THT). None are SMD. The SMD/THT classification is incorrect.",
+      "created_from": "FND-00000385",
+      "check": {
+        "path": "assembly_complexity.tht_count",
+        "op": "equals",
+        "value": 3
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000385-AST-02",
+      "description": "INCORRECT: design_analysis.net_classification classifies VbusA as 'signal'. VbusA is the USB VBUS power rail delivered to the target device through the SWD 10-pin header (J2 pin 10). It is connected to J3 pin 2 (the other end of the power jumper). This is a power distribution net and should be classified as 'power', consistent with how the related 'Vbus' net is classified.",
+      "created_from": "FND-00000385",
+      "check": {
+        "path": "design_analysis.net_classification.VbusA",
+        "op": "equals",
+        "value": "power"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000385-AST-03",
+      "description": "J2 pins 1, 5, 7, 8, 9 are each on isolated unnamed nets (__unnamed_0 through __unnamed_4) with no connections. These five single-pin nets appear in the nets section but connectivity_issues.single_pin_nets is an empty list. They should all be reported there as connectivity issues.",
+      "created_from": "FND-00000385",
+      "check": {
+        "path": "connectivity_issues.single_pin_nets",
+        "op": "min_count",
+        "value": 5
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000385-AST-04",
+      "description": "The design is explicitly a SWD breakout adapter. J2 (Conn_02x05_Odd_Even) carries nets named SWD and SWCLK \u2014 the canonical 10-pin ARM SWD/JTAG header pinout. The test_coverage.observations incorrectly states 'No debug connectors (SWD/JTAG/UART) identified'. A connector with SWD and SWCLK signals on a 2x5 header should be recognised as a debug/SWD connector.",
+      "created_from": "FND-00000385",
+      "check": {
+        "path": "test_coverage.observations",
+        "op": "not_contains_match",
+        "value": "No debug connectors"
+      },
+      "aspirational": true
+    }
+  ]
+}

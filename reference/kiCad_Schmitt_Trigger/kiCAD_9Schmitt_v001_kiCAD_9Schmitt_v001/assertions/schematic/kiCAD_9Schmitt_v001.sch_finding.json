@@ -1,0 +1,29 @@
+{
+  "file_pattern": "kiCAD_9Schmitt_v001.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002484",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002484-AST-01",
+      "description": "All 9 channels of the 9-channel Schmitt trigger design have R2(18K2)+C(100nF) RC low-pass filters correctly identified with fc=87.45 Hz (verified: 1/(2*pi*18200*100e-9) = 87.45 Hz). The analyzer correctly identified R2 as the filter resistor and excluded the upstream series resistor R1(82K) that is isolated by diode D1.",
+      "created_from": "FND-00002484",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "FND-00002485-AST-02",
+      "description": "The 9-Schmitt design uses 74LVC3G14 (Triple Schmitt-Trigger Inverter ICs) with per-channel R-D-RC conditioning networks. All 9 subcircuit entries have description='' \u2014 the analyzer failed to classify the topology as 'Schmitt trigger input conditioning' or any equivalent label. Given that the part name 74LVC3G14 explicitly identifies it as a Schmitt trigger and the RC filter + series diode + series resistor pattern is a textbook Schmitt trigger input conditioning circuit, this is a missed classification opportunity.",
+      "created_from": "FND-00002485",
+      "check": {
+        "path": "subcircuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

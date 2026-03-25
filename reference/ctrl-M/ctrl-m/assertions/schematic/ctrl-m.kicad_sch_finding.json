@@ -1,0 +1,41 @@
+{
+  "file_pattern": "ctrl-m.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002320",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002320-AST-01",
+      "description": "INCORRECT: The bus_topology detector reports: A8..A10 as width=6 (actual: 3 signals), B13..B15 as width=6 (actual: 3 signals), C0..C7 as width=16 (actual: 8 signals), R0..R15 as width=32 (actual: 16 signals). Every bus width is exactly 2x the correct value. This suggests a bug in the bus width computation \u2014 possibly counting bus entries from both ends of a wire or double-counting bidirectional connections.",
+      "created_from": "FND-00002320",
+      "check": {
+        "path": "bus_topology.detected_bus_signals",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002320-AST-02",
+      "description": "INCORRECT: The design has a USB_B connector (J1) with net names D+ and D-, and a USBLC6-2SC6 ESD protection IC (U1). The differential_pairs detector classifies this pair as type='differential' rather than type='USB'. Compare with crimpdeq-pcb where nets named USB_D+/USB_D- are correctly classified as type='USB'. The classifier is net-name-sensitive and misses the USB type when net names are simply D+/D- without the 'USB_' prefix, even when a USB connector and ESD IC are present.",
+      "created_from": "FND-00002320",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002320-AST-03",
+      "description": "This is a Model M keyboard controller. The schematic has 16 row signals (R0..R15) and 8 column signals (C0..C7) connecting STM32F072 GPIO pins to row/column connectors J7 and J8. The bus_topology correctly identifies these as named buses, but signal_analysis.key_matrices returns an empty list. The analyzer should recognize the R*/C* naming convention with matching GPIO connections as a keyboard matrix.",
+      "created_from": "FND-00002320",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

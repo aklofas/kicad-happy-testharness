@@ -1,0 +1,78 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_iCE40HX1K-EVB_iCE40HX1K-EVB_Rev_B.sch.json.json",
+      "status": "promoted",
+      "summary": "SPI flash U1 (W25Q16) memory_interfaces reports only 1 shared signal net with FPGA, obscuring the broken SPI connection; JTAG connector (PGM1) not detected as JTAG/SPI programming interface in bus_...",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies two SY8009AAAC switching regulators (U2/U3) for the +3.3V and +1V2 rails respectively, detects the SPI configuration bus with prefix matching 'ICE40-', detects UART signals on PIO2_9/TxD and PIO2_8/RxD nets routed through U4 (the FPGA), identifies W25Q16 as a memory interface, and counts 5 power rails (+1V2, +3.3V, +5V, GND, PWR_FLAG). The 4-layer board stackup (F.Cu, In1(GND).Cu, In2(PWR).Cu, B.Cu) is also correctly parsed.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 2
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The memory_interfaces detector reports connected_processors with shared_signal_nets=1 for the W25Q16 SPI flash connected to the iCE40HX1K FPGA. Inspection of net assignments shows that U1's DI, DO, CLK, CS, WP, and HOLD pins are all on unnamed/floating nets (e.g., __unnamed_16 through __unnamed_21), and only the CLK/SCK net ('iCE40-SCK') is actually shared with the FPGA. The SPI bus is effectively broken in the schematic \u2014 no MOSI/MISO/CS connections are made between U1 and U4. The analyzer's bus_analysis correctly identifies the SPI bus using only the iCE40-SD* prefix nets (which only have one end connected to U4/PGM1), but misses that U1 is not wired into this bus. This same issue appears in Rev A.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.memory_interfaces[0].connected_processors[0].shared_signal_nets",
+            "op": "equals",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The schematic has a 10-pin programming connector (PGM1) whose pins are connected to the iCE40 SPI configuration bus nets (iCE40-SCK, iCE40-SDO, iCE40-SDI, iCE40-SS_B). This is a standard SPI programming header for iCE40 devices. The bus_analysis.spi section lists chip_select_count=1 but does not recognize PGM1 as a programming connector participant. The analyzer does not produce any JTAG or programming-connector detection. No jtag key exists in bus_analysis at all. The HX8K-EVB has an explicit JTAG connector (JTAG1, CON6) which is also not detected.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "iCE40HX1K-EVB",
+      "project": "iCE40HX1K-EVB_Rev_B",
+      "created": "2026-03-24T08:33:50.208116+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002210"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_iCE40HX1K-EVB_iCE40HX1K-EVB_Rev_B.kicad_pcb.json.json",
+      "status": "new",
+      "summary": "4-layer stackup with named power planes (In1(GND).Cu, In2(PWR).Cu) correctly parsed from legacy KiCad 4 format",
+      "correct": [
+        {
+          "description": "The PCB analyzer correctly parses the legacy KiCad 4 format (.kicad_pcb file_version=4) and identifies the 4 copper layers including the named internal planes In1(GND).Cu and In2(PWR).Cu. The board dimensions of 50x50mm, 279 vias, 2527 track segments, and routing_complete=true are all consistent with a fully-routed compact FPGA evaluation board. The kicad_version is reported as 'unknown' for version 4 format, which is expected.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.copper_layers_used",
+            "op": "equals",
+            "value": 4
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "iCE40HX1K-EVB",
+      "project": "iCE40HX1K-EVB_Rev_B",
+      "created": "2026-03-24T08:33:50.208140+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002211"
+    }
+  ]
+}

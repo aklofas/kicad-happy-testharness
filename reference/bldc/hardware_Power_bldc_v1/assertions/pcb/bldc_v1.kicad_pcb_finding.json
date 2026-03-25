@@ -1,0 +1,19 @@
+{
+  "file_pattern": "bldc_v1.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002281",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002281-AST-01",
+      "description": "The BLDC motor controller PCB has three voltage rails (/48v, /12v, /5v) that all have significant track routing: /48v has 135mm total length with 122 vias and a 4159mm\u00b2 copper zone (the largest zone on the board), /12v has 146mm total length, and /5v has 160mm total length. Despite this, power_net_routing and current_capacity.power_ground_nets only contain '/GND'. The nets appear correctly in net_lengths, showing the analyzer can parse them but fails to classify them as power nets. The leading slash in KiCad hierarchical net names (/48v vs 48v) likely prevents the power-net heuristic from matching them.",
+      "created_from": "FND-00002281",
+      "check": {
+        "path": "power_net_routing",
+        "op": "min_count",
+        "value": 3
+      },
+      "aspirational": true
+    }
+  ]
+}

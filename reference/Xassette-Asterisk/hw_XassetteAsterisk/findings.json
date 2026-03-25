@@ -1,0 +1,212 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "XassetteAsterisk.sch.json",
+      "status": "new",
+      "summary": "Component count 144 matches KiCad 5 schematic source; D3 (Device:LED) correctly classified as led, not diode; Two switching regulators (SY8089AAAC) and one LDO (XC6206) detected; Two crystal circui...",
+      "correct": [
+        {
+          "description": "Analyzer reports 144 total components. Manual count from $Comp blocks in the KiCad 5 .sch file confirms 144 non-power components: 7 ICs, 13 connectors, 33 resistors, 59 capacitors, 12 diodes, 1 LED, 2 crystals, 4 inductors, 2 switches, 5 mounting holes, 2 resistor networks, 3 jumpers, 1 other.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 144,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The schematic has 12 actual diodes (D1, D2, D4, D5-D13) and one LED (D3 using Device:LED). The analyzer correctly splits these into diode=12 and led=1.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.led",
+            "value": 1,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "Analyzer finds 5 power regulators: U3, U4, U5 (SY8089AAAC switching), U6 (SY7201ABC boost), U7 (XC6206PxxxMR LDO). This is consistent with the multi-rail power supply design visible in the schematic.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "value": 5,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "Y1 and Y2 are both found with correct load capacitor pairs (18pF each, effective load 12pF). Y2 at 24MHz is the USB PHY crystal. Both crystal circuits correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "value": 2,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "The analyzer detects the TWI2-SDA net as an I2C signal, correctly identifying U1 (F133 SoC) as the controlling device. The has_pull_up=false is correct \u2014 no external I2C pull-ups are visible in the schematic, likely because the camera module supplies them.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "value": 1,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "Analyzer reports 238 total nets, consistent with a complex SoC design with LCD parallel bus (24-bit), CSI camera interface, audio, USB, and multiple power rails.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_nets",
+            "value": 238,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Xassette-Asterisk",
+      "project": "hw_XassetteAsterisk",
+      "created": "2026-03-24T01:30:45.764800+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001766"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "XassetteAsterisk.kicad_pcb.json",
+      "status": "new",
+      "summary": "2-layer 56x56mm board, 145 footprints, fully routed; DFM advanced tier flagged for 0.1mm annular ring",
+      "correct": [
+        {
+          "description": "Analyzer correctly reports a 56x56mm 2-layer board with 145 footprints (130 SMD, 8 THT), 2044 track segments, 265 vias, routing_complete=true, and 0 unrouted nets.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 145,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The board uses 0.4mm drill with 0.6mm via pads, giving a 0.1mm annular ring which is below the standard 0.125mm limit. The DFM tier correctly escalates to 'advanced' with one violation.",
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm.dfm_tier",
+            "value": "advanced",
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Xassette-Asterisk",
+      "project": "hw_XassetteAsterisk",
+      "created": "2026-03-24T01:30:45.764820+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001767"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "auxiliary_Brk40p_Brk40p.sch.json",
+      "status": "new",
+      "summary": "Brk40p breakout board: 4 components, 2 connectors and 2 mounting holes",
+      "correct": [
+        {
+          "description": "Analyzer correctly identifies this simple adapter board: J1 (Conn_01x40 pin header), J2 (TE FFC connector), H1 and H2 (M3 mounting holes). Total 4 components matches source.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 4,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Xassette-Asterisk",
+      "project": "hw_XassetteAsterisk",
+      "created": "2026-03-24T01:30:45.764823+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001768"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "auxiliary_Brk40p_Brk40p.kicad_pcb.json",
+      "status": "new",
+      "summary": "Brk40p adapter board correctly shows 1 unrouted net (GND on mounting pin)",
+      "correct": [
+        {
+          "description": "The GND mounting pin (J2.MP) is unrouted in the PCB, resulting in routing_complete=false and unrouted_net_count=1. This matches the actual board design where J2's mounting pad connects to GND but the trace is not drawn.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "value": false,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Xassette-Asterisk",
+      "project": "hw_XassetteAsterisk",
+      "created": "2026-03-24T01:30:45.764826+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001769"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber.json",
+      "status": "promoted",
+      "summary": "Complete 9-layer gerber set detected with no missing layers; 124 via holes in drill file matches PCB via count; Gerber front_side=15 disagrees with PCB front_side=14 by 1 component",
+      "correct": [
+        {
+          "description": "Analyzer correctly identifies 9 gerber files (F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, Edge.Cuts) plus 2 drill files (PTH, NPTH). completeness.complete=true and no missing_required layers.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "value": true,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The PTH drill file contains 124 via holes (0.3mm diameter) matching the PCB analyzer's via_count=124 exactly. 4 component holes (0.6mm) and 2 NPTH holes also present.",
+          "analyzer_section": "drill_classification",
+          "check": {
+            "path": "drill_classification.vias.count",
+            "value": 124,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The PCB analyzer reports 14 components on the front side and 42 on the back. The gerber analyzer reports 15 on the front and 41 on the back. The total of 56 agrees, but the per-side count differs by 1. This is likely caused by a component at the boundary of the two analyses (different attribution of a component to F.Cu vs B.Cu). The discrepancy should be investigated.",
+          "analyzer_section": "component_analysis",
+          "check": {
+            "path": "component_analysis.total_unique",
+            "value": 56,
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Xassette-Asterisk",
+      "project": "hw_XassetteAsterisk",
+      "created": "2026-03-24T01:30:45.764829+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001770"
+    }
+  ]
+}

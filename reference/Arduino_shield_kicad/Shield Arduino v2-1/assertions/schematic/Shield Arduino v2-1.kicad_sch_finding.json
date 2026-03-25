@@ -1,0 +1,77 @@
+{
+  "file_pattern": "Shield Arduino v2-1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000379",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000379-AST-01",
+      "description": "C5 has value '865080253012 470uF 10V' in the schematic \u2014 a W\u00fcrth Elektronik capacitor where the designer prepended the MPN (865080253012) into the value field. The analyzer parses '865080253012' as the capacitance in farads (0.865080253012 F = 865,080 \u00b5F) instead of extracting '470uF'. This causes signal_analysis.decoupling_analysis for the +5VA rail to report total_capacitance_uF=865080.353 instead of the correct ~470.1 \u00b5F, and inrush_analysis to use the wrong capacitance. The correct approach is to parse the last numeric token followed by a capacitance unit suffix (uF, nF, pF) from a multi-token value string.",
+      "created_from": "FND-00000379",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis[?rail=='+5VA'].total_capacitance_uF",
+        "op": "eq",
+        "value": 470.1
+      },
+      "aspirational": true,
+      "aspirational_reason": "unsupported op: eq"
+    },
+    {
+      "id": "FND-00000379-AST-02",
+      "description": "simulation_readiness reports needs_model=24 and total_components=81 (correctly excludes 4 mounting holes), but the components_without_model list only contains 20 entries. The 4 missing entries appear to be the fiducials (FID1, FID2, FID3) and test point (GPIO2), which are counted in the needs_model total but silently omitted from the explicit list. The count and list should be consistent.",
+      "created_from": "FND-00000379",
+      "check": {
+        "path": "simulation_readiness.needs_model",
+        "op": "eq",
+        "value": 20
+      },
+      "aspirational": true,
+      "aspirational_reason": "unsupported op: eq"
+    },
+    {
+      "id": "FND-00000379-AST-03",
+      "description": "assembly_complexity.total_components=89 counts each unit of multi-unit ICs separately: U2 (LM324, quad op-amp) contributes 5 entries (4 op-amp units + 1 power unit) instead of 1. statistics.total_components=85 correctly counts unique references. The assembly complexity metric should use unique reference count (85) for consistency, since placing and soldering a component counts once regardless of its internal unit count.",
+      "created_from": "FND-00000379",
+      "check": {
+        "path": "assembly_complexity.total_components",
+        "op": "eq",
+        "value": 85
+      },
+      "aspirational": true,
+      "aspirational_reason": "unsupported op: eq"
+    },
+    {
+      "id": "FND-00000379-AST-04",
+      "description": "INCORRECT: VR1 (PT10MH01-103A2020-S) is a through-hole trimmer potentiometer (description: 'TRIMMER, 10K, 0.15W, 1TURN', lib_id: SamacSys_lib:PT10MH01-103A2020-S). The analyzer classifies it as type='varistor' (likely triggered by the 'VR' reference prefix). It is then incorrectly listed in protection_devices as clamping the +5VA rail to AN2. A trimmer pot has no protection/clamping function. The correct type should be 'potentiometer' or 'variable_resistor'.",
+      "created_from": "FND-00000379",
+      "check": {
+        "path": "statistics.component_types.varistor",
+        "op": "eq",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000379-AST-05",
+      "description": "INCORRECT: signal_analysis.protection_devices includes VR1 (PT10MH01-103A2020-S, a trimmer potentiometer) as a 'varistor' clamping the +5VA rail. This is incorrect: a trimmer pot is a user-adjustable resistor, not an overvoltage clamping device. The protection_devices list should only contain TVS diodes, MOVs, varistors, and fuses. VR1 appears here as a downstream consequence of the varistor misclassification.",
+      "created_from": "FND-00000379",
+      "check": {
+        "path": "signal_analysis.protection_devices[?ref=='VR1']",
+        "op": "eq",
+        "value": null
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000379-AST-06",
+      "description": "L1 (B82442T1685K050, 6.8 mH inductor) is placed in series between the +5V and +5VA power rails, with bulk/bypass capacitors C5 (470 \u00b5F) and C6 (10 \u00b5F) on the +5VA output. This is a classic L-C power filter used to create a low-noise analog supply (+5VA) from the digital +5V rail. signal_analysis.lc_filters=[] \u2014 the filter is not detected. The LC filter detector should recognize inductors on power rails with downstream capacitors as power filter topologies.",
+      "created_from": "FND-00000379",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "min_value",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

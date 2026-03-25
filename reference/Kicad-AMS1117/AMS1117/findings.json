@@ -1,0 +1,68 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "AMS1117.sch.json",
+      "status": "promoted",
+      "summary": "power_regulators detector missed AP1117-50 linear regulator (U1); Decoupling analysis correctly identifies 2-cap bulk+bypass on both +12V and +5V rails",
+      "correct": [
+        {
+          "description": "decoupling_analysis correctly pairs C1 (220\u00b5F bulk) + C2 (100nF bypass) on +12V, and C3 (10\u00b5F bulk) + C4 (100nF bypass) on +5V. has_bulk=true, has_bypass=true for both rails. Self-resonant frequency values computed correctly.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U1 is an AP1117-50 (AMS1117-class LDO), +12V in \u2192 +5V out, with decoupling caps on both rails. power_regulators=[] is empty. The subcircuit description for U1 is also empty and neighbor_components=[] despite C1/C2 on +12V and C3/C4 on +5V clearly being associated. This is a missed detection for a textbook LDO circuit.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Kicad-AMS1117",
+      "project": "AMS1117",
+      "created": "2026-03-23T22:43:29.361857+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000780"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "AMS1117.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "board_outline bounding_box is null \u2014 board has no edge cuts defined; Via annular ring DFM violation correctly detected (0.1mm < 0.125mm standard)",
+      "correct": [
+        {
+          "description": "All 12 vias are 0.6mm diameter / 0.4mm drill \u2192 0.1mm annular ring, below the 0.125mm standard threshold. DFM violation correctly classified as requiring 'advanced' process.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "board_outline shows edge_count=0, bounding_box=null, yet board_width_mm and board_height_mm are also null. The board has no Edge.Cuts geometry. This is a real design issue (board with no outline) that the analyzer captures correctly. However, the DFM tier reports 'advanced' with only one violation \u2014 without a board outline, area-based calculations (zone density per cm\u00b2) are unreliable.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Kicad-AMS1117",
+      "project": "AMS1117",
+      "created": "2026-03-23T22:43:29.361873+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000781"
+    }
+  ]
+}

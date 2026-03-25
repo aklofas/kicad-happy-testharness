@@ -1,0 +1,18 @@
+{
+  "file_pattern": "skadis_clock.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002178",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002178-AST-01",
+      "description": "The skadis_clock PCB is 327mm \u00d7 95mm \u2014 a long display board holding 60 LEDs arranged as four 7-segment digit groups. The DFM analysis correctly flags this as a board_size violation: 327.0\u00d795.0mm exceeds the 100\u00d7100mm threshold, resulting in a higher fabrication pricing tier at JLCPCB. dfm_tier is reported as 'standard' with violation_count=1.",
+      "created_from": "FND-00002178",
+      "check": {
+        "path": "dfm.violation_count",
+        "op": "equals",
+        "value": 1
+      }
+    }
+  ]
+}

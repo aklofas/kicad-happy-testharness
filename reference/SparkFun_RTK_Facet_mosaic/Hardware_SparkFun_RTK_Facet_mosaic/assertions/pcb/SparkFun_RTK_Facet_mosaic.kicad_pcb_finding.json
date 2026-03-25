@@ -1,0 +1,59 @@
+{
+  "file_pattern": "SparkFun_RTK_Facet_mosaic.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001537",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001537-AST-01",
+      "description": "173 footprints confirmed (28 front, 145 back; 118 SMD, 14 THT, 39 board-only, 2 special). Four copper layers (F.Cu, In1.Cu, In2.Cu, B.Cu) correctly identified. 1586 track segments, 321 vias, 8 zones, and total track length of 2958.15mm are all plausible for this board complexity. Routing complete with 0 unrouted nets.",
+      "created_from": "FND-00001537",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 173
+      }
+    },
+    {
+      "id": "FND-00001537-AST-02",
+      "description": "The board uses minimum 0.1778mm (7mil) track width, 0.1524mm (6mil) spacing, 0.3mm drill, and 0.13mm annular ring \u2014 all within standard fab tier parameters. Zero DFM violations is correct.",
+      "created_from": "FND-00001537",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "op": "equals",
+        "value": "standard"
+      }
+    },
+    {
+      "id": "FND-00001537-AST-03",
+      "description": "10 courtyard overlaps are correctly detected, all involving components on B.Cu overlapping with J3 (JST 1mm Qwiic connector). The overlap magnitude of 1.748mm\u00b2 per pair is plausible for tightly packed 0402 components near a small connector. This is a real layout concern.",
+      "created_from": "FND-00001537",
+      "check": {
+        "path": "placement_analysis.overlap_count",
+        "op": "equals",
+        "value": 10
+      }
+    },
+    {
+      "id": "FND-00001537-AST-04",
+      "description": "34 0402 capacitors on B.Cu are correctly flagged as medium tombstoning risk because one pad is connected to the GND copper zone and the other is not. This thermal imbalance during reflow is a legitimate concern, especially for back-side components.",
+      "created_from": "FND-00001537",
+      "check": {
+        "path": "tombstoning_risk",
+        "op": "min_count",
+        "value": 30
+      }
+    },
+    {
+      "id": "FND-00001537-AST-05",
+      "description": "The main PCB board outline is defined as a single gr_poly element on the Edge.Cuts layer with 10 vertices (the board has a notch cutout shape). The analyzer reports edge_count=0 and bounding_box=null because it only processes gr_line and gr_arc elements on Edge.Cuts, not gr_poly. Both board_width_mm and board_height_mm are reported as None. The connector PCB has the same issue.",
+      "created_from": "FND-00001537",
+      "check": {
+        "path": "board_outline.edge_count",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

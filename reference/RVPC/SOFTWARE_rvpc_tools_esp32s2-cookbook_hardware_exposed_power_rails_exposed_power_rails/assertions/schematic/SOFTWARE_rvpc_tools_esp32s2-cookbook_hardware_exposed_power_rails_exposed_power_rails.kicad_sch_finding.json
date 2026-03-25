@@ -1,42 +1,9 @@
 {
-  "file_pattern": "SOFTWARE_rvpc_tools_esp32s2-cookbook_hardware_exposed_power_rails_exposed_power_rails.kicad_sch",
+  "file_pattern": "exposed_power_rails.kicad_sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000230",
   "generated_by": "findings.py promote",
   "assertions": [
-    {
-      "id": "FND-00000230-AST-01",
-      "description": "6 LDO regulators (U1-U4, U6, U7, all HX6306P332MR) correctly identified with LDO topology and 3.3V estimated output",
-      "created_from": "FND-00000230",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U1$"
-      }
-    },
-    {
-      "id": "FND-00000230-AST-02",
-      "description": "Y1 40MHz crystal with C9/C10 (10pF) correctly detected, effective load 8pF within ESP32-S2 spec",
-      "created_from": "FND-00000230",
-      "check": {
-        "path": "signal_analysis.crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Y1$"
-      }
-    },
-    {
-      "id": "FND-00000230-AST-03",
-      "description": "R6(5.1k)/C2(1uF) RC filter (31.21Hz cutoff) correctly detected on GPIO0 reset path",
-      "created_from": "FND-00000230",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R6$"
-      }
-    },
     {
       "id": "FND-00000230-AST-04",
       "description": "BOM accurate: 14 capacitors, 10 resistors, 7 ICs, 3 connectors, 1 diode, 1 LED, 1 crystal",

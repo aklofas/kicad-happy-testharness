@@ -1,0 +1,112 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "tubes.sch.json",
+      "status": "promoted",
+      "summary": "8 WS2812B LEDs in a single daisy chain reported as 8 separate chains of length 1",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "In tubes.sch, the 8 WS2812B LEDs (D1-D8) are connected in a single daisy chain: NEOPIXEL -> R13 (100 ohm series resistor) -> D1 DIN, then D1 DOUT -> D2 DIN -> D3 DIN -> ... -> D8 DIN via direct wire connections. The wires explicitly connect each LED's DOUT to the next LED's DIN (e.g., wire at y=5900 from x=2100 to x=2650 connects D1 DOUT to D2 DIN, then 3250-3800 for D2->D3, etc.). The analyzer reports 8 separate chains of length 1 each instead of 1 chain of length 8. This is because the WS2812B components use a custom library symbol (8IN14Lib:WS2812B) whose pin data is not resolved in the net list \u2014 the chain topology cannot be traced and each LED is treated as an isolated chain. The correct result is addressable_led_chains with 1 entry, chain_length=8, first_led=D1, last_led=D8.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains[0].chain_length",
+            "op": "eq",
+            "value": 8
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "8IN14NixieShield",
+      "project": "8IN14NixieShield",
+      "created": "2026-03-23T18:41:56.677069+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000328"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "8IN14NixieShield.sch.json",
+      "status": "promoted",
+      "summary": "8 WS2812B LEDs (aggregated from tubes.sch) reported as 8 chains of length 1 in top-level output",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The top-level 8IN14NixieShield.sch.json aggregates all sub-sheets. The same WS2812B daisy-chain miscount from tubes.sch propagates here: 8 chains of length 1 are reported instead of 1 chain of length 8. The 8 WS2812B LEDs D1-D8 in tubes.sch are explicitly wired in sequence and form one chain driven from the NEOPIXEL signal via a 100-ohm series resistor.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains[0].chain_length",
+            "op": "eq",
+            "value": 8
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "8IN14NixieShield",
+      "project": "8IN14NixieShield",
+      "created": "2026-03-23T18:41:56.677094+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000329"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "nixie_ctl.sch.json",
+      "status": "promoted",
+      "summary": "8 TLP627 optocouplers not detected as isolation barriers",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "nixie_ctl.sch contains 8 TLP627 phototransistor optocouplers (U1-U8) from the Isolator library (lib_id: Isolator:TLP627). These are galvanic isolation devices used to isolate the low-voltage control signals (ACTL_1 through ACTL_8) from the high-voltage anode drive signals. The analyzer reports isolation_barriers: [] despite 8 TLP627 isolators being present. The TLP627 is a well-known optocoupler from Toshiba.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "8IN14NixieShield",
+      "project": "8IN14NixieShield",
+      "created": "2026-03-23T18:41:56.677100+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000330"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "boost.sch.json",
+      "status": "promoted",
+      "summary": "Boost converter MOSFET (IRF740 Q1) not detected as a transistor circuit",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "boost.sch implements a discrete boost converter using an IRF740 power MOSFET (Q1, lib_id: Transistor_FET:IRF740), a 470uH inductor (L1), a HER106 rectifier diode (D9), a 4.7uF/350V output capacitor (C9), a gate resistor R2 (22 ohm), and a voltage divider (R1=300k / R4=4.7k) for feedback. The analyzer detects the voltage divider correctly but reports transistor_circuits: []. The IRF740 is a well-known TO-220 power MOSFET and this is a straightforward switched-mode boost converter topology that should be detectable as a transistor switching circuit.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "8IN14NixieShield",
+      "project": "8IN14NixieShield",
+      "created": "2026-03-23T18:41:56.677103+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000331"
+    }
+  ]
+}

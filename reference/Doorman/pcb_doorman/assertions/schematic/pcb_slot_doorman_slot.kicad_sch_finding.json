@@ -1,0 +1,28 @@
+{
+  "file_pattern": "slot_doorman_slot.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000475",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000475-AST-01",
+      "description": "U2 is an XC6210B332MR (700mA LDO, lib_id=Regulator_Linear:XC6210B332MR). The signal_analysis.power_regulators correctly identifies it with topology='LDO', input_rail='__unnamed_1', output_rail='+3.3V'. The associated L1 (TBD inductor) connects between +5V and the unnamed VIN net \u2014 the LDO is correctly modeled as using the filtered supply. The XC6210 is correctly classified as LDO not switching despite having an inductor on its input side.",
+      "created_from": "FND-00000475",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000475-AST-02",
+      "description": "The signal_analysis.voltage_dividers correctly identifies R7 (1M) as top and R8 (160K) as bottom with top_net=TASTA_ONLY_BUS, mid_net=GPIO26, bottom_net=GND, ratio=0.138. The mid-point connections to U3 (ESP32-PICO-MINI-02) pin IO26 and TP7 are correctly captured.",
+      "created_from": "FND-00000475",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "file_pattern": "ATMega-Board.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000730",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000730-AST-01",
+      "description": "power_regulators correctly reports topology=LDO, input_rail='VDC_IN', output_rail='+5V'. The output rail has 4 decoupling caps (100n x3, 10uF x1) correctly enumerated in decoupling_analysis.",
+      "created_from": "FND-00000730",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000730-AST-02",
+      "description": "crystal_circuits correctly identifies Y1, load_caps [C5=22p, C6=22p], effective_load_pF=14.0 with correct formula note. SPI bus lines (MOSI/MISO/SCK via J4) are present in net names. UART detection on D0/RX and D1/TX nets is correct.",
+      "created_from": "FND-00000730",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000730-AST-03",
+      "description": "The schematic has explicit MOSI, MISO, SCK net labels connected to ATmega328 PB3/PB4/PB5 and the J4 ISP header. bus_analysis.spi is empty [] despite the named SPI nets being present. The UART detector fired on RX/TX nets but the SPI detector missed the MOSI/MISO/SCK pattern.",
+      "created_from": "FND-00000730",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

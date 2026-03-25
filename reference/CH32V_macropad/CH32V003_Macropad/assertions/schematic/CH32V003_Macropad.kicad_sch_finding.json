@@ -1,0 +1,53 @@
+{
+  "file_pattern": "CH32V003_Macropad.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000440",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000440-AST-01",
+      "description": "connectivity_issues.single_pin_nets lists two single-pin nets: SWCLK (J2 pin 1) and RST (U1 NRST). The SWCLK global label 'output' on J2 pin 1 connects to no other component in any schematic. However design_observations reports count=1 with only the RST net listed, missing SWCLK entirely. This internal inconsistency means the design_observations section undercounts the single-pin net problem.",
+      "created_from": "FND-00000440",
+      "check": {
+        "path": "signal_analysis.design_observations[0].count",
+        "op": "equals",
+        "value": 2
+      },
+      "aspirational": true,
+      "aspirational_reason": "design_observations undercounts single-pin nets"
+    },
+    {
+      "id": "FND-00000440-AST-02",
+      "description": "INCORRECT: R1 is a 1.5K resistor with pin 1 on VDD and pin 2 on the MCU_D- net. This is a USB Full Speed D- pull-up resistor (shunt from VDD to D-), used to signal device presence to the host. It is NOT an inline series impedance-matching resistor. The differential_pairs entry for MCU_D+/MCU_D- incorrectly lists R1 in series_resistors. A true series resistor would be in-line between the MCU and the bus (typically 22-33 ohm), not a 1.5K shunt from a power rail.",
+      "created_from": "FND-00000440",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "not_contains_match",
+        "value": {
+          "positive": "MCU_D+",
+          "series_resistors": [
+            "R1"
+          ]
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000440-AST-03",
+      "description": "INCORRECT: The MCU_D+/MCU_D- differential pair entry has esd_protection: [U1, U2]. U1 is the CH32V003 microcontroller \u2014 a general-purpose MCU, not a dedicated ESD protection device. Only U2 (CH334R USB hub, which has integrated TVS/ESD) qualifies as providing ESD protection on these lines. The analyzer appears to credit all ICs sharing the differential pair nets as ESD protection sources regardless of component type.",
+      "created_from": "FND-00000440",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "not_contains_match",
+        "value": {
+          "positive": "MCU_D+",
+          "esd_protection": [
+            "U1",
+            "U2"
+          ]
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

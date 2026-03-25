@@ -1,0 +1,32 @@
+{
+  "file_pattern": "RN2483shield.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001176",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001176-AST-01",
+      "description": "Two filled GND zones found (F.Cu 47.4% fill, B.Cu 70.1% fill) plus one keepout zone. Board dimensions 68.9x53.6mm, 2-layer, fully routed \u2014 all correct.",
+      "created_from": "FND-00001176",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001176-AST-02",
+      "description": "P2 is a 6-pin header used as a bus for the UART TX signal; all pads share UART_ARDUINO_TO_RADIO. Similarly P3 is all UART_RADIO_TO_ARDUINO. This unusual single-net multi-pad connector is faithfully reported.",
+      "created_from": "FND-00001176",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

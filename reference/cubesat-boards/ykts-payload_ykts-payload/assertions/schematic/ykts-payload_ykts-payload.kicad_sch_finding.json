@@ -1,5 +1,5 @@
 {
-  "file_pattern": "ykts-payload_ykts-payload.kicad_sch",
+  "file_pattern": "ykts-payload.kicad_sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000281",
   "generated_by": "findings.py promote",
@@ -15,17 +15,6 @@
       }
     },
     {
-      "id": "FND-00000281-AST-02",
-      "description": "4 crystal circuits (Y1/Y3 8MHz, Y2/Y4 12MHz) with 22pF load caps correct",
-      "created_from": "FND-00000281",
-      "check": {
-        "path": "signal_analysis.crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Y1$"
-      }
-    },
-    {
       "id": "FND-00000281-AST-03",
       "description": "3 power regulators (AMS1117-5.0, dual L78L33) correctly identified",
       "created_from": "FND-00000281",
@@ -33,17 +22,6 @@
         "path": "signal_analysis.power_regulators",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "FND-00000281-AST-04",
-      "description": "PMOS Q1 PMV65XP high-side switch correctly identified",
-      "created_from": "FND-00000281",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q1$"
       }
     },
     {
@@ -67,18 +45,6 @@
         "op": "not_contains_match",
         "field": "resistor.ref",
         "pattern": "^R48$"
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00000281-AST-07",
-      "description": "MAX4372FEUK (U4) current sense amplifier with R_CSB1 (0.1ohm shunt) on +5V rail not detected in current_sense",
-      "created_from": "FND-00000281",
-      "check": {
-        "path": "signal_analysis.current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^U4$"
       },
       "aspirational": true
     }

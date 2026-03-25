@@ -1,0 +1,211 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "PCB_KiCAD_Nucleo32TNC.sch",
+      "status": "promoted",
+      "summary": "Logo_Open_Hardware_Large graphic classified as a power rail; LED_TX net falsely detected as UART interface; I2C bus not detected despite I2C_SCL and I2C_SDA nets with a 24LC32 EEPROM; Transistor ci...",
+      "correct": [
+        {
+          "description": "9 RC filters detected including the audio path filters: 32.88 Hz output coupling cap (R4/C2), 5.31 kHz anti-aliasing filters (R7/C6, R16/C7), 9.18 kHz (R14 with parallel C6+C8). These match the audio TNC use case.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "52 components correctly counted with correct breakdown: 3 ICs, 2 transistors, 22 resistors, 13 capacitors, 4 LEDs, 2 diodes, 1 connector, 4 mounting holes, 1 switch. BOM values and footprints correctly extracted.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The Graphic:Logo_Open_Hardware_Large symbol (#LOGO1) is listed in statistics.power_rails alongside +3.3V and GND. It is a decorative graphic element, not a power rail. The parser is treating the lib_id value field as a net name for non-power graphic symbols.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "bus_analysis.uart reports LED_TX as a UART signal (pin_count=1, no devices). LED_TX is a GPIO signal driving an LED indicator (D4 anode), not a UART TX line. The analyzer is pattern-matching on the '_TX' suffix without verifying connectivity to UART-capable IC pins.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "U1 is an MCP6004 quad op-amp. All 5 units (including power unit 5) are reported with configuration='unknown'. The 4 active signal-processing units are in inverting, non-inverting, and active filter configurations based on the surrounding R/C components. Opamp configuration detection fails because op-amp pin connections are empty in the KiCad 5 parser.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "SW1 (a tactile push button, user/boot button) is listed as having a pin on the I2C_SCL net, which is incorrect. SW1 pin 2 goes to GND. This appears to be a wire-tracing error in the KiCad 5 parser placing nearby wires on wrong nets.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The schematic has a 24LC32 I2C EEPROM (U2) with I2C_SCL and I2C_SDA nets and 2K2 pull-up resistors (R17, R18), but bus_analysis.i2c is empty. Root cause: U2 has pins:[] in the output (KiCad 5 .sch IC pin connections not parsed), so the I2C bus detector finds no IC pins on the I2C nets.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Q1 and Q2 are 2N7000 N-channel MOSFETs used as PTT (push-to-talk) switches. transistor_circuits in signal_analysis is empty. The transistor detector is missing these, likely because pin connections to the FET are not parsed (same KiCad 5 pin extraction issue).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "NucleoTNC",
+      "project": "Enclosure_KiCAD_BackPanel_BackPanel",
+      "created": "2026-03-23T23:22:35.545386+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000993"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "PCB_KiCAD_Nucleo32TNC.kicad_pcb",
+      "status": "promoted",
+      "summary": "PCB statistics correctly extracted: 54 footprints, 187 tracks, 3 vias, 2-layer board; LEDs (D3-D6) flagged with -4.95mm edge clearance are likely intentional panel-mount overhangs; 20 courtyard ove...",
+      "correct": [
+        {
+          "description": "Board is 66x99mm, 2-layer (F.Cu + B.Cu), fully routed with 52 nets, 1012mm total track length. All correct for a THT-dominant TNC board on a Nucleo32 carrier.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The board is a THT-dominant design (48 THT, 1 SMD, 5 virtual) packed in 66x99mm. Overlapping courtyards are expected when manually placing THT components tightly. The overlaps reported (U1/R16, C12/C13, etc.) are consistent with a hand-designed amateur radio TNC.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The thermal analysis correctly finds the +3V3 zone on F.Cu with 5640mm2 area and 1 stitching via. Board metadata (title, revision, company) all correctly extracted.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "D3, D4, D5, D6 all show -4.95mm edge_clearance_mm. For a TNC in an enclosure, horizontal LED_D3.0mm THT LEDs are commonly placed to protrude through panel holes \u2014 their leads overhang the PCB edge intentionally. The warning is technically accurate but likely not a real defect for this board style. The board metadata confirms this is a PCB Rev B (Mobilinkd LLC) with '67mm width' note.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The statistics report smd_count=1 which is the LOGO footprint (library=KiCAD:LOGO, reference=G1). This inflates the SMD count by counting a graphic element as an SMD component. The board is effectively all-THT.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "NucleoTNC",
+      "project": "Enclosure_KiCAD_BackPanel_BackPanel",
+      "created": "2026-03-23T23:22:35.545408+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000994"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "KiCAD_Nucleo32TNC.sch",
+      "status": "new",
+      "summary": "Older KiCAD/Nucleo32TNC.sch (breadboard version) correctly parsed with 41 components",
+      "correct": [
+        {
+          "description": "The older design iteration has 41 components (vs 52 in the PCB version), 32 nets, and no LEDs for DCD/TX status indicators, consistent with an earlier breadboard design. The output matches the source schematic accurately.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "NucleoTNC",
+      "project": "Enclosure_KiCAD_BackPanel_BackPanel",
+      "created": "2026-03-23T23:22:35.545411+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000995"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Enclosure_KiCAD_FrontPanel_FrontPanel.sch",
+      "status": "new",
+      "summary": "Enclosure panel schematics correctly identified as mounting-hole-only with no signal analysis",
+      "correct": [
+        {
+          "description": "FrontPanel (8 mounting holes) and BackPanel (6 mounting holes) are mechanical-only boards. The analyzer correctly extracts these as mounting_hole type components with no signal analysis detectors triggered.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "NucleoTNC",
+      "project": "Enclosure_KiCAD_BackPanel_BackPanel",
+      "created": "2026-03-23T23:22:35.545413+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000996"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "",
+      "status": "promoted",
+      "summary": "No gerber files present in repo \u2014 gerber analysis not applicable",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The review prompt referenced 4 gerber output files (NucleoTNC-gerbers, NucleoTNC_r3-gerbers, NucleoTNC_r4-gerbers, NucleoTNC_r5-gerbers), but the NucleoTNC repo contains no gerber files. The checked-out repo only has .sch and .kicad_pcb files. These outputs do not exist and cannot be reviewed.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "NucleoTNC",
+      "project": "Enclosure_KiCAD_BackPanel_BackPanel",
+      "created": "2026-03-23T23:22:35.545415+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000997"
+    }
+  ]
+}

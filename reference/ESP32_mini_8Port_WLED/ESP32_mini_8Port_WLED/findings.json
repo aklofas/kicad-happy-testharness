@@ -1,0 +1,235 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ESP32_mini_8Port_WLED.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Component count, BOM, and net connectivity are correctly extracted; I2C bus falsely detected from ESP32 pin name substrings; neither net is actually I2C; UART interface on U1 TXD/RXD connected to J...",
+      "correct": [
+        {
+          "description": "All 25 real components (25 = 27 symbol instances minus 2 power symbols #PWR01/#PWR02) are correctly identified and categorized: 8 WS2812B LEDs, 4 polarized capacitors, 1 relay (SANYOU_SRD_Form_C), 1 1N4001 diode, 6 connectors, 1 resistor, 1 switch, 2 ICs (mini_esp32 + TSOP382xx), 1 BC547 transistor. Wire count (179), no-connect count (23), net count (53) all verified correct against source. Pin-to-net mappings verified correct for all major nets including GND bus (21 components), +5V bus (7 components plus PWR symbol), and all signal nets.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The design intentionally drives each of the 8 WS2812B LEDs (D1\u2013D8) from a separate ESP32 GPIO pin (IO_00, IO_02, IO_04, IO_16, IO_18, IO_19, IO_23, IO_26). Each LED's DOUT connects to a separate output terminal (J1 or J2 screw terminal pins), not to another LED's DIN. The analyzer correctly reports 8 chains of chain_length=1. This is a valid 8-independent-port WLED controller topology, not a single daisy chain. The estimated_current_mA=60 per chain (20mA \u00d7 3 channels) is correct for WS2812B.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Q1 (BC547 NPN) is correctly identified as a transistor circuit with: base_net=__unnamed_12, collector_net=__unnamed_3, emitter_net=GND (emitter_is_ground: true), and base_resistors=[R1]. The collector load (K1 relay coil) is correctly connected: K1 coil from +5V (pin1) through the relay to Q1 collector (pin2), with D9 (1N4001) as a flyback diode (K at +5V, A at Q1 collector node \u2014 correct polarity). K1 contact pin3 (COM) connects to the WS2812B VDD bus, pin5 (NO) connects to +5V, so relay energization powers the LED array. load_type='other' is acceptable given there is no dedicated 'relay' load type.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "U1 (mini_esp32) has three GND pins: pin 1 (GND, net __unnamed_46, 1 component), pin 22 (GND, net __unnamed_30, 1 component), and pin 33 (GND, net GND, connected to main ground). Pins 1 and 22 are electrically isolated from the main GND net \u2014 this is a real design issue where the schematic author left two ESP32 ground pins unconnected. The net classification correctly labels __unnamed_30 and __unnamed_46 as 'power_internal', and the analyzer does not falsely merge them with GND. However, these are not flagged in connectivity_issues.single_pin_nets (that list is empty), which means the analyzer silently misses isolated power_in pins.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The design_observations entry correctly notes that U2 (TSOP382xx) has its Vs (+5V) power pin without a dedicated decoupling capacitor. The schematic shows no cap between +5V and GND near U2, while C1\u2013C4 are all connected to the WS2812B VDD bus (net __unnamed_0), not +5V. The observation is accurate per the TSOP382xx datasheet recommendation for a 100nF bypass cap on Vs.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The schematic uses custom power symbols from library 'PCM_4ms_Power-symbol' (not the standard KiCad power library). The analyzer correctly identifies that neither the GND nor +5V rails have a PWR_FLAG or power_out pin to satisfy ERC, and issues pwr_flag_warnings for both. This is a real ERC issue in the design.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The bus_analysis.i2c section reports two I2C lines: (1) SCL on net __unnamed_13 connecting U1 IO_22/D1/SCL to R1, and (2) SDA on net __unnamed_34 connecting U1 IO_21/D2/SDA to U2 TSOP382xx OUT and J5 Pin_5. Both are false positives from matching 'SCL' and 'SDA' substrings in the ESP32 mini module's pin names. The SCL net is actually U1 GPIO22 driving a base resistor R1 for transistor Q1 (relay driver circuit); the SDA net is U1 GPIO21 receiving the demodulated output of the TSOP382xx IR receiver. Neither net has pull-up resistors (correctly noted as has_pull_up: false), there are no other I2C peripheral devices, and the TSOP OUT pin is an 'output' type \u2014 ruling out I2C. The analyzer should not classify a net as I2C based purely on pin name substrings when there are no pull-ups and the connected component functions contradict the bus role.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "U1 pin 21 (TXD) connects to J4 pin 2 via net __unnamed_29, and U1 pin 23 (RXD) connects to J4 pin 3 via net __unnamed_31. These form a clearly paired UART TX/RX breakout to connector J4 (a 4-pin socket with +5V, TXD, RXD, GND). Despite the pin names containing 'TXD' and 'RXD', the bus_analysis.uart section is empty. The analyzer detected I2C from 'SCL'/'SDA' substrings but failed to apply the same logic to 'TXD'/'RXD' \u2014 an inconsistency. The UART interface to J4 should have been detected.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The transistor_circuits entry for Q1 lists base_resistors=[R1] but base_driver_ics=[]. In fact U1 (mini_esp32) pin 25 (IO_22) drives net __unnamed_13, which connects to R1 pin2; R1 pin1 connects to Q1 base. U1 is the IC driving Q1's base through the base resistor. The analyzer stops at the resistor and does not follow the signal back to the driving IC. This means the ESP32-to-relay signal path is incomplete \u2014 U1 should appear as a base_driver_ic for Q1.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ESP32_mini_8Port_WLED",
+      "project": "ESP32_mini_8Port_WLED",
+      "created": "2026-03-23T20:32:17.589864+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000523"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "kicad-data_logocircuit_logocircuit.sch.json",
+      "status": "new",
+      "summary": "Empty KiCad 5 legacy schematic correctly parsed with zero components and empty analysis",
+      "correct": [
+        {
+          "description": "The logocircuit.sch file contains only the EESchema header ('EESchema Schematic File Version 2 / EELAYER 25 0 / EELAYER END / $EndSCHEMATC') with no actual schematic content. The analyzer correctly identifies this as a KiCad 5 (legacy) file (file_version=4), reports 0 components, 0 nets, 0 wires, empty signal_analysis, and empty bus_analysis. No false positives generated for an empty file.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "ESP32_mini_8Port_WLED",
+      "project": "ESP32_mini_8Port_WLED",
+      "created": "2026-03-23T20:32:17.589883+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000524"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ESP32_mini_8Port_WLED.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Component inventory is accurate: 25 total (8 WS2812B, 4 caps, 1 relay, 1 diode, 6 connectors, 1 resistor, 1 switch, 2 ICs, 1 transistor); 8 independent WS2812B chains (length=1 each) correctly dete...",
+      "correct": [
+        {
+          "description": "All 25 components parsed correctly with right types, values, and footprints. BOM grouping is correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Each WS2812B DIN is driven directly from a unique ESP32 GPIO. No DOUT-to-DIN chaining between LEDs. The 8 chains of length 1 match the circuit topology.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The file header has version 20230121 which corresponds to KiCad 7. The analyzer outputs kicad_version='unknown' instead of detecting it from the date-based version number.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Net __unnamed_34 (U1 SDA pin + U2 TSOP382xx OUT + J5 pin) is flagged as an I2C SDA line. The TSOP382xx is an IR demodulator whose output happens to be connected to the ESP32 SDA-capable pin used as a plain GPIO input. This is a pin-name false positive with no pull-ups present.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Net __unnamed_13 (U1 SCL pin + R1) is flagged as I2C SCL. In reality IO_22/SCL is used as a plain GPIO to drive the relay via BJT Q1 through base resistor R1. No I2C devices are on this net and there are no pull-ups.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "U1 pin TXD (net __unnamed_29) connects to J4 pin 2, and U1 pin RXD (net __unnamed_31) connects to J4 pin 3. This is a clear UART breakout but bus_analysis.uart is [].",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The collector net __unnamed_3 connects Q1 collector to K1 (relay coil) and D9 (1N4001 flyback anode). load_type should be 'relay', not 'other'. The relay is a clear inductive load.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "D9 cathode is on +5V and anode is on the collector net with K1 coil \u2014 this is a classic flyback/freewheeling diode protecting Q1 from the relay inductive kick. protection_devices is empty and snubbers is empty.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The power_budget only accounts for U2 TSOP382xx at 10 mA on +5V. The 8 WS2812B LEDs are powered from +5V (via J1/J2 screw terminals) and together can draw ~480 mA at full brightness. The power budget dramatically underestimates +5V load.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ESP32_mini_8Port_WLED",
+      "project": "ESP32_mini_8Port_WLED",
+      "created": "2026-03-23T20:32:17.720683+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000525"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "kicad-data_logocircuit_logocircuit.sch.json",
+      "status": "promoted",
+      "summary": "Empty KiCad 5 legacy schematic (4-line stub) correctly parsed with zero components, nets, and wires; logocircuit.sch file_version reported as '4' but file header says 'EESchema Schematic File Versi...",
+      "correct": [
+        {
+          "description": "The file is a bare EESchema stub with no content. The analyzer correctly returns all-zero statistics and empty lists.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The source file header is 'EESchema Schematic File Version 2', but the analyzer outputs file_version='4'. The version number is parsed incorrectly for this legacy format file.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ESP32_mini_8Port_WLED",
+      "project": "ESP32_mini_8Port_WLED",
+      "created": "2026-03-23T20:32:17.720701+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000526"
+    }
+  ]
+}

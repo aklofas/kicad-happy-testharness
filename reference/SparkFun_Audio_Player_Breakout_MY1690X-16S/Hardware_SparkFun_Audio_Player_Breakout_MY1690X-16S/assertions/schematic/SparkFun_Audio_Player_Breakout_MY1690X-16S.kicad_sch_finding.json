@@ -1,0 +1,40 @@
+{
+  "file_pattern": "SparkFun_Audio_Player_Breakout_MY1690X-16S.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001415",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001415-AST-01",
+      "description": "total_components=42 is correct per the BOM (9 caps, 3 diodes, 1 ESD IC, 1 LED power LED, 1 status LED, 4 fiducials, 6 connectors: J1 TRRS, J2 3-pin, J3 2-pin, J4 USB-C, J5 6-pin PTH, J6 microSD; 1 inductor L1, 1 MOSFET Q1, 7 resistors, 3 jumpers, 3 standoffs, 1 logo). The five power rails match: VIN (raw battery/DC input), VUSB (USB 5V), VCC (MY1690X analog supply), 3.3V_P (regulated 3.3V), GND. The MY1690X-16S serial MP3 decoder IC is correctly typed as 'ic'.",
+      "created_from": "FND-00001415",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 42,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001415-AST-02",
+      "description": "INCORRECT: transistor_circuits[0] shows gate_net='3.3V_P' for the BSS138 N-MOSFET level shifter. In the classic open-drain bidirectional level-shifter topology, the gate is connected through a resistor to the higher-voltage rail (here 3.3V_P via R1 2.2k), so the gate IS on the 3.3V_P net. This is technically correct for this specific topology. However, the analyzer also lists U2 (MY1690X-16S IC) as a gate_driver_ic for Q1, which is incorrect \u2014 U2 is on the MY_RX_LV net (drain side), not driving the gate. The gate_driver_ics inference is a false positive caused by U2 being connected to the same (drain-side) net rather than the gate net.",
+      "created_from": "FND-00001415",
+      "check": {
+        "path": "signal_analysis.transistor_circuits[0].gate_driver_ics",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001415-AST-03",
+      "description": "D2 and D3 (both BAT60A Schottky diodes) implement a power-OR / ideal diode OR circuit allowing operation from either USB (VUSB) or external VIN. This is a significant power management topology. The signal_analysis.protection_devices list is empty \u2014 D2 and D3 are not classified as power-path protection devices or as a diode-OR circuit. The analyzer correctly identifies D6 (DT1042-04SO) as an ESD IC, but misses the analog power-path topology formed by D2 and D3.",
+      "created_from": "FND-00001415",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

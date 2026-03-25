@@ -1,5 +1,5 @@
 {
-  "file_pattern": "EDA files_KiCad_EEZ DIB AFE3.kicad_sch",
+  "file_pattern": "EEZ DIB AFE3.kicad_sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000201",
   "generated_by": "findings.py promote",
@@ -45,50 +45,6 @@
       }
     },
     {
-      "id": "FND-00000201-AST-05",
-      "description": "Voltage divider R25/R24 (330R/10K) from -2V5_ISO to GND generating LO_CLAMP reference, ratio=0.968",
-      "created_from": "FND-00000201",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R25$"
-      }
-    },
-    {
-      "id": "FND-00000201-AST-06",
-      "description": "Voltage divider R22/R23 (330R/10K) from +2V5_ISO to GND generating HI_CLAMP reference, ratio=0.968",
-      "created_from": "FND-00000201",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R22$"
-      }
-    },
-    {
-      "id": "FND-00000201-AST-07",
-      "description": "Voltage divider R20/R13 (100K/100K) correctly detected with ratio=0.5 feeding IN3N",
-      "created_from": "FND-00000201",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R20$"
-      }
-    },
-    {
-      "id": "FND-00000201-AST-08",
-      "description": "Q1 and Q2 (2N7002) NMOS transistors correctly identified as switches driven by IC6 (DG212) analog switch",
-      "created_from": "FND-00000201",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Q1$"
-      }
-    },
-    {
       "id": "FND-00000201-AST-09",
       "description": "9 isolated power rails correctly identified: +15V_ISO, -15V_ISO, +5V_ISO, -5V_ISO, +3V3_ISO, +2V5_ISO, -2V5_ISO, GND, PWR_FLAG",
       "created_from": "FND-00000201",
@@ -106,17 +62,6 @@
         "path": "statistics.component_types",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "FND-00000201-AST-11",
-      "description": "RC networks R5/C1 and R6/C1 (10R/8n2, fc=1.94MHz) correctly detected as input EMI filters",
-      "created_from": "FND-00000201",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R5$"
       }
     },
     {

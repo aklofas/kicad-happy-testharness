@@ -1,0 +1,39 @@
+{
+  "file_pattern": "ZBSmartMeter.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001974",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001974-AST-01",
+      "description": "The ZBSmartMeter PCB uses a KiCad 8 format (version 20240108) with 121 copper zones \u2014 a mix of +3.3V and GND pours covering both layers. This is verified against the source file (121 zone definitions). The zone_stitching section correctly summarizes the 9 major nets with copper pours.",
+      "created_from": "FND-00001974",
+      "check": {
+        "path": "statistics.zone_count",
+        "op": "equals",
+        "value": 121
+      }
+    },
+    {
+      "id": "FND-00001974-AST-02",
+      "description": "The board is 43.3\u00d737.6 mm with 37 footprints including THT connectors (RJ12, USB-C) with large courtyard footprints. The 14 overlaps include large violations like J1 vs U1 (61.4 mm\u00b2) and C3 vs J5 (37.2 mm\u00b2), which are plausible given how tightly components are placed around the THT connectors.",
+      "created_from": "FND-00001974",
+      "check": {
+        "path": "placement_analysis.overlap_count",
+        "op": "equals",
+        "value": 14
+      }
+    },
+    {
+      "id": "FND-00001974-AST-03",
+      "description": "INCORRECT: The ESP32-C6-MINI-1/U footprint defines pad '49' (the exposed ground thermal pad) as one custom-shaped pad plus 8 rectangular sub-pads \u2014 a total of 9 pad definitions in the source file. The analyzer reports 8 identical entries in thermal_analysis.thermal_pads, all for (U3, pad '49'). These should be deduplicated into a single thermal pad entry. All 8 entries show 0 nearby_thermal_vias, which may also be inaccurate given the dense copper pour on the board.",
+      "created_from": "FND-00001974",
+      "check": {
+        "path": "thermal_analysis.thermal_pads",
+        "op": "max_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

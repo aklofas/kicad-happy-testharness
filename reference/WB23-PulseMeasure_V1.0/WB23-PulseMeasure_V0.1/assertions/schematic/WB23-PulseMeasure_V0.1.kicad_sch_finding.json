@@ -1,0 +1,124 @@
+{
+  "file_pattern": "WB23-PulseMeasure_V0.1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001794",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001794-AST-01",
+      "description": "The schematic contains exactly 75 unique component references (R1-R32, C1-C25, U1-U4, D1-D4, J1-J2+J5-J6, JP1, V1-V3, VR1, Y1), all confirmed against the source KiCad 6 file. The analyzer count matches exactly.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 75,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001794-AST-02",
+      "description": "The source schematic has R1-R32 (32 resistors) and C1-C25 (25 capacitors). The analyzer reports resistor=32 and capacitor=25, both correct.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "value": 32,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001794-AST-03",
+      "description": "Two LDO regulators detected: V1=AMS1117-5.0 (input +12V, output +5V) and V2=HT7533 (input +5V, output +3.3V). Both are correct based on the KiCad library IDs and value strings.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 2,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001794-AST-04",
+      "description": "Y1 is an 8MHz crystal with C1=20pF and C4=20pF as load capacitors, yielding an effective load of 13pF. The analyzer correctly identifies the crystal circuit, frequency, and load caps.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001794-AST-05",
+      "description": "The analyzer correctly identifies decoupling caps on +3.3V (6 caps, 10.5uF total), VCC (2 caps, 20uF), +5V (2 caps, 10.1uF), and +12V (2 caps, 10.1uF). All rails have bulk and bypass coverage.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "value": 4,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001794-AST-06",
+      "description": "The PCB (KiCad 6 format, version 20211014) contains exactly 75 footprints, confirmed against the source file's fp_text reference entries. This matches the 75 schematic components.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 75,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001794-AST-07",
+      "description": "The PCB is fully routed (routing_complete=true, unrouted_net_count=0) with 91 nets matching the schematic's 91 nets. Board dimensions 53.3 x 20.3mm are as laid out.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "statistics.routing_complete",
+        "value": true,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001794-AST-08",
+      "description": "INCORRECT: VR1 uses lib '3296W-1-103:3296W-1-103' with value '20K', which is a Bourns 3296W series multi-turn trimmer potentiometer \u2014 a variable resistor, not a varistor (MOV). The analyzer classifies it as 'varistor' based on the 'VR' reference prefix. It also appears in protection_devices as type='varistor', which is incorrect. It should be classified as a potentiometer or resistor.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "statistics.component_types.varistor",
+        "value": 1,
+        "op": "less_than"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001794-AST-09",
+      "description": "INCORRECT: V3 uses lib 'Reference_Voltage:REF3025' with value 'REF3025', which is a precision voltage reference IC. The analyzer classifies it as type='varistor' and lists it in protection_devices as type='varistor' with clamp_net='+3.3V'. This is wrong \u2014 REF3025 is a shunt reference IC, not a varistor. It should be classified as 'ic'. This also means ic count is understated at 6 (should be 7: U1, U2, U3, U4, V1, V2, V3).",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "value": 7,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001794-AST-10",
+      "description": "INCORRECT: The analyzer detects 10 opamp circuit entries for U3 and U4 (TLC274 quad op-amp). Units 1-4 of each IC are real opamp sections (8 correct detections). Unit 5 is the power supply pin unit of TLC274 \u2014 it has no signal function and should not appear as an opamp circuit. The two 'unknown' configuration entries for U3 unit 5 and U4 unit 5 are false positives.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "value": 8,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001794-AST-11",
+      "description": "The KiCad 6 PCB file (version 20211014) stores references as '(fp_text reference \"R1\" ...)' syntax. The analyzer fails to extract these, leaving all footprint refs as '?'. The source file contains 75 valid unique refs (R1-R32, C1-C25, etc.) that are not surfaced in the output. This affects ref-based cross-checking and BOM generation.",
+      "created_from": "FND-00001794",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 75,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

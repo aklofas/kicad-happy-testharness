@@ -1,0 +1,198 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "STM32F407_MVCU_MVCU_F407.kicad_sch",
+      "status": "promoted",
+      "summary": "XBee module (XB24CDMPIT-001) not detected as RF chain; STM32F407 microcontroller misclassified as a power regulator; MORNSUN isolated DC-DC (U7), I2C buses with pullups, and CAN transceiver (MCP255...",
+      "correct": [
+        {
+          "description": "design_observations correctly identifies I2C buses on I2C3_SCL/I2C_SDA with pullups (R8, R7 to +3.3V) and I2C1 without pullups. MCP2551 CAN transceiver captured in subcircuits. AMS1117 regulator caps observation correctly flags missing caps.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U2 STM32F407VGTx is listed in power_regulators with topology 'ic_with_internal_regulator'. While it has an internal regulator, it is a microcontroller first. Including it in the power_regulators array alongside AMS1117 LDOs is misleading and inflates the regulator count.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "U9 XB24CDMPIT-001 is an 802.15.4 RF transceiver module. The rf_chains and rf_matching arrays are both empty. The analyzer has subcircuits for this IC but fails to classify it as an RF device, missing an important design feature.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "PCB_Designs",
+      "project": "Cyclometer_Cyclometer_v1",
+      "created": "2026-03-23T23:31:35.156884+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001042"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Cyclometer_v1.kicad_sch",
+      "status": "promoted",
+      "summary": "TP4056 LiPo charger not detected as a BMS/charger circuit",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "U4 TP4056 is a single-cell Li-Ion battery charger. The bms_systems array is empty. This is a distinct power management circuit that should be flagged \u2014 it controls charge current and has PROG pin for charge rate setting.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "PCB_Designs",
+      "project": "Cyclometer_Cyclometer_v1",
+      "created": "2026-03-23T23:31:35.156908+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001043"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "STM32F103_InverterVCU_inverter_vcu.kicad_sch",
+      "status": "new",
+      "summary": "AMS1117-3.3 output rail reported as unnamed net instead of +3.3V",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The power_regulators entry for U4 AMS1117-3.3 shows output_rail as '__unnamed_3' when the rail should resolve to +3.3V (listed in power_rails). This suggests the analyzer fails to connect the unnamed net to its named power symbol in this schematic, producing a less useful output.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "PCB_Designs",
+      "project": "Cyclometer_Cyclometer_v1",
+      "created": "2026-03-23T23:31:35.156911+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001044"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "STM32F103_VCU_VCU.kicad_sch",
+      "status": "new",
+      "summary": "CAN transceiver (MCP2551), LM7805+AMS1117 regulator chain, voltage divider, and RC filter all correctly detected",
+      "correct": [
+        {
+          "description": "Subcircuits identify MCP2551 CAN transceiver and ACS712 current sensor. signal_analysis correctly finds voltage divider (R14/R15 on +5V\u2192volt_measure), RC filter (R1/C1 for RESET), and regulator chain. IC analysis is thorough.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "PCB_Designs",
+      "project": "Cyclometer_Cyclometer_v1",
+      "created": "2026-03-23T23:31:35.156914+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001045"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "STM32F103_board_f103_V2.kicad_pcb",
+      "status": "new",
+      "summary": "9 courtyard overlaps correctly detected on this student-designed STM32 dev board",
+      "correct": [
+        {
+          "description": "Overlaps between connectors (J9/J11: 81mm\u00b2, J8/J5: 27.4mm\u00b2) and Y1/SW1 (21.3mm\u00b2) are real placement issues. DFM tier 'standard' and dfm metrics look reasonable for a 2-layer board.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "PCB_Designs",
+      "project": "Cyclometer_Cyclometer_v1",
+      "created": "2026-03-23T23:31:35.156916+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001046"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "RP2040_Audio_player.kicad_pcb",
+      "status": "new",
+      "summary": "Thermal pad on U3 detected with nearby via count; GND pour across B.Cu and F.Cu correctly analyzed",
+      "correct": [
+        {
+          "description": "U3 thermal pad (pad 57, 10.24mm\u00b2) with 2 thermal vias is correctly identified. Zone stitching shows GND across both layers with 31 vias. The 22 courtyard overlaps suggest a densely packed board worth flagging.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "PCB_Designs",
+      "project": "Cyclometer_Cyclometer_v1",
+      "created": "2026-03-23T23:31:35.156918+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001047"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "STM32F103_VCU",
+      "status": "new",
+      "summary": "Gerber set with only F.Cu for a 2-layer board with 45 vias reported as 'complete'",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The .gbrjob only lists VCU-F_Cu.gbr as expected (one layer). The analyzer trusts the gbrjob definition of 'expected', so complete=True. However, the PCB has 2 copper layers (B.Cu+F.Cu), 45 vias, and 25 THT pads \u2014 none of which have drill files. Missing B.Cu and drill files should be flagged as an incomplete export, not reported as complete.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "PCB_Designs",
+      "project": "Cyclometer_Cyclometer_v1",
+      "created": "2026-03-23T23:31:35.156920+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001048"
+    }
+  ]
+}

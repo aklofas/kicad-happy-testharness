@@ -1,0 +1,19 @@
+{
+  "file_pattern": "data.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002037",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002037-AST-01",
+      "description": "INCORRECT: design_analysis.bus_analysis.i2c reports has_pull_up=false and pull_ups=[] for both SDA and SCL. However ic_pin_analysis confirms R19 (4.7k) is connected to SDA (pin 2 of TMP1075 U6), and R20 (4.7k) is connected to SCL. The other end of these resistors connects to the '3V3' net, which is used as a regular net label (not a power symbol), so '3V3' does not appear in statistics.power_rails. The pull-up detection algorithm requires the pull resistor's supply end to be on a recognized power rail; because 3V3 is a label-net rather than a power symbol net, the pull-ups go undetected. This is a false negative that will incorrectly suggest missing I2C pull-up resistors.",
+      "created_from": "FND-00002037",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c[?net=='SDA'].has_pull_up",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    }
+  ]
+}

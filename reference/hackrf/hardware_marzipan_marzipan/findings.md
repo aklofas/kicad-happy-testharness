@@ -2,7 +2,7 @@
 
 ## FND-00000030: "Description" custom field not captured in legacy parser
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: schematic
 - **Source**: hardware_marzipan_marzipan.sch.json
 - **Created**: 2026-03-13

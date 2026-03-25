@@ -1,0 +1,49 @@
+{
+  "file_pattern": "RPi-Z80-Controller.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001198",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001198-AST-01",
+      "description": "Top-level schematic includes Z80.sch and Power.sch sub-sheets. Component count (91), power rails (+3.3V, +5V, GND), BOM groupings, and i2c bus detection (SCL/SDA with MCP23017 devices) all look accurate.",
+      "created_from": "FND-00001198",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001198-AST-02",
+      "description": "Q2 and Q3 (BSS138) are correctly classified as MOSFETs with gate_net on i2C_SCL/i2C_SDA and drain connected to the 5V-side SCL/SDA \u2014 correctly reflecting the open-drain level-shifter topology.",
+      "created_from": "FND-00001198",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001198-AST-03",
+      "description": "7 caps on +5V (4.7uF bulk + 5x100nF bypass) and 4 caps on +3.3V (4.7uF + 3x100nF) are accurately enumerated.",
+      "created_from": "FND-00001198",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001198-AST-04",
+      "description": "Q2+Q3 with R5/R6 form a classic bidirectional i2c level-shifter between 3.3V and 5V domains. The analyzer identifies the individual transistors but does not produce a higher-level 'level_shifter' or 'i2c_level_shifter' detection in design_observations.",
+      "created_from": "FND-00001198",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

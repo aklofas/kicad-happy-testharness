@@ -1,0 +1,69 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001443",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001443-AST-01",
+      "description": "The completeness.found_layers correctly lists all 8 standard layers for a 2-layer board. Both PTH and NPTH drill files are present (has_pth_drill=true, has_npth_drill=true).",
+      "created_from": "FND-00001443",
+      "check": {
+        "path": "completeness.found_layers",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "FND-00001443-AST-02",
+      "description": "The drill_classification accurately separates vias (282 at 0.3mm) from component holes (24 at 1.016mm, for J3 4-pin THT connector) and mounting holes (30 at 3.302mm NPTH, for the 5 standoffs across 6 panel copies). These counts are consistent with the panelized PCB having 6 copies of the design.",
+      "created_from": "FND-00001443",
+      "check": {
+        "path": "drill_classification.vias.count",
+        "op": "equals",
+        "value": 282
+      }
+    },
+    {
+      "id": "FND-00001443-AST-03",
+      "description": "The trace_widths section shows exactly 2 unique widths (0.1778mm and 0.4064mm), consistent with the PCB analyzer output. The min_feature_mm of 0.1778mm is accurate.",
+      "created_from": "FND-00001443",
+      "check": {
+        "path": "trace_widths.width_count",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001443-AST-04",
+      "description": "The alignment section shows aligned=true with no issues. Layer extents are consistent between F.Cu and B.Cu (both 172.95 x 133.841mm), indicating correct gerber generation.",
+      "created_from": "FND-00001443",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001443-AST-05",
+      "description": "The gerbers come from the panelized production file. The drill count of 282 vias matches exactly 6 copies of the single-board via count (47). The 30 mounting holes match 6 \u00d7 5 standoffs. The 24 THT component holes = 6 \u00d7 4 (J3 connector). Component analysis shows 55 unique components from the panelized file, consistent with 6 copies of ~9 unique SMD types plus board-only elements.",
+      "created_from": "FND-00001443",
+      "check": {
+        "path": "statistics.drill_files",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001443-AST-06",
+      "description": "INCORRECT: The gerber output lists 'SparkFun Indoor Air Quality Sensor - SCD41 SEN55_panelized.GKO' with layer_type='B.Mask'. The .GKO extension is the standard KiCad extension for the board outline (Edge.Cuts / Profile layer), not for the back soldermask. The x2_attributes for this file show FileFunction='Soldermask,Bot' but the Profile aperture function is also present. Because the GKO file is misclassified, Edge.Cuts appears in missing_required and complete=false. The board outline file is actually present and should be correctly identified as Edge.Cuts.",
+      "created_from": "FND-00001443",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "not_contains_match",
+        "value": "Edge.Cuts"
+      },
+      "aspirational": true
+    }
+  ]
+}

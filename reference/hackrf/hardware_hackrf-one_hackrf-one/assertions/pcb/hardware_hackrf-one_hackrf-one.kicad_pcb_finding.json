@@ -1,0 +1,91 @@
+{
+  "file_pattern": "hackrf-one.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000293",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000293-AST-01",
+      "description": "Footprint count (321) matches visual inspection of the hackrf-one board",
+      "created_from": "FND-00000293",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000293-AST-02",
+      "description": "Track segment count (4403) and via count (1173) consistent with dense 4-layer RF design",
+      "created_from": "FND-00000293",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000293-AST-03",
+      "description": "Board dimensions 120.9mm x 74.8mm match known hackrf-one form factor",
+      "created_from": "FND-00000293",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000293-AST-04",
+      "description": "DFM tier correctly identified for this production board",
+      "created_from": "FND-00000293",
+      "check": {
+        "path": "dfm",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000293-AST-05",
+      "description": "Power net routing analysis captures major power rails",
+      "created_from": "FND-00000293",
+      "check": {
+        "path": "power_net_routing",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000293-AST-06",
+      "description": "INCORRECT: copper_layers_used=5 includes F.SilkS which is not a copper layer. hackrf-one is a 4-layer board (F.Cu, In1.Cu, In2.Cu, B.Cu)",
+      "created_from": "FND-00000293",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 4
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000293-AST-07",
+      "description": "No RF impedance analysis despite this being an SDR (Software Defined Radio) board with critical 50-ohm RF traces",
+      "created_from": "FND-00000293",
+      "check": {
+        "path": "rf_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000293-AST-08",
+      "description": "No differential pair analysis despite USB and RF differential signaling",
+      "created_from": "FND-00000293",
+      "check": {
+        "path": "differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

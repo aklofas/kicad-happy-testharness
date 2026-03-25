@@ -1,0 +1,51 @@
+{
+  "file_pattern": "Mouse.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001927",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001927-AST-01",
+      "description": "31 components correctly parsed matching PCB footprint count exactly. Component types: 3 switches (SW1/SW2/SW3), 1 connector (J1), 11 resistors, 8 capacitors, 1 inductor, 2 LEDs (LD1/LD2), 1 IC (U1), 4 jumpers (JP1-JP4). All 31 references accounted for in BOM groups.",
+      "created_from": "FND-00001927",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 31,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001927-AST-02",
+      "description": "INCORRECT: LQ1 from lib 'Optical_Mouse:LQ' with value 'EL' is classified as type='inductor'. The 'LQ' prefix triggered the inductor heuristic (L prefix). However, from context it is a custom optical encoder/sensor component in a custom library specific to this mouse design \u2014 not an inductor. The value 'EL' (electroluminescent?) and lib name 'Optical_Mouse:LQ' both indicate it is a sensor/emitter element, not an inductor. It should be classified as 'ic' or left as unknown rather than inductor.",
+      "created_from": "FND-00001927",
+      "check": {
+        "path": "components[?reference=='LQ1'].type",
+        "value": "inductor",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001927-AST-03",
+      "description": "The schematic has two global labels for 'D+' and two for 'D-', representing USB data lines. D- appears correctly in the nets dict (connected to R7 and C8). However, 'D+' does not appear in the nets dict at all despite appearing in the labels array. Because D+ is absent from nets, the differential pair detector cannot match D+ and D- and reports differential_pairs=[]. The D+ net is effectively lost in the legacy KiCad5 net resolution. The net classification also has no entry for D+ (returns None). The design has classic USB low-speed/full-speed signaling with 270\u03a9 pull-down resistors (R7, R8).",
+      "created_from": "FND-00001927",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001927-AST-04",
+      "description": "The design has multiple decoupling capacitors on the VCC supply rail used by the optical sensor IC (U1). C14 (4.7uF) and C15 (0.1uF) are bulk/bypass on VCC, C8 and C9 (0.01uF each) are high-frequency bypass. However signal_analysis.decoupling_analysis=[] and design_observations=[] \u2014 no decoupling coverage analysis was generated. This is likely because VCC is a global label in the design (not a power symbol), and the decoupling analyzer does not connect the caps to the VCC rail.",
+      "created_from": "FND-00001927",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

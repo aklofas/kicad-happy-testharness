@@ -1,0 +1,29 @@
+{
+  "file_pattern": "faceplate.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001599",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001599-AST-01",
+      "description": "The faceplate PCB defines its board outline using a single gr_poly element on the Edge.Cuts layer (coordinates: (124.4, 45.0) to (154.4, 173.5), giving a 30.0 \u00d7 128.5 mm panel). The analyzer only processes gr_line and gr_arc for edge detection and misses gr_poly, so it reports edge_count=0, bounding_box=null, and board_width_mm=null / board_height_mm=null. The board is a standard Eurorack 3U faceplate.",
+      "created_from": "FND-00001599",
+      "check": {
+        "path": "board_outline.bounding_box",
+        "op": "exists"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001599-AST-02",
+      "description": "As a direct consequence of the gr_poly Edge.Cuts miss, statistics.board_width_mm and statistics.board_height_mm are null. The actual Eurorack faceplate is 30.0 mm wide and approximately 128.5 mm tall (3U panel height).",
+      "created_from": "FND-00001599",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "op": "equals",
+        "value": 30.0
+      },
+      "aspirational": true
+    }
+  ]
+}

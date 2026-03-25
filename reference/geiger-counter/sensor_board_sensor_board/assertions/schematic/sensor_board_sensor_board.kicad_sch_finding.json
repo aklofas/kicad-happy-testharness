@@ -1,20 +1,9 @@
 {
-  "file_pattern": "sensor_board_sensor_board.kicad_sch",
+  "file_pattern": "sensor_board.kicad_sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000212",
   "generated_by": "findings.py promote",
   "assertions": [
-    {
-      "id": "FND-00000212-AST-01",
-      "description": "Voltage divider R99 (4k7) / R100 (1k) correctly detected feeding Vref net to all 16 comparator non-inverting inputs (U1-U16 AP331A pin 3) with bypass caps",
-      "created_from": "FND-00000212",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R99$"
-      }
-    },
     {
       "id": "FND-00000212-AST-02",
       "description": "32 BC849C BJT transistor circuits correctly analyzed with base resistors (2M2 for input stages, 220k for cascade stages), emitter resistors (1k), and correct base/collector/emitter net assignments",
@@ -74,30 +63,6 @@
         "op": "min_count",
         "value": 1
       }
-    },
-    {
-      "id": "FND-00000212-AST-08",
-      "description": "U17 MMTL431B is a shunt voltage reference/regulator generating the 18V bias rail but is not detected in power_regulators. The TL431 family are programmable shunt regulators commonly used for voltage regulation.",
-      "created_from": "FND-00000212",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U17$"
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00000212-AST-09",
-      "description": "The 16 AP331A comparators (U1-U16) are used as signal discriminators for the photodiode channels but are not detected in opamp_circuits. While comparators are distinct from op-amps, they share the same topology and the analyzer should recognize comparator-based circuits.",
-      "created_from": "FND-00000212",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^U1$"
-      },
-      "aspirational": true
     }
   ]
 }

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "JLC_DemoBoard.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000736",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000736-AST-01",
+      "description": "3 components, 3 nets (GND, VCC, unnamed signal), correct power rail identification, component types (battery, resistor, led) all correct.",
+      "created_from": "FND-00000736",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000736-AST-02",
+      "description": "In the net output, BT1 pin '1' (named '+') is on the GND net and pin '2' (named '-') is on VCC. This is reversed polarity relative to standard conventions. No ERC warning generated. May be a symbol convention artifact in KiCad 5, but warrants a design observation.",
+      "created_from": "FND-00000736",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

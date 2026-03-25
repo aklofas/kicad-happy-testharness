@@ -1,0 +1,29 @@
+{
+  "file_pattern": "flex.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001403",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001403-AST-01",
+      "description": "31 total components: 10 SK6812MINI LEDs, 2 capacitors, 5 diodes (standard 1N4148-style for 5-key matrix), 5 switches, 3 connectors, 2 resistors, 4 Mousebite tabs (breakoff PCB connection points). The 4 Mousebite components correctly appear as type='other' rather than a functional component type. PCB has 33 footprints = 31 schematic + 2 G*** logo footprints, confirmed board_only. Key matrix detection: 1 row \u00d7 5 cols = 5 switches with 5 diodes is correct for the thumb cluster.",
+      "created_from": "FND-00001403",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 31,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001403-AST-02",
+      "description": "INCORRECT: The thumb cluster has 10 SK6812MINI LEDs using the same branching topology as the main plate. The analyzer reports: chain0 (D3,D4,D8,D10,D12), chain1 (D3,D6,D7,D11,D13), chain2 (D2 alone). D3 appears in both chains 0 and 1 (shared start LED). All 10 unique LEDs are covered across the 3 chains (union = {D2,D3,D4,D6,D7,D8,D10,D11,D12,D13}), but reporting 3 separate chains overstates the chain count and incorrectly suggests D2 (chain2, length=1, 60mA) is a standalone chain rather than the chain entry point. The same branching topology issue as the main plate manifests here at smaller scale.",
+      "created_from": "FND-00001403",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains[2].chain_length",
+        "value": 1,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

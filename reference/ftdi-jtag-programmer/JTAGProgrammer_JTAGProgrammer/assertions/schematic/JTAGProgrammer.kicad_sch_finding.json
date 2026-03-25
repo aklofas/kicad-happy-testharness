@@ -1,0 +1,41 @@
+{
+  "file_pattern": "JTAGProgrammer.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002074",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002074-AST-01",
+      "description": "INCORRECT: The design_observations for USB_D+ and USB_D- both report has_esd_protection: false. However, D1 and D2 are PGB1010603MR (Littelfuse TVS diode array), a standard USB ESD protection device. D1 and D2 are explicitly listed in the 'devices' array for those nets, so the analyzer sees them but still sets the flag to false. The ESD protection check does not recognize PGB1010603MR as an ESD/TVS device because it uses a custom lib_id (PGB1010603MR:PGB1010603MR) rather than a standard library name like Diode: or TVS:.",
+      "created_from": "FND-00002074",
+      "check": {
+        "path": "signal_analysis.design_observations[?net=='USB_D+'].has_esd_protection",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002074-AST-02",
+      "description": "INCORRECT: The hierarchical_labels section reports 17 unconnected_hierarchical labels: SRST, TCK, TDI, TDO, TMS from the JTAG connector sub-sheet (UUID 0ad90f15) and CTS, RTS, RXD, TXD, VBUS from the UART connector sub-sheet (UUID 58123637). These labels are connected at the top level: the top-level sheet instantiates both the JTAG connector sub-sheet and the FTDI sub-sheet and wires their hierarchical pins. The named nets in the main sheet (e.g. /dc788767.../JTAG_TCK) confirm cross-sheet connectivity is present. The false positive arises because the per-sheet analyzer cannot track connections that pass through the top-level parent sheet.",
+      "created_from": "FND-00002074",
+      "check": {
+        "path": "hierarchical_labels.unconnected_hierarchical",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002074-AST-03",
+      "description": "U3 (93LC56B, Memory_EEPROM:93LCxxBxxOT) is the FT2232HL configuration EEPROM connected via Microwire/SPI. The memory_interfaces and spi_buses detectors both return empty lists. The 93LC56B is a well-known EEPROM part (standard KiCad library symbol) and its presence alongside the FT2232HL is a standard design pattern. The net names for CS/SK/DI/DO are unnamed in the sub-sheet, which may prevent detection.",
+      "created_from": "FND-00002074",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

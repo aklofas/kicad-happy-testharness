@@ -1,0 +1,29 @@
+{
+  "file_pattern": "dragon64.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002334",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002334-AST-01",
+      "description": "The dragon64 PCB (252.984 x 199.39mm, a full computer motherboard) is correctly classified as 'advanced' DFM tier due to a 0.104mm annular ring (below the 0.125mm standard threshold). The board size flag is also correctly triggered since the board exceeds 100x100mm. The 9 'exclude_from_pos_files' footprints (mounting holes M1,M3,M4,M7,M8 and others) are correctly typed separately from the 240 THT components, avoiding inflation of the SMD/THT component counts.",
+      "created_from": "FND-00002334",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "op": "equals",
+        "value": "advanced"
+      }
+    },
+    {
+      "id": "FND-00002334-AST-02",
+      "description": "INCORRECT: The dragon64 PCB has 11 zones with net=0 and net_name='' that appear in the zones list as regular copper zones with is_filled=False. Inspection of the source .kicad_pcb file confirms these are KiCad keepout zones \u2014 they contain 'keepout (copperpour not_allowed)' rules, not empty copper pours. The analyzer does not detect or report the keepout rule attribute, so these zones are indistinguishable in the output from unfilled copper fills. A reviewer would incorrectly interpret them as copper zones that failed to fill. The 4 GND zones (net=143) are correctly identified as filled copper pours on F&B.Cu.",
+      "created_from": "FND-00002334",
+      "check": {
+        "path": "statistics.zone_count",
+        "op": "equals",
+        "value": 15
+      },
+      "aspirational": true
+    }
+  ]
+}

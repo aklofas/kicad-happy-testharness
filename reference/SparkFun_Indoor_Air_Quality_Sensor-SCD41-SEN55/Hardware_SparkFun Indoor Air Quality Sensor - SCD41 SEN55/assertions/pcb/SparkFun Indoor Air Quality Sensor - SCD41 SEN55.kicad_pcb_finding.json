@@ -1,0 +1,80 @@
+{
+  "file_pattern": "SparkFun Indoor Air Quality Sensor - SCD41 SEN55.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001442",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001442-AST-01",
+      "description": "The PCB has 58 footprints (39 front, 19 back), 2 copper layers (F.Cu, B.Cu), 119 track segments, 47 vias, and is fully routed with 0 unrouted nets. Net count of 32 matches the schematic. These all appear accurate based on cross-checking the footprint list and net table.",
+      "created_from": "FND-00001442",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 58
+      }
+    },
+    {
+      "id": "FND-00001442-AST-02",
+      "description": "The zones array reports one GND zone on F&B.Cu with outline_area_mm2=1016.13, fill_ratio=1.567 (filled area larger due to both layers), and the thermal_analysis confirms 32 via-stitch vias for the GND zone at 3.1 vias/cm2. This is correct \u2014 the board uses a flood GND pour.",
+      "created_from": "FND-00001442",
+      "check": {
+        "path": "zones",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001442-AST-03",
+      "description": "The thermal_analysis.thermal_pads correctly identifies U3 pad 21 (GND thermal pad, 4.8x4.8mm, 23.04mm\u00b2) with 9 nearby thermal vias on F.Cu. The via_in_pad analysis also correctly lists 4 vias within the pad courtyard.",
+      "created_from": "FND-00001442",
+      "check": {
+        "path": "thermal_analysis.thermal_pads",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001442-AST-04",
+      "description": "Both J1 and J2 (Qwiic_RA, JST 1mm 4-pin right-angle) are correctly mapped with pad 1=GND, pad 2=3.3V, pad 3=SDA, pad 4=SCL \u2014 the standard Qwiic pinout. The NC pads are correctly assigned unconnected nets.",
+      "created_from": "FND-00001442",
+      "check": {
+        "path": "footprints",
+        "op": "min_count",
+        "value": 50
+      }
+    },
+    {
+      "id": "FND-00001442-AST-05",
+      "description": "The tracks.width_distribution correctly shows 0.4064mm (50 segments, power tracks) and 0.1778mm (69 segments, signal tracks). All vias are consistently 0.56mm/0.3mm drill.",
+      "created_from": "FND-00001442",
+      "check": {
+        "path": "tracks.width_distribution",
+        "op": "exists",
+        "value": null
+      }
+    },
+    {
+      "id": "FND-00001442-AST-06",
+      "description": "INCORRECT: The board_outline section shows edge_count=0, edges=[], and bounding_box=null. However, the PCB has a defined board outline on the Edge.Cuts layer (confirmed by the gerber output showing an Edge.Cuts/GKO file with draw_count=527 and a Profile aperture). The main PCB layout is clearly bounded (the gerber layer extents show approximately 172.95 x 133.84 mm dimensions for copper layers). The board outline parser either failed to find or parse the Edge.Cuts shapes.",
+      "created_from": "FND-00001442",
+      "check": {
+        "path": "board_outline.edge_count",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001442-AST-07",
+      "description": "INCORRECT: The statistics show 58 footprints (39 front, 19 back), but the component_groups show 21 kibuzzard entries plus other board_only/aesthetic footprints. The kibuzzard entries are PCB artwork elements (logos, decorative text), not real components. The smd_count=30 and tht_count=1 appear more representative of real components but the front/back totals are inflated by these purely decorative footprints. This is a structural limitation but worth noting.",
+      "created_from": "FND-00001442",
+      "check": {
+        "path": "statistics.smd_count",
+        "op": "equals",
+        "value": 30
+      },
+      "aspirational": true
+    }
+  ]
+}

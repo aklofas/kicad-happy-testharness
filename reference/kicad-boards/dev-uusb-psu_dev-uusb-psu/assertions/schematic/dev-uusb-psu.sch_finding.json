@@ -1,0 +1,19 @@
+{
+  "file_pattern": "dev-uusb-psu.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002487",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002487-AST-01",
+      "description": "VREG1 (LM1117-3.3, lib: Regulator_Linear:LM1117-3.3) is correctly identified as a power_regulator but topology is 'unknown', estimated_vout is null, and input_rail/output_rail are both null. The component value 'LM1117-3.3' explicitly encodes the output voltage (3.3V) and the lib_id confirms it is a fixed linear regulator. The analyzer should parse the '-3.3' suffix and emit topology='fixed_linear' with estimated_vout=3.3. Additionally, pins=[] for VREG1 in the KiCad 5 legacy format means pin-to-net connectivity was not parsed, which is why input/output rails could not be traced \u2014 this is a secondary root cause.",
+      "created_from": "FND-00002487",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

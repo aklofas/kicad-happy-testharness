@@ -1,0 +1,63 @@
+{
+  "file_pattern": "ESP32.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002091",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002091-AST-01",
+      "description": "The usb_compliance section correctly identifies J19 (XUNPU TYPEC-304-ACP16) as a USB Type-C connector and verifies CC1/CC2 pull-down resistors (5.1k each, pass), D+/D- series resistors (pass), and VBUS decoupling (pass). The VBUS ESD protection check correctly fails\u2014no TVS diode, USBLC6, or ESD protection IC appears anywhere in the schematic. This is a genuine design gap.",
+      "created_from": "FND-00002091",
+      "check": {
+        "path": "usb_compliance.connectors[0].checks.vbus_esd_protection",
+        "op": "equals",
+        "value": "fail"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002091-AST-02",
+      "description": "The power_regulators section correctly identifies U2 as an AMS1117-3.3 LDO with input rail +5V and output rail LDO_+3.3V at 3.3V, using the fixed_suffix vref method. The RC filter on R9/C4 (10k/10uF, 1.59Hz cutoff) driving the ESP32-S2 EN pin is also correctly detected as a power-on reset delay circuit.",
+      "created_from": "FND-00002091",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].ref",
+        "op": "equals",
+        "value": "U2"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002091-AST-03",
+      "description": "INCORRECT: The analyzer reports one I2C bus entry with net 'I2C_PULL_UP' classified as an SCL line. In reality, I2C_PULL_UP is a global label that controls a P-channel MOSFET gate (Q3/Q4) to switch power to I2C pull-up resistors. It is not the SCL signal. The ESP32 board has no SDA/SCL named nets\u2014I2C GPIO assignments are not represented as named nets in this schematic. The false detection results in a spurious I2C bus entry with has_pull_up=false and only U1 as a device.",
+      "created_from": "FND-00002091",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002091-AST-04",
+      "description": "The statistics section correctly counts 12 transistors, but signal_analysis.transistor_circuits contains only 8 entries covering Q1\u2013Q4 and Q9\u2013Q12 (all AO3401A/AO3400A MOSFETs). Q5, Q6, Q7, and Q8 are MMDT2907A-7-F (footprint MMDT3906), dual PNP BJT packages used for power switching (+5V\u2192Ext_+5V, +3.3V\u2192Ext_+3.3V paths). The transistor circuit analyzer handles MOSFETs but silently skips BJTs, leaving 4 BJT-based power switching circuits uncharacterized.",
+      "created_from": "FND-00002091",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 12
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002091-AST-05",
+      "description": "The SPI bus detector finds the MOSI/MISO/CLK named nets (which connect to the Flipper Zero debug/GPIO header via J21) and reports a single SPI bus with only U1 as device. However, J24 (Micro_SD_XUNPU__TF-115) is connected via IO_35 (CMD/MOSI), IO_36 (CLK), IO_37 (DAT0/MISO), and CS/SWO (DAT3/CS)\u2014forming a complete SPI interface using GPIO-numbered net names. The SPI detector misses this second SPI instance because the nets are named IO_35/IO_36/IO_37 rather than MOSI/MISO/CLK.",
+      "created_from": "FND-00002091",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

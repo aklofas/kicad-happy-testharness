@@ -1,0 +1,30 @@
+{
+  "file_pattern": "PowerBook.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000414",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000414-AST-01",
+      "description": "INCORRECT: RP1 (value: Pico_Footprint, lib_id: custom_symbols:BlackSCSI, 40-pin MCU module) is classified as 'resistor' because its reference starts with 'R'. The resistor count is 40 instead of 39 actual discrete resistors. Same issue as the other three schematics.",
+      "created_from": "FND-00000414",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "equals",
+        "value": 40
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000414-AST-02",
+      "description": "INCORRECT: SD2 (value: MicroSD-TF-06, lib_id: New_Library:MicroSD-TF-06) is classified as 'switch'. The SPI interface nets are present (SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS) but memory_interfaces remains empty. Same issue as the other three schematics.",
+      "created_from": "FND-00000414",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    }
+  ]
+}

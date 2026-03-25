@@ -1,0 +1,29 @@
+{
+  "file_pattern": "mainboard.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001373",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001373-AST-01",
+      "description": "The reported 58 components match: 20 capacitors, 21 resistors, 8 ICs (LM1117 LDO, TPS79633 LDO, SAMD51J MCU, OPA388, GD25Q64 flash, AD5686R DAC, SN74AHCT125 level shifter, OPA4197), 3 connectors, 3 test points, 2 diodes, 1 crystal. The 5 power rails (+12V, +3V3, +5V, -12V, GND) are correctly identified. The TPS79633 and LM1117-5.0 regulators and the 32.768kHz crystal circuit are correctly detected.",
+      "created_from": "FND-00001373",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 58,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001373-AST-02",
+      "description": "The mainboard schematic has two op-amp ICs: U4 (OPA388, single-channel precision op-amp in SOT-23-5) and U8 (OPA4197, quad precision op-amp in TSSOP-14). Both are powered from \u00b112V rails (U8 confirmed in ic_power_rails). The signal_analysis.opamp_circuits array is empty. This is a missed detection \u2014 the design has an analog output scaling section with four channels of op-amp buffering for DAC_OUT_A/B/C/D through resistor networks (R2/R3/R5/R7/R8/R9/R16-R19 precision 0.1% resistors), exactly the kind of op-amp circuit the detector should identify.",
+      "created_from": "FND-00001373",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "file_pattern": "kivar-demo.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000726",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000726-AST-01",
+      "description": "66 total - 9 DNP - 7 JP (in_bom=False) - 2 with actual MPN (U3, U4) = 48 missing, matching statistics.missing_mpn count exactly.",
+      "created_from": "FND-00000726",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000726-AST-02",
+      "description": "Root sheet has 8 subsheet references (examples 1-7 + rule_processing). All are listed in sheets[], components are tagged with _sheet index, and net names include hierarchical path prefixes. Component and net counts agree between schematic and PCB outputs.",
+      "created_from": "FND-00000726",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000726-AST-03",
+      "description": "U6 TLV75801PDBV correctly identified as LDO with input=+5V, output=VOUT, feedback divider R35/R36 detected. U3 ISL91127IRNZ detected as buck-boost (topology='ic_with_internal_regulator') with inductor L1, +BATT\u2192+3V3. U5 AP3032 detected as switching with inductor L2. The estimated_vout=1.2V for U6 uses a heuristic Vref=0.6V (actual TLV758P Vref=0.8V gives 1.6V) but this is documented as heuristic.",
+      "created_from": "FND-00000726",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+# Findings: Shortcut-Kicad-Schematic / keyboard
+
+## FND-00001351: Component count and type breakdown accurate for the three parsed sheets; Key matrix column count inflated: 14 columns detected but only 7 are wired to components; Crystal/resonator circuit (X1 CSTC...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: keyboard.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- 73 total components across 3 sheets (keyboard.sch, left-board.sch, left-thumb.sch): 1 IC (ATmega32U4), 4 R, 5 C, 13 connectors, 1 crystal/resonator, 18 switches, 23 diodes, 8 LEDs. These match the components actually present in those three .sch files. The right-side keyboard half (SW1–SW15, S1–S2, led1–led8, D1–D22) appears only on the PCB with no corresponding schematic pages, but that is a property of the source design, not an analyzer error.
+- The main sheet's power rails (+5V, Earth) and PWR_FLAG power symbol are all captured. The USB_OTG connector P1 is correctly typed as a connector. The SPI-named nets (sck, mosi) are present in the net list; the analyzer correctly does not fire a SPI bus detection because these nets connect only to connector pins (P2) rather than an MCU SPI peripheral, so bus_analysis.spi=[] is accurate.
+
+### Incorrect
+- The key_matrices detector reports a 4×14 matrix with estimated_keys=33 and switches_on_matrix=26. The 14-column figure comes from merging label-only nets col8–col14 (which appear only as flat labels in the main sheet with no switch or diode pins) with col1–col7 from the left-board sub-sheet. Columns col8–col13 each have zero component pins; col14 connects only to connector P2. The actual populated left-side matrix is 4×7 with 15 switches + a 4×2 thumb extension = 23 diode-switched positions. The 14-column figure is a false positive caused by treating label-only nets as populated matrix columns.
+  (signal_analysis)
+
+### Missed
+- X1 is a Murata CSTCE16M0V53 ceramic resonator (datasheet field confirms the part number), paired with U1 (ATmega32U4). The crystal_circuits list is empty. Detection fails because the KiCad 5 legacy parser does not resolve pin-to-net mappings for the ATmega32U4 (U1 pins=[]) or the resonator (X1 pins=[]), so the topological matching for a crystal+MCU circuit cannot trigger. The design observation about a missing oscillator circuit is therefore also absent from design_observations.
+  (signal_analysis)
+- The design has 16 WS2812B LEDs (led1–led16) split across two halves, intended to form daisy-chained groups. The analyzer produces 8 separate addressable_led_chains each with chain_length=1 and data_in_net=''. Chain stitching fails because KiCad 5 legacy parsing leaves all LED pin arrays empty (pins=[]), so the DIN→DOUT connection topology cannot be traced. Additionally, led1–led8 (right half) are missing from all three .sch files and are therefore not detected at all. The eight LEDs on the left-board sheet are detected individually but never linked.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001352: Left-board 4×7 key matrix with 15 switches and 15 diodes correctly identified; estimated_keys=33 is inflated for a 4×7 left-side board with 23 actual switch positions
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: left-board.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- left-board.sch (2 sheets: left-board + left-thumb sub-sheet) reports a 4×7 matrix with switches_on_matrix=26 and diodes_on_matrix=33 via net_name detection. The 15 left-board switches (SW16, SW24–SW37) and 8 thumb diodes (for S3/S4 alps_4way contacts) account for 23 of the 33 diodes; the discrepancy reflects how estimated_keys is derived from matrix dimensions rather than actual switch count. The row/col net naming (row1–row4, col1–col7) is correctly parsed. Power rails (+5V, Earth) are also correctly identified.
+
+### Incorrect
+- The left-board.sch 4×7 matrix reports estimated_keys=33 but the actual diode count is 23 (15 left-board + 8 left-thumb). The value 33 appears to be row×col×something or an artifact of how the detector counts net intersections. A 4×7 matrix has at most 28 positions; adding the 4×2 thumb sub-matrix gives 36 theoretical max. The 33 figure does not correspond to any physically meaningful count and will mislead LLM reviewers about keyboard size.
+  (signal_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001353: Left-thumb 4×2 matrix with 8 diodes and 2 alps_4way switches correctly detected; No false-positive signal detectors fired on the thumb cluster sub-sheet
+
+- **Status**: new
+- **Analyzer**: schematic
+- **Source**: left-thumb.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- left-thumb.sch has 13 components: 8 diodes (D37–D44), 2 alps_4way switches (S3, S4), and 3 connectors (P14, P20, P19). The 4×2 key_matrix is detected via net_name (row1–row4, col1–col2) with diodes_on_matrix=8 and switches_on_matrix=0. The zero switch count is expected because alps_4way pins are empty in KiCad 5 legacy parsing. The 4 no_connects for P14, P20 mounting holes and the S3/S4 second ports are accurately recorded.
+- All signal analysis lists (voltage_dividers, rc_filters, power_regulators, etc.) are correctly empty. The only populated detector is key_matrices, which is accurate for a thumb cluster. Net classification correctly labels all 16 nets as signal since there are no power rails on this sheet (power enters via hierarchical connector P19).
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001354: board_width_mm reported as 2312mm; actual Edge.Cuts width is ~140.6mm; Routing completeness, layer count, track widths, and via count plausible; Footprint count (164) plausible for a 46-key split k...
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: keyboard.kicad_pcb.json
+- **Created**: 2026-03-24
+
+### Correct
+- 2-layer board (F.Cu / B.Cu) with 1888 track segments, 141 vias, and 0 unrouted nets is consistent with a fully-routed 46-switch + 16-LED keyboard PCB. Two track widths (0.25mm for 1614 segments, 0.4mm for 274 segments) are appropriate for a keyboard. DFM correctly flags annular ring at 0.1mm (advanced process) and the oversized board dimension (triggered by the erroneous 2312mm width). Net count of 103 is reasonable for this design.
+- The PCB has 164 footprints: 46 diodes (D1–D46), 30 SW-type + 4 S-type switches = 34 key positions, 16 WS2812B LEDs, 1 ATmega32U4, 1 USB connector, 2 16-pin inter-board connectors, 7 capacitors, 4 resistors, 1 resonator, 22 connectors/mounting holes, and misc. The 162 front-side vs 2 back-side split is consistent with this component placement. SMD count (88) vs THT count (75) is reasonable given the mixed through-hole key switches and SMD passives.
+
+### Incorrect
+- The analyzer reports board_width_mm=2312.294, but the true board outline (from Edge.Cuts lines only) spans approximately 140.6mm wide × 174.8mm tall. The height is correct. The width error arises because the bounding-box calculation includes footprint and track coordinates that extend far outside the Edge.Cuts boundary (the extreme X coordinates in the file reach −1060 to +1362mm, likely from off-board or misplaced elements), rather than restricting the measurement to Edge.Cuts geometry. This causes a ~16× overestimate of board width and inflates the computed board area from ~245cm² to ~4042cm².
+  (statistics)
+- The dfm.violations list includes a board_size entry stating '2312.294x174.818mm exceeds 100×100mm'. This is a cascading error from the incorrect board_width_mm computation. The actual board is ~140.6×174.8mm, which does legitimately exceed 100×100mm for JLCPCB standard pricing but the extreme dimension (2312mm) is fictitious. The violation message is therefore misleading — it implies a board nearly 2.3 meters wide rather than a normal keyboard PCB. The annular ring violation (0.1mm requiring advanced process) is genuine.
+  (dfm)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

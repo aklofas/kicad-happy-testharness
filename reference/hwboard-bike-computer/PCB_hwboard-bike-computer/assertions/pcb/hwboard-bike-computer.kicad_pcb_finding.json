@@ -1,0 +1,18 @@
+{
+  "file_pattern": "hwboard-bike-computer.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002135",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002135-AST-01",
+      "description": "The board has footprint_count=1 (the Raspberry Pi CM0 module), copper_layers_used=0, track_segments=0, and routing_complete=false with 3 unrouted nets. This accurately reflects an early-stage PCB file that has the footprint placed but no routing started. The 87 nets are hierarchical net names imported from the schematic. The board outline (277x190mm) is realistic for a bicycle computer PCB.",
+      "created_from": "FND-00002135",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": false
+      }
+    }
+  ]
+}

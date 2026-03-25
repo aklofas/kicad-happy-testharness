@@ -61,7 +61,7 @@
 
 ## FND-00000305: Gerber review: beta (2L Eagle) vs production (6L KiCad 8). GKO misclassified as In4.Cu from conflicting X2 FileFunction
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: gerber
 - **Source**: Hardware/Production/
 - **Related**: KH-178, KH-181, KH-185, KH-186

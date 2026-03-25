@@ -1,0 +1,31 @@
+{
+  "file_pattern": "laemp_led_board.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000765",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000765-AST-01",
+      "description": "Every 100n cap has pad 1 on VBUS (signal) and pad 2 on GND zone, creating thermal asymmetry. The analyzer correctly identifies all 44 as medium risk. No false positives or misses.",
+      "created_from": "FND-00000765",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000765-AST-02",
+      "description": "The LED board carries VBUS to 44 SK6812 LEDs with a maximum current of ~2640mA at full brightness. The PCB has VBUS tracks as narrow as 0.2mm (rated ~0.5A at 1oz Cu). The current_capacity section lists VBUS min=0.2mm but raises no warning. narrow_signal_nets is empty and no current headroom advisory is generated for this power net.",
+      "created_from": "FND-00000765",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

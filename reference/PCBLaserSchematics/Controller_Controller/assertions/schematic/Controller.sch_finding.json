@@ -1,0 +1,49 @@
+{
+  "file_pattern": "Controller.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001064",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001064-AST-01",
+      "description": "Component counts, types, power rails (+12V, +3V3, +5V, GND), and BOM extraction are all accurate. Power rail net classification (power/ground) is correct for Controller.",
+      "created_from": "FND-00001064",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001064-AST-02",
+      "description": "MSP430G2553 P1.4/P1.5 connect to SDA/SCL nets. The bus analysis correctly identifies U2 as the device and correctly notes no pull-up resistors on either line.",
+      "created_from": "FND-00001064",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001064-AST-03",
+      "description": "R6 and C5 form a filter from the multi-resistor junction (__unnamed_59) to GND. Cutoff frequency calculation is correct.",
+      "created_from": "FND-00001064",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001064-AST-04",
+      "description": "The +3V3 rail is sourced from the FT232RL's built-in 3.3V output (USBDP pin tied to +3V3 in the netlist), which serves MSP430, A4988s, and connectors. The power_regulators array is empty; an integrated regulator detection is missing.",
+      "created_from": "FND-00001064",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

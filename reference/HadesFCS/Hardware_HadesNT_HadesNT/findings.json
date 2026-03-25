@@ -95,7 +95,7 @@
       "repo": "HadesFCS",
       "project": "Hardware_HadesNT_HadesNT",
       "created": "2026-03-18T04:16:33.304866+00:00",
-      "status": "new",
+      "status": "promoted",
       "analyzer_type": "gerber",
       "source_file": "Hardware/HadesNT/gerbers/",
       "summary": "Gerber review: 4-layer (80x50mm). False alignment failure from normal copper edge clearance",
@@ -103,7 +103,12 @@
         {
           "type": "drill_classification",
           "description": "4.3mm mounting holes (4x) correctly classified -- M4 for vibration-resistant flight controller",
-          "analyzer_section": "drill_classification.mounting_holes"
+          "analyzer_section": "drill_classification.mounting_holes",
+          "check": {
+            "path": "drill_classification.mounting_holes",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

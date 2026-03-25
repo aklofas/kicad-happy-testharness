@@ -1,0 +1,29 @@
+{
+  "file_pattern": "amurNutzlast.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002271",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002271-AST-01",
+      "description": "For the ICE40HX1K-TQ144 FPGA design, the analyzer correctly identifies: 1 I2C bus, 2 SPI buses, 4 UART buses; a crystal circuit for Y1 with proper load cap identification (C38, C37 at 18pF each); decoupling capacitor groupings per power rail (+3.3V, +1V8, etc.); the W25Q128JVS flash memory interface connected to the ICE40 with 4 shared signal nets; and 3 power regulators (LT3030, LD1117S33TR, FT2232HL internal LDO). The design_observations correctly flag U4 (FT2232HL) as missing decoupling on the '+' rail.",
+      "created_from": "FND-00002271",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00002271-AST-02",
+      "description": "INCORRECT: U2 (LT3030 dual LDO) has two feedback paths. The analyzer selects the voltage divider formed by R10 (0.1\u03a9, top_net='+1V2') and R11 (100\u03a9, bottom_net='GND') and calculates estimated_vout = 0.6 * (100/100.1) = 0.601V. However R10/R11 are current sense resistors placed in the output current path, not the ADJ feedback divider. The actual feedback divider for OUT1 is R12 (357k\u03a9, top) and R13 (210k\u03a9, bottom) connecting to the ADJ1 pin. Using the correct formula Vout = Vref*(1 + R_top/R_bot) = 0.6*(1 + 357k/210k) = 1.62V. The analyzer incorrectly identifies any voltage divider whose midpoint connects to a regulator pin, without distinguishing sense resistors from feedback resistors by value.",
+      "created_from": "FND-00002271",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "value": "/\"estimated_vout\":\\s*[0-9]/"
+      },
+      "aspirational": true
+    }
+  ]
+}

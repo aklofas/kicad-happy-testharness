@@ -1,0 +1,30 @@
+{
+  "file_pattern": "Gouriet_clapp_capacitive_three_point_oscillator.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000431",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000431-AST-01",
+      "description": "INCORRECT: V1 (5.5 V gate bias) and V2 (30 V drain supply) are pspice:VSOURCE ideal voltage sources used for SPICE simulation \u2014 not varistors (voltage-dependent resistors). The analyzer classifies both as type 'varistor' because the lib_id starts with 'pspice:V'. They then erroneously appear in signal_analysis.protection_devices as varistors clamping nets to GND, which is functionally incorrect. They should be classified as 'voltage_source' or 'power_supply' and not appear in protection_devices.",
+      "created_from": "FND-00000431",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000431-AST-02",
+      "description": "The circuit is a Gouriet-Clapp capacitive three-point (Colpitts-family) oscillator: IRF740 MOSFET Q1 with tank circuit formed by L1 (200 nH gate-source), L2 (2 \u00b5H drain-source), C1 (22 pF), C2 (1 \u00b5F), and C3 (100 \u00b5F bypass). The analyzer finds three independent LC filter pairs with resonant frequencies but misses the feedback loop connecting drain to gate through the LC network. The oscillator topology is not surfaced in any signal_analysis section.",
+      "created_from": "FND-00000431",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

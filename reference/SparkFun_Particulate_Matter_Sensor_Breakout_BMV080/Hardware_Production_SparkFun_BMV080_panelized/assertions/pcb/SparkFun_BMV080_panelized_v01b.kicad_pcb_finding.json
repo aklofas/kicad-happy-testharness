@@ -1,0 +1,19 @@
+{
+  "file_pattern": "SparkFun_BMV080_panelized_v01b.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001508",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001508-AST-01",
+      "description": "INCORRECT: Same issue as the main panelized board: routing_complete=false with 3 unrouted nets corresponding to NC pads on J2 (Qwiic connector, note different reference from main schematic) and U1. These are intentional no-connect pads, not routing failures. The v01b panel contains fewer copies (4 copies based on 256 vias vs 3240 in the main panel).",
+      "created_from": "FND-00001508",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    }
+  ]
+}

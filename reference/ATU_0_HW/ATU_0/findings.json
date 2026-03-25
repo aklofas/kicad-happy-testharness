@@ -1,0 +1,95 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ATU_0.sch.json",
+      "status": "promoted",
+      "summary": "RL* relay components misclassified as resistors; relay type missing entirely from statistics; relay type absent from component_types statistics in all three output files",
+      "correct": [
+        {
+          "description": "18 relay components (RL1-RL18, value=HFD2-L2, lib=ATU_0-rescue:HFD2-L2-flipdotUSV-cache) are all typed 'resistor' instead of 'relay'. The classify_component function extracts prefix 'RL', finds no 'RL' entry in type_map, then falls through to single-char fallback: prefix[0]='R' \u2192 'resistor'. The fix is to add 'RL' to type_map as 'relay'. Impact: statistics.component_types reports resistor=39 (should be 21 resistors + 18 relays); relay type is absent from statistics entirely. The relay misclassification also prevents any relay-aware signal-path analysis (e.g., switched RF network detection).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.resistor",
+            "op": "eq",
+            "value": 21
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "All 18 HFD2-L2 relay components (RL1-RL18) are present in the design but the 'relay' key never appears in statistics.component_types across any of the three output files. The correct count is relay=18 in ATU_0.sch (hierarchical), relay=8 in Csektion.sch, relay=8 in Lsektion.sch. This is a direct consequence of the RL-prefix misclassification bug in classify_component (kicad_utils.py): 'RL' is not in type_map so it falls back to 'R' \u2192 'resistor'.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.relay",
+            "op": "eq",
+            "value": 18
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ATU_0_HW",
+      "project": "ATU_0",
+      "created": "2026-03-23T18:54:55.880360+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000353"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Csektion.sch.json",
+      "status": "new",
+      "summary": "RL* relay components misclassified as resistors in Csektion (capacitor-switching section)",
+      "correct": [
+        {
+          "description": "8 relay components (RL11-RL18, value=HFD2-L2) are typed 'resistor' instead of 'relay'. statistics.component_types shows resistor=16 (should be 8 real R* resistors + 8 relays separately). Same root cause as ATU_0.sch: 'RL' prefix not in type_map, falls back to single-char 'R' \u2192 'resistor'.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.resistor",
+            "op": "eq",
+            "value": 8
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "ATU_0_HW",
+      "project": "ATU_0",
+      "created": "2026-03-23T18:54:55.880377+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000354"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Lsektion.sch.json",
+      "status": "new",
+      "summary": "RL* relay components misclassified as resistors in Lsektion (inductor-switching section); resistor count inflated from 0 to 8",
+      "correct": [
+        {
+          "description": "8 relay components (RL3-RL10, value=HFD2-L2) are typed 'resistor' instead of 'relay'. Lsektion contains zero real resistors (no R* components), so the correct resistor count is 0. The output reports resistor=8, which is entirely due to the RL prefix falling through to single-char 'R' \u2192 'resistor' in classify_component. The relay type is absent from statistics.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.resistor",
+            "op": "eq",
+            "value": 0
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "ATU_0_HW",
+      "project": "ATU_0",
+      "created": "2026-03-23T18:54:55.880380+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000355"
+    }
+  ]
+}

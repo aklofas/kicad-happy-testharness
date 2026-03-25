@@ -1,0 +1,28 @@
+{
+  "file_pattern": "Jamma_rgbuntu_xbox360.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000652",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000652-AST-01",
+      "description": "PICO1_D+/PICO1_D- and PICO2_D+/PICO2_D- are correctly identified as differential pairs with ESD protection attributed to the Pi Pico (U1, U2) internal protection.",
+      "created_from": "FND-00000652",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000652-AST-02",
+      "description": "The board is a purely passive passthrough adapter. Zero bus protocols detected is correct. 17 components + 56 no-connects reflect the heavily unconnected nature of the design.",
+      "created_from": "FND-00000652",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

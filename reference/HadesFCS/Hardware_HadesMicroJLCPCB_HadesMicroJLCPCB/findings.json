@@ -94,7 +94,12 @@
         {
           "type": "layer_completeness",
           "description": "Nearly identical to HadesMicro with 7 fewer vias (165 vs 172) -- expected production variant",
-          "analyzer_section": "drill_classification"
+          "analyzer_section": "drill_classification",
+          "check": {
+            "path": "drill_classification",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [

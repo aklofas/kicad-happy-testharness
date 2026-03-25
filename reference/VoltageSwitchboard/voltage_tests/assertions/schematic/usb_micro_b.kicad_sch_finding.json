@@ -1,0 +1,29 @@
+{
+  "file_pattern": "usb_micro_b.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001672",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001672-AST-01",
+      "description": "REG1_UM1 (AP2112K-3.3) is correctly detected as an LDO with input_rail='+5V', output_rail='+3V3', and estimated_vout=3.3 via fixed_suffix. The +5V USB input and +3V3 output rails are correctly identified. 8 components total (1 USB connector, 3 resistors, 2 caps, 1 ESD, 1 LDO) is correct.",
+      "created_from": "FND-00001672",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001672-AST-02",
+      "description": "ESD1_UM1 (USBLC6-2P6) is an ESD protection IC from lib Power_Protection:USBLC6-2P6 placed on the USB data lines. It is classified as type 'other' and is absent from signal_analysis.protection_devices. This is a missed detection \u2014 the USBLC6-2P6 is a well-known USB ESD protection part and should appear in protection_devices.",
+      "created_from": "FND-00001672",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

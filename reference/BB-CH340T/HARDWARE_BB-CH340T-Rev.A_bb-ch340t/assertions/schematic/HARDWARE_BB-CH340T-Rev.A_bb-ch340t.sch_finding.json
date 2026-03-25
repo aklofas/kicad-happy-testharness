@@ -1,0 +1,34 @@
+{
+  "file_pattern": "bb-ch340t.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000400",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000400-AST-01",
+      "description": "INCORRECT: The analyzer detects UART on the named nets RXD and TXD. However, U1's actual TXD pin (pin 3) is on an isolated unnamed net (__unnamed_0) and U1's actual RXD pin (pin 4) is on another isolated unnamed net (__unnamed_1). Neither is connected to the labeled RXD or TXD nets. The RXD net contains U1.pin20 (NOS#, a modem-control signal) and a connector pin; the TXD net contains R1 and D1 passive pins but no IC UART output. The UART detection is triggered by net name pattern matching, not by tracing actual IC UART pin connectivity.",
+      "created_from": "FND-00000400",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "not_contains_match",
+        "value": {
+          "devices": [
+            "U1"
+          ]
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000400-AST-02",
+      "description": "U1's GND pin (pin 8, at schematic coordinate y=4450) is placed on net __unnamed_4 rather than the named GND net. The wire at y=4450 connects from USB1.D+ (pin 3) to U1.GND (pin 8). As a result, the CH340T GND pin is not detected as connected to the board ground plane. This may be an unusual schematic connection or a design error, but it means the power rail detection misses U1's ground connection. The GND net's power_rails list is present but U1 has no ground rail in its ic_power_rails entry.",
+      "created_from": "FND-00000400",
+      "check": {
+        "path": "design_analysis.power_domains.ic_power_rails.U1.power_rails",
+        "op": "not_contains_match",
+        "value": "GND"
+      },
+      "aspirational": true
+    }
+  ]
+}

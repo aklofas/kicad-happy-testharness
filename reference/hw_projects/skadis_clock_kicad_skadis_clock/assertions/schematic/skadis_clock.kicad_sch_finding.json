@@ -1,0 +1,30 @@
+{
+  "file_pattern": "skadis_clock.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002171",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002171-AST-01",
+      "description": "INCORRECT: The bus_analysis.spi list contains two entries for the same physical SPI bus (SCK/MOSI/MISO on the same nets). bus_id=0 comes from U1 (ATtiny2313) pin analysis; bus_id=pin_J1 comes from the AVR-ISP-6 connector (J1) whose pins are literally named MISO/SCK/MOSI. The SPI bus detector triggers once per source of named pins rather than once per unique bus (deduplicated by net). Both entries reference the same nets and the same device.",
+      "created_from": "FND-00002171",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "max_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002171-AST-02",
+      "description": "The design has 60 discrete LEDs (D1-D60) grouped into four segments, each group switched by a PNP BC807 transistor (Q1-Q4) via a common emitter/VCC topology. The transistor_circuits correctly identifies all four as BJT switches with load_type=led. However, signal_analysis.addressable_led_chains and signal_analysis.key_matrices are both empty \u2014 the multiplexed LED display pattern (transistor row-enable + resistor current-limit per LED column) is not recognized as a display topology.",
+      "created_from": "FND-00002171",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 4
+      },
+      "aspirational": true
+    }
+  ]
+}

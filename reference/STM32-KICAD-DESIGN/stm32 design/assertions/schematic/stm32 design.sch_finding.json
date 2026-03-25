@@ -1,0 +1,64 @@
+{
+  "file_pattern": "stm32 design.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001342",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001342-AST-01",
+      "description": "Y1 (16MHz HSE crystal) correctly identifies C3 and C1 (both 12pF) as load caps, computes effective_load_pF=9.0. The 12pF caps giving 9pF effective load (6pF series + 3pF stray) is a standard and correct calculation for a 16MHz MCU crystal circuit.",
+      "created_from": "FND-00001342",
+      "check": {
+        "path": "signal_analysis.crystal_circuits[0].effective_load_pF",
+        "value": 9.0,
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001342-AST-02",
+      "description": "I2C1_SDA and I2C1_SCL nets are both detected as i2c_bus in design_observations, with R2 as SDA pull-up and R5 as SCL pull-up, both connected to the +3.3VA rail. This is accurate for a properly configured I2C bus on an STM32 design.",
+      "created_from": "FND-00001342",
+      "check": {
+        "path": "signal_analysis.design_observations[3].category",
+        "value": "i2c_bus",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001342-AST-03",
+      "description": "50 total components parsed with correct breakdown: 16 caps, 3 ICs (STM32F405, MP2359DJ, USBLC6), 11 resistors, 2 inductors, 2 LEDs, 1 crystal, 1 fuse, 1 transistor, 1 ferrite bead, 2 diodes, 5 connectors, 4 mounting holes. All counts match the BOM section and component list.",
+      "created_from": "FND-00001342",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 50,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001342-AST-04",
+      "description": "INCORRECT: Q1 is an AO3401A which is a P-channel MOSFET (confirmed by its datasheet \u2014 AO3401A is a P-ch MOSFET in SOT-23). The analyzer reports is_pchannel=false. Additionally, gate_net and source_net are both reported as '__unnamed_52', which suggests a pin connectivity parsing error \u2014 gate and source cannot share the same net in a functional circuit.",
+      "created_from": "FND-00001342",
+      "check": {
+        "path": "signal_analysis.transistor_circuits[0].is_pchannel",
+        "value": true,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001342-AST-05",
+      "description": "INCORRECT: U2 (MP2359DJ) is a step-down converter. The analyzer reports fb_net='BUCK_SW' (the switch node) instead of the correct feedback net 'BUCK_FB'. BUCK_FB is the actual feedback divider output connected to the FB pin of U2. BUCK_SW is the switching node (inductor drive), not the feedback net. This is a pin mapping error in the switching regulator detector.",
+      "created_from": "FND-00001342",
+      "check": {
+        "path": "signal_analysis.power_regulators[1].fb_net",
+        "value": "BUCK_FB",
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "file_pattern": "bb-ads1220.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000382",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000382-AST-01",
+      "description": "INCORRECT: The net classification assigns 'chip_select' to the AVSS net. AVSS is the analog supply ground (negative supply) of the ADS1220 \u2014 a power/ground rail, not a chip select signal. The name 'AVSS' (Analog Voltage Negative Supply) is a standard power rail name. It should be classified as 'ground' or 'power' rather than 'chip_select', which is presumably triggered by the presence of 'SS' in the net name.",
+      "created_from": "FND-00000382",
+      "check": {
+        "path": "design_analysis.net_classification.AVSS",
+        "op": "equals",
+        "value": "ground"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000382-AST-02",
+      "description": "The schematic uses a text label 'REFP' at coordinate (5500,2850) to connect U1 pin 9 (REFP0) to the REFP net. The analyzer correctly identifies the REFP net (containing P1 pin 7) and the label, but fails to merge U1 pin 9 (REFP0) into it \u2014 placing that pin in an isolated unnamed net '__unnamed_8' with point_count=1. The REFP label at the U1 end should unify these into a single net containing both U1/REFP0 and P1/P7.",
+      "created_from": "FND-00000382",
+      "check": {
+        "path": "nets.REFP.pins",
+        "op": "contains_match",
+        "value": {
+          "component": "U1",
+          "pin_name": "REFP0"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000382-AST-03",
+      "description": "The schematic uses a text label 'REFN' at coordinate (5800,2850) to connect U1 pin 8 (REFN0) to the REFN net. The analyzer correctly identifies the REFN net (containing P1 pin 6) and the label, but fails to merge U1 pin 8 (REFN0) into it \u2014 placing that pin in an isolated unnamed net '__unnamed_7' with point_count=1. The REFN label at the U1 end should unify these into a single net containing both U1/REFN0 and P1/P6.",
+      "created_from": "FND-00000382",
+      "check": {
+        "path": "nets.REFN.pins",
+        "op": "contains_match",
+        "value": {
+          "component": "U1",
+          "pin_name": "REFN0"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000382-AST-04",
+      "description": "The schematic uses a text label 'AVSS' at coordinate (4600,4500) to connect U1 pin 5 (AVSS) to the AVSS net. The AVSS net contains C2 pin 2, P1 pin 3, and P2 pin 1, but U1 pin 5 (AVSS) is isolated in unnamed net '__unnamed_4' with point_count=1. The label should have unified U1/AVSS into the same net.",
+      "created_from": "FND-00000382",
+      "check": {
+        "path": "nets.AVSS.pins",
+        "op": "contains_match",
+        "value": {
+          "component": "U1",
+          "pin_name": "AVSS"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000382-AST-05",
+      "description": "The ADS1220 is a 24-bit SPI ADC. The schematic wires U1 pin 1 (SCLK) to P2 pin 5, U1 pin 2 (CS#) to P2 pin 4, U1 pin 15 (DOUT/DRDY#) and pin 16 (DIN) to P2 \u2014 all canonical SPI signal names. The analyzer returns bus_analysis.spi as an empty array, missing this SPI interface entirely.",
+      "created_from": "FND-00000382",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000382-AST-06",
+      "description": "C1, C2, and C3 are all 100nF bypass/decoupling capacitors placed on U1's power rails (AVDD, AVSS/GND, and the DVDD/output side). The signal_analysis.decoupling_analysis array is empty, missing all three. C2 is explicitly on the AVSS supply node, C3 is on the DVDD output pin of U1, and C1 is on the CLK/reference side.",
+      "created_from": "FND-00000382",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000382-AST-07",
+      "description": "The subcircuit for U1 (ADS1220) lists only C3, P1, and P2 as neighbor components. C1 and C2 are also directly associated with U1 \u2014 C2 is connected to the AVSS node of U1 (or should be, once the label connectivity bug is resolved) and C1 is placed on the power/CLK side of U1. All three capacitors form U1's local decoupling network and should appear as neighbors.",
+      "created_from": "FND-00000382",
+      "check": {
+        "path": "subcircuits[0].neighbor_components",
+        "op": "min_count",
+        "value": 5
+      },
+      "aspirational": true
+    }
+  ]
+}

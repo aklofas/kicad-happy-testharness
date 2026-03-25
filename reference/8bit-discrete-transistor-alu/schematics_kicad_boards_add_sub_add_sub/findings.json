@@ -1,0 +1,158 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematics_kicad_boards_add_sub_add_sub.kicad_sch.json",
+      "status": "new",
+      "summary": "8-bit adder/subtractor built from discrete CMOS transistors (178 NMOS/PMOS) plus 74HC86 XOR and 74HC157 mux ICs; bridge detector misclassifies transmission gates as motor bridges; no discrete logic gate detection",
+      "correct": [
+        {
+          "description": "Total transistor count of 178 (89 PMOS + 89 NMOS) is correct, matching all discrete MOSFET instances across hierarchical sheets",
+          "analyzer_section": "statistics.component_types.transistor",
+          "check": {
+            "path": "statistics.component_types.transistor",
+            "op": "equals",
+            "value": 178
+          }
+        },
+        {
+          "description": "Correctly identified 12 IC packages: 6x 74HC86 quad XOR and 6x 74HC157 quad 2:1 mux",
+          "analyzer_section": "statistics.component_types.ic",
+          "check": {
+            "path": "statistics.component_types.ic",
+            "op": "equals",
+            "value": 12
+          }
+        },
+        {
+          "description": "Correctly identified VCC and GND as the only two power rails",
+          "analyzer_section": "statistics.power_rails",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "Decoupling analysis correctly found 6x 100nF caps on VCC rail",
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis[0].cap_count",
+            "op": "equals",
+            "value": 6
+          }
+        },
+        {
+          "description": "Bus topology correctly detected A[0..7], B[0..7], and SUM[0..7] 8-bit buses",
+          "analyzer_section": "bus_topology.detected_bus_signals",
+          "check": {
+            "path": "bus_topology.detected_bus_signals",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "Correctly identified 4 connectors (J101-J104): 3x Conn_01x12 and 1x Conn_01x34",
+          "analyzer_section": "statistics.component_types.connector",
+          "check": {
+            "path": "statistics.component_types.connector",
+            "op": "equals",
+            "value": 4
+          }
+        },
+        {
+          "description": "140 transistor circuits correctly identified with MOSFET type, gate/drain/source nets, and power connection analysis",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 140
+          }
+        },
+        {
+          "description": "Correctly traversed 58 hierarchical sheets including deeply nested structures (root -> adder8 -> adder2 -> gate_and/or/nand)",
+          "analyzer_section": "sheets",
+          "check": {
+            "path": "sheets",
+            "op": "min_count",
+            "value": 58
+          }
+        },
+        {
+          "description": "BOM correctly grouped 8 unique part values with accurate quantities",
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom",
+            "op": "equals",
+            "value": 8
+          }
+        },
+        {
+          "description": "Connectivity issues correctly flagged 16 single-pin nets including U801/U802 I0 inputs that appear unconnected at the mux level",
+          "analyzer_section": "connectivity_issues.single_pin_nets",
+          "check": {
+            "path": "connectivity_issues.single_pin_nets",
+            "op": "min_count",
+            "value": 8
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Bridge circuit detection classified 19 complementary NMOS pairs as a '19_phase' motor bridge. These are actually CMOS transmission gates implementing discrete multiplexer/pass-transistor logic in the adder carry chain, not H-bridges or motor drivers. The 38 transistors (Q36xx-Q57xx) form paired NMOS pass gates, not power-stage half-bridges.",
+          "analyzer_section": "signal_analysis.bridge_circuits"
+        },
+        {
+          "description": "Bridge circuit lists 74HC86 XOR gates as 'driver_ics' for the bridge. XOR gates serve as conditional inverters for the subtraction mode (A XOR M), not as gate drivers for a motor bridge.",
+          "analyzer_section": "signal_analysis.bridge_circuits[0].driver_ics"
+        },
+        {
+          "description": "All FETs in the bridge classification show as NMOS only, but the actual transmission gates use complementary NMOS/PMOS pairs. The PMOS counterparts (Q3601, Q3604, Q3701, Q3704, etc.) are in transistor_circuits but their paired NMOS are in bridge_circuits, splitting what are actually complementary pairs across two different detection categories.",
+          "analyzer_section": "signal_analysis.bridge_circuits[0].fet_values"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No detection of discrete CMOS logic gates. The design's core innovation is implementing AND, OR, NAND, NOT, and XOR functions from complementary MOSFET pairs. The 140 transistors in transistor_circuits form recognizable CMOS gate topologies (e.g., Q5005+Q5006 form an AND gate, Q903-Q906 form an OR gate, Q5105+Q5106 form an inverter) that should be classified as digital logic gates rather than generic transistor circuits.",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q5005$"
+          }
+        },
+        {
+          "description": "No detection of the adder/subtractor functional block. The hierarchical sheet structure (adder8 containing 4x adder2, each containing full-adder logic) implements an 8-bit ripple-carry adder with XOR-based conditional inversion for subtraction mode. This is a recognizable arithmetic circuit topology.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No detection of CMOS transmission gates / pass-transistor logic. The 38 transistors classified as bridge circuits are actually CMOS pass gates used in the multiplexer selection logic, a fundamental analog switch topology distinct from both bridges and simple switching transistors.",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Add a discrete CMOS logic gate detector that recognizes complementary NMOS/PMOS pairs with shared drain nodes as inverters, series/parallel PMOS+NMOS networks as NAND/NOR gates, and cascaded stages as AND/OR gates",
+        "Add a CMOS transmission gate / pass-gate detector for complementary NMOS/PMOS pairs with shared source and drain (not power/ground) that act as analog switches",
+        "The bridge circuit detector should distinguish power-stage half-bridges (where the output drives a load between VCC and GND) from signal-level pass-transistor logic (where the 'power' net is actually a signal input). A key distinguishing feature: in real bridges, the high-side FET is typically PMOS and the supply net is a power rail, whereas here both FETs are NMOS and the 'supply' is a logic signal",
+        "Consider detecting arithmetic circuit patterns (ripple-carry adder, carry chain) from the hierarchical sheet names and connectivity patterns"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "8bit-discrete-transistor-alu",
+      "project": "schematics_kicad_boards_add_sub_add_sub",
+      "created": "2026-03-23T18:09:24.768355+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

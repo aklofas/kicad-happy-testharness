@@ -1,0 +1,49 @@
+{
+  "file_pattern": "Mouse.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000936",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000936-AST-01",
+      "description": "ATmega32U4 (U3), ADNS2610 optical sensor (U1), quadrature encoder (U2), crystals Y1/Y2, buttons SW1-SW4, USB connector J1, fuse F1, ferrite beads L1/L2, TVS diodes D2/D3, all correctly typed and counted. Multi-sheet parsing (main + MousePlayground sub-sheet) works correctly.",
+      "created_from": "FND-00000936",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000936-AST-02",
+      "description": "Y2 (LFXTAL057485Cutt) correctly identified with C9/C10 (18pF each), effective load of 12.0pF calculated correctly using the series formula CL_eff = (18*18)/(18+18) + ~3pF stray. Y1 (24MHz THT crystal with capacitor footprint) correctly flagged without load caps.",
+      "created_from": "FND-00000936",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000936-AST-03",
+      "description": "Q1 detected as BJT PNP, collector to GND, emitter drives LED D4 through R14 (1K current limiter). Base resistors R5 (1K) and R4 (100K) correctly identified. led_driver sub-structure correctly populated.",
+      "created_from": "FND-00000936",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000936-AST-04",
+      "description": "The differential_pairs section is empty. The design has a clear USB D+/D- pair: J1 (microUSB) -> 22-ohm series resistors R1/R3 -> U3 ATmega32U4 D+/D- pins. The pair is present and even has ESD TVS diodes D2/D3. Detection fails because the signal passes through three separately-named net segments (e.g., __unnamed_28 -> 'D+' net label -> __unnamed_10 for D+), preventing the pair matcher from tracing it end-to-end.",
+      "created_from": "FND-00000936",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002497",
+      "source_file": "schematic/kicad_templates/Alchitry_Au_Alchitry_Au.sch.json",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "Alchitry shield connectors (B1-B4) classified as type='other' instead of 'connector'",
+      "details": "The Alchitry Au template schematic has 4 shield connector symbols (B1-B4, lib_id=Alchitry_Au:Alchitry_Shield, value=Alchitry_Shield). These are multi-pin board-to-board connectors but are classified as type='other' rather than 'connector'. The component_types statistics show {other: 4, mounting_hole: 4} with no connectors. The classifier likely fails to identify them as connectors because they use a custom library and a non-standard reference prefix 'B' instead of 'J' or 'P'. These symbols represent the physical expansion port connectors that make the Alchitry Au a development board.",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "equals",
+        "value": 4
+      }
+    }
+  ]
+}

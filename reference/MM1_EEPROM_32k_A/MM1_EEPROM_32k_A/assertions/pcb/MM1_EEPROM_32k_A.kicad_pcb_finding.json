@@ -1,0 +1,44 @@
+{
+  "file_pattern": "MM1_EEPROM_32k_A.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000872",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000872-AST-01",
+      "description": "EEPROM: 4 footprints (3F/1B, 4 SMD), FLASH: 6 footprints (4F/2B, 4 SMD/2 THT for PLCC socket and pin header), SRAM: 9 footprints (5F/4B, all SMD). All consistent with the actual footprint library refs in the PCB file.",
+      "created_from": "FND-00000872",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000872-AST-02",
+      "description": "All three boards: routing_complete=true, unrouted=0, correct board dimensions (51.5x34.0mm identical across the MM1 series), correct via counts matching drill files. GND zones correctly identified on both layers with fill data.",
+      "created_from": "FND-00000872",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000872-AST-03",
+      "description": "All three boards have exactly one GND domain with all components listed. EEPROM: [C1,C2,J1,U1], FLASH adds R1/JP1, SRAM: all 9 components. Zone coverage correctly noted on both copper layers.",
+      "created_from": "FND-00000872",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

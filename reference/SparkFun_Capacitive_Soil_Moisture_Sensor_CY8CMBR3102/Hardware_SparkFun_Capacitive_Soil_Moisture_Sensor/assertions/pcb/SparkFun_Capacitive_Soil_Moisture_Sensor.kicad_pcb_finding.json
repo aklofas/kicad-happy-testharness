@@ -1,0 +1,19 @@
+{
+  "file_pattern": "SparkFun_Capacitive_Soil_Moisture_Sensor.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001419",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001419-AST-01",
+      "description": "INCORRECT: board_width_mm=null, board_height_mm=null in the PCB statistics. The gerber analysis reports F.Cu extents of 15.087x75.948mm, and B.Cu extents of 15.087x25.14mm, consistent with a narrow elongated PCB with a ~76mm tall probe and a ~25mm circuit section. The board outline likely uses a non-rectangular or curved shape for the probe, which the PCB analyzer fails to parse into bounding dimensions. This is a real data gap \u2014 the null dimensions prevent automated size checks.",
+      "created_from": "FND-00001419",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "value": true,
+        "op": "exists"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "powerconverters.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002280",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002280-AST-01",
+      "description": "The power converters sheet contains two TL2575HV-ADJ adjustable step-down switching regulators (U1, U2), each with the classic inductor-diode-capacitor topology. The component type is correctly identified as 'ic', but detectors is empty \u2014 no voltage_regulators, switching_regulators, or buck_converter entries. This sheet has 1N5819 Schottky diodes, 680uH and 330uH inductors, and large bulk capacitors (330uF, 1.2mF) that together form a canonical buck regulator circuit. The same design also appears in hardware_Control_control_v1.sch (same components) with the same miss.",
+      "created_from": "FND-00002280",
+      "check": {
+        "path": "detectors",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

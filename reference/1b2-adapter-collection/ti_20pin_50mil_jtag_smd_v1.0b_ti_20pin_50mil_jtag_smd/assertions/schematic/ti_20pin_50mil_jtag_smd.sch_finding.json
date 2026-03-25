@@ -1,0 +1,41 @@
+{
+  "file_pattern": "ti_20pin_50mil_jtag_smd.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000312",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000312-AST-01",
+      "description": "INCORRECT: The ERC flags net 'VREF' as having no driver because X1 pin 9 (library type power_in, named 'GND') is connected to it. In this adapter, the TI 20-pin JTAG VREF line is intentionally wired to what the JTAG-10 library symbol calls GND (pin 9). Since X1 is DNP and this is a passive pinout-remapping adapter, the warning is a schematic library artifact rather than a real electrical issue. The ERC warning for the TDO net (X1 pin 6, input type, on a connector-only net) is similarly an adapter artifact.",
+      "created_from": "FND-00000312",
+      "check": {
+        "path": "design_analysis.erc_warnings",
+        "op": "max_value",
+        "value": 2
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000312-AST-02",
+      "description": "X1 has a manufacturer part number stored in a custom field named 'MFN' (F5: FTSH-105-01-F-DV-K) rather than the standard 'MPN' field. The analyzer correctly reports mpn: '' for X1 in the BOM but only lists P1 in missing_mpn. X1 should also appear in missing_mpn since its MPN is not in a recognized field \u2014 even though it is DNP. The custom 'MFN' field name is a project convention not recognized by the analyzer.",
+      "created_from": "FND-00000312",
+      "check": {
+        "path": "statistics.missing_mpn",
+        "op": "contains",
+        "value": "X1"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000312-AST-03",
+      "description": "The schematic is a TI 20-pin 50mil JTAG to ARM Cortex 10-pin SWD/JTAG adapter. All canonical JTAG signals are present and labeled (TMS, TCK, TDI, TDO, TRST, RTCK, VREF) on both connectors. The signal_analysis.design_observations list is empty \u2014 no note is generated that this is a debug interface adapter. A design_observation calling out the JTAG/SWD signal mapping would add significant context.",
+      "created_from": "FND-00000312",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_value",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

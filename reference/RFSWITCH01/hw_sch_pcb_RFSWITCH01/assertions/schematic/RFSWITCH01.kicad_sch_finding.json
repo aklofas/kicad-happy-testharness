@@ -1,0 +1,38 @@
+{
+  "file_pattern": "RFSWITCH01.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001144",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001144-AST-01",
+      "description": "Correctly identifies 2x PE4259 RF switches with matching L/C networks on RX/TX antenna ports at ~15.9 MHz. 9 LC filters found correctly. ERC no_driver warnings for SW1_CTRL/SW2_CTRL/SW1_#CTRL/SW2_#CTRL are valid \u2014 these nets are driven externally via connectors.",
+      "created_from": "FND-00001144",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001144-AST-02",
+      "description": "FL1 SAW_AFS434S3-T is correctly categorized as type='filter', category='filter' in the BOM, and appears in statistics.component_types.filter=1.",
+      "created_from": "FND-00001144",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001144-AST-03",
+      "description": "The board is powered externally through connectors; no PWR_FLAG symbols present. Warnings for +3V3 and GND are valid ERC findings for this design.",
+      "created_from": "FND-00001144",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

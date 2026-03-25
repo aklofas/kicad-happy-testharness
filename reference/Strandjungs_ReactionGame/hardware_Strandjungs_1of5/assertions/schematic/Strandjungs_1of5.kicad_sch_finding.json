@@ -1,0 +1,45 @@
+{
+  "file_pattern": "Strandjungs_1of5.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001593",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001593-AST-01",
+      "description": "The schematic correctly identifies 64 total components including 2 ICs (U1=L7805, A1=Arduino_Nano), 4 capacitors, 10 transistors (5 BUZ11 N-MOSFET TO-220 + 5 BC847 SOT-23), 5 rectifier diodes (SM4001), 5 LEDs, 21 resistors, 12 connectors, 3 mounting holes, and 2 switches. The L7805 is correctly detected as a linear power regulator with +12V input and +5V output. Power rails (+12V, +5V, GND) are correct.",
+      "created_from": "FND-00001593",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 64
+      }
+    },
+    {
+      "id": "FND-00001593-AST-02",
+      "description": "INCORRECT: The assembly_complexity section reports smd_count=51 and tht_count=13. Manual count from footprints gives 35 SMD (4 SMD caps, 5 D_MELF diodes, 5 SOT-23 transistors, 21 R_0603 resistors) and 29 THT (U1 TO-220, 5 BUZ11 TO-220, 5 LED THT, A1 Arduino Nano, 8 terminal blocks, 4 pin headers, 3 mounting holes, 2 switches). The PCB analyzer correctly reports 35 SMD and 26 THT (3 fewer THT because mounting holes are excluded). The schematic assembly analyzer overcounts SMD significantly.",
+      "created_from": "FND-00001593",
+      "check": {
+        "path": "assembly_complexity.smd_count",
+        "op": "range",
+        "value": [
+          30,
+          40
+        ]
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001593-AST-03",
+      "description": "INCORRECT: The design has 5 identical switch channels, each with a BUZ11 MOSFET driving a solenoid load and a BC847 NPN transistor driving a status LED. In the transistor_circuits output, all 5 BUZ11 instances (Q2, Q4, Q6, Q8, Q10) report flyback_diode='D7' and led_driver pointing to D8+R12. This is because the hierarchical schematic was flattened and all channels share net aliases; D7 and D8 belong to one specific channel but the analyzer cannot distinguish per-channel assignments. Each channel has its own dedicated flyback diode and LED, not a shared one.",
+      "created_from": "FND-00001593",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "count_matches",
+        "value": {
+          "flyback_diode": "D7"
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

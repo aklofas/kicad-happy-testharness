@@ -1,0 +1,19 @@
+{
+  "file_pattern": "diyosc.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002172",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002172-AST-01",
+      "description": "INCORRECT: U1 is a 74HC00 NAND gate with 4 gate units plus a power unit (5 units total). The subcircuits list contains 5 separate entries all with center_ic=U1, each with an identical neighbor list. The subcircuit builder processes each schematic symbol instance rather than deduplicating by reference. This same bug is confirmed in VGAtest where U5 (74HC02, 5 units) produces 5 subcircuit entries.",
+      "created_from": "FND-00002172",
+      "check": {
+        "path": "subcircuits",
+        "op": "max_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

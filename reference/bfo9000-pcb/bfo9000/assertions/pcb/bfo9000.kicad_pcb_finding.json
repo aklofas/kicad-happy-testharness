@@ -1,0 +1,39 @@
+{
+  "file_pattern": "bfo9000.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001955",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001955-AST-01",
+      "description": "286 footprints are detected (280 front, 6 back), 2 copper layers, 84 nets, 1013 track segments, 46 vias, 2 zones, and 0 unrouted nets. The 54 key switches, 54 diodes, 4 mounting holes, test points, USB-C connectors, and ProMicro footprint all account for the total correctly.",
+      "created_from": "FND-00001955",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 286
+      }
+    },
+    {
+      "id": "FND-00001955-AST-02",
+      "description": "The PCB has vias with 0.4mm drill diameter. The analyzer computes 0.1mm annular ring (below the standard 0.125mm threshold) and correctly flags this as requiring an advanced fabrication process. The board size violation for 171.45 x 116.979mm exceeding 100x100mm is also correctly reported as a pricing tier factor.",
+      "created_from": "FND-00001955",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "op": "equals",
+        "value": "advanced"
+      }
+    },
+    {
+      "id": "FND-00001955-AST-03",
+      "description": "INCORRECT: The silkscreen documentation_warnings include 'missing_switch_labels' for all 54 keyboard switches (SW_A1 through SW_F9) and SW_RESET1. The keyboard switches have no need for individual silkscreen function labels. SW_RESET1 is a legitimate candidate for a warning but the keyboard key switches are false positives. This is the same over-broad switch-label heuristic seen in beyblock20.",
+      "created_from": "FND-00001955",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "greater_than",
+        "value": 100
+      },
+      "aspirational": true
+    }
+  ]
+}

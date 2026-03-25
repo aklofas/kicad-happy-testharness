@@ -1,0 +1,19 @@
+{
+  "file_pattern": "CNC_shield.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001719",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001719-AST-01",
+      "description": "INCORRECT: The legacy KiCad 5 CNC_shield.sch is parsed to report 51 total nets (29 named + 22 unnamed), while the KiCad 6+ CNC_shield.kicad_sch of the same design reports 30 total nets (29 named + 1 unnamed). The 21 extra unnamed nets in the legacy format are artifacts of the legacy parser failing to merge connected wire segments at junction points into unified nets, creating spurious isolated net stubs. The named net count (29) is consistent between both parsers.",
+      "created_from": "FND-00001719",
+      "check": {
+        "path": "statistics.total_nets",
+        "value": 51,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "file_pattern": "Gerber",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002166",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002166-AST-01",
+      "description": "INCORRECT: The file '2.4 GHz Chip Antenna.gtd' is a GerbTool GT-Designer proprietary design archive (header: '$Program GerbTool GT-Designer Service Release 3'). It is not a Gerber/RS-274X file. The analyzer includes it in the gerbers list and counts it in statistics.gerber_files (inflating count to 8 instead of 7). The same issue occurs in pcb_kicad_antenna_2.4ghz_chip_vsma_GerbTool.json and other gerber sets in this repo. The GTD file parses to zero apertures, zero flashes, and zero draws, but is still counted.",
+      "created_from": "FND-00002166",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "equals",
+        "value": 7
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002166-AST-02",
+      "description": "INCORRECT: completeness.missing_required includes 'Edge.Cuts' for chip antenna and vsma gerber sets, but both have a 'Chip Antenna-Margin.gbr' file that IS the board outline (FileFunction: Other,User with 4 draw elements forming the board rectangle). KiCad v4 exported the Margin layer as the board outline \u2014 it is functionally equivalent to Edge.Cuts. The analyzer does not recognize Margin.gbr as a board outline substitute, resulting in a false-positive missing layer warning.",
+      "created_from": "FND-00002166",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

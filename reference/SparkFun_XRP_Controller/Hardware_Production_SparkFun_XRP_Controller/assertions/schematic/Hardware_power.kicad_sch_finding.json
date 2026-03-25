@@ -1,0 +1,31 @@
+{
+  "file_pattern": "Hardware_power.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001895",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001895-AST-01",
+      "description": "Voltage divider R22=100k / R23=33k from VIN to GND with ratio=0.248 detected. Mid-point connects to JP14 (VIN_MEAS jumper) which routes to an ADC pin (GPIO46/VIN_MEAS). The ratio 33/(100+33)=0.248 scales VIN for ADC measurement, correct for a 3.3V ADC measuring up to ~13.3V. This is a correctly identified measurement divider.",
+      "created_from": "FND-00001895",
+      "check": {
+        "path": "signal_analysis.voltage_dividers[2].top_net",
+        "value": "VIN",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001895-AST-02",
+      "description": "INCORRECT: In power.kicad_sch standalone output, Q5 emitter=VUSB and Q1 emitter=VBATT. In the main hierarchical output, Q5 emitter=VSYS and Q1 emitter=VRAW. The functional power topology is: VBATT\u2192Q2(PMOS)\u2192VRAW\u2192Q1/Q3(PNP guard)\u2192VRAW; VUSB\u2192Q4/Q6(PMOS)\u2192VSYS\u2192Q5/Q7(PNP gate drive). The hierarchical analysis (main schematic) has the correct net resolution since global labels are resolved across sheets; the standalone power sheet analysis uses local unresolved net names. The hierarchical values are functionally correct.",
+      "created_from": "FND-00001895",
+      "check": {
+        "path": "signal_analysis.transistor_circuits[5].emitter_net",
+        "value": "VSYS",
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

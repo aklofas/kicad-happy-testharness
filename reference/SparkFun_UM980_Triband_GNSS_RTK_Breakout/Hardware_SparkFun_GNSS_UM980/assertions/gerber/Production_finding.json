@@ -1,0 +1,42 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001576",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001576-AST-01",
+      "description": "alignment.aligned=true with no issues reported across the 8 recognized layers. The SMD ratio of 0.93 is consistent with a mostly-SMD board (66 SMD vs 6 THT in the PCB output). Drill classification correctly identifies vias (568 at 0.305mm and 0.4mm), component holes (84), and mounting NPTH holes (16 at 3.302mm).",
+      "created_from": "FND-00001576",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001576-AST-02",
+      "description": "The Production directory contains a 4-layer panelized design with gerbers including SparkFun_GNSS_UM980_panelized.GL1 and .GL2 for inner copper layers. The analyzer reports only 9 gerber files processed and found_layers contains only ['B.Cu','B.Mask','B.Paste','B.SilkS','F.Cu','F.Mask','F.Paste','F.SilkS'] \u2014 no In1.Cu or In2.Cu. The missing inner copper layers are not flagged in missing_required or missing_recommended, so a 4-layer board effectively appears as 2-layer to the analysis.",
+      "created_from": "FND-00001576",
+      "check": {
+        "path": "completeness.found_layers",
+        "op": "contains_match",
+        "value": {
+          "name": "In1.Cu"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001576-AST-03",
+      "description": "SparkFun_GNSS_UM980_panelized.GKO is the board outline (Edge.Cuts) gerber using the legacy KiCad extension. The analyzer parses it (contributing to gerber_files=9) but does not map it to 'Edge.Cuts' \u2014 the layer does not appear in found_layers or layer_extents. completeness.missing_required=['Edge.Cuts'] correctly reports it as missing, but the cause is the extension not being recognized as Edge.Cuts, not an absent file.",
+      "created_from": "FND-00001576",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    }
+  ]
+}

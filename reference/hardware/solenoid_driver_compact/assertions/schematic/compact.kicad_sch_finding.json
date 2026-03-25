@@ -1,0 +1,18 @@
+{
+  "file_pattern": "compact.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002116",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002116-AST-01",
+      "description": "Both IRLZ34N N-channel MOSFETs (Q1, Q2) are correctly identified as mosfet type with gate resistors R3/R4 (1k), LM358 op-amp as gate driver, flyback diodes D1/D2, and source-side current-sense resistors R1/R2 (1 ohm). The LM358 units are correctly identified as open-loop comparator configuration driving the gates. The L7805 linear regulator converting +12V to +5V is also correctly detected.",
+      "created_from": "FND-00002116",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 2
+      }
+    }
+  ]
+}

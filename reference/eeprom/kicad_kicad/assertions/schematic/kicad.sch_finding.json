@@ -1,0 +1,19 @@
+{
+  "file_pattern": "kicad.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002478",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002478-AST-01",
+      "description": "The design uses two cascaded 74HC595 shift registers (U1, U2) driven via SPI-like signals (SCLK, RCLK, SER) to address a 32KB AT28C256 parallel EEPROM (U3). The schematic uses nets named SCLK, RCLK, SER, ~CE, ~OE, ~WE, and IO0-IO7. Despite clear memory bus signals and a parallel EEPROM footprint, `signal_analysis.memory_interfaces` is empty. The 74HC595 serial-in/parallel-out shift registers driving parallel address lines represent a recognizable address-expansion pattern.",
+      "created_from": "FND-00002478",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

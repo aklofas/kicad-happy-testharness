@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Tortoise-Relay-4up.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001636",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001636-AST-01",
+      "description": "INCORRECT: The four EC2-12NU components (refs RL1, RL2, RL3, RL4) are Panasonic EC2-12NU 12 V DPDT relays. The analyzer classifies them as 'resistor', causing component_types to show {'connector': 12, 'resistor': 4} instead of {'connector': 12, 'relay': 4} (or 'other'). The RL prefix and EC2-12NU part name both unambiguously indicate a relay.",
+      "created_from": "FND-00001636",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

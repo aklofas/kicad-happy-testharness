@@ -39,7 +39,7 @@
 
 ## FND-00000302: Gerber review: 4-layer (80x50mm). False alignment failure from normal copper edge clearance
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: gerber
 - **Source**: Hardware/HadesNT/gerbers/
 - **Related**: KH-177, KH-183, KH-184

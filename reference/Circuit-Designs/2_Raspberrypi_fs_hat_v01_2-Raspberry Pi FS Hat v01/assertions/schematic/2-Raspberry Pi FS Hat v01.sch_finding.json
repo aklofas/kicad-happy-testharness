@@ -1,0 +1,19 @@
+{
+  "file_pattern": "2-Raspberry Pi FS Hat v01.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000429",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000429-AST-01",
+      "description": "INCORRECT: The label '3V3' is used throughout the schematic as the 3.3 V supply rail \u2014 it powers the DHT22 sensor (U1 pin 4 labeled GND connects here, and U1 pin 1 is VCC on 3V3), both LED indicator resistors, the switch pull-up, and is marked with PWR_FLAG. It is classified as 'signal' in design_analysis.net_classification. Since it is flagged by a PWR_FLAG symbol and drives IC power pins, it should be classified as 'power'. Additionally, '3V3' does not appear in statistics.power_rails even though it is the only supply rail other than GND.",
+      "created_from": "FND-00000429",
+      "check": {
+        "path": "design_analysis.net_classification.3V3",
+        "op": "equals",
+        "value": "power"
+      },
+      "aspirational": true
+    }
+  ]
+}

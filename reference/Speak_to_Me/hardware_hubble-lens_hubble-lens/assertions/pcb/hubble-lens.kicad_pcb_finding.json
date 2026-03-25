@@ -1,0 +1,19 @@
+{
+  "file_pattern": "hubble-lens.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001600",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001600-AST-01",
+      "description": "INCORRECT: The KiCad 5 PCB header (kicad_pcb \u2026 (general \u2026 (nets 92))) stores the next available net number, not the count of named nets in use. The source file declares only 5 unique net numbers (0, 78, 85, 86, 91) with corresponding names. The analyzer reports net_count=91, which appears to be 92 \u2212 1 from the header value. The actual count of routed/used nets is 5 (or 4 excluding unconnected net 0). This inflated count misrepresents the board's complexity.",
+      "created_from": "FND-00001600",
+      "check": {
+        "path": "statistics.net_count",
+        "op": "less_than",
+        "value": 10
+      },
+      "aspirational": true
+    }
+  ]
+}

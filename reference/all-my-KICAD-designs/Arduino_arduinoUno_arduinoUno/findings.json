@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_all-my-KICAD-designs_current_booster_power_supply_current_booster_power_supply.sch.json",
+      "status": "promoted",
+      "summary": "Power regulator entries have reference=null despite components having valid references; MJE2955T PNP power transistors (U12, U7, U8, U13) classified as ic instead of transistor; Current-boost topol...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The power_regulators array reports 4 entries (U1/U3/U4 LM317_3PinPackage, U6 AZ1117-ADJ) but each entry has reference: null rather than the actual component reference. The component list confirms these parts have valid references (U1, U3, U4, U6). The regulator detector is failing to populate the reference field when constructing the regulator record.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "Four MJE2955T PNP power transistors are referenced as U12, U7, U8, U13 (U-prefix used by the designer), causing the analyzer to classify them as 'ic' instead of 'transistor'. Their pin names (B, C, E) confirm they are BJTs. Because of the wrong type classification, they do not appear in transistor_circuits and the L7805 current-boost topology is missed entirely.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The design uses four MJE2955T PNP transistors as current-boost pass elements on the regulator outputs. Because the transistors are misclassified as 'ic', the analyzer cannot recognize the boosted-regulator topology. The transistor_circuits list is empty for this schematic, and no topology involving the BJT current boosters is reported.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 4
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "all-my-KICAD-designs",
+      "project": "Arduino_arduinoUno_arduinoUno",
+      "created": "2026-03-24T09:02:01.760953+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002340"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_all-my-KICAD-designs_current_booster_power_supply_current_booster_power_supply.kicad_pcb.json",
+      "status": "new",
+      "summary": "Correctly detected 99 THT footprints and 27 unrouted nets in an incomplete layout",
+      "correct": [
+        {
+          "description": "The PCB has 99 footprints (all THT, 0 SMD), 0 tracks and 27 unrouted nets, accurately reflecting a partially laid-out design where components are placed but routing has not started. The copper_layers_used: 0 and routing_complete: false are both accurate.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 99
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "all-my-KICAD-designs",
+      "project": "Arduino_arduinoUno_arduinoUno",
+      "created": "2026-03-24T09:02:01.760976+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002341"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002388",
+      "source_file": "mikroBUS/RS485_Click_RS485_Click.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "RS-485 transceiver (YD3082EESA) and differential pair detected correctly",
+      "details": "The bus_analysis correctly identifies the RS-485 transceiver U1 (YD3082EESA, an ST485EBDR-compatible device) with A/B differential lines and the DE/RE control signals (TEN and ~{REN}). The protection_devices section also correctly identifies D2 and D3 (SMF7.5CA TVS diodes) protecting the A and B lines."
+    },
+    {
+      "id": "FND-00002389",
+      "source_file": "mikroBUS/RS485_Click_RS485_Click.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "missed",
+      "summary": "D1 (SMF7.5CA TVS diode) missing from protection_devices",
+      "details": "The protection_devices list includes D2 and D3 (SMF7.5CA on the A and B RS-485 lines) but omits D1 which has the same value and lib_id (SMF7.5CA, archive:Device_D_TVS_ALT). This indicates an incomplete scan of TVS diodes on the differential pair. D1's pins list is empty in the component data, suggesting the analyzer failed to resolve its net connections from the 'archive:' library symbol.",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "FND-00002390",
+      "source_file": "mikroBUS/RS485_Click_RS485_Click.kicad_pcb",
+      "analyzer_type": "pcb",
+      "category": "incorrect",
+      "summary": "Board outline not detected: Edge.Cuts segments are inside a footprint (fp_line), not top-level gr_line",
+      "details": "The board_outline reports edge_count: 0 and bounding_box: null, and board_width_mm/board_height_mm are null, even though 5 Edge.Cuts lines exist in the PCB file. Examination of the source shows these edges are defined as fp_line elements inside a footprint rather than as top-level gr_line elements. The analyzer only scans top-level graphic lines for the board outline and misses footprint-embedded Edge.Cuts.",
+      "check": {
+        "path": "board_outline.edge_count",
+        "op": "greater_than",
+        "value": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "file_pattern": "DuPal_V3.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000480",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000480-AST-01",
+      "description": "The analyzer correctly identifies: U1 Raspberry Pi Pico (MCU_RaspberryPi_and_Boards:Pico, 43 pins, classified ic), U2\u2013U6 74HCT595 SIPO shift registers (\u00d75), U8\u2013U12 74HCT166 PISO shift registers (\u00d75), U7 74HCT02 quad NOR gate, U13 SN74LV1T125DBV level-translating buffer, K1 G6K-2 DPDT relay, Q1 2N3904 NPN transistor, F1 500mA fuse, D1 1N5818 Schottky diode, D2\u2013D4 status LEDs, and 41 pairs of 10K pull-up + 470K pull-down resistors for ZIF socket biasing. Total unique refs = 128, total_components = 132 (includes 4 in_bom=False mounting holes H1\u2013H4).",
+      "created_from": "FND-00000480",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000480-AST-02",
+      "description": "Each ZIF socket signal pin uses a 10K pull-up (to an unnamed floating rail) and a 470K pull-down to GND, giving a ratio of 0.979 (470K/480K). The analyzer correctly identifies 19 such R_top/R_bottom voltage divider pairs (e.g., R18/R62 on ZIF_17, R35/R79 on ZIF_35, R15/R59 on ZIF_14). The mid_point_connections correctly show the ZIF connector pins (J1, J4) and the PISO/SIPO shift register IC inputs connected at the midpoint.",
+      "created_from": "FND-00000480",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000480-AST-03",
+      "description": "signal_analysis.transistor_circuits correctly identifies Q1 (2N3904, BJT NPN) with base_net=__unnamed_11, collector_net=__unnamed_12, emitter_net=GND, emitter_is_ground=true, load_type='other', and base_resistors=[{R1, 2.2K}]. The collector drives the K1 relay coil. The detection is accurate including the emitter-to-GND topology.",
+      "created_from": "FND-00000480",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000480-AST-04",
+      "description": "D1 (1N5818 Schottky, 30V/1A) has its anode on net __unnamed_12 (shared with Q1 collector and K1 relay coil) and cathode on VCC. This is a classic flyback/freewheeling diode protecting Q1 from the inductive kick of K1's coil when deenergized. The analyzer detects only F1 (fuse) under protection_devices and does not identify D1 as a flyback/freewheeling diode protection device. The 1N5818 is correctly classified as a diode, but its function in the relay driver circuit is not captured.",
+      "created_from": "FND-00000480",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

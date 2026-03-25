@@ -1,0 +1,153 @@
+{
+  "file_pattern": "SparkFun_Qwiic_Fingerprint_Sensor_FPC2534.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001449",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001449-AST-01",
+      "description": "The schematic has C\u00d74, D\u00d72, FID\u00d74, G\u00d73 (G1,G2,G3 in_bom=true), G4 (in_bom=false, OSHW logo), J\u00d77, JP\u00d75, R\u00d712, ST\u00d74, TP\u00d71, U\u00d72 = 45 total. The analyzer correctly counts 45 total_components.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 45
+      }
+    },
+    {
+      "id": "FND-00001449-AST-02",
+      "description": "jumper:5, mounting_hole:4, other:4, resistor:12, fiducial:4, capacitor:4, connector:7, led:2, test_point:1, ic:2 \u2014 all verified against the BOM and component list.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "equals",
+        "value": 12
+      }
+    },
+    {
+      "id": "FND-00001449-AST-03",
+      "description": "RT9080-3.3 is correctly identified as an LDO topology with input_rail=VBUS and output_rail=3.3V, matching the schematic. The fixed output voltage suffix extraction (3.3) is correct.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001449-AST-04",
+      "description": "C4 (1.0uF) and C5 (10uF) decoupling 3.3V, C2 (10uF) and C3 (1.0uF) decoupling VBUS, all correctly detected. Total 11uF per rail is accurate.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001449-AST-05",
+      "description": "All four power rails are correctly extracted. EGND is the analog/earth ground for the fingerprint sensor standoffs, distinct from digital GND \u2014 correct.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": "EGND"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 4 items"
+    },
+    {
+      "id": "FND-00001449-AST-06",
+      "description": "J4 is correctly classified as a USB_C_Receptacle connector with DP and DM bidirectional nets, CC1/CC2 lines (pull-down resistors R2/R4 at 5.1k for UFP mode), and VBUS power. All pin assignments match the source schematic.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001449-AST-07",
+      "description": "TX and RX signals from U1 (FPC2534) to J7 are correctly detected in bus_analysis.uart. The sensor supports multiple interface modes including UART.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001449-AST-08",
+      "description": "39 total nets matches the PCB net list, which also shows 39 nets. The net breakdown includes 4 power rails and various signal nets.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "equals",
+        "value": 39
+      }
+    },
+    {
+      "id": "FND-00001449-AST-09",
+      "description": "G1 (qwiic_Logo) and G3 (SparkFun_Logo) both have empty footprint fields in the schematic. They are correctly listed in missing_footprint. G2 has a footprint assigned so it is correctly not listed.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "statistics.missing_footprint",
+        "op": "contains_match",
+        "value": "G1"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items"
+    },
+    {
+      "id": "FND-00001449-AST-10",
+      "description": "INCORRECT: The differential_pairs entry reports has_esd=true with U1 (FPC2534 fingerprint sensor) as the ESD protection device. U1 is the main fingerprint sensor IC, not an ESD protection device. There is no dedicated TVS diode or ESD protection IC on the USB data lines. The analyzer appears to count the IC connected to DP/DM as ESD protection, which is incorrect.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "not_contains_match",
+        "value": {
+          "positive": "DP",
+          "has_esd": true
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001449-AST-11",
+      "description": "The analyzer reports has_pullup=false for both SCL and SDA nets. However, R12 (2.2k) connects SCL to JP4 pin A, and R11 (2.2k) connects SDA to JP4 pin C. JP4 is a 3-pole solder jumper whose center pad (pin 2/B) connects to 3.3V. When JP4 is bridged (its default closed state), R11 and R12 serve as I2C pull-ups to 3.3V. The pull-up detection fails because the path goes through JP4 rather than a direct resistor-to-rail connection.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "not_contains_match",
+        "value": {
+          "category": "i2c_bus",
+          "net": "SCL",
+          "has_pullup": true
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001449-AST-12",
+      "description": "The design has a clear SPI interface: ~{CS} (chip select), SCK (clock), POCI (peripheral out), PICO (peripheral in) \u2014 all connected between U1 (FPC2534 fingerprint sensor) and J5 (6-pin header). The bus_analysis.spi array is empty, indicating the SPI bus was not detected. This is likely because the signal names use POCI/PICO (IUPAC naming) rather than MISO/MOSI, and CS is active-low with tilde prefix.",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001449-AST-13",
+      "description": "CFG1 net: R6 (100k) pulls to GND and JP2/R5 (1k) can pull to 3.3V \u2014 forming a selectable pull-down configuration. CFG2 net: R7 (100k) to GND and JP3/R8 (1k) to 3.3V via jumper. These resistor pairs forming interface configuration dividers are not detected in signal_analysis.voltage_dividers (which is empty).",
+      "created_from": "FND-00001449",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_exists",
+        "value": null
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad_rf_detector_v1_rev-_kicad_rf_detector.sch.json",
+      "status": "promoted",
+      "summary": "RV1 potentiometer (Device:R_POT_US) classified as 'resistor' component type; RF detector signal chain not detected \u2014 Schottky diode envelope detector with RF input and LC filter; RC filter detected...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "RV1 is a Bourns 3314G 10k SMD trimmer potentiometer with lib_id 'Device:R_POT_US' and footprint 'Potentiometer_SMD:Potentiometer_Bourns_3314G_Vertical'. The analyzer classifies it as type 'resistor' in both the BOM and component_types. It should be a distinct type like 'potentiometer' or 'variable_resistor'. This also means the RC filter detection uses the potentiometer as a fixed 10k resistor with a calculated cutoff of 15.92 kHz, which is misleading since the resistance is variable.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.resistor",
+            "op": "equals",
+            "value": 0
+          }
+        },
+        {
+          "description": "The detected RC low-pass filter reports input_net='__unnamed_6' (RV1 wiper/pin 2) and output_net='__unnamed_3' (L1/C4 junction, before the wiper). In the actual circuit, RF power flows from J1 through D1 and L1 into net __unnamed_3 (the detected DC voltage node), then through the RV1 pot to the wiper output. The RC filter topology and cutoff calculation (15.92 kHz) may be structurally questionable since RV1 is a variable resistor and the signal direction is from __unnamed_3 toward __unnamed_6, not the reverse.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "This is a classic RF envelope detector: SMA input J1 \u2192 input coupling capacitor C1 (5pF) \u2192 Schottky diode D1 (SMS7630-005LF, a zero-bias Schottky for RF detection) with C2/C3 bypass caps \u2192 inductor L1 (100nH) RF choke \u2192 C4 output filter \u2192 RV1 trimmer output. The rf_chains and rf_matching arrays are both empty. The analyzer should detect at minimum the Schottky diode in an RF context (no forward bias DC source, connected to RF input connector) and the LC network as RF-frequency filtering (~15 MHz resonance). The design_observations list is also empty.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad_rf_detector",
+      "project": "v1_rev-_kicad_rf_detector",
+      "created": "2026-03-24T09:02:03.433620+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002369"
+    }
+  ]
+}

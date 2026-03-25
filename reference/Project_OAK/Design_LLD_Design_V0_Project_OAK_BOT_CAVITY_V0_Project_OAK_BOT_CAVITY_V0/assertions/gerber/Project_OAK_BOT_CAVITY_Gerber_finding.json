@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Project_OAK_BOT_CAVITY_Gerber",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001727",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001727-AST-01",
+      "description": "The BOT_CAVITY gerbers are correctly parsed as a 2-layer board with 7 gerber files (complete per .gbrjob), 8 mounting holes (2.1mm diameter), 0 via count, 0 component holes, and 0 SMD apertures. F.Cu and F.SilkS are empty (all copper is on B.Cu for the mounting ring pads). All 5 other mechanical PCBs have the same correct structure.",
+      "created_from": "FND-00001727",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001727-AST-02",
+      "description": "INCORRECT: All 6 mechanical PCBs report aligned=False with large dimension mismatches (e.g. 'Width varies by 36mm across copper/edge layers'). This is caused by F.Cu having 0x0 extents (no copper on top layer) while Edge.Cuts spans the full 42.61mm board outline, creating an artificial mismatch. For mechanical boards where copper is minimal (only mounting hole pads on B.Cu), empty-layer extent comparisons against Edge.Cuts will always produce false alignment failures. The alignment check should exclude layers with zero-extent copper.",
+      "created_from": "FND-00001727",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    }
+  ]
+}

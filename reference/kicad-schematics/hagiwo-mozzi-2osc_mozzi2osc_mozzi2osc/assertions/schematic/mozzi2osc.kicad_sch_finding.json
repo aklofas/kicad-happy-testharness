@@ -1,0 +1,19 @@
+{
+  "file_pattern": "mozzi2osc.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002349",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002349-AST-01",
+      "description": "INCORRECT: The analyzer detects an I2C bus on net 'CV' because Arduino Nano Every pin 23 is named 'SDA/A4' and the net name happens to match. However, the net named 'CV' (control voltage) is used as an analog audio input with a voltage divider (R6 1k series, R4 100k pull-down) and Schottky diode clamps \u2014 clearly an analog signal path, not a digital I2C bus. The paired SCL/A5 pin (pin 24) is on an unnamed net with no connected devices, confirming this is not an active I2C bus. The I2C detection is driven by pin naming heuristics rather than actual bus topology.",
+      "created_from": "FND-00002349",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

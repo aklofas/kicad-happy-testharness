@@ -1,0 +1,26 @@
+# Findings: 1b2-adapter-collection / 20pin_100mil_jtag_half_smd_v1.0_20pin_100mil_jtag_adapter_half_smd
+
+## FND-00000312: X1 (DNP JTAG-10) missing from missing_mpn list despite having no standard MPN field; No design_observation for JTAG/SWD debug interface adapter detected; ERC no_driver warning for VREF net is a fal...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: ti_20pin_50mil_jtag_smd_v1.0b_ti_20pin_50mil_jtag_smd.sch.json
+- **Created**: 2026-03-23
+
+### Correct
+(none)
+
+### Incorrect
+- The ERC flags net 'VREF' as having no driver because X1 pin 9 (library type power_in, named 'GND') is connected to it. In this adapter, the TI 20-pin JTAG VREF line is intentionally wired to what the JTAG-10 library symbol calls GND (pin 9). Since X1 is DNP and this is a passive pinout-remapping adapter, the warning is a schematic library artifact rather than a real electrical issue. The ERC warning for the TDO net (X1 pin 6, input type, on a connector-only net) is similarly an adapter artifact.
+  (design_analysis)
+
+### Missed
+- X1 has a manufacturer part number stored in a custom field named 'MFN' (F5: FTSH-105-01-F-DV-K) rather than the standard 'MPN' field. The analyzer correctly reports mpn: '' for X1 in the BOM but only lists P1 in missing_mpn. X1 should also appear in missing_mpn since its MPN is not in a recognized field — even though it is DNP. The custom 'MFN' field name is a project convention not recognized by the analyzer.
+  (statistics)
+- The schematic is a TI 20-pin 50mil JTAG to ARM Cortex 10-pin SWD/JTAG adapter. All canonical JTAG signals are present and labeled (TMS, TCK, TDI, TDO, TRST, RTCK, VREF) on both connectors. The signal_analysis.design_observations list is empty — no note is generated that this is a debug interface adapter. A design_observation calling out the JTAG/SWD signal mapping would add significant context.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---

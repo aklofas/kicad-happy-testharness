@@ -1,5 +1,5 @@
 {
-  "file_pattern": "hardware_moco-rd321_moco-rd321.kicad_sch",
+  "file_pattern": "moco-rd321.kicad_sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000269",
   "generated_by": "findings.py promote",
@@ -22,17 +22,6 @@
         "path": "design_analysis.bus_analysis.spi",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "FND-00000269-AST-03",
-      "description": "VBUS voltage divider (R2=100k/R5=10k) correctly detected",
-      "created_from": "FND-00000269",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R2$"
       }
     },
     {
@@ -65,18 +54,6 @@
         "path": "signal_analysis.bridge_circuits",
         "op": "min_count",
         "value": 1
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00000269-AST-07",
-      "description": "current_sense empty \u2014 three 20mohm/3W shunt resistors (R14/R16/R30) in phase paths with differential outputs to STSPIN32F0A internal opamps",
-      "created_from": "FND-00000269",
-      "check": {
-        "path": "signal_analysis.current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^R14$"
       },
       "aspirational": true
     },

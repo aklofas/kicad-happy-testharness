@@ -1,0 +1,30 @@
+{
+  "file_pattern": "current-dr-amp.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002322",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002322-AST-01",
+      "description": "INCORRECT: The amp schematic uses global labels Vee and Vee_hi as negative supply rails (symmetric with Vcc and Vcc_hi). The power_rails list only shows ['GND', 'PWR_FLAG', 'Vcc', 'Vcc_hi'], omitting Vee and Vee_hi entirely. In design_analysis.net_classification, both Vee and Vee_hi are classified as 'signal' rather than 'power'. Since these are KiCad 5 global_label (not power: symbols), the analyzer fails to infer their power role from naming convention. The decoupling_analysis also only covers Vcc and Vcc_hi, missing the negative supply rails entirely.",
+      "created_from": "FND-00002322",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": "/Vee/"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002322-AST-02",
+      "description": "INCORRECT: The three op-amp ICs (U1 OPA1641, U2/U3 OPA1611) are all reported with configuration='unknown' in opamp_circuits. This is a classic audio current-drive amplifier circuit \u2014 the op-amps are surrounded by resistors forming feedback networks. The voltage_dividers detector did find R7/R10 and R8/R10 dividers adjacent to these op-amps, but no feedback_networks were detected and the op-amp configuration analyzer didn't resolve inverting or non-inverting configurations. This limits the useful signal-path description of the design.",
+      "created_from": "FND-00002322",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 3
+      },
+      "aspirational": true
+    }
+  ]
+}

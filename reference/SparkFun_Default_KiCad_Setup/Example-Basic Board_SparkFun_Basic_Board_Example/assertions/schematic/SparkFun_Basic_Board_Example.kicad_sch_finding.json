@@ -1,0 +1,64 @@
+{
+  "file_pattern": "SparkFun_Basic_Board_Example.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001389",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001389-AST-01",
+      "description": "U2 RT9080-3.3 is detected as topology=LDO, input_rail=VCC, output_rail=3.3V, estimated_vout=3.3. This is accurate \u2014 the RT9080-3.3 is a fixed 3.3V LDO taking 3.8\u20136V in. Part count is 20 total components (1 IC, 4 caps, 1 connector, 4 standoffs, 2 TPs, 4 fiducials, 4 logos) which matches the PCB footprint list exactly.",
+      "created_from": "FND-00001389",
+      "check": {
+        "path": "subcircuits[0].power_regulators[0].topology",
+        "value": "LDO",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected LDO, got None"
+    },
+    {
+      "id": "FND-00001389-AST-02",
+      "description": "statistics.total_components=20 and the type breakdown (1 ic, 4 capacitors, 1 connector, 4 standoffs/mounting_holes, 2 test_points, 4 fiducials, 4 other/logos) is consistent with the BOM entries listing U2, C2/C3/C4/C5, J1, ST1\u2013ST4, TP1/TP2, FID1\u2013FID4, G1/G2/G4, and G3/OSHW logo. Power rail list [3.3V, GND, VCC] is correct.",
+      "created_from": "FND-00001389",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 20,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001389-AST-03",
+      "description": "The design_observations include a decoupling_coverage entry for 3.3V rail with cap_count=2, total_uF=11.0. The power_regulators entry for U2 correctly identifies output_caps C4 (1.0uF) and C5/C2 (10uF on input and output). The nearby_caps in the PCB output also correctly place C3, C4, C2, C5 within ~5mm of U2 on the same layer.",
+      "created_from": "FND-00001389",
+      "check": {
+        "path": "subcircuits[0].power_regulators[0].output_rail",
+        "value": "3.3V",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected 3.3V, got None"
+    },
+    {
+      "id": "FND-00001389-AST-04",
+      "description": "INCORRECT: G1, G2, G4 (logo/aesthetic symbols with on_board=false) appear in statistics.missing_mpn. Logo and aesthetic symbols that are not on-board should not generate missing MPN warnings since they are mechanical/graphical annotations with no electrical function and no expected MPN. The missing_footprint list for G4 and G2 is similarly spurious for off-board decorative items.",
+      "created_from": "FND-00001389",
+      "check": {
+        "path": "statistics.missing_mpn",
+        "value": "G1",
+        "op": "contains_match"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001389-AST-05",
+      "description": "The schematic has named global labels SCL and SDA connected to a JST Qwiic connector J1 (4-pin, 1mm, I2C). The design_observations correctly categorizes the nets as i2c (clock/data), but bus_analysis.i2c is an empty array []. The SCL and SDA nets each have only one pin (single_pin_nets), which likely causes the I2C bus detector to skip them \u2014 but they are clearly I2C interface pins on an output connector and should be reported.",
+      "created_from": "FND-00001389",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad-keyboards_kicad-keyboards.kicad_sch.json.json",
+      "status": "promoted",
+      "summary": "Key matrix correctly detected: 4\u00d79, 37 keys, 37 diodes, via net-name method; USB Full Speed interface not detected despite ATmega32U4 and D+/D- nets; Crystal circuit correctly detected with Y1 16MH...",
+      "correct": [
+        {
+          "description": "The analyzer correctly identified the keyboard matrix structure: 4 row nets (Row 0\u20133), 9 column nets (Col 0\u20139), 37 MX switches, and 37 SOD-123 diodes matched on matrix. Detection method 'net_name' is accurate for this design.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Y1 (16MHz crystal) is found with both load capacitors C6 and C7 (22pF each), yielding effective load of 14pF. The circuit is consistent with ATmega32U4 USB FS requirements (16MHz with 22pF load caps is a standard and correct combination).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The schematic uses an ATmega32U4 MCU (U1) which has a built-in USB FS transceiver. The D+ and D- nets are present (connected via 22\u03a9 series resistors R2/R3 to USB connector USB1). However, there is no 'usb_interfaces' key in signal_analysis at all \u2014 USB FS detection is entirely absent from the analyzer. The design clearly implements USB HID.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.usb_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad-keyboards",
+      "project": "kicad-keyboards",
+      "created": "2026-03-24T08:33:52.578247+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002250"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_kicad-keyboards_kicad-keyboards.kicad_pcb.json.json",
+      "status": "new",
+      "summary": "Empty/stub PCB file correctly reported as having 0 footprints and 0 tracks",
+      "correct": [
+        {
+          "description": "The source kicad_pcb file is a minimal 78-byte stub containing only the version header with no footprints, tracks, or board outline. The analyzer correctly returns all-zero statistics rather than crashing. This is a schematic-only project where PCB layout has not been started.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "kicad-keyboards",
+      "project": "kicad-keyboards",
+      "created": "2026-03-24T08:33:52.578264+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002251"
+    }
+  ]
+}

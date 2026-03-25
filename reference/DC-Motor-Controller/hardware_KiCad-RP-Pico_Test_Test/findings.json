@@ -1,0 +1,322 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_KiCad-RP-Pico_Test_Test.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Raspberry Pi Pico test board: component count, refs, and connector pins all correct; I2C bus not detected on Test.kicad_sch despite GPIO4/GPIO5 (SDA/SCL) being labeled in the Pico symbol",
+      "correct": [
+        {
+          "description": "Source has U1 (Pico), J1/J2 (Conn_01x20), J3 (Conn_01x03) = 4 total components. Output reports total_components=4, ic=1, connector=3. All 43 pin UUIDs for U1 captured. Power rail GND and PWR_FLAG both detected. 36 nets and 61 wires match the dense wiring. kicad_version reported as 'unknown' because file_version 20211123 predates the version-to-release mapping used by the analyzer, which is acceptable behavior.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The Pico's GPIO4 (I2C0 SDA) and GPIO5 (I2C0 SCL) pins are connected to J1 rows. The schematic nets are unnamed (no I2C net labels at this sheet level), so the bus_analysis.i2c list is empty. This is correct behavior for a raw breakout board \u2014 no I2C bus labeling is present \u2014 so this is a true negative, not an error.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DC-Motor-Controller",
+      "project": "hardware_KiCad-RP-Pico_Test_Test",
+      "created": "2026-03-23T20:18:23.378775+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000449"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_drv8833_motor_controller.kicad_sch.json",
+      "status": "promoted",
+      "summary": "DRV8833 motor driver sheet: all 5 components, 2 current-sense resistors, decoupling caps correctly identified; drv8833_motor_controller.kicad_sch: U3 reference resolution uses sheet-local instance ...",
+      "correct": [
+        {
+          "description": "Source has U3 (DRV8833PW), RSENSEA1 (0.2 ohm), RSENSEB1 (0.2 ohm), C2 (0.01uF), C6 (10uF) = 5 components. Output reports total_components=5, ic=1, resistor=2, capacitor=2. Hierarchical labels a_in1/a_in2/b_in1/b_in2/a_out1/a_out2/b_out1/b_out2/sleep_in/fault_out/motor_voltage all captured. The DRV8833PW has 16 pins (SLEEP on pin 1, VCP on pin 11, AISEN on pin 3, BISEN on pin 6, AIN1 on pin 16, AIN2 on pin 15, BIN1 on pin 9, BIN2 on pin 10, GND on pin 13, VINT on pin 14, VM on pin 12, FAULT on pin 8, AOUT1 on pin 2, AOUT2 on pin 4, BOUT1 on pin 7, BOUT2 on pin 5) \u2014 all captured correctly. Power rails GND and PWR_FLAG (from PCM_4ms_Power-symbol library) correctly detected.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The DRV8833PW symbol has multiple `instances` entries \u2014 it is instantiated as U1 at root path, U4 in one sub-sheet, and U3 in another. The analyzer correctly reads reference U3 for this file's context (path /22a309dc.../5e4b21d2...). Similarly RSENSEA1/RSENSEB1, C6, C2 are all correctly resolved from their multi-project instance blocks. No error here \u2014 this is correct behavior.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DC-Motor-Controller",
+      "project": "hardware_KiCad-RP-Pico_Test_Test",
+      "created": "2026-03-23T20:18:23.378792+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000450"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_i2c.kicad_sch.json",
+      "status": "promoted",
+      "summary": "I2C sub-sheet: all 4 components, nets, and pull-up resistors correctly identified; I2C bus detection missed: nets I2C0_SDA and I2C0_SCL not detected as an I2C bus even though they are named as such...",
+      "correct": [
+        {
+          "description": "Source has J1 (Conn_01x04_Pin, 2.54mm), STEMMA_QT_I2C1 (JST_SH_SM04), R7 (10k SCL pull-up), R8 (10k SDA pull-up) = 4 components. Output reports total_components=4, connector=2, resistor=2. Nets I2C0_SCL and I2C0_SDA correctly identified and routed. R7 pin 2 on +3.3V, pin 1 on I2C0_SCL (pull-up). R8 pin 2 on +3.3V, pin 1 on I2C0_SDA (pull-up). +3.3V and GND power rails correctly detected. Hierarchical labels SCL and SDA both captured. sleep_current_audit correctly identifies R7 and R8 as 10k pull-ups each drawing 330 uA worst-case.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer flags STEMMA_QT_I2C1's footprint 'JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal' as not matching filter pattern 'Connector*:*_1x??_*'. The pattern uses ?? which matches exactly 2 characters. The footprint library prefix is 'Connector_JST' (matches Connector*), but the footprint name 'JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal' contains '1x04-1MP' rather than a simple '1x04'. The warning is technically correct as the pattern doesn't match, but the underlying cause is that the custom JST footprint name deviates from the standard format. This is working as designed \u2014 not an analyzer bug.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The bus_analysis.i2c list is empty despite the presence of nets named 'I2C0_SDA' and 'I2C0_SCL' with 10k pull-up resistors (R7/R8) to +3.3V. The analyzer has the signal name pattern available but apparently does not detect a bus when the only bus-connected devices are passive connectors with no active IC endpoint on the sheet. This is a sheet-level limitation since the MCU is on a different sheet, but the named nets and pull-ups are strong I2C bus indicators that the detector could fire on.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DC-Motor-Controller",
+      "project": "hardware_KiCad-RP-Pico_Test_Test",
+      "created": "2026-03-23T20:18:23.378795+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000451"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_midi.kicad_sch.json",
+      "status": "promoted",
+      "summary": "MIDI sub-sheet: 11 components correctly identified including 74LCX07 buffer, optocoupler OC1, DIN-5 connector, and protection components; MIDI sheet: MIDI_RX/MIDI_TX incorrectly classified in bus_a...",
+      "correct": [
+        {
+          "description": "Source has U2 (74LCX07), J2 (DIN-5_180degree MIDI_IN connector), OC1 (optocoupler), MIDI_IN2 (MIDI out connector), D1 (1n4148), R9/R10/R11/R12 (resistors), C15 (15pF), C16 (0.1uF). Output reports total_components=11, ic=1, connector=2, optocoupler=1, resistor=4, capacitor=2, diode=1. All component types are correctly categorized. The 74LCX07 is a hex open-drain buffer used for 5V-to-3.3V level shifting on MIDI lines. 16 no_connects correctly counted. Power rails +3.3V and GND detected.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The bus_analysis.uart section reports MIDI_RX and MIDI_TX as UART bus signals. While MIDI physically uses a UART-compatible serial format (31.25 kbps, 8N1), the detection fires purely on the net name pattern. The MIDI_TX net has only a single pin (flagged correctly as a single_pin_net for U2 pin 1), meaning the UART 'bus' entry for MIDI_TX has only 1 device and 1 pin. This is an over-eager UART bus detection based on net name matching without verifying that both TX and RX are connected as a pair to a UART controller.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The rc_filters entry shows R10 (10k) and C15 (15pF) with input_net='+3.3V', output_net='MIDI_RX', ground_net='GND', cutoff=1.06 MHz. However R10 is the MIDI input current-limiting resistor, and C15 is an EMI suppression capacitor across the MIDI input. The input_net of '+3.3V' is incorrect \u2014 R10 pin 2 and C15 pin 1 are on the MIDI_RX net, while R10 pin 1 connects to the optocoupler anode network, not +3.3V. The '+3.3V' attribution is likely a misidentification of the pull-up rail on the optocoupler output side being conflated with the input side.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DC-Motor-Controller",
+      "project": "hardware_KiCad-RP-Pico_Test_Test",
+      "created": "2026-03-23T20:18:23.378798+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000452"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_pico-robot-brain.kicad_sch.json",
+      "status": "promoted",
+      "summary": "pico-robot-brain top sheet: 46 components correctly counted including Pico (U7), two DRV8833 drivers (U3/U4), TLV1117-50 (U1), MOSFETs, connectors; pico-robot-brain: Q1 (DMP2045U P-MOSFET) gate_net...",
+      "correct": [
+        {
+          "description": "Output reports total_components=46, unique_parts=24. Component breakdown: resistor=8, connector=16, mounting_hole=4, ic=4, switch=1, capacitor=9, led=1, diode=1, transistor=2. Power rails +3.3V, GND, PWR_FLAG all detected. LDO regulator U1 (TLV1117-50) detected with input_rail=MOTOR_PWR, output_rail derived correctly. DRV8833 drivers appear as part of motor control path. RC filter detected: R18 (10k) + C14 (0.1uF) as 159.15 Hz low-pass on RESET net \u2014 this is the Pico reset debounce/filter, correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The transistor_circuits entry for Q1 (DMP2045U, P-channel MOSFET) shows gate_net='GND'. In the source, Q1 is a P-channel load switch for MOTOR_PWR, and its gate should be driven by a Pico GPIO pin through the gate drive network, not tied statically to GND. The gate_driver_ics list does show U7 (Pico) multiple times (appears 4+ times, suggesting a deduplication issue), and gate_resistors is empty. The gate_net='GND' assignment indicates the analyzer traced the gate pull-down (or a gate resistor to GND) as the net rather than the controlling signal net. This is a net resolution error for P-channel MOSFET gate analysis.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The transistor_circuits entry for Q1 shows gate_driver_ics with the Pico (U7) repeated multiple times (at least 4 entries with identical reference='U7', value='Pico'). This is a deduplication failure: the same IC is added to the gate_driver_ics list once per connected net endpoint rather than once per unique device. This inflates the gate driver list with duplicate entries.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DC-Motor-Controller",
+      "project": "hardware_KiCad-RP-Pico_Test_Test",
+      "created": "2026-03-23T20:18:23.378801+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000453"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_power.kicad_sch.json",
+      "status": "promoted",
+      "summary": "power.kicad_sch: 10 components correctly identified including TLV1117-50 LDO, two MOSFETs, Schottky diode, and four 10uF/16V caps; power.kicad_sch: Q1 (DMP2045U P-MOSFET) gate_driver_ics incorrectl...",
+      "correct": [
+        {
+          "description": "Source has D2 (B5819W Schottky), Powerpins1 (Conn_01x02 terminal block), U1 (TLV1117-50 5V LDO), 5VOUTPINS1 (Conn_01x02 5V output), C7/C1/C8/C5 (10uF/16V caps), Q1 (DMP2045U P-MOSFET), Q2 (DMG2305UX N-MOSFET) = 10 components. Output reports total_components=10, diode=1, connector=2, ic=1, capacitor=4, transistor=2. LDO U1 detected with topology=LDO, input_rail=MOTOR_PWR, output_rail=REGULATED_MOTORPWR, estimated_vout=5.0V. Both MOSFETs detected in transistor_circuits. Schottky diode D2 is present in components.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The transistor_circuits entry for Q1 (DMP2045U, P-channel MOSFET) lists gate_driver_ics=[{reference:'U1', value:'TLV1117-50'}]. A TLV1117-50 LDO linear regulator is not a gate driver \u2014 it generates a regulated voltage rail, not a gate drive signal. The gate of Q1 is connected to GND (for permanent on state) or to the Pico GPIO, not to the LDO output. The LDO's output net likely shares connectivity with a net that the analyzer traces as the gate drive path, causing the misattribution.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The transistor_circuits entry for Q2 shows lib_id='PCM_Transistor_MOSFET_AKL:DMG2305UX' and is_pchannel=false. However the DMG2305UX is a P-channel enhancement mode MOSFET (the 'P' in DMP2045U and the DMG2305UX datasheet confirms P-channel). The is_pchannel flag should be true. The misclassification likely stems from the analyzer inspecting the custom library symbol name 'DMG2305UX' without recognizing it as a P-channel device \u2014 the standard KiCad naming convention of Q_PMOS_DGS vs Q_NMOS_DGS is not being used here. The datasheet description in the output ('SOT-23 P-MOSFET enchancement mode transistor') actually says P-MOSFET, yet is_pchannel=false.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The signal_analysis.decoupling_analysis list is empty, yet C7, C1, C8, and C5 (all 10uF/16V, Capacitor_SMD:CP_Elec_5x5.7) exist in the schematic and are connected to the power rails. The regulator observation notes missing input/output caps for U1 (TLV1117-50), which contradicts the capacitors being present. The decoupling analyzer likely fails because the capacitors are on unnamed nets (MOTOR_PWR, REGULATED_MOTORPWR) that don't match standard +xV power rail naming patterns.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DC-Motor-Controller",
+      "project": "hardware_KiCad-RP-Pico_Test_Test",
+      "created": "2026-03-23T20:18:23.378803+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000454"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_solenoid_driver.kicad_sch.json",
+      "status": "promoted",
+      "summary": "solenoid_driver.kicad_sch: all 3 components, MOSFET circuit, and gate network correctly identified; solenoid_driver.kicad_sch: flyback diode correctly noted as absent but no warning generated for i...",
+      "correct": [
+        {
+          "description": "Source has R1 (150 ohm gate resistor), Q? (TK4R3E06PL N-MOSFET, unannotated), R2 (10k gate pull-down) = 3 components. Output correctly reports: total_components=3, resistor=2, transistor=1. MOSFET Q? identified as N-channel with gate_net=__unnamed_0 (the R1/R2 junction net), drain_net='drain', source_net='GND', source_is_ground=true. Gate pull-down R2 (10k) correctly identified. Gate resistor R1 (150 ohm) correctly identified. annotation_issues.unannotated=['Q?'] correctly flagged. Missing footprint for all 3 components correctly reported. generic_symbol_warnings for Q? correctly flags the generic DGS pin order.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The transistor_circuits entry for Q? correctly records has_flyback_diode=false. The load_type is 'other' (not 'inductive'), and no design_observation warns about the missing flyback diode despite this being a solenoid driver (the schematic title is 'solenoid_driver.kicad_sch' and the file name plus Toshiba app note reference in the text annotation clearly indicate an inductive load). The analyzer could emit a warning when has_flyback_diode=false and context suggests an inductive load, but currently does not.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DC-Motor-Controller",
+      "project": "hardware_KiCad-RP-Pico_Test_Test",
+      "created": "2026-03-23T20:18:23.378805+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000455"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_I2C_StemmaQT.kicad_sch.json",
+      "status": "promoted",
+      "summary": "I2C_StemmaQT.kicad_sch: 14 components correctly identified including AP2112K-3.3 LDO, BSS138BKS dual NMOS level shifter, test points, and dual STEMMA QT connectors; I2C_StemmaQT.kicad_sch: bus_anal...",
+      "correct": [
+        {
+          "description": "Output reports total_components=14 (resistor=4, capacitor=3, transistor=1, test_point=3, connector=2, ic=1). U1 AP2112K-3.3 LDO detected with input_rail=I2C_VCC, output_rail=+3.3V, estimated_vout=3.3. BSS138BKS (Q1) dual NMOS used as bidirectional I2C level shifter between I2C_VCC domain (5V logic) and +3.3V domain. STEMMA_QT_I2C1 and STEMMA_QT_I2C2 both captured as JST_SH_SM04 connectors. Test points I2C_VCC_IN1 and others captured. Decoupling caps C1/C3 on +3.3V and C2 on I2C_VCC correctly analyzed.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The bus_analysis.i2c list contains: net='I2C_VCC', line='SCL', devices=['U1', 'U1'], pull_ups=[], has_pull_up=false. I2C_VCC is a power supply net (the input voltage to the LDO), not an I2C clock line. The AP2112K-3.3 (U1) is an LDO regulator, not an I2C device. This false positive appears because the net name 'I2C_VCC' contains 'I2C' and the VIN pin of the LDO is on this net, triggering an incorrectly broad I2C bus pattern match. The actual I2C lines are SCL, SDA, SCL_3V, SDA_3V \u2014 these correctly appear in net_classification but are not detected as an I2C bus (a separate missed detection).",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The transistor_circuits entry for Q1 (BSS138BKS) reports: gate_net='+3.3V', drain_net='SDA_3V', source_net='SCL'. The BSS138BKS in SOT-363 package is a dual NMOS device with 6 pins (G1, S1, D1, G2, S2, D2). For the bidirectional level shifter: G1 and G2 are both tied to +3.3V (correct), but source_net='SCL' is wrong \u2014 S1 and S2 connect to the low-voltage I2C side (SDA and SCL at 3.3V levels), while D1 and D2 connect to the high-voltage side (I2C_VCC domain). The analyzer appears to have confused the source and clock-line nets due to the dual-gate shared net topology.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The design contains two I2C bus pairs: SCL/SDA (high-voltage side, I2C_VCC domain) with 10K pull-ups R1/R2, and SCL_3V/SDA_3V (3.3V side) with 10K pull-ups R3/R4. Both pairs have standard I2C net names and matched pull-up resistors on the appropriate power rails. Neither pair appears in bus_analysis.i2c \u2014 the only entry is the false positive on I2C_VCC. The actual level-shifted I2C buses with pull-ups are missed entirely.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DC-Motor-Controller",
+      "project": "hardware_KiCad-RP-Pico_Test_Test",
+      "created": "2026-03-23T20:18:23.378808+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000456"
+    }
+  ]
+}

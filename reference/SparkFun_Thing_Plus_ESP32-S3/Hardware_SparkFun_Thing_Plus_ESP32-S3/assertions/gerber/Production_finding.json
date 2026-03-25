@@ -1,0 +1,52 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001574",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001574-AST-01",
+      "description": "INCORRECT: completeness.missing_required includes 'Edge.Cuts' and complete=false. However, the Production/ directory contains SparkFun_Thing_Plus_ESP32-S3_panelized.GKO which IS the board outline/Edge.Cuts layer. The analyzer fails to map the .GKO extension to the Edge.Cuts layer, likely because it relies solely on X2 FileFunction attributes. The GKO file's X2 header says FileFunction=Soldermask,Bot (a KiCad export quirk), but the file content contains the Profile (board outline) aperture function. The analyzer should use aperture function analysis as a fallback when X2 attributes are inconsistent.",
+      "created_from": "FND-00001574",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "not_contains_match",
+        "value": "Edge.Cuts"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001574-AST-02",
+      "description": "INCORRECT: The GKO file (SparkFun_Thing_Plus_ESP32-S3_panelized.GKO) has X2 attribute %TF.FileFunction,Soldermask,Bot*% (a known KiCad export quirk where .GKO gets an incorrect Soldermask attribute) but its aperture_analysis shows it contains Profile (board outline) geometry. The analyzer classifies it as B.Mask based on the X2 attribute without cross-checking the aperture function, resulting in B.Mask appearing in found_layers while Edge.Cuts is absent. The aperture content should take precedence over or be reconciled with the X2 attribute.",
+      "created_from": "FND-00001574",
+      "check": {
+        "path": "found_layers",
+        "op": "not_contains_match",
+        "value": "B.Mask"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001574-AST-03",
+      "description": "INCORRECT: The board is a 4-layer design (F.Cu, In1.Cu, In2.Cu, B.Cu) but GL1 and GL2 inner layer gerbers are not recognized by the analyzer. As a result missing_recommended=[] rather than listing In1.Cu and In2.Cu as missing recommended layers for a 4-layer design. Even if the analyzer cannot read .GL1/.GL2 files, it should infer that inner copper layers are expected given the layer_count=4 and flag them as missing.",
+      "created_from": "FND-00001574",
+      "check": {
+        "path": "completeness.missing_recommended",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001574-AST-04",
+      "description": "The Production/ directory contains SparkFun_Thing_Plus_ESP32-S3_panelized.GL1 (FileFunction=Copper,L2,Inr) and SparkFun_Thing_Plus_ESP32-S3_panelized.GL2 (FileFunction=Copper,L3,Inr), which are the In1.Cu and In2.Cu inner copper layers of the 4-layer board. These files are completely absent from the gerber analysis output \u2014 they do not appear in files_analyzed, found_layers, or any other section. The analyzer apparently does not recognize .GL1/.GL2 as gerber file extensions.",
+      "created_from": "FND-00001574",
+      "check": {
+        "path": "found_layers",
+        "op": "contains_match",
+        "value": "In1.Cu"
+      },
+      "aspirational": true
+    }
+  ]
+}

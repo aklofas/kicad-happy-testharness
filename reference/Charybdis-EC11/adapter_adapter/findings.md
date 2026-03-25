@@ -1,0 +1,26 @@
+# Findings: Charybdis-EC11 / adapter_adapter
+
+## FND-00000425: SW1 (Device:RotaryEncoder_Switch) classified as 'switch' instead of 'encoder'; Rotary encoder quadrature interface on SW1 not detected in signal_analysis; addressable_led_chains data_in_net reports...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: adapter_adapter.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- The LED chain's data_in_net is reported as '__unnamed_9' (the net between R1 pin 1 and D1 DIN). However, the actual data input to this chain enters the schematic via global label 'DIN' connected to J1 pin 5, then through series resistor R1. The named 'DIN' net (J1 pin 5 to R1 pin 2) is the true chain input signal; '__unnamed_9' is the post-resistor local net. Reporting the unnamed net loses the labeled signal identity and makes it harder to trace back to the connector pin.
+
+### Incorrect
+- SW1 uses lib_id 'Device:RotaryEncoder_Switch' with quadrature encoder pins A, B, C and push-button pins S1, S2. The analyzer assigns type='switch' and category='switch' in both the BOM and component list, losing the encoder context entirely. This device is a rotary encoder (Alps EC11E), not a simple switch. The component_types stat counts it as switch:1 rather than recognizing an encoder. Net r1 carries encoder channel B and r2 carries channel A — these are quadrature signals, not simple switch contacts.
+  (statistics)
+- The design_observations entry for '+5V' decoupling coverage sets has_bypass=true and has_bulk=true for C1 (1uF, 1206 package). A 1uF SMD capacitor in a 1206 package is a bulk/local decoupling capacitor. Bypass capacitors are conventionally 100nF or smaller. Classifying 1uF as a bypass cap overstates the high-frequency decoupling coverage. has_bypass should be false; only has_bulk should be true for this value.
+  (signal_analysis)
+
+### Missed
+- SW1 (Device:RotaryEncoder_Switch, Alps EC11E) has quadrature encoder channels on pins A (net r2) and B (net r1), both connected back to the trackball connector J1 pins 3 and 4. The signal_analysis section produces no encoder-related detection — the bus_analysis, design_observations, and all signal detectors are empty with respect to this device. A quadrature encoder interface is a meaningful signal path that should be flagged.
+  (signal_analysis)
+
+### Suggestions
+- Fix: SW1 (Device:RotaryEncoder_Switch) classified as 'switch' instead of 'encoder'
+
+---

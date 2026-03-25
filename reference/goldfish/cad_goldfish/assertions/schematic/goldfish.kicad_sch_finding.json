@@ -1,0 +1,29 @@
+{
+  "file_pattern": "goldfish.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002105",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002105-AST-01",
+      "description": "The analyzer correctly: identifies the 16 MHz crystal (X1) with two 22 pF load caps (C7, C8) and computes effective load capacitance of 14 pF; detects CC1/CC2 5.1k pulldown resistors (R1, R2) as passing USB-C device compliance; finds decoupling caps on VBUS (C5 0.1uF + C6 4.7uF) and VCC rails; identifies F1 as a fuse protecting the VBUS line from RAW; and correctly counts 26 schematic components matching the BOM.",
+      "created_from": "FND-00002105",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002105-AST-02",
+      "description": "INCORRECT: The usb_compliance check passes usb_esd_ic (correctly detects USBLC6-2P6) but fails vbus_esd_protection. The USBLC6-2P6 is a dedicated USB ESD protection IC whose pin 5 is VBUS \u2014 it provides bidirectional TVS clamping on VBUS as part of its designed function, not just D+/D- protection. U2 (USBLC6-2P6) pin 5 is confirmed connected to the VBUS net. The vbus_esd_protection check apparently looks for a separate TVS/Zener on VBUS and does not recognize the USBLC6-2P6 VBUS pin as providing that protection. This is a false failure.",
+      "created_from": "FND-00002105",
+      "check": {
+        "path": "usb_compliance.connectors[0].checks.vbus_esd_protection",
+        "op": "equals",
+        "value": "pass"
+      },
+      "aspirational": true
+    }
+  ]
+}

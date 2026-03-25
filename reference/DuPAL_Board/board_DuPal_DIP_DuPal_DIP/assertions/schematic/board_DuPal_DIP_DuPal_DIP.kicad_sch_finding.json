@@ -1,0 +1,68 @@
+{
+  "file_pattern": "DuPal_DIP.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000478",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000478-AST-01",
+      "description": "The analyzer correctly identifies 55 components (9 ICs: U1 ATmega8A-PU, U2/U3/U9 74HC595, U5 PAL16L8, U6 MAX232, U7 L7805, U8 74HC166, U10 24-pin PAL), 14 resistors, 17 capacitors, 4 LEDs (D1/D2/D4/D5), 1 diode (D3 1N4001), 1 crystal (Y1 8MHz), 3 connectors (J1 AVR-ISP-6, J2 RS232, J3 barrel jack), 2 switches (SW1 reset, SW2 power), and 4 mounting holes. Power rails ['+12V', 'GND', 'VCC'] are correct.",
+      "created_from": "FND-00000478",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000478-AST-02",
+      "description": "crystal_circuits detects Y1 (8MHz), load_caps C1 (22pF on XTAL1) and C2 (22pF on XTAL2), effective_load_pF=14.0 (series combination + 3 pF stray), matched to ATmega8A U1 pin PB6/XTAL1 and PB7/XTAL2.",
+      "created_from": "FND-00000478",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000478-AST-03",
+      "description": "signal_analysis.power_regulators correctly finds U7 (L7805, Regulator_Linear:L7805) with input_rail='RECT_V12' and output_rail='VCC'. The RECT_V12 rail is the rectified 12V from J3 barrel jack through D3 (1N4001) and D2 (POWER_LED). This is a full and accurate topology identification.",
+      "created_from": "FND-00000478",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000478-AST-04",
+      "description": "bus_analysis.uart finds 4 entries: net TTL-RX (devices U1, U6), TTL-TX (devices U1, U6), RS232-RX (devices U6), RS232-TX (devices U6). This matches the schematic: U1 ATmega8A UART pins connect to U6 MAX232 TTL side, and U6 RS232 side connects to J2 DE9 connector (J2 connector passive pins do not appear in devices list, which is correct).",
+      "created_from": "FND-00000478",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000478-AST-05",
+      "description": "connectivity_issues.multi_driver_nets correctly identifies nets P20_12 through P20_16 as having two tri-state drivers each: U5 (PAL16L8, IO pins 12\u201316) and U10 (24-pin PAL, IO pins 17\u201322). These nets represent the shared data bus between the two PAL sockets on the DuPAL board, where only one socket is populated at a time. The tri_state pin type is appropriate and the detection is accurate.",
+      "created_from": "FND-00000478",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000478-AST-06",
+      "description": "signal_analysis.decoupling_analysis correctly enumerates C8, C9, C10, C11, C12, C14, C13, C16, C17 (all 100nF) on VCC, and separately C4, C5, C6, C7 (1.0uF) as bulk capacitors. The design_observations notes the regulator U7 is missing input-side bypass on RECT_V12 rail, which is accurate (C15 is the only capacitor on RECT_V12, a 220nF electrolytic).",
+      "created_from": "FND-00000478",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

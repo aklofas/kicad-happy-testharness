@@ -1,0 +1,89 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "6502puter.sch.json",
+      "status": "promoted",
+      "summary": "Memory chips U7 (27C512 EPROM) and U8 (M29W004 Flash) not detected as memory_interfaces; W65C51N ACIA (U4) not detected as a UART device in bus_analysis.uart; Crystal Y1 load caps C6/C7 are 10uF (e...",
+      "correct": [
+        {
+          "description": "C6 and C7 are 10uF electrolytic capacitors (Tantalum, CP_Radial_Tantal footprint) connected to the Y1 crystal pins. The analyzer identifies them as load capacitors with effective_load_pF=5,000,003 and correctly reports in_typical_range=false. However, 10uF caps are not crystal load caps (typical range: 5-33pF) \u2014 they are likely decoupling or bypass caps for the PIC24 (IC1) VDD pins that happen to be in close proximity to the crystal circuit. The crystal circuit association is geometrically correct by coordinate proximity but electrically misleading.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.crystal_circuits[0].effective_load_pF",
+            "op": "max_value",
+            "value": 100
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "C2 and C3 use the 'device:CP1' electrolytic capacitor symbol with value '4.7k' \u2014 the designer appears to have typed a resistance value ('4.7k' ohms) instead of a capacitance value (e.g., '4.7uF'). These are the MAX232 (U6) charge pump capacitors. The analyzer correctly classifies them as type 'capacitor' based on the library symbol, but the value '4.7k' is a design error in the source schematic that the analyzer silently passes through without flagging as an anomalous capacitor value.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "contains",
+            "value": "anomalous_value"
+          }
+        },
+        {
+          "description": "The ERC warning for net 'ROMA1' lists U1 pin 'PHI0' (clock input) as being on that net. PHI0 should be on the Mainclock net (connected via a 74HC14 Schmitt trigger oscillator), not ROMA1 (a ROM address bit). This is almost certainly a legacy KiCad 5 (.sch) coordinate-based pin connectivity parsing artifact, where the proximity of the U1 component in schematic space causes a false pin-to-net association. ROMA1 net should only connect to address bus pins on U1 (A0), U7, and U10.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.erc_warnings",
+            "op": "min_value",
+            "value": 0
+          }
+        },
+        {
+          "description": "Five I2C bus entries are reported for IC1 (PIC24FV32KA304-IPT) on nets __unnamed_140, __unnamed_141, __unnamed_156, __unnamed_157, __unnamed_159 \u2014 all unnamed nets with no pull-up resistors and only one device each. These are unconnected or no-connect PIC24 I2C peripheral pins, not actual I2C buses in use. Reporting these as I2C bus detections is a false positive triggered by pin name matching (SDA/SCL pin names on the PIC24 symbol).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.bus_analysis.i2c",
+            "op": "max_value",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "This 6502-based computer has two parallel-bus memory chips: U7 (27C512PLCC, 64KB EPROM from 'memory:27C512PLCC' lib) and U8 (M29W004, 4Mbit Flash from 'memory:M29W004' lib), both connected to the CPU address/data bus via ROMA*/RAMA* nets. Both are listed in 'subcircuits' and 'components' but signal_analysis.memory_interfaces is empty ([]).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_value",
+            "value": 1
+          }
+        },
+        {
+          "description": "U4 is a W65C51N ACIA (Asynchronous Communications Interface Adapter), a classic UART chip. It connects to TX/RX nets which are detected in bus_analysis.uart, but the UART entries show empty 'devices' lists ([]) and pin_count=1. The ACIA chip U4 should be identified as a UART device. The MAX232 (U6) is also present for RS-232 level translation. Neither is classified as a UART participant.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.bus_analysis.uart[0].devices",
+            "op": "min_value",
+            "value": 1
+          }
+        },
+        {
+          "description": "The 'decoupling_analysis' section is empty ([]), but the design_observations section correctly reports 5 ICs (U1, U6, U8, IC1, U13) with rails_without_caps. C1 and C5 (value 'CP1' \u2014 designer left default symbol name as value) likely serve as bulk decoupling for the 74xx logic chips (U5, U9, U10) and are near them, but without a parsed capacitance value the analyzer cannot categorize them. This is a minor accuracy gap: the decoupling_analysis section should report the missing decoupling findings from design_observations.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_value",
+            "value": 5
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix: C2 and C3 have value '4.7k' but are classified as capacitors \u2014 anomalous value for MAX232 charge pump caps"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "6502puter",
+      "project": "6502puter",
+      "created": "2026-03-23T18:27:22.558217+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000322"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 ## FND-00000304: Gerber review: Eagle vs KiCad across 16 sets. Three HIGH Eagle bugs: .TXT drill, .G2L inner layers, inch units
 
-- **Status**: new
+- **Status**: promoted
 - **Analyzer**: gerber
 - **Source**: aux-ps/EDA files/
 - **Related**: KH-178, KH-179, KH-180, KH-186

@@ -1,0 +1,41 @@
+{
+  "file_pattern": "SparkFun_VEML7700.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001412",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001412-AST-01",
+      "description": "statistics.total_components=25, with correct breakdown: 1 ic (VEML7700-TT), 4 resistors (R1 4.7, R2 2.2k, R3 4.7k, R6 2.2k), 2 capacitors (C1 2.2uF, C2 0.1uF), 1 LED (D1), 2 Qwiic JST connectors (J3, J5), 1 PTH I2C header (J4), 4 fiducials, 4 mounting holes, 2 jumpers, 3 graphic logos. The BOM entries match the actual component list and quantities. Power rails 3.3V and GND correctly identified.",
+      "created_from": "FND-00001412",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 25,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001412-AST-02",
+      "description": "bus_analysis.i2c correctly enumerates two entries (SCL and SDA nets), each listing U1 as the connected device. Net classification correctly labels SCL as 'clock' and SDA as 'data'. The 13 total nets match the schematic.",
+      "created_from": "FND-00001412",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c[0].devices[0]",
+        "value": "U1",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected U1, got None"
+    },
+    {
+      "id": "FND-00001412-AST-03",
+      "description": "INCORRECT: R2 (2.2k) is on the SCL net (pin 1) with its other end (pin 2) connected through JP2 to the 3.3V rail. R6 (2.2k) mirrors this on SDA. These are the on-board I2C pull-ups (switchable via JP2). The analyzer reports has_pullup: false and pullup_resistor: null for both SCL and SDA in design_observations. The pull-up resistors feed through a 3-pin solder jumper (JP2) which has a middle tap connected to 3.3V \u2014 the analyzer fails to trace through the jumper to find the power rail connection, so the pull-up topology goes undetected.",
+      "created_from": "FND-00001412",
+      "check": {
+        "path": "signal_analysis.design_observations[0].has_pullup",
+        "value": true,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

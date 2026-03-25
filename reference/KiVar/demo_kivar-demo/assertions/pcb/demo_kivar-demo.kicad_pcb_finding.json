@@ -1,0 +1,32 @@
+{
+  "file_pattern": "kivar-demo.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000727",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000727-AST-01",
+      "description": "The PCB is a demo/placement board with no copper traces routed. Statistics correctly report track_segments=0, via_count=0, routing_complete=false, unrouted_net_count=29 out of 57 nets.",
+      "created_from": "FND-00000727",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000727-AST-02",
+      "description": "PCB correctly identifies 9 DNP footprints (C5, C6, R1, R9, R11, R17, R18, R21, R29) matching the schematic DNP set. 16 exclude_from_bom footprints also correctly captured. This matches KiVar variant-selector components.",
+      "created_from": "FND-00000727",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "file_pattern": "Effector.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001228",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001228-AST-01",
+      "description": "The Effector board uses GNDA (analog ground) and GND (digital ground) as separate domains. ground_domains correctly classifies GND as 'signal' and GNDA as 'analog', sets multiple_domains=true, and issues a star-ground verification note. This is exactly right for an audio effects board with op-amps.",
+      "created_from": "FND-00001228",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001228-AST-02",
+      "description": "Two identical 470k/470k voltage dividers from +3.3V to GNDA are identified, with mid-points connected to op-amp non-inverting inputs (U1 pin 3 and U1 pin 5). Ratio=0.5 is correct. The decoupling caps (C2, C3) at mid-points are also listed in mid_point_connections.",
+      "created_from": "FND-00001228",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001228-AST-03",
+      "description": "All four active op-amp circuits (U1 units 1&2, U2 units 1&2) are correctly identified as unity-gain buffers (output fed back to inverting input). The power unit (unit 3 for both ICs) is correctly reported as 'unknown' configuration \u2014 it's the supply pin unit of the NJM4580/LM2904D.",
+      "created_from": "FND-00001228",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001228-AST-04",
+      "description": "design_observations correctly identifies both I2C bus lines with has_pullup=true, correct pullup values and rail. The SSD1306 OLED connector J3 is the I2C device connected via the Pico A1 module.",
+      "created_from": "FND-00001228",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

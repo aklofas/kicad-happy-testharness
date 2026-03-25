@@ -1,0 +1,19 @@
+{
+  "file_pattern": "converter.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002235",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002235-AST-01",
+      "description": "INCORRECT: The PCB has 61 footprints (31 on 'Front', 30 on 'Back'), 497 track segments, 26 vias, and 3 copper zones \u2014 clearly a routed 2-layer board. However statistics report copper_layers_used=0, copper_layer_names=[], front_side=0, back_side=0. The layer table shows layers named 'Front' and 'Back' (KiCad 5 legacy naming), not 'F.Cu' and 'B.Cu' (KiCad 6+ naming). The analyzer appears to match copper layers by the modern 'F.Cu'/'B.Cu' names only, failing to count 'Front'/'Back' as copper layers.",
+      "created_from": "FND-00002235",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

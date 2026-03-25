@@ -1,0 +1,29 @@
+{
+  "file_pattern": "CNC_shield.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001705",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001705-AST-01",
+      "description": "The CNC shield schematic contains 9 connectors (P1 Power, P2 Analog, P3 Digital, P4 Digital as Arduino socket headers, plus J1-J3 JST-XH 6-pin and J4-J5 2x13 headers). All 9 are correctly classified as connector type with proper footprints identified.",
+      "created_from": "FND-00001705",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 9,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001705-AST-02",
+      "description": "INCORRECT: Four nets are incorrectly flagged as UART: 'DirX' (contains substring 'RX' when uppercased: 'DIRX'), 'LimitX' (contains 'TX' in 'LIMITX'), '1(TX)' (Arduino digital pin 1 labeled TX), and '0(RX)' (Arduino digital pin 0 labeled RX). None of these are UART signals in this design context: DirX and LimitX are stepper motor direction and limit switch signals routed from the Arduino digital headers to JST connectors, while 0(RX) and 1(TX) are single-pin connector nets (pin count 1) with no UART IC attached. The pattern-matching on substring TX/RX in arbitrary net names is too broad.",
+      "created_from": "FND-00001705",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "value": 0,
+        "op": "max_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

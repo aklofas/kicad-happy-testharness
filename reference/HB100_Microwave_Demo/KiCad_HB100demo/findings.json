@@ -1,0 +1,123 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "KiCad_HB100demo.sch.json",
+      "status": "promoted",
+      "summary": "LMV358 dual op-amp (U2) not detected as amplifier; RC filter R1/C2: input_net and output_net are swapped relative to signal flow; LDO regulator NCP1117DT33G (U3) correctly detected with +5V input a...",
+      "correct": [
+        {
+          "description": "U3 is correctly identified as an LDO with topology='LDO', input_rail='+5V', output_rail='VCC'. Decoupling analysis correctly identifies bypass caps on both rails.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "RC filter entry for R1 (12K) + C2 (4.7uF) shows input_net='__unnamed_3' (the R1.2/C2.2 junction, i.e. the mid-node) and output_net='GND'. The true signal input is __unnamed_4 (C2.1 side, connected to U2 non-inverting input and R5), and the output is __unnamed_3 (junction). The type='high-pass' and cutoff of 2.82 Hz are mathematically correct but the net direction labeling is backwards.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "RC filters include two 'RC-network' entries that both involve C8 (4.7uF): one pairs R6(1M)+C8 and another pairs R7(8.2K)+C8. C8 is a coupling capacitor between the two op-amp stages; creating multiple RC networks through it with different resistors at each end produces artifacts. The ground_nets are signal nodes (__unnamed_9, __unnamed_6), not GND, indicating these are not true shunt-to-ground filters.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "U2 (LMV358, dual op-amp) is classified as generic 'ic'. The signal_analysis.amplifiers list is empty. HB100 is a Doppler sensor preamp circuit with two op-amp gain stages built around U2 units 1 and 2. The analyzer should detect the inverting/non-inverting topology of each LMV358 unit.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "HB100_Microwave_Demo",
+      "project": "KiCad_HB100demo",
+      "created": "2026-03-23T20:49:03.703074+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000577"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "_home_aklofas_Projects_kicad-happy-testharness_repos_HHKB_controller_bluetooth.sch.json",
+      "status": "new",
+      "summary": "U2 MIC5504-3.3YMTR LDO has zero pins resolved \u2014 topology=unknown, no I/O rails",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "In bluetooth.sch, U2 (MIC5504-3.3YMTR, lib_id=LDO_REGULATOR) has an empty pins list. The KiCad5 legacy 'LDO_REGULATOR' symbol has no pin entries in the cache lib, so the analyzer cannot determine IN/OUT connections. Result: topology='unknown', input_rail=null, output_rail=null. The correct detection should show input=+5V, output=+3.3V.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "HB100_Microwave_Demo",
+      "project": "KiCad_HB100demo",
+      "created": "2026-03-23T20:49:03.703094+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000578"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "_home_aklofas_Projects_kicad-happy-testharness_repos_HHKB_controller_HHKB_controller.sch.json",
+      "status": "promoted",
+      "summary": "single_pin_nets falsely reports U1 ATmega32U4 GND pin connected to net PC7; Crystal X1 (16MHz) with 22pF load caps correctly detected; USB D+/D- lines present but usb_circuits list is empty; LC fil...",
+      "correct": [
+        {
+          "description": "Crystal circuit detection correctly identifies X1=16MHz with C5 and C6 (both 22pF), effective load of 14pF (series combination), and marks it within typical range. This is correct for the ATmega32U4 application.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "L1/C15 LC filter on the PSEL net is correctly identified. Resonant frequency 7.34 kHz and impedance 2.17 ohm are mathematically correct for these values.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "design_observations lists U1 pin 'GND' on net 'PC7' and pin 'UGnd' on net 'PD0'. These are hardware USB pins of the ATmega32U4 (D+/D-/UGnd); the net names reflect pin mapping from the KiCad5 legacy library where pin names don't match net labels. This is likely a pin-name vs net-name ambiguity in KiCad5 legacy parsing, producing false single-pin-net warnings for what are actually multi-pin nets.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The design has J1 USB connector with D+ and D- signals (via R2/R3 series resistors to ATmega32U4 U1). design_observations correctly notes usb_data for D+ and D- but signal_analysis.usb_circuits is empty. The analyzer detected the USB nets but did not produce a USB circuit entry.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "HB100_Microwave_Demo",
+      "project": "KiCad_HB100demo",
+      "created": "2026-03-23T20:49:03.703099+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000579"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "PD-Injector.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001058",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001058-AST-01",
+      "description": "All 5 USB differential pairs identified. ESD protection correctly reported as absent (has_esd=False) \u2014 the board is a pass-through injector with no ESD protection components (only two CC resistors R1/R2).",
+      "created_from": "FND-00001058",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001058-AST-02",
+      "description": "The PCB has 34 nets (J1/J2/P1 USB-C connectors have individual pad nets like J1-PadA2 etc.) while the schematic shows only 17. The schematic parser is not flagging this discrepancy. A cross-check observation would be useful here since the extra PCB nets represent unconnected/floating pads on the USB-C connectors.",
+      "created_from": "FND-00001058",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

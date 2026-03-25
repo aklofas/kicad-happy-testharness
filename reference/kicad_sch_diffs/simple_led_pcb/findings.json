@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad_sch_diffs_simple_led_pcb.kicad_sch.json.json",
+      "status": "promoted",
+      "summary": "Four single-pin nets from unconnected RGB LED channels not reported in connectivity_issues.single_pin_nets; assembly_complexity reports smd_count=3 for components with no assigned footprints",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The RGB LED (D1, Device:LED_RGB) has 6 pins. Only the RA (pin 6) connects to the resistor, and BK (pin 3) connects to the battery negative. The remaining four pins \u2014 RK (pin 1), GK (pin 2), BA (pin 4), GA (pin 5) \u2014 each form isolated single-pin nets (__unnamed_3 through __unnamed_6), as confirmed by their point_count of 1 in the nets section. However, connectivity_issues.single_pin_nets is an empty array. The analyzer correctly nets the pins but fails to flag these dangling connections in the connectivity issues report.",
+          "analyzer_section": "connectivity_issues",
+          "check": {
+            "path": "connectivity_issues.single_pin_nets",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "All three components (BT1, R1.1, D1) have empty footprint fields and appear in missing_footprint. Without footprint assignments, the SMD vs THT classification cannot be determined from the schematic alone. Yet assembly_complexity reports smd_count=3, tht_count=0, implying all components are SMD. This is a false inference \u2014 the correct output should be smd_count=0 or the field should reflect 'unknown' when footprints are absent. The complexity_score of 40 based on 3 'medium' SMD parts is similarly unreliable.",
+          "analyzer_section": "assembly_complexity",
+          "check": {
+            "path": "assembly_complexity.smd_count",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad_sch_diffs",
+      "project": "simple_led_pcb",
+      "created": "2026-03-24T09:02:03.727753+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002372"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_kicad_sch_diffs_simple_led_pcb.kicad_pcb.json.json",
+      "status": "new",
+      "summary": "Empty PCB correctly analyzed as having zero footprints, tracks, and nets",
+      "correct": [
+        {
+          "description": "The simple_led_pcb.kicad_pcb file exists as an empty board layout (the schematic symbols have no footprints). The PCB analyzer correctly reports footprint_count=0, track_segments=0, via_count=0, net_count=0, and routing_complete=true. The copper_presence warning about unfilled zones is appropriate.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "kicad_sch_diffs",
+      "project": "simple_led_pcb",
+      "created": "2026-03-24T09:02:03.727773+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002373"
+    }
+  ]
+}

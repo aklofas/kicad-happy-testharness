@@ -1,0 +1,31 @@
+{
+  "file_pattern": "jlcpcb_gerber",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001140",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001140-AST-01",
+      "description": "9 gerber files, 2 drill files detected. Found layers match 4-layer stack (F.Cu, B.Cu, In1.Cu, In2.Cu, plus mask/silk/edge). Missing F.Paste noted as recommended (not required). Board dimensions 15.12x29.15mm match PCB output exactly. complete=true is correct.",
+      "created_from": "FND-00001140",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001140-AST-02",
+      "description": "All gerber entries have role=None and layer=None even though layer_type is correctly parsed (e.g., 'B.Cu', 'In1.Cu'). If role/layer are supposed to be populated from X2 attributes or filename mapping, they appear to be missing output fields.",
+      "created_from": "FND-00001140",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

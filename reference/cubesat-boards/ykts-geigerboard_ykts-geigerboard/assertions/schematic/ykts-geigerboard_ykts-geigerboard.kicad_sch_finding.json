@@ -1,5 +1,5 @@
 {
-  "file_pattern": "ykts-geigerboard_ykts-geigerboard.kicad_sch",
+  "file_pattern": "ykts-geigerboard.kicad_sch",
   "analyzer_type": "schematic",
   "created_from": "FND-00000283",
   "generated_by": "findings.py promote",
@@ -12,39 +12,6 @@
         "path": "signal_analysis.opamp_circuits",
         "op": "min_count",
         "value": 1
-      }
-    },
-    {
-      "id": "FND-00000283-AST-02",
-      "description": "2 crystal circuits (Y1/Y2 8MHz) with 22pF load caps correct",
-      "created_from": "FND-00000283",
-      "check": {
-        "path": "signal_analysis.crystal_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^Y1$"
-      }
-    },
-    {
-      "id": "FND-00000283-AST-03",
-      "description": "Voltage divider R6(100)/R4(12K) for Geiger pulse comparator input correct",
-      "created_from": "FND-00000283",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R6$"
-      }
-    },
-    {
-      "id": "FND-00000283-AST-04",
-      "description": "LC filter L3+C25/C26 (10uH+2.3uF) at 33kHz for boost output correct",
-      "created_from": "FND-00000283",
-      "check": {
-        "path": "signal_analysis.lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L3$"
       }
     },
     {

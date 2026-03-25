@@ -1,0 +1,49 @@
+{
+  "file_pattern": "ISM01.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000626",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000626-AST-01",
+      "description": "Regulator detection correctly identifies the LM1117-3V3 in SOT-223, extracts the 3.3V output from the fixed suffix, and links VCC\u2192+3V3 power domains. Decoupling analysis correctly finds 10uF+100nF on VCC and extensive caps on +3V3.",
+      "created_from": "FND-00000626",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000626-AST-02",
+      "description": "11 LC filters detected around the Si1060-A-GM RF transceiver antenna matching network using 18nH/39nH inductors and small pF capacitors. Resonant frequencies match expected Sub-GHz ISM band (868/915 MHz range with harmonic filters).",
+      "created_from": "FND-00000626",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000626-AST-03",
+      "description": "VCC is sourced from J1 (a 3x2 header/jumper acting as power input). The PWR_FLAG warnings for VCC, +3V3, and GND are technically valid KiCad ERC issues since no PWR_FLAG symbols are placed. These are real ERC warnings, not false positives.",
+      "created_from": "FND-00000626",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000626-AST-04",
+      "description": "The Si1060-A-GM is controlled via SPI but its SPI pins (MOSI, MISO, SCK, /CS) are routed through the GPIO connector header breakout with generic P0.x/P1.x labels rather than named SPI nets. No SPI detection is shown (bus_analysis.spi=[]). This is a genuine miss \u2014 the analyzer should ideally cross-reference the IC datasheet or recognize SPI-capable ICs by lib_id. However, unlabeled nets make this hard to detect automatically; the miss is understandable.",
+      "created_from": "FND-00000626",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

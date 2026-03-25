@@ -1,0 +1,30 @@
+{
+  "file_pattern": "AVB switch with Can gateway.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000358",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000358-AST-01",
+      "description": "INCORRECT: The multi-sheet top-level JSON inherits the same UART false positives as switch.sch: RX1+, RX1-, RX2+, RX2-, RX3-, RX3+, RX4+, RX4-, RX5+, RX5-, TX1+, TX1-, TX2+, TX2-, TX3-, TX3+, TX4+, TX4-, TX5+, TX5- are all Ethernet port differential nets from the KSZ8567 switch, reported as UART candidates. Only UART8_TX and UART8_RX are genuine UART signals. Total 22 entries instead of 2.",
+      "created_from": "FND-00000358",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "eq",
+        "value": 2
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000358-AST-02",
+      "description": "The Ethernet interface for IC1 (KSZ8567) correctly identifies J4, J6, J7, J8 as connectors with value 'RJ45_Magjack_Connector'. However, the magnetics list is empty. MagJack (magnetics+jack) connectors have integrated transformers and should be classified as 'integrated_magnetics' in the magnetics list rather than plain connectors. The design has no separate discrete magnetics because the RJ45 MagJack connectors include them. The current output implies no magnetics are present, which is misleading for design review.",
+      "created_from": "FND-00000358",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces[0].magnetics",
+        "op": "min_value",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

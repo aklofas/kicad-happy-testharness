@@ -1,0 +1,30 @@
+{
+  "file_pattern": "usb_hub.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000441",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000441-AST-01",
+      "description": "In usb_hub.kicad_sch, U2 (CH334R) pin 13 (VDD33_LDO, power_out) connects to an unnamed net (__unnamed_0) along with C7 (1uF) and C8 (10uF). These capacitors are bypass/decoupling caps for the CH334R's internal 3.3V LDO output. Because the net has no name, the decoupling_analysis only reports +5V and VBUS rails, completely omitting the VDD33_LDO bypass capacitors. The internal LDO output is a real power rail that should appear in decoupling analysis.",
+      "created_from": "FND-00000441",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 3
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000441-AST-02",
+      "description": "The usb_hub.kicad_sch uses hierarchical_labels MCU_D+ and MCU_D- (shape: input) as sheet ports. When the hub schematic is analyzed in isolation these appear as single-pin nets with only U2 connections, producing spurious single_pin_nets entries in connectivity_issues and design_observations. These are valid inter-sheet signals, not floating nets. Similarly P0_IN_D+ and P0_IN_D- are hierarchical_labels that are also flagged as single-pin but represent upstream port connections through the hierarchy.",
+      "created_from": "FND-00000441",
+      "check": {
+        "path": "connectivity_issues.single_pin_nets",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

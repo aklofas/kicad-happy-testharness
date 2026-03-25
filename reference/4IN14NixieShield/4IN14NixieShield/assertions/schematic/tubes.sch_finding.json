@@ -1,0 +1,52 @@
+{
+  "file_pattern": "tubes.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000319",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000319-AST-01",
+      "description": "INCORRECT: D2, D3, D4, and D5 are connected in a single WS2812B chain: NEOPIXEL \u2192 R9 \u2192 D2 DIN, D2 DOUT \u2192 D3 DIN (wire at coords 2100,3900\u20133700,3900), D3 DOUT \u2192 D4 DIN (coords 4300,3900\u20137400,3900), D4 DOUT \u2192 D5 DIN (coords 8000,3900\u20139600,3900), D5 DOUT NoConnect. The analyzer reports 4 separate chains each with chain_length=1 instead of one chain with chain_length=4. The data-out to data-in connections are made via unlabeled wires that the chain-stitching logic is failing to follow.",
+      "created_from": "FND-00000319",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "eq",
+        "value": 4
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000319-AST-02",
+      "description": "Each of the 4 detected addressable_led_chains has chain_length=1. The correct detection would be a single chain with chain_length=4 covering D2\u2192D3\u2192D4\u2192D5. This means estimated_current_mA is reported as 60mA per pseudo-chain (240mA total spread across 4 entries) rather than as 240mA for the full chain.",
+      "created_from": "FND-00000319",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains[0].chain_length",
+        "op": "eq",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000319-AST-03",
+      "description": "Four IN-14 Nixie tubes (N1, N2, N3, N4) operate at approximately 170V DC on their anodes (ANODE_1 through ANODE_4 hierarchical labels). The analyzer classifies them as component type 'other' with no design_observation about high-voltage operation. There is no HV rail detected on this sheet (HV supply comes in through the ANODE_* hierarchical labels from another sheet). No protection_devices or high-voltage observations are generated for the Nixie tube circuit.",
+      "created_from": "FND-00000319",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "eq",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000319-AST-04",
+      "description": "NL1 is an IN-3 neon indicator lamp connected between ANODE_DOT (high voltage) and GND through R8 (4k7 current-limiting resistor). This is a classic neon lamp driver circuit with ballast resistor. The analyzer does not detect this as a protection_device, current_sense, or any other structured circuit. R8 and NL1 are isolated findings with no circuit relationship identified.",
+      "created_from": "FND-00000319",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "eq",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

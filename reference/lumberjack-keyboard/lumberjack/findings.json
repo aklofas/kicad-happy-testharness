@@ -1,0 +1,51 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002422",
+      "source_file": "lumberjack.kicad_pcb",
+      "analyzer_type": "pcb",
+      "category": "incorrect",
+      "summary": "zone_count statistic inflated 480x by teardrop zones",
+      "details": "The PCB statistics report zone_count=481, but 480 of these are KiCad-generated teardrop pad/via fills. Only 1 real copper fill zone exists.",
+      "check": {
+        "path": "statistics.zone_count",
+        "op": "equals",
+        "value": 481
+      }
+    },
+    {
+      "id": "FND-00002423",
+      "source_file": "lumberjack.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "pwr_flag_warnings false-positive: PWR_FLAG symbols are properly wired to +5V and GND",
+      "details": "The analyzer raises pwr_flag_warnings for both +5V and GND, saying they have no power_out or PWR_FLAG. In fact, two PWR_FLAG symbols are present and properly wired.",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "max_count",
+        "value": 0
+      }
+    },
+    {
+      "id": "FND-00002424",
+      "source_file": "lumberjack.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "key matrix overcounts switches_on_matrix (63) vs diodes_on_matrix (60) due to 2u alternate keys",
+      "details": "The analyzer reports switches_on_matrix=63 but diodes_on_matrix=60. The 2 extra counted switches are optional 2u keycap alternate footprints, not additional matrix entries.",
+      "check": {
+        "path": "signal_analysis.key_matrices.0.diodes_on_matrix",
+        "op": "equals",
+        "value": 60
+      }
+    },
+    {
+      "id": "FND-00002425",
+      "source_file": "lumberjack gerbers",
+      "analyzer_type": "gerber",
+      "category": "incorrect",
+      "summary": "Gerber alignment reported as failed due to B.SilkS extending 55mm beyond board edge",
+      "details": "The alignment check reports aligned=false. The real discrepancy is B.SilkS extending beyond the board outline, which is legitimate. Silkscreen layers should be excluded from alignment checks."
+    }
+  ]
+}

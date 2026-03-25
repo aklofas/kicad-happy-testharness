@@ -1,0 +1,31 @@
+{
+  "file_pattern": "daughterboard.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002126",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002126-AST-01",
+      "description": "R1/R2/R3/R4 (all 5.1k) serve as CC pulldowns for the two USB-C receptacles. The usb_compliance section correctly reports cc1_pulldown_5k1: pass and cc2_pulldown_5k1: pass for both J1 and J4. The vbus_esd_protection: fail and vbus_decoupling: fail results are accurate \u2014 there is no ESD diode or decoupling capacitor on VBUS in this pass-through daughterboard.",
+      "created_from": "FND-00002126",
+      "check": {
+        "path": "usb_compliance.summary.pass",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00002126-AST-02",
+      "description": "INCORRECT: Both USB-C connectors J1 and J4 have their VBUS pins (A4, A9, B4, B9) connected together into nets __unnamed_3 and __unnamed_11 respectively, because there is no explicit PWR_FLAG or named power label for VBUS in the schematic. The statistics.power_rails list shows only ['GND'], omitting VBUS entirely. The design_analysis.power_domains.ic_power_rails dict is empty, and the power_net_summary only tracks GND. The ferrite beads FB1/FB2 filter VBUS (Net-(FB1-Pad2) and Net-(FB2-Pad2) appear in the PCB nets) but the schematic analyzer cannot infer this relationship because VBUS has no named net.",
+      "created_from": "FND-00002126",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "equals",
+        "value": [
+          "GND"
+        ]
+      },
+      "aspirational": true
+    }
+  ]
+}

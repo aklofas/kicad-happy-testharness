@@ -1,0 +1,50 @@
+{
+  "file_pattern": "gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001941",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001941-AST-01",
+      "description": "The gerber set has 8 files covering B.Cu, B.Mask, B.SilkS, Edge.Cuts, F.Cu, F.Mask, F.Paste, and F.SilkS. The missing_required and missing_recommended lists are both empty and complete=true. B.Paste is absent because the back-side has only through-hole/SMD pads without solder paste needed (the P1 connector uses through-hole pads). This is consistent with the PCB having 1 back-side component.",
+      "created_from": "FND-00001941",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001941-AST-02",
+      "description": "The gerber analyzer reports board_dimensions of 37.08\u00d712.14mm from edge_cuts_extents, which matches the PCB analyzer's reported 37.084\u00d712.141mm exactly (within rounding). Layer extents show consistent alignment across copper, mask, paste, and silkscreen layers.",
+      "created_from": "FND-00001941",
+      "check": {
+        "path": "board_dimensions.width_mm",
+        "op": "equals",
+        "value": 37.08
+      }
+    },
+    {
+      "id": "FND-00001941-AST-03",
+      "description": "INCORRECT: The PCB has 24 vias (as reported by the PCB analyzer) and 0 actual through-hole component holes (all components are SMD). The drill file antiAFK.drl contains 24 holes of 0.508mm diameter. These are all via drills (the PCB via size is 0.635/0.508 = 0.635mm annular ring / 0.508mm drill). However, the gerber drill_classification reports them as component_holes: 24, vias: 0. The drill file type is 'unknown' rather than 'pth'. The PCB has no THT components, so all 24 holes must be vias, not component holes.",
+      "created_from": "FND-00001941",
+      "check": {
+        "path": "drill_classification.vias.count",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001941-AST-04",
+      "description": "INCORRECT: The completeness section reports has_pth_drill=false and has_npth_drill=false even though the drill file antiAFK.drl contains 24 holes of 0.508mm. These are plated through-holes (vias). The analyzer cannot determine plated vs non-plated status from the drill file because the format is 'unknown', but the has_pth_drill flag should be true since the board has copper-layer via transitions that require PTH drilling.",
+      "created_from": "FND-00001941",
+      "check": {
+        "path": "statistics.drill_files",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

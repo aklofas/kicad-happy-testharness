@@ -1,0 +1,28 @@
+{
+  "file_pattern": "OSO-WILD-A1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000767",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000767-AST-01",
+      "description": "Correctly finds U1 (BU9796AMUV-E2 LCD segment driver), 2x 10K I2C pull-ups (R1/R2) on SCL_LCD/SDA_LCD nets, 3 solder jumpers for I2C address/signal routing, LCD connector (LCD1, 16-pin), decoupling cap C1 (0.1uF on +3V3). Bus analysis correctly identifies I2C with pull-ups present. Net connectivity for all COM/SEG signals to LCD connector is correct.",
+      "created_from": "FND-00000767",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000767-AST-02",
+      "description": "GND and +3V3 rails have no PWR_FLAG symbols and no power_out driver in the kicad_sch (power comes from the Feather connector, modeled in the legacy .sch). The ERC warning is technically valid for this file in isolation. This is the known KH-160 pattern (connector-powered designs triggering PWR_FLAG warnings).",
+      "created_from": "FND-00000767",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

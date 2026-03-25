@@ -1,0 +1,108 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "SparkFun_Pico_Add_On_Flipper.kicad_sch",
+      "status": "promoted",
+      "summary": "Component counts correct: 16 total with 5 connectors, 4 fiducials, 2 resistors, 1 switch, 1 jumper, 3 other; I2C bus not detected despite R1/R2 (2.2k) pullup resistors on IO4/SDA and IO5/SCL nets; ...",
+      "correct": [
+        {
+          "description": "The Pico Add-On Flipper board is a pass-through PCB with 4x 20-pin SMD connectors (J1-J4), a Qwiic I2C connector (J5), two 2.2k I2C pullup resistors (R1, R2), a 3-way I2C jumper (JP1), a reset switch (SW1), and 4 fiducials plus 2 logos. The analyzer correctly identifies all 16 components with no DNP parts.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 16
+          }
+        },
+        {
+          "description": "The test_coverage section correctly identifies IO4{slash}SDA and IO5{slash}SCL as uncovered_key_nets with category 'i2c', and VBUS/VSYS as power_rail. The observation 'Key nets without test points: 2 i2c, 2 power_rail' accurately reflects the absence of test points on this passthrough board.",
+          "analyzer_section": "test_coverage",
+          "check": {
+            "path": "test_coverage.uncovered_key_nets",
+            "op": "contains_match",
+            "value": {
+              "net": "IO4{slash}SDA",
+              "category": "i2c"
+            }
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The bus_analysis.i2c is empty ([]) and design_observations is empty. The schematic has net names 'IO4{slash}SDA' and 'IO5{slash}SCL', with R2 pin 1 on IO4/SDA and R1 pin 1 on IO5/SCL, both pins 2 on 3.3V. These are classic I2C pullup resistors. The detection fails because the net names contain the IO prefix and slash encoding ('IO4{slash}SDA') rather than bare 'SDA'/'SCL'. The analyzer should match I2C lines from net names containing 'SDA' or 'SCL' as substrings, not just exact matches.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "equals",
+            "value": []
+          }
+        },
+        {
+          "description": "R1 (2.2k) has pin 2 on 3.3V and pin 1 on IO5/SCL, and R2 (2.2k) has pin 2 on 3.3V and pin 1 on IO4/SDA. These are textbook I2C pullup resistors connected directly from 3.3V to the bus lines. Because the bus names use compound net names (IO4{slash}SDA), the I2C detector fails to recognize these resistors as pullups, leaving design_observations empty and both decoupling_analysis and rc_filters empty.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SparkFun_Pico_Add_On_Flipper",
+      "project": "Hardware_SparkFun_Pico_Add_On_Flipper",
+      "created": "2026-03-24T00:42:00.050375+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001470"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "SparkFun_Pico_Add_On_Flipper.kicad_pcb",
+      "status": "promoted",
+      "summary": "PCB footprint count of 109 correctly includes 92 kibuzzard decorative footprints; Board dimensions are null despite Edge.Cuts layer being present in the PCB file; PCB routing complete with correct ...",
+      "correct": [
+        {
+          "description": "The PCB has 109 footprints total, with 92 kibuzzard decorative graphics (board_only) and 17 real components. This matches the schematic's 16 components plus 1 OSHW logo (G3) marked board-only in the PCB. The component_groups correctly lists 4 FID, 4 J, 1 JP, 2 R, 1 SW, and 4 G references alongside 92 kibuzzard refs.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 109
+          }
+        },
+        {
+          "description": "The PCB is correctly identified as 2-layer (F.Cu, B.Cu) with routing_complete: true, 212 track segments, 43 vias, and 1 copper pour zone. Net count of 37 matches the schematic's 37 nets. The 0 THT components is correct as all real components (4x 20-pin SMD connectors, Qwiic JST, SMD resistors, SMD switch) are surface-mount.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The statistics show board_width_mm: null and board_height_mm: null, and the board_outline section has edge_count: 0 and bounding_box: null. However, the PCB file does have an Edge.Cuts layer. This indicates the board outline is likely defined as a footprint reference rather than direct Edge.Cuts graphics, or uses a non-standard format, causing the analyzer to fail to extract the board boundary. The PCB is a known rectangular board for Raspberry Pi Pico passthrough.",
+          "analyzer_section": "board_outline",
+          "check": {
+            "path": "board_outline.edge_count",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SparkFun_Pico_Add_On_Flipper",
+      "project": "Hardware_SparkFun_Pico_Add_On_Flipper",
+      "created": "2026-03-24T00:42:00.050395+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001471"
+    }
+  ]
+}

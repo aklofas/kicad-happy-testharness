@@ -1,0 +1,64 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002442",
+      "source_file": "schematic/lora-modul/lora-module.sch.json",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "Crystal Q1 (32MHz) misclassified as transistor type in component_types",
+      "details": "The component Q1 has value '32MHz' and is the crystal oscillator for the SX1276 LoRa transceiver. The BOM and crystal_circuits detector correctly identify it as a crystal with a 15pF load cap. However, the statistics.component_types reports 'crystal: 1' with Q1 as the reference, while Q1 should be classified under a 'crystal' type not using the Q prefix (BJT/FET convention). The Q prefix is causing a missing_mpn list inclusion for Q1 (it appears in missing_mpn), but critically the component_types correctly shows 'crystal: 1' and not 'transistor: 1', so the type classification is right. The main issue is that the crystal_circuits entry uses reference 'Q1' which could cause confusion, but reflects the actual schematic annotation.",
+      "check": {
+        "path": "statistics.component_types.crystal",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002443",
+      "source_file": "schematic/lora-modul/lora-module.sch.json",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "Duplicate SPI bus detected \u2014 same SX1276 SPI interface reported twice",
+      "details": "The bus_analysis.spi section reports two separate SPI buses for the single SX1276 transceiver (U2): bus_id 'pin_U2' (SCK, MISO=CS net, MOSI) and bus_id '0' (MOSI, MISO with CS). The same physical SPI interface on U2 is being detected by two different detection paths and reported as two buses. Additionally, in bus 'pin_U2' the MISO signal is mapped to the net named 'CS', which is actually the chip-select net \u2014 this suggests a net naming collision where the MISO pin detection algorithm is confusing the net named 'CS' with a chip select signal. Only one SPI bus should be reported.",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002444",
+      "source_file": "schematic/lora-modul/lora-module.sch.json",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "RF chain correctly identifies SX1276 transceiver and PE4259 RF switch",
+      "details": "The analyzer correctly detected the LoRa RF chain with U2 (SX1276) as transceiver and U5 (PE4259) as RF switch. The LC filters in the RF matching network are also detected, including a 453 MHz resonant LC pair (L2/C16) consistent with a 433/470 MHz LoRa band. The rf_chains detector properly categorizes the two RF-domain ICs."
+    },
+    {
+      "id": "FND-00002445",
+      "source_file": "schematic/lora-modul/lora-module.sch.json",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "Two separate 3.3V power rails (+3.3V and +3V3) treated as independent domains",
+      "details": "The design uses two power symbol names '+3.3V' and '+3V3' which are almost certainly the same physical net (common KiCad naming inconsistency). The analyzer correctly lists both in statistics.power_rails but treats them as separate power domains in design_analysis.power_domains, placing U2 on '+3.3V' and U5 on '+3V3'. This results in no cross-domain coupling being flagged, when in practice these are almost certainly the same supply. The analyzer should at minimum warn about similar-named power rails.",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "FND-00002446",
+      "source_file": "pcb/lora-modul/lora-module.kicad_pcb.json",
+      "analyzer_type": "pcb",
+      "category": "correct",
+      "summary": "Correctly identifies 2 unrouted nets and 13 courtyard overlaps on dense RF board",
+      "details": "The PCB analyzer correctly reports 2 unrouted nets (Net-(C11-Pad1) between C11 and U5.3, and Net-(L11-Pad1) between U2.21 and L11.1). The 13 courtyard overlaps on this highly dense 27.3x24.5mm 4-layer RF board are a real layout concern, as components including decoupling caps and RF inductors are placed very tightly. The unrouted and overlap detection is accurate.",
+      "check": {
+        "path": "connectivity.unrouted_count",
+        "op": "equals",
+        "value": 2
+      }
+    }
+  ]
+}

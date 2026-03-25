@@ -1,0 +1,39 @@
+{
+  "file_pattern": "KCORES CSPS to ATX Converter.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000656",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000656-AST-01",
+      "description": "voltage_dividers correctly identifies R2=22K (top, +12V) and R3=3.3K (bottom, GND) with mid-point connected to U4 pin ~PSON, ratio 0.130 (\u224812V \u00d7 0.13 = 1.56V). This is a pull-down divider for ATX PS-ON logic level conditioning.",
+      "created_from": "FND-00000656",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000656-AST-02",
+      "description": "Six power rails (+12V, +12VSB, +5V, +5VSB, +3V3, GND) extracted correctly. Decoupling observations note missing bypass/high-frequency caps on all rails (only bulk 100uF Tantalum present). ERC no-driver for ~ATX_PSON is a real issue \u2014 the external CSPS drives this signal via the J1 connector but the connector pin is passive-typed.",
+      "created_from": "FND-00000656",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000656-AST-03",
+      "description": "U1 (Mini560 5V), U2 (Mini560 3.3V), and U3 (Mini560 5V) are switching step-down converters providing the ATX 5V, 3.3V, and 5VSB rails from 12V. power_regulators is empty. The Mini560 is classified as 'ic' but not recognized by the regulator detector \u2014 likely because 'Mini560' is not in the known regulator keyword list.",
+      "created_from": "FND-00000656",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

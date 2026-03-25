@@ -1,0 +1,49 @@
+{
+  "file_pattern": "ErgoTravel.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000546",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000546-AST-01",
+      "description": "row0-row3 and col0-col6 nets correctly enumerated. 28 diodes on matrix correctly counted. Detection method 'net_name' is appropriate for this design.",
+      "created_from": "FND-00000546",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000546-AST-02",
+      "description": "BOM quantities match the schematic source. The 28 key switches and 28 diodes align with the 4x7 matrix. Connector counts are reasonable.",
+      "created_from": "FND-00000546",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000546-AST-03",
+      "description": "R2 is correctly identified as the SCL pull-up at 4.7k\u03a9 to VCC. The sdaPM net lacking a pull-up is also correctly noted (it routes through SJ1 solder jumper to 'sda' which has its own pull-up on the expander side).",
+      "created_from": "FND-00000546",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000546-AST-04",
+      "description": "The schematic has nets named SCK, MOSI, MISO routed from U1 to the ICSP header J4 (Conn_01x06). The bus_analysis SPI list is empty. These are clearly SPI/ICSP signals by name and should be detected.",
+      "created_from": "FND-00000546",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

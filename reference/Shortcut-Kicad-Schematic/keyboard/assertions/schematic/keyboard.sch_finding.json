@@ -1,0 +1,63 @@
+{
+  "file_pattern": "keyboard.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001351",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001351-AST-01",
+      "description": "73 total components across 3 sheets (keyboard.sch, left-board.sch, left-thumb.sch): 1 IC (ATmega32U4), 4 R, 5 C, 13 connectors, 1 crystal/resonator, 18 switches, 23 diodes, 8 LEDs. These match the components actually present in those three .sch files. The right-side keyboard half (SW1\u2013SW15, S1\u2013S2, led1\u2013led8, D1\u2013D22) appears only on the PCB with no corresponding schematic pages, but that is a property of the source design, not an analyzer error.",
+      "created_from": "FND-00001351",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 73,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001351-AST-02",
+      "description": "The main sheet's power rails (+5V, Earth) and PWR_FLAG power symbol are all captured. The USB_OTG connector P1 is correctly typed as a connector. The SPI-named nets (sck, mosi) are present in the net list; the analyzer correctly does not fire a SPI bus detection because these nets connect only to connector pins (P2) rather than an MCU SPI peripheral, so bus_analysis.spi=[] is accurate.",
+      "created_from": "FND-00001351",
+      "check": {
+        "path": "statistics.power_rails",
+        "value": "+5V",
+        "op": "contains_match"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected match for //, got no match in 3 items"
+    },
+    {
+      "id": "FND-00001351-AST-03",
+      "description": "INCORRECT: The key_matrices detector reports a 4\u00d714 matrix with estimated_keys=33 and switches_on_matrix=26. The 14-column figure comes from merging label-only nets col8\u2013col14 (which appear only as flat labels in the main sheet with no switch or diode pins) with col1\u2013col7 from the left-board sub-sheet. Columns col8\u2013col13 each have zero component pins; col14 connects only to connector P2. The actual populated left-side matrix is 4\u00d77 with 15 switches + a 4\u00d72 thumb extension = 23 diode-switched positions. The 14-column figure is a false positive caused by treating label-only nets as populated matrix columns.",
+      "created_from": "FND-00001351",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].columns",
+        "value": 9,
+        "op": "max_count"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001351-AST-04",
+      "description": "X1 is a Murata CSTCE16M0V53 ceramic resonator (datasheet field confirms the part number), paired with U1 (ATmega32U4). The crystal_circuits list is empty. Detection fails because the KiCad 5 legacy parser does not resolve pin-to-net mappings for the ATmega32U4 (U1 pins=[]) or the resonator (X1 pins=[]), so the topological matching for a crystal+MCU circuit cannot trigger. The design observation about a missing oscillator circuit is therefore also absent from design_observations.",
+      "created_from": "FND-00001351",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001351-AST-05",
+      "description": "The design has 16 WS2812B LEDs (led1\u2013led16) split across two halves, intended to form daisy-chained groups. The analyzer produces 8 separate addressable_led_chains each with chain_length=1 and data_in_net=''. Chain stitching fails because KiCad 5 legacy parsing leaves all LED pin arrays empty (pins=[]), so the DIN\u2192DOUT connection topology cannot be traced. Additionally, led1\u2013led8 (right half) are missing from all three .sch files and are therefore not detected at all. The eight LEDs on the left-board sheet are detected individually but never linked.",
+      "created_from": "FND-00001351",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains[0].chain_length",
+        "value": 1,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

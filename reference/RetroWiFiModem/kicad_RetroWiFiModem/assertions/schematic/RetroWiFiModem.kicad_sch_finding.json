@@ -1,0 +1,49 @@
+{
+  "file_pattern": "RetroWiFiModem.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001230",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001230-AST-01",
+      "description": "U4 (L4931CZ33-AP) is correctly detected as an LDO with +5V input, +3V3 output, and 3.3V estimated output from the part suffix. The lib_id (LM2931AZ-3.3_5.0) differs from the value but the analyzer correctly uses the value suffix for vout estimation.",
+      "created_from": "FND-00001230",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001230-AST-02",
+      "description": "R1 is an 8-resistor network in a DIP-16 package used as current-limiting resistors for 8 LEDs. The analyzer correctly parses all 8 units with individual pin UUIDs. The BOM shows 1 R1 entry which is correct for a single network package.",
+      "created_from": "FND-00001230",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001230-AST-03",
+      "description": "The +5V rail has only C7 (100nF disc cap) and the 1uF electrolytic C8 on +3V3 after the LDO. The analyzer correctly reports 1 cap, 0.1uF total, has_bulk=false for +5V. This is a real concern for a board running WeMos WiFi and DFPlayer.",
+      "created_from": "FND-00001230",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001230-AST-04",
+      "description": "U1 (MAX3237CAI+) is a 5-driver/3-receiver RS-232 transceiver. The ic_pin_analysis shows function='' (empty) for U1. The WeMos mini (U5) has a UART that connects to the MAX3237, and this serial path is not detected in signal_analysis. U5 and U6 (DFPlayer) also have empty function fields.",
+      "created_from": "FND-00001230",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

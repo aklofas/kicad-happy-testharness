@@ -1,0 +1,29 @@
+{
+  "file_pattern": "sushnikov_efbo_02_23.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001104",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001104-AST-01",
+      "description": "STM32F407VGTx (U1), LTC-4627JD 7-segment display (U2), 9 current-limiting resistors, 2 LEDs, SW1 (DIP), SW2 (rotary encoder). All correctly identified.",
+      "created_from": "FND-00001104",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001104-AST-02",
+      "description": "The STM32F407VGTx has multiple VDD pins (11, 19, 28, 50, 75, 100), VDDA, VBAT, and VREF+, all without any decoupling caps connected. design_observations correctly notes rails_without_caps=['+3.3V'], but the schematic appears to be a partial/early-stage design with no decoupling at all. The observation is correct but the total_nets=110 with 82 no-connects and no caps is a significant design concern that should be flagged more prominently.",
+      "created_from": "FND-00001104",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

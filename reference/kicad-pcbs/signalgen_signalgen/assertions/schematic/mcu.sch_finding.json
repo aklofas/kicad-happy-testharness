@@ -1,0 +1,19 @@
+{
+  "file_pattern": "mcu.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002256",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002256-AST-01",
+      "description": "INCORRECT: The RC filter detector reports two RC networks (R2/C6 and R3/C6) with ground_net='USART1_TX'. USART1_TX is a hierarchical label connecting to the MCU's UART TX output \u2014 it is a signal net, not ground. The capacitor C6 (100n) has one pin on the unnamed node between R2/R3 and the other pin on the USART1_TX net. The MCU subsheet treats USART1_TX as a shared net but the top-level sheet likely uses it as a signal net. The analyzer should not classify a net named 'USART1_TX' as a ground reference.",
+      "created_from": "FND-00002256",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "RFModulator1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001107",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001107-AST-01",
+      "description": "All 18 components are correctly identified: 7 caps, 3 resistors, 1 NJFET (Q2), 6 connectors/coaxials, 1 diode, 2 potentiometers. Nets are correctly traced including the JFET source-follower topology (Q2 drain to +15V, gate to GND, source feedback via R1).",
+      "created_from": "FND-00001107",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001107-AST-02",
+      "description": "The design is an RF modulator with a JFET (Q2) source follower, two variable capacitors (C6, C7 are trimmers), and a varactor diode (D1/1N4148 used as varactor). No frequency estimation, no detection of the varactor/trimmer tuning network, no signal chain analysis from J1/J2 input through JFET to J3 output.",
+      "created_from": "FND-00001107",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_board_power.kicad_sch.json",
+      "status": "promoted",
+      "summary": "pwr_flag_warnings fires for +12V and -12V despite PWR_FLAG symbols being present on both rails; Eurorack reverse-polarity protection diodes (D1/D2 PMEG2005) not detected as protection_devices",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The power sheet contains two PWR_FLAG symbols co-located with the +12V and -12V power nets. However, the analyzer assigns these symbols a net_name of 'PWR_FLAG' instead of resolving them to the nets they are placed on (+12V/-12V). As a result, +12V and -12V appear to have no power_out or PWR_FLAG, triggering false positive warnings. The same false positives propagate to board.kicad_sch (which flattens the hierarchy). This appears to be the same class of issue as KH-160.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "D1 and D2 are Schottky diodes (PMEG2005EGWX, 20V) placed in series with the +12V and -12V Eurorack power lines for reverse polarity protection. The protection_devices[] list is empty. The analyzer should recognize series diodes on power input rails as protection devices.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Hydrogen",
+      "project": "hardware_board_board",
+      "created": "2026-03-23T20:49:04.240275+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000587"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_board_mults.kicad_sch.json",
+      "status": "promoted",
+      "summary": "pwr_flag_warnings fires for GND in a sub-sheet that receives GND via hierarchical connectivity; 10 audio jack connectors without MPNs correctly flagged in missing_mpn list",
+      "correct": [
+        {
+          "description": "J2-J11 (Eurorack_Mono_Jack variants) have empty mpn fields in the schematic, correctly reported in missing_mpn. This is a real design characteristic \u2014 Winterbloom uses custom footprint libraries but leaves MPN blank for these panel-mount connectors.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "mults.kicad_sch is a sub-sheet with no local PWR_FLAG \u2014 GND is supplied hierarchically from the power sheet. The analyzer warns that GND has no PWR_FLAG, but this sub-sheet design is intentional: PWR_FLAGs live in the power sub-sheet, not in every functional sub-sheet. This is a false positive for hierarchical designs.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Hydrogen",
+      "project": "hardware_board_board",
+      "created": "2026-03-23T20:49:04.240293+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000588"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_board_board.kicad_sch.json",
+      "status": "new",
+      "summary": "Hierarchical flattening of sub-sheets into board.kicad_sch is correct (38 = 27 + 14 - 3 shared multi-unit ICs); Opamp buffer configurations correctly detected for 8 OPA4991 units and 2 LM358 compar...",
+      "correct": [
+        {
+          "description": "board.kicad_sch is the top-level sheet referencing mults.kicad_sch and power.kicad_sch. The 38 components in its output correctly equals 27 (mults) + 14 (power) - 3 shared multi-unit ICs (U1/U2/U3 appear in both sub-sheets). The sheets[] array correctly lists all three file paths.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "All 8 signal-path units of the two OPA4991 quad opamps are correctly identified as unity-gain buffers (gain=1.0) with 51-ohm series input resistors. The two LM358 units are correctly classified as comparator_or_open_loop. The power supply units (unit 5 of OPA4991, unit 3 of LM358) are correctly shown as 'unknown' since they carry no signal pins.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Hydrogen",
+      "project": "hardware_board_board",
+      "created": "2026-03-23T20:49:04.240296+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000589"
+    }
+  ]
+}

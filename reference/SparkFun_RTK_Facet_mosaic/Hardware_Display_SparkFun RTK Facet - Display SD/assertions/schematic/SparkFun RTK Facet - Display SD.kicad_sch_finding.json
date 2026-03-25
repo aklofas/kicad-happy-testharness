@@ -1,0 +1,37 @@
+{
+  "file_pattern": "SparkFun RTK Facet - Display SD.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001536",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001536-AST-01",
+      "description": "R2 (10k) + C7 (1.0uF) forming a 15.92 Hz low-pass filter on the OLED RESET line is correctly detected. The reset_pin design observation for U1 (OLED) correctly identifies the pullup and filter capacitor. The RC filter cutoff of 15.92 Hz is accurate for 10k/1.0uF.",
+      "created_from": "FND-00001536",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "value": {
+          "resistor": {
+            "ref": "R2"
+          },
+          "cutoff_hz": 15.92
+        }
+      }
+    },
+    {
+      "id": "FND-00001536-AST-02",
+      "description": "INCORRECT: The i2c_bus design observation for the SDA net lists U1 twice in the devices array because the OLED (SSD1306 compatible) has two pins (pin 17 = D1/MOSI and pin 18 = D2) connected to the SDA net in I2C mode. While technically accurate at the pin level, reporting a single component twice in the device list is misleading for I2C bus analysis.",
+      "created_from": "FND-00001536",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "contains_match",
+        "value": {
+          "category": "i2c_bus",
+          "net": "SDA"
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

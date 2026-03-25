@@ -1,0 +1,85 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad-tools_examples_08-label-based-schematic_label_based_mcu.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Global-label-only schematic: component pins not resolved into named nets, breaking signal path analysis",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "This schematic uses only global labels for connectivity (total_wires=0). The analyzer detects 6 components and 9 global labels correctly, but fails to resolve component pin connections through the labels. Net 'VCC_3V3' has point_count=3 (3 label occurrences) but pins=[] \u2014 the AMS1117-3.3 output pin is never associated with this net. Consequently U1 shows total_pins=0 in ic_pin_analysis, the power_regulators topology is 'unknown' with null input/output rails, and pwr_flag_warnings fire for +5V and GND rails that are actually driven. The design_observations correctly identify the AMS1117-3.3 as a linear regulator, but the absence of pin-to-net resolution means no decoupling, feedback, or power domain analysis is possible.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad-tools",
+      "project": "boards_01-voltage-divider_output_voltage_divider",
+      "created": "2026-03-24T09:02:02.535052+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002352"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_kicad-tools_boards_03-usb-joystick_output_usb_joystick.kicad_sch.json",
+      "status": "promoted",
+      "summary": "U1 MCU placeholder (Connector_Generic:Conn_02x16) classified as 'ic' based on value field, not lib_id",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "U1 has lib_id 'Connector_Generic:Conn_02x16_Counter_Clockwise' (a generic connector symbol used as MCU placeholder) but value='MCU'. The analyzer classifies it as type 'ic' because the value contains 'MCU', overriding the lib_id-based classification. This results in component_types reporting 1 IC and only 2 connectors when there are actually 3 connectors (J1, J2, and U1). The USB detection (USB_D+/USB_D- nets) and crystal circuit detection still work correctly because they rely on net names rather than component type.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.connector",
+            "op": "equals",
+            "value": 2
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "kicad-tools",
+      "project": "boards_01-voltage-divider_output_voltage_divider",
+      "created": "2026-03-24T09:02:02.535071+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002353"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_kicad-tools_boards_03-usb-joystick_output_usb_joystick_routed.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB correctly identifies incomplete routing in a file named '_routed' (only 2 of 16 nets routed)",
+      "correct": [
+        {
+          "description": "The file named 'usb_joystick_routed.kicad_pcb' (implying a routed board) actually has only 2 of 16 nets physically routed, with 14 nets unrouted including GND, VBUS, VCC, and all button/joystick signals. The analyzer correctly reports routing_complete=false with unrouted_count=14. This is a kicad-tools demo board in an intermediate routing state; the analyzer's connectivity analysis correctly captures the partial-routing reality regardless of filename.",
+          "analyzer_section": "connectivity",
+          "check": {
+            "path": "connectivity.routing_complete",
+            "op": "equals",
+            "value": false
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "kicad-tools",
+      "project": "boards_01-voltage-divider_output_voltage_divider",
+      "created": "2026-03-24T09:02:02.535075+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002354"
+    }
+  ]
+}

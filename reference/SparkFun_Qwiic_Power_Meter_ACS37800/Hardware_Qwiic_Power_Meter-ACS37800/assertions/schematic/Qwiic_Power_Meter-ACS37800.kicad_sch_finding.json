@@ -1,0 +1,66 @@
+{
+  "file_pattern": "Qwiic_Power_Meter-ACS37800.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001514",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001514-AST-01",
+      "description": "The design_analysis.differential_pairs correctly identifies IP+ and IP- as a differential pair, associates them with U1 (ACS37800), and marks has_esd: true with U1 as the ESD protection element (the ACS37800 has internal ESD protection on its current sense inputs). The 37-component count and 22 nets match the source schematic and PCB exactly.",
+      "created_from": "FND-00001514",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001514-AST-02",
+      "description": "The decoupling_analysis correctly identifies C1 (0.1uF) as the only decoupling capacitor on the 3.3V rail, calculates total_capacitance_uF=0.1, and notes has_bulk: false and has_bypass: true. This is accurate for this design which uses only one bypass cap for the ACS37800.",
+      "created_from": "FND-00001514",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "contains_match",
+        "value": {
+          "rail": "3.3V",
+          "cap_count": 1
+        }
+      }
+    },
+    {
+      "id": "FND-00001514-AST-03",
+      "description": "INCORRECT: R7 (4.7k) pin1 connects to the SDA net, R7 pin2 connects to JP2 pin3. R8 (4.7k) pin1 connects to the SCL net, R8 pin2 connects to JP2 pin1. JP2 is a 3-pole closed solder jumper whose center pin (pin2) connects to 3.3V. The schematic annotation states 'Cut I2C Jumper to remove pullup resistors from the I2C bus'. Despite this, the analyzer reports has_pullup: false for both SDA and SCL because the pullup path traverses an intermediate unnamed net through the solder jumper.",
+      "created_from": "FND-00001514",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "contains_match",
+        "value": {
+          "has_pull_up": false
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001514-AST-04",
+      "description": "U1 (ACS37800) is a dedicated power monitoring current sensor IC with IP+/IP- current sense inputs (pins 1-8) and VINP/VINN voltage sense inputs. The signal_analysis.current_sense array is empty despite U1 being the core current-sensing element of this design. The IP+/IP- differential pair is detected correctly in design_analysis.differential_pairs, but the IC's primary function as a current sensor is not reflected in current_sense. The ACS37800 has 'sensor IC' function classification in ic_pin_analysis but this does not propagate to the signal-level current_sense detector.",
+      "created_from": "FND-00001514",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001514-AST-05",
+      "description": "The ACS37800 design uses R3 (8.2k) as a sense resistor between the high-voltage input and VINN, and R9 (1M), R11 (1M) as series input protection/divider resistors to VINP. The schematic text explicitly states 'For 60VDC maximum input, with RSENSE = 8.2kOhms, VINP - VINN will be 245mV'. These resistors form a voltage sensing/divider network on the VINP and VINN inputs. The signal_analysis.voltage_dividers array is empty, missing this voltage measurement front-end network.",
+      "created_from": "FND-00001514",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    }
+  ]
+}

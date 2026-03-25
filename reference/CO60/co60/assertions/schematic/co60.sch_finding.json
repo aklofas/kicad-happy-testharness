@@ -1,0 +1,73 @@
+{
+  "file_pattern": "co60.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000442",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000442-AST-01",
+      "description": "Both U2 and U4 use the legacy .sch transform matrix '1 0 0 -1', which the analyzer maps to mirror_x=True but actually encodes a Y-axis negation (mirror_y). This causes pin positions to be reflected over the wrong axis, swapping the power supply pins with their opposites. U2 shows: pin 1 (IN, power_in) \u2192 GND net, pin 2 (GND, power_in) \u2192 +5V net. U4 shows: pin 5 (VCC, power_in) \u2192 GND net, pin 3 (GND, power_in) \u2192 +5V net. In both cases VCC and GND pins are swapped in the output. The correct connections are U2 IN\u2192+5V, U2 GND\u2192GND, U4 VCC\u2192+5V, U4 GND\u2192GND.",
+      "created_from": "FND-00000442",
+      "check": {
+        "path": "nets.+5V.pins[?component=='U2'].pin_name",
+        "op": "not_contains_match",
+        "value": "GND"
+      }
+    },
+    {
+      "id": "FND-00000442-AST-02",
+      "description": "INCORRECT: The NPN transistor Q1 (FMMT493TA) is wired as an emitter-follower for LED PWM control: emitter goes to 'LEDGND' (the controlled LED ground rail driven by the MCU's LEDPWM signal via RC1), and collector goes to actual GND. The analyzer sets emitter_is_ground=True because 'LEDGND' contains the string 'GND', but LEDGND is a distinct named net \u2014 the controlled sink for LED current, not a power ground. This misclassification misrepresents the circuit topology; it is an emitter-follower (common-collector), not a simple common-emitter switch with emitter to ground.",
+      "created_from": "FND-00000442",
+      "check": {
+        "path": "signal_analysis.transistor_circuits[0].emitter_is_ground",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000442-AST-03",
+      "description": "INCORRECT: The CO60 keyboard schematic (Matrix.sch) contains 91 MX keyboard switches and 68 matrix diodes across a 5-row \u00d7 15-column matrix. The combined analysis reports switches_on_matrix=111 and estimated_keys=111, overcounting by 20. The individual Matrix.sch analysis separately reports switches_on_matrix=0 (because keyboard switches have no ROW/COL net labels on their pins directly \u2014 only via unnamed junction nets). The combined roll-up produces an inflated count. The correct value is 91 switches on the matrix.",
+      "created_from": "FND-00000442",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "op": "equals",
+        "value": 111
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000442-AST-04",
+      "description": "INCORRECT: U3 (NUF2221W1T2G) is a USB EMI filter with ESD protection. Its pin 5 is labeled 'VBUS' with type=power_in in the KiCad library symbol. In the schematic this pin is connected to the D_PI net (USB D+ signal from the Type-C connector). Because pin 5 has type=power_in, the power_domains analyzer includes D_PI as one of U3's power rails, listing ic_power_rails.U3.power_rails = ['+3.3V', 'D_PI']. D_PI is a USB data signal net, not a power supply rail. The true power supply for U3 is +3.3V only.",
+      "created_from": "FND-00000442",
+      "check": {
+        "path": "design_analysis.power_domains.ic_power_rails.U3.power_rails",
+        "op": "contains_match",
+        "value": "D_PI"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000442-AST-05",
+      "description": "INCORRECT: The RGBLED net connects U4's output (74LVC1G34 single buffer) through a 470\u03a9 series resistor RC9 to the data input of the first WS2812B LED (RGB1 pin 4, DIN). The ERC checker reports no_driver for RGBLED because the driver (U4 output pin, which is an output type) sits on the unnamed net between U4 and RC9, not directly on RGBLED. Only RC9 (passive) and RGB1 DIN (input) appear on RGBLED, so the ERC system sees no output pin. The net is in fact properly driven. Similarly, the RGBLED_3V3 no_driver warning is a false positive \u2014 RGBLED_3V3 is driven by the STM32 MCU (U1) output, which is on an unnamed net that connects to U4 input via the global label hierarchy.",
+      "created_from": "FND-00000442",
+      "check": {
+        "path": "design_analysis.erc_warnings[?net=='RGBLED'].type",
+        "op": "contains_match",
+        "value": "no_driver"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000442-AST-06",
+      "description": "The LDO regulator detector reports input_rail=null for U2 because the pin inversion error (from the transform matrix bug) places the IN pin on the GND net rather than +5V. The detector correctly looks at the IN pin's net but finds 'GND' which is not a valid power supply rail, so it sets input_rail=null. The correct input_rail is '+5V'. The output_rail is also misidentified as '__unnamed_3' rather than '+3.3V', though '+3.3V' is reached via a short wire segment creating an internal net.",
+      "created_from": "FND-00000442",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].input_rail",
+        "op": "equals",
+        "value": null
+      },
+      "aspirational": true
+    }
+  ]
+}

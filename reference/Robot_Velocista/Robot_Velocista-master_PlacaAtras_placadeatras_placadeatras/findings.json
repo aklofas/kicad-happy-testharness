@@ -1,0 +1,178 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "pcb",
+      "source_file": "placadeatras.kicad_pcb",
+      "status": "promoted",
+      "summary": "Empty PCB correctly parsed as a KiCad version 4 dummy/stub file; kicad_version reported as 'unknown' instead of 'KiCad 5 (legacy)' for version 4 file",
+      "correct": [
+        {
+          "description": "The file contains only '(kicad_pcb (version 4) (host kicad \"dummy file\") )' \u2014 a placeholder with no layout data. The analyzer correctly outputs zeroed statistics and does not crash.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Both SensoresForward PCBs (file_version 20171130) also report kicad_version='unknown'. The PCB analyzer is not mapping file_version values to human-readable KiCad version strings the way the schematic analyzer does (it correctly reports '5 (legacy)'). This affects the PlacaAtras PCB (version 4) and both SensoresForward PCBs (version 20171130 = KiCad 5).",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Robot_Velocista",
+      "project": "Robot_Velocista-master_PlacaAtras_placadeatras_placadeatras",
+      "created": "2026-03-24T00:01:01.750945+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001212"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "placadeatras.sch",
+      "status": "promoted",
+      "summary": "PlacaAtras schematic correctly parsed with Arduino Nano, connectors, I2C/UART bus detection, and unannotated ref detection; RESET pin reported on two different nets (DIST_FRONT and DIST_DCHA) \u2014 lik...",
+      "correct": [
+        {
+          "description": "The 5-component schematic (Arduino Nano, diode, resistor, switch, connector) is correctly parsed. All annotation issues flagged (all refs are unannotated, '?' suffixed). I2C bus (SCL/SDA) and UART (BT_TX/BT_RX) correctly detected. Single-pin nets correctly flagged for unconnected global labels.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Arduino_Nano_v3.x has multiple RESET pins in KiCad (pin 28 and pin 3 both named RESET \u2014 one is the power-side reset, one is the signal pin). The analyzer maps both to the same pin name 'RESET', causing two reset_pin observations with different nets. The actual design likely only uses one. This causes two spurious reset_pin design_observations that also lack pullup/filter cap.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Robot_Velocista",
+      "project": "Robot_Velocista-master_PlacaAtras_placadeatras_placadeatras",
+      "created": "2026-03-24T00:01:01.750960+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001213"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Robot_Velocista-master_SensoresForward_SensoresForward.sch",
+      "status": "promoted",
+      "summary": "CNY70 IR reflectance sensor array + CD4053 analog mux correctly identified with subcircuits; Decoupling warnings falsely flagged for CNY70 opto-reflectance sensors; CD4053 analog multiplexer circui...",
+      "correct": [
+        {
+          "description": "All 6 CNY70 sensors correctly parsed with subcircuit neighbor analysis showing the 82-ohm LED driver resistors and 10k pull-up resistors. The 4053 triple analog mux with sensor inputs and line select outputs is correctly mapped. Component count (17), net count (28), and BOM all correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U1, U3, U5 (CNY70) are flagged as needing decoupling caps on +5V. CNY70 is an opto-reflectance sensor (phototransistor + IR LED pair), not a digital IC. It does not require bypass/decoupling capacitors. U2, U4, U6 are correctly excluded since their LED anode is driven through a series resistor, not directly from +5V. The 4053 mux (U7) decoupling warning is valid.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The CD4053 (triple 2:1 analog mux) driving a 6-sensor array into 3 multiplexed output lines is a recognizable sensor multiplexing pattern. The analyzer has no mux/switch IC detector, so it only appears in subcircuits. Not a critical gap but a missed opportunity for a more informative output.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Robot_Velocista",
+      "project": "Robot_Velocista-master_PlacaAtras_placadeatras_placadeatras",
+      "created": "2026-03-24T00:01:01.750964+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001214"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Robot_Velocista-master_SensoresForward_SensoresForward.kicad_pcb",
+      "status": "promoted",
+      "summary": "Fully routed SensoresForward master PCB correctly analyzed: 19 footprints, 2-layer, routing complete, DRC clean; REF** fabrication markers flagged as edge clearance warnings at 0.0mm",
+      "correct": [
+        {
+          "description": "All 19 footprints parsed with correct pad-net assignments. Routing complete (18/18 nets routed, 7 vias). Courtyard overlap (J1 vs U7, 10.3 mm\u00b2) and U7 edge clearance violation (-0.46mm, outside board edge) correctly detected. DFM tier standard with 0.25mm trace width. Board dimensions 62.23\u00d730.48mm correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Two 'REF**' entries in edge_clearance_warnings with edge_clearance_mm=0.0 are non-actionable noise. REF** is a KiCad fabrication-layer placeholder reference (not a real component), and 0.0mm edge clearance means it is at the board edge \u2014 probably a fab note intentionally placed there. These should be filtered out of placement warnings.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Robot_Velocista",
+      "project": "Robot_Velocista-master_PlacaAtras_placadeatras_placadeatras",
+      "created": "2026-03-24T00:01:01.750967+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001215"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "SensoresForward_SensoresForward.kicad_pcb",
+      "status": "promoted",
+      "summary": "Incomplete SensoresForward root PCB correctly reports 6 unrouted nets with pad lists; Layer transitions without vias flagged for Net-(R1-Pad2) and Net-(R4-Pad2) \u2014 likely a micro-segment artifact, n...",
+      "correct": [
+        {
+          "description": "17 footprints, routing_complete=false, 6 unrouted nets (/linea1, /linea2, /linea3, /linea_selec, /sensor3, /sensor5) all listed with correct pad counts and component references. This is an earlier/in-progress version of the design.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Both nets show a 0.013mm F.Cu segment alongside larger B.Cu segments with zero vias. A 13-micron segment is almost certainly a routing artifact (sub-pixel segment from pad endpoint alignment) rather than an intentional cross-layer connection. The layer_transitions section surfaces this as if it were a via-less layer crossing, which is misleading for such small segments.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The source file has an Edge.Cuts layer but the analyzer reports null dimensions and zero edge_count in board_outline. Checking the file confirms Edge.Cuts exists (grep finds 1 match). The KiCad 5.0 format for this older file may use a different Edge.Cuts representation that the analyzer fails to parse, causing the board outline to be missed.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Robot_Velocista",
+      "project": "Robot_Velocista-master_PlacaAtras_placadeatras_placadeatras",
+      "created": "2026-03-24T00:01:01.750970+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001216"
+    }
+  ]
+}

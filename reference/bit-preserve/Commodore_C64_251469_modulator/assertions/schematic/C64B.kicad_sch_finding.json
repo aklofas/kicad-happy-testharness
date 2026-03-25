@@ -1,0 +1,41 @@
+{
+  "file_pattern": "C64B.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002342",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002342-AST-01",
+      "description": "INCORRECT: The C64 schematic contains an RF modulator subcircuit with components prefixed RF- (e.g., RF-C1 330 pF, RF-C6 68 pF). All 81 RF-prefixed components are classified as 'resistor' regardless of their actual type (capacitor, inductor, transistor, diode). The current_sense detector then treats each RF-C* capacitor as a low-ohm shunt, producing 218 absurd detections with computed max_current values exceeding 100 million amps (e.g., 151,515,152 A for a 330 pF cap). Every single one of the 218 current_sense entries is a false positive.",
+      "created_from": "FND-00002342",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002342-AST-02",
+      "description": "INCORRECT: The Commodore C64 RF modulator uses the naming convention RF-C*, RF-L*, RF-Q*, RF-D*, RF-R* for its components. The analyzer classifies all 81 of these as 'resistor', ignoring the actual component type indicator in the sub-reference (C=capacitor, L=inductor, Q=transistor, D=diode). This inflates the statistics resistor count from 115 to 129 (at least 14 non-resistors wrongly counted) and causes cascading false detections in the current_sense, voltage_divider, and other detectors.",
+      "created_from": "FND-00002342",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "less_than",
+        "value": 120
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002342-AST-03",
+      "description": "INCORRECT: The bus_analysis.uart array contains one entry for the net POTX, listing U18 (6581 SID chip) and U28 (4066 analog switch) as UART devices. POTX is a paddle/potentiometer input line on the SID audio chip and has no serial protocol characteristics. This is a false positive from the UART detector matching net naming or pin-count heuristics incorrectly.",
+      "created_from": "FND-00002342",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

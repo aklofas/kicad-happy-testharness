@@ -1,0 +1,95 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Motherboard_RUST_Motherboard.kicad_sch.json",
+      "status": "new",
+      "summary": "ATmega1280+ATmega16U2 motherboard: good component/crystal/regulator detection, but OLED SPI clock misclassified as I2C SCL, MCP1661 boost converter output rail wrong (+3V8 vs +12V), ceramic resonators correctly flagged as no load caps",
+      "correct": [
+        {
+          "description": "271 components correctly counted",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "min_value",
+            "value": 270
+          }
+        },
+        {
+          "description": "Crystal/resonator circuits Y1 and Y2 (16MHz AWSCR ceramic resonators) detected",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "Ceramic resonators correctly noted as having no external load caps (built-in)",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Power regulators detected including LDOs",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "SPI buses correctly detected",
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "OLED_SCL_3V3 net classified as I2C SCL but it is actually SPI clock for OLED display - 'SCL' substring triggered false I2C classification",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "MCP1661 (U7) boost converter output_rail listed as +3V8 (which is the input rail VIN). Actual output is +12V via SW->L2->D23 boost topology",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U7$"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "Boost converter topology (U7 MCP1661: +3V8->SW->L2->D23->+12V) not fully traced through inductor-diode chain",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U7$"
+          }
+        }
+      ],
+      "suggestions": [
+        "SPI clock nets (SCK, SCLK, SCL in SPI context) should not be classified as I2C when other SPI signals (MOSI, MISO, CS) are on the same IC",
+        "Boost converter output rail detection should trace through the SW->inductor->diode chain to find the actual output rail, not just use VIN/VOUT pin names"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "RUST_Hardware",
+      "project": "Motherboard_RUST_Motherboard",
+      "created": "2026-03-23T18:13:47.820463+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

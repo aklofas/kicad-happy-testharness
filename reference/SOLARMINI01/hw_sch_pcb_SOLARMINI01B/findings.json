@@ -1,0 +1,114 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "SOLARMINI01B.kicad_sch",
+      "status": "promoted",
+      "summary": "SPV1040 MPPT IC detected as switching regulator with L1 inductor; design_observations incorrectly flags missing output caps for U1; Voltage divider not detected: R7(560k)/R8(270k) feedback network ...",
+      "correct": [
+        {
+          "description": "power_regulators correctly identifies U1 as switching topology with inductor L1. current_sense shunt R6=0R47 correctly detected. RC and LC filters found.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "protection_devices correctly identifies D2=SMBJ5.0A as a TVS clamping device on the internal switching node.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The observation claims output rail '__unnamed_1' has missing caps, but C1, C6, C7 (47uF tantalum caps) are present on the output side. The issue is that unnamed nets prevent correct cap association.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "R7=560k and R8=270k form a feedback voltage divider for the SPV1040 MPPT IC. voltage_dividers is empty. This is a real signal path the analyzer missed.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SOLARMINI01",
+      "project": "hw_sch_pcb_SOLARMINI01B",
+      "created": "2026-03-24T00:10:56.706386+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001294"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "SOLARMINI01B.kicad_pcb",
+      "status": "new",
+      "summary": "PCB stats correct: 28 footprints, 2-layer, 40x40mm, routing complete",
+      "correct": [
+        {
+          "description": "Component count (28), layer count (2), board dimensions (40.132x40.132mm), and routing_complete=true all look accurate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "SOLARMINI01",
+      "project": "hw_sch_pcb_SOLARMINI01B",
+      "created": "2026-03-24T00:10:56.706402+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001295"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "hw_cam_profi",
+      "status": "promoted",
+      "summary": "Gerber set complete with 9 layers, all present and aligned; NPTH drill file reports 0 holes but file exists \u2014 NPTH may just be empty",
+      "correct": [
+        {
+          "description": "9 gerber files plus 2 drill files, completeness=true, aligned=true. F.Paste present but empty (0 flashes) which is correct for an all-SMD-back design.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "has_npth_drill=true from gbrjob but NPTH drill file has hole_count=0. This is technically correct (empty file is present) but could mislead \u2014 a note that the NPTH file is empty would be more accurate.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SOLARMINI01",
+      "project": "hw_sch_pcb_SOLARMINI01B",
+      "created": "2026-03-24T00:10:56.706406+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001296"
+    }
+  ]
+}

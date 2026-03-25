@@ -1,0 +1,40 @@
+{
+  "file_pattern": "converter.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002234",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002234-AST-01",
+      "description": "The 16MHz crystal X1 is correctly identified with both load capacitors C5 (10p) and C6 (10p), effective load capacitance 8pF calculated correctly, and flagged as within typical range. The USB differential pair D+/D- with series resistors R1/R2 is also correctly detected.",
+      "created_from": "FND-00002234",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002234-AST-02",
+      "description": "INCORRECT: In the BOM, the component CN1 with value 'MINI_DIN_8P_JACK' is assigned type 'capacitor'. This is a clear misclassification \u2014 a Mini-DIN 8-pin jack is a connector. The value does not contain any capacitor keywords, so the classifier likely fell through to a default 'capacitor' bucket for unrecognized values.",
+      "created_from": "FND-00002234",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "equals",
+        "value": 5
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002234-AST-03",
+      "description": "INCORRECT: The design_observations lists 10 'single_pin_nets' including PB2 (U1.XTAL1), PB1 (U1.XTAL2), and PB0 (U1.GND). These are KiCad 5 legacy net labels that alias the actual connection nets: the crystal X1 is truly connected via __unnamed_3 (X1, C5, U1.XTAL2 via PB2 label) and __unnamed_4. The labels have point_count=2 confirming wire connections. The crystal_circuits detector correctly found X1 with load caps C5/C6, showing the underlying connectivity is parsed correctly \u2014 but the single-pin-net observation wrongly reports these aliased label-nets as floating.",
+      "created_from": "FND-00002234",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

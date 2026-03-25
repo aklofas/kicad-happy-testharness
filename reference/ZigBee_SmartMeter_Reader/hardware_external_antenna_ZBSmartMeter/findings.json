@@ -1,0 +1,105 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ZBSmartMeter.kicad_sch",
+      "status": "promoted",
+      "summary": "TLV1117-33 LDO regulator correctly identified with estimated 3.3V output; USB-C differential pair correctly identified with ESD protection; UART interfaces correctly detected for NCN5150 and ESP32-...",
+      "correct": [
+        {
+          "description": "U2 (TLV1117-33) is correctly identified as an LDO regulator with input from +5V and output to +3.3V. The estimated_vout=3.3 is derived from the fixed_suffix of the part name, which is correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The USB_D+ and USB_D- differential pair is correctly detected with shared_ics including J6 (USB-C connector) and U3 (ESP32-C6). ESD protection is correctly flagged as present via CPDQ5V0-HF diodes (D4, D5, D6). The three protection diodes are all correctly classified.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Four UART nets detected: UART1_TX/RX (between NCN5150DG U1 and ESP32-C6 U3) and UART0_PROG_RX/TX (programming interface on U3). All four are correctly identified with the relevant device references.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "min_count",
+            "value": 2
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "U3 (ESP32-C6-MINI-1/U) is a ZigBee and WiFi SoC with an external antenna configuration. The project name ('external_antenna') and the PCB design indicate an RF signal path. The signal_analysis.rf_chains list is empty. The analyzer likely does not recognize ESP32-C6-MINI as an RF device, and without explicit antenna net names (e.g., ANT, RF_OUT), the RF chain detector does not fire.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ZigBee_SmartMeter_Reader",
+      "project": "hardware_external_antenna_ZBSmartMeter",
+      "created": "2026-03-24T06:36:51.040628+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001973"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "ZBSmartMeter.kicad_pcb",
+      "status": "promoted",
+      "summary": "ESP32-C6 thermal pad (pad 49) duplicated 8 times in thermal_pads list; Zone count of 121 correctly reflects dense copper pour design; 14 courtyard overlaps correctly detected on a densely populated...",
+      "correct": [
+        {
+          "description": "The ZBSmartMeter PCB uses a KiCad 8 format (version 20240108) with 121 copper zones \u2014 a mix of +3.3V and GND pours covering both layers. This is verified against the source file (121 zone definitions). The zone_stitching section correctly summarizes the 9 major nets with copper pours.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.zone_count",
+            "op": "equals",
+            "value": 121
+          }
+        },
+        {
+          "description": "The board is 43.3\u00d737.6 mm with 37 footprints including THT connectors (RJ12, USB-C) with large courtyard footprints. The 14 overlaps include large violations like J1 vs U1 (61.4 mm\u00b2) and C3 vs J5 (37.2 mm\u00b2), which are plausible given how tightly components are placed around the THT connectors.",
+          "analyzer_section": "placement_analysis",
+          "check": {
+            "path": "placement_analysis.overlap_count",
+            "op": "equals",
+            "value": 14
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The ESP32-C6-MINI-1/U footprint defines pad '49' (the exposed ground thermal pad) as one custom-shaped pad plus 8 rectangular sub-pads \u2014 a total of 9 pad definitions in the source file. The analyzer reports 8 identical entries in thermal_analysis.thermal_pads, all for (U3, pad '49'). These should be deduplicated into a single thermal pad entry. All 8 entries show 0 nearby_thermal_vias, which may also be inaccurate given the dense copper pour on the board.",
+          "analyzer_section": "thermal_analysis",
+          "check": {
+            "path": "thermal_analysis.thermal_pads",
+            "op": "max_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ZigBee_SmartMeter_Reader",
+      "project": "hardware_external_antenna_ZBSmartMeter",
+      "created": "2026-03-24T06:36:51.040650+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001974"
+    }
+  ]
+}

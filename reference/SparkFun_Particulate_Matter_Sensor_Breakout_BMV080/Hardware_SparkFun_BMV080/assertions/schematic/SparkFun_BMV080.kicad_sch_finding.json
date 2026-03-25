@@ -1,0 +1,150 @@
+{
+  "file_pattern": "SparkFun_BMV080.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001505",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001505-AST-01",
+      "description": "The analyzer correctly identifies 24 total components: 5 capacitors (C1-C5), 5 resistors (R1-R5), 4 jumpers (JP1-JP4), 4 fiducials (FID1-4), 2 connectors (J1, J2), 3 other (G1 OSHW Logo, G2 SparkFun Logo, G3 qwiic Logo), 1 IC (U1 BMV080). These match the source schematic exactly.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 24
+      }
+    },
+    {
+      "id": "FND-00001505-AST-02",
+      "description": "The design is a single-rail 3.3V design with GND. The BMV080 has four separate VDD pins (VDDL, VDDA, VDDD, VDDIO) all connected to 3.3V. The analyzer correctly reports power_rails=['3.3V', 'GND'].",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "equals",
+        "value": [
+          "3.3V",
+          "GND"
+        ]
+      }
+    },
+    {
+      "id": "FND-00001505-AST-03",
+      "description": "The analyzer correctly finds C1-C4 (4x 2.2uF) and C5 (10uF) as decoupling capacitors on the 3.3V rail, totalling 18.8 uF. The BMV080 datasheet requires decoupling on each VDD pin. The analyzer correctly flags 'has_bypass': false because all caps are bulk (>=1uF) with no 100nF or smaller bypass caps.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "contains_match",
+        "value": {
+          "rail": "3.3V",
+          "cap_count": 5,
+          "total_capacitance_uF": 18.8
+        }
+      }
+    },
+    {
+      "id": "FND-00001505-AST-04",
+      "description": "The analyzer correctly identifies SDA and SCL as I2C bus nets with U1 (BMV080) as the device. The Qwiic connector (J1) and 7-pin header (J2) also carry these signals. The bus topology is correctly traced.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001505-AST-05",
+      "description": "U1 (BMV080) is correctly typed as 'ic' with the Bosch datasheet URL and correct lib_id 'SparkFun-Sensor:BMV080'. The 13-pin FPC connector footprint (FPC_0.3mm-13) is correctly assigned. All power and signal pins are correctly traced.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001505-AST-06",
+      "description": "All 23 BOM-included components have empty MPN fields. The analyzer correctly lists all of them in missing_mpn. SparkFun uses a separate BOM management system and often doesn't embed MPNs in the schematic symbol properties.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "statistics.missing_mpn",
+        "op": "min_count",
+        "value": 20
+      }
+    },
+    {
+      "id": "FND-00001505-AST-07",
+      "description": "G2 and G3 are schematic-only logo symbols with no PCB footprint assigned. The analyzer correctly identifies them as missing_footprint. These are cosmetic/documentation symbols that intentionally have no physical footprint and on_board=false.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "statistics.missing_footprint",
+        "op": "contains_match",
+        "value": "G2"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items"
+    },
+    {
+      "id": "FND-00001505-AST-08",
+      "description": "The analyzer correctly reports inconsistent label shapes: SCL has both 'input' and 'output' shaped global labels, and AB0 has both 'input' and 'output' shaped labels. This reflects the dual-role of these signals (SCL drives the sensor, AB0 is bidirectional for address configuration).",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "label_shape_warnings",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001505-AST-09",
+      "description": "The subcircuit for U1 (BMV080) correctly identifies all 15 neighboring components: 5 capacitors, 2 connectors, 3 jumpers (JP2, JP3, JP4), and 5 resistors. JP1 is missing from the subcircuit neighbor list but it's the mode select jumper which is reasonably separated from the IC's direct periphery.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "subcircuits",
+        "op": "contains_match",
+        "value": {
+          "center_ic": "U1"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001505-AST-10",
+      "description": "INCORRECT: R3 (2.2k) and R5 (2.2k) are I2C pull-up resistors. R3 has pin1=SCL and pin2 connected to JP4 pin B (__unnamed_3). R5 has pin1=SDA and pin2 connected to JP4 pin A (__unnamed_8). JP4 is a 3-pole net-tie solder jumper (SolderJumper_3_Bridged123_No_Silk) with pin C bridged to 3.3V. The schematic text explicitly says 'To remove pull-up resistors on SDA/SCL, cut traces in jumper, JP4 (I2C)'. The analyzer fails to trace the pull-up path through the JP4 net-tie to discover that R3/R5 are pulled to 3.3V. Instead it labels them as 'series' resistors to unnamed nets and reports has_pullup=false.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "not_contains_match",
+        "value": {
+          "category": "i2c_bus",
+          "line": "SDA",
+          "has_pullup": false
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001505-AST-11",
+      "description": "INCORRECT: The source KiCad schematic contains 3 no_connect markers (grep confirms 3 occurrences of 'no_connect' in the .kicad_sch file). These are on J1.NC1, J1.NC2 (Qwiic connector NC pins), and U1.13 (BMV080 NC pad). The analyzer reports total_no_connects=0 and no_connects=[]. These NC pins do appear in the nets analysis as 'no_connect' pin_type entries, but are not counted in the statistics. The no_connects list should contain at least these 3 entries.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "statistics.total_no_connects",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001505-AST-12",
+      "description": "U1 pin 7 (PS, Protocol Select) is reported on net '__unnamed_6' with only 1 pin. In the PCB, U1 PS pad is connected to Net-(JP1-C) which routes to JP1 center, connecting through the MODE solder jumper. The schematic shows JP1 center (pin 2/C) on net '__unnamed_9' (also single-pin). These two unnamed nets should represent the same electrical node (wire trace exists between PS pin at 77.47,66.04 and connecting to JP1 region), but the net tracer assigns them separate unnamed net IDs. The practical result is that U1 PS appears to be floating in the analysis when it is actually connected to JP1.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "connectivity_issues.single_pin_nets",
+        "op": "not_contains_match",
+        "value": {
+          "component": "U1",
+          "pin_name": "PS"
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

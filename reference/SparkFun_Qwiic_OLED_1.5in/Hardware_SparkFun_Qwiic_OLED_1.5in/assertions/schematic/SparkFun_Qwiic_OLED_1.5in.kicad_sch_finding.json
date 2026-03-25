@@ -1,0 +1,67 @@
+{
+  "file_pattern": "SparkFun_Qwiic_OLED_1.5in.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001512",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001512-AST-01",
+      "description": "U5 (AP3012) is correctly classified as a switching regulator with topology 'switching', the associated inductor L1 is correctly linked, and the feedback divider (R1=18k, R2=2.1k connecting 12V to FB) is correctly extracted as a voltage divider and feedback network. The 5 capacitors (C1-C5) are correctly enumerated. The decoupling analysis for both 3.3V (C1+C4=5.7uF) and 12V (C2+C5=5.7uF) rails is accurate.",
+      "created_from": "FND-00001512",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001512-AST-02",
+      "description": "The output's 39 total_components matches the actual unique placed symbol instances in the SparkFun_Qwiic_OLED_1.5in project context. The 25 nets matches the PCB net count exactly. Component type breakdown (5 caps, 9 resistors, 1 inductor, 1 diode, 2 ICs, 4 connectors, 5 jumpers, 4 mounting holes, 2 fiducials, 1 LED, 1 test_point, 4 other) is correct.",
+      "created_from": "FND-00001512",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 39
+      }
+    },
+    {
+      "id": "FND-00001512-AST-03",
+      "description": "INCORRECT: U5 (AP3012) is a boost converter (labeled 'Contrast Boost - AP3012' in schematic annotations) that takes 3.3V input and boosts to ~12V for the OLED contrast voltage. The SW output pin connects to local label '12V_OUT', which connects through Schottky diode D2 (PMEG4005EJ anode) to the 12V global power rail. The analyzer reports output_rail: '3.3V' (incorrectly matching the IC's input power rail) and input_rail: '3.3V' (correct). The true output_rail is '12V'. The estimated_vout of 5.743V is a heuristic approximation given the AP3012 Vref=0.6V and the R1=18k/R2=2.1k feedback divider, while the actual 12V output suggests a different Vref or the design targets VCOMH voltage not directly tied to the feedback.",
+      "created_from": "FND-00001512",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "value": {
+          "ref": "U5",
+          "output_rail": "3.3V"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001512-AST-04",
+      "description": "INCORRECT: R4 (2.2k) connects SDA{slash}SDI to JP2 pin3 and R5 (2.2k) connects SCL{slash}SCK to JP2 pin1. JP2 is a 3-pole solder jumper (I2C jumper) whose center pin connects to 3.3V. These are I2C pullup resistors that can be disconnected by cutting the jumper. The analyzer reports no pullup detection (the bus is not even recognized due to {slash} encoding), missing the presence of switchable I2C pullups in this design.",
+      "created_from": "FND-00001512",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "not_contains_match",
+        "value": {
+          "category": "i2c_bus",
+          "has_pullup": true
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001512-AST-05",
+      "description": "The OLED schematic uses combined net names 'SDA{slash}SDI' and 'SCL{slash}SCK' (KiCad encodes '/' as '{slash}' in global labels) for the dual-mode I2C/SPI interface. The bus_analysis.i2c and bus_analysis.spi arrays are both empty. The analyzer's pattern matching does not handle the {slash} encoding and fails to match these nets against SDA/SCL/SDI/SCK patterns. Notably, the test_coverage section correctly identifies the same nets as 'i2c' category, demonstrating an inconsistency between the two subsystems.",
+      "created_from": "FND-00001512",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    }
+  ]
+}

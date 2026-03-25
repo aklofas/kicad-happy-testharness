@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Controlador-temperatura.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001087",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001087-AST-01",
+      "description": "Despite KiCad 5 format limitations, the analyzer correctly identifies 11 subcircuits (BTM112 BT module, MAX31855 thermocouple, AD623 instrumentation amp, ATmega328P, relay PS module), detects R10/R19 voltage divider (6.8k/100 Ohm ratio 0.014 for op-amp input), RC filter (2k/100nF, 795Hz for reset debounce), SPI bus (MOSI/MISO/SCK nets), and 9 NPN/MOSFET transistors for 7-segment display driving.",
+      "created_from": "FND-00001087",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001087-AST-02",
+      "description": "The KiCad 5 legacy schematic output lacks ic_pin_analysis, connectivity_issues, pwr_flag_warnings, usb_compliance, inrush_analysis, pdn_impedance, sourcing_audit, ground_domains, bus_topology, test_coverage, assembly_complexity, and sleep_current_audit sections \u2014 all present for KiCad 6+ schematics. This is a systematic capability gap for KiCad 5 users. The relay K1 also has no confirmed flyback diode (D1 is 1N4007 which may serve this role, but it's not surfaced by connectivity analysis).",
+      "created_from": "FND-00001087",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

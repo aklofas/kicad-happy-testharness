@@ -1,0 +1,29 @@
+{
+  "file_pattern": "SofleKeyboardTopPlate.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001366",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001366-AST-01",
+      "description": "Board dimensions 143.369x111.75mm match the main PCB and bottom plate, confirming all three boards align. copper_layers_used=0, track_segments=0, via_count=0 are all correct \u2014 a mechanical switch plate has no copper routing. The single zone (a fill pattern for the plate shape) is correctly identified.",
+      "created_from": "FND-00001366",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "value": 0,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001366-AST-02",
+      "description": "INCORRECT: The top plate PCB component_groups.SW shows count=30 but all 30 entries in the references array are 'SW2'. This is a reference deduplication bug in the analyzer: the PCB file has all 30 key-hole cutout footprints referencing the same 'SW2' designator (the plate cutouts share a reference, which is unusual but valid for mechanical plates). However, the analyzer should ideally report this as 30 instances of 'SW2' or note the duplicate reference anomaly rather than silently listing them as 30 distinct items with identical names.",
+      "created_from": "FND-00001366",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 35,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}
