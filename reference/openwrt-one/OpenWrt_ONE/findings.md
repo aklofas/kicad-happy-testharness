@@ -46,3 +46,49 @@
 - Part number Vout parsing should handle 12V suffix as 12V, not as divisor
 
 ---
+
+## FND-00002509: OpenWrt ONE is a MediaTek MT7981B Wi-Fi 6 router with MT7976C radio, Airoha EN8811 2.5GbE PHY, DDR4, dual SPI flash, PCIe M.2, and USB 2.0. Analyzer traverses all 8 sub-sheets (994 components, 1005 nets) but has significant gaps: DDR4/Ethernet PHY/RF chain all undetected, 26 UART false positives from WiFi/Ethernet net name matching, and total_components reflects only 38 BOM lines instead of 994 instances.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: OpenWrt_ONE.kicad_sch.json
+- **Created**: 2026-03-30
+
+### Correct
+- SPI buses correctly detected: SPI0 with 2 chip selects (NOR + NAND flash), plus SPI1 and SPI2
+- PCIe differential pairs correctly identified for M.2 Key-M slot
+- HSGMII Ethernet differential pairs correctly identified between MT7981B and EN8811
+- I2C buses correctly identified for RTC (AT8563S) and EEPROM (P24C02A)
+- HT42B534 USB-to-UART bridge correctly identified
+- All 8 sub-sheets correctly resolved
+
+### Incorrect
+- statistics.total_components = 38 but actual instance count is 994. Reflects unique unannotated reference prefixes (BOM lines) not instances.
+  (statistics.total_components)
+- CN? prefix (8 connector instances) misclassified as 'capacitor' because 'C' prefix fires before 'CN'.
+  (statistics.component_types)
+- USB ESD inconsistency: design_observations says has_esd_protection: false while differential_pairs says has_esd: true for same USB nets.
+  (signal_analysis.design_observations)
+- JTAG_JTCK and JTAG_JTMS falsely detected as I2C SDA/SCL lines.
+  (design_analysis.bus_analysis.i2c)
+
+### Missed
+- DDR4 memory interface not detected despite 58 EMI0_* nets connecting MT7981B to NT5AD512M16C4-JR.
+  (signal_analysis.memory_interfaces)
+- EN8811 2.5GbE Ethernet PHY not detected despite HSGMII and SMI_MDC/MDIO connections.
+  (signal_analysis.ethernet_interfaces)
+- MT7976C Wi-Fi 6 radio entirely absent from rf_chains despite AFE0_WF* analog front-end nets.
+  (signal_analysis.rf_chains)
+- 26 of 30 UART detections are false positives: WiFi TX gain rails (AVDD18_WF3_TX_GA), Ethernet PHY nets (TXVP_A), SGMII nets.
+  (design_analysis.bus_analysis.uart)
+- Most power regulators missed: only one AP7366 detected, missing SY8089AAAC, MP8756GD, LA1314HD, LA3484A.
+  (signal_analysis.power_regulators)
+
+### Suggestions
+- Fix total_components to use component instance count, not BOM line count for unannotated designs.
+- Add 'CN' as connector prefix before 'C' capacitor catch-all.
+- Narrow UART detection: exclude nets with TX/RX substrings from WiFi/Ethernet power and data domains.
+- Detect DDR4 via EMI_*/DQ/DQS/CK net patterns even with unannotated refs.
+- Detect EN8811 Ethernet PHY by part number matching.
+
+---

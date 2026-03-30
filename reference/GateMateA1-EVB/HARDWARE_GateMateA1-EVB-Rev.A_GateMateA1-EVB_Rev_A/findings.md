@@ -33,3 +33,43 @@
 (none)
 
 ---
+
+## FND-00002503: GateMateA1-EVB evaluation board for Cologne Chip CCGM1A1 FPGA with RP2040 co-processor, five SY8089 buck regulators, VGA output, PS2 port, PSRAM, and SPI flash. Analyzer correctly classifies most components but has four issues: VDD_CORE regulator output unnamed, RC filter false positive from feedback network, TVS diodes missed, and BSS138 level shifters misclassified as inductive load.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: HARDWARE_GateMateA1-EVB-Rev.A_GateMateA1-EVB_Rev_A.kicad_sch.json
+- **Created**: 2026-03-30
+
+### Correct
+- Identified all five SY8089AAAC switching regulators (U11-U15) with correct inductors (L3-L7). Four of five have correct feedback divider and output voltage.
+- Correctly detected Q1 (12 MHz crystal) with load capacitors C111/C110 (18pF each, 12pF effective).
+- Correctly classified CR1 as an active oscillator (10 MHz) with output on pin 3.
+- Correctly identified PSRAM U8 (LY68S3200SLT) connected to RP2040 U10 via 6 shared QSPI signal nets.
+- Correctly detected USB-C1 CC1/CC2 5.1k pull-down resistors and VBUS decoupling; accurately flagged missing VBUS ESD protection.
+- Correctly detected power-sequencing RC delay networks for regulator enable pins: R69/C122, R63/C117, R62/C116, R70/C123.
+- Correctly identified component counts: 73 resistors, 121 capacitors, 5 inductors, 2 ferrite beads, 13 ICs, 6 LEDs, 5 switches.
+- Correctly identified 14 named power rails including FPGA supply domains: VDD_NA, VDD_NB, VDD_EB, VDD_PLL, VDD_SER, VDD_SER_PLL.
+- Button debounce filter R28 (10k) + C89 (100nF) correctly detected as 159 Hz LP filter on FPGA button input.
+
+### Incorrect
+- U15 (SY8089AAAC) output_rail reported as '__unnamed_7' instead of VDD_CORE. Feedback divider R73=1k/R78=2k not detected, so estimated_vout absent. Vout = 0.6*(1+1k/2k) = 0.9V nominal.
+  (signal_analysis.power_regulators)
+- R73 (1k) + C125 (47uF) incorrectly paired as a 3.39 Hz RC low-pass filter. R73 is actually the top feedback resistor for U15 (VDD_CORE to U15 FB), and C125 is the output bulk cap.
+  (signal_analysis.rc_filters)
+- FET1 and FET2 (BSS138 N-MOSFETs) classified with load_type='inductive', but these are open-drain level shifters for PS2 keyboard interface. No inductive load present.
+  (signal_analysis.transistor_circuits)
+
+### Missed
+- Five TVS protection diodes (TVS1-TVS5, GG0402052R542P) on VGA signal lines absent from protection_devices. TVS1-3 protect RGB, TVS4-5 protect sync signals.
+  (signal_analysis.protection_devices)
+- VGA weighted-resistor DAC not detected. FPGA drives 4-bit Red, 5-bit Green, 4-bit Blue channels into resistor-ladder DACs feeding VGA1.
+  (signal_analysis.design_observations)
+
+### Suggestions
+- In power_regulators, trace feedback divider from regulator output rail through resistor to FB pin to catch cases like U15 where Rtop connects output-to-FB.
+- In RC filter detector, exclude resistor-capacitor pairs where the resistor is part of a regulator feedback network.
+- Add N-MOSFET open-drain level shifter topology recognition: drain tied to pull-up rail, gate driven by logic signal, classify as 'level_shifter' not 'inductive'.
+- Extend protection_devices to recognize TVS diodes by lib_id/value patterns and topology.
+
+---

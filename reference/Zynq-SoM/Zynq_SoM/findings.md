@@ -34,3 +34,48 @@
 - Ethernet detector: match on part value (RTL8211) not just lib_id prefix
 
 ---
+
+## FND-00002508: Zynq-7020 SoM with DDR3L, QSPI flash, eMMC, Gigabit Ethernet PHY (RTL8211F), ULPI USB PHY, STM32G431 system controller, and 5-rail switching power. Analyzer handles hierarchical design well but has significant false-positive level-shifter warnings for DDR3L and ULPI (from incomplete FPGA power domain tracking), misses Ethernet PHY and eMMC due to custom lib_ids.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: Zynq_SoM.kicad_sch.json
+- **Created**: 2026-03-30
+
+### Correct
+- All five power regulators correctly detected with accurate feedback divider analysis
+- DDR3L memory interface correctly identified: U1 MT41K256M16TW with 25 shared signal nets to U2 XC7Z020
+- W25Q128JVS SPI flash correctly detected with 5 shared nets to Zynq
+- DDR CK, DQS0, DQS1 differential pairs correctly identified with series impedance matching
+- Power sequencing correctly detected: STM32 controls EN for all regulators with power-good feedback
+- I2C, eMMC/SDIO buses correctly detected
+- Ethernet MDI differential pairs correctly identified between RTL8211F and J1
+- JTAG debug nets correctly classified
+
+### Incorrect
+- X3 (CMOS_OSC, 4-pin SMD oscillator) classified as 'crystal' instead of 'oscillator'.
+  (statistics.component_types)
+- 56 of 64 cross_domain_signals flagged as needs_level_shifter including all DDR3L signals. Zynq PS DDR controller natively drives DDR3L at 1.35V — no level shifter needed. Root cause: U2 power_domains only shows '+3V3'.
+  (design_analysis.cross_domain_signals)
+- 10 ULPI signals falsely flagged as needs_level_shifter between Zynq and USB3318 — both operate at 1.8V.
+  (design_analysis.cross_domain_signals)
+- RGMII Ethernet signals misclassified as 'uart' in test_coverage. SDIO signals misclassified as 'spi'.
+  (test_coverage)
+
+### Missed
+- RTL8211F (U3) not detected as Ethernet PHY — uses custom MyLibrary: lib_id.
+  (signal_analysis.ethernet_interfaces)
+- IS21ES08G eMMC (U7) not detected in memory_interfaces — uses custom MyLibrary: lib_id.
+  (signal_analysis.memory_interfaces)
+- U2 XC7Z020 power domain detection severely incomplete: only '+3V3' tracked despite VCCINT (1.0V), VCCAUX (1.8V) etc.
+  (design_analysis.power_domains)
+- QSPI interface not detected in bus_analysis.spi despite QSPI_CLK/D0-D3/CS nets.
+  (design_analysis.bus_analysis.spi)
+
+### Suggestions
+- Match Ethernet PHY by value field (RTL8211F, KSZ9031, etc.) in addition to lib prefix.
+- Match eMMC by value/description keywords in addition to Memory_Flash: lib prefix.
+- Fix cross_domain_signals: exclude DDR signals from level-shifter check; track all FPGA power rails across multi-unit components.
+- Fix test_coverage net categorization for RGMII/SDIO signals.
+
+---

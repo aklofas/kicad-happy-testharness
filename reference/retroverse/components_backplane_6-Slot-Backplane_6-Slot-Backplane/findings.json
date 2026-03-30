@@ -211,6 +211,70 @@
       "project": "components_backplane_6-Slot-Backplane_6-Slot-Backplane",
       "created": "2026-03-23T18:12:21.961039+00:00",
       "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "components_backplane_6-Slot-Backplane_6-Slot-Backplane.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "VME 6-slot backplane with ATX power input, 6 DIN41612 slot connectors, 7 74ACT32 OR gates for BG/IACK daisy-chains, 2 TCA0372 comparators for power monitoring, and 24 Bourns 4610X terminator SIPs. Component identification correct but S1 (OSHW logo) misclassified as switch, duplicate pin entries for multi-unit ICs inflate ERC warnings, and 98 unnamed single-pin nets for terminator taps not flagged.",
+      "correct": [
+        {
+          "description": "All 163 components correctly typed: 7 74ACT32 as ic, 2 TCA0372 as ic, 6 DIN41612 connectors, 24 4610X as resistor_network",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "All 4 comparator voltage-divider references correctly detected: R19/R20, R3/R4, R21/R22, R7/R8 producing 2.94V",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "All 4 TCA0372 units correctly classified as comparator_or_open_loop with hysteresis feedback",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "VME bus topology correctly detects A[1..31], D[0..31], AM[0..5] from 536 bus wires across 9 sheets",
+          "analyzer_section": "bus_topology"
+        },
+        {
+          "description": "All 12 dual-terminator connections correctly merged to named bus signals",
+          "analyzer_section": "nets"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "S1 (Graphic:Logo_Open_Hardware_Small, OSHW silkscreen logo) classified as type='switch'. Should be 'graphic' or excluded from BOM.",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "15 nets have duplicated pin entries for multi-unit 74ACT32 ICs, inflating ERC output_conflict counts from 5 to 10 per net.",
+          "analyzer_section": "connectivity_issues.multi_driver_nets"
+        },
+        {
+          "description": "5 output_conflict ERC warnings inflated by duplicate-pin issue. Each net legitimately has 5 OR-gate outputs (VME daisy-chain), but reports 10.",
+          "analyzer_section": "design_analysis.erc_warnings"
+        }
+      ],
+      "missed": [
+        {
+          "description": "98 unnamed single-component nets for RN1-RN12 terminator tap pins (pins 3-9) not reported as connectivity issues. 7 of 8 bus terminations per SIP appear unconnected.",
+          "analyzer_section": "connectivity_issues.single_pin_nets"
+        },
+        {
+          "description": "TERM_L1_LOW net shows only JP2 pin 2 connected \u2014 asymmetric label resolution failure vs TERM_L1_HIGH which correctly merges with 14 components.",
+          "analyzer_section": "connectivity_issues.single_pin_nets"
+        }
+      ],
+      "suggestions": [
+        "Add 'Graphic:' library prefix to classify as 'graphic' instead of 'switch'.",
+        "Deduplicate pin-to-net entries by (reference, pin_number) for multi-unit ICs.",
+        "Extend single_pin_net detection to include unnamed nets with exactly one non-#PWR pin."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002510",
+      "repo": "retroverse",
+      "project": "components_backplane_6-Slot-Backplane_6-Slot-Backplane",
+      "created": "2026-03-30T23:15:38.164902+00:00",
+      "datasheets_used": []
     }
   ]
 }

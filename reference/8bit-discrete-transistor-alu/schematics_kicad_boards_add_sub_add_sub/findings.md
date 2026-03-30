@@ -42,3 +42,37 @@
 - Consider detecting arithmetic circuit patterns (ripple-carry adder, carry chain) from the hierarchical sheet names and connectivity patterns
 
 ---
+
+## FND-00002508: 8-bit discrete CMOS MOSFET ALU adder/subtractor using 89 PMOS + 89 NMOS transistors for combinational logic alongside 6x 74HC86 XOR and 6x 74HC157 MUX ICs. Component classification is correct, but bridge_circuits generates a major false positive by misidentifying 19 NMOS pass-transistor pairs in CMOS logic stacks as H-bridge half-bridges.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: schematics_kicad_boards_add_sub_add_sub.kicad_sch.json
+- **Created**: 2026-03-30
+
+### Correct
+- Component type classification accurate: 178 transistors (89 PMOS, 89 NMOS), 12 ICs (6x 74HC86, 6x 74HC157), 4 connectors, 6 capacitors
+- Bus topology correctly identifies 8-bit A[0..7], B[0..7], SUM[0..7] and CTRL buses
+- 6x 100nF bypass capacitors on VCC correctly aggregated
+- 140 transistors correctly analyzed as MOSFETs with accurate gate/drain/source net assignments
+- Subcircuit topology correctly identifies 74HC86/74HC157 as center components with neighboring MOSFETs
+
+### Incorrect
+- 19 NMOS pass-transistors falsely labeled as 'high_side' of H-bridge half-bridges. All 38 components in bridge_circuits are NMOS — a real H-bridge high-side must be PMOS. The actual topology is CMOS logic gate stacks, not motor bridges. 74HC86 XOR ICs incorrectly flagged as 'driver_ics'.
+  (signal_analysis.bridge_circuits)
+- assembly_complexity.total_components reports 224 instead of 200 due to multi-unit 74HC86 ICs counted per-unit instead of per-reference.
+  (assembly_complexity.total_components)
+- bus_topology reports B_SEL width=4 but only B_SEL0 and B_SEL1 exist (width should be 2). CTRL bus width=6 but CTRL0..CTRL4 spans 5 indices.
+  (bus_topology.detected_bus_signals)
+
+### Missed
+- No detection of CMOS complementary logic pattern: 50 PMOS+NMOS gate pairs share the same gate net forming CMOS inverter/buffer/pass-gate cells — the defining architecture of this design.
+  (signal_analysis.design_observations)
+
+### Suggestions
+- Fix bridge_circuits to require high-side FETs be PMOS. Reject candidates where both high_side and low_side are NMOS.
+- Fix assembly_complexity to count unique references, not per-unit entries.
+- Fix bus_topology width: derive from (max_index - min_index + 1).
+- Add CMOS complementary pair detection: PMOS+NMOS sharing gate net with one to VCC and other to GND.
+
+---

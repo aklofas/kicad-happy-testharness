@@ -243,6 +243,72 @@
       "project": "mist_mist_mist",
       "created": "2026-03-23T18:12:21.939952+00:00",
       "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "mist_mist_mist.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Mist is a full-size mechanical keyboard with 103 Choc switches, per-key SK6812MINI-E RGB LEDs, STM32G474RETx MCU, USB-C with ESD protection, SPI TFT LCD, and a 5V to 3.3V LDO. The analyzer correctly identifies the key matrix, addressable LED chain, SPI bus, LDO regulator, and USB-C CC pull-down resistors, but misclassifies U3 as FPGA (Xilinx) and incorrectly reports D- as lacking ESD protection.",
+      "correct": [
+        {
+          "description": "Key matrix correctly detected: 103 switches (CH1-CH103), 103 diodes, 7 rows x 18 columns",
+          "analyzer_section": "signal_analysis.key_matrices"
+        },
+        {
+          "description": "Addressable LED chain correctly identified: 103 SK6812MINI-E LEDs in WS2812 protocol, estimated current 6180mA",
+          "analyzer_section": "signal_analysis.addressable_led_chains"
+        },
+        {
+          "description": "LDO regulator U3 (XC6206PxxxMR) correctly detected as +5V to +3V3 LDO in power_regulators",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "ESD protection U2 (PRTR5V0U2X) correctly identified protecting both D+ and D-",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "USB-C CC pull-down resistors R1 and R2 (both 5.1k) correctly detected",
+          "analyzer_section": "usb_compliance"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U3 (XC6206PxxxMR) function classified as FPGA (Xilinx) in ic_pin_analysis; XC6206 is a Torex LDO regulator \u2014 the XC prefix incorrectly triggers Xilinx FPGA match.",
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis[?reference==\"U3\"].function",
+            "op": "equals",
+            "value": "LDO regulator"
+          }
+        },
+        {
+          "description": "design_observations reports D- as has_esd_protection=False, but U2 (PRTR5V0U2X) pin I/O1 connects directly to D-. Contradicts protection_devices which correctly lists protected_nets=[D+,D-].",
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations[?net==\"D-\"].has_esd_protection",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "S1-S7 (MX_stab) are mechanical key stabilizers, not electrically functional switches, but are classified as switch and inflate the count to 111 instead of 104.",
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types.switch",
+            "op": "equals",
+            "value": 104
+          }
+        }
+      ],
+      "suggestions": [
+        "Guard Xilinx XC* match against known LDO part numbers like XC6206.",
+        "When computing has_esd_protection, check the protection_devices list rather than independently re-deriving.",
+        "Add stabilizer category or filter for lib_ids matching *_stab patterns."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true
     }
   ]
 }

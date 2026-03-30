@@ -208,6 +208,100 @@
       "project": "hardware_mackerel-30-proto_mackerel-30-proto",
       "created": "2026-03-23T18:12:21.958532+00:00",
       "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_mackerel-30-proto_mackerel-30-proto.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Mackerel-30 is a prototype 68030-based SBC with DRAM SIMM, flash ROM, SRAM, MC68882 FPU, two EPM7128 CPLDs, XR68C681 DUART, LM2576T-5 buck regulator, and AMS1117-3.3 LDO. Bus topology detection is solid but memory_interfaces is empty despite clear DRAM signals, the buck regulator output rail is misidentified, and several IC functions are undetected.",
+      "correct": [
+        {
+          "description": "All 131 components correctly counted and classified: 57 caps, 29 resistors, 16 ICs, 15 connectors, 3 oscillators",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "Full 32-bit address bus (A0..A31) and data bus (D0..D31) correctly detected",
+          "analyzer_section": "bus_topology"
+        },
+        {
+          "description": "DRAM address bus (DRAM_A0..A11), FC bus, IDE bus all correctly identified",
+          "analyzer_section": "bus_topology"
+        },
+        {
+          "description": "Three oscillators X1, X2, X3 correctly identified as active_oscillator type",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "U7 AMS1117-3.3 correctly detected as LDO, input +5V, output +3.3V",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "XR68C681 (U5) UART signals correctly detected; CPLD correctly identified as bus partner",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        },
+        {
+          "description": "68030 control signals correctly netted to U1 MC68030RC",
+          "analyzer_section": "nets"
+        },
+        {
+          "description": "U6 LM2576T-5 correctly detected as switching topology on +12V input",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "53 bypass capacitors on +5V rail correctly aggregated",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U6 LM2576T-5 output_rail reported as '__unnamed_68' (switching node) instead of '+5V'. The FB pin connects to +5V, confirming that is the regulated output.",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "power_budget treats U6 as a 10mA load on +12V rather than a regulator converting +12V to +5V.",
+          "analyzer_section": "power_budget"
+        },
+        {
+          "description": "HS1 (Heatsink, Mechanical:Heatsink) classified as 'mounting_hole' instead of heatsink.",
+          "analyzer_section": "statistics.component_types"
+        }
+      ],
+      "missed": [
+        {
+          "description": "memory_interfaces is empty despite full DRAM subsystem: U10 (SIMM72) with /RAS0-3, /CAS0-3, DRAM_A0-A11, controlled by U9 CPLD.",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "IDE/ATA interface not detected: IDE_D0-D15, /IDE_CS0, /IDE_CS1, /IDE_RD, /IDE_WR through J13 and U9 CPLD.",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "DS1233 (U8) voltage supervisor not detected as protection device.",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "MC68030RC (U1), MC68882 (U11), EPM7128 (U2/U9), XR68C681 (U5) all have no function labels in ic_pin_analysis.",
+          "analyzer_section": "ic_pin_analysis.function"
+        },
+        {
+          "description": "JTAG interface not detected: TCK/TDI/TDO/TMS global labels present plus separate DRAM JTAG chain.",
+          "analyzer_section": "design_analysis.bus_analysis"
+        }
+      ],
+      "suggestions": [
+        "For fixed-voltage buck converters, use the FB pin net as output_rail when FB connects to a named power net.",
+        "Add DRAM memory interface detection via RAS/CAS strobe pattern with multiplexed address bus.",
+        "Add ATA/IDE interface detection via IDE_D* data bus plus CS/RD/WR signals.",
+        "Add JTAG chain detection for TCK+TDI+TDO+TMS signals.",
+        "Add function labels for well-known retro CPU/CPLD parts."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002508",
+      "repo": "mackerel-68k",
+      "project": "hardware_mackerel-30-proto_mackerel-30-proto",
+      "created": "2026-03-30T23:12:33.088834+00:00",
+      "datasheets_used": []
     }
   ]
 }

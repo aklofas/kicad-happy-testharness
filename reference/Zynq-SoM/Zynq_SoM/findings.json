@@ -91,6 +91,95 @@
       "project": "Zynq_SoM",
       "created": "2026-03-16T21:43:56.604885+00:00",
       "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Zynq_SoM.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Zynq-7020 SoM with DDR3L, QSPI flash, eMMC, Gigabit Ethernet PHY (RTL8211F), ULPI USB PHY, STM32G431 system controller, and 5-rail switching power. Analyzer handles hierarchical design well but has significant false-positive level-shifter warnings for DDR3L and ULPI (from incomplete FPGA power domain tracking), misses Ethernet PHY and eMMC due to custom lib_ids.",
+      "correct": [
+        {
+          "description": "All five power regulators correctly detected with accurate feedback divider analysis",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "DDR3L memory interface correctly identified: U1 MT41K256M16TW with 25 shared signal nets to U2 XC7Z020",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "W25Q128JVS SPI flash correctly detected with 5 shared nets to Zynq",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "DDR CK, DQS0, DQS1 differential pairs correctly identified with series impedance matching",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "Power sequencing correctly detected: STM32 controls EN for all regulators with power-good feedback",
+          "analyzer_section": "power_sequencing"
+        },
+        {
+          "description": "I2C, eMMC/SDIO buses correctly detected",
+          "analyzer_section": "design_analysis.bus_analysis"
+        },
+        {
+          "description": "Ethernet MDI differential pairs correctly identified between RTL8211F and J1",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "JTAG debug nets correctly classified",
+          "analyzer_section": "design_analysis.net_classification"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "X3 (CMOS_OSC, 4-pin SMD oscillator) classified as 'crystal' instead of 'oscillator'.",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "56 of 64 cross_domain_signals flagged as needs_level_shifter including all DDR3L signals. Zynq PS DDR controller natively drives DDR3L at 1.35V \u2014 no level shifter needed. Root cause: U2 power_domains only shows '+3V3'.",
+          "analyzer_section": "design_analysis.cross_domain_signals"
+        },
+        {
+          "description": "10 ULPI signals falsely flagged as needs_level_shifter between Zynq and USB3318 \u2014 both operate at 1.8V.",
+          "analyzer_section": "design_analysis.cross_domain_signals"
+        },
+        {
+          "description": "RGMII Ethernet signals misclassified as 'uart' in test_coverage. SDIO signals misclassified as 'spi'.",
+          "analyzer_section": "test_coverage"
+        }
+      ],
+      "missed": [
+        {
+          "description": "RTL8211F (U3) not detected as Ethernet PHY \u2014 uses custom MyLibrary: lib_id.",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        },
+        {
+          "description": "IS21ES08G eMMC (U7) not detected in memory_interfaces \u2014 uses custom MyLibrary: lib_id.",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "U2 XC7Z020 power domain detection severely incomplete: only '+3V3' tracked despite VCCINT (1.0V), VCCAUX (1.8V) etc.",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "QSPI interface not detected in bus_analysis.spi despite QSPI_CLK/D0-D3/CS nets.",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        }
+      ],
+      "suggestions": [
+        "Match Ethernet PHY by value field (RTL8211F, KSZ9031, etc.) in addition to lib prefix.",
+        "Match eMMC by value/description keywords in addition to Memory_Flash: lib prefix.",
+        "Fix cross_domain_signals: exclude DDR signals from level-shifter check; track all FPGA power rails across multi-unit components.",
+        "Fix test_coverage net categorization for RGMII/SDIO signals."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002508",
+      "repo": "Zynq-SoM",
+      "project": "Zynq_SoM",
+      "created": "2026-03-30T23:14:11.416776+00:00",
+      "datasheets_used": []
     }
   ]
 }

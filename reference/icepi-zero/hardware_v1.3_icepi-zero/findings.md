@@ -60,3 +60,43 @@
 - Detect SD/SDIO interfaces by matching SD_CLK/SD_CMD/SD_DAT* net name patterns connected to an SD card connector
 
 ---
+
+## FND-00002508: Icepi Zero v1.3 is a Lattice ECP5 FPGA SBC with RPi-compatible GPIO, 256Mbit SDRAM, 128Mbit SPI flash, GPDI video output, and three USB-C ports. Analyzer correctly identifies most subsystems but has a false-positive level-shifter flag for FT231X signals, incomplete FPGA power domain tracking, and misses the GPDI/HDMI-compatible video interface.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: hardware_v1.3_icepi-zero.kicad_sch.json
+- **Created**: 2026-03-30
+
+### Correct
+- U1 (ECP5-CABGA256) correctly identified as FPGA with custom lib icepi-lib:LFE5U-25F-6BG256x
+- U12 (W25Q128JVS) SPI flash correctly detected with 6 shared signal nets to U1
+- U11 (W9825G6KH) SDRAM correctly detected with 39 shared signal nets to U1
+- Three TLV62569DBV switching regulators U2/U3/U4 correctly identified with inductors and feedback dividers from +5V
+- Y1 (SG-8018CG 50MHz MEMS) correctly detected as active_oscillator on GLOBAL_CLK
+- SPI flash bus correctly detected: FLASH_MOSI/FLASH_MISO between U12 and U1
+- I2C bus for GPDI DDC correctly detected with U6 (PCA9306DC1) level translator
+- ESD protection U5/U7/U8/U10 (TPD2EUSB30A) correctly identified on USB differential pairs
+- GPDI differential pairs correctly detected from U1
+- UART bridge U9 (FT231XQ) correctly detected with USB_TXD/USB_RXD to U1
+- USB-C compliance checks correctly passing CC1/CC2 pull-downs and ESD; VBUS ESD fail is accurate
+
+### Incorrect
+- cross_domain_signals flags JTAG and UART signals as 'needs_level_shifter: true' between U1 (+3V3) and U9 (+5V). False positive: U9 (FT231XQ) has VCCIO tied to its own 3V3OUT pin, so all I/O switches at 3.3V.
+  (design_analysis.cross_domain_signals)
+- power_domains for U1 (ECP5) lists only ['+3V3'], omitting +1V1 (VCC core) and FILTERED_2V5 (VCCAUX). ECP5 requires three supply rails.
+  (design_analysis.power_domains)
+- power_budget for +2V5 shows ic_count=0 and load=0mA. U1 VCCAUX is supplied from +2V5 through FB1 (producing FILTERED_2V5). Load missed because filtered net doesn't carry the power symbol.
+  (power_budget)
+
+### Missed
+- GPDI/HDMI-compatible interface not detected: J2 carries complete DVI-compatible differential video (GPDI_D0-2+/-, GPDI_CLK+/-) plus DDC I2C, HPD, CEC, UTIL from U1.
+  (signal_analysis.hdmi_dvi_interfaces)
+
+### Suggestions
+- Fix FT231X level-shifter false positive: when VCCIO is connected to device's own regulated output (3V3OUT), use VCCIO voltage for signal domain classification.
+- Fix power_domains to aggregate across all units of multi-unit components (ECP5 has 10 units).
+- Fix power_budget to follow one-hop filtered rails through ferrite beads.
+- Add GPDI/TMDS interface detection: 4 differential pairs with D0/D1/D2/CLK naming plus HPD/DDC.
+
+---

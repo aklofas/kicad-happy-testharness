@@ -94,6 +94,92 @@
       "project": "OpenWrt_ONE",
       "created": "2026-03-15T18:55:17.234259+00:00",
       "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "OpenWrt_ONE.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "OpenWrt ONE is a MediaTek MT7981B Wi-Fi 6 router with MT7976C radio, Airoha EN8811 2.5GbE PHY, DDR4, dual SPI flash, PCIe M.2, and USB 2.0. Analyzer traverses all 8 sub-sheets (994 components, 1005 nets) but has significant gaps: DDR4/Ethernet PHY/RF chain all undetected, 26 UART false positives from WiFi/Ethernet net name matching, and total_components reflects only 38 BOM lines instead of 994 instances.",
+      "correct": [
+        {
+          "description": "SPI buses correctly detected: SPI0 with 2 chip selects (NOR + NAND flash), plus SPI1 and SPI2",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        },
+        {
+          "description": "PCIe differential pairs correctly identified for M.2 Key-M slot",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "HSGMII Ethernet differential pairs correctly identified between MT7981B and EN8811",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "I2C buses correctly identified for RTC (AT8563S) and EEPROM (P24C02A)",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "HT42B534 USB-to-UART bridge correctly identified",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        },
+        {
+          "description": "All 8 sub-sheets correctly resolved",
+          "analyzer_section": "sheets"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "statistics.total_components = 38 but actual instance count is 994. Reflects unique unannotated reference prefixes (BOM lines) not instances.",
+          "analyzer_section": "statistics.total_components"
+        },
+        {
+          "description": "CN? prefix (8 connector instances) misclassified as 'capacitor' because 'C' prefix fires before 'CN'.",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "USB ESD inconsistency: design_observations says has_esd_protection: false while differential_pairs says has_esd: true for same USB nets.",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "JTAG_JTCK and JTAG_JTMS falsely detected as I2C SDA/SCL lines.",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        }
+      ],
+      "missed": [
+        {
+          "description": "DDR4 memory interface not detected despite 58 EMI0_* nets connecting MT7981B to NT5AD512M16C4-JR.",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "EN8811 2.5GbE Ethernet PHY not detected despite HSGMII and SMI_MDC/MDIO connections.",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        },
+        {
+          "description": "MT7976C Wi-Fi 6 radio entirely absent from rf_chains despite AFE0_WF* analog front-end nets.",
+          "analyzer_section": "signal_analysis.rf_chains"
+        },
+        {
+          "description": "26 of 30 UART detections are false positives: WiFi TX gain rails (AVDD18_WF3_TX_GA), Ethernet PHY nets (TXVP_A), SGMII nets.",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        },
+        {
+          "description": "Most power regulators missed: only one AP7366 detected, missing SY8089AAAC, MP8756GD, LA1314HD, LA3484A.",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "suggestions": [
+        "Fix total_components to use component instance count, not BOM line count for unannotated designs.",
+        "Add 'CN' as connector prefix before 'C' capacitor catch-all.",
+        "Narrow UART detection: exclude nets with TX/RX substrings from WiFi/Ethernet power and data domains.",
+        "Detect DDR4 via EMI_*/DQ/DQS/CK net patterns even with unannotated refs.",
+        "Detect EN8811 Ethernet PHY by part number matching."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002509",
+      "repo": "openwrt-one",
+      "project": "OpenWrt_ONE",
+      "created": "2026-03-30T23:14:38.000141+00:00",
+      "datasheets_used": []
     }
   ]
 }

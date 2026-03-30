@@ -89,6 +89,95 @@
       "project": "2000EATX-KiCAD-R31_2000ATX",
       "created": "2026-03-16T21:08:26.679677+00:00",
       "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "2000EATX-KiCAD-R31_2000ATX.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Amiga 2000 EATX motherboard re-implementation (rev 3.1) with 612 components featuring Amiga custom ICs (MC68000, Agnus, Gary, Paula, Denise, Buster, 8520s), Zorro II expansion, ISA slots, and ATX power. Analyzer correctly identifies most signal paths but misclassifies 12 Amiga/ISA bus connector symbols as capacitors, misses LF347/LM339 opamp and comparator circuits.",
+      "correct": [
+        {
+          "description": "All Amiga custom ICs correctly identified: U100 MC68000, U101 Agnus, U102 Gary, U200 Paula, U201 Denise, U300/U301 8520 CIAs, U800 Buster, U899 MSM6242 RTC",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "16 power rails correctly detected: +12V, +5V, -12V, -5V, +5VSB, +5VMOUSE, +AUD, +AV, +VID, -AV",
+          "analyzer_section": "statistics.power_rails"
+        },
+        {
+          "description": "Regulator U9000 (MC7905) correctly identified as LDO converting -12V to -5V",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "All 7 transistors correctly classified: Q200/Q201 as JFET (MMBFJ211) audio mute switches, Q300/Q301/Q302/Q9100 as BJTs",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "Crystal oscillators correctly detected: Y800 (32.768kHz passive), X1 (28.63636MHz master clock), X2 oscillator",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "ATX power-on delay RC networks correctly detected: R9101/C9104 (62ms delay) and R9103/C9103 for +5VSB sense",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "67 RC filters detected including 47 Zorro bus termination networks (1k + 1000pF, fc=159kHz) and 8 audio filters",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "UART/RS-232 correctly detected: U304 (SN75188DR driver) and U305 (SN75189DR receiver)",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        },
+        {
+          "description": "Bus topology correctly extracted with 486 bus wires and all Zorro/68000 buses: A[1..23], D[0..15], BA[1..23], BD[0..15]",
+          "analyzer_section": "bus_topology"
+        },
+        {
+          "description": "Three fuses correctly identified: F1 (4A, +5VMOUSE), F3 (+12V), F4 (+5V)",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "13 ferrite beads correctly classified (FB101-104, FB215, FB301-303, FB401, FB900-902, FB907)",
+          "analyzer_section": "statistics.component_types"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "12 proprietary Amiga/ISA bus connector symbols misclassified as 'capacitor': CN600 (CPU-Slot), CN601-CN605 (5x Zorro-Slot), CN700-CN702 (3x ISA-16-BIT-Slot), CN203/CN207 (Video-Slot). Inflates capacitor count and understates connector count.",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "design_observations flags U204 (LF347) as missing decoupling on '+AV' rail, but ic_pin_analysis shows C220 (0.22uF), C222 (47uF), and C900 (0.1uF) on +AV. False positive contradicting its own ic_pin_analysis.",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [
+        {
+          "description": "LF347 quad op-amp (U204) not detected in opamp_circuits despite having 4 units with +in/-in/out pins and dual supply +AV/-AV. LM339 comparator (U805) also not detected.",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "F2 (4A fuse) missed in protection_devices because both adjacent nets are unnamed. F2 sits between EMI332 feedthrough cap and D400 on +12V Zorro supply.",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "Y800 (32.768kHz crystal) has only one load cap reported (C810). VC800 (22-47pF trimmer on pin 2) not counted as load cap despite serving the same function.",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        }
+      ],
+      "suggestions": [
+        "Improve connector classification: when lib_id contains 'Slot', 'Connector', or 'Socket', classify as 'connector' regardless of lib_name.",
+        "Fix fuse detection to find fuses where both nets are unnamed but topologically connected to power rails via diodes or ferrite beads.",
+        "Add LF347 and multi-unit op-amp detection via lib_id matching known op-amp families.",
+        "In crystal_circuits, include variable/trim capacitors (VC* prefix) alongside fixed capacitors as load caps."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002505",
+      "repo": "Amiga-2000-EATX",
+      "project": "2000EATX-KiCAD-R31_2000ATX",
+      "created": "2026-03-30T23:06:43.354708+00:00",
+      "datasheets_used": []
     }
   ]
 }

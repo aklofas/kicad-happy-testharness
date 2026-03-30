@@ -52,3 +52,38 @@
 - Classify known bus control signals (~{AS}, ~{DS*}, ~{DTACK}, ~{BERR}, ~{WRITE}, ~{BBSY}, ~{BCLR}) as 'control' rather than generic 'signal'
 
 ---
+
+## FND-00002510: VME 6-slot backplane with ATX power input, 6 DIN41612 slot connectors, 7 74ACT32 OR gates for BG/IACK daisy-chains, 2 TCA0372 comparators for power monitoring, and 24 Bourns 4610X terminator SIPs. Component identification correct but S1 (OSHW logo) misclassified as switch, duplicate pin entries for multi-unit ICs inflate ERC warnings, and 98 unnamed single-pin nets for terminator taps not flagged.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: components_backplane_6-Slot-Backplane_6-Slot-Backplane.kicad_sch.json
+- **Created**: 2026-03-30
+
+### Correct
+- All 163 components correctly typed: 7 74ACT32 as ic, 2 TCA0372 as ic, 6 DIN41612 connectors, 24 4610X as resistor_network
+- All 4 comparator voltage-divider references correctly detected: R19/R20, R3/R4, R21/R22, R7/R8 producing 2.94V
+- All 4 TCA0372 units correctly classified as comparator_or_open_loop with hysteresis feedback
+- VME bus topology correctly detects A[1..31], D[0..31], AM[0..5] from 536 bus wires across 9 sheets
+- All 12 dual-terminator connections correctly merged to named bus signals
+
+### Incorrect
+- S1 (Graphic:Logo_Open_Hardware_Small, OSHW silkscreen logo) classified as type='switch'. Should be 'graphic' or excluded from BOM.
+  (statistics.component_types)
+- 15 nets have duplicated pin entries for multi-unit 74ACT32 ICs, inflating ERC output_conflict counts from 5 to 10 per net.
+  (connectivity_issues.multi_driver_nets)
+- 5 output_conflict ERC warnings inflated by duplicate-pin issue. Each net legitimately has 5 OR-gate outputs (VME daisy-chain), but reports 10.
+  (design_analysis.erc_warnings)
+
+### Missed
+- 98 unnamed single-component nets for RN1-RN12 terminator tap pins (pins 3-9) not reported as connectivity issues. 7 of 8 bus terminations per SIP appear unconnected.
+  (connectivity_issues.single_pin_nets)
+- TERM_L1_LOW net shows only JP2 pin 2 connected — asymmetric label resolution failure vs TERM_L1_HIGH which correctly merges with 14 components.
+  (connectivity_issues.single_pin_nets)
+
+### Suggestions
+- Add 'Graphic:' library prefix to classify as 'graphic' instead of 'switch'.
+- Deduplicate pin-to-net entries by (reference, pin_number) for multi-unit ICs.
+- Extend single_pin_net detection to include unnamed nets with exactly one non-#PWR pin.
+
+---

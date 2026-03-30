@@ -60,3 +60,56 @@
 - Power rail detection should include all nets with VCC/GND prefixes or those connected to regulator outputs, not just explicitly named power symbols
 
 ---
+
+## FND-00002508: EBAZ4205 is a Zynq 7010-based board (originally Bitcoin miner controller) with DDR3 SDRAM, NAND flash, IP101GA Ethernet PHY, four J37I switching regulators, and optocoupler isolation. Analyzer performs well on power regulation and Zynq handling, but misses DDR3 and NAND flash memory interfaces, misclassifies several component types, and falsely detects RMII Ethernet signals as UART.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: ebaz4205_ebaz4205.kicad_sch.json
+- **Created**: 2026-03-30
+
+### Correct
+- Four J37I switching regulators (U22/U26/U27/U28) correctly identified with accurate voltages: VCC=3.3V, VCCP=1.0V, VCCA=1.8V, VCC-DDR=1.5V
+- XC7Z010-1CLG400I (U31) correctly identified as FPGA with all 9 units parsed (400 pins)
+- IP101GA Ethernet PHY (U24) correctly identified with RMII pins and 25MHz crystal Y3
+- Four optocouplers (U67/U68 EL817, U69/U70 PC817) correctly detected in isolation_barriers with separate ground domains
+- Zynq JTAG debug nets correctly classified
+- DDR VREF divider R2432/R2433 (100K/100K) correctly identified at 1.65V
+- TPS51200AQDRCRQ1 (U72) DDR termination regulator correctly identified
+- 74 DDR-related nets correctly parsed in nets dictionary
+
+### Incorrect
+- U20/U21 (MMBT3904 NPN transistors, Device:Q_NPN_BEC) classified as 'ic' instead of 'transistor'.
+  (statistics.component_types)
+- U25 (RJ45 connector, 8P8C_LED) classified as 'ic' instead of 'connector'.
+  (statistics.component_types)
+- X3 (DS1307Z+ RTC IC) classified as 'connector' instead of 'ic' due to X-prefix fallback.
+  (statistics.component_types)
+- EC2/EC5/EC6 (Device:CP polarized capacitors) classified as 'other' instead of 'capacitor'.
+  (statistics.component_types)
+- RMII signals TXD0-3, RXD0-3 between U24 (PHY) and U31 (Zynq) falsely detected as UART. These are Ethernet data signals.
+  (design_analysis.bus_analysis.uart)
+- False decoupling warnings for ICs on VCC rail which has 26 decoupling capacitors.
+  (signal_analysis.design_observations)
+- power_budget for VCC-DDR shows ic_count=0 despite U66 DDR3 being on that rail.
+  (power_budget)
+
+### Missed
+- DDR3 SDRAM interface not detected: U66 (EM6GD16EWKG-12H) with 16 DQ, differential DQS, 14 address, CK/CKE/CS/ODT/WE/CAS/RAS to Zynq. memory_interfaces is empty.
+  (signal_analysis.memory_interfaces)
+- NAND flash interface not detected: U12 (W29N01HVSINA 1Gbit) with 8 I/O, ALE, CLE, #CE, #RE, #WE to Zynq PS_MIO.
+  (signal_analysis.memory_interfaces)
+- Ethernet transformer T6 (BT16B03) not linked to ethernet_interfaces. U25 (RJ45) also not linked.
+  (signal_analysis.ethernet_interfaces)
+- X3 (DS1307Z+ RTC) not detected as I2C device. bus_analysis.i2c is empty.
+  (design_analysis.bus_analysis.i2c)
+
+### Suggestions
+- Add Device:Q_NPN_* and Device:Q_PNP_* lib_id recognition for transistor classification.
+- Add 8P8C/RJ45 lib_id recognition for connector classification.
+- Add Device:CP lib_id recognition for capacitor classification.
+- Improve memory_interfaces to detect DDR (DQ/DQS/CK net names) and NAND (ALE/CLE/#CE signals).
+- Exclude RMII signals from UART detection when Ethernet PHY present on same nets.
+- Improve X-prefix classification: check lib_id before defaulting to connector.
+
+---

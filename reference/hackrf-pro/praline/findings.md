@@ -66,3 +66,50 @@
 - Fix decoupling has_bypass/has_high_freq classification - likely broken by the same unit parsing bug
 
 ---
+
+## FND-00002510: Praline is a wideband SDR (1MHz-6GHz) with RFFC5072 mixer/synthesizer, MAX2831 transceiver, MAX5865 40MSPS ADC/DAC, ICE40UP5K FPGA, and LPC4330 MCU. Analyzer correctly identifies major RF ICs and chain topology, but has 35 RF signal nets falsely detected as UART, misses RF impedance matching networks, omits FL2/FL3 bandpass filters and MAX5865 from RF chain, and misclassifies AP22652 load switches as LDOs.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: praline.kicad_sch.json
+- **Created**: 2026-03-30
+
+### Correct
+- RFFC5072 (U4) correctly identified as mixer with proper connections to T1/T2 RF baluns on MIX_IN+/- and MIX_OUT+/-
+- BGB741L7ESD/TRF37C73 amplifiers correctly placed in RF chain
+- T1-T4 baluns correctly identified in rf_chains
+- MAX2831 (U17) correctly identified as RF transceiver with differential pairs RXIF+/-, TXIF+/-, RXBB.I/Q+/-
+- RF switches FM8625H/MXD8546F/MXD8638C correctly classified as RF IC
+- SI5351C clock generator correctly typed as oscillator; TCXO X1 (25MHz) identified
+- ICE40UP5K correctly classified as FPGA (Lattice)
+- RF-frequency LC filters correctly computed: L6/C114 at 3.88GHz, L9/C111 at 767MHz
+- All I/Q baseband differential pairs correctly detected
+- TPS62410 (U21) correctly identified as switching regulator with feedback divider R38/R39
+- 577 total components correctly counted: 157 resistors, 211 caps, 32 inductors, 4 transformers, 3 filters, 66 test points
+
+### Incorrect
+- AP22652 (U28) classified as LDO but it is a current-limiting load switch. Passes VCC directly to 3V3AUX under enable control, no internal voltage reference.
+  (signal_analysis.power_regulators)
+- 35 of 42 UART detections are false positives from RF signal net names containing RX/TX: RXIF+/-, TXIF+/-, RXBB.I/Q+/-, TXBB.I/Q+/-, RX_AMP_IN/OUT, TX_AMP_IN/OUT, etc. Only U0_RXD/U0_TXD are real UART.
+  (design_analysis.bus_analysis.uart)
+
+### Missed
+- rf_matching is empty despite clear RF impedance matching networks: L6/C114/R124 pi-network on MIX_OUT+ at GHz resonance, L30/C198 on MIX_OUT-, and matching around U1/U9 bypass paths.
+  (signal_analysis.rf_matching)
+- FL2 and FL3 (BFCN-1445/BPF1608LM02R2400A 2.45GHz bandpass filters) absent from rf_chains.filters despite being in the mixer signal path.
+  (signal_analysis.rf_chains)
+- MAX5865 (U18, 40MSPS dual ADC+DAC) absent from rf_chains and has no function label. It is the core data converter connected via SPI alongside MAX2831 and ICE40.
+  (signal_analysis.rf_chains)
+- RFFC5072 PLL/synthesizer function not captured — classified only as 'mixer' but it is a mixer+synthesizer+VCO. MIXER.LD (lock detect) not noted.
+  (signal_analysis.rf_chains)
+- GT4227 (U3/U8/U34/U35) classified as 'USB IC' but used as differential 2:1 muxes for baseband I/Q signal routing, not USB switching.
+  (ic_pin_analysis)
+
+### Suggestions
+- Require UART detection to check pin type or exclude nets already in RF chain context.
+- Add filter-type components (RF_Filter lib_id) to rf_chains builder.
+- Include ADC/DAC components on same SPI bus as transceiver in rf_chains.
+- Add 'synthesizer' role for ICs with VCO/synthesizer in description.
+- Classify AP22652/BD2243G as 'load_switch' topology, not 'LDO'.
+
+---
