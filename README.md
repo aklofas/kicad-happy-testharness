@@ -1,6 +1,6 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,050+ real-world open-source KiCad projects. Provides a 3-layer regression testing system with 295K+ machine-checkable assertions at 100% pass rate, including 30,000+ SPICE simulations across 17 subcircuit types.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,050+ real-world open-source KiCad projects. Provides a 3-layer regression testing system with 296K+ machine-checkable assertions at 99.9% pass rate, 235 unit tests, and 30,000+ SPICE simulations across 17 subcircuit types with 7-type cross-validation.
 
 For a deep dive into the architecture, reasoning, and design decisions, see [methodology.md](methodology.md).
 
@@ -47,6 +47,11 @@ python3 validate/validate_outputs.py --repo {repo}
 
 # 8. Promote improvements
 python3 regression/promote.py --repo {repo} --apply
+
+# Or use the unified orchestrator (runs unit tests + assertions + validators)
+python3 validate_all.py                    # full validation
+python3 validate_all.py --quick            # unit tests + assertions only
+python3 validate_all.py --repo {repo}      # single repo
 ```
 
 ### Requirements
@@ -252,15 +257,35 @@ Each constant is auto-classified into a category that determines what kind of ve
 
 The registry (`reference/constants_registry.json`) tracks stable IDs, content hashes for drift detection, per-entry verification for lookup tables, corpus hit data, and both risk dimensions.
 
-## Validation scripts
+## Validation and reporting
 
 ```bash
-python3 validate/validate_outputs.py --repo {repo}     # structural invariants
-python3 validate/validate_spice.py --repo {repo}        # cross-validate SPICE vs analyzer
+# Unified orchestrator (recommended)
+python3 validate_all.py                                 # full pipeline
+python3 validate_all.py --quick                         # unit tests + assertions
+python3 validate_all.py --repo {repo} --json            # single repo, JSON output
+
+# Individual validators
+python3 validate/validate_outputs.py --repo {repo}      # structural invariants (--json)
+python3 validate/validate_spice.py --repo {repo}        # SPICE cross-validation (--json)
+python3 validate/validate_schema.py scan                # build field inventory
+python3 validate/validate_schema.py diff                # detect schema drift
 python3 validate/extract_mpns.py --repo {repo}          # extract MPNs from outputs
 python3 validate/analyze_bom_mismatch.py --repo {repo}  # BOM qty vs component count
 python3 validate/download_datasheets.py --project {repo} --status   # datasheet downloads
 python3 validate/validate_mpns.py --limit 50            # validate MPNs against APIs
+
+# Reporting
+python3 coverage_report.py --top 20                     # uncovered high-complexity repos
+python3 coverage_report.py --repo {repo}                # per-repo coverage detail
+python3 generate_health_report.py                       # single-page health summary
+python3 generate_health_report.py --json --log          # append to health_log.jsonl
+python3 regression/audit_bugfix_coverage.py             # gaps in bugfix regression
+
+# Testing
+python3 run_tests.py --unit                             # 235 unit tests
+python3 run_tests.py --integration                      # integration tests
+python3 run_tests.py --quick-sanity                     # assertions on 5 repos
 ```
 
 ## Repo management
@@ -306,21 +331,26 @@ FIXED.md                    # Closed issues with fix details
 checkout.py                 # Clone repos + check upstream updates
 discover.py                 # Find KiCad files, write manifests
 utils.py                    # Shared utilities (path resolution, unified runner)
+run_tests.py                # Unit + integration test runner (--unit, --quick-sanity)
+validate_all.py             # Unified validation orchestrator (--quick, --repo, --json)
+coverage_report.py          # Assertion coverage analysis (--top, --uncovered-only)
+generate_health_report.py   # Health metrics + trend tracking (--json, --log)
 
 run/                        # Batch-run analyzers (all support --repo, --jobs)
   run_schematic.py
   run_pcb.py
   run_gerbers.py
   run_spice.py              #   SPICE simulations (requires ngspice)
+  run_datasheets.py         #   Download datasheets + validate extractions
 
 regression/                 # 3-layer regression testing
   _differ.py                #   Semantic JSON diff engine
-  checks.py                 #   Assertion data model + evaluation engine
+  checks.py                 #   Assertion data model + evaluation engine (KNOWN_OPS)
   refextract.py             #   Component ref extraction from descriptions
   snapshot.py               #   Snapshot outputs to reference/ baselines
   compare.py                #   Diff current outputs vs baselines
   run_checks.py             #   Run assertions against outputs
-  seed.py                   #   Generate coarse SEED-* assertions
+  seed.py                   #   Generate SEED-* assertions (quality + empty-detector)
   seed_structural.py        #   Generate per-ref STRUCT-* assertions
   findings.py               #   Manage LLM review findings + promote to assertions
   generate_finding_checks.py #  Auto-generate check fields for finding items
@@ -331,23 +361,37 @@ regression/                 # 3-layer regression testing
   promote.py                #   Promote improved results/ to reference/
   bugfix_registry.json      #   KH-* issue -> regression assertion mapping
   generate_bugfix_assertions.py #  Generate BUGFIX-* assertions from registry
+  audit_bugfix_coverage.py  #   Audit gaps between FIXED.md and registry
 
 validate/                   # Output quality + constants audit
-  validate_outputs.py       #   Structural invariants on analyzer JSON
-  validate_spice.py         #   Cross-validate SPICE vs analyzer values
+  validate_outputs.py       #   Structural invariants on analyzer JSON (--json)
+  validate_spice.py         #   Cross-validate SPICE vs analyzer values (--json)
+  validate_schema.py        #   Schema inventory and drift detection (scan/diff)
   extract_mpns.py           #   Extract MPN + manufacturer pairs
   validate_mpns.py          #   Validate MPNs against distributor APIs
   analyze_bom_mismatch.py   #   BOM qty vs component count analysis
   download_datasheets.py    #   Download datasheets from multiple sources
   audit_constants.py        #   AST-based constant registry + verification
 
+tests/                      # Unit tests (235 tests, custom runner)
+  test_checks.py            #   Assertion evaluation engine (43 tests)
+  test_differ.py            #   Baseline diff engine (13 tests)
+  test_refextract.py        #   Reference extraction (33 tests)
+  test_schema.py            #   Schema validation + KNOWN_OPS (24 tests)
+  test_seed.py              #   Seed assertion generation (23 tests)
+  test_spice.py             #   SPICE seed + structural + cross-val (28 tests)
+  test_utils.py             #   Path utilities (16 tests)
+  test_validate_outputs.py  #   Output validation (27 tests)
+  test_validate_spice.py    #   SPICE cross-validation (28 tests)
+
 integration/                # End-to-end tests
-  test_datasheets.py        #   Datasheet download across distributors
-  test_bom_manager.py       #   BOM manager pipeline
+  test_datasheet_extraction.py # Datasheet download + extraction pipeline
 
 reference/                  # Tracked in git -- known-good regression data
   constants_registry.json   #   Constant audit registry
   constants_registry.md     #   Auto-generated constant summary
+  schema_inventory.json     #   Field inventory for schema drift detection
+  health_log.jsonl          #   Health metrics over time (append-only)
   test_mpns.json            #   Curated test MPNs
   {repo}/{project}/         #   Per-repo, per-project reference data
     baselines/              #     Compact baseline manifests

@@ -17,7 +17,7 @@ Last updated: 2026-03-31
 | Checked out in repos/ | 1,035 |
 | Repos with baselines | 1,035 |
 | Repos with assertions | 1,035 |
-| Total assertion files | ~23,000 |
+| Total assertion files | ~28,500 |
 | SEED assertions (schematic) | 55,872 |
 | SEED assertions (PCB) | 42,947 |
 | SEED assertions (gerber) | 8,965 |
@@ -28,10 +28,11 @@ Last updated: 2026-03-31
 | FND assertions (required) | 2,731 |
 | FND assertions (aspirational) | 1,987 |
 | BUGFIX assertions | 77 |
-| **Total assertions** | **~295,000** |
-| Assertion pass rate | 100.0% |
-| Bugfix registry entries | 58 |
-| Layer 3 reviewed repos | 905 |
+| **Total assertions** | **~297,000** |
+| Assertion pass rate | 99.9% |
+| Bugfix registry entries | 67 |
+| Unit tests | 235 |
+| Layer 3 reviewed repos | 992 |
 | Total findings | 2,575 |
 | Open KH-* issues | 0 |
 | Closed KH-* issues | 186 |
@@ -48,8 +49,9 @@ Last updated: 2026-03-31
 | Warn | 1,350 (4.4%) |
 | Fail | 5 (0.02%) |
 | Skip | 922 (3.0%) |
-| Cross-validation checks | 12,777 |
-| Cross-validation agreement | 99.6% |
+| Cross-validation types | 7 (voltage_divider, rc_filter, lc_filter, current_sense, feedback_network, opamp_circuit, regulator_feedback) |
+| Cross-validation checks | 14,018 |
+| Cross-validation agreement | 97.6% |
 
 ---
 

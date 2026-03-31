@@ -93,8 +93,11 @@ Models are defined in `spice_models.py`. An unused `IDEAL_LDO` model exists for 
 | rc_filters | SPICE fc vs analyzer cutoff_hz | 99.3% |
 | lc_filters | SPICE f0 vs analyzer resonant_hz | 100% |
 | current_sense | SPICE I@50mV vs analyzer max_current_50mV_A | 100% |
+| feedback_networks | SPICE vfb vs analyzer ratio x Vin | 100% |
+| opamp_circuits | SPICE gain_dB vs expected gain | 41.7% |
+| regulator_feedback | SPICE vfb vs expected from divider | 100% |
 
-The 53 RC filter mismatches are sub-3% rounding differences at very low frequencies (<1Hz) between analytical 1/(2piRC) and ngspice's numerical AC sweep.
+The RC filter mismatches are sub-3% rounding differences at very low frequencies (<1Hz) between analytical 1/(2piRC) and ngspice's numerical AC sweep. The opamp_circuit agreement is lower because many opamp configurations lack expected gain values (unknown topology), and the subcircuit type has a 48% warn rate indicating model limitations.
 
 ## Regression assertions
 
