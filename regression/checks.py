@@ -26,6 +26,44 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import resolve_path, load_project_metadata
 
+# All supported assertion operators — validated at load time
+KNOWN_OPS = frozenset({
+    "range", "min_count", "max_count", "equals", "exists", "not_exists",
+    "greater_than", "less_than", "field_equals", "contains_match",
+    "not_contains_match", "count_matches",
+})
+
+
+def validate_assertion_structure(assertion, source_file=None):
+    """Validate assertion structure at load time. Returns list of warning strings."""
+    warnings = []
+    prefix = f"{source_file}: " if source_file else ""
+
+    if not isinstance(assertion, dict):
+        warnings.append(f"{prefix}assertion is not a dict")
+        return warnings
+
+    aid = assertion.get("id", "?")
+
+    if "id" not in assertion:
+        warnings.append(f"{prefix}assertion missing 'id'")
+    if "description" not in assertion:
+        warnings.append(f"{prefix}[{aid}] missing 'description'")
+
+    check = assertion.get("check")
+    if not isinstance(check, dict):
+        warnings.append(f"{prefix}[{aid}] missing or invalid 'check'")
+        return warnings
+
+    if "path" not in check:
+        warnings.append(f"{prefix}[{aid}] check missing 'path'")
+    if "op" not in check:
+        warnings.append(f"{prefix}[{aid}] check missing 'op'")
+    elif check["op"] not in KNOWN_OPS:
+        warnings.append(f"{prefix}[{aid}] unknown operator '{check['op']}'")
+
+    return warnings
+
 
 def _item_field(item, field):
     """Get a field value from a dict, supporting dotted paths (e.g., 'r_top.ref')."""
@@ -106,8 +144,8 @@ def evaluate_assertion(assertion, data):
         result["actual"] = "present" if result["passed"] else "missing"
         result["expected"] = "present"
     elif op == "not_exists":
-        result["passed"] = val is None
-        result["actual"] = "missing" if val is None else "present"
+        result["passed"] = val is None or val == [] or val == {} or val == ""
+        result["actual"] = "missing" if result["passed"] else "present"
         result["expected"] = "missing"
     elif op == "greater_than":
         count = _countable(val)
@@ -274,6 +312,11 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
                             fp = data.get("file_pattern", "")
                             if not fnmatch.fnmatch(fp, file_pattern):
                                 continue
+                        # Validate assertion structure at load time
+                        for a in data.get("assertions", []):
+                            warnings = validate_assertion_structure(a, str(f))
+                            for w in warnings:
+                                print(f"WARNING: {w}", file=sys.stderr)
                         # Annotate with location info for output mapping
                         data["_repo"] = repo_dir.name
                         data["_project"] = proj_dir.name
