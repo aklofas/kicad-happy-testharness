@@ -366,4 +366,20 @@ def extract_manifest_entry(data, analyzer_type):
             "by_type": by_type,
         }
 
+    elif analyzer_type == "datasheets":
+        parts = data.get("parts", {})
+        by_cat = {}
+        for info in parts.values():
+            cat = info.get("category", "unknown")
+            by_cat[cat] = by_cat.get(cat, 0) + 1
+        return {
+            "total_parts": data.get("total_parts", 0),
+            "downloaded": data.get("downloaded", 0),
+            "extracted": data.get("extracted", 0),
+            "sufficient": data.get("sufficient", 0),
+            "stale": data.get("stale", 0),
+            "avg_score": data.get("avg_score", 0),
+            "by_category": by_cat,
+        }
+
     return {}

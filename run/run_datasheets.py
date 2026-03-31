@@ -1,0 +1,296 @@
+#!/usr/bin/env python3
+"""Download datasheets and validate existing extractions across test repos.
+
+This script handles the deterministic parts of the datasheet pipeline:
+  1. Download PDFs via sync_datasheets_digikey.py (requires DigiKey API credentials)
+  2. Validate/score existing extractions cached in datasheets/extracted/
+
+The actual PDF→JSON extraction step is NOT automated here — it happens
+interactively when a user runs the kicad skill in a Claude Code session.
+
+Usage:
+    python3 run/run_datasheets.py                          # Full: download + validate
+    python3 run/run_datasheets.py --repo OpenMower          # Single repo
+    python3 run/run_datasheets.py --download-only           # Just download PDFs
+    python3 run/run_datasheets.py --validate-only           # Just score existing extractions
+    python3 run/run_datasheets.py --dry-run                 # Preview without downloading
+
+Prerequisites:
+    1. Schematic outputs in results/outputs/schematic/ (run run_schematic.py first)
+    2. For downloads: DIGIKEY_CLIENT_ID and DIGIKEY_CLIENT_SECRET env vars
+    3. kicad-happy repo with datasheet extraction infrastructure
+
+Environment:
+    KICAD_HAPPY_DIR  Path to kicad-happy repo (required if not at ../kicad-happy)
+"""
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+from collections import Counter
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import OUTPUTS_DIR, REPOS_DIR, resolve_kicad_happy_dir
+
+# Resolve kicad-happy once at module level
+_kicad_happy = resolve_kicad_happy_dir()
+_kicad_scripts = _kicad_happy / "skills" / "kicad" / "scripts"
+sys.path.insert(0, str(_kicad_scripts))
+
+
+def find_repos_with_schematics():
+    """Find repos that have schematic analysis outputs."""
+    schematic_dir = OUTPUTS_DIR / "schematic"
+    if not schematic_dir.exists():
+        return []
+
+    repos = []
+    for repo_dir in sorted(schematic_dir.iterdir()):
+        if not repo_dir.is_dir():
+            continue
+        if any(repo_dir.glob("*.json")):
+            repos.append(repo_dir.name)
+    return repos
+
+
+def download_datasheets(repo_name, sync_script, dry_run=False):
+    """Download datasheets for a repo using sync_datasheets_digikey.py.
+
+    Returns (downloaded_count, failed_count, total_parts) or None on error.
+    """
+    repo_dir = REPOS_DIR / repo_name
+    if not repo_dir.exists():
+        return None
+
+    schematics = sorted(repo_dir.rglob("*.kicad_sch"), key=lambda p: len(p.parts))
+    if not schematics:
+        return None
+
+    cmd = [sys.executable, str(sync_script), str(schematics[0])]
+    if dry_run:
+        cmd.append("--dry-run")
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        downloaded = 0
+        failed = 0
+        for line in result.stdout.split("\n"):
+            if "Downloaded" in line and "bytes" in line:
+                downloaded += 1
+            if "Failed:" in line:
+                try:
+                    failed = int(line.strip().split("Failed:")[1].strip().split()[0])
+                except (ValueError, IndexError):
+                    pass
+        return downloaded, failed, 0
+    except (subprocess.TimeoutExpired, Exception):
+        return None
+
+
+def validate_extractions(repo_dir):
+    """Validate existing extractions for a repo.
+
+    Returns a report dict with scores, staleness, and coverage info.
+    """
+    from datasheet_extract_cache import (
+        get_cached_extraction, is_extraction_stale, list_extractions,
+    )
+    from datasheet_score import score_extraction
+
+    datasheets_dir = repo_dir / "datasheets"
+    extract_dir = datasheets_dir / "extracted"
+    index_path = datasheets_dir / "index.json"
+
+    report = {
+        "repo": repo_dir.name,
+        "total_parts": 0,
+        "downloaded": 0,
+        "download_failed": 0,
+        "extracted": 0,
+        "stale": 0,
+        "avg_score": 0.0,
+        "sufficient": 0,
+        "by_category": {},
+        "missing_extractions": [],
+        "parts": {},
+    }
+
+    # Read index once
+    index_parts = {}
+    if index_path.exists():
+        with open(index_path) as f:
+            index_parts = json.load(f).get("parts", {})
+        report["total_parts"] = len(index_parts)
+        report["downloaded"] = sum(1 for p in index_parts.values() if p.get("status") == "ok")
+        report["download_failed"] = sum(1 for p in index_parts.values() if p.get("status") == "failed")
+
+    # Score extractions
+    if extract_dir.exists():
+        extractions = list_extractions(extract_dir)
+        report["extracted"] = len(extractions)
+
+        scores = []
+        for item in extractions:
+            mpn = item["mpn"]
+            ext = get_cached_extraction(extract_dir, mpn)
+            if not ext:
+                continue
+
+            score = score_extraction(ext, expected_pin_count=item.get("pin_count"))
+            scores.append(score["total"])
+
+            stale, reason = is_extraction_stale(
+                extract_dir, mpn, datasheets_dir=str(datasheets_dir)
+            )
+            if stale:
+                report["stale"] += 1
+
+            cat = ext.get("category", "unknown")
+            report["by_category"][cat] = report["by_category"].get(cat, 0) + 1
+
+            if score["sufficient"]:
+                report["sufficient"] += 1
+
+            report["parts"][mpn] = {
+                "score": round(score["total"], 1),
+                "stale": stale,
+                "stale_reason": reason if stale else None,
+                "category": cat,
+                "sufficient": score["sufficient"],
+            }
+
+        if scores:
+            report["avg_score"] = round(sum(scores) / len(scores), 1)
+
+    # Parts with downloads but no extraction
+    for mpn, entry in index_parts.items():
+        if entry.get("status") == "ok" and mpn not in report["parts"]:
+            report["missing_extractions"].append(mpn)
+
+    return report
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Download datasheets and validate extractions"
+    )
+    parser.add_argument("--repo", action="append", dest="repos",
+                        help="Only process this repo (can repeat)")
+    parser.add_argument("--download-only", action="store_true",
+                        help="Only download PDFs, skip validation")
+    parser.add_argument("--validate-only", action="store_true",
+                        help="Only validate existing extractions")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Preview what would be downloaded")
+    args = parser.parse_args()
+
+    sync_script = _kicad_happy / "skills" / "digikey" / "scripts" / "sync_datasheets_digikey.py"
+
+    if not args.validate_only and not sync_script.exists():
+        print(f"Error: {sync_script} not found", file=sys.stderr)
+        sys.exit(1)
+
+    if not args.validate_only and not args.dry_run:
+        if not os.environ.get("DIGIKEY_CLIENT_ID"):
+            print("Warning: DIGIKEY_CLIENT_ID not set — downloads may fail",
+                  file=sys.stderr)
+
+    repos = args.repos if args.repos else find_repos_with_schematics()
+
+    if not repos:
+        print("No repos with schematic outputs found. Run run_schematic.py first.",
+              file=sys.stderr)
+        sys.exit(1)
+
+    print(f"=== Datasheet Pipeline ===")
+    print(f"Repos: {len(repos)}")
+    if not args.validate_only:
+        print(f"Mode: {'dry-run' if args.dry_run else 'download'} + validate")
+    else:
+        print(f"Mode: validate-only")
+    print()
+
+    ds_out_dir = OUTPUTS_DIR / "datasheets"
+
+    total_downloaded = 0
+    total_failed = 0
+    total_extracted = 0
+    total_stale = 0
+    total_sufficient = 0
+    total_parts = 0
+    repos_processed = 0
+    all_categories = Counter()
+
+    for repo_name in repos:
+        repo_dir = REPOS_DIR / repo_name
+        if not repo_dir.exists():
+            continue
+
+        repos_processed += 1
+
+        if not args.validate_only:
+            result = download_datasheets(repo_name, sync_script, args.dry_run)
+            if result:
+                total_downloaded += result[0]
+                total_failed += result[1]
+
+        if not args.download_only:
+            report = validate_extractions(repo_dir)
+            if report:
+                total_parts += report["total_parts"]
+                total_extracted += report["extracted"]
+                total_stale += report["stale"]
+                total_sufficient += report["sufficient"]
+                all_categories.update(report["by_category"])
+
+                repo_out = ds_out_dir / repo_name
+                repo_out.mkdir(parents=True, exist_ok=True)
+                with open(repo_out / "_report.json", "w") as f:
+                    json.dump(report, f, indent=2)
+                    f.write("\n")
+
+                if report["extracted"] > 0:
+                    print(f"  {repo_name}: {report['extracted']} extracted "
+                          f"(avg {report['avg_score']:.1f}), "
+                          f"{report['stale']} stale, "
+                          f"{len(report['missing_extractions'])} unextracted")
+
+    aggregate = {
+        "repos_processed": repos_processed,
+        "total_parts": total_parts,
+        "total_downloaded": total_downloaded,
+        "total_failed": total_failed,
+        "total_extracted": total_extracted,
+        "total_stale": total_stale,
+        "total_sufficient": total_sufficient,
+        "by_category": dict(all_categories),
+    }
+    ds_out_dir.mkdir(parents=True, exist_ok=True)
+    with open(ds_out_dir / "_aggregate.json", "w") as f:
+        json.dump(aggregate, f, indent=2)
+        f.write("\n")
+
+    print()
+    print("=" * 60)
+    print("Datasheet Pipeline Summary")
+    print("=" * 60)
+    print(f"Repos processed:        {repos_processed}")
+    if not args.validate_only:
+        print(f"PDFs downloaded:        {total_downloaded}")
+        print(f"Download failures:      {total_failed}")
+    if not args.download_only:
+        print(f"Total parts:            {total_parts}")
+        print(f"Extracted:              {total_extracted}")
+        print(f"Sufficient (>= 6.0):   {total_sufficient}")
+        print(f"Stale:                  {total_stale}")
+        if all_categories:
+            print(f"By category:")
+            for cat, count in sorted(all_categories.items(), key=lambda x: -x[1]):
+                print(f"  {cat:30s}: {count}")
+
+
+if __name__ == "__main__":
+    main()

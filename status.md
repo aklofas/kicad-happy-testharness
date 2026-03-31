@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-03-30
+Last updated: 2026-03-31
 
 ---
 
@@ -44,9 +44,9 @@ Last updated: 2026-03-30
 | Files with simulations | 4,338 |
 | Total subcircuit simulations | 30,646 |
 | Subcircuit types | 17 |
-| Pass | 28,853 (94.1%) |
-| Warn | 857 (2.8%) |
-| Fail | 14 (0.05%) |
+| Pass | 28,369 (92.6%) |
+| Warn | 1,350 (4.4%) |
+| Fail | 5 (0.02%) |
 | Skip | 922 (3.0%) |
 | Cross-validation checks | 12,777 |
 | Cross-validation agreement | 99.6% |

@@ -249,6 +249,37 @@ def generate_spice_structural_assertions(data, strict=True):
     return assertions
 
 
+def generate_datasheets_structural_assertions(data, strict=True):
+    """Generate structural assertions from a datasheets validation report.
+
+    For each extracted MPN, asserts presence with category and minimum score.
+    """
+    parts = data.get("parts", {})
+    if not parts:
+        return []
+
+    assertions = []
+    ast_num = 1
+
+    for mpn, info in sorted(parts.items()):
+        score = info.get("score", 0)
+        cat = info.get("category", "unknown")
+
+        if info.get("sufficient"):
+            assertions.append({
+                "id": f"STRUCT-{ast_num:08d}",
+                "description": f"{mpn} extracted as {cat} (score {score})",
+                "check": {
+                    "path": f"parts.{mpn}.score",
+                    "op": "greater_than",
+                    "value": 6.0,
+                },
+            })
+            ast_num += 1
+
+    return assertions
+
+
 def generate_for_repo(repo_name, atype, strict, min_components,
                       dry_run):
     """Generate structural assertions for one repo."""
@@ -282,6 +313,12 @@ def generate_for_repo(repo_name, atype, strict, min_components,
                     skipped += 1
                     continue
                 assertions = generate_spice_structural_assertions(data_content, strict)
+            elif atype == "datasheets":
+                extracted = data_content.get("extracted", 0)
+                if extracted < 1:
+                    skipped += 1
+                    continue
+                assertions = generate_datasheets_structural_assertions(data_content, strict)
             else:
                 stats = data_content.get("statistics", {})
                 comps = (stats.get("total_components", 0)

@@ -6,6 +6,7 @@ Verification of `spice_part_library.py` constants against external authoritative
 
 1. **DigiKey Product Information API v4** (Phase 1, 2026-03-31) — parametric search for GBW, slew rate
 2. **Manufacturer PDF datasheets** (Phase 2, 2026-03-31) — 31 PDFs downloaded and read, electrical characteristics tables
+3. **DigiKey datasheet downloads** (Phase 3, 2026-03-31) — 11 MOSFET datasheets downloaded via DigiKey API
 
 ## Status Summary
 
@@ -29,6 +30,11 @@ Verification of `spice_part_library.py` constants against external authoritative
 - **Datasheet-verified**: 3 (TL431, REF5050, LM4040)
 - **Fixed in Phase 2**: LM4040 vref (2.048V→2.5V, added 3.0/3.3V, removed 10V), TL431 zout
 - **Unverified**: 7
+
+### MOSFET_SPECS (10 entries, was 12)
+- **Datasheet-verified**: 10 (all Vth, Rdson, Ciss, Vds, Id confirmed from downloaded PDFs)
+- **Fixed in Phase 3**: 26 value corrections across 10 parts (Ciss systematically wrong)
+- **Removed**: 2 (DMP3150 fictitious part, NTR4101 unverifiable)
 
 ### RF/Capacitor tables — unchanged from Phase 1
 
@@ -247,3 +253,51 @@ All 7 entries verified against Murata GRM / TDK C series typical values. All OK.
 | 0805 | ≤1µF | 0.08 Ω | 0.03-0.15 Ω | OK |
 | 1206 | ≤1µF | 0.1 Ω | 0.03-0.2 Ω | OK |
 | Others | large C | low mΩ | not checked | Reasonable |
+
+---
+
+## Phase 3: MOSFET_SPECS Verification (2026-03-31)
+
+Source: 11 datasheets downloaded via DigiKey API, read with PDF tool.
+
+### Corrections Applied (26 value fixes across 10 parts)
+
+| Part | Param | Old | New | Datasheet Source |
+|------|-------|-----|-----|-----------------|
+| BSS138 | rdson | 3.5Ω | **2.5Ω** | ON Semi BSS138, max@Vgs=10V |
+| BSS138 | ciss | 30pF | **27pF** | typ |
+| BSS138 | id | 0.2A | **0.22A** | |
+| AO3400 | vth | 1.4V | **1.05V** | AOS AO3400A, typ |
+| AO3400 | rdson | 40mΩ | **27mΩ** | max@Vgs=10V |
+| AO3400 | ciss | 800pF | **630pF** | typ |
+| SI2302 | vth | 0.7V | **0.63V** | Vishay SI2302CDS, midpoint 0.4-0.85V |
+| SI2302 | rdson | 100mΩ | **57mΩ** | max@Vgs=4.5V |
+| SI2302 | ciss | 260pF | **340pF** | from graph |
+| SI2302 | id | 2.6A | **2.9A** | |
+| IRLML2502 | vth | 0.8V | **0.9V** | Infineon, midpoint 0.6-1.2V |
+| IRLML2502 | rdson | 40mΩ | **45mΩ** | max@Vgs=4.5V |
+| IRLML2502 | ciss | 900pF | **740pF** | typ |
+| IRLML6344 | rdson | 30mΩ | **29mΩ** | Infineon, max@Vgs=4.5V |
+| IRLML6344 | ciss | 1200pF | **650pF** | typ (was 85% too high) |
+| DMN3150 | vth | 1.5V | **0.92V** | Diodes DMN3150L, typ |
+| DMN3150 | rdson | 100mΩ | **72mΩ** | max@Vgs=4.5V |
+| DMN3150 | ciss | 170pF | **305pF** | typ |
+| BSS84 | vth | -1.3V | **-1.6V** | Nexperia BSS84AKW, typ |
+| BSS84 | rdson | 10Ω | **7.5Ω** | max@Vgs=-10V |
+| BSS84 | ciss | 45pF | **24pF** | typ |
+| BSS84 | id | -0.13A | **-0.15A** | |
+| SI2301 | rdson | 0.15Ω | **0.112Ω** | Vishay SI2301CDS, max@Vgs=-4.5V |
+| SI2301 | ciss | 320pF | **405pF** | typ |
+| AO3401 | vth | -1.4V | **-0.9V** | AOS AO3401A, typ |
+| AO3401 | ciss | 600pF | **645pF** | typ |
+
+### Removed Entries (2)
+
+| Part | Reason |
+|------|--------|
+| DMP3150 | Not a real part — no Diodes Inc product with this MPN exists |
+| NTR4101 | ON Semi blocks datasheet downloads; cannot verify against authoritative source |
+
+### Convention: Rdson uses max spec
+
+All Rdson values use the datasheet **maximum** at rated Vgs (typically 4.5V for logic-level, 10V for standard). This gives worst-case behavioral model behavior, which is appropriate for SPICE simulation (avoids optimistic switching predictions).
