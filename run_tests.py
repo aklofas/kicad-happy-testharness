@@ -25,11 +25,77 @@ def discover_tests(dirs):
     return tests
 
 
+def _parse_tested_repos(priority_file, count=5):
+    """Parse first N repos from the 'Tested' section of priority.md."""
+    repos = []
+    in_tested = False
+    try:
+        text = priority_file.read_text()
+    except OSError:
+        return repos
+    for line in text.splitlines():
+        if line.strip() == "## Tested":
+            in_tested = True
+            continue
+        if in_tested and line.startswith("| ") and "/" in line:
+            # "| user/repo | Category |" → extract "user/repo"
+            parts = line.split("|")
+            if len(parts) >= 3:
+                repo = parts[1].strip()
+                if "/" in repo:
+                    # Repo name in repos/ uses the last component
+                    repos.append(repo.split("/")[-1] if "/" in repo else repo)
+                    if len(repos) >= count:
+                        break
+    return repos
+
+
+def run_quick_sanity():
+    """Run assertions on 5 repos from priority.md as a quick sanity check."""
+    priority_file = HARNESS_DIR / "priority.md"
+    repos = _parse_tested_repos(priority_file, count=5)
+    if not repos:
+        print("  SKIP  quick-sanity (no repos found in priority.md)")
+        return 0
+
+    run_checks = HARNESS_DIR / "regression" / "run_checks.py"
+    passed = 0
+    failed = 0
+    for repo in repos:
+        try:
+            result = subprocess.run(
+                [sys.executable, str(run_checks), "--repo", repo, "--json"],
+                capture_output=True, text=True, timeout=120,
+            )
+            if result.returncode == 0:
+                import json
+                data = json.loads(result.stdout)
+                rate = data.get("pass_rate", "?")
+                total = data.get("total", 0)
+                print(f"  PASS  sanity/{repo} ({total} assertions, {rate})")
+                passed += 1
+            else:
+                print(f"  FAIL  sanity/{repo}")
+                failed += 1
+        except subprocess.TimeoutExpired:
+            print(f"  SKIP  sanity/{repo} (timed out)")
+        except Exception as e:
+            print(f"  FAIL  sanity/{repo} ({e})")
+            failed += 1
+
+    return 1 if failed > 0 else 0
+
+
 def main():
     parser = argparse.ArgumentParser(description="Run all tests")
     parser.add_argument("--unit", action="store_true", help="Unit tests only")
     parser.add_argument("--integration", action="store_true", help="Integration tests only")
+    parser.add_argument("--quick-sanity", action="store_true",
+                        help="Run assertions on 5 repos as a quick sanity check")
     args = parser.parse_args()
+
+    if args.quick_sanity:
+        sys.exit(run_quick_sanity())
 
     dirs = []
     if args.unit:
