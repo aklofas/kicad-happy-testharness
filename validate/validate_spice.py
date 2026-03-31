@@ -120,6 +120,84 @@ def cross_validate_file(schematic_json, spice_json):
                 "status": "match" if delta < 1 else "mismatch",
             })
 
+    # feedback_networks: compare feedback voltage
+    for det in sa.get("feedback_networks", []):
+        r_top = det.get("r_top", {})
+        r_bot = det.get("r_bottom", {})
+        if not isinstance(r_top, dict) or not isinstance(r_bot, dict):
+            continue
+        comps = tuple(sorted([r_top.get("ref", ""), r_bot.get("ref", "")]))
+        sr = spice_by_key.get(("feedback_network", comps))
+        if not sr:
+            continue
+
+        analyzer_ratio = det.get("ratio")
+        sim_vfb = sr.get("simulated", {}).get("fb_voltage_V")
+        expected_vfb = sr.get("expected", {}).get("fb_voltage_V")
+
+        if sim_vfb is not None and expected_vfb is not None and expected_vfb != 0:
+            delta = abs(sim_vfb - expected_vfb) / abs(expected_vfb) * 100
+            results.append({
+                "type": "feedback_network",
+                "components": list(comps),
+                "analyzer_value": f"ratio={analyzer_ratio:.4f}" if analyzer_ratio else "ratio=?",
+                "spice_value": f"vfb={sim_vfb:.4f}V",
+                "delta_pct": round(delta, 3),
+                "status": "match" if delta < 1 else "mismatch",
+            })
+
+    # opamp_circuits: compare gain
+    for det in sa.get("opamp_circuits", []):
+        ref = det.get("reference", "")
+        if not ref:
+            continue
+        comps = (ref,)
+        sr = spice_by_key.get(("opamp_circuit", comps))
+        if not sr:
+            continue
+
+        expected_gain = sr.get("expected", {}).get("gain_dB")
+        sim_gain = sr.get("simulated", {}).get("gain_dB")
+
+        if sim_gain is not None and expected_gain is not None and expected_gain != 0:
+            delta = abs(sim_gain - expected_gain) / abs(expected_gain) * 100
+            results.append({
+                "type": "opamp_circuit",
+                "components": list(comps),
+                "analyzer_value": f"gain={expected_gain:.1f}dB",
+                "spice_value": f"gain={sim_gain:.1f}dB",
+                "delta_pct": round(delta, 3),
+                "status": "match" if delta < 5 else "mismatch",
+            })
+
+    # regulator_feedback: compare feedback voltage
+    for det in sa.get("power_regulators", []):
+        fb = det.get("feedback_divider", {})
+        if not isinstance(fb, dict) or not fb:
+            continue
+        r_top = fb.get("r_top", {})
+        r_bot = fb.get("r_bottom", {})
+        if not isinstance(r_top, dict) or not isinstance(r_bot, dict):
+            continue
+        comps = tuple(sorted([r_top.get("ref", ""), r_bot.get("ref", "")]))
+        sr = spice_by_key.get(("regulator_feedback", comps))
+        if not sr:
+            continue
+
+        expected_vfb = sr.get("expected", {}).get("vfb_V")
+        sim_vfb = sr.get("simulated", {}).get("vfb_V")
+
+        if sim_vfb is not None and expected_vfb is not None and expected_vfb != 0:
+            delta = abs(sim_vfb - expected_vfb) / abs(expected_vfb) * 100
+            results.append({
+                "type": "regulator_feedback",
+                "components": list(comps),
+                "analyzer_value": f"vfb={expected_vfb:.4f}V",
+                "spice_value": f"vfb={sim_vfb:.4f}V",
+                "delta_pct": round(delta, 3),
+                "status": "match" if delta < 1 else "mismatch",
+            })
+
     # current_sense: compare I at 50mV
     for det in sa.get("current_sense", []):
         shunt = det.get("shunt", {})
@@ -173,6 +251,8 @@ def main():
     total_match = 0
     total_mismatch = 0
     by_type = {}
+    # Track SPICE simulation status (pass/warn/fail) per subcircuit type
+    sim_status_by_type = {}
 
     for repo in repos:
         repo_sch = schematic_dir / repo
@@ -190,6 +270,14 @@ def main():
                 spice_data = json.loads(spice_file.read_text())
             except Exception:
                 continue
+
+            # Collect SPICE simulation status counts per type
+            for sr in spice_data.get("simulation_results", []):
+                stype = sr.get("subcircuit_type", "unknown")
+                status = sr.get("status", "unknown")
+                if stype not in sim_status_by_type:
+                    sim_status_by_type[stype] = {"pass": 0, "warn": 0, "fail": 0, "skip": 0}
+                sim_status_by_type[stype][status] = sim_status_by_type[stype].get(status, 0) + 1
 
             results = cross_validate_file(sch_data, spice_data)
             for r in results:
@@ -222,12 +310,28 @@ def main():
     print(f"Mismatch:        {total_mismatch}")
     if total_checks:
         print(f"Agreement rate:  {total_match/total_checks*100:.1f}%")
-    print(f"\nBy type:")
-    for t in sorted(by_type):
-        m = by_type[t]["match"]
-        mm = by_type[t]["mismatch"]
-        total = m + mm
-        print(f"  {t:25s} {m}/{total} match ({m/total*100:.1f}%)")
+    if by_type:
+        print(f"\nCross-validation by type:")
+        for t in sorted(by_type):
+            m = by_type[t]["match"]
+            mm = by_type[t]["mismatch"]
+            total = m + mm
+            print(f"  {t:25s} {m}/{total} match ({m/total*100:.1f}%)")
+
+    # Warn rate report
+    if sim_status_by_type:
+        high_warn = []
+        for stype in sorted(sim_status_by_type):
+            counts = sim_status_by_type[stype]
+            total = sum(counts.values())
+            warn = counts.get("warn", 0)
+            if total > 0 and warn / total > 0.3:
+                high_warn.append((stype, warn, total))
+
+        if high_warn:
+            print(f"\nHigh warn rate types (>30%):")
+            for stype, warn, total in high_warn:
+                print(f"  {stype:25s} {warn}/{total} warn ({warn/total*100:.1f}%)")
 
 
 if __name__ == "__main__":

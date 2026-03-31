@@ -172,6 +172,224 @@ def test_current_sense_zero_analyzer():
     assert len(results) == 0
 
 
+# === feedback_network cross-validation ===
+
+def test_feedback_network_match():
+    sch = _make_sch({"feedback_networks": [{
+        "r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"}, "ratio": 0.25,
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "feedback_network",
+        "components": ["R1", "R2"],
+        "expected": {"ratio": 0.25, "fb_voltage_V": 0.825},
+        "simulated": {"fb_voltage_V": 0.826},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert len(results) == 1
+    assert results[0]["status"] == "match"
+    assert results[0]["type"] == "feedback_network"
+
+def test_feedback_network_mismatch():
+    sch = _make_sch({"feedback_networks": [{
+        "r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"}, "ratio": 0.25,
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "feedback_network",
+        "components": ["R1", "R2"],
+        "expected": {"fb_voltage_V": 0.825},
+        "simulated": {"fb_voltage_V": 1.5},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert len(results) == 1
+    assert results[0]["status"] == "mismatch"
+
+def test_feedback_network_zero_expected():
+    sch = _make_sch({"feedback_networks": [{
+        "r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"}, "ratio": 0.0,
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "feedback_network",
+        "components": ["R1", "R2"],
+        "expected": {"fb_voltage_V": 0},
+        "simulated": {"fb_voltage_V": 0.1},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert results == []
+
+
+# === opamp_circuit cross-validation ===
+
+def test_opamp_circuit_match():
+    sch = _make_sch({"opamp_circuits": [{
+        "reference": "U1", "configuration": "non-inverting",
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "opamp_circuit",
+        "components": ["U1"],
+        "expected": {"gain_dB": 20.0},
+        "simulated": {"gain_dB": 20.1, "gain_linear": 10.12, "bandwidth_hz": 100000},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert len(results) == 1
+    assert results[0]["status"] == "match"
+    assert results[0]["type"] == "opamp_circuit"
+    assert results[0]["delta_pct"] < 5.0
+
+def test_opamp_circuit_mismatch():
+    sch = _make_sch({"opamp_circuits": [{
+        "reference": "U1", "configuration": "inverting",
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "opamp_circuit",
+        "components": ["U1"],
+        "expected": {"gain_dB": 20.0},
+        "simulated": {"gain_dB": 6.0, "gain_linear": 2.0, "bandwidth_hz": 50000},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert len(results) == 1
+    assert results[0]["status"] == "mismatch"
+
+def test_opamp_circuit_no_expected_gain():
+    """No expected gain_dB means no cross-validation."""
+    sch = _make_sch({"opamp_circuits": [{
+        "reference": "U1", "configuration": "unknown",
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "opamp_circuit",
+        "components": ["U1"],
+        "expected": {},
+        "simulated": {"gain_dB": 20.0, "gain_linear": 10.0, "bandwidth_hz": 100000},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert results == []
+
+def test_opamp_circuit_no_reference():
+    """Opamp with empty reference should be skipped."""
+    sch = _make_sch({"opamp_circuits": [{
+        "reference": "", "configuration": "buffer",
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "opamp_circuit",
+        "components": ["U1"],
+        "expected": {"gain_dB": 0.0},
+        "simulated": {"gain_dB": 0.0},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert results == []
+
+
+# === regulator_feedback cross-validation ===
+
+def test_regulator_feedback_match():
+    sch = _make_sch({"power_regulators": [{
+        "ref": "U1", "topology": "switching",
+        "feedback_divider": {
+            "r_top": {"ref": "R1", "ohms": 100000},
+            "r_bottom": {"ref": "R2", "ohms": 22000},
+            "ratio": 0.18,
+        },
+        "estimated_vout": 3.3,
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "regulator_feedback",
+        "components": ["R1", "R2"],
+        "regulator": "U1",
+        "expected": {"vfb_V": 0.6, "vref_V": 0.6, "ratio": 0.18},
+        "simulated": {"vfb_V": 0.6001},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert len(results) == 1
+    assert results[0]["status"] == "match"
+    assert results[0]["type"] == "regulator_feedback"
+
+def test_regulator_feedback_mismatch():
+    sch = _make_sch({"power_regulators": [{
+        "ref": "U1",
+        "feedback_divider": {
+            "r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"}, "ratio": 0.18,
+        },
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "regulator_feedback",
+        "components": ["R1", "R2"],
+        "expected": {"vfb_V": 0.6},
+        "simulated": {"vfb_V": 1.2},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert len(results) == 1
+    assert results[0]["status"] == "mismatch"
+
+def test_regulator_feedback_no_divider():
+    """Regulator without feedback_divider should be skipped."""
+    sch = _make_sch({"power_regulators": [{
+        "ref": "U1", "topology": "LDO",
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "regulator_feedback",
+        "components": ["R1", "R2"],
+        "expected": {"vfb_V": 0.6},
+        "simulated": {"vfb_V": 0.6},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert results == []
+
+def test_regulator_feedback_zero_expected():
+    sch = _make_sch({"power_regulators": [{
+        "ref": "U1",
+        "feedback_divider": {
+            "r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"}, "ratio": 0.0,
+        },
+    }]})
+    spice = _make_spice([{
+        "subcircuit_type": "regulator_feedback",
+        "components": ["R1", "R2"],
+        "expected": {"vfb_V": 0},
+        "simulated": {"vfb_V": 0.1},
+    }])
+    results = cross_validate_file(sch, spice)
+    assert results == []
+
+
+# === all 7 types combined ===
+
+def test_all_seven_types():
+    """All cross-validation types work together."""
+    sch = _make_sch({
+        "voltage_dividers": [{"r_top": {"ref": "R1"}, "r_bottom": {"ref": "R2"}, "ratio": 0.5}],
+        "rc_filters": [{"resistor": {"ref": "R3"}, "capacitor": {"ref": "C1"}, "cutoff_hz": 1000.0}],
+        "lc_filters": [{"inductor": {"ref": "L1"}, "capacitor": {"ref": "C2"}, "resonant_hz": 50000.0}],
+        "current_sense": [{"shunt": {"ref": "R4"}, "max_current_50mV_A": 0.5}],
+        "feedback_networks": [{"r_top": {"ref": "R5"}, "r_bottom": {"ref": "R6"}, "ratio": 0.25}],
+        "opamp_circuits": [{"reference": "U1", "configuration": "non-inverting"}],
+        "power_regulators": [{"ref": "U2", "feedback_divider": {
+            "r_top": {"ref": "R7"}, "r_bottom": {"ref": "R8"}, "ratio": 0.18,
+        }}],
+    })
+    spice = _make_spice([
+        {"subcircuit_type": "voltage_divider", "components": ["R1", "R2"],
+         "expected": {"vout_V": 1.65}, "simulated": {"vout_V": 1.65}},
+        {"subcircuit_type": "rc_filter", "components": ["C1", "R3"],
+         "simulated": {"fc_hz": 1005.0}},
+        {"subcircuit_type": "lc_filter", "components": ["C2", "L1"],
+         "simulated": {"resonant_hz": 50100.0}},
+        {"subcircuit_type": "current_sense", "components": ["R4"],
+         "simulated": {"i_at_50mV_A": 0.5001}},
+        {"subcircuit_type": "feedback_network", "components": ["R5", "R6"],
+         "expected": {"fb_voltage_V": 0.825}, "simulated": {"fb_voltage_V": 0.826}},
+        {"subcircuit_type": "opamp_circuit", "components": ["U1"],
+         "expected": {"gain_dB": 20.0}, "simulated": {"gain_dB": 20.1}},
+        {"subcircuit_type": "regulator_feedback", "components": ["R7", "R8"],
+         "expected": {"vfb_V": 0.6}, "simulated": {"vfb_V": 0.6001}},
+    ])
+    results = cross_validate_file(sch, spice)
+    types = {r["type"] for r in results}
+    assert types == {
+        "voltage_divider", "rc_filter", "lc_filter", "current_sense",
+        "feedback_network", "opamp_circuit", "regulator_feedback",
+    }
+    assert all(r["status"] == "match" for r in results)
+
+
 # === edge cases ===
 
 def test_empty_signal_analysis():
