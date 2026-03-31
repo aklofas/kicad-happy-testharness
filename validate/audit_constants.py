@@ -44,6 +44,7 @@ REGISTRY_PATH = DATA_DIR / "constants_registry.json"
 MARKDOWN_PATH = DATA_DIR / "constants_registry.md"
 
 SCRIPTS_SUBDIR = Path("skills") / "kicad" / "scripts"
+SPICE_SCRIPTS_SUBDIR = Path("skills") / "spice" / "scripts"
 
 # Analyzer source files to scan (relative to kicad-happy repo root)
 ANALYZER_FILES = [
@@ -54,6 +55,17 @@ ANALYZER_FILES = [
     "kicad_types.py",
     "signal_detectors.py",
     "sexp_parser.py",
+]
+
+# SPICE skill source files to scan
+SPICE_FILES = [
+    "spice_templates.py",
+    "spice_results.py",
+    "spice_models.py",
+    "spice_part_library.py",
+    "spice_model_generator.py",
+    "spice_model_cache.py",
+    "simulate_subcircuits.py",
 ]
 
 
@@ -264,6 +276,26 @@ class ConstantVisitor(ast.NodeVisitor):
                 ))
                 return
 
+        # List/Tuple of 3+ tuple entries (e.g., lookup tables like _CAP_ESR_TABLE)
+        if isinstance(value_node, (ast.Tuple, ast.List)):
+            tuple_count = sum(1 for elt in value_node.elts
+                              if isinstance(elt, ast.Tuple))
+            if tuple_count >= 3:
+                literal = _extract_literal(value_node)
+                if literal:
+                    content_hash = _hash_value([list(t) if isinstance(t, tuple) else t for t in literal])
+                else:
+                    content_hash = f"sha256:ast_{lineno}"
+                self.constants.append(ConstantInfo(
+                    name=name, file=self.filename, line=lineno,
+                    end_line=_node_end_line(value_node),
+                    scope=self._scope, func=self._current_func, cls=self._current_cls,
+                    const_type="tuple_table",
+                    entry_count=tuple_count,
+                    content_hash=content_hash,
+                ))
+                return
+
         # Set literal or frozenset() call with 3+ string entries
         if isinstance(value_node, ast.Set) and _count_string_literals(value_node) >= 3:
             literal = _extract_literal(value_node)
@@ -407,7 +439,7 @@ def scan_file(filepath):
 
 
 def scan_all(scripts_dir):
-    """Scan all analyzer source files. Returns list of ConstantInfo."""
+    """Scan all analyzer and SPICE source files. Returns list of ConstantInfo."""
     all_constants = []
     for fname in ANALYZER_FILES:
         fpath = scripts_dir / fname
@@ -417,6 +449,18 @@ def scan_all(scripts_dir):
         constants = scan_file(fpath)
         all_constants.extend(constants)
         print(f"  {fname}: {len(constants)} constants")
+
+    # Also scan SPICE skill scripts
+    spice_dir = scripts_dir.parent.parent / "spice" / "scripts"
+    if spice_dir.exists():
+        for fname in SPICE_FILES:
+            fpath = spice_dir / fname
+            if not fpath.exists():
+                continue
+            constants = scan_file(fpath)
+            all_constants.extend(constants)
+            print(f"  spice/{fname}: {len(constants)} constants")
+
     return all_constants
 
 
