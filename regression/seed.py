@@ -31,18 +31,67 @@ from utils import (
 )
 
 
+# Quality checks: detector field → (field_path, description, regex matching BAD values).
+# Each generates a not_contains_match assertion: "no item should have this bad value".
+_QUALITY_CHECKS = {
+    "voltage_dividers": ("ratio", "non-zero ratio", r"^(0(\.0+)?|None|)$"),
+    "rc_filters": ("cutoff_hz", "non-zero cutoff_hz", r"^(0(\.0+)?|None|)$"),
+    "lc_filters": ("resonant_hz", "non-zero resonant_hz", r"^(0(\.0+)?|None|)$"),
+    "current_sense": ("shunt.ref", "shunt ref present", r"^(None|)$"),
+    "power_regulators": ("ref", "ref present", r"^(None|\?|)$"),
+    "crystal_circuits": ("reference", "reference present", r"^(None|\?|)$"),
+    "opamp_circuits": ("reference", "reference present", r"^(None|\?|)$"),
+    "transistor_circuits": ("reference", "reference present", r"^(None|\?|)$"),
+    "feedback_networks": ("r_top.ref", "r_top ref present", r"^(None|)$"),
+}
+
+# Signal detectors that are lists (for empty-detector assertions)
+_LIST_DETECTORS = [
+    "addressable_led_chains", "bms_systems", "bridge_circuits",
+    "buzzer_speaker_circuits", "crystal_circuits", "current_sense",
+    "ethernet_interfaces", "feedback_networks", "hdmi_dvi_interfaces",
+    "isolation_barriers", "key_matrices", "lc_filters", "memory_interfaces",
+    "opamp_circuits", "power_regulators", "protection_devices", "rc_filters",
+    "rf_chains", "rf_matching", "snubbers", "transistor_circuits",
+    "voltage_dividers",
+]
+
+
+def _quality_assertions(sig_type, detections, ast_num):
+    """Generate field-completeness assertions for a signal detector type.
+
+    Returns (assertions_list, next_ast_num).
+    """
+    qc = _QUALITY_CHECKS.get(sig_type)
+    if not qc:
+        return [], ast_num
+
+    field, desc, pattern = qc
+    assertions = [{
+        "id": f"SEED-{ast_num:08d}",
+        "description": f"All {sig_type} have {desc}",
+        "check": {
+            "path": f"signal_analysis.{sig_type}",
+            "op": "not_contains_match",
+            "field": field,
+            "pattern": pattern,
+        },
+    }]
+    return assertions, ast_num + 1
+
+
 def _range_bounds(value, tolerance):
     """Compute [lo, hi] range with tolerance around a value."""
     lo = max(0, math.floor(value * (1 - tolerance)))
     hi = math.ceil(value * (1 + tolerance))
     # Ensure minimum spread of 2 for small values
-    if hi - lo < 2 and value > 0:
+    if hi - lo < 2:
         lo = max(0, value - 1)
         hi = value + 1
     return lo, hi
 
 
-def generate_schematic_assertions(data, tolerance=0.10):
+def generate_schematic_assertions(data, tolerance=0.10, include_empty=False):
     """Generate assertions from a schematic analyzer output dict."""
     stats = data.get("statistics", {})
     sa = data.get("signal_analysis", {})
@@ -106,6 +155,24 @@ def generate_schematic_assertions(data, tolerance=0.10):
         })
         ast_num += 1
 
+        # Field-completeness: critical fields must be non-zero/present
+        qa, ast_num = _quality_assertions(sig_type, detections, ast_num)
+        assertions.extend(qa)
+
+    # Empty-detector assertions: detectors with 0 items stay at 0
+    # Only for schematics with enough components to be meaningful
+    if include_empty and total_comps >= 50:
+        for det in _LIST_DETECTORS:
+            det_items = sa.get(det, [])
+            if isinstance(det_items, list) and len(det_items) == 0:
+                assertions.append({
+                    "id": f"SEED-{ast_num:08d}",
+                    "description": f"No {det} expected",
+                    "check": {"path": f"signal_analysis.{det}",
+                              "op": "max_count", "value": 0},
+                })
+                ast_num += 1
+
     # Component types exist
     comp_types = stats.get("component_types", {})
     for ctype, count in sorted(comp_types.items()):
@@ -114,7 +181,7 @@ def generate_schematic_assertions(data, tolerance=0.10):
                 "id": f"SEED-{ast_num:08d}",
                 "description": f"Has {count} {ctype}(s)",
                 "check": {"path": f"statistics.component_types.{ctype}",
-                          "op": "min_count", "value": max(1, count // 2)},
+                          "op": "min_count", "value": max(1, int(count * 0.75))},
             })
             ast_num += 1
 
@@ -447,6 +514,47 @@ def generate_gerber_assertions(data, tolerance=0.10):
     return assertions
 
 
+def generate_datasheets_assertions(data, tolerance=0.10):
+    """Generate assertions from a datasheets validation report."""
+    parts = data.get("parts", {})
+    assertions = []
+    ast_num = 1
+
+    extracted = data.get("extracted", 0)
+    if extracted == 0:
+        return assertions
+
+    # Extraction count
+    lo, hi = _range_bounds(extracted, tolerance)
+    assertions.append({
+        "id": f"SEED-{ast_num:08d}",
+        "description": f"Extraction count ~{extracted} (tolerance {tolerance:.0%})",
+        "check": {"path": "extracted", "op": "range", "min": lo, "max": hi},
+    })
+    ast_num += 1
+
+    # Sufficient count (score >= 6.0)
+    sufficient = data.get("sufficient", 0)
+    if sufficient > 0:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"At least {sufficient} sufficient extraction(s)",
+            "check": {"path": "sufficient", "op": "min_count", "value": sufficient},
+        })
+        ast_num += 1
+
+    # Per-category counts
+    for cat, count in sorted(data.get("by_category", {}).items()):
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"{count} {cat} extraction(s)",
+            "check": {"path": f"by_category.{cat}", "op": "equals", "value": count},
+        })
+        ast_num += 1
+
+    return assertions
+
+
 def generate_spice_assertions(data, tolerance=0.10):
     """Generate assertions from a SPICE simulation output dict."""
     summary = data.get("summary", {})
@@ -503,7 +611,7 @@ def generate_spice_assertions(data, tolerance=0.10):
 
 
 def generate_for_repo(repo_name, atype, tolerance, min_components,
-                      file_filter, dry_run):
+                      file_filter, dry_run, include_empty=False):
     """Generate seed assertions for one repo."""
     type_dir = OUTPUTS_DIR / atype / repo_name
     if not type_dir.exists():
@@ -544,7 +652,8 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
                 if comps < min_components:
                     skipped += 1
                     continue
-                assertions = generate_schematic_assertions(data_content, tolerance)
+                assertions = generate_schematic_assertions(
+                    data_content, tolerance, include_empty=include_empty)
             elif atype == "pcb":
                 fps = data_content.get("statistics", {}).get("footprint_count", 0)
                 if fps < min_components:
@@ -563,6 +672,12 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
                     skipped += 1
                     continue
                 assertions = generate_spice_assertions(data_content, tolerance)
+            elif atype == "datasheets":
+                extracted = data_content.get("extracted", 0)
+                if extracted < 1:
+                    skipped += 1
+                    continue
+                assertions = generate_datasheets_assertions(data_content, tolerance)
             else:
                 continue
 
@@ -619,6 +734,9 @@ def main():
                         help="Tolerance for range assertions (default: 0.10 = 10%%)")
     parser.add_argument("--min-components", type=int, default=10,
                         help="Skip files with fewer components (default: 10)")
+    parser.add_argument("--include-empty", action="store_true",
+                        help="Add max_count=0 assertions for absent detectors "
+                             "(schematics with 50+ components)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print assertions without writing files")
     args = parser.parse_args()
@@ -635,7 +753,8 @@ def main():
     for repo in repos:
         files, assertions, skipped = generate_for_repo(
             repo, args.type, args.tolerance, args.min_components,
-            args.filter, args.dry_run)
+            args.filter, args.dry_run,
+            include_empty=getattr(args, "include_empty", False))
         grand_files += files
         grand_assertions += assertions
         grand_skipped += skipped
