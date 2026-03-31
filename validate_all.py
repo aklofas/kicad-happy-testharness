@@ -283,7 +283,21 @@ def main():
                         timeout=120)
         steps.append(step)
 
-    # Step 4: Schema diff (skip if validate_schema.py doesn't exist or no inventory)
+    # Step 4: Constants audit — check for critical-risk constants
+    constants_script = HARNESS_DIR / "validate" / "audit_constants.py"
+    if constants_script.exists():
+        step = run_step("constants_audit",
+                        [sys.executable, str(constants_script),
+                         "list", "--risk", "critical"],
+                        timeout=60)
+        # "No matching constants" means pass (exit 0)
+        # Any output listing constants means there are critical-risk items
+        if step["status"] == "pass" and "No matching" not in step.get("output", ""):
+            step["status"] = "warn"
+            step["detail"] = "critical-risk constants found"
+        steps.append(step)
+
+    # Step 5: Schema diff (skip if validate_schema.py doesn't exist or no inventory)
     schema_script = HARNESS_DIR / "validate" / "validate_schema.py"
     inventory_file = DATA_DIR / "schema_inventory.json"
     if schema_script.exists() and inventory_file.exists():

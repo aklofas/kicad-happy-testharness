@@ -13,6 +13,8 @@ import sys
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(HARNESS_DIR))
+from utils import TEST_TIMEOUT, INTEGRATION_TEST_TIMEOUT
 
 
 def discover_tests(dirs):
@@ -117,7 +119,7 @@ def main():
 
     for test_file in tests:
         rel = test_file.relative_to(HARNESS_DIR)
-        timeout = 600 if "integration" in str(test_file) else 120
+        timeout = INTEGRATION_TEST_TIMEOUT if "integration" in str(test_file) else TEST_TIMEOUT
         try:
             result = subprocess.run(
                 [sys.executable, str(test_file)],

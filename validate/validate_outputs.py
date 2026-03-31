@@ -191,6 +191,7 @@ def validate_new_sections(ctx, name, data):
 def main():
     parser = argparse.ArgumentParser(description="Validate analyzer JSON outputs")
     parser.add_argument("--repo", help="Only validate outputs for this repo")
+    parser.add_argument("--json", action="store_true", help="JSON output")
     args = parser.parse_args()
 
     if args.repo:
@@ -238,7 +239,7 @@ def main():
 
         try:
             data = load_result(json_path)
-        except Exception as e:
+        except (json.JSONDecodeError, OSError) as e:
             ctx.anomalies["invalid_json"].append((str(json_path), str(e)))
             continue
 
@@ -257,6 +258,17 @@ def main():
             validate_new_sections(ctx, name, data)
 
     # Report
+    if args.json:
+        output = {
+            "stats": dict(ctx.stats),
+            "anomaly_count": sum(len(v) for v in ctx.anomalies.values()),
+            "anomaly_categories": len(ctx.anomalies),
+            "anomalies": {cat: [{"file": n, "detail": d} for n, d in items]
+                          for cat, items in ctx.anomalies.items()},
+        }
+        print(json.dumps(output, indent=2))
+        return
+
     print("=" * 70)
     print("VALIDATION SUMMARY")
     print("=" * 70)

@@ -17,7 +17,13 @@ REPOS_DIR = HARNESS_DIR / "repos"
 DATA_DIR = HARNESS_DIR / "reference"
 MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
 OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
-ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice"]
+ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice", "datasheets"]
+
+# Timeout constants (seconds) — used across runners and validators
+ANALYZER_TIMEOUT = 120
+GIT_TIMEOUT = 60
+TEST_TIMEOUT = 120
+INTEGRATION_TEST_TIMEOUT = 600
 
 
 def project_prefix(project_path: str) -> str:
@@ -25,6 +31,14 @@ def project_prefix(project_path: str) -> str:
     if project_path and project_path != ".":
         return project_path.replace("/", "_").replace("\\", "_") + "_"
     return ""
+
+
+def safe_load_json(path, default=None):
+    """Load JSON from a file path, returning default on any error."""
+    try:
+        return json.loads(Path(path).read_text())
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return default
 
 
 def resolve_path(data: dict, path: str):
@@ -238,12 +252,12 @@ def _run_one(analyzer, file_path, outfile, errfile):
     try:
         result = subprocess.run(
             [sys.executable, str(analyzer), file_path, "-o", str(outfile)],
-            capture_output=True, text=True, timeout=120,
+            capture_output=True, text=True, timeout=ANALYZER_TIMEOUT,
         )
         errfile.write_text(result.stderr)
         return result.returncode, outfile
     except subprocess.TimeoutExpired:
-        errfile.write_text("Timed out after 120s")
+        errfile.write_text(f"Timed out after {ANALYZER_TIMEOUT}s")
         return None, outfile
 
 

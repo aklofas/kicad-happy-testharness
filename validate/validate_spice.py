@@ -234,6 +234,7 @@ def main():
                         help="Print summary only (no per-file details)")
     parser.add_argument("--mismatches-only", action="store_true",
                         help="Only show mismatches")
+    parser.add_argument("--json", action="store_true", help="JSON output")
     args = parser.parse_args()
 
     schematic_dir = OUTPUTS_DIR / "schematic"
@@ -268,7 +269,7 @@ def main():
             try:
                 sch_data = json.loads(sch_file.read_text())
                 spice_data = json.loads(spice_file.read_text())
-            except Exception:
+            except (json.JSONDecodeError, OSError):
                 continue
 
             # Collect SPICE simulation status counts per type
@@ -300,6 +301,19 @@ def main():
                               f"analyzer={r['analyzer_value']} "
                               f"spice={r['spice_value']} "
                               f"delta={r['delta_pct']:.3f}%")
+
+    if args.json:
+        output = {
+            "total_checks": total_checks,
+            "match": total_match,
+            "mismatch": total_mismatch,
+            "agreement_rate": f"{total_match/total_checks*100:.1f}%"
+                if total_checks else "N/A",
+            "by_type": by_type,
+            "sim_status_by_type": sim_status_by_type,
+        }
+        print(json.dumps(output, indent=2))
+        return
 
     # Summary
     print(f"\n{'='*60}")

@@ -291,7 +291,7 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
                         if p["name"] == proj_dir.name:
                             project_path = p["path"]
                             break
-                except Exception:
+                except (ImportError, OSError):
                     pass
 
             type_dirs = []
@@ -322,7 +322,7 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
                         data["_project"] = proj_dir.name
                         data["_project_path"] = project_path
                         all_assertions.append(data)
-                    except Exception:
+                    except (json.JSONDecodeError, OSError):
                         continue
 
     return all_assertions
