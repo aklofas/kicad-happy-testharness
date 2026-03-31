@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Component count ~36 (tolerance 10%)",
+      "description": "Component count ~43 (tolerance 10%)",
       "check": {
         "path": "statistics.total_components",
         "op": "range",
-        "min": 32,
-        "max": 40
+        "min": 38,
+        "max": 48
       }
     },
     {
@@ -78,6 +78,15 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "1 voltage_dividers detected",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -86,21 +95,30 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "Has 6 ic(s)",
+      "id": "SEED-00000011",
+      "description": "Has 5 connector(s)",
       "check": {
-        "path": "statistics.component_types.ic",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 3
+        "value": 2
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "Has 6 resistor(s)",
+      "id": "SEED-00000012",
+      "description": "Has 5 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "Has 8 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 3
+        "value": 4
       }
     }
   ]

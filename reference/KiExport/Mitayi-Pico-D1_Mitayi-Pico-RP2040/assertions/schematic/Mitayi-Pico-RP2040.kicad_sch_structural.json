@@ -24,15 +24,24 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 5 design_observations",
+      "description": "Exactly 3 decoupling_analysis",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 5
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000004",
+      "description": "Exactly 7 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 7
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 memory_interfaces",
       "check": {
         "path": "signal_analysis.memory_interfaces",
@@ -41,7 +50,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "U1 in memory_interfaces",
       "check": {
         "path": "signal_analysis.memory_interfaces",
@@ -51,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -60,7 +69,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "U2 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -70,32 +79,22 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 2 rc_filters",
+      "id": "STRUCT-00000009",
+      "description": "Exactly 1 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "R9 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R9$"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "R10 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R10$"
       }
     }
   ]

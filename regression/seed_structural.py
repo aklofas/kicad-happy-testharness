@@ -170,6 +170,85 @@ def generate_pcb_structural_assertions(data, strict=True):
     return assertions
 
 
+def generate_spice_structural_assertions(data, strict=True):
+    """Generate structural assertions from a SPICE simulation output.
+
+    For each subcircuit type, asserts exact count. For each unique component
+    ref, asserts presence with its subcircuit type.
+
+    Returns list of assertion dicts.
+    """
+    results = data.get("simulation_results", [])
+    if not results:
+        return []
+
+    assertions = []
+    ast_num = 1
+
+    # Count per subcircuit type
+    by_type = {}
+    for r in results:
+        t = r.get("subcircuit_type", "unknown")
+        by_type[t] = by_type.get(t, 0) + 1
+
+    for stype, count in sorted(by_type.items()):
+        if strict:
+            assertions.append({
+                "id": f"STRUCT-{ast_num:08d}",
+                "description": f"Exactly {count} {stype} simulation(s)",
+                "check": {
+                    "path": "simulation_results",
+                    "op": "count_matches",
+                    "field": "subcircuit_type",
+                    "pattern": f"^{stype}$",
+                    "value": count,
+                },
+            })
+        else:
+            lo = max(0, count - 1)
+            hi = count + 1
+            assertions.append({
+                "id": f"STRUCT-{ast_num:08d}",
+                "description": f"~{count} {stype} simulation(s) (±1)",
+                "check": {
+                    "path": "simulation_results",
+                    "op": "count_matches",
+                    "field": "subcircuit_type",
+                    "pattern": f"^{stype}$",
+                    "value": count,
+                },
+            })
+        ast_num += 1
+
+    # Per-component-ref assertions: "R5 simulated as rc_filter"
+    # The components field is a list, so str() produces "['R5', 'C3']".
+    # Use word-boundary matching to find the ref within the stringified list.
+    # Skip un-annotated refs (ending in ?) — they're not stable.
+    seen = set()
+    for r in results:
+        stype = r.get("subcircuit_type", "unknown")
+        for comp_ref in r.get("components", []):
+            if comp_ref.endswith("?") or not re.match(r'^[A-Za-z0-9_]+$', comp_ref):
+                continue
+            key = (comp_ref, stype)
+            if key in seen:
+                continue
+            seen.add(key)
+            assertions.append({
+                "id": f"STRUCT-{ast_num:08d}",
+                "description": f"{comp_ref} simulated as {stype}",
+                "check": {
+                    "path": "simulation_results",
+                    "op": "contains_match",
+                    "field": "components",
+                    "pattern": rf"\b{re.escape(comp_ref)}\b",
+                },
+            })
+            ast_num += 1
+
+    return assertions
+
+
 def generate_for_repo(repo_name, atype, strict, min_components,
                       dry_run):
     """Generate structural assertions for one repo."""
@@ -197,19 +276,26 @@ def generate_for_repo(repo_name, atype, strict, min_components,
             except Exception:
                 continue
 
-            stats = data_content.get("statistics", {})
-            comps = (stats.get("total_components", 0)
-                     or stats.get("footprint_count", 0))
-            if comps < min_components:
-                skipped += 1
-                continue
-
-            if atype == "schematic":
-                assertions = generate_structural_assertions(data_content, strict)
-            elif atype == "pcb":
-                assertions = generate_pcb_structural_assertions(data_content, strict)
+            if atype == "spice":
+                total_sims = data_content.get("summary", {}).get("total", 0)
+                if total_sims < 1:
+                    skipped += 1
+                    continue
+                assertions = generate_spice_structural_assertions(data_content, strict)
             else:
-                continue
+                stats = data_content.get("statistics", {})
+                comps = (stats.get("total_components", 0)
+                         or stats.get("footprint_count", 0))
+                if comps < min_components:
+                    skipped += 1
+                    continue
+
+                if atype == "schematic":
+                    assertions = generate_structural_assertions(data_content, strict)
+                elif atype == "pcb":
+                    assertions = generate_pcb_structural_assertions(data_content, strict)
+                else:
+                    continue
             if not assertions:
                 continue
 

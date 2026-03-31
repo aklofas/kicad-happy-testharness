@@ -1,0 +1,98 @@
+{
+  "file_pattern": "ti92-reviceStable.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 rf_chain simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rf_chain$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "kbQ1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bkbQ1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "kbPI1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bkbPI1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "kbW1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bkbW1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "kbMode1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bkbMode1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "kbP1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bkbP1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "kbF1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bkbF1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "klock1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bklock1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "arrwUP1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\barrwUP1\\b"
+      }
+    }
+  ]
+}

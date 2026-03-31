@@ -1,0 +1,114 @@
+{
+  "file_pattern": "ESP32-PoE-ISO_Rev_H.sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~22 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 19,
+        "max": 25
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 15 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 15
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "1 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "1 current_sense simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^current_sense$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "6 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 protection_device simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^protection_device$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "8 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "1 rf_chain simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rf_chain$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "3 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    }
+  ]
+}

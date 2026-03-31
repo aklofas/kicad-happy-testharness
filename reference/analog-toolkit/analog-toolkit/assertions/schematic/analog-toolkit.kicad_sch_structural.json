@@ -5,20 +5,20 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 decoupling_analysis",
+      "description": "Exactly 4 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 8 design_observations",
+      "description": "Exactly 7 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 8
+        "value": 7
       }
     },
     {
@@ -32,12 +32,12 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "U1 in power_regulators",
+      "description": "U3 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U1$"
+        "pattern": "^U3$"
       }
     },
     {
@@ -61,12 +61,31 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "U2 in protection_devices",
+      "description": "U1 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "contains_match",
         "field": "ref",
-        "pattern": "^U2$"
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Exactly 1 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R5 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R5$"
       }
     }
   ]

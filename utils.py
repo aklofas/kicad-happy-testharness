@@ -17,7 +17,7 @@ REPOS_DIR = HARNESS_DIR / "repos"
 DATA_DIR = HARNESS_DIR / "reference"
 MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
 OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
-ANALYZER_TYPES = ["schematic", "pcb", "gerber"]
+ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice"]
 
 
 def project_prefix(project_path: str) -> str:

@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-03-22
+Last updated: 2026-03-30
 
 ---
 
@@ -13,26 +13,43 @@ Last updated: 2026-03-22
 
 | Metric | Count |
 |--------|------:|
-| Total repos in repos.md | 1,052 |
-| Checked out in repos/ | 1,044 |
+| Total repos in repos.md | 1,043 |
+| Checked out in repos/ | 1,035 |
 | Repos with baselines | 1,035 |
 | Repos with assertions | 1,035 |
-| Total assertion files | 18,060 |
-| SEED assertions (schematic) | 64,089 |
+| Total assertion files | ~23,000 |
+| SEED assertions (schematic) | 55,872 |
 | SEED assertions (PCB) | 42,947 |
 | SEED assertions (gerber) | 8,965 |
-| STRUCT assertions (schematic) | 45,833 |
+| SEED assertions (SPICE) | 20,788 |
+| STRUCT assertions (schematic) | 45,935 |
 | STRUCT assertions (PCB) | 40,831 |
-| FND assertions (required) | 443 |
-| FND assertions (aspirational) | 211 |
-| BUGFIX assertions | 67 |
-| **Total assertions** | **203,179** |
+| STRUCT assertions (SPICE) | 68,504 |
+| FND assertions (required) | 2,731 |
+| FND assertions (aspirational) | 1,987 |
+| BUGFIX assertions | 77 |
+| **Total assertions** | **~295,000** |
 | Assertion pass rate | 100.0% |
 | Bugfix registry entries | 58 |
-| Layer 3 reviewed repos | 155 |
-| Total findings | 295 |
-| Open KH-* issues | 9 (3 MEDIUM, 6 LOW) |
-| Closed KH-* issues | 177 |
+| Layer 3 reviewed repos | 905 |
+| Total findings | 2,575 |
+| Open KH-* issues | 0 |
+| Closed KH-* issues | 186 |
+
+### SPICE simulation summary
+
+| Metric | Count |
+|--------|------:|
+| Schematic files processed | 6,853 |
+| Files with simulations | 4,338 |
+| Total subcircuit simulations | 30,646 |
+| Subcircuit types | 17 |
+| Pass | 28,853 (94.1%) |
+| Warn | 857 (2.8%) |
+| Fail | 14 (0.05%) |
+| Skip | 922 (3.0%) |
+| Cross-validation checks | 12,777 |
+| Cross-validation agreement | 99.6% |
 
 ---
 

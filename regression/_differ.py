@@ -349,4 +349,21 @@ def extract_manifest_entry(data, analyzer_type):
             "sections": sorted(k for k in data.keys() if k != "file"),
         }
 
+    elif analyzer_type == "spice":
+        summary = data.get("summary", {})
+        by_type = {}
+        for r in data.get("simulation_results", []):
+            t = r.get("subcircuit_type", "unknown")
+            by_type[t] = by_type.get(t, 0) + 1
+        total = summary.get("total", 0)
+        return {
+            "total_sims": total,
+            "pass": summary.get("pass", 0),
+            "warn": summary.get("warn", 0),
+            "fail": summary.get("fail", 0),
+            "skip": summary.get("skip", 0),
+            "pass_rate": round(summary.get("pass", 0) / total * 100, 1) if total else 0,
+            "by_type": by_type,
+        }
+
     return {}

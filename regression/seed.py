@@ -447,6 +447,61 @@ def generate_gerber_assertions(data, tolerance=0.10):
     return assertions
 
 
+def generate_spice_assertions(data, tolerance=0.10):
+    """Generate assertions from a SPICE simulation output dict."""
+    summary = data.get("summary", {})
+    results = data.get("simulation_results", [])
+
+    assertions = []
+    ast_num = 1
+
+    total = summary.get("total", 0)
+    if total == 0:
+        return assertions
+
+    # Total simulation count range
+    lo, hi = _range_bounds(total, tolerance)
+    assertions.append({
+        "id": f"SEED-{ast_num:08d}",
+        "description": f"Simulation count ~{total} (tolerance {tolerance:.0%})",
+        "check": {"path": "summary.total", "op": "range",
+                  "min": lo, "max": hi},
+    })
+    ast_num += 1
+
+    # Pass count (minimum — at least 80% of current)
+    pass_count = summary.get("pass", 0)
+    if pass_count > 0:
+        min_pass = max(1, int(pass_count * 0.8))
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"At least {min_pass} passing simulation(s)",
+            "check": {"path": "summary.pass", "op": "min_count",
+                      "value": min_pass},
+        })
+        ast_num += 1
+
+    # Per subcircuit type count
+    by_type = {}
+    for r in results:
+        t = r.get("subcircuit_type", "unknown")
+        by_type[t] = by_type.get(t, 0) + 1
+
+    for stype, count in sorted(by_type.items()):
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"{count} {stype} simulation(s)",
+            "check": {"path": "simulation_results",
+                      "op": "count_matches",
+                      "field": "subcircuit_type",
+                      "pattern": f"^{stype}$",
+                      "value": count},
+        })
+        ast_num += 1
+
+    return assertions
+
+
 def generate_for_repo(repo_name, atype, tolerance, min_components,
                       file_filter, dry_run):
     """Generate seed assertions for one repo."""
@@ -502,6 +557,12 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
                     skipped += 1
                     continue
                 assertions = generate_gerber_assertions(data_content, tolerance)
+            elif atype == "spice":
+                total_sims = data_content.get("summary", {}).get("total", 0)
+                if total_sims < 1:
+                    skipped += 1
+                    continue
+                assertions = generate_spice_assertions(data_content, tolerance)
             else:
                 continue
 

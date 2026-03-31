@@ -1,0 +1,129 @@
+{
+  "file_pattern": "serdes_clock.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "R705 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR705\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C710 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC710\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R704 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR704\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C708 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC708\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C702 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC702\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C703 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC703\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C704 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC704\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C705 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC705\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C706 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC706\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C701 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC701\\b"
+      }
+    }
+  ]
+}

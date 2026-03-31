@@ -101,7 +101,7 @@ def find_output_file(file_pattern, repo_name, project_path, analyzer_type):
 def main():
     parser = argparse.ArgumentParser(description="Check assertions against outputs")
     parser.add_argument("--repo", help="Only check assertions for this repo")
-    parser.add_argument("--type", choices=["schematic", "pcb", "gerber"],
+    parser.add_argument("--type", choices=["schematic", "pcb", "gerber", "spice"],
                         help="Only check one analyzer type")
     parser.add_argument("--file", help="Only check assertions matching this file pattern")
     parser.add_argument("--json", action="store_true", help="Output as JSON")

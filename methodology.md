@@ -6,7 +6,7 @@ How we validate a suite of KiCad analyzers against 1,050+ real-world open-source
 
 ## The problem
 
-kicad-happy includes three deterministic Python analyzers that parse KiCad schematics, PCB layouts, and Gerber files. They extract components, nets, and signal paths, then run 21+ signal detectors (voltage dividers, regulators, filters, bus protocols, opamp circuits, etc.) to produce structured JSON output.
+kicad-happy includes three deterministic Python analyzers that parse KiCad schematics, PCB layouts, and Gerber files. They extract components, nets, and signal paths, then run 21+ signal detectors (voltage dividers, regulators, filters, bus protocols, opamp circuits, etc.) to produce structured JSON output. A fourth tool, `simulate_subcircuits.py`, generates ngspice testbenches from detector output to validate circuit behavior via SPICE simulation (see [spice.md](spice.md)).
 
 These analyzers contain 180+ hardcoded constants: voltage reference tables sourced from datasheets, component classification keyword lists, regex patterns for net name matching, and numeric thresholds for detection heuristics. A single wrong entry — a hallucinated Vref value, an overly broad regex, a misclassified component prefix — can silently produce incorrect results across hundreds of projects.
 
