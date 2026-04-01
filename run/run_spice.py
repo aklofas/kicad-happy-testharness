@@ -52,23 +52,63 @@ def find_schematic_outputs(repo_filter=None):
     return outputs
 
 
-def run_one_spice(simulator_script, input_json, output_json, timeout=5):
+def find_pcb_output(schematic_json):
+    """Find matching PCB output for a schematic output.
+
+    Given results/outputs/schematic/{repo}/{name}.kicad_sch.json,
+    looks for results/outputs/pcb/{repo}/{name}.kicad_pcb.json.
+    """
+    repo_name = schematic_json.parent.name
+    pcb_dir = OUTPUTS_DIR / "pcb" / repo_name
+    if not pcb_dir.exists():
+        return None
+
+    stem = schematic_json.name
+    for old, new in [(".kicad_sch.json", ".kicad_pcb.json"),
+                     (".sch.json", ".kicad_pcb.json")]:
+        if stem.endswith(old):
+            pcb_path = pcb_dir / stem.replace(old, new)
+            if pcb_path.exists() and pcb_path.stat().st_size > 0:
+                return pcb_path
+    return None
+
+
+def run_extract_parasitics(extractor_script, pcb_json, parasitics_json):
+    """Run extract_parasitics.py on a PCB analysis JSON.
+
+    Returns:
+        True if extraction succeeded, False otherwise.
+    """
+    try:
+        result = subprocess.run(
+            [sys.executable, str(extractor_script),
+             str(pcb_json),
+             "--output", str(parasitics_json)],
+            capture_output=True, text=True, timeout=30,
+        )
+        return result.returncode == 0 and parasitics_json.exists()
+    except Exception:
+        return False
+
+
+def run_one_spice(simulator_script, input_json, output_json, timeout=5,
+                  parasitics_json=None):
     """Run simulate_subcircuits.py on one schematic analysis JSON.
 
     Returns:
         (returncode, summary_dict_or_None)
     """
+    cmd = [sys.executable, str(simulator_script),
+           str(input_json),
+           "--output", str(output_json),
+           "--compact",
+           "--timeout", str(timeout)]
+    if parasitics_json and parasitics_json.exists():
+        cmd.extend(["--parasitics", str(parasitics_json)])
+
     try:
-        result = subprocess.run(
-            [sys.executable, str(simulator_script),
-             str(input_json),
-             "--output", str(output_json),
-             "--compact",
-             "--timeout", str(timeout)],
-            capture_output=True,
-            text=True,
-            timeout=60,  # Overall timeout for the script
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True,
+                                timeout=60)
         if result.returncode == 0 and output_json.exists():
             with open(output_json) as f:
                 data = json.load(f)
@@ -97,6 +137,10 @@ def main():
                         help="Parallel jobs (default: 4)")
     parser.add_argument("--timeout", "-t", type=int, default=5,
                         help="Timeout per subcircuit simulation in seconds (default: 5)")
+    parser.add_argument("--with-parasitics", action="store_true",
+                        help="Enable PCB parasitic injection: extract trace R/via L "
+                        "from PCB outputs and inject into SPICE testbenches. "
+                        "Results go to results/outputs/spice-parasitics/.")
     args = parser.parse_args()
 
     # Resolve paths
@@ -106,6 +150,13 @@ def main():
     if not simulator.exists():
         print(f"Error: {simulator} not found", file=sys.stderr)
         sys.exit(1)
+
+    extractor = None
+    if args.with_parasitics:
+        extractor = kicad_happy / "skills" / "spice" / "scripts" / "extract_parasitics.py"
+        if not extractor.exists():
+            print(f"Error: {extractor} not found", file=sys.stderr)
+            sys.exit(1)
 
     # Check ngspice (the simulator script handles NGSPICE_PATH and Windows paths,
     # but do a basic check here for early feedback)
@@ -135,11 +186,20 @@ def main():
         sys.exit(1)
 
     # Output directory
-    spice_out_dir = OUTPUTS_DIR / "spice"
+    if args.with_parasitics:
+        spice_out_dir = OUTPUTS_DIR / "spice-parasitics"
+    else:
+        spice_out_dir = OUTPUTS_DIR / "spice"
 
-    print(f"=== Running SPICE simulation ===")
+    mode_label = "SPICE + PCB Parasitics" if args.with_parasitics else "SPICE simulation"
+    print(f"=== Running {mode_label} ===")
     print(f"Simulator: {simulator}")
-    print(f"Inputs: {len(inputs)} schematic outputs")
+    if args.with_parasitics:
+        print(f"Extractor: {extractor}")
+        pcb_matches = sum(1 for inp in inputs if find_pcb_output(inp))
+        print(f"Inputs: {len(inputs)} schematic outputs ({pcb_matches} with PCB)")
+    else:
+        print(f"Inputs: {len(inputs)} schematic outputs")
     print(f"Jobs: {args.jobs}")
     print(f"Timeout: {args.timeout}s per subcircuit")
     print()
@@ -152,15 +212,31 @@ def main():
     errors = 0
     type_counts = {}
 
+    parasitics_extracted = 0
+
     def process_one(input_json):
+        nonlocal parasitics_extracted
         # Mirror the repo directory structure
         repo_name = input_json.parent.name
         out_dir = spice_out_dir / repo_name
         out_dir.mkdir(parents=True, exist_ok=True)
         output_json = out_dir / input_json.name
 
+        # Extract parasitics from matching PCB output if --with-parasitics
+        parasitics_json = None
+        if args.with_parasitics:
+            pcb_json = find_pcb_output(input_json)
+            if pcb_json:
+                parasitics_json = out_dir / (input_json.stem + ".parasitics.json")
+                ok = run_extract_parasitics(extractor, pcb_json, parasitics_json)
+                if ok:
+                    parasitics_extracted += 1
+                else:
+                    parasitics_json = None  # Extraction failed, run without
+
         returncode, summary = run_one_spice(
-            simulator, input_json, output_json, timeout=args.timeout
+            simulator, input_json, output_json, timeout=args.timeout,
+            parasitics_json=parasitics_json,
         )
         return input_json, returncode, summary, output_json
 
@@ -228,9 +304,12 @@ def main():
     # Summary
     print()
     print(f"{'='*60}")
-    print(f"SPICE Simulation Summary")
+    title = "SPICE + Parasitics Summary" if args.with_parasitics else "SPICE Simulation Summary"
+    print(title)
     print(f"{'='*60}")
     print(f"Schematic files processed:  {total_files}")
+    if args.with_parasitics:
+        print(f"Parasitics extracted:       {parasitics_extracted}")
     print(f"Files with simulations:     {files_with_sims}")
     print(f"Script errors:              {errors}")
     print(f"{'='*60}")
@@ -261,6 +340,9 @@ def main():
         "pass_rate": round(total_pass / total_sims * 100, 1) if total_sims else 0,
         "by_type": type_counts,
     }
+    if args.with_parasitics:
+        agg["parasitics_extracted"] = parasitics_extracted
+    agg_file.parent.mkdir(parents=True, exist_ok=True)
     agg_file.write_text(json.dumps(agg, indent=2))
     print(f"\nAggregate report: {agg_file}")
 

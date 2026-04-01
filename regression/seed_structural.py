@@ -249,6 +249,79 @@ def generate_spice_structural_assertions(data, strict=True):
     return assertions
 
 
+def generate_emc_structural_assertions(data, strict=True):
+    """Generate structural assertions from EMC analysis output.
+
+    For each category, asserts exact count of findings.
+    For each unique rule_id, asserts presence.
+    For each unique component ref in findings, asserts presence.
+    """
+    findings = data.get("findings", [])
+    if not findings:
+        return []
+
+    assertions = []
+    ast_num = 1
+
+    # Per-category finding counts
+    by_category = {}
+    for f in findings:
+        cat = f.get("category", "other")
+        by_category[cat] = by_category.get(cat, 0) + 1
+
+    for cat, count in sorted(by_category.items()):
+        assertions.append({
+            "id": f"STRUCT-{ast_num:08d}",
+            "description": f"{count} {cat} finding(s)",
+            "check": {
+                "path": "findings",
+                "op": "count_matches",
+                "field": "category",
+                "pattern": f"^{re.escape(cat)}$",
+                "value": count,
+            },
+        })
+        ast_num += 1
+
+    # Per-rule_id presence
+    rule_ids = sorted(set(f.get("rule_id", "") for f in findings if f.get("rule_id")))
+    for rid in rule_ids:
+        assertions.append({
+            "id": f"STRUCT-{ast_num:08d}",
+            "description": f"Rule {rid} present",
+            "check": {
+                "path": "findings",
+                "op": "contains_match",
+                "field": "rule_id",
+                "pattern": f"^{re.escape(rid)}$",
+            },
+        })
+        ast_num += 1
+
+    # Per-component ref presence
+    seen_refs = set()
+    for f in findings:
+        for comp_ref in f.get("components", []):
+            if comp_ref.endswith("?") or not re.match(r'^[A-Za-z0-9_]+$', comp_ref):
+                continue
+            if comp_ref in seen_refs:
+                continue
+            seen_refs.add(comp_ref)
+            assertions.append({
+                "id": f"STRUCT-{ast_num:08d}",
+                "description": f"{comp_ref} in EMC findings",
+                "check": {
+                    "path": "findings",
+                    "op": "contains_match",
+                    "field": "components",
+                    "pattern": rf"\b{re.escape(comp_ref)}\b",
+                },
+            })
+            ast_num += 1
+
+    return assertions
+
+
 def generate_datasheets_structural_assertions(data, strict=True):
     """Generate structural assertions from a datasheets validation report.
 
@@ -313,6 +386,12 @@ def generate_for_repo(repo_name, atype, strict, min_components,
                     skipped += 1
                     continue
                 assertions = generate_spice_structural_assertions(data_content, strict)
+            elif atype == "emc":
+                total_checks = data_content.get("summary", {}).get("total_checks", 0)
+                if total_checks < 1:
+                    skipped += 1
+                    continue
+                assertions = generate_emc_structural_assertions(data_content, strict)
             elif atype == "datasheets":
                 extracted = data_content.get("extracted", 0)
                 if extracted < 1:

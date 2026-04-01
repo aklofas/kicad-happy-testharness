@@ -1,6 +1,6 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,050+ real-world open-source KiCad projects. Provides a 3-layer regression testing system with 296K+ machine-checkable assertions at 99.9% pass rate, 235 unit tests, and 30,000+ SPICE simulations across 17 subcircuit types with 7-type cross-validation.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,050+ real-world open-source KiCad projects. Provides a 3-layer regression testing system with 369K+ machine-checkable assertions, 264 unit tests, 30,000+ SPICE simulations across 17 subcircuit types, and 29,000+ EMC pre-compliance findings across 7 rule categories.
 
 For a deep dive into the architecture, reasoning, and design decisions, see [methodology.md](methodology.md).
 
@@ -34,6 +34,9 @@ python3 run/run_gerbers.py --jobs 4
 
 # 4b. Run SPICE simulations (requires ngspice, reads schematic outputs)
 python3 run/run_spice.py --jobs 16
+
+# 4c. Run EMC analysis (reads schematic + PCB outputs)
+python3 run/run_emc.py --jobs 16
 
 # 5. Snapshot and compare baselines
 python3 regression/snapshot.py --repo {repo}
@@ -79,10 +82,12 @@ export KICAD_HAPPY_DIR=/path/to/kicad-happy   # if not at ../kicad-happy
 | `analyze_pcb.py` | `.kicad_pcb` | Footprints, tracks, vias, zones, DFM analysis |
 | `analyze_gerbers.py` | Gerber directories | Layer completeness, drill alignment |
 | `simulate_subcircuits.py` | Schematic JSON | SPICE simulation of 17 subcircuit types (requires ngspice) |
+| `analyze_emc.py` | Schematic + PCB JSON | EMC pre-compliance risk analysis (7 rule categories, 6 standards) |
 
 All analyzers are pure Python 3.8+ stdlib. They produce JSON output and support KiCad versions 5 through 9.
 
 For details on the SPICE simulation system, see [spice.md](spice.md).
+For details on the EMC pre-compliance system, see [emc.md](emc.md).
 
 **Note on `.sch` files**: `discover.py` filters legacy `.sch` files by checking the header for "EESchema" (KiCad 5 signature) to exclude Eagle XML/binary `.sch` files.
 
@@ -257,6 +262,35 @@ Each constant is auto-classified into a category that determines what kind of ve
 
 The registry (`reference/constants_registry.json`) tracks stable IDs, content hashes for drift detection, per-entry verification for lookup tables, corpus hit data, and both risk dimensions.
 
+## Equation tracking
+
+The analyzer scripts use 83 engineering formulas — radiation calculations, impedance estimates, filter frequencies, harmonic analysis, and more. Unlike constants, equations can't be detected by AST alone, so they use structured comment tags (`# EQ-NNN:`) placed at each formula, with a scanner that detects changes via function body hashing.
+
+```bash
+python3 validate/audit_equations.py scan                # scan for EQ tags, update registry
+python3 validate/audit_equations.py scan --diff          # show what changed since last scan
+python3 validate/audit_equations.py list                 # all tracked equations
+python3 validate/audit_equations.py list --unverified    # unverified only
+python3 validate/audit_equations.py show EQ-001          # detail view
+python3 validate/audit_equations.py verify EQ-001 --source "Ott Eq. 6.4 p. 156"
+python3 validate/audit_equations.py render               # generate equation_registry.md
+python3 validate/audit_equations.py untagged             # find math functions without EQ tags
+```
+
+Each equation is tagged in the kicad-happy source with its formula and authoritative source:
+
+```python
+# EQ-001: E = K × f² × A × I / r (differential-mode loop radiation)
+# Source: Ott "EMC Engineering" (Wiley, 2009) Eq. 6.4
+# Source: MSU EMC Lab Module 9 p.9-16 (egr.msu.edu)
+k = 2.632e-14 if ground_plane else 1.316e-14
+return k * freq_hz**2 * area_m2 * current_a / distance_m
+```
+
+The registry (`reference/equation_registry.json`) tracks each equation's ID, formula, file, function, category, impact level, verification status, and source citations. When a function body changes (detected by AST hash), the equation is marked `stale` for re-verification. The `untagged` command uses heuristic detection (presence of `math.sqrt`, `math.pi`, `**2`, etc.) to find functions with engineering math that lack EQ tags.
+
+**Verification quality:** 12 equations verified with online URLs (MSU EMC Lab PDFs, LearnEMC calculators, EDN articles, IEEE papers via Semantic Scholar, TI app notes). 36 are self-evident physics (Ohm's law, Euclidean distance). 16 are derived from other verified equations. The remaining 19 are engineering heuristics clearly labeled as such.
+
 ## Validation and reporting
 
 ```bash
@@ -268,6 +302,7 @@ python3 validate_all.py --repo {repo} --json            # single repo, JSON outp
 # Individual validators
 python3 validate/validate_outputs.py --repo {repo}      # structural invariants (--json)
 python3 validate/validate_spice.py --repo {repo}        # SPICE cross-validation (--json)
+python3 validate/validate_emc.py --repo {repo}          # EMC cross-validation (--summary)
 python3 validate/validate_schema.py scan                # build field inventory
 python3 validate/validate_schema.py diff                # detect schema drift
 python3 validate/extract_mpns.py --repo {repo}          # extract MPNs from outputs
@@ -283,7 +318,7 @@ python3 generate_health_report.py --json --log          # append to health_log.j
 python3 regression/audit_bugfix_coverage.py             # gaps in bugfix regression
 
 # Testing
-python3 run_tests.py --unit                             # 235 unit tests
+python3 run_tests.py --unit                             # 270 unit tests
 python3 run_tests.py --integration                      # integration tests
 python3 run_tests.py --quick-sanity                     # assertions on 5 repos
 ```
@@ -323,6 +358,7 @@ Prefixes: `KH-*` for analyzer bugs, `TH-*` for harness issues. Numbers are globa
 
 ```
 spice.md                    # SPICE simulation documentation
+emc.md                      # EMC pre-compliance testing documentation
 repos.md                    # Master repo list (1,043 repos with pinned hashes)
 priority.md                 # Testing priority ranking (all tested)
 status.md                   # Batch testing progress log
@@ -341,6 +377,7 @@ run/                        # Batch-run analyzers (all support --repo, --jobs)
   run_pcb.py
   run_gerbers.py
   run_spice.py              #   SPICE simulations (requires ngspice)
+  run_emc.py                #   EMC pre-compliance analysis (reads schematic + PCB)
   run_datasheets.py         #   Download datasheets + validate extractions
 
 regression/                 # 3-layer regression testing
@@ -366,16 +403,19 @@ regression/                 # 3-layer regression testing
 validate/                   # Output quality + constants audit
   validate_outputs.py       #   Structural invariants on analyzer JSON (--json)
   validate_spice.py         #   Cross-validate SPICE vs analyzer values (--json)
+  validate_emc.py           #   Cross-validate EMC vs analyzer values (--summary)
   validate_schema.py        #   Schema inventory and drift detection (scan/diff)
   extract_mpns.py           #   Extract MPN + manufacturer pairs
   validate_mpns.py          #   Validate MPNs against distributor APIs
   analyze_bom_mismatch.py   #   BOM qty vs component count analysis
   download_datasheets.py    #   Download datasheets from multiple sources
   audit_constants.py        #   AST-based constant registry + verification
+  audit_equations.py        #   EQ-tag equation tracking + verification
 
-tests/                      # Unit tests (235 tests, custom runner)
+tests/                      # Unit tests (270 tests, custom runner)
   test_checks.py            #   Assertion evaluation engine (43 tests)
   test_differ.py            #   Baseline diff engine (13 tests)
+  test_emc.py               #   EMC seed + structural + cross-val (35 tests)
   test_refextract.py        #   Reference extraction (33 tests)
   test_schema.py            #   Schema validation + KNOWN_OPS (24 tests)
   test_seed.py              #   Seed assertion generation (23 tests)
@@ -388,8 +428,10 @@ integration/                # End-to-end tests
   test_datasheet_extraction.py # Datasheet download + extraction pipeline
 
 reference/                  # Tracked in git -- known-good regression data
-  constants_registry.json   #   Constant audit registry
+  constants_registry.json   #   Constant audit registry (290 constants)
   constants_registry.md     #   Auto-generated constant summary
+  equation_registry.json    #   Equation tracking registry (83 equations)
+  equation_registry.md      #   Auto-generated equation summary
   schema_inventory.json     #   Field inventory for schema drift detection
   health_log.jsonl          #   Health metrics over time (append-only)
   test_mpns.json            #   Curated test MPNs

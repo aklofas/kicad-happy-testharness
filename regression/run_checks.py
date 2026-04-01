@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import evaluate_assertion, load_assertions
-from utils import OUTPUTS_DIR, DATA_DIR, project_prefix
+from utils import OUTPUTS_DIR, DATA_DIR, project_prefix, ANALYZER_TYPES
 
 
 def check_assertions(data_dir, repo_name=None, analyzer_type=None):
@@ -101,7 +101,7 @@ def find_output_file(file_pattern, repo_name, project_path, analyzer_type):
 def main():
     parser = argparse.ArgumentParser(description="Check assertions against outputs")
     parser.add_argument("--repo", help="Only check assertions for this repo")
-    parser.add_argument("--type", choices=["schematic", "pcb", "gerber", "spice"],
+    parser.add_argument("--type", choices=ANALYZER_TYPES,
                         help="Only check one analyzer type")
     parser.add_argument("--file", help="Only check assertions matching this file pattern")
     parser.add_argument("--json", action="store_true", help="Output as JSON")

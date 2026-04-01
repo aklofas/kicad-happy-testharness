@@ -1,0 +1,189 @@
+{
+  "file_pattern": "poly_kb.sch",
+  "analyzer_type": "emc",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Finding count ~988 (tolerance 10%)",
+      "check": {
+        "path": "summary.total_checks",
+        "op": "range",
+        "min": 889,
+        "max": 1087
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "critical count ~751",
+      "check": {
+        "path": "summary.critical",
+        "op": "range",
+        "min": 675,
+        "max": 827
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "high count ~108",
+      "check": {
+        "path": "summary.high",
+        "op": "range",
+        "min": 97,
+        "max": 119
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "medium count ~16",
+      "check": {
+        "path": "summary.medium",
+        "op": "range",
+        "min": 14,
+        "max": 18
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "low count ~113",
+      "check": {
+        "path": "summary.low",
+        "op": "range",
+        "min": 101,
+        "max": 125
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "EMC risk score ~0 (+-10)",
+      "check": {
+        "path": "summary.emc_risk_score",
+        "op": "range",
+        "min": 0,
+        "max": 10
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "2 board_edge finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^board_edge$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "3 clock_routing finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^clock_routing$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "16 decoupling finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^decoupling$",
+        "value": 16
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "4 diff_pair finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^diff_pair$",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "850 ground_plane finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^ground_plane$",
+        "value": 850
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "112 io_filtering finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^io_filtering$",
+        "value": 112
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "1 thermal_emc finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^thermal_emc$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "Target standard is fcc-class-b",
+      "check": {
+        "path": "target_standard",
+        "op": "equals",
+        "value": "fcc-class-b"
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "4 frequency band(s) in test plan",
+      "check": {
+        "path": "test_plan.frequency_bands",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "~113 probe point(s) in test plan",
+      "check": {
+        "path": "test_plan.probe_points",
+        "op": "min_count",
+        "value": 101
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "Regulatory market is us",
+      "check": {
+        "path": "regulatory_coverage.market",
+        "op": "equals",
+        "value": "us"
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "2 applicable standard(s)",
+      "check": {
+        "path": "regulatory_coverage.applicable_standards",
+        "op": "min_count",
+        "value": 2
+      }
+    }
+  ]
+}

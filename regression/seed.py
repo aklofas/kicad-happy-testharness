@@ -555,6 +555,132 @@ def generate_datasheets_assertions(data, tolerance=0.10):
     return assertions
 
 
+def generate_emc_assertions(data, tolerance=0.10):
+    """Generate assertions from an EMC analysis output dict."""
+    summary = data.get("summary", {})
+    findings = data.get("findings", [])
+
+    assertions = []
+    ast_num = 1
+
+    total = summary.get("total_checks", 0)
+    if total == 0:
+        return assertions
+
+    # Total findings count range
+    lo, hi = _range_bounds(total, tolerance)
+    assertions.append({
+        "id": f"SEED-{ast_num:08d}",
+        "description": f"Finding count ~{total} (tolerance {tolerance:.0%})",
+        "check": {"path": "summary.total_checks", "op": "range",
+                  "min": lo, "max": hi},
+    })
+    ast_num += 1
+
+    # Per-severity counts (range for non-zero)
+    for sev in ("critical", "high", "medium", "low"):
+        count = summary.get(sev, 0)
+        if count > 0:
+            lo, hi = _range_bounds(count, tolerance)
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"{sev} count ~{count}",
+                "check": {"path": f"summary.{sev}", "op": "range",
+                          "min": lo, "max": hi},
+            })
+            ast_num += 1
+
+    # EMC risk score range
+    score = summary.get("emc_risk_score", 0)
+    slo = max(0, score - 10)
+    shi = min(100, score + 10)
+    assertions.append({
+        "id": f"SEED-{ast_num:08d}",
+        "description": f"EMC risk score ~{score} (+-10)",
+        "check": {"path": "summary.emc_risk_score", "op": "range",
+                  "min": slo, "max": shi},
+    })
+    ast_num += 1
+
+    # Per-category counts
+    by_category = {}
+    for f in findings:
+        cat = f.get("category", "other")
+        by_category[cat] = by_category.get(cat, 0) + 1
+
+    for cat, count in sorted(by_category.items()):
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"{count} {cat} finding(s)",
+            "check": {"path": "findings",
+                      "op": "count_matches",
+                      "field": "category",
+                      "pattern": f"^{cat}$",
+                      "value": count},
+        })
+        ast_num += 1
+
+    # Target standard
+    standard = data.get("target_standard", "")
+    if standard:
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Target standard is {standard}",
+            "check": {"path": "target_standard", "op": "equals",
+                      "value": standard},
+        })
+        ast_num += 1
+
+    # Test plan section (Phase 2+)
+    test_plan = data.get("test_plan", {})
+    if test_plan:
+        fb_count = len(test_plan.get("frequency_bands", []))
+        if fb_count > 0:
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"{fb_count} frequency band(s) in test plan",
+                "check": {"path": "test_plan.frequency_bands",
+                          "op": "min_count", "value": fb_count},
+            })
+            ast_num += 1
+
+        pp_count = len(test_plan.get("probe_points", []))
+        if pp_count > 0:
+            lo, hi = _range_bounds(pp_count, tolerance)
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"~{pp_count} probe point(s) in test plan",
+                "check": {"path": "test_plan.probe_points",
+                          "op": "min_count", "value": max(1, lo)},
+            })
+            ast_num += 1
+
+    # Regulatory coverage section (Phase 2+)
+    reg = data.get("regulatory_coverage", {})
+    if reg:
+        market = reg.get("market", "")
+        if market:
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"Regulatory market is {market}",
+                "check": {"path": "regulatory_coverage.market",
+                          "op": "equals", "value": market},
+            })
+            ast_num += 1
+
+        std_count = len(reg.get("applicable_standards", []))
+        if std_count > 0:
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"{std_count} applicable standard(s)",
+                "check": {"path": "regulatory_coverage.applicable_standards",
+                          "op": "min_count", "value": std_count},
+            })
+            ast_num += 1
+
+    return assertions
+
+
 def generate_spice_assertions(data, tolerance=0.10):
     """Generate assertions from a SPICE simulation output dict."""
     summary = data.get("summary", {})
@@ -672,6 +798,12 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
                     skipped += 1
                     continue
                 assertions = generate_spice_assertions(data_content, tolerance)
+            elif atype == "emc":
+                total_checks = data_content.get("summary", {}).get("total_checks", 0)
+                if total_checks < 1:
+                    skipped += 1
+                    continue
+                assertions = generate_emc_assertions(data_content, tolerance)
             elif atype == "datasheets":
                 extracted = data_content.get("extracted", 0)
                 if extracted < 1:

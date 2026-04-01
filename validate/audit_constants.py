@@ -45,6 +45,7 @@ MARKDOWN_PATH = DATA_DIR / "constants_registry.md"
 
 SCRIPTS_SUBDIR = Path("skills") / "kicad" / "scripts"
 SPICE_SCRIPTS_SUBDIR = Path("skills") / "spice" / "scripts"
+EMC_SCRIPTS_SUBDIR = Path("skills") / "emc" / "scripts"
 
 # Analyzer source files to scan (relative to kicad-happy repo root)
 ANALYZER_FILES = [
@@ -66,6 +67,13 @@ SPICE_FILES = [
     "spice_model_generator.py",
     "spice_model_cache.py",
     "simulate_subcircuits.py",
+]
+
+# EMC skill source files to scan
+EMC_FILES = [
+    "emc_formulas.py",
+    "emc_rules.py",
+    "analyze_emc.py",
 ]
 
 
@@ -460,6 +468,17 @@ def scan_all(scripts_dir):
             constants = scan_file(fpath)
             all_constants.extend(constants)
             print(f"  spice/{fname}: {len(constants)} constants")
+
+    # Also scan EMC skill scripts
+    emc_dir = scripts_dir.parent.parent / "emc" / "scripts"
+    if emc_dir.exists():
+        for fname in EMC_FILES:
+            fpath = emc_dir / fname
+            if not fpath.exists():
+                continue
+            constants = scan_file(fpath)
+            all_constants.extend(constants)
+            print(f"  emc/{fname}: {len(constants)} constants")
 
     return all_constants
 

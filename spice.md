@@ -17,6 +17,9 @@ The test harness validates the kicad-happy SPICE simulation skill (`simulate_sub
 python3 run/run_spice.py --repo {repo}       # single repo
 python3 run/run_spice.py --jobs 16           # full corpus
 
+# Run with PCB parasitic injection (trace R, via L from PCB layout)
+python3 run/run_spice.py --jobs 16 --with-parasitics
+
 # Check aggregate results
 cat results/outputs/spice/_aggregate.json | python3 -m json.tool
 
@@ -82,6 +85,34 @@ All simulations use **generic behavioral models** (no manufacturer SPICE models)
 - **RF chain**: Heuristic gain/loss per component role (amplifier +15dB, switch -0.5dB, etc.)
 
 Models are defined in `spice_models.py`. An unused `IDEAL_LDO` model exists for future regulator loop stability simulation.
+
+## PCB parasitic injection
+
+The `--with-parasitics` flag enables PCB-aware SPICE simulation. For each schematic output that has a matching PCB output, the runner:
+
+1. Runs `extract_parasitics.py` on the PCB JSON to compute per-net trace resistance and via inductance
+2. Passes the resulting `parasitics.json` to `simulate_subcircuits.py --parasitics`
+3. Testbench generators inject parasitic R/L elements between nodes (e.g., trace resistance between filter R and C)
+
+**Formulas** (from `extract_parasitics.py`):
+- Trace resistance: `R = ρ × L / (W × T)` (ρ_Cu = 1.68e-8 Ω·m)
+- Via resistance: `R = ρ × H / (π × (r_outer² - r_inner²))` (25µm plating)
+- Via inductance: `L ≈ (µ₀ × H / 2π) × ln(2H/D)`
+- Coupling capacitance: `C ≈ ε₀ × εᵣ × L × T / S` (parallel-plate approximation)
+
+**Results** go to `results/outputs/spice-parasitics/` (separate from ideal simulations). This allows comparing ideal vs parasitic-aware results to measure real-world shifts in filter frequencies and feedback accuracy.
+
+**When to use**: High-impedance feedback networks, LC filters, RF circuits, long analog traces. Most digital decoupling and power supply circuits show negligible parasitic impact (0.3-3.8% typical shifts).
+
+**Prerequisite:** PCB analysis must be run with `analyze_pcb.py --full` to include per-trace segment data (`trace_segments` in `net_lengths`). Standard batch PCB runs (`run_pcb.py`) do NOT use `--full` — outputs lack segment data and the extractor will find 0 nets. This is an opt-in feature for when parasitic accuracy matters.
+
+```bash
+# Step 1: Run PCB analysis with --full (includes per-trace segment data)
+python3 run/run_pcb.py --repo {repo} --jobs 4 --full
+
+# Step 2: Run SPICE with parasitic injection
+python3 run/run_spice.py --repo {repo} --jobs 16 --with-parasitics
+```
 
 ## Cross-validation
 

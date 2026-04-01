@@ -321,6 +321,17 @@ def main():
         step = run_step("spice_crossval", cmd, timeout=300)
         steps.append(step)
 
+    # Step 6: EMC cross-validation (if outputs exist)
+    emc_dir = OUTPUTS_DIR / "emc"
+    if emc_dir.exists() and any(emc_dir.iterdir()):
+        cmd = [sys.executable,
+               str(HARNESS_DIR / "validate" / "validate_emc.py"),
+               "--summary"]
+        if args.repo:
+            cmd.extend(["--repo", args.repo])
+        step = run_step("emc_crossval", cmd, timeout=300)
+        steps.append(step)
+
     _finish(pf_checks, steps, args)
 
 

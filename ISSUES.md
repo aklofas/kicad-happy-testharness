@@ -7,7 +7,7 @@ Contains enough detail to resume work with zero conversation history.
 > same session. See README.md "Issue tracking protocol" for full details. Closed issues
 > with root cause and verification details are in [FIXED.md](FIXED.md).
 
-Last updated: 2026-03-23
+Last updated: 2026-04-01
 
 ---
 
@@ -15,7 +15,7 @@ Last updated: 2026-03-23
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-187**. Next TH number: **TH-008**.
+number: **KH-192**. Next TH number: **TH-008**.
 
 ---
 

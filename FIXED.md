@@ -11,6 +11,51 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-01 — Batch 25: PCB --full stackup string type bug (KH-191)
+
+### KH-191 (HIGH): PCB analyzer crashes with --full on boards with string stackup values
+
+- **File**: `analyze_pcb.py` — `_build_layer_heights()`, `_microstrip_impedance()`
+- **Root cause**: `_microstrip_impedance()` compares height_mm/thickness_mm/epsilon_r against 0 using `<=`, but stackup values from some KiCad files are strings (e.g., `"0.2"` instead of `0.2`). `_build_layer_heights()` passes these raw values through. Affects 1,137 of 3,498 PCB files when using `--full`.
+- **Fix**: Added `_safe_num()` helper (same pattern as EMC's `_safe_float()`). Applied in `_build_layer_heights()` for thickness, epsilon_r, and copper_thickness reads. Also applied as guard at top of `_microstrip_impedance()`.
+- **Verified**: Full corpus with `--full`: 3,496/3,498 pass (99.9%). 2 failures are known empty stub files.
+
+---
+
+## 2026-04-01 — Batch 24 (EMC): 4 EMC analyzer bugs found during corpus run (KH-187–KH-190)
+
+Bugs discovered during first full-corpus EMC run (6,853 files). All in `analyze_emc.py` and `emc_rules.py`.
+
+### KH-187 (MEDIUM): Crystal frequency field can be None, crashes comparison
+
+- **File**: `emc_rules.py` — `check_via_stitching()`, `analyze_emc.py` — `extract_board_info()`
+- **Root cause**: Schematic analyzer sometimes emits `"frequency": null` for crystal circuits with unparseable values. EMC code did `freq > highest_freq` which raises TypeError on NoneType.
+- **Fix**: Changed `xtal.get('frequency', 0)` to `xtal.get('frequency') or 0` with `isinstance(freq, (int, float))` guard in both files.
+- **Verified**: Full corpus 6853/6853, 0 script errors. Eliminated 495 crashes.
+
+### KH-188 (MEDIUM): Stackup thickness field can be string, crashes addition
+
+- **File**: `emc_rules.py` — `check_stackup()`
+- **Root cause**: Some KiCad files export stackup layer thickness as string (e.g., `"0.2"` instead of `0.2`). The `d_total += thickness` addition raised TypeError.
+- **Fix**: Added `_safe_float()` helper that handles None, str, and invalid values with a default. Applied to all `thickness` and `epsilon_r` reads in stackup checks.
+- **Verified**: Full corpus 6853/6853, 0 script errors. Eliminated 69 crashes.
+
+### KH-189 (LOW): Footprint value field can be list, crashes .lower()
+
+- **File**: `emc_rules.py` — `_connector_refs()`, `check_connector_filtering()`, `check_missing_decoupling()`
+- **Root cause**: Some schematic analyzer outputs emit `"value": ["part1", "part2"]` as a list when a component has multiple value fields. Three places called `.lower()` directly on the result of `fp.get('value', '')`.
+- **Fix**: Wrapped all three sites with `(raw_val if isinstance(raw_val, str) else str(raw_val)).lower()`.
+- **Verified**: Full corpus 6853/6853, 0 script errors. Eliminated 3 crashes.
+
+### KH-190 (LOW): Footprint lib_id field can be list
+
+- **File**: `emc_rules.py` — `_connector_refs()`, `check_connector_filtering()`
+- **Root cause**: Same pattern as KH-189 but for `lib_id` field.
+- **Fix**: Same wrapping as KH-189 applied to `lib_id` reads.
+- **Verified**: Full corpus 6853/6853, 0 script errors.
+
+---
+
 ## 2026-03-23 — Batch 25: Last 2 LOW issues (KH-173, KH-176)
 
 Fixes the final 2 open issues. All KH-* issues are now closed.

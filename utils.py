@@ -17,7 +17,7 @@ REPOS_DIR = HARNESS_DIR / "repos"
 DATA_DIR = HARNESS_DIR / "reference"
 MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
 OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
-ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice", "datasheets"]
+ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice", "emc", "datasheets"]
 
 # Timeout constants (seconds) — used across runners and validators
 ANALYZER_TIMEOUT = 120
@@ -247,12 +247,14 @@ def list_projects_in_data(repo_name):
 # Shared analyzer runner
 # ---------------------------------------------------------------------------
 
-def _run_one(analyzer, file_path, outfile, errfile):
+def _run_one(analyzer, file_path, outfile, errfile, extra_args=None):
     """Run a single analyzer subprocess. Returns (returncode, outfile)."""
+    cmd = [sys.executable, str(analyzer), file_path, "-o", str(outfile)]
+    if extra_args:
+        cmd.extend(extra_args)
     try:
         result = subprocess.run(
-            [sys.executable, str(analyzer), file_path, "-o", str(outfile)],
-            capture_output=True, text=True, timeout=ANALYZER_TIMEOUT,
+            cmd, capture_output=True, text=True, timeout=ANALYZER_TIMEOUT,
         )
         errfile.write_text(result.stderr)
         return result.returncode, outfile
@@ -306,6 +308,7 @@ def run_analyzer(config, args=None):
     type_name = config["type_name"]
     output_subdir = config["output_subdir"]
     summarize = config["summarize"]
+    extra_args = config.get("extra_args")
     jobs = getattr(args, "jobs", 1)
 
     print(f"=== Running {type_name} analysis ===")
@@ -348,7 +351,7 @@ def run_analyzer(config, args=None):
     if jobs <= 1:
         for i, file_path in enumerate(files, 1):
             relpath, outfile, errfile = _prepare(file_path)
-            returncode, _ = _run_one(analyzer, file_path, outfile, errfile)
+            returncode, _ = _run_one(analyzer, file_path, outfile, errfile, extra_args)
             ok, msg = _format_result(i, relpath, returncode, outfile)
             if ok:
                 passed += 1
@@ -361,7 +364,7 @@ def run_analyzer(config, args=None):
         with ThreadPoolExecutor(max_workers=jobs) as pool:
             for i, file_path in enumerate(files, 1):
                 relpath, outfile, errfile = _prepare(file_path)
-                future = pool.submit(_run_one, analyzer, file_path, outfile, errfile)
+                future = pool.submit(_run_one, analyzer, file_path, outfile, errfile, extra_args)
                 tasks[future] = (i, relpath, outfile)
             for future in as_completed(tasks):
                 i, relpath, outfile = tasks[future]

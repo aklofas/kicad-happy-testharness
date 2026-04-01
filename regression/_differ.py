@@ -366,6 +366,23 @@ def extract_manifest_entry(data, analyzer_type):
             "by_type": by_type,
         }
 
+    elif analyzer_type == "emc":
+        summary = data.get("summary", {})
+        by_category = {}
+        for f in data.get("findings", []):
+            cat = f.get("category", "other")
+            by_category[cat] = by_category.get(cat, 0) + 1
+        return {
+            "total_findings": summary.get("total_checks", 0),
+            "critical": summary.get("critical", 0),
+            "high": summary.get("high", 0),
+            "medium": summary.get("medium", 0),
+            "low": summary.get("low", 0),
+            "emc_risk_score": summary.get("emc_risk_score", 0),
+            "target_standard": data.get("target_standard", ""),
+            "by_category": by_category,
+        }
+
     elif analyzer_type == "datasheets":
         parts = data.get("parts", {})
         by_cat = {}
