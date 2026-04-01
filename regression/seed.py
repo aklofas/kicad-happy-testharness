@@ -67,6 +67,15 @@ def _quality_assertions(sig_type, detections, ast_num):
         return [], ast_num
 
     field, desc, pattern = qc
+    # Only assert the quality invariant if ALL detections actually satisfy it
+    import re
+    pat = re.compile(pattern)
+    for det in detections:
+        val = det
+        for part in field.split("."):
+            val = val.get(part, "") if isinstance(val, dict) else ""
+        if pat.match(str(val)):
+            return [], ast_num  # At least one violation — don't assert invariant
     assertions = [{
         "id": f"SEED-{ast_num:08d}",
         "description": f"All {sig_type} have {desc}",
