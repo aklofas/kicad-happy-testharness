@@ -328,6 +328,25 @@ constants, 0 critical-risk.
 20V rail to trigger the check. Not a code bug — the code's voltage rating heuristic is
 conservative, and real verification would need datasheet data.
 
+### Batch 28 — EMC SPICE, quick wins, final features test plans (2026-04-01)
+
+Validated 3 additional EMC test plans from the other agent:
+- **SPICE-Enhanced** (22 tests): simulator detection, PDN SPICE testbench, EMI filter
+  insertion loss, rules integration, backward compat. All pass.
+- **Quick Wins** (10 tests): CK-003 clock near connector, IO-002 ground pin adequacy,
+  DC-003 cap-to-via distance. All pass.
+- **Final Features** (12 tests): per-net scoring, component suggestions, SW-002 switching
+  node area, SW-003 input cap loop area, polygon area formula. All pass.
+
+**Full corpus re-run:** 151,206 findings, 0 errors. New rules IO-002 and DC-003 found in
+corpus (CK-003 and SW-002/003 require --full PCB and re-analyzed schematics respectively).
+
+**Harness improvements:** `run_emc.py` gained `--spice-enhanced` pass-through. Seed
+generator now tracks `per_net_scores` count. 3 new equations tagged (EQ-086..088).
+Constants/equations registries updated (292 constants, 86 equations, 0 critical-risk).
+
+**Assertions:** 112,297 total at 100% pass rate (was 109,810).
+
 ### Batch 27 — Equation tracking system (2026-04-01)
 
 Implemented `validate/audit_equations.py` — a comment-tag-based equation tracking system

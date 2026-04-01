@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~9 (tolerance 10%)",
+      "description": "Finding count ~11 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 9,
+        "max": 13
       }
     },
     {
@@ -35,12 +35,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~3",
+      "description": "medium count ~5",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 4,
+        "max": 6
       }
     },
     {
@@ -55,12 +55,12 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~57 (+-10)",
+      "description": "EMC risk score ~51 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 47,
-        "max": 67
+        "min": 41,
+        "max": 61
       }
     },
     {
@@ -76,13 +76,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "1 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -98,13 +98,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "4 io_filtering finding(s)",
+      "description": "5 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -148,6 +148,15 @@
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "~3 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
         "op": "min_count",
         "value": 2
       }

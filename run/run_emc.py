@@ -79,7 +79,7 @@ def find_pcb_output(schematic_json):
 
 
 def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
-                standard="fcc-class-b", timeout=30):
+                standard="fcc-class-b", timeout=30, spice_enhanced=False):
     """Run analyze_emc.py on one schematic (+optional PCB) output.
 
     Returns:
@@ -92,6 +92,8 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
            "--standard", standard]
     if pcb_json:
         cmd.extend(["--pcb", str(pcb_json)])
+    if spice_enhanced:
+        cmd.append("--spice-enhanced")
 
     try:
         result = subprocess.run(cmd, capture_output=True, text=True,
@@ -129,6 +131,9 @@ def main():
                         help="Target EMC standard (default: fcc-class-b)")
     parser.add_argument("--timeout", "-t", type=int, default=30,
                         help="Timeout per file in seconds (default: 30)")
+    parser.add_argument("--spice-enhanced", action="store_true",
+                        help="Enable SPICE-verified PDN impedance and EMI "
+                        "filter checks (requires ngspice)")
     args = parser.parse_args()
 
     # Resolve paths
@@ -181,7 +186,8 @@ def main():
         pcb_json = find_pcb_output(input_json)
         returncode, summary = run_one_emc(
             analyzer, input_json, pcb_json, output_json,
-            standard=args.standard, timeout=args.timeout
+            standard=args.standard, timeout=args.timeout,
+            spice_enhanced=args.spice_enhanced,
         )
         return input_json, returncode, summary, output_json, pcb_json is not None
 

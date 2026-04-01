@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~19 (tolerance 10%)",
+      "description": "Finding count ~22 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 17,
-        "max": 21
+        "min": 19,
+        "max": 25
       }
     },
     {
@@ -25,22 +25,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~3",
+      "description": "medium count ~5",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 4,
+        "max": 6
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~2",
+      "description": "low count ~3",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 1,
-        "max": 3
+        "min": 2,
+        "max": 4
       }
     },
     {
@@ -66,13 +66,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 decoupling finding(s)",
+      "description": "3 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -88,13 +88,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "2 io_filtering finding(s)",
+      "description": "3 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -140,6 +140,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "~14 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 12
       }
     }
   ]

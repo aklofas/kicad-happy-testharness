@@ -16,13 +16,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "3 decoupling finding(s)",
+      "description": "6 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 6
       }
     },
     {
@@ -38,13 +38,13 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "2 io_filtering finding(s)",
+      "description": "4 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -69,6 +69,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "Rule DC-003 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DC\\-003$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Rule GP-001 present",
       "check": {
         "path": "findings",
@@ -78,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -88,7 +98,17 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
+      "description": "Rule IO-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^IO\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "U101 in EMC findings",
       "check": {
         "path": "findings",
@@ -98,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "U102 in EMC findings",
       "check": {
         "path": "findings",
@@ -108,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "U103 in EMC findings",
       "check": {
         "path": "findings",
@@ -118,7 +138,47 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000014",
+      "description": "C114 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC114\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "U107 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU107\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "U110 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU110\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "U113 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU113\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "P101 in EMC findings",
       "check": {
         "path": "findings",
@@ -128,13 +188,33 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000019",
       "description": "P103 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bP103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "P105 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bP105\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "P102 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bP102\\b"
       }
     }
   ]

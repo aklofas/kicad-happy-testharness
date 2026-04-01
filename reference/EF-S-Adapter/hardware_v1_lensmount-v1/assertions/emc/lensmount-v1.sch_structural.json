@@ -60,13 +60,13 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "6 io_filtering finding(s)",
+      "description": "7 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 6
+        "value": 7
       }
     },
     {
@@ -151,6 +151,16 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "Rule IO-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^IO\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "U3 in EMC findings",
       "check": {
         "path": "findings",
@@ -160,7 +170,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "J9 in EMC findings",
       "check": {
         "path": "findings",
@@ -170,7 +180,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "U1 in EMC findings",
       "check": {
         "path": "findings",
@@ -180,7 +190,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "J10 in EMC findings",
       "check": {
         "path": "findings",
@@ -190,7 +200,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "J5 in EMC findings",
       "check": {
         "path": "findings",
@@ -200,7 +210,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "J6 in EMC findings",
       "check": {
         "path": "findings",
@@ -210,7 +220,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "J4 in EMC findings",
       "check": {
         "path": "findings",
@@ -220,7 +230,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "J7 in EMC findings",
       "check": {
         "path": "findings",
@@ -230,13 +240,23 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
       "description": "J8 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJ8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "P1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bP1\\b"
       }
     }
   ]

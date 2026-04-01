@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~55 (tolerance 10%)",
+      "description": "Finding count ~60 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 49,
-        "max": 61
+        "min": 54,
+        "max": 66
       }
     },
     {
@@ -35,22 +35,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~10",
+      "description": "medium count ~13",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 9,
-        "max": 11
+        "min": 11,
+        "max": 15
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~1",
+      "description": "low count ~3",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 0,
-        "max": 2
+        "min": 2,
+        "max": 4
       }
     },
     {
@@ -65,13 +65,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "3 decoupling finding(s)",
+      "description": "6 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 6
       }
     },
     {
@@ -109,13 +109,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 io_filtering finding(s)",
+      "description": "3 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -172,6 +172,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "~44 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 39
       }
     }
   ]

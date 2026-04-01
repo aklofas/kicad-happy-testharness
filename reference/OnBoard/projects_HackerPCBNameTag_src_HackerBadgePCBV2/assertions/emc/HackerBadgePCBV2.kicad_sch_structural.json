@@ -5,6 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "4 decoupling finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^decoupling$",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "1 emi_filter finding(s)",
       "check": {
         "path": "findings",
@@ -15,7 +26,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "1 stackup finding(s)",
       "check": {
         "path": "findings",
@@ -26,18 +37,28 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "2 switching_emc finding(s)",
+      "id": "STRUCT-00000004",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 2
+        "value": 3
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
+      "description": "Rule DC-003 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DC\\-003$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Rule EF-001 present",
       "check": {
         "path": "findings",
@@ -47,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "Rule SU-001 present",
       "check": {
         "path": "findings",
@@ -57,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "Rule SW-001 present",
       "check": {
         "path": "findings",
@@ -67,13 +88,93 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
+      "description": "Rule SW-003 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^SW\\-003$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C4 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "U3 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C9 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC9\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "U1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "C2 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "U2 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "L1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL1\\b"
       }
     }
   ]

@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~185 (tolerance 10%)",
+      "description": "Finding count ~197 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 166,
-        "max": 204
+        "min": 177,
+        "max": 217
       }
     },
     {
@@ -25,22 +25,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~26",
+      "description": "high count ~25",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 23,
-        "max": 29
+        "min": 22,
+        "max": 28
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~14",
+      "description": "medium count ~27",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 24,
+        "max": 30
       }
     },
     {
@@ -76,13 +76,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "2 decoupling finding(s)",
+      "description": "15 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 15
       }
     },
     {
@@ -109,13 +109,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "2 pdn finding(s)",
+      "description": "1 pdn finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^pdn$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -183,6 +183,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000019",
+      "description": "~168 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 151
       }
     }
   ]

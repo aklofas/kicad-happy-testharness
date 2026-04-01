@@ -678,6 +678,18 @@ def generate_emc_assertions(data, tolerance=0.10):
             })
             ast_num += 1
 
+    # Per-net scores (Final Features)
+    per_net = data.get("per_net_scores", [])
+    if per_net:
+        lo, hi = _range_bounds(len(per_net), tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"~{len(per_net)} net(s) with EMC scores",
+            "check": {"path": "per_net_scores",
+                      "op": "min_count", "value": max(1, lo)},
+        })
+        ast_num += 1
+
     return assertions
 
 

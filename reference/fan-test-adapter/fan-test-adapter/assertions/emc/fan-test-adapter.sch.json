@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~38 (tolerance 10%)",
+      "description": "Finding count ~49 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 34,
-        "max": 42
+        "min": 44,
+        "max": 54
       }
     },
     {
@@ -25,22 +25,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~5",
+      "description": "medium count ~8",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 4,
-        "max": 6
+        "min": 7,
+        "max": 9
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~19",
+      "description": "low count ~27",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 17,
-        "max": 21
+        "min": 24,
+        "max": 30
       }
     },
     {
@@ -55,13 +55,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "1 decoupling finding(s)",
+      "description": "4 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 4
       }
     },
     {
@@ -77,13 +77,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "19 io_filtering finding(s)",
+      "description": "27 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 19
+        "value": 27
       }
     },
     {
@@ -129,6 +129,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "~18 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 16
       }
     }
   ]

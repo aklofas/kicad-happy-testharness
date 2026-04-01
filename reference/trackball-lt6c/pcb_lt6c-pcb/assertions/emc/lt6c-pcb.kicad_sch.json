@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~13 (tolerance 10%)",
+      "description": "Finding count ~14 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 11,
-        "max": 15
+        "min": 12,
+        "max": 16
       }
     },
     {
@@ -35,33 +35,33 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~7",
+      "description": "medium count ~8",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 7,
+        "max": 9
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~17 (+-10)",
+      "description": "EMC risk score ~14 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 7,
-        "max": 27
+        "min": 4,
+        "max": 24
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "2 decoupling finding(s)",
+      "description": "3 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -120,6 +120,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "~10 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 9
       }
     }
   ]

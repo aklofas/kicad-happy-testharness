@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~6 (tolerance 10%)",
+      "description": "Finding count ~8 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 7,
+        "max": 9
       }
     },
     {
@@ -35,22 +35,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~3",
+      "description": "low count ~5",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 2,
-        "max": 4
+        "min": 4,
+        "max": 6
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~78 (+-10)",
+      "description": "EMC risk score ~76 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 68,
-        "max": 88
+        "min": 66,
+        "max": 86
       }
     },
     {
@@ -66,13 +66,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "3 io_filtering finding(s)",
+      "description": "5 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 3
+        "value": 5
       }
     },
     {

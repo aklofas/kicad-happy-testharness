@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~14 (tolerance 10%)",
+      "description": "Finding count ~15 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 13,
+        "max": 17
       }
     },
     {
@@ -35,22 +35,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~7",
+      "description": "low count ~8",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 7,
+        "max": 9
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~62 (+-10)",
+      "description": "EMC risk score ~61 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 52,
-        "max": 72
+        "min": 51,
+        "max": 71
       }
     },
     {
@@ -66,13 +66,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "7 io_filtering finding(s)",
+      "description": "8 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 7
+        "value": 8
       }
     },
     {
@@ -118,6 +118,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "~6 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 5
       }
     }
   ]

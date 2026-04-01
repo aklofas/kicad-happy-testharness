@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~281 (tolerance 10%)",
+      "description": "Finding count ~284 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 252,
-        "max": 310
+        "min": 255,
+        "max": 313
       }
     },
     {
@@ -35,22 +35,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~28",
+      "description": "medium count ~30",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 25,
-        "max": 31
+        "min": 27,
+        "max": 33
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~10",
+      "description": "low count ~11",
       "check": {
         "path": "summary.low",
         "op": "range",
         "min": 9,
-        "max": 11
+        "max": 13
       }
     },
     {
@@ -76,13 +76,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "7 decoupling finding(s)",
+      "description": "9 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 7
+        "value": 9
       }
     },
     {
@@ -109,13 +109,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "11 io_filtering finding(s)",
+      "description": "12 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 11
+        "value": 12
       }
     },
     {
@@ -172,6 +172,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "~239 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 215
       }
     }
   ]

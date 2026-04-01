@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~274 (tolerance 10%)",
+      "description": "Finding count ~307 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 246,
-        "max": 302
+        "min": 276,
+        "max": 338
       }
     },
     {
@@ -25,32 +25,32 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~98",
+      "description": "high count ~99",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 88,
-        "max": 108
+        "min": 89,
+        "max": 109
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~62",
+      "description": "medium count ~89",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 55,
-        "max": 69
+        "min": 80,
+        "max": 98
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~7",
+      "description": "low count ~12",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 10,
+        "max": 14
       }
     },
     {
@@ -76,13 +76,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "33 decoupling finding(s)",
+      "description": "60 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 33
+        "value": 60
       }
     },
     {
@@ -98,17 +98,28 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "7 io_filtering finding(s)",
+      "description": "12 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 7
+        "value": 12
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "1 pdn finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^pdn$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -117,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -126,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "~26 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -135,7 +146,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -144,12 +155,21 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "~230 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 207
       }
     }
   ]

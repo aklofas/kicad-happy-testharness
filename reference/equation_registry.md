@@ -2,19 +2,19 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-04-01T21:47:25.249114+00:00
+**Last scan:** 2026-04-01T23:00:09.492413+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
-| Total equations | 83 |
+| Total equations | 86 |
 | Verified | 83 |
 | Unverified | 0 |
-| Stale | 0 |
+| Stale | 3 |
 | Critical impact | 9 |
-| High impact | 28 |
-| Medium impact | 31 |
+| High impact | 30 |
+| Medium impact | 32 |
 | Low impact | 15 |
 
 ## analyze_pcb.py
@@ -83,15 +83,18 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
 | EQ-034 | `check_connector_area_stitching` | Via density in connector proximity region | parasitic | high | **verified** |
-| EQ-035 | `check_connector_filtering` | d = √(Δx²+Δy²) (filter-to-connector distance) | filter_design | high | **verified** |
+| EQ-035 | `check_connector_filtering` | d = √(Δx²+Δy²) (filter-to-connector distance) | filter_design | high | **stale** |
 | EQ-036 | `check_diff_pair_cm_radiation` | E_cm from V_cm and cable length using EQ-003 | unknown | medium | **verified** |
-| EQ-037 | `check_emi_filter_effectiveness` | ratio = f_sw/f_cutoff; ratio >= 5 for adequate EMI filter | filter_design | high | **verified** |
+| EQ-037 | `check_emi_filter_effectiveness` | ratio = f_sw/f_cutoff; ratio >= 5 for adequate EMI filter | filter_design | high | **stale** |
 | EQ-038 | `check_esd_protection_path` | V_overshoot = L × dI/dt; dI/dt = 37.5 GA/s for 8kV ESD | unknown | medium | **verified** |
 | EQ-039 | `check_ground_pour_ring` | Edge coverage from GND zone bounding box sampling | unknown | medium | **verified** |
 | EQ-040 | `check_layer_transition_stitching` | Via distance from layer transition vias | parasitic | high | **verified** |
-| EQ-041 | `check_pdn_impedance` | Z_pdn(f) vs Z_target = V×ripple%/(0.5×I_transient) | unknown | medium | **verified** |
+| EQ-041 | `check_pdn_impedance` | Z_pdn(f) vs Z_target = V×ripple%/(0.5×I_transient) | unknown | medium | **stale** |
 | EQ-042 | `check_thermal_emc` | DC bias derating lookup + ferrite µ thermal degradation | thermal | medium | **verified** |
 | EQ-043 | `check_via_stitching` | spacing = √(area/count) vs λ/20 (via stitching check) | parasitic | high | **verified** |
+| EQ-086 | `check_decoupling_via_distance` | d = √(Δx²+Δy²) (cap-to-via distance for connection inductance) | parasitic | high | **verified** |
+| EQ-087 | `check_clock_near_connector` | d = √(Δx²+Δy²) (clock trace midpoint to connector distance) | parasitic | high | **verified** |
+| EQ-088 | `check_input_cap_loop_area` | A = polygon_area(cap, IC, inductor) (hot loop area estimation) | unknown | medium | **verified** |
 
 ## extract_parasitics.py
 

@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "4 io_filtering finding(s)",
+      "description": "8 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 4
+        "value": 8
       }
     },
     {
@@ -48,6 +48,16 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "Rule IO-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^IO\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Rule SU-001 present",
       "check": {
         "path": "findings",
@@ -57,7 +67,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Rule VS-001 present",
       "check": {
         "path": "findings",
@@ -67,7 +77,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "J101 in EMC findings",
       "check": {
         "path": "findings",
@@ -77,7 +87,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "J102 in EMC findings",
       "check": {
         "path": "findings",
@@ -87,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "J103 in EMC findings",
       "check": {
         "path": "findings",
@@ -97,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "J104 in EMC findings",
       "check": {
         "path": "findings",

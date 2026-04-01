@@ -5,17 +5,28 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "3 decoupling finding(s)",
+      "description": "13 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 13
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "8 io_filtering finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^io_filtering$",
+        "value": 8
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
@@ -25,7 +36,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Rule DC-002 present",
       "check": {
         "path": "findings",
@@ -35,7 +46,27 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
+      "description": "Rule DC-003 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DC\\-003$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Rule IO-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^IO\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "U102 in EMC findings",
       "check": {
         "path": "findings",
@@ -45,7 +76,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000008",
       "description": "C607 in EMC findings",
       "check": {
         "path": "findings",
@@ -55,7 +86,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000009",
       "description": "C613 in EMC findings",
       "check": {
         "path": "findings",
@@ -65,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000010",
       "description": "U101 in EMC findings",
       "check": {
         "path": "findings",
@@ -75,7 +106,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000011",
       "description": "U801 in EMC findings",
       "check": {
         "path": "findings",
@@ -85,7 +116,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000012",
       "description": "C806 in EMC findings",
       "check": {
         "path": "findings",
@@ -95,13 +126,183 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000013",
       "description": "C804 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC804\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "C1104 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "U301 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU301\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "U602 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU602\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "C1103 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "U1101 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "U1102 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1102\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "U1103 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "U1104 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "U505 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU505\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "J201 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ201\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "J203 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ203\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "J202 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ202\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "J204 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ204\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "J702 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ702\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
+      "description": "J403 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ403\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000029",
+      "description": "J401 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ401\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "J405 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ405\\b"
       }
     }
   ]

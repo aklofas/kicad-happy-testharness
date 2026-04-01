@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~138 (tolerance 10%)",
+      "description": "Finding count ~155 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 124,
-        "max": 152
+        "min": 139,
+        "max": 171
       }
     },
     {
@@ -35,22 +35,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~10",
+      "description": "medium count ~22",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 9,
-        "max": 11
+        "min": 19,
+        "max": 25
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~10",
+      "description": "low count ~15",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 9,
-        "max": 11
+        "min": 13,
+        "max": 17
       }
     },
     {
@@ -76,13 +76,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "12 decoupling finding(s)",
+      "description": "24 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 12
+        "value": 24
       }
     },
     {
@@ -98,13 +98,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "11 io_filtering finding(s)",
+      "description": "16 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 11
+        "value": 16
       }
     },
     {
@@ -150,6 +150,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "~113 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 101
       }
     }
   ]

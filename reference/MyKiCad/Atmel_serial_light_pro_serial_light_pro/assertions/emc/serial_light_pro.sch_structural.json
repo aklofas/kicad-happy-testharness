@@ -16,6 +16,17 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "2 io_filtering finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^io_filtering$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Rule GP-001 present",
       "check": {
         "path": "findings",
@@ -25,13 +36,43 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Rule GP-004 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
         "pattern": "^GP\\-004$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Rule IO-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^IO\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "J4 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "J5 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ5\\b"
       }
     }
   ]

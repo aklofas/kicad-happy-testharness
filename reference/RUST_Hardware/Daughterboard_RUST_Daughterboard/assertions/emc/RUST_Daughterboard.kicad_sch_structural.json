@@ -49,13 +49,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "2 io_filtering finding(s)",
+      "description": "4 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -151,6 +151,16 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "Rule IO-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^IO\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "Rule SU-001 present",
       "check": {
         "path": "findings",
@@ -160,7 +170,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "U11 in EMC findings",
       "check": {
         "path": "findings",
@@ -170,7 +180,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "C44 in EMC findings",
       "check": {
         "path": "findings",
@@ -180,7 +190,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "C45 in EMC findings",
       "check": {
         "path": "findings",
@@ -190,7 +200,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "J7 in EMC findings",
       "check": {
         "path": "findings",
@@ -200,13 +210,33 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJ1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "J2 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "J6 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ6\\b"
       }
     }
   ]

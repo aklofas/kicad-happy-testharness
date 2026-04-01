@@ -38,13 +38,13 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "2 io_filtering finding(s)",
+      "description": "4 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -120,6 +120,16 @@
     },
     {
       "id": "STRUCT-00000012",
+      "description": "Rule IO-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^IO\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "Rule SU-001 present",
       "check": {
         "path": "findings",
@@ -129,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "U1 in EMC findings",
       "check": {
         "path": "findings",
@@ -139,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "R42 in EMC findings",
       "check": {
         "path": "findings",
@@ -149,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "J16 in EMC findings",
       "check": {
         "path": "findings",
@@ -159,13 +169,33 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "J15 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJ15\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "J10 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ10\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "J5 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ5\\b"
       }
     }
   ]

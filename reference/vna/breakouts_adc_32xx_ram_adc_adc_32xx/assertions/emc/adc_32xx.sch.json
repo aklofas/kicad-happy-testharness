@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~99 (tolerance 10%)",
+      "description": "Finding count ~103 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 89,
-        "max": 109
+        "min": 92,
+        "max": 114
       }
     },
     {
@@ -35,22 +35,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~11",
+      "description": "medium count ~13",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 9,
-        "max": 13
+        "min": 11,
+        "max": 15
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "low count ~9",
+      "description": "low count ~11",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 9,
+        "max": 13
       }
     },
     {
@@ -76,13 +76,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "2 decoupling finding(s)",
+      "description": "4 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -98,13 +98,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "9 io_filtering finding(s)",
+      "description": "11 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 9
+        "value": 11
       }
     },
     {
@@ -150,6 +150,15 @@
         "path": "regulatory_coverage.applicable_standards",
         "op": "min_count",
         "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "~79 net(s) with EMC scores",
+      "check": {
+        "path": "per_net_scores",
+        "op": "min_count",
+        "value": 71
       }
     }
   ]
