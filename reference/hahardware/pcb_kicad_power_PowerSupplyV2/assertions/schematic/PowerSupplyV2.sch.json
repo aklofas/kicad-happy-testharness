@@ -69,6 +69,16 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "4 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -77,48 +87,58 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "Has 15 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 7
-      }
-    },
-    {
       "id": "SEED-00000010",
-      "description": "Has 7 connector(s)",
+      "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 3
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 10 diode(s)",
+      "description": "Has 15 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.diode",
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 11
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 7 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
         "op": "min_count",
         "value": 5
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
+      "description": "Has 10 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 7 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "Has 14 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 7
+        "value": 10
       }
     }
   ]

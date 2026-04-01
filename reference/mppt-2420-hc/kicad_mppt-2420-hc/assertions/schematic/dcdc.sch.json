@@ -69,6 +69,16 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "All lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "5 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -77,30 +87,30 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "Has 17 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 8
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "Has 15 resistor(s)",
-      "check": {
-        "path": "statistics.component_types.resistor",
-        "op": "min_count",
-        "value": 7
+        "value": 12
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "Has 15 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 11
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 8 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
         "op": "min_count",
-        "value": 4
+        "value": 6
       }
     }
   ]

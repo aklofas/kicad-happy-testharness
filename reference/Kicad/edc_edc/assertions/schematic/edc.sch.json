@@ -60,11 +60,21 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All transistor_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 4
+        "value": 6
       }
     }
   ]

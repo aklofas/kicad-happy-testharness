@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All crystal_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "5 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -59,12 +69,22 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "min_count",
         "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     }
   ]

@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "1 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -59,12 +69,22 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 5 ferrite_bead(s)",
       "check": {
         "path": "statistics.component_types.ferrite_bead",
         "op": "min_count",
-        "value": 2
+        "value": 3
       }
     }
   ]

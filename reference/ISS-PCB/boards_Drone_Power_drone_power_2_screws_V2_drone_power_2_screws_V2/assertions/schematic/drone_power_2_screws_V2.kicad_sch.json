@@ -60,6 +60,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "3 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,7 +78,17 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "7 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -77,21 +97,31 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 23 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 11
+        "value": 17
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
       "description": "Has 15 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 7
+        "value": 11
       }
     }
   ]

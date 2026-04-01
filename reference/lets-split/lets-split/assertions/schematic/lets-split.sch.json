@@ -60,20 +60,30 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "Has 24 diode(s)",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "statistics.component_types.diode",
-        "op": "min_count",
-        "value": 12
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000008",
+      "description": "Has 24 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 18
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 25 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
         "op": "min_count",
-        "value": 12
+        "value": 18
       }
     }
   ]

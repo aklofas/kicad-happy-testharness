@@ -69,38 +69,48 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 49 capacitor(s)",
+      "description": "All power_regulators have ref present",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 24
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 5 connector(s)",
+      "description": "Has 49 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.connector",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 2
+        "value": 36
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 40 ic(s)",
+      "description": "Has 5 connector(s)",
       "check": {
-        "path": "statistics.component_types.ic",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 20
+        "value": 3
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "Has 40 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 30
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     }
   ]

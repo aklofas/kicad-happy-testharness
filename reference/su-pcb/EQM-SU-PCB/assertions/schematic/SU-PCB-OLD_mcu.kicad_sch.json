@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All crystal_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "9 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -59,7 +69,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "1 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -68,21 +78,31 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
+      "description": "All lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 26 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 13
+        "value": 19
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "Has 13 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     }
   ]

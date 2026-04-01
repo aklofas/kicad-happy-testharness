@@ -69,11 +69,21 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 6 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
         "op": "min_count",
-        "value": 3
+        "value": 4
       }
     }
   ]

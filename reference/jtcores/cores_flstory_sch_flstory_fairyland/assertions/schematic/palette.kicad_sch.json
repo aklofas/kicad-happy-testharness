@@ -69,20 +69,30 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 24 ic(s)",
+      "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 12
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "Has 24 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 18
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 15 other(s)",
       "check": {
         "path": "statistics.component_types.other",
         "op": "min_count",
-        "value": 7
+        "value": 11
       }
     }
   ]

@@ -69,47 +69,57 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 5 capacitor(s)",
+      "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 2
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 5 connector(s)",
+      "description": "Has 5 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.connector",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 5 other(s)",
+      "description": "Has 5 connector(s)",
       "check": {
-        "path": "statistics.component_types.other",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 9 resistor_network(s)",
+      "description": "Has 5 other(s)",
       "check": {
-        "path": "statistics.component_types.resistor_network",
+        "path": "statistics.component_types.other",
         "op": "min_count",
-        "value": 4
+        "value": 3
       }
     },
     {
       "id": "SEED-00000012",
+      "description": "Has 9 resistor_network(s)",
+      "check": {
+        "path": "statistics.component_types.resistor_network",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 9 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
         "op": "min_count",
-        "value": 4
+        "value": 6
       }
     }
   ]

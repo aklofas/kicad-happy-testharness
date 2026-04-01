@@ -60,6 +60,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "3 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -68,30 +78,30 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "Has 15 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 7
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "Has 5 ic(s)",
-      "check": {
-        "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 2
+        "value": 11
       }
     },
     {
       "id": "SEED-00000010",
+      "description": "Has 5 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 8
+        "value": 12
       }
     }
   ]

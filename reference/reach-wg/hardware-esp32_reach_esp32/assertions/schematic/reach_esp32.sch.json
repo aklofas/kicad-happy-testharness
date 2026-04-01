@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All crystal_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "1 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -59,7 +69,17 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
+      "description": "All lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "1 memory_interfaces detected",
       "check": {
         "path": "signal_analysis.memory_interfaces",

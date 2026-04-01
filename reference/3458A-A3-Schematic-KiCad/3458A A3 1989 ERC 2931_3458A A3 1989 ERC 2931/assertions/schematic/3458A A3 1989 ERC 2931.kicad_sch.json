@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All crystal_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "26 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -59,7 +69,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "6 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -68,7 +78,17 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
+      "description": "All lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "15 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -77,7 +97,17 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
+      "description": "All opamp_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "30 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -86,7 +116,17 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "5 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -95,84 +135,94 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000015",
+      "description": "All transistor_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "Has 76 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 38
+        "value": 57
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000017",
       "description": "Has 27 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
         "op": "min_count",
-        "value": 13
+        "value": 20
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000018",
       "description": "Has 31 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 15
+        "value": 23
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000019",
       "description": "Has 13 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000020",
       "description": "Has 6 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000021",
+      "description": "Has 5 mounting_hole(s)",
+      "check": {
+        "path": "statistics.component_types.mounting_hole",
         "op": "min_count",
         "value": 3
       }
     },
     {
-      "id": "SEED-00000016",
-      "description": "Has 5 mounting_hole(s)",
-      "check": {
-        "path": "statistics.component_types.mounting_hole",
-        "op": "min_count",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000017",
+      "id": "SEED-00000022",
       "description": "Has 89 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 44
+        "value": 66
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000023",
       "description": "Has 14 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
         "op": "min_count",
-        "value": 7
+        "value": 10
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000024",
       "description": "Has 5 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
         "op": "min_count",
-        "value": 2
+        "value": 3
       }
     }
   ]

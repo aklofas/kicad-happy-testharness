@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "13 rf_matching detected",
       "check": {
         "path": "signal_analysis.rf_matching",
@@ -59,21 +69,21 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "Has 13 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "Has 19 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
         "op": "min_count",
-        "value": 9
+        "value": 14
       }
     }
   ]

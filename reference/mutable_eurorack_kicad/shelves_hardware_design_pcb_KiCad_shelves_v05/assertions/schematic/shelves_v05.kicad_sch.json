@@ -60,6 +60,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All opamp_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -68,66 +78,76 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "Has 58 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 29
-      }
-    },
-    {
       "id": "SEED-00000009",
-      "description": "Has 15 connector(s)",
+      "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 7
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 16 diode(s)",
+      "description": "Has 58 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.diode",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 8
+        "value": 43
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "Has 15 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 11
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 16 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 14 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "Has 10 jumper(s)",
+      "check": {
+        "path": "statistics.component_types.jumper",
         "op": "min_count",
         "value": 7
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "Has 10 jumper(s)",
-      "check": {
-        "path": "statistics.component_types.jumper",
-        "op": "min_count",
-        "value": 5
-      }
-    },
-    {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "Has 5 other(s)",
       "check": {
         "path": "statistics.component_types.other",
         "op": "min_count",
-        "value": 2
+        "value": 3
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000016",
       "description": "Has 122 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 61
+        "value": 91
       }
     }
   ]

@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All crystal_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "15 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -59,7 +69,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "5 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -68,7 +78,17 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
+      "description": "All opamp_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "2 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -77,7 +97,17 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "2 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -86,39 +116,49 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
+      "description": "All transistor_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 27 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 13
+        "value": 20
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000015",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 5
+        "value": 7
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000016",
       "description": "Has 12 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000017",
       "description": "Has 43 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 21
+        "value": 32
       }
     }
   ]

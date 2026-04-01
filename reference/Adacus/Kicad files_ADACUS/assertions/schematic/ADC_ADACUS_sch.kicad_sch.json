@@ -69,6 +69,16 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "All opamp_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "1 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -77,7 +87,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "8 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -86,21 +96,31 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 16 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 8
+        "value": 12
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
       "description": "Has 10 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 5
+        "value": 7
       }
     }
   ]

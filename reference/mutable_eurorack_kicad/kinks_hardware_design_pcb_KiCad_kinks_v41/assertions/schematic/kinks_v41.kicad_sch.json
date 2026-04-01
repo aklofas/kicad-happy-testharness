@@ -60,6 +60,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All opamp_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "3 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -68,48 +78,58 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "Has 13 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 6
-      }
-    },
-    {
       "id": "SEED-00000009",
-      "description": "Has 12 connector(s)",
+      "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 6
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 12 diode(s)",
+      "description": "Has 13 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.diode",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 5 ic(s)",
+      "description": "Has 12 connector(s)",
       "check": {
-        "path": "statistics.component_types.ic",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 2
+        "value": 9
       }
     },
     {
       "id": "SEED-00000012",
+      "description": "Has 12 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "Has 5 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 37 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 18
+        "value": 27
       }
     }
   ]

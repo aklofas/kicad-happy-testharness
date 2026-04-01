@@ -69,56 +69,66 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 28 connector(s)",
+      "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 14
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 18 diode(s)",
+      "description": "Has 28 connector(s)",
       "check": {
-        "path": "statistics.component_types.diode",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 9
+        "value": 21
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 5 filter(s)",
+      "description": "Has 18 diode(s)",
       "check": {
-        "path": "statistics.component_types.filter",
+        "path": "statistics.component_types.diode",
         "op": "min_count",
-        "value": 2
+        "value": 13
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 8 ic(s)",
+      "description": "Has 5 filter(s)",
       "check": {
-        "path": "statistics.component_types.ic",
+        "path": "statistics.component_types.filter",
         "op": "min_count",
-        "value": 4
+        "value": 3
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "Has 10 resistor(s)",
+      "description": "Has 8 ic(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 5
+        "value": 6
       }
     },
     {
       "id": "SEED-00000013",
+      "description": "Has 10 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 6 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
         "op": "min_count",
-        "value": 3
+        "value": 4
       }
     }
   ]

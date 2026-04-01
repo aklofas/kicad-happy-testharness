@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All crystal_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "14 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -59,7 +69,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "6 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -68,84 +78,84 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "Has 15 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 7
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "Has 17 connector(s)",
-      "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 8
+        "value": 11
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 13 fuse(s)",
+      "description": "Has 17 connector(s)",
       "check": {
-        "path": "statistics.component_types.fuse",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 6
+        "value": 12
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 17 ic(s)",
+      "description": "Has 13 fuse(s)",
       "check": {
-        "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 8
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "Has 13 inductor(s)",
-      "check": {
-        "path": "statistics.component_types.inductor",
-        "op": "min_count",
-        "value": 6
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "Has 9 mounting_hole(s)",
-      "check": {
-        "path": "statistics.component_types.mounting_hole",
-        "op": "min_count",
-        "value": 4
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "Has 18 other(s)",
-      "check": {
-        "path": "statistics.component_types.other",
+        "path": "statistics.component_types.fuse",
         "op": "min_count",
         "value": 9
       }
     },
     {
-      "id": "SEED-00000015",
-      "description": "Has 15 relay(s)",
+      "id": "SEED-00000012",
+      "description": "Has 17 ic(s)",
       "check": {
-        "path": "statistics.component_types.relay",
+        "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 7
+        "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "Has 13 inductor(s)",
+      "check": {
+        "path": "statistics.component_types.inductor",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "Has 9 mounting_hole(s)",
+      "check": {
+        "path": "statistics.component_types.mounting_hole",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "Has 18 other(s)",
+      "check": {
+        "path": "statistics.component_types.other",
+        "op": "min_count",
+        "value": 13
       }
     },
     {
       "id": "SEED-00000016",
+      "description": "Has 15 relay(s)",
+      "check": {
+        "path": "statistics.component_types.relay",
+        "op": "min_count",
+        "value": 11
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "Has 12 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     }
   ]

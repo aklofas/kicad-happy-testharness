@@ -69,20 +69,30 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 5 capacitor(s)",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 2
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "Has 5 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 9 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 4
+        "value": 6
       }
     }
   ]

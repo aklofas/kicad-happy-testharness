@@ -60,6 +60,16 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All opamp_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,39 +78,49 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "Has 12 capacitor(s)",
+      "id": "SEED-00000009",
+      "description": "All power_regulators have ref present",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 6
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "Has 18 connector(s)",
+      "id": "SEED-00000010",
+      "description": "Has 12 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.connector",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
         "value": 9
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
+      "description": "Has 18 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 13
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 13 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
       "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 8
+        "value": 12
       }
     }
   ]

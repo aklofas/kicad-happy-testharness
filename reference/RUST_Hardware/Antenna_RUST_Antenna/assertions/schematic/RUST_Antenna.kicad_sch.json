@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "2 rf_matching detected",
       "check": {
         "path": "signal_analysis.rf_matching",

@@ -60,11 +60,21 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "Has 9 led(s)",
       "check": {
         "path": "statistics.component_types.led",
         "op": "min_count",
-        "value": 4
+        "value": 6
       }
     }
   ]

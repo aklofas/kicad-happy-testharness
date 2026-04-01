@@ -78,6 +78,16 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "1 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -86,39 +96,49 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
+      "description": "All voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 22 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 11
+        "value": 16
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
       "description": "Has 10 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "Has 7 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
         "op": "min_count",
         "value": 5
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "Has 7 ic(s)",
-      "check": {
-        "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "Has 7 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     }
   ]

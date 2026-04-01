@@ -60,29 +60,39 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "Has 20 capacitor(s)",
+      "description": "All opamp_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 10
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 10 connector(s)",
+      "description": "Has 20 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.connector",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 5
+        "value": 15
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "Has 10 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 37 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 18
+        "value": 27
       }
     }
   ]

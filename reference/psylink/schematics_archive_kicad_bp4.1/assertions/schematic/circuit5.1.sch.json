@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All opamp_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "1 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",

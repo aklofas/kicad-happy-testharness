@@ -69,38 +69,48 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 17 capacitor(s)",
+      "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 8
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 19 connector(s)",
+      "description": "Has 17 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.connector",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 9
+        "value": 12
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 8 jumper(s)",
+      "description": "Has 19 connector(s)",
       "check": {
-        "path": "statistics.component_types.jumper",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 4
+        "value": 14
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "Has 8 jumper(s)",
+      "check": {
+        "path": "statistics.component_types.jumper",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 8
+        "value": 12
       }
     }
   ]

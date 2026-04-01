@@ -60,29 +60,39 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "Has 10 connector(s)",
+      "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 5
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 14 resistor(s)",
+      "description": "Has 10 connector(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
         "value": 7
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "Has 14 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 7 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     }
   ]

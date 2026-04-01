@@ -60,119 +60,129 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "Has 17 capacitor(s)",
+      "description": "All power_regulators have ref present",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 8
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 62 connector(s)",
+      "description": "Has 17 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.connector",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 31
+        "value": 12
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 17 diode(s)",
+      "description": "Has 62 connector(s)",
       "check": {
-        "path": "statistics.component_types.diode",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 8
+        "value": 46
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 17 fuse(s)",
+      "description": "Has 17 diode(s)",
       "check": {
-        "path": "statistics.component_types.fuse",
+        "path": "statistics.component_types.diode",
         "op": "min_count",
-        "value": 8
+        "value": 12
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 17 ic(s)",
+      "description": "Has 17 fuse(s)",
       "check": {
-        "path": "statistics.component_types.ic",
+        "path": "statistics.component_types.fuse",
         "op": "min_count",
-        "value": 8
+        "value": 12
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "Has 15 inductor(s)",
+      "description": "Has 17 ic(s)",
       "check": {
-        "path": "statistics.component_types.inductor",
+        "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 7
+        "value": 12
       }
     },
     {
       "id": "SEED-00000013",
-      "description": "Has 15 mounting_hole(s)",
+      "description": "Has 15 inductor(s)",
       "check": {
-        "path": "statistics.component_types.mounting_hole",
+        "path": "statistics.component_types.inductor",
         "op": "min_count",
-        "value": 7
+        "value": 11
       }
     },
     {
       "id": "SEED-00000014",
-      "description": "Has 105 other(s)",
+      "description": "Has 15 mounting_hole(s)",
       "check": {
-        "path": "statistics.component_types.other",
+        "path": "statistics.component_types.mounting_hole",
         "op": "min_count",
-        "value": 52
+        "value": 11
       }
     },
     {
       "id": "SEED-00000015",
-      "description": "Has 17 relay(s)",
+      "description": "Has 105 other(s)",
       "check": {
-        "path": "statistics.component_types.relay",
+        "path": "statistics.component_types.other",
         "op": "min_count",
-        "value": 8
+        "value": 78
       }
     },
     {
       "id": "SEED-00000016",
-      "description": "Has 15 resistor(s)",
+      "description": "Has 17 relay(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.relay",
         "op": "min_count",
-        "value": 7
+        "value": 12
       }
     },
     {
       "id": "SEED-00000017",
-      "description": "Has 15 switch(s)",
+      "description": "Has 15 resistor(s)",
       "check": {
-        "path": "statistics.component_types.switch",
+        "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 7
+        "value": 11
       }
     },
     {
       "id": "SEED-00000018",
-      "description": "Has 13 transformer(s)",
+      "description": "Has 15 switch(s)",
       "check": {
-        "path": "statistics.component_types.transformer",
+        "path": "statistics.component_types.switch",
         "op": "min_count",
-        "value": 6
+        "value": 11
       }
     },
     {
       "id": "SEED-00000019",
+      "description": "Has 13 transformer(s)",
+      "check": {
+        "path": "statistics.component_types.transformer",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000020",
       "description": "Has 15 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
         "op": "min_count",
-        "value": 7
+        "value": 11
       }
     }
   ]

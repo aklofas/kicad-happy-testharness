@@ -87,6 +87,16 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "2 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -95,39 +105,39 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "Has 20 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 10
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "Has 120 diode(s)",
-      "check": {
-        "path": "statistics.component_types.diode",
-        "op": "min_count",
-        "value": 60
+        "value": 15
       }
     },
     {
       "id": "SEED-00000013",
-      "description": "Has 17 led(s)",
+      "description": "Has 120 diode(s)",
       "check": {
-        "path": "statistics.component_types.led",
+        "path": "statistics.component_types.diode",
         "op": "min_count",
-        "value": 8
+        "value": 90
       }
     },
     {
       "id": "SEED-00000014",
+      "description": "Has 17 led(s)",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "min_count",
+        "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "Has 128 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
         "op": "min_count",
-        "value": 64
+        "value": 96
       }
     }
   ]

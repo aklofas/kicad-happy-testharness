@@ -69,29 +69,39 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 13 connector(s)",
+      "description": "All power_regulators have ref present",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 6
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 10 ic(s)",
+      "description": "Has 13 connector(s)",
       "check": {
-        "path": "statistics.component_types.ic",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 5
+        "value": 9
       }
     },
     {
       "id": "SEED-00000010",
+      "description": "Has 10 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "Has 13 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 6
+        "value": 9
       }
     }
   ]

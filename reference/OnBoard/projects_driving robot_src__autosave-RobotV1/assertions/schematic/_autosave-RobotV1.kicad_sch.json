@@ -60,20 +60,30 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "Has 14 connector(s)",
+      "description": "All power_regulators have ref present",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 7
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000008",
+      "description": "Has 14 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 8 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
         "op": "min_count",
-        "value": 4
+        "value": 6
       }
     }
   ]

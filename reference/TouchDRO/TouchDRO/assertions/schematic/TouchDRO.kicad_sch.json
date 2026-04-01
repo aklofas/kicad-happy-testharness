@@ -69,29 +69,39 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 11 capacitor(s)",
+      "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 5
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 16 connector(s)",
+      "description": "Has 11 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.connector",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
         "value": 8
       }
     },
     {
       "id": "SEED-00000010",
+      "description": "Has 16 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "Has 24 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 12
+        "value": 18
       }
     }
   ]

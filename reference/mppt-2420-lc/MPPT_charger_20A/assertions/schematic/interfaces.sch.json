@@ -78,29 +78,39 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 5 diode(s)",
+      "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.diode",
-        "op": "min_count",
-        "value": 2
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 11 resistor(s)",
+      "description": "Has 5 diode(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.diode",
         "op": "min_count",
-        "value": 5
+        "value": 3
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "Has 11 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 5 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
         "op": "min_count",
-        "value": 2
+        "value": 3
       }
     }
   ]

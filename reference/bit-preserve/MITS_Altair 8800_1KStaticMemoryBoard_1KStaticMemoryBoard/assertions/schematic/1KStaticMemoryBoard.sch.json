@@ -69,20 +69,30 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 23 capacitor(s)",
+      "description": "All power_regulators have ref present",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 11
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "Has 23 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 17
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 21 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 10
+        "value": 15
       }
     }
   ]

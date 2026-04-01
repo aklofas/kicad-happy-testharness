@@ -75,6 +75,16 @@
         "op": "min_count",
         "value": 1
       }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
     }
   ]
 }

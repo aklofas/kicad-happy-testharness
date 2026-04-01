@@ -69,6 +69,16 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "14 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -77,30 +87,40 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "Has 19 connector(s)",
-      "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 9
-      }
-    },
-    {
       "id": "SEED-00000010",
-      "description": "Has 24 resistor(s)",
+      "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.resistor",
-        "op": "min_count",
-        "value": 12
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "Has 19 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 14
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 24 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 18
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 14 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
         "op": "min_count",
-        "value": 7
+        "value": 10
       }
     }
   ]

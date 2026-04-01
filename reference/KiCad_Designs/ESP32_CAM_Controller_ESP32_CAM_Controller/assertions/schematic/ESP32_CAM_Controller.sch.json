@@ -69,20 +69,30 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 8 connector(s)",
+      "description": "All power_regulators have ref present",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 4
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000009",
+      "description": "Has 8 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 7 fuse(s)",
       "check": {
         "path": "statistics.component_types.fuse",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     }
   ]

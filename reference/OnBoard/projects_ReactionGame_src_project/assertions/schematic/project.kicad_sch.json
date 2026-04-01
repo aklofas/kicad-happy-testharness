@@ -78,6 +78,16 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "8 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -86,39 +96,49 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "Has 17 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 8
-      }
-    },
-    {
       "id": "SEED-00000011",
-      "description": "Has 8 led(s)",
+      "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
-        "path": "statistics.component_types.led",
-        "op": "min_count",
-        "value": 4
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "Has 8 relay(s)",
+      "description": "Has 17 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.relay",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 4
+        "value": 12
       }
     },
     {
       "id": "SEED-00000013",
+      "description": "Has 8 led(s)",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "Has 8 relay(s)",
+      "check": {
+        "path": "statistics.component_types.relay",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 4
+        "value": 6
       }
     }
   ]

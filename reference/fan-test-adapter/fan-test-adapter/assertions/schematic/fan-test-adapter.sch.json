@@ -69,6 +69,16 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "4 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -77,39 +87,49 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "Has 11 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 5
-      }
-    },
-    {
       "id": "SEED-00000010",
-      "description": "Has 23 connector(s)",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 11
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 9 diode(s)",
+      "description": "Has 11 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.diode",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 4
+        "value": 8
       }
     },
     {
       "id": "SEED-00000012",
+      "description": "Has 23 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 17
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "Has 9 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 15 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 7
+        "value": 11
       }
     }
   ]

@@ -60,20 +60,30 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "Has 11 resistor(s)",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "statistics.component_types.resistor",
-        "op": "min_count",
-        "value": 5
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000008",
+      "description": "Has 11 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 17 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
         "op": "min_count",
-        "value": 8
+        "value": 12
       }
     }
   ]

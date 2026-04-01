@@ -69,38 +69,48 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 27 capacitor(s)",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 13
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 9 ic(s)",
+      "description": "Has 27 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.ic",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 4
+        "value": 20
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 19 resistor(s)",
+      "description": "Has 9 ic(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 9
+        "value": 6
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "Has 19 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 14
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 7 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     }
   ]

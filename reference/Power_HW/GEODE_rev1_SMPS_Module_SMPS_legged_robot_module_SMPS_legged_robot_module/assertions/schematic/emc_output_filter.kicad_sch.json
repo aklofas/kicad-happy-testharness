@@ -66,6 +66,16 @@
         "op": "min_count",
         "value": 1
       }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All transistor_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
     }
   ]
 }

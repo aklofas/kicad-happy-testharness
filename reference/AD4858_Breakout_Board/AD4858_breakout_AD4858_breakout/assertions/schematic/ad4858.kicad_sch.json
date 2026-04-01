@@ -60,20 +60,30 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "Has 22 connector(s)",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 11
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000008",
+      "description": "Has 22 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 16
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 23 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
         "op": "min_count",
-        "value": 11
+        "value": 17
       }
     }
   ]

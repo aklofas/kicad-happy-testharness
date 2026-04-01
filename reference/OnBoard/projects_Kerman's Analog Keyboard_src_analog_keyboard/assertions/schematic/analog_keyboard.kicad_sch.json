@@ -69,29 +69,39 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 94 ic(s)",
+      "description": "All power_regulators have ref present",
       "check": {
-        "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 47
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 8 mounting_hole(s)",
+      "description": "Has 94 ic(s)",
       "check": {
-        "path": "statistics.component_types.mounting_hole",
+        "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 4
+        "value": 70
       }
     },
     {
       "id": "SEED-00000010",
+      "description": "Has 8 mounting_hole(s)",
+      "check": {
+        "path": "statistics.component_types.mounting_hole",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "Has 86 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
         "op": "min_count",
-        "value": 43
+        "value": 64
       }
     }
   ]

@@ -69,38 +69,48 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "Has 5 capacitor(s)",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 2
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 32 led(s)",
+      "description": "Has 5 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.led",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 16
+        "value": 3
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 9 resistor(s)",
+      "description": "Has 32 led(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.led",
         "op": "min_count",
-        "value": 4
+        "value": 24
       }
     },
     {
       "id": "SEED-00000011",
+      "description": "Has 9 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 8 resistor_network(s)",
       "check": {
         "path": "statistics.component_types.resistor_network",
         "op": "min_count",
-        "value": 4
+        "value": 6
       }
     }
   ]

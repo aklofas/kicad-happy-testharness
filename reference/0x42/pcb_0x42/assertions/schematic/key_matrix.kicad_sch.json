@@ -78,38 +78,48 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "Has 5 capacitor(s)",
+      "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 2
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "Has 70 diode(s)",
+      "description": "Has 5 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.diode",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 35
+        "value": 3
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "Has 8 resistor(s)",
+      "description": "Has 70 diode(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.diode",
         "op": "min_count",
-        "value": 4
+        "value": 52
       }
     },
     {
       "id": "SEED-00000012",
+      "description": "Has 8 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 84 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
         "op": "min_count",
-        "value": 42
+        "value": 63
       }
     }
   ]

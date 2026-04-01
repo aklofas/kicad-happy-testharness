@@ -51,6 +51,16 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All crystal_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "1 current_sense detected",
       "check": {
         "path": "signal_analysis.current_sense",
@@ -59,7 +69,17 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
+      "description": "All current_sense have shunt ref present",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "not_contains_match",
+        "field": "shunt.ref",
+        "pattern": "^(None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "4 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -68,7 +88,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "11 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -77,7 +97,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "1 ethernet_interfaces detected",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
@@ -86,7 +106,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000012",
       "description": "1 isolation_barriers detected",
       "check": {
         "path": "signal_analysis.isolation_barriers",
@@ -95,7 +115,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
       "description": "3 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -104,7 +124,17 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000014",
+      "description": "All lc_filters have non-zero resonant_hz",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "6 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -113,7 +143,17 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000016",
+      "description": "All opamp_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "5 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -122,7 +162,17 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000018",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "7 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -131,7 +181,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000020",
       "description": "52 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -140,7 +190,17 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000021",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000022",
       "description": "32 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -149,7 +209,17 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000023",
+      "description": "All transistor_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000024",
       "description": "11 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -158,138 +228,148 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "Has 158 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 79
-      }
-    },
-    {
-      "id": "SEED-00000019",
-      "description": "Has 27 connector(s)",
-      "check": {
-        "path": "statistics.component_types.connector",
-        "op": "min_count",
-        "value": 13
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "Has 30 diode(s)",
-      "check": {
-        "path": "statistics.component_types.diode",
-        "op": "min_count",
-        "value": 15
-      }
-    },
-    {
-      "id": "SEED-00000021",
-      "description": "Has 7 ferrite_bead(s)",
-      "check": {
-        "path": "statistics.component_types.ferrite_bead",
-        "op": "min_count",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000022",
-      "description": "Has 6 fiducial(s)",
-      "check": {
-        "path": "statistics.component_types.fiducial",
-        "op": "min_count",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000023",
-      "description": "Has 33 ic(s)",
-      "check": {
-        "path": "statistics.component_types.ic",
-        "op": "min_count",
-        "value": 16
-      }
-    },
-    {
-      "id": "SEED-00000024",
-      "description": "Has 6 inductor(s)",
-      "check": {
-        "path": "statistics.component_types.inductor",
-        "op": "min_count",
-        "value": 3
-      }
-    },
-    {
       "id": "SEED-00000025",
-      "description": "Has 6 jumper(s)",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "statistics.component_types.jumper",
-        "op": "min_count",
-        "value": 3
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
       "id": "SEED-00000026",
-      "description": "Has 12 led(s)",
+      "description": "Has 158 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.led",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 6
+        "value": 118
       }
     },
     {
       "id": "SEED-00000027",
-      "description": "Has 6 optocoupler(s)",
+      "description": "Has 27 connector(s)",
       "check": {
-        "path": "statistics.component_types.optocoupler",
+        "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 3
+        "value": 20
       }
     },
     {
       "id": "SEED-00000028",
-      "description": "Has 14 other(s)",
+      "description": "Has 30 diode(s)",
       "check": {
-        "path": "statistics.component_types.other",
+        "path": "statistics.component_types.diode",
         "op": "min_count",
-        "value": 7
+        "value": 22
       }
     },
     {
       "id": "SEED-00000029",
-      "description": "Has 6 relay(s)",
+      "description": "Has 7 ferrite_bead(s)",
       "check": {
-        "path": "statistics.component_types.relay",
+        "path": "statistics.component_types.ferrite_bead",
         "op": "min_count",
-        "value": 3
+        "value": 5
       }
     },
     {
       "id": "SEED-00000030",
-      "description": "Has 184 resistor(s)",
+      "description": "Has 6 fiducial(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.fiducial",
         "op": "min_count",
-        "value": 92
+        "value": 4
       }
     },
     {
       "id": "SEED-00000031",
-      "description": "Has 6 switch(s)",
+      "description": "Has 33 ic(s)",
       "check": {
-        "path": "statistics.component_types.switch",
+        "path": "statistics.component_types.ic",
         "op": "min_count",
-        "value": 3
+        "value": 24
       }
     },
     {
       "id": "SEED-00000032",
+      "description": "Has 6 inductor(s)",
+      "check": {
+        "path": "statistics.component_types.inductor",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000033",
+      "description": "Has 6 jumper(s)",
+      "check": {
+        "path": "statistics.component_types.jumper",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000034",
+      "description": "Has 12 led(s)",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000035",
+      "description": "Has 6 optocoupler(s)",
+      "check": {
+        "path": "statistics.component_types.optocoupler",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000036",
+      "description": "Has 14 other(s)",
+      "check": {
+        "path": "statistics.component_types.other",
+        "op": "min_count",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000037",
+      "description": "Has 6 relay(s)",
+      "check": {
+        "path": "statistics.component_types.relay",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000038",
+      "description": "Has 184 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 138
+      }
+    },
+    {
+      "id": "SEED-00000039",
+      "description": "Has 6 switch(s)",
+      "check": {
+        "path": "statistics.component_types.switch",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000040",
       "description": "Has 34 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
         "op": "min_count",
-        "value": 17
+        "value": 25
       }
     }
   ]

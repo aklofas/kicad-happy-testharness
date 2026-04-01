@@ -87,6 +87,16 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "2 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -95,7 +105,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "2 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -104,39 +114,49 @@
       }
     },
     {
-      "id": "SEED-00000012",
-      "description": "Has 11 capacitor(s)",
-      "check": {
-        "path": "statistics.component_types.capacitor",
-        "op": "min_count",
-        "value": 5
-      }
-    },
-    {
       "id": "SEED-00000013",
-      "description": "Has 93 diode(s)",
+      "description": "All transistor_circuits have reference present",
       "check": {
-        "path": "statistics.component_types.diode",
-        "op": "min_count",
-        "value": 46
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {
       "id": "SEED-00000014",
-      "description": "Has 98 resistor(s)",
+      "description": "Has 11 capacitor(s)",
       "check": {
-        "path": "statistics.component_types.resistor",
+        "path": "statistics.component_types.capacitor",
         "op": "min_count",
-        "value": 49
+        "value": 8
       }
     },
     {
       "id": "SEED-00000015",
+      "description": "Has 93 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 69
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "Has 98 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 73
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "Has 107 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
         "op": "min_count",
-        "value": 53
+        "value": 80
       }
     }
   ]
