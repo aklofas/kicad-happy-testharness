@@ -208,6 +208,17 @@ def collect_spice_data():
         return {}
 
 
+def collect_emc_data():
+    """Collect EMC analysis statistics from aggregate."""
+    agg_file = RESULTS_DIR / "outputs" / "emc" / "_aggregate.json"
+    if not agg_file.exists():
+        return {}
+    try:
+        return json.loads(agg_file.read_text())
+    except Exception:
+        return {}
+
+
 def collect_output_sizes():
     """Get output sizes per repo for complexity distribution."""
     sizes = {}
@@ -664,6 +675,30 @@ def print_summary():
         pct = len(repos) / total_repos_with_outputs * 100
         print(f"  {det:<30} {len(repos):>5} repos ({pct:.0f}%)")
 
+    emc = collect_emc_data()
+    if emc:
+        print()
+        print(f"EMC Analysis:")
+        print(f"  Files processed:      {emc.get('total_files', 0):,}")
+        print(f"  Total findings:       {emc.get('total_findings', 0):,}")
+        print(f"  Errors:               {emc.get('errors', 0)}")
+        sev = emc.get("severity", {})
+        print(f"  CRITICAL: {sev.get('CRITICAL', 0):,}  HIGH: {sev.get('HIGH', 0):,}  "
+              f"MEDIUM: {sev.get('MEDIUM', 0):,}  LOW: {sev.get('LOW', 0):,}")
+        cats = emc.get("by_category", {})
+        if cats:
+            print(f"  Categories ({len(cats)}):")
+            for cat, count in sorted(cats.items(), key=lambda x: -x[1])[:8]:
+                print(f"    {cat:<25} {count:>7,}")
+
+    spice = collect_spice_data()
+    if spice:
+        print()
+        print(f"SPICE Simulations:")
+        print(f"  Total:                {spice.get('total_sims', 0):,}")
+        print(f"  Pass rate:            {spice.get('pass_rate', 0):.1f}%")
+        print(f"  Errors:               {spice.get('errors', 0)}")
+
 
 # ---------------------------------------------------------------------------
 # Main
@@ -767,6 +802,129 @@ def generate_spice_coverage_svg():
     return svg
 
 
+def generate_emc_severity_svg():
+    """Donut chart showing EMC finding severity breakdown."""
+    emc = collect_emc_data()
+    severity = emc.get("severity", {})
+    total = emc.get("total_findings", 0)
+    if total == 0:
+        return ""
+
+    w, h = 400, 300
+    cx, cy, r = 160, 150, 100
+    inner_r = 60
+
+    items = [
+        ("Critical", severity.get("CRITICAL", 0), COLORS["red"]),
+        ("High", severity.get("HIGH", 0), COLORS["orange"]),
+        ("Medium", severity.get("MEDIUM", 0), COLORS["amber"]),
+        ("Low", severity.get("LOW", 0), COLORS["blue"]),
+        ("Info", severity.get("INFO", 0), COLORS["gray"]),
+    ]
+    items = [(l, v, c) for l, v, c in items if v > 0]
+
+    svg = _svg_header(w, h, "EMC Finding Severity")
+    svg += f'<text x="{cx}" y="24" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">EMC Finding Severity</text>\n'
+
+    angle = -90
+    for label, val, color in items:
+        sweep = val / total * 360
+        if sweep < 0.5:
+            angle += sweep
+            continue
+        start_rad = math.radians(angle)
+        end_rad = math.radians(angle + sweep)
+        x1_o = cx + r * math.cos(start_rad)
+        y1_o = cy + r * math.sin(start_rad)
+        x2_o = cx + r * math.cos(end_rad)
+        y2_o = cy + r * math.sin(end_rad)
+        x1_i = cx + inner_r * math.cos(end_rad)
+        y1_i = cy + inner_r * math.sin(end_rad)
+        x2_i = cx + inner_r * math.cos(start_rad)
+        y2_i = cy + inner_r * math.sin(start_rad)
+        large = 1 if sweep > 180 else 0
+        path = (
+            f'M {x1_o:.1f} {y1_o:.1f} '
+            f'A {r} {r} 0 {large} 1 {x2_o:.1f} {y2_o:.1f} '
+            f'L {x1_i:.1f} {y1_i:.1f} '
+            f'A {inner_r} {inner_r} 0 {large} 0 {x2_i:.1f} {y2_i:.1f} Z'
+        )
+        svg += f'<path d="{path}" fill="{color}" opacity="0.85"/>\n'
+        angle += sweep
+
+    svg += f'<text x="{cx}" y="{cy - 4}" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">{total:,}</text>\n'
+    svg += f'<text x="{cx}" y="{cy + 14}" text-anchor="middle" font-size="11" fill="#6b7280">findings</text>\n'
+
+    lx = 290
+    ly = 70
+    for i, (label, val, color) in enumerate(items):
+        y = ly + i * 24
+        pct = val / total * 100
+        svg += f'<rect x="{lx}" y="{y - 8}" width="12" height="12" rx="2" fill="{color}" opacity="0.85"/>\n'
+        svg += f'<text x="{lx + 18}" y="{y + 2}" font-size="12" fill="#374151">{label}</text>\n'
+        svg += f'<text x="{lx + 18}" y="{y + 16}" font-size="10" fill="#9ca3af">{val:,} ({pct:.1f}%)</text>\n'
+
+    # Add files/errors note
+    files = emc.get("total_files", 0)
+    errors = emc.get("errors", 0)
+    svg += f'<text x="{cx}" y="{h - 10}" text-anchor="middle" font-size="10" fill="#9ca3af">{files:,} files, {errors} errors</text>\n'
+
+    svg += _svg_footer()
+    return svg
+
+
+def generate_emc_categories_svg():
+    """Horizontal bar chart of EMC findings by category."""
+    emc = collect_emc_data()
+    by_cat = emc.get("by_category", {})
+    if not by_cat:
+        return ""
+
+    sorted_cats = sorted(by_cat.items(), key=lambda x: -x[1])
+
+    bar_h = 22
+    gap = 4
+    n = len(sorted_cats)
+    margin_top = 40
+    margin_left = 140
+    margin_right = 80
+    w = 700
+    chart_w = w - margin_left - margin_right
+    h = margin_top + n * (bar_h + gap) + 30
+    max_val = max(by_cat.values()) if by_cat else 1
+
+    svg = _svg_header(w, h, "EMC Findings by Category")
+    svg += f'<text x="{w // 2}" y="24" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">EMC Findings by Category</text>\n'
+
+    cat_colors = {
+        "ground_plane": COLORS["red"],
+        "io_filtering": COLORS["orange"],
+        "decoupling": COLORS["amber"],
+        "clock_routing": COLORS["purple"],
+        "stackup": COLORS["indigo"],
+        "diff_pair": COLORS["cyan"],
+        "board_edge": COLORS["teal"],
+        "via_stitching": COLORS["blue"],
+        "esd_path": COLORS["pink"],
+        "switching_emc": COLORS["green"],
+        "thermal_emc": COLORS["slate"],
+        "pdn": COLORS["gray"],
+        "emi_filter": COLORS["orange"],
+    }
+
+    for i, (cat, count) in enumerate(sorted_cats):
+        y = margin_top + i * (bar_h + gap)
+        bar_w = max(1, count / max_val * chart_w)
+        color = cat_colors.get(cat, PALETTE[i % len(PALETTE)])
+
+        svg += f'<text x="{margin_left - 8}" y="{y + bar_h // 2 + 4}" text-anchor="end" font-size="11" fill="#374151">{cat}</text>\n'
+        svg += f'<rect x="{margin_left}" y="{y}" width="{bar_w:.1f}" height="{bar_h}" rx="3" fill="{color}" opacity="0.8"/>\n'
+        svg += f'<text x="{margin_left + bar_w + 6}" y="{y + bar_h // 2 + 4}" font-size="11" fill="#6b7280">{count:,}</text>\n'
+
+    svg += _svg_footer()
+    return svg
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate analytics charts")
     parser.add_argument("--summary", action="store_true", help="Print text summary only")
@@ -787,6 +945,8 @@ def main():
         ("corpus_complexity.svg", generate_complexity_heatmap_svg),
         ("spice_status.svg", generate_spice_status_svg),
         ("spice_coverage.svg", generate_spice_coverage_svg),
+        ("emc_severity.svg", generate_emc_severity_svg),
+        ("emc_categories.svg", generate_emc_categories_svg),
     ]
 
     for filename, generator in charts:
@@ -814,6 +974,7 @@ def main():
         "| ![Findings Distribution](analytics/findings_distribution.svg) | ![Issue Tracker](analytics/issue_tracker.svg) |\n"
         "| ![Signal Detector Coverage](analytics/signal_detector_coverage.svg) | ![Corpus Complexity](analytics/corpus_complexity.svg) |\n"
         "| ![SPICE Status](analytics/spice_status.svg) | ![SPICE Coverage](analytics/spice_coverage.svg) |\n"
+        "| ![EMC Severity](analytics/emc_severity.svg) | ![EMC Categories](analytics/emc_categories.svg) |\n"
     )
     print(f"\n  README snippet: {snippet}")
     print("  Copy the contents of analytics/README_SNIPPET.md into README.md")
