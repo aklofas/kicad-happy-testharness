@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "4 clock_routing finding(s)",
+      "description": "6 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 4
+        "value": 6
       }
     },
     {
@@ -70,6 +70,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "Rule CK-003 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^CK\\-003$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Rule DC-002 present",
       "check": {
         "path": "findings",
@@ -79,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Rule GP-001 present",
       "check": {
         "path": "findings",
@@ -89,7 +99,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Rule GP-004 present",
       "check": {
         "path": "findings",
@@ -99,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "Rule GP-005 present",
       "check": {
         "path": "findings",
@@ -109,7 +119,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -119,7 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "Rule IO-002 present",
       "check": {
         "path": "findings",
@@ -129,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "Rule SU-001 present",
       "check": {
         "path": "findings",
@@ -139,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "U10 in EMC findings",
       "check": {
         "path": "findings",
@@ -149,23 +159,13 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "JP1 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJP1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "J1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJ1\\b"
       }
     },
     {
@@ -180,6 +180,16 @@
     },
     {
       "id": "STRUCT-00000018",
+      "description": "J1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
       "description": "J5 in EMC findings",
       "check": {
         "path": "findings",
@@ -189,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "J4 in EMC findings",
       "check": {
         "path": "findings",
@@ -199,7 +209,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",
@@ -209,7 +219,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "J3 in EMC findings",
       "check": {
         "path": "findings",
@@ -219,7 +229,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "JP2 in EMC findings",
       "check": {
         "path": "findings",

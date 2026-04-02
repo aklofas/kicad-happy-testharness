@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 board_edge finding(s)",
+      "description": "4 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
-        "pattern": "^board_edge$",
-        "value": 1
+        "pattern": "^clock_routing$",
+        "value": 4
       }
     },
     {
@@ -82,12 +82,12 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Rule BE-001 present",
+      "description": "Rule CK-003 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^BE\\-001$"
+        "pattern": "^CK\\-003$"
       }
     },
     {
@@ -312,26 +312,6 @@
     },
     {
       "id": "STRUCT-00000031",
-      "description": "J8 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJ8\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000032",
-      "description": "J9 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJ9\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000033",
       "description": "J4 in EMC findings",
       "check": {
         "path": "findings",
@@ -341,13 +321,33 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000032",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJ2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000033",
+      "description": "J8 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000034",
+      "description": "J9 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ9\\b"
       }
     },
     {

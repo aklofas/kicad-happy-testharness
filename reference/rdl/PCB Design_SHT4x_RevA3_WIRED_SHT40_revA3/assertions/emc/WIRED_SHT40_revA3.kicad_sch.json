@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~13 (tolerance 10%)",
+      "description": "Finding count ~15 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 11,
-        "max": 15
+        "min": 13,
+        "max": 17
       }
     },
     {
@@ -35,12 +35,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~4",
+      "description": "medium count ~6",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -55,23 +55,23 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~30 (+-10)",
+      "description": "EMC risk score ~24 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 20,
-        "max": 40
+        "min": 14,
+        "max": 34
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "2 board_edge finding(s)",
+      "description": "4 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -165,11 +165,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "~4 net(s) with EMC scores",
+      "description": "~5 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 3
+        "value": 4
       }
     }
   ]

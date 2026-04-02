@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~91 (tolerance 10%)",
+      "description": "Finding count ~100 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 81,
-        "max": 101
+        "min": 90,
+        "max": 111
       }
     },
     {
@@ -25,22 +25,22 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~6",
+      "description": "high count ~9",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 8,
+        "max": 10
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~10",
+      "description": "medium count ~16",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 9,
-        "max": 11
+        "min": 14,
+        "max": 18
       }
     },
     {
@@ -65,13 +65,13 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 board_edge finding(s)",
+      "description": "10 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 1
+        "value": 10
       }
     },
     {

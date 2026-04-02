@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 board_edge finding(s)",
+      "description": "3 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
-        "pattern": "^board_edge$",
-        "value": 1
+        "pattern": "^clock_routing$",
+        "value": 3
       }
     },
     {
@@ -71,12 +71,12 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Rule BE-001 present",
+      "description": "Rule CK-003 present",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "rule_id",
-        "pattern": "^BE\\-001$"
+        "pattern": "^CK\\-003$"
       }
     },
     {
@@ -171,6 +171,16 @@
     },
     {
       "id": "STRUCT-00000017",
+      "description": "JP1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJP1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",
@@ -180,7 +190,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "J3 in EMC findings",
       "check": {
         "path": "findings",
@@ -190,7 +200,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "FB1 in EMC findings",
       "check": {
         "path": "findings",
@@ -200,7 +210,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "U1 in EMC findings",
       "check": {
         "path": "findings",

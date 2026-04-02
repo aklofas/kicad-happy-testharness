@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~96 (tolerance 10%)",
+      "description": "Finding count ~99 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 86,
-        "max": 106
+        "min": 89,
+        "max": 109
       }
     },
     {
@@ -35,12 +35,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "medium count ~18",
+      "description": "medium count ~21",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 16,
-        "max": 20
+        "min": 18,
+        "max": 24
       }
     },
     {
@@ -65,24 +65,24 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 board_edge finding(s)",
+      "description": "3 board_edge finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^board_edge$",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "SEED-00000008",
-      "description": "1 clock_routing finding(s)",
+      "description": "2 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -176,11 +176,11 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "~79 net(s) with EMC scores",
+      "description": "~80 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 71
+        "value": 72
       }
     }
   ]
