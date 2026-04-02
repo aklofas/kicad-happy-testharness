@@ -294,6 +294,109 @@ def cmd_diff(args):
     sys.exit(1 if changes else 0)
 
 
+def find_stale_assertions(changes):
+    """Find assertion files that reference removed fields.
+
+    Returns list of {assertion_file, assertion_id, removed_field, detector}.
+    """
+    removed_fields = {}
+    for c in changes:
+        if c["change_type"] == "removed" and c["field"]:
+            key = (c["category"], c["detector"], c["field"])
+            removed_fields[key] = c
+
+    if not removed_fields:
+        return []
+
+    stale = []
+    for f in DATA_DIR.rglob("assertions/*/*.json"):
+        try:
+            data = json.loads(f.read_text())
+        except (json.JSONDecodeError, OSError):
+            continue
+        atype = data.get("analyzer_type", "schematic")
+        for a in data.get("assertions", []):
+            path = a.get("check", {}).get("path", "")
+            # Check if path references a removed field
+            for (cat, det, field), change in removed_fields.items():
+                if cat == atype and f"{det}" in path and field in path:
+                    stale.append({
+                        "assertion_file": str(f),
+                        "assertion_id": a.get("id", "?"),
+                        "removed_field": f"{det}.{field}",
+                        "detector": det,
+                    })
+    return stale
+
+
+def generate_seed_for_new_fields(changes):
+    """Generate exists-assertions for newly added fields.
+
+    Returns list of assertion dicts ready to write.
+    """
+    assertions = []
+    for c in changes:
+        if c["change_type"] != "added" or not c["field"]:
+            continue
+        det = c["detector"]
+        field = c["field"]
+        cat = c["category"]
+        assertions.append({
+            "id": f"DRIFT-{len(assertions)+1:04d}",
+            "description": f"New field {field} in {det} (detected by schema drift)",
+            "check": {
+                "path": f"signal_analysis.{det}" if cat == "schematic"
+                        else f"{det}",
+                "op": "exists",
+            },
+            "aspirational": True,
+        })
+    return assertions
+
+
+def cmd_auto_seed(args):
+    """Auto-generate assertions for schema drift."""
+    if not INVENTORY_FILE.exists():
+        print(f"No saved inventory. Run 'scan' first.", file=sys.stderr)
+        sys.exit(1)
+
+    saved = json.loads(INVENTORY_FILE.read_text())
+    repos = [args.repo] if args.repo else list_repos()
+    current = build_inventory(repos)
+    changes = diff_inventories(saved, current)
+
+    if not changes:
+        print("No schema drift detected.")
+        return
+
+    # New field assertions
+    new_assertions = generate_seed_for_new_fields(changes)
+    # Stale assertion scan
+    stale = find_stale_assertions(changes)
+
+    added = [c for c in changes if c["change_type"] == "added"]
+    removed = [c for c in changes if c["change_type"] == "removed"]
+
+    print(f"Schema drift: {len(added)} new fields, {len(removed)} removed fields")
+    if new_assertions:
+        print(f"\nNew assertions to generate ({len(new_assertions)}):")
+        for a in new_assertions[:10]:
+            print(f"  {a['id']}: {a['description']}")
+        if len(new_assertions) > 10:
+            print(f"  ... and {len(new_assertions) - 10} more")
+
+    if stale:
+        print(f"\nStale assertions referencing removed fields ({len(stale)}):")
+        for s in stale[:10]:
+            print(f"  {s['assertion_id']} in {Path(s['assertion_file']).name}: "
+                  f"references removed {s['removed_field']}")
+        if len(stale) > 10:
+            print(f"  ... and {len(stale) - 10} more")
+
+    if not new_assertions and not stale:
+        print("No actionable drift detected.")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Schema validation — field inventory and drift detection"
@@ -308,11 +411,17 @@ def main():
     diff_p.add_argument("--repo", help="Diff one repo only")
     diff_p.add_argument("--json", action="store_true", help="JSON output")
 
+    auto_p = sub.add_parser("auto-seed",
+                            help="Generate assertions for new fields, flag stale refs")
+    auto_p.add_argument("--repo", help="Limit to one repo")
+
     args = parser.parse_args()
     if args.command == "scan":
         cmd_scan(args)
     elif args.command == "diff":
         cmd_diff(args)
+    elif args.command == "auto-seed":
+        cmd_auto_seed(args)
     else:
         parser.print_help()
         sys.exit(1)

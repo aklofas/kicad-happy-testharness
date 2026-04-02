@@ -11,6 +11,48 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-02 — Batch 27: parse_tolerance() coverage + run_spice.py passthrough (KH-193, TH-008)
+
+### KH-193 (LOW): parse_tolerance() misses value strings with non-standard delimiters
+
+- **File**: `kicad_utils.py` — `parse_tolerance()`
+- **Root cause**: Split regex only covered `/ \s _ , ±` delimiters. Values using hyphen (`100K-1%`), pipe (`100p|5%|16V`), or leading-dot tolerance (`.1%`) were not parsed. Affected Monte Carlo tolerance bands for ~6% of values with explicit tolerance.
+- **Fix**: Three changes:
+  1. Added `-` and `|` to the split regex: `r'[/\s_,±|\-]+'`
+  2. Changed number regex from `\d+(?:\.\d+)?` to `\d*\.?\d+` to accept `.1%` (no leading digit)
+  3. Applied same regex fix to the parenthesized fallback pattern
+- **Verified**: Parse rate 756/759 (99.6%), up from 711/759 (93.7%). All parsed tolerances in valid 0.1%-50% range. MC test on Power-PCB passes, SPICE assertions unchanged.
+- **Note**: Initial fix (splitting on `_ , ±`, stripping `()+-`) was included in commit `4eb8fb2` by the other agent. This fix addresses the remaining edge cases.
+
+### TH-008 (LOW): run_spice.py missing --extra-args passthrough
+
+- **File**: `run/run_spice.py`
+- **Root cause**: No mechanism to forward additional arguments (e.g., `--monte-carlo`, `--mc-seed`, `--mc-distribution`) from the batch runner to `simulate_subcircuits.py`.
+- **Fix**: Added `--extra-args` CLI flag that passes through to `run_one_spice()` via `shlex.split()`. Args appended to the subprocess command.
+- **Verified**: Used in all MC test plan phases (1-8). MC N=100 on 5 repos, reproducibility test, edge cases all pass through the runner.
+
+---
+
+## 2026-04-02 — Batch 26: diff_analysis.py set-on-dicts crash (KH-192)
+
+### KH-192 (HIGH): diff_analysis.py crashes with TypeError on 44% of schematic outputs
+
+- **File**: `diff_analysis.py` — `diff_schematic()`, lines ~352 and ~366
+- **Root cause**: Two locations used `set()` on lists that can contain dicts:
+  1. Line ~352: `connectivity_issues` — `single_pin_nets`, `floating_nets`, `multi_driver_nets` can contain dicts with nested pin info, not just strings
+  2. Line ~366: `erc_warnings` — always dicts with nested `pins` lists containing component/pin_number/pin_name
+  `set()` requires hashable elements; dicts are not hashable, so both lines raise `TypeError: unhashable type: 'dict'`.
+- **Impact**: 3,023 of 6,853 schematic outputs (44%) have ERC warnings; 140+ have dict-type connectivity issues. diff_analysis.py crashed with 100% failure rate on any file with either. Blocked diff-aware design reviews on nearly half of real-world designs.
+- **Fix**: Both locations now use hashable key representations — JSON serialization for connectivity issues, tuple keying for ERC warnings. Set operations (difference, intersection) work on the keys while preserving the original dicts for output.
+- **Verified**: 4-phase test plan executed:
+  - Phase 1: 50 previously-crashing files (25 ERC + 25 conn) all self-diff successfully with `has_changes: false`
+  - Phase 2: ERC diff correctness — added/removed warnings correctly detected using mutated test data
+  - Phase 3: Connectivity diff correctness — added/removed items correctly detected using mutated test data
+  - Phase 4: 100 corpus pairs (82 with ERC, 55 with connectivity issues), 0 crashes, 0 errors
+- **Discovered**: 2026-04-01 during diff-analysis test plan Phase 2 (schematic diff mutations)
+
+---
+
 ## 2026-04-01 — Batch 25: PCB --full stackup string type bug (KH-191)
 
 ### KH-191 (HIGH): PCB analyzer crashes with --full on boards with string stackup values

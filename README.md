@@ -1,8 +1,13 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,050+ real-world open-source KiCad projects. Provides a 3-layer regression testing system with 420K+ machine-checkable assertions, 270 unit tests, 30,000+ SPICE simulations across 17 subcircuit types, and 157,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,050+ real-world open-source KiCad projects. Provides a 3-layer regression testing system with 421K+ machine-checkable assertions, 270 unit tests, 30,000+ SPICE simulations across 17 subcircuit types, and 141,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
 
 For a deep dive into the architecture, reasoning, and design decisions, see [methodology.md](methodology.md).
+
+**For operational procedures, see [RUNBOOK.md](RUNBOOK.md)** — 17 checklists covering
+code change validation, feature testing, corpus health, issue management, constants
+verification, Layer 3 reviews, release preparation, and more. Agents should follow
+the relevant checklist rather than improvising workflows.
 
 ## Analytics
 
@@ -82,8 +87,11 @@ export KICAD_HAPPY_DIR=/path/to/kicad-happy   # if not at ../kicad-happy
 | `analyze_schematic.py` | `.kicad_sch`, `.sch` | Components, nets, signal paths, BOM, design analysis |
 | `analyze_pcb.py` | `.kicad_pcb` | Footprints, tracks, vias, zones, DFM analysis |
 | `analyze_gerbers.py` | Gerber directories | Layer completeness, drill alignment |
-| `simulate_subcircuits.py` | Schematic JSON | SPICE simulation of 17 subcircuit types (requires ngspice) |
-| `analyze_emc.py` | Schematic + PCB JSON | EMC pre-compliance risk analysis (7 rule categories, 6 standards) |
+| `simulate_subcircuits.py` | Schematic JSON | SPICE simulation of 17 subcircuit types + Monte Carlo tolerance analysis (requires ngspice) |
+| `analyze_emc.py` | Schematic + PCB JSON | EMC pre-compliance risk analysis (15 rule categories, 40 rules, 6 standards) |
+| `analyze_thermal.py` | Schematic + PCB JSON | Thermal hotspot estimation — junction temp, proximity warnings |
+| `diff_analysis.py` | Two analyzer JSONs | Diff-aware design reviews (components, signals, findings, SPICE status) |
+| `what_if.py` | Schematic JSON + changes | Interactive parameter sweep with optional SPICE re-simulation |
 
 All analyzers are pure Python 3.8+ stdlib. They produce JSON output and support KiCad versions 5 through 9.
 
@@ -112,10 +120,11 @@ Machine-checkable facts about what an analyzer should find in a specific file. S
 
 | Prefix | Source | Description |
 |--------|--------|-------------|
-| `SEED-*` | `seed.py` | Coarse count-based assertions (component counts, section sizes) |
+| `SEED-*` | `seed.py` | Coarse count-based assertions (component counts, section sizes). Tolerance scales with count: <50→10%, 50-200→5%, >200→3% |
 | `STRUCT-*` | `seed_structural.py` | Per-detection structural assertions (specific component refs in specific detectors) |
 | `FND-*` | `findings.py promote` | Promoted from Layer 3 LLM findings, including aspirational assertions for known bugs |
 | `BUGFIX-*` | `generate_bugfix_assertions.py` | Prevent fixed bugs from returning, tied to specific KH-* issues |
+| `NEG-*` | `seed_negative.py` | Negative assertions from false-positive findings (prevent regressions of FP fixes) |
 
 Supported operators: `range`, `min_count`, `max_count`, `equals`, `exists`, `not_exists`, `greater_than`, `less_than`, `field_equals`, `contains_match`, `not_contains_match`, `count_matches`.
 
@@ -201,7 +210,7 @@ python3 regression/promote.py --repo {repo} --apply   # promote
 
 ## Constants audit
 
-The analyzer scripts contain 180+ hardcoded constants: lookup tables, keyword lists, numeric thresholds, and regex patterns. `audit_constants.py` scans analyzer source using Python AST, builds a registry of all constants, and tracks verification status.
+The analyzer scripts contain 292 hardcoded constants: lookup tables, keyword lists, numeric thresholds, and regex patterns. `audit_constants.py` scans analyzer source using Python AST, builds a registry of all constants, and tracks verification status.
 
 ```bash
 python3 validate/audit_constants.py scan                # scan scripts, update registry
@@ -265,7 +274,7 @@ The registry (`reference/constants_registry.json`) tracks stable IDs, content ha
 
 ## Equation tracking
 
-The analyzer scripts use 83 engineering formulas — radiation calculations, impedance estimates, filter frequencies, harmonic analysis, and more. Unlike constants, equations can't be detected by AST alone, so they use structured comment tags (`# EQ-NNN:`) placed at each formula, with a scanner that detects changes via function body hashing.
+The analyzer scripts use 86 engineering formulas — radiation calculations, impedance estimates, filter frequencies, harmonic analysis, and more. Unlike constants, equations can't be detected by AST alone, so they use structured comment tags (`# EQ-NNN:`) placed at each formula, with a scanner that detects changes via function body hashing.
 
 ```bash
 python3 validate/audit_equations.py scan                # scan for EQ tags, update registry
@@ -304,12 +313,25 @@ python3 validate_all.py --repo {repo} --json            # single repo, JSON outp
 python3 validate/validate_outputs.py --repo {repo}      # structural invariants (--json)
 python3 validate/validate_spice.py --repo {repo}        # SPICE cross-validation (--json)
 python3 validate/validate_emc.py --repo {repo}          # EMC cross-validation (--summary)
+python3 validate/cross_analyzer.py --summary            # schematic↔PCB↔EMC↔SPICE consistency
 python3 validate/validate_schema.py scan                # build field inventory
 python3 validate/validate_schema.py diff                # detect schema drift
+python3 validate/validate_schema.py auto-seed           # generate assertions for new fields
 python3 validate/extract_mpns.py --repo {repo}          # extract MPNs from outputs
 python3 validate/analyze_bom_mismatch.py --repo {repo}  # BOM qty vs component count
 python3 validate/download_datasheets.py --project {repo} --status   # datasheet downloads
 python3 validate/validate_mpns.py --limit 50            # validate MPNs against APIs
+python3 validate/verify_constants_online.py --dry-run   # verify constants vs DigiKey API
+
+# Quality assurance
+python3 validate/mutation_test.py --repo {repo} --type schematic  # assertion effectiveness
+python3 regression/check_staleness.py                   # stale/missing assertions
+python3 regression/seed_negative.py --all --dry-run     # false-positive assertion candidates
+python3 coverage_detector_map.py                        # per-detector coverage matrix
+
+# Change management
+python3 detect_changes.py                               # upstream kicad-happy change impact
+python3 detect_changes.py --since HEAD~5 --json         # diff against older commit
 
 # Reporting
 python3 coverage_report.py --top 20                     # uncovered high-complexity repos
@@ -367,29 +389,36 @@ ISSUES.md                   # Open issues (KH-* analyzer, TH-* harness)
 FIXED.md                    # Closed issues with fix details
 checkout.py                 # Clone repos + check upstream updates
 discover.py                 # Find KiCad files, write manifests
-utils.py                    # Shared utilities (path resolution, unified runner)
+utils.py                    # Shared utilities (path resolution, unified runner, output validation)
 run_tests.py                # Unit + integration test runner (--unit, --quick-sanity)
 validate_all.py             # Unified validation orchestrator (--quick, --repo, --json)
 coverage_report.py          # Assertion coverage analysis (--top, --uncovered-only)
-generate_health_report.py   # Health metrics + trend tracking (--json, --log)
+coverage_detector_map.py    # Per-detector coverage matrix (--json, --uncovered-only)
+detect_changes.py           # Upstream kicad-happy change impact (--since, --json)
+generate_health_report.py   # Health metrics + trend tracking + drop detection (--json, --log)
+RUNBOOK.md                  # Operational checklists for agents
 
 run/                        # Batch-run analyzers (all support --repo, --jobs)
   run_schematic.py
   run_pcb.py
   run_gerbers.py
-  run_spice.py              #   SPICE simulations (requires ngspice)
+  run_spice.py              #   SPICE simulations (--extra-args for MC, requires ngspice)
   run_emc.py                #   EMC pre-compliance analysis (reads schematic + PCB)
   run_datasheets.py         #   Download datasheets + validate extractions
+  # All runners support --validate for output JSON structure checking
+  # All runners write _timing.json with per-file and aggregate timing data
 
 regression/                 # 3-layer regression testing
   _differ.py                #   Semantic JSON diff engine
-  checks.py                 #   Assertion data model + evaluation engine (KNOWN_OPS)
+  checks.py                 #   Assertion data model + evaluation engine (12 operators)
   refextract.py             #   Component ref extraction from descriptions
   snapshot.py               #   Snapshot outputs to reference/ baselines
   compare.py                #   Diff current outputs vs baselines
   run_checks.py             #   Run assertions against outputs
-  seed.py                   #   Generate SEED-* assertions (quality + empty-detector)
+  check_staleness.py        #   Detect stale assertions vs outputs (--repo, --type)
+  seed.py                   #   Generate SEED-* assertions (scaled tolerance by count)
   seed_structural.py        #   Generate per-ref STRUCT-* assertions
+  seed_negative.py          #   Generate NEG-* from false-positive findings (--dry-run)
   findings.py               #   Manage LLM review findings + promote to assertions
   generate_finding_checks.py #  Auto-generate check fields for finding items
   drift.py                  #   Detect findings drift against outputs
@@ -405,13 +434,16 @@ validate/                   # Output quality + constants audit
   validate_outputs.py       #   Structural invariants on analyzer JSON (--json)
   validate_spice.py         #   Cross-validate SPICE vs analyzer values (--json)
   validate_emc.py           #   Cross-validate EMC vs analyzer values (--summary)
-  validate_schema.py        #   Schema inventory and drift detection (scan/diff)
+  cross_analyzer.py         #   Cross-analyzer consistency (sch↔PCB↔EMC↔SPICE)
+  mutation_test.py          #   Mutation testing for assertion effectiveness
+  validate_schema.py        #   Schema inventory, drift detection, auto-seed (scan/diff/auto-seed)
+  verify_constants_online.py #  Verify constants against DigiKey parametric data
   extract_mpns.py           #   Extract MPN + manufacturer pairs
   validate_mpns.py          #   Validate MPNs against distributor APIs
   analyze_bom_mismatch.py   #   BOM qty vs component count analysis
   download_datasheets.py    #   Download datasheets from multiple sources
-  audit_constants.py        #   AST-based constant registry + verification
-  audit_equations.py        #   EQ-tag equation tracking + verification
+  audit_constants.py        #   AST-based constant registry + verification (292 constants)
+  audit_equations.py        #   EQ-tag equation tracking + verification (86 equations)
 
 tests/                      # Unit tests (270 tests, custom runner)
   test_checks.py            #   Assertion evaluation engine (43 tests)
@@ -429,9 +461,9 @@ integration/                # End-to-end tests
   test_datasheet_extraction.py # Datasheet download + extraction pipeline
 
 reference/                  # Tracked in git -- known-good regression data
-  constants_registry.json   #   Constant audit registry (290 constants)
+  constants_registry.json   #   Constant audit registry (292 constants)
   constants_registry.md     #   Auto-generated constant summary
-  equation_registry.json    #   Equation tracking registry (83 equations)
+  equation_registry.json    #   Equation tracking registry (86 equations)
   equation_registry.md      #   Auto-generated equation summary
   schema_inventory.json     #   Field inventory for schema drift detection
   health_log.jsonl          #   Health metrics over time (append-only)
@@ -443,6 +475,7 @@ reference/                  # Tracked in git -- known-good regression data
       {file}_structural.json #      STRUCT-* per-ref assertions
       {file}_bugfix.json    #       BUGFIX-* regression assertions
       {file}_finding.json   #       FND-* promoted findings
+      {file}_negative.json  #       NEG-* false-positive prevention
     findings.json           #     Structured findings from LLM review
     findings.md             #     Human-readable view (auto-generated)
 

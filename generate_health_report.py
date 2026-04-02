@@ -171,6 +171,33 @@ def main():
 
     metrics = collect_metrics()
 
+    # Check for assertion count drops vs last logged entry
+    drop_warnings = []
+    if HEALTH_LOG.exists():
+        try:
+            lines = HEALTH_LOG.read_text().strip().splitlines()
+            if lines:
+                prev = json.loads(lines[-1])
+                prev_total = prev.get("assertions", {}).get("total", 0)
+                curr_total = metrics["assertions"]["total"]
+                if prev_total > 0 and curr_total < prev_total:
+                    drop_pct = (prev_total - curr_total) / prev_total * 100
+                    drop_warnings.append(
+                        f"Assertion count dropped: {prev_total:,} -> {curr_total:,} "
+                        f"(-{drop_pct:.1f}%)"
+                    )
+                # Check per-type drops
+                for atype in ("SEED", "STRUCT", "FND", "BUGFIX"):
+                    prev_n = prev.get("assertions", {}).get("by_type", {}).get(atype, 0)
+                    curr_n = metrics["assertions"]["by_type"].get(atype, 0)
+                    if prev_n > 0 and curr_n < prev_n * 0.9:
+                        drop_warnings.append(
+                            f"  {atype} dropped: {prev_n:,} -> {curr_n:,}"
+                        )
+        except (json.JSONDecodeError, KeyError):
+            pass
+    metrics["drop_warnings"] = drop_warnings
+
     if args.log:
         HEALTH_LOG.parent.mkdir(parents=True, exist_ok=True)
         with open(HEALTH_LOG, "a") as f:
@@ -218,6 +245,13 @@ def main():
           f"{c['verified']} verified, {c['unverified']} unverified")
 
     print(f"\nSPICE outputs:       {sp['repos']} repos, {sp['files']} files")
+
+    if drop_warnings:
+        print(f"\n{'!'*60}")
+        print("WARNING: Assertion count regression detected!")
+        for w in drop_warnings:
+            print(f"  {w}")
+        print(f"{'!'*60}")
 
     if args.log:
         print(f"\nAppended to {HEALTH_LOG}")

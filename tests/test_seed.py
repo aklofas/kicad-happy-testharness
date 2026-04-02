@@ -20,8 +20,9 @@ from seed import (
 
 def test_range_bounds_normal():
     lo, hi = _range_bounds(100, 0.10)
-    assert lo == 90
-    assert 110 <= hi <= 111  # ceil(110.0) may be 111 due to float precision
+    # 100 is in 50-200 band: effective_tol = 0.10 * 0.5 = 0.05
+    assert lo == 95
+    assert hi == 105
 
 def test_range_bounds_zero():
     lo, hi = _range_bounds(0, 0.10)
@@ -37,8 +38,9 @@ def test_range_bounds_one():
 
 def test_range_bounds_large():
     lo, hi = _range_bounds(1000, 0.10)
-    assert lo == 900
-    assert hi == 1100
+    # 1000 is in >200 band: effective_tol = 0.10 * 0.3 = 0.03
+    assert lo == 970
+    assert hi == 1030
 
 def test_range_bounds_tight_tolerance():
     lo, hi = _range_bounds(50, 0.01)

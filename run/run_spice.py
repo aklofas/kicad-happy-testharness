@@ -25,6 +25,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -92,11 +93,11 @@ def run_extract_parasitics(extractor_script, pcb_json, parasitics_json):
 
 
 def run_one_spice(simulator_script, input_json, output_json, timeout=5,
-                  parasitics_json=None):
+                  parasitics_json=None, extra_args=None):
     """Run simulate_subcircuits.py on one schematic analysis JSON.
 
     Returns:
-        (returncode, summary_dict_or_None)
+        (returncode, summary_dict_or_None, elapsed_s)
     """
     cmd = [sys.executable, str(simulator_script),
            str(input_json),
@@ -105,27 +106,33 @@ def run_one_spice(simulator_script, input_json, output_json, timeout=5,
            "--timeout", str(timeout)]
     if parasitics_json and parasitics_json.exists():
         cmd.extend(["--parasitics", str(parasitics_json)])
+    if extra_args:
+        import shlex
+        cmd.extend(shlex.split(extra_args))
 
+    t0 = time.time()
     try:
         result = subprocess.run(cmd, capture_output=True, text=True,
                                 timeout=60)
+        elapsed = time.time() - t0
         if result.returncode == 0 and output_json.exists():
             with open(output_json) as f:
                 data = json.load(f)
-            return 0, data.get("summary", {})
+            return 0, data.get("summary", {}), elapsed
         else:
-            # Write error to .err file
             err_file = output_json.with_suffix(".err")
             err_file.write_text(result.stderr or f"exit {result.returncode}")
-            return result.returncode, None
+            return result.returncode, None, elapsed
     except subprocess.TimeoutExpired:
+        elapsed = time.time() - t0
         err_file = output_json.with_suffix(".err")
         err_file.write_text("Timed out after 60s")
-        return None, None
+        return None, None, elapsed
     except Exception as e:
+        elapsed = time.time() - t0
         err_file = output_json.with_suffix(".err")
         err_file.write_text(str(e))
-        return -1, None
+        return -1, None, elapsed
 
 
 def main():
@@ -141,6 +148,9 @@ def main():
                         help="Enable PCB parasitic injection: extract trace R/via L "
                         "from PCB outputs and inject into SPICE testbenches. "
                         "Results go to results/outputs/spice-parasitics/.")
+    parser.add_argument("--extra-args", type=str, default="",
+                        help="Extra arguments to pass through to simulate_subcircuits.py "
+                        "(e.g. '--monte-carlo 100 --mc-seed 42')")
     args = parser.parse_args()
 
     # Resolve paths
@@ -202,6 +212,8 @@ def main():
         print(f"Inputs: {len(inputs)} schematic outputs")
     print(f"Jobs: {args.jobs}")
     print(f"Timeout: {args.timeout}s per subcircuit")
+    if args.extra_args:
+        print(f"Extra args: {args.extra_args}")
     print()
 
     # Aggregate stats
@@ -211,6 +223,8 @@ def main():
     files_with_sims = 0
     errors = 0
     type_counts = {}
+    timings = []
+    t_start = time.time()
 
     parasitics_extracted = 0
 
@@ -234,11 +248,12 @@ def main():
                 else:
                     parasitics_json = None  # Extraction failed, run without
 
-        returncode, summary = run_one_spice(
+        returncode, summary, elapsed = run_one_spice(
             simulator, input_json, output_json, timeout=args.timeout,
             parasitics_json=parasitics_json,
+            extra_args=args.extra_args,
         )
-        return input_json, returncode, summary, output_json
+        return input_json, returncode, summary, output_json, elapsed
 
     results_list = []
     if args.jobs <= 1:
@@ -256,7 +271,8 @@ def main():
     # Sort by index for ordered output
     results_list.sort(key=lambda x: x[0])
 
-    for i, (input_json, returncode, summary, output_json) in results_list:
+    for i, (input_json, returncode, summary, output_json, elapsed) in results_list:
+        timings.append((f"{input_json.parent.name}/{input_json.name}", elapsed))
         total_files += 1
         rel = f"{input_json.parent.name}/{input_json.name}"
 
@@ -325,6 +341,26 @@ def main():
         print(f"By subcircuit type:")
         for t, c in sorted(type_counts.items(), key=lambda x: -x[1]):
             print(f"  {t:25s}: {c}")
+
+    total_elapsed = time.time() - t_start
+    avg_elapsed = sum(t for _, t in timings) / len(timings) if timings else 0
+    slowest = sorted(timings, key=lambda x: -x[1])[:5]
+    print(f"Time:  {total_elapsed:.1f}s total, {avg_elapsed:.2f}s avg per file")
+    if slowest:
+        print(f"Slowest:")
+        for path, t in slowest:
+            print(f"  {t:6.1f}s  {path}")
+
+    # Write timing data
+    timing_file = spice_out_dir / "_timing.json"
+    timing_data = {
+        "total_files": total_files,
+        "total_elapsed_s": round(total_elapsed, 2),
+        "avg_per_file_s": round(avg_elapsed, 3),
+        "slowest": [{"file": p, "elapsed_s": round(t, 3)} for p, t in slowest],
+    }
+    timing_file.parent.mkdir(parents=True, exist_ok=True)
+    timing_file.write_text(json.dumps(timing_data, indent=2))
 
     # Write aggregate report
     agg_file = spice_out_dir / "_aggregate.json"

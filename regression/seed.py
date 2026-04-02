@@ -90,9 +90,22 @@ def _quality_assertions(sig_type, detections, ast_num):
 
 
 def _range_bounds(value, tolerance):
-    """Compute [lo, hi] range with tolerance around a value."""
-    lo = max(0, math.floor(value * (1 - tolerance)))
-    hi = math.ceil(value * (1 + tolerance))
+    """Compute [lo, hi] range with tolerance around a value.
+
+    Scales tolerance inversely with count for tighter bounds on large values:
+      count < 10:   ±2 absolute (minimum spread)
+      count 10-50:  base tolerance (default 10%)
+      count 50-200: tolerance * 0.5 (e.g., 5%)
+      count > 200:  tolerance * 0.3 (e.g., 3%)
+    """
+    if value > 200:
+        effective_tol = tolerance * 0.3
+    elif value > 50:
+        effective_tol = tolerance * 0.5
+    else:
+        effective_tol = tolerance
+    lo = max(0, math.floor(value * (1 - effective_tol)))
+    hi = math.ceil(value * (1 + effective_tol))
     # Ensure minimum spread of 2 for small values
     if hi - lo < 2:
         lo = max(0, value - 1)

@@ -9,6 +9,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -244,23 +245,58 @@ def list_projects_in_data(repo_name):
 
 
 # ---------------------------------------------------------------------------
+# Output validation
+# ---------------------------------------------------------------------------
+
+# Minimum required top-level keys per analyzer type (signature check)
+EXPECTED_KEYS = {
+    "schematic": {"components", "statistics", "signal_analysis"},
+    "pcb": {"footprints", "statistics", "connectivity"},
+    "gerber": {"layers", "summary"},
+    "emc": {"findings", "summary"},
+    "spice": {"simulation_results", "summary"},
+}
+
+
+def validate_output(outfile, analyzer_type):
+    """Check an output file is valid JSON with expected keys.
+
+    Returns (ok, message).
+    """
+    if not outfile.exists():
+        return False, "output file missing"
+    try:
+        data = json.loads(outfile.read_text())
+    except json.JSONDecodeError as e:
+        return False, f"invalid JSON: {e}"
+    if not isinstance(data, dict):
+        return False, f"expected dict, got {type(data).__name__}"
+    expected = EXPECTED_KEYS.get(analyzer_type, set())
+    missing = expected - set(data.keys())
+    if missing:
+        return False, f"missing keys: {sorted(missing)}"
+    return True, "ok"
+
+
+# ---------------------------------------------------------------------------
 # Shared analyzer runner
 # ---------------------------------------------------------------------------
 
 def _run_one(analyzer, file_path, outfile, errfile, extra_args=None):
-    """Run a single analyzer subprocess. Returns (returncode, outfile)."""
+    """Run a single analyzer subprocess. Returns (returncode, outfile, elapsed_s)."""
     cmd = [sys.executable, str(analyzer), file_path, "-o", str(outfile)]
     if extra_args:
         cmd.extend(extra_args)
+    t0 = time.time()
     try:
         result = subprocess.run(
             cmd, capture_output=True, text=True, timeout=ANALYZER_TIMEOUT,
         )
         errfile.write_text(result.stderr)
-        return result.returncode, outfile
+        return result.returncode, outfile, time.time() - t0
     except subprocess.TimeoutExpired:
         errfile.write_text(f"Timed out after {ANALYZER_TIMEOUT}s")
-        return None, outfile
+        return None, outfile, time.time() - t0
 
 
 def run_analyzer(config, args=None):
@@ -282,6 +318,8 @@ def run_analyzer(config, args=None):
         parser.add_argument("--repo", help=f"Only analyze {config['type_name']}s for this repo")
         parser.add_argument("--jobs", "-j", type=int, default=1,
                             help="Number of parallel analyzer processes (default: 1)")
+        parser.add_argument("--validate", action="store_true",
+                            help="Validate output JSON structure after each run")
         args = parser.parse_args()
 
     kicad_happy = resolve_kicad_happy_dir()
@@ -319,6 +357,8 @@ def run_analyzer(config, args=None):
     print()
 
     passed = failed = 0
+    timings = []  # (relpath, elapsed_s)
+    t_start = time.time()
     repos_str = str(REPOS_DIR)
 
     def _prepare(file_path):
@@ -331,8 +371,14 @@ def run_analyzer(config, args=None):
         errfile = repo_out_dir / f"{sname}.err"
         return relpath, outfile, errfile
 
+    do_validate = getattr(args, "validate", False)
+
     def _format_result(i, relpath, returncode, outfile):
         if returncode == 0:
+            if do_validate:
+                ok, msg = validate_output(outfile, output_subdir)
+                if not ok:
+                    return False, f"VFAIL [{i}] {relpath}\n     {msg}"
             try:
                 with open(outfile) as f:
                     d = json.load(f)
@@ -351,7 +397,8 @@ def run_analyzer(config, args=None):
     if jobs <= 1:
         for i, file_path in enumerate(files, 1):
             relpath, outfile, errfile = _prepare(file_path)
-            returncode, _ = _run_one(analyzer, file_path, outfile, errfile, extra_args)
+            returncode, _, elapsed = _run_one(analyzer, file_path, outfile, errfile, extra_args)
+            timings.append((relpath, elapsed))
             ok, msg = _format_result(i, relpath, returncode, outfile)
             if ok:
                 passed += 1
@@ -368,7 +415,8 @@ def run_analyzer(config, args=None):
                 tasks[future] = (i, relpath, outfile)
             for future in as_completed(tasks):
                 i, relpath, outfile = tasks[future]
-                returncode, _ = future.result()
+                returncode, _, elapsed = future.result()
+                timings.append((relpath, elapsed))
                 ok, msg = _format_result(i, relpath, returncode, outfile)
                 if ok:
                     passed += 1
@@ -377,9 +425,31 @@ def run_analyzer(config, args=None):
                 print(msg)
 
     total = passed + failed
+    total_elapsed = time.time() - t_start
+    avg_elapsed = sum(t for _, t in timings) / len(timings) if timings else 0
+    slowest = sorted(timings, key=lambda x: -x[1])[:5]
+
     print(f"\n=== Results ===")
     print(f"Total: {total}")
     print(f"Pass:  {passed}")
     print(f"Fail:  {failed}")
     if total > 0:
         print(f"Rate:  {passed * 100 / total:.1f}%")
+    print(f"Time:  {total_elapsed:.1f}s total, {avg_elapsed:.2f}s avg per file")
+    if slowest:
+        print(f"Slowest:")
+        for path, t in slowest:
+            print(f"  {t:6.1f}s  {path}")
+
+    # Write timing data
+    timing_file = OUTPUTS_DIR / output_subdir / "_timing.json"
+    timing_file.parent.mkdir(parents=True, exist_ok=True)
+    timing_data = {
+        "total_files": total,
+        "total_elapsed_s": round(total_elapsed, 2),
+        "avg_per_file_s": round(avg_elapsed, 3),
+        "slowest": [{"file": p, "elapsed_s": round(t, 3)} for p, t in slowest],
+        "all": [{"file": p, "elapsed_s": round(t, 3)} for p, t in
+                sorted(timings, key=lambda x: x[0])],
+    }
+    timing_file.write_text(json.dumps(timing_data, indent=2))

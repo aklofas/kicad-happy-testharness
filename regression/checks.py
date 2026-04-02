@@ -321,6 +321,7 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
                         data["_repo"] = repo_dir.name
                         data["_project"] = proj_dir.name
                         data["_project_path"] = project_path
+                        data["_source_file"] = str(f)
                         all_assertions.append(data)
                     except (json.JSONDecodeError, OSError):
                         continue

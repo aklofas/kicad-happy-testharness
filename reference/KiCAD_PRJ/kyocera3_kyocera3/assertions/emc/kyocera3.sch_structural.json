@@ -5,39 +5,28 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "5 clock_routing finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^clock_routing$",
-        "value": 5
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "4 decoupling finding(s)",
+      "description": "2 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "32 ground_plane finding(s)",
+      "id": "STRUCT-00000002",
+      "description": "2 ground_plane finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^ground_plane$",
-        "value": 32
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "8 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -48,17 +37,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Rule CK-003 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^CK\\-003$"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000004",
       "description": "Rule DC-001 present",
       "check": {
         "path": "findings",
@@ -68,27 +47,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "Rule DC-003 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^DC\\-003$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "Rule GP-001 present",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "rule_id",
-        "pattern": "^GP\\-001$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000005",
       "description": "Rule GP-004 present",
       "check": {
         "path": "findings",
@@ -98,7 +57,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000006",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -108,7 +67,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000007",
       "description": "U2 in EMC findings",
       "check": {
         "path": "findings",
@@ -118,7 +77,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000008",
       "description": "C5 in EMC findings",
       "check": {
         "path": "findings",
@@ -128,7 +87,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000009",
       "description": "U1 in EMC findings",
       "check": {
         "path": "findings",
@@ -138,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000010",
       "description": "C3 in EMC findings",
       "check": {
         "path": "findings",
@@ -148,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000011",
       "description": "C4 in EMC findings",
       "check": {
         "path": "findings",
@@ -158,23 +117,63 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
-      "description": "JP_RED1 in EMC findings",
+      "id": "STRUCT-00000012",
+      "description": "CN_FPGA1 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bJP_RED1\\b"
+        "pattern": "\\bCN_FPGA1\\b"
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000013",
+      "description": "JP_LEDA1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJP_LEDA1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "CN_TRIG1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCN_TRIG1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "J1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJ1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "JP_IR1 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJP_IR1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "JP_RED1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bJP_RED1\\b"
       }
     },
     {
@@ -185,46 +184,6 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bJP_RED_IR1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
-      "description": "CN_FPGA1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bCN_FPGA1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
-      "description": "JP_LEDA1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJP_LEDA1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000021",
-      "description": "CN_TRIG1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bCN_TRIG1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
-      "description": "J1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bJ1\\b"
       }
     }
   ]

@@ -23,6 +23,7 @@ import argparse
 import json
 import sys
 import subprocess
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -83,7 +84,7 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
     """Run analyze_emc.py on one schematic (+optional PCB) output.
 
     Returns:
-        (returncode, summary_dict_or_None)
+        (returncode, summary_dict_or_None, elapsed_s)
     """
     cmd = [sys.executable, str(analyzer_script),
            "--schematic", str(schematic_json),
@@ -95,26 +96,30 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
     if spice_enhanced:
         cmd.append("--spice-enhanced")
 
+    t0 = time.time()
     try:
         result = subprocess.run(cmd, capture_output=True, text=True,
                                 timeout=timeout)
+        elapsed = time.time() - t0
         # Exit code 0 = success, 1 = critical findings (still valid output)
         if result.returncode in (0, 1) and output_json.exists():
             with open(output_json) as f:
                 data = json.load(f)
-            return 0, data.get("summary", {})
+            return 0, data.get("summary", {}), elapsed
         else:
             err_file = output_json.with_suffix(".err")
             err_file.write_text(result.stderr or f"exit {result.returncode}")
-            return result.returncode, None
+            return result.returncode, None, elapsed
     except subprocess.TimeoutExpired:
+        elapsed = time.time() - t0
         err_file = output_json.with_suffix(".err")
         err_file.write_text(f"Timed out after {timeout}s")
-        return None, None
+        return None, None, elapsed
     except Exception as e:
+        elapsed = time.time() - t0
         err_file = output_json.with_suffix(".err")
         err_file.write_text(str(e))
-        return -1, None
+        return -1, None, elapsed
 
 
 def main():
@@ -176,6 +181,8 @@ def main():
     category_counts = {}
     files_with_findings = 0
     paired_count = 0
+    timings = []
+    t_start = time.time()
 
     def process_one(input_json):
         repo_name = input_json.parent.name
@@ -184,12 +191,12 @@ def main():
         output_json = out_dir / input_json.name
 
         pcb_json = find_pcb_output(input_json)
-        returncode, summary = run_one_emc(
+        returncode, summary, elapsed = run_one_emc(
             analyzer, input_json, pcb_json, output_json,
             standard=args.standard, timeout=args.timeout,
             spice_enhanced=args.spice_enhanced,
         )
-        return input_json, returncode, summary, output_json, pcb_json is not None
+        return input_json, returncode, summary, output_json, pcb_json is not None, elapsed
 
     results_list = []
     if args.jobs <= 1:
@@ -206,7 +213,8 @@ def main():
 
     results_list.sort(key=lambda x: x[0])
 
-    for i, (input_json, returncode, summary, output_json, had_pcb) in results_list:
+    for i, (input_json, returncode, summary, output_json, had_pcb, elapsed) in results_list:
+        timings.append((f"{input_json.parent.name}/{input_json.name}", elapsed))
         total_files += 1
         rel = f"{input_json.parent.name}/{input_json.name}"
 
@@ -274,6 +282,15 @@ def main():
         for cat, cnt in sorted(category_counts.items(), key=lambda x: -x[1]):
             print(f"  {cat:25s}: {cnt}")
 
+    total_elapsed = time.time() - t_start
+    avg_elapsed = sum(t for _, t in timings) / len(timings) if timings else 0
+    slowest = sorted(timings, key=lambda x: -x[1])[:5]
+    print(f"Time:  {total_elapsed:.1f}s total, {avg_elapsed:.2f}s avg per file")
+    if slowest:
+        print(f"Slowest:")
+        for path, t in slowest:
+            print(f"  {t:6.1f}s  {path}")
+
     # Write aggregate report
     agg_file = emc_out_dir / "_aggregate.json"
     agg = {
@@ -288,6 +305,16 @@ def main():
     agg_file.parent.mkdir(parents=True, exist_ok=True)
     agg_file.write_text(json.dumps(agg, indent=2))
     print(f"\nAggregate report: {agg_file}")
+
+    # Write timing data
+    timing_file = emc_out_dir / "_timing.json"
+    timing_data = {
+        "total_files": total_files,
+        "total_elapsed_s": round(total_elapsed, 2),
+        "avg_per_file_s": round(avg_elapsed, 3),
+        "slowest": [{"file": p, "elapsed_s": round(t, 3)} for p, t in slowest],
+    }
+    timing_file.write_text(json.dumps(timing_data, indent=2))
 
     sys.exit(1 if errors > 0 else 0)
 

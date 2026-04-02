@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-01 (equation tracking)
+Last updated: 2026-04-02 (v1.1 feature testing + harness improvements)
 
 ---
 
@@ -17,27 +17,20 @@ Last updated: 2026-04-01 (equation tracking)
 | Checked out in repos/ | 1,035 |
 | Repos with baselines | 1,035 |
 | Repos with assertions | 1,035 |
-| Total assertion files | ~28,500 |
-| SEED assertions (schematic) | 55,872 |
-| SEED assertions (PCB) | 42,947 |
-| SEED assertions (gerber) | 8,965 |
-| SEED assertions (SPICE) | 20,788 |
-| SEED assertions (EMC) | 32,741 |
-| STRUCT assertions (schematic) | 45,935 |
-| STRUCT assertions (PCB) | 40,831 |
-| STRUCT assertions (SPICE) | 68,504 |
-| STRUCT assertions (EMC) | 56,067 |
+| Total assertion files | ~35,500 |
+| SEED assertions | 195,375 |
+| STRUCT assertions | 221,352 |
 | FND assertions (required) | 2,731 |
 | FND assertions (aspirational) | 1,987 |
 | BUGFIX assertions | 77 |
-| **Total assertions** | **~384,000** |
-| Assertion pass rate | 99.8% (pre-EMC) / 100% (EMC) |
+| **Total assertions** | **~421,500** |
+| Assertion pass rate | 99.5% (schematic 100%, PCB 99.96%, SPICE 99.5%, EMC 98.7%) |
 | Bugfix registry entries | 67 |
-| Unit tests | 264 |
+| Unit tests | 270 |
 | Layer 3 reviewed repos | 992 |
 | Total findings | 2,575 |
 | Open KH-* issues | 0 |
-| Closed KH-* issues | 191 |
+| Closed KH-* issues | 193 |
 
 ### SPICE simulation summary
 
@@ -88,6 +81,25 @@ Last updated: 2026-04-01 (equation tracking)
 ---
 
 ## Completed batches
+
+### v1.1 Feature Validation + Harness Improvements (2026-04-01 to 2026-04-02)
+
+Executed 6 test plans for v1.1 features developed by the kicad-happy agent:
+1. **Monte Carlo tolerance analysis** — 8 phases, all passed. N=100 on 5 repos, 277/315 subcircuits with tolerance_analysis, reproducible (same seed = identical), sensitivity physically correct (71/71 RC dominance), 66x overhead at N=100.
+2. **Diff-aware design reviews** — 11 phases, all passed. Schematic/PCB/EMC/SPICE diffs, edge cases (no-change, type mismatch, threshold filtering, reorder stability), 50-pair corpus smoke test.
+3. **Integration testing** (format-report.py, entrypoint.sh) — 9 phases, all passed. --diff flag, EMC exit code fix, MC in format-report, 50-file corpus smoke test.
+4. **Thermal hotspot estimation** — 11 phases, all passed. Package classification 54.5%, Tj formula verified, all severity thresholds correct, 50-repo smoke test, ambient flag delta exact.
+5. **Diff dict fix** (set-on-dicts crash) — 4 phases, all passed. 50 previously-crashing files now work, ERC/connectivity diffs correct, 100-pair corpus smoke test with 0 crashes.
+6. **What-if parameter sweep** — 10 phases, all passed. RC filter -50%, VD ratio 0.5, multi-change invariant, cross-detection, SPICE agreement -78.7%, patched export, 27-file corpus smoke test.
+
+Bugs found and fixed:
+- KH-192 (HIGH): diff_analysis.py set(dicts) crash on 44% of schematics — fixed, verified
+- KH-193 (LOW): parse_tolerance() coverage gap — fixed, 99.6% parse rate (was 68%)
+- TH-008 (LOW): run_spice.py --extra-args passthrough — fixed
+
+Test harness improvements implemented (13 items):
+- **Quick wins (6):** Pre-commit hook, timing instrumentation, staleness detector, tighter SEED tolerances, health report drop detection, JSON output validation
+- **Medium effort (7):** Cross-analyzer consistency (19K checks, 91.2%), per-detector coverage map (22 detectors), mutation testing (100% catch rate), schema drift detection (5 new fields), negative assertions (1,920 candidates), DigiKey constants verification (102 entries), upstream change detection (AST-based)
 
 ### Batch 1 — Well-known hardware projects (10 repos)
 
