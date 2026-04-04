@@ -1,12 +1,12 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,050+ real-world open-source KiCad projects. Provides a 3-layer regression testing system with 421K+ machine-checkable assertions, 270 unit tests, 30,000+ SPICE simulations across 17 subcircuit types, and 141,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,043 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 402K+ machine-checkable assertions, 276 unit tests, 28 auto-discovered signal detectors, 30,000+ SPICE simulations across 17 subcircuit types, and 141,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
 
 For a deep dive into the architecture, reasoning, and design decisions, see [methodology.md](methodology.md).
 
-**For operational procedures, see [RUNBOOK.md](RUNBOOK.md)** — 17 checklists covering
+**For operational procedures, see [RUNBOOK.md](RUNBOOK.md)** — 19 checklists covering
 code change validation, feature testing, corpus health, issue management, constants
-verification, Layer 3 reviews, release preparation, and more. Agents should follow
+verification, Layer 3 reviews, release preparation, domain detector testing, and more. Agents should follow
 the relevant checklist rather than improvising workflows.
 
 ## Analytics
@@ -102,7 +102,7 @@ For details on the EMC pre-compliance system, see [emc.md](emc.md).
 
 ## Regression testing (3-layer approach)
 
-All operations are per-repo. Data is organized by `reference/{repo}/{project}/` where project is the subpath to the KiCad project directory with `/` encoded as `_`.
+All operations are per-repo. Data is organized by `reference/{owner}/{repo}/{project}/` where project is the subpath to the KiCad project directory with `/` encoded as `_`. Repos use `owner/repo` format throughout (e.g., `greatscottgadgets/hackrf`).
 
 ### Layer 1: Baselines
 
@@ -328,44 +328,56 @@ python3 validate/mutation_test.py --repo {repo} --type schematic  # assertion ef
 python3 regression/check_staleness.py                   # stale/missing assertions
 python3 regression/seed_negative.py --all --dry-run     # false-positive assertion candidates
 python3 coverage_detector_map.py                        # per-detector coverage matrix
+python3 validate/detector_dashboard.py                  # field-level detector stats
+python3 validate/detector_dashboard.py --detector X     # one detector detail
 
 # Change management
 python3 detect_changes.py                               # upstream kicad-happy change impact
 python3 detect_changes.py --since HEAD~5 --json         # diff against older commit
+python3 detect_changes.py generate-map                  # auto-generate impact map from imports
 
 # Reporting
 python3 coverage_report.py --top 20                     # uncovered high-complexity repos
-python3 coverage_report.py --repo {repo}                # per-repo coverage detail
 python3 generate_health_report.py                       # single-page health summary
 python3 generate_health_report.py --json --log          # append to health_log.jsonl
+python3 generate_health_report.py --reset-baseline "reason"  # set new comparison baseline
 python3 regression/audit_bugfix_coverage.py             # gaps in bugfix regression
+python3 regression/audit_bugfix_paths.py                # verify bugfix assertion paths
+
+# Catalog
+python3 generate_catalog.py                             # build repo metadata catalog
+python3 generate_catalog.py --query "category=ESP32"    # query by category
+python3 generate_catalog.py --query "tags contains rf"  # query by tag
 
 # Testing
-python3 run_tests.py --unit                             # 270 unit tests
-python3 run_tests.py --integration                      # integration tests
-python3 run_tests.py --quick-sanity                     # assertions on 5 repos
+python3 run_tests.py --unit                             # unit tests (276 tests)
+python3 run_tests.py --tier unit                        # same as --unit
+python3 run_tests.py --tier online                      # integration tests (need API keys)
+python3 run_tests.py --quick-sanity                     # assertions on smoke pack repos
 ```
 
 ## Repo management
 
-- **repos.md** -- Master list of all repos with URLs and pinned commit hashes
-- **priority.md** -- Repos ranked by testing priority (schematic complexity)
+- **repos.md** -- Master list of all repos with URLs, pinned commit hashes, and categories (via `## Section` headers)
 - **status.md** -- Operational log of batch testing progress
+- **reference/repo_catalog.json** -- Searchable metadata catalog (KiCad versions, complexity, quality scores, design domains, tags)
+- **reference/smoke_pack.md** -- Curated ~20 repos for `--smoke` mode, tagged by capability
 
 ### Adding test repos
 
-Edit `repos.md` directly:
+Edit `repos.md` directly under the appropriate `## Category` section:
 
 ```
-- https://github.com/user/repo
-- https://github.com/user/large-repo (shallow)
-- https://github.com/user/pinned-repo @ abc123def456
+- https://github.com/user/repo @ abc123def456
 ```
+
+All repos must have a pinned 40-char commit hash. All clones are shallow.
 
 ```bash
-python3 checkout.py                        # clone new repos
-python3 checkout.py --check-updates        # compare pinned hashes to remote HEAD
-python3 checkout.py --check-updates --pin  # update repos.md with new hashes
+python3 checkout.py                              # clone new repos
+python3 checkout.py --check-updates --jobs 16    # check for upstream updates (parallel)
+python3 checkout.py --check-updates --pin        # update hashes in repos.md
+python3 generate_catalog.py                      # rebuild metadata catalog
 ```
 
 ## Issue tracking
@@ -382,21 +394,22 @@ Prefixes: `KH-*` for analyzer bugs, `TH-*` for harness issues. Numbers are globa
 ```
 spice.md                    # SPICE simulation documentation
 emc.md                      # EMC pre-compliance testing documentation
-repos.md                    # Master repo list (1,043 repos with pinned hashes)
-priority.md                 # Testing priority ranking (all tested)
+repos.md                    # Master repo list (1,043 repos, categories via ## headers)
 status.md                   # Batch testing progress log
 ISSUES.md                   # Open issues (KH-* analyzer, TH-* harness)
 FIXED.md                    # Closed issues with fix details
 checkout.py                 # Clone repos + check upstream updates
 discover.py                 # Find KiCad files, write manifests
 utils.py                    # Shared utilities (path resolution, unified runner, output validation)
-run_tests.py                # Unit + integration test runner (--unit, --quick-sanity)
+run_tests.py                # Test runner (--unit, --tier unit|online|all, --json)
+run_corpus.py               # Unified corpus orchestrator (--full, --smoke, --quick, --json)
 validate_all.py             # Unified validation orchestrator (--quick, --repo, --json)
 coverage_report.py          # Assertion coverage analysis (--top, --uncovered-only)
-coverage_detector_map.py    # Per-detector coverage matrix (--json, --uncovered-only)
-detect_changes.py           # Upstream kicad-happy change impact (--since, --json)
-generate_health_report.py   # Health metrics + trend tracking + drop detection (--json, --log)
-RUNBOOK.md                  # Operational checklists for agents
+coverage_detector_map.py    # Per-detector coverage matrix (auto-discovered from schema)
+detect_changes.py           # Upstream change impact (--since, --json, generate-map)
+generate_health_report.py   # Health metrics + drop detection (--json, --log, --reset-baseline)
+generate_catalog.py         # Repo metadata catalog (--query, --json)
+RUNBOOK.md                  # 19 operational checklists for agents
 
 run/                        # Batch-run analyzers (all support --repo, --jobs)
   run_schematic.py
@@ -405,8 +418,7 @@ run/                        # Batch-run analyzers (all support --repo, --jobs)
   run_spice.py              #   SPICE simulations (--extra-args for MC, requires ngspice)
   run_emc.py                #   EMC pre-compliance analysis (reads schematic + PCB)
   run_datasheets.py         #   Download datasheets + validate extractions
-  # All runners support --validate for output JSON structure checking
-  # All runners write _timing.json with per-file and aggregate timing data
+  # All runners support --validate, --json, and write _timing.json
 
 regression/                 # 3-layer regression testing
   _differ.py                #   Semantic JSON diff engine
@@ -416,7 +428,7 @@ regression/                 # 3-layer regression testing
   compare.py                #   Diff current outputs vs baselines
   run_checks.py             #   Run assertions against outputs
   check_staleness.py        #   Detect stale assertions vs outputs (--repo, --type)
-  seed.py                   #   Generate SEED-* assertions (scaled tolerance by count)
+  seed.py                   #   Generate SEED-* assertions (--prune-stale, field specs)
   seed_structural.py        #   Generate per-ref STRUCT-* assertions
   seed_negative.py          #   Generate NEG-* from false-positive findings (--dry-run)
   findings.py               #   Manage LLM review findings + promote to assertions
@@ -429,6 +441,7 @@ regression/                 # 3-layer regression testing
   bugfix_registry.json      #   KH-* issue -> regression assertion mapping
   generate_bugfix_assertions.py #  Generate BUGFIX-* assertions from registry
   audit_bugfix_coverage.py  #   Audit gaps between FIXED.md and registry
+  audit_bugfix_paths.py     #   Verify bugfix assertion paths resolve to outputs
 
 validate/                   # Output quality + constants audit
   validate_outputs.py       #   Structural invariants on analyzer JSON (--json)
@@ -436,7 +449,8 @@ validate/                   # Output quality + constants audit
   validate_emc.py           #   Cross-validate EMC vs analyzer values (--summary)
   cross_analyzer.py         #   Cross-analyzer consistency (sch↔PCB↔EMC↔SPICE)
   mutation_test.py          #   Mutation testing for assertion effectiveness
-  validate_schema.py        #   Schema inventory, drift detection, auto-seed (scan/diff/auto-seed)
+  validate_schema.py        #   Schema drift detection for all 5 output types (scan/diff/auto-seed)
+  detector_dashboard.py     #   Field-level detector statistics (--detector, --json)
   verify_constants_online.py #  Verify constants against DigiKey parametric data
   extract_mpns.py           #   Extract MPN + manufacturer pairs
   validate_mpns.py          #   Validate MPNs against distributor APIs
@@ -445,7 +459,7 @@ validate/                   # Output quality + constants audit
   audit_constants.py        #   AST-based constant registry + verification (292 constants)
   audit_equations.py        #   EQ-tag equation tracking + verification (86 equations)
 
-tests/                      # Unit tests (270 tests, custom runner)
+tests/                      # Unit tests (276 tests, TIER="unit")
   test_checks.py            #   Assertion evaluation engine (43 tests)
   test_differ.py            #   Baseline diff engine (13 tests)
   test_emc.py               #   EMC seed + structural + cross-val (35 tests)
@@ -453,7 +467,7 @@ tests/                      # Unit tests (270 tests, custom runner)
   test_schema.py            #   Schema validation + KNOWN_OPS (24 tests)
   test_seed.py              #   Seed assertion generation (23 tests)
   test_spice.py             #   SPICE seed + structural + cross-val (28 tests)
-  test_utils.py             #   Path utilities (16 tests)
+  test_utils.py             #   Path utilities + bracket notation (22 tests)
   test_validate_outputs.py  #   Output validation (27 tests)
   test_validate_spice.py    #   SPICE cross-validation (28 tests)
 
@@ -465,10 +479,14 @@ reference/                  # Tracked in git -- known-good regression data
   constants_registry.md     #   Auto-generated constant summary
   equation_registry.json    #   Equation tracking registry (86 equations)
   equation_registry.md      #   Auto-generated equation summary
-  schema_inventory.json     #   Field inventory for schema drift detection
+  schema_inventory.json     #   Field inventory for all 5 output types
   health_log.jsonl          #   Health metrics over time (append-only)
+  health_baseline.json      #   Health comparison baseline (after intentional changes)
+  repo_catalog.json         #   Searchable metadata catalog (KiCad versions, quality, tags)
+  repo_catalog.md           #   Human-readable catalog summary
+  smoke_pack.md             #   Curated ~20 repos for --smoke mode
   test_mpns.json            #   Curated test MPNs
-  {repo}/{project}/         #   Per-repo, per-project reference data
+  {owner}/{repo}/{project}/ #   Per-repo, per-project reference data
     baselines/              #     Compact baseline manifests
     assertions/{type}/      #     Machine-checkable facts per file
       {file}.json           #       SEED-* coarse assertions
@@ -479,10 +497,10 @@ reference/                  # Tracked in git -- known-good regression data
     findings.json           #     Structured findings from LLM review
     findings.md             #     Human-readable view (auto-generated)
 
-repos/                      # Git-ignored -- cloned test repos
+repos/                      # Git-ignored -- cloned test repos ({owner}/{repo}/ subdirs)
 results/                    # Git-ignored -- outputs, manifests, review packets
 ```
 
 ## Usage warning
 
-The test corpus has 1,050+ repos and cannot be processed in a single session. Work through repos in batches using `--repo` flags. Use `--jobs` for parallelism where supported.
+The test corpus has 1,043 repos and cannot be processed in a single session. Work through repos in batches using `--repo` flags. Use `--jobs` for parallelism where supported.

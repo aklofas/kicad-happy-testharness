@@ -1,6 +1,6 @@
 # Test Harness Runbook
 
-18 operational checklists for the kicad-happy test harness. Designed for Claude Code
+19 operational checklists for the kicad-happy test harness. Designed for Claude Code
 agents working autonomously or with minimal supervision.
 
 **This is the primary operational reference.** Agents MUST follow the relevant

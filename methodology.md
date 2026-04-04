@@ -1,6 +1,6 @@
 # Methodology
 
-How we validate a suite of KiCad analyzers against 1,050+ real-world open-source hardware designs, and why the system is built the way it is.
+How we validate a suite of KiCad analyzers against 1,043 real-world open-source hardware designs, and why the system is built the way it is.
 
 ---
 
@@ -22,7 +22,7 @@ Several constraints shaped the architecture:
 
 1. **No ground truth exists.** There is no authoritative database of "correct" signal analysis results for arbitrary KiCad projects. The analyzers are producing novel observations — voltage divider ratios, regulator configurations, filter topologies — that no prior tool has computed.
 
-2. **The corpus is too large for a single session.** 1,050+ repos with 6,800+ schematics. Any workflow must support incremental, per-repo processing across many sessions.
+2. **The corpus is too large for a single session.** 1,043 repos with 6,800+ schematics. Any workflow must support incremental, per-repo processing across many sessions.
 
 3. **Analyzer changes are frequent.** Bug fixes, new detectors, and constant table updates happen regularly. Each change can affect outputs across the entire corpus. Regression detection must be fast and precise enough to distinguish intentional improvements from unintended breakage.
 
@@ -275,7 +275,7 @@ Every repo in `repos.md` is pinned to a specific commit hash. `checkout.py --che
 
 ### Priority ranking
 
-`priority.md` ranks repos by schematic complexity (total file size) as a proxy for signal detector coverage value. Complex designs with many signal paths exercise more detectors and are more likely to expose edge cases. The priority queue guided batch testing order: high-priority repos were tested first to maximize early coverage.
+`repos.md` organizes repos into category sections. The repo catalog (`reference/repo_catalog.json`) provides searchable metadata including complexity scores, KiCad versions, design domains, and quality axes. This replaced the earlier `priority.md` testing queue, which was fully processed and removed.
 
 ---
 
