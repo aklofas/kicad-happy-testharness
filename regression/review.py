@@ -193,28 +193,35 @@ def show_status():
     total_findings = 0
 
     if DATA_DIR.exists():
-        for repo_dir in sorted(DATA_DIR.iterdir()):
-            if not repo_dir.is_dir() or repo_dir.name.startswith("."):
+        for owner_dir in sorted(DATA_DIR.iterdir()):
+            if not owner_dir.is_dir() or owner_dir.name.startswith("."):
                 continue
-            for proj_dir in repo_dir.iterdir():
-                if not proj_dir.is_dir():
+            for repo_dir in sorted(owner_dir.iterdir()):
+                if not repo_dir.is_dir():
                     continue
-                ff = proj_dir / "findings.json"
-                if ff.exists():
-                    try:
-                        data = json.loads(ff.read_text())
-                        n = len(data.get("findings", []))
-                        if n > 0:
-                            repos_with_findings.add(repo_dir.name)
-                            total_findings += n
-                    except Exception:
-                        pass
+                repo_key = f"{owner_dir.name}/{repo_dir.name}"
+                for proj_dir in repo_dir.iterdir():
+                    if not proj_dir.is_dir():
+                        continue
+                    ff = proj_dir / "findings.json"
+                    if ff.exists():
+                        try:
+                            data = json.loads(ff.read_text())
+                            n = len(data.get("findings", []))
+                            if n > 0:
+                                repos_with_findings.add(repo_key)
+                                total_findings += n
+                        except Exception:
+                            pass
 
     # Count total repos with outputs
     out_dir = OUTPUTS_DIR / "schematic"
     repos_with_outputs = 0
     if out_dir.exists():
-        repos_with_outputs = sum(1 for d in out_dir.iterdir() if d.is_dir())
+        for owner_dir in out_dir.iterdir():
+            if not owner_dir.is_dir():
+                continue
+            repos_with_outputs += sum(1 for d in owner_dir.iterdir() if d.is_dir())
 
     print(f"Layer 3 Review Coverage")
     print(f"  Repos reviewed: {len(repos_with_findings)}")

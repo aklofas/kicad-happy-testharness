@@ -126,12 +126,15 @@ def _spice_summary():
 
     repos = 0
     files = 0
-    for repo_dir in spice_dir.iterdir():
-        if repo_dir.is_dir():
-            repo_files = list(repo_dir.glob("*.json"))
-            if repo_files:
-                repos += 1
-                files += len(repo_files)
+    for owner_dir in spice_dir.iterdir():
+        if not owner_dir.is_dir():
+            continue
+        for repo_dir in owner_dir.iterdir():
+            if repo_dir.is_dir():
+                repo_files = list(repo_dir.glob("*.json"))
+                if repo_files:
+                    repos += 1
+                    files += len(repo_files)
 
     return {"repos": repos, "files": files}
 

@@ -38,15 +38,19 @@ def find_schematic_outputs(repo_filter=None):
         return []
 
     outputs = []
-    for repo_dir in sorted(schematic_dir.iterdir()):
-        if not repo_dir.is_dir():
+    for owner_dir in sorted(schematic_dir.iterdir()):
+        if not owner_dir.is_dir():
             continue
-        if repo_filter and repo_dir.name != repo_filter:
-            continue
-        for json_file in sorted(repo_dir.glob("*.json")):
-            if json_file.stat().st_size == 0:
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir():
                 continue
-            outputs.append(json_file)
+            repo_key = f"{owner_dir.name}/{repo_dir.name}"
+            if repo_filter and repo_key != repo_filter:
+                continue
+            for json_file in sorted(repo_dir.glob("*.json")):
+                if json_file.stat().st_size == 0:
+                    continue
+                outputs.append(json_file)
     return outputs
 
 

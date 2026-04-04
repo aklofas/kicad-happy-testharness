@@ -226,12 +226,15 @@ def collect_output_sizes():
         out_dir = RESULTS_DIR / "outputs" / typ
         if not out_dir.exists():
             continue
-        for repo_dir in out_dir.iterdir():
-            if not repo_dir.is_dir():
+        for owner_dir in out_dir.iterdir():
+            if not owner_dir.is_dir():
                 continue
-            repo = repo_dir.name
-            total = sum(f.stat().st_size for f in repo_dir.glob("*.json"))
-            sizes[repo] = sizes.get(repo, 0) + total
+            for repo_dir in owner_dir.iterdir():
+                if not repo_dir.is_dir():
+                    continue
+                repo = f"{owner_dir.name}/{repo_dir.name}"
+                total = sum(f.stat().st_size for f in repo_dir.glob("*.json"))
+                sizes[repo] = sizes.get(repo, 0) + total
     return sizes
 
 

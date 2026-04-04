@@ -122,20 +122,24 @@ def list_snapshots():
     print(f"{'Repo':<25s} {'Project':<30s} {'Created':<22s} {'Files':<6s} Analyzer")
     print("-" * 100)
 
-    for repo_dir in sorted(DATA_DIR.iterdir()):
-        if not repo_dir.is_dir():
+    for owner_dir in sorted(DATA_DIR.iterdir()):
+        if not owner_dir.is_dir():
             continue
-        for proj_dir in sorted(repo_dir.iterdir()):
-            if not proj_dir.is_dir():
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir():
                 continue
-            meta_file = proj_dir / "baselines" / "metadata.json"
-            if not meta_file.exists():
-                continue
-            meta = json.loads(meta_file.read_text())
-            total = sum(meta.get("file_counts", {}).values())
-            commit = (meta.get("analyzer_commit") or "unknown")[:12]
-            created = meta["created"][:19].replace("T", " ")
-            print(f"{repo_dir.name:<25s} {proj_dir.name:<30s} {created:<22s} {total:<6d} {commit}")
+            repo_key = f"{owner_dir.name}/{repo_dir.name}"
+            for proj_dir in sorted(repo_dir.iterdir()):
+                if not proj_dir.is_dir():
+                    continue
+                meta_file = proj_dir / "baselines" / "metadata.json"
+                if not meta_file.exists():
+                    continue
+                meta = json.loads(meta_file.read_text())
+                total = sum(meta.get("file_counts", {}).values())
+                commit = (meta.get("analyzer_commit") or "unknown")[:12]
+                created = meta["created"][:19].replace("T", " ")
+                print(f"{repo_key:<25s} {proj_dir.name:<30s} {created:<22s} {total:<6d} {commit}")
 
 
 def delete_snapshot(repo_name):

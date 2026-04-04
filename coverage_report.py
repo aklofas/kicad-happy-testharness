@@ -74,47 +74,51 @@ def collect_coverage(repo_filter=None):
         return []
 
     results = []
-    for repo_dir in sorted(DATA_DIR.iterdir()):
-        if not repo_dir.is_dir() or repo_dir.name.startswith("."):
+    for owner_dir in sorted(DATA_DIR.iterdir()):
+        if not owner_dir.is_dir() or owner_dir.name.startswith("."):
             continue
-        # Skip non-repo files (schema_inventory.json, etc.)
-        if not any(d.is_dir() for d in repo_dir.iterdir()):
-            continue
-        if repo_filter and repo_dir.name != repo_filter:
-            continue
-
-        for proj_dir in sorted(repo_dir.iterdir()):
-            if not proj_dir.is_dir():
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir():
+                continue
+            repo_key = f"{owner_dir.name}/{repo_dir.name}"
+            # Skip non-repo files (schema_inventory.json, etc.)
+            if not any(d.is_dir() for d in repo_dir.iterdir()):
+                continue
+            if repo_filter and repo_key != repo_filter:
                 continue
 
-            assertions_dir = proj_dir / "assertions"
-            findings_file = proj_dir / "findings.json"
+            for proj_dir in sorted(repo_dir.iterdir()):
+                if not proj_dir.is_dir():
+                    continue
 
-            counts = _count_assertions_by_prefix(assertions_dir)
-            total_assertions = sum(counts.values())
+                assertions_dir = proj_dir / "assertions"
+                findings_file = proj_dir / "findings.json"
 
-            findings_total, findings_reviewed = 0, 0
-            has_findings = findings_file.exists()
-            if has_findings:
-                findings_total, findings_reviewed = _count_findings(findings_file)
+                counts = _count_assertions_by_prefix(assertions_dir)
+                total_assertions = sum(counts.values())
 
-            comp_count = _get_component_count(proj_dir)
+                findings_total, findings_reviewed = 0, 0
+                has_findings = findings_file.exists()
+                if has_findings:
+                    findings_total, findings_reviewed = _count_findings(findings_file)
 
-            results.append({
-                "repo": repo_dir.name,
-                "project": proj_dir.name,
-                "components": comp_count,
-                "total_assertions": total_assertions,
-                "seed": counts.get("SEED", 0),
-                "struct": counts.get("STRUCT", 0),
-                "fnd": counts.get("FND", 0),
-                "bugfix": counts.get("BUGFIX", 0),
-                "other": sum(v for k, v in counts.items()
-                             if k not in ("SEED", "STRUCT", "FND", "BUGFIX")),
-                "findings_total": findings_total,
-                "findings_reviewed": findings_reviewed,
-                "has_findings": has_findings and findings_total > 0,
-            })
+                comp_count = _get_component_count(proj_dir)
+
+                results.append({
+                    "repo": repo_key,
+                    "project": proj_dir.name,
+                    "components": comp_count,
+                    "total_assertions": total_assertions,
+                    "seed": counts.get("SEED", 0),
+                    "struct": counts.get("STRUCT", 0),
+                    "fnd": counts.get("FND", 0),
+                    "bugfix": counts.get("BUGFIX", 0),
+                    "other": sum(v for k, v in counts.items()
+                                 if k not in ("SEED", "STRUCT", "FND", "BUGFIX")),
+                    "findings_total": findings_total,
+                    "findings_reviewed": findings_reviewed,
+                    "has_findings": has_findings and findings_total > 0,
+                })
 
     return sorted(results, key=lambda r: r["components"], reverse=True)
 

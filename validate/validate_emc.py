@@ -222,43 +222,47 @@ def main():
     all_results = []
     by_check = {}
 
-    for repo_dir in sorted(emc_dir.iterdir()):
-        if not repo_dir.is_dir():
+    for owner_dir in sorted(emc_dir.iterdir()):
+        if not owner_dir.is_dir():
             continue
-        if args.repo and repo_dir.name != args.repo:
-            continue
-
-        for emc_file in sorted(repo_dir.glob("*.json")):
-            if emc_file.name.startswith("_"):
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir():
                 continue
-            try:
-                emc_data = json.loads(emc_file.read_text())
-            except Exception:
+            repo_key = f"{owner_dir.name}/{repo_dir.name}"
+            if args.repo and repo_key != args.repo:
                 continue
 
-            schematic_data, pcb_data = find_source_json(emc_file)
-            results = cross_validate_file(schematic_data, pcb_data, emc_data)
+            for emc_file in sorted(repo_dir.glob("*.json")):
+                if emc_file.name.startswith("_"):
+                    continue
+                try:
+                    emc_data = json.loads(emc_file.read_text())
+                except Exception:
+                    continue
 
-            for r in results:
-                total_checks += 1
-                if r["status"] == "match":
-                    total_match += 1
-                else:
-                    total_mismatch += 1
+                schematic_data, pcb_data = find_source_json(emc_file)
+                results = cross_validate_file(schematic_data, pcb_data, emc_data)
 
-                check_name = r["check"]
-                if check_name not in by_check:
-                    by_check[check_name] = {"match": 0, "mismatch": 0}
-                by_check[check_name][r["status"]] += 1
-
-                if not args.summary:
-                    rel = f"{repo_dir.name}/{emc_file.name}"
-                    status_str = "OK" if r["status"] == "match" else "MISMATCH"
-                    if args.json:
-                        r["file"] = rel
-                        all_results.append(r)
+                for r in results:
+                    total_checks += 1
+                    if r["status"] == "match":
+                        total_match += 1
                     else:
-                        print(f"  {status_str:8s} {rel}: {r['check']} {r['detail']}")
+                        total_mismatch += 1
+
+                    check_name = r["check"]
+                    if check_name not in by_check:
+                        by_check[check_name] = {"match": 0, "mismatch": 0}
+                    by_check[check_name][r["status"]] += 1
+
+                    if not args.summary:
+                        rel = f"{repo_key}/{emc_file.name}"
+                        status_str = "OK" if r["status"] == "match" else "MISMATCH"
+                        if args.json:
+                            r["file"] = rel
+                            all_results.append(r)
+                        else:
+                            print(f"  {status_str:8s} {rel}: {r['check']} {r['detail']}")
 
     if args.json:
         json.dump({

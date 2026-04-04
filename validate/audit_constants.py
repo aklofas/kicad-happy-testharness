@@ -1295,11 +1295,15 @@ def _iter_schematic_outputs():
     sch_dir = OUTPUTS_DIR / "schematic"
     if not sch_dir.exists():
         return
-    for repo_dir in sorted(sch_dir.iterdir()):
-        if not repo_dir.is_dir():
+    for owner_dir in sorted(sch_dir.iterdir()):
+        if not owner_dir.is_dir():
             continue
-        for jf in sorted(repo_dir.glob("*.json")):
-            yield repo_dir.name, jf
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir():
+                continue
+            repo_key = f"{owner_dir.name}/{repo_dir.name}"
+            for jf in sorted(repo_dir.glob("*.json")):
+                yield repo_key, jf
 
 
 def _load_json_quiet(path):

@@ -98,28 +98,31 @@ def find_uncovered_outputs(data_dir, repo_name=None, analyzer_type=None):
         type_dir = OUTPUTS_DIR / atype
         if not type_dir.exists():
             continue
-        for repo_dir in sorted(type_dir.iterdir()):
-            if not repo_dir.is_dir():
+        for owner_dir in sorted(type_dir.iterdir()):
+            if not owner_dir.is_dir():
                 continue
-            if repo_name and repo_dir.name != repo_name:
-                continue
-            for json_file in sorted(repo_dir.glob("*.json")):
-                if json_file.name.startswith("_"):
+            for repo_dir in sorted(owner_dir.iterdir()):
+                if not repo_dir.is_dir():
                     continue
-                # Check if any assertion covers this output
-                repo = repo_dir.name
-                stem = json_file.stem  # e.g. "foo.kicad_sch"
-                is_covered = any(
-                    stem.endswith(fp) or stem == fp
-                    for r, t, fp in covered
-                    if r == repo and t == atype
-                )
-                if not is_covered:
-                    uncovered.append({
-                        "repo": repo,
-                        "type": atype,
-                        "output_file": str(json_file),
-                    })
+                repo = f"{owner_dir.name}/{repo_dir.name}"
+                if repo_name and repo != repo_name:
+                    continue
+                for json_file in sorted(repo_dir.glob("*.json")):
+                    if json_file.name.startswith("_"):
+                        continue
+                    # Check if any assertion covers this output
+                    stem = json_file.stem  # e.g. "foo.kicad_sch"
+                    is_covered = any(
+                        stem.endswith(fp) or stem == fp
+                        for r, t, fp in covered
+                        if r == repo and t == atype
+                    )
+                    if not is_covered:
+                        uncovered.append({
+                            "repo": repo,
+                            "type": atype,
+                            "output_file": str(json_file),
+                        })
 
     return uncovered
 

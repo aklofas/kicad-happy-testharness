@@ -48,11 +48,14 @@ def find_repos_with_schematics():
         return []
 
     repos = []
-    for repo_dir in sorted(schematic_dir.iterdir()):
-        if not repo_dir.is_dir():
+    for owner_dir in sorted(schematic_dir.iterdir()):
+        if not owner_dir.is_dir():
             continue
-        if any(repo_dir.glob("*.json")):
-            repos.append(repo_dir.name)
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir():
+                continue
+            if any(repo_dir.glob("*.json")):
+                repos.append(f"{owner_dir.name}/{repo_dir.name}")
     return repos
 
 

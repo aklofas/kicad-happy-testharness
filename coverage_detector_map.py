@@ -43,21 +43,24 @@ def count_corpus_hits():
     if not sch_dir.exists():
         return hits
 
-    for repo_dir in sch_dir.iterdir():
-        if not repo_dir.is_dir():
+    for owner_dir in sch_dir.iterdir():
+        if not owner_dir.is_dir():
             continue
-        for f in repo_dir.glob("*.json"):
-            if f.name.startswith("_"):
+        for repo_dir in owner_dir.iterdir():
+            if not repo_dir.is_dir():
                 continue
-            try:
-                data = json.loads(f.read_text())
-                sa = data.get("signal_analysis", {})
-                for det in DETECTORS:
-                    items = sa.get(det, [])
-                    if isinstance(items, list) and len(items) > 0:
-                        hits[det] += 1
-            except Exception:
-                continue
+            for f in repo_dir.glob("*.json"):
+                if f.name.startswith("_"):
+                    continue
+                try:
+                    data = json.loads(f.read_text())
+                    sa = data.get("signal_analysis", {})
+                    for det in DETECTORS:
+                        items = sa.get(det, [])
+                        if isinstance(items, list) and len(items) > 0:
+                            hits[det] += 1
+                except Exception:
+                    continue
 
     return hits
 
