@@ -1,5 +1,7 @@
 """Unit tests for utils.py — shared harness utilities."""
 
+TIER = "unit"
+
 import sys
 from pathlib import Path
 

@@ -1,5 +1,7 @@
 """Unit tests for regression/refextract.py — component reference extraction."""
 
+TIER = "unit"
+
 import sys
 from pathlib import Path
 

@@ -1,5 +1,7 @@
 """Unit tests for regression/seed.py — assertion generation."""
 
+TIER = "unit"
+
 import sys
 from pathlib import Path
 

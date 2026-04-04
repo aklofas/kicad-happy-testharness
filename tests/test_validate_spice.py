@@ -1,5 +1,7 @@
 """Unit tests for validate/validate_spice.py — SPICE cross-validation."""
 
+TIER = "unit"
+
 import sys
 from pathlib import Path
 

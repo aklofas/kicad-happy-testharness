@@ -20,6 +20,8 @@ Environment:
     KICAD_HAPPY_DIR — path to kicad-happy repo (default: ../kicad-happy)
 """
 
+TIER = "online"
+
 import argparse
 import json
 import os

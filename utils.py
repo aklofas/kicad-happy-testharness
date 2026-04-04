@@ -320,6 +320,8 @@ def run_analyzer(config, args=None):
                             help="Number of parallel analyzer processes (default: 1)")
         parser.add_argument("--validate", action="store_true",
                             help="Validate output JSON structure after each run")
+        parser.add_argument("--json", action="store_true",
+                            help="Print JSON summary line at end of output")
         args = parser.parse_args()
 
     kicad_happy = resolve_kicad_happy_dir()
@@ -453,3 +455,16 @@ def run_analyzer(config, args=None):
                 sorted(timings, key=lambda x: x[0])],
     }
     timing_file.write_text(json.dumps(timing_data, indent=2))
+
+    # JSON summary line (for machine consumption by run_corpus.py)
+    if getattr(args, "json", False):
+        summary = {
+            "type": output_subdir,
+            "total": total,
+            "passed": passed,
+            "failed": failed,
+            "pass_rate": f"{passed * 100 / total:.1f}%" if total > 0 else "N/A",
+            "elapsed_s": round(total_elapsed, 2),
+            "avg_per_file_s": round(avg_elapsed, 3) if total > 0 else 0,
+        }
+        print(json.dumps(summary))

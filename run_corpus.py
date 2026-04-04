@@ -38,9 +38,15 @@ def _run_step(name, cmd, timeout=600, abort_on_fail=False):
         )
         elapsed = time.time() - t0
         status = "pass" if result.returncode == 0 else "fail"
-        detail = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else ""
-        # Print last few lines of output
         lines = result.stdout.strip().splitlines()
+        # Try to parse last line as JSON (structured runner output)
+        detail = ""
+        if lines:
+            try:
+                detail = json.loads(lines[-1])
+            except (json.JSONDecodeError, ValueError):
+                detail = lines[-1] if lines else ""
+        # Print last few lines of output
         for line in lines[-5:]:
             print(f"  {line}")
         if result.returncode != 0 and result.stderr:
@@ -65,7 +71,7 @@ def _run_step(name, cmd, timeout=600, abort_on_fail=False):
         sys.exit(1)
 
     return {"name": name, "status": status, "elapsed_s": round(elapsed, 2),
-            "detail": detail[:200]}
+            "detail": detail if isinstance(detail, dict) else str(detail)[:200]}
 
 
 def _load_smoke_repos():

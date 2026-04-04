@@ -8,6 +8,8 @@ Tests:
   - Full round-trip: generate assertions -> evaluate against same data
 """
 
+TIER = "unit"
+
 import sys
 from pathlib import Path
 

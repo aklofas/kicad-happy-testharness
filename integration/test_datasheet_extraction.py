@@ -9,6 +9,8 @@ and SPICE spec fetcher integration. Run from the testharness root:
 Requires KICAD_HAPPY_DIR set (or ../kicad-happy as sibling).
 """
 
+TIER = "online"
+
 import json
 import os
 import sys

@@ -1,5 +1,7 @@
 """Unit tests for validate/validate_schema.py and checks.py assertion validation."""
 
+TIER = "unit"
+
 import sys
 from pathlib import Path
 

@@ -1,5 +1,7 @@
 """Unit tests for validate/validate_outputs.py — output structural validation."""
 
+TIER = "unit"
+
 import sys
 from pathlib import Path
 

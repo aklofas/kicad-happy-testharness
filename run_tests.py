@@ -2,12 +2,17 @@
 """Run all unit and integration tests.
 
 Usage:
-    python3 run_tests.py              # All tests
-    python3 run_tests.py --unit       # Unit tests only (tests/)
-    python3 run_tests.py --integration # Integration tests only (integration/)
+    python3 run_tests.py                  # Unit tests (default)
+    python3 run_tests.py --unit           # Unit tests only (tests/)
+    python3 run_tests.py --integration    # Online integration tests (integration/)
+    python3 run_tests.py --tier unit      # Only tier=unit tests
+    python3 run_tests.py --tier online    # Only tier=online tests
+    python3 run_tests.py --tier all       # All tiers
+    python3 run_tests.py --json           # JSON output
 """
 
 import argparse
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -17,13 +22,34 @@ sys.path.insert(0, str(HARNESS_DIR))
 from utils import TEST_TIMEOUT, INTEGRATION_TEST_TIMEOUT
 
 
-def discover_tests(dirs):
-    """Find all test_*.py files in given directories."""
+def discover_tests(dirs, tier_filter=None):
+    """Find all test_*.py files in given directories, optionally filtered by TIER.
+
+    Each test file can declare TIER = "unit"|"online" at module level.
+    If tier_filter is set, only files matching that tier are returned.
+    Files without a TIER declaration default to "unit" for tests/ and "online"
+    for integration/.
+    """
     tests = []
     for d in dirs:
         test_dir = HARNESS_DIR / d
-        if test_dir.exists():
-            tests.extend(sorted(test_dir.glob("test_*.py")))
+        if not test_dir.exists():
+            continue
+        default_tier = "online" if d == "integration" else "unit"
+        for f in sorted(test_dir.glob("test_*.py")):
+            if tier_filter and tier_filter != "all":
+                # Read TIER from file
+                tier = default_tier
+                try:
+                    for line in f.read_text().splitlines()[:30]:
+                        if line.startswith("TIER"):
+                            tier = line.split("=")[1].strip().strip("'\"")
+                            break
+                except OSError:
+                    pass
+                if tier != tier_filter:
+                    continue
+            tests.append(f)
     return tests
 
 
@@ -90,24 +116,34 @@ def run_quick_sanity():
 
 def main():
     parser = argparse.ArgumentParser(description="Run all tests")
-    parser.add_argument("--unit", action="store_true", help="Unit tests only")
-    parser.add_argument("--integration", action="store_true", help="Integration tests only")
+    parser.add_argument("--unit", action="store_true", help="Unit tests only (alias for --tier unit)")
+    parser.add_argument("--integration", action="store_true",
+                        help="Integration tests only (alias for --tier online)")
+    parser.add_argument("--tier", choices=["unit", "online", "all"],
+                        help="Run tests matching this tier (unit, online, all)")
     parser.add_argument("--quick-sanity", action="store_true",
                         help="Run assertions on 5 repos as a quick sanity check")
+    parser.add_argument("--json", action="store_true", help="JSON output")
     args = parser.parse_args()
 
     if args.quick_sanity:
         sys.exit(run_quick_sanity())
 
-    dirs = []
+    # Resolve tier filter from flags
+    tier_filter = args.tier
     if args.unit:
-        dirs = ["tests"]
+        tier_filter = "unit"
     elif args.integration:
-        dirs = ["integration"]
-    else:
-        dirs = ["tests", "integration"]
+        tier_filter = "online"
 
-    tests = discover_tests(dirs)
+    # Determine which directories to scan
+    dirs = ["tests", "integration"]
+    if tier_filter == "unit":
+        dirs = ["tests"]
+    elif tier_filter == "online":
+        dirs = ["integration"]
+
+    tests = discover_tests(dirs, tier_filter=tier_filter)
     if not tests:
         print("No test files found.")
         return 0
@@ -116,6 +152,7 @@ def main():
     total_failed = 0
     total_skipped = 0
     failures = []
+    file_results = []
 
     for test_file in tests:
         rel = test_file.relative_to(HARNESS_DIR)
@@ -127,12 +164,15 @@ def main():
             )
         except subprocess.TimeoutExpired:
             total_skipped += 1
-            print(f"  SKIP  {rel} (timed out after {timeout}s)")
+            file_results.append({"file": str(rel), "passed": 0, "failed": 0, "status": "skip"})
+            if not args.json:
+                print(f"  SKIP  {rel} (timed out after {timeout}s)")
             continue
 
         # Parse last line for counts
         last_lines = result.stdout.strip().split("\n")
         summary_line = last_lines[-1] if last_lines else ""
+        p = f = s = 0
 
         if result.returncode == 0:
             # Try to parse "N passed, N failed (N total)"
@@ -155,29 +195,41 @@ def main():
                         total_skipped += s
                         status = f"{p}p {f}f {s}s"
                     else:
+                        p = 1
                         total_passed += 1
                         status = "ok"
                 except (IndexError, ValueError):
+                    p = 1
                     total_passed += 1
                     status = "ok"
-            print(f"  PASS  {rel} ({status})")
+            file_results.append({"file": str(rel), "passed": p, "failed": f, "status": "pass"})
+            if not args.json:
+                print(f"  PASS  {rel} ({status})")
         else:
             total_failed += 1
             failures.append(rel)
-            print(f"  FAIL  {rel}")
-            # Show last few lines of output for debugging
-            for line in last_lines[-3:]:
-                if line.strip():
-                    print(f"        {line}")
+            file_results.append({"file": str(rel), "passed": 0, "failed": 1, "status": "fail"})
+            if not args.json:
+                print(f"  FAIL  {rel}")
+                for line in last_lines[-3:]:
+                    if line.strip():
+                        print(f"        {line}")
 
-    print()
-    print("=" * 50)
-    print(f"Results: {total_passed} passed, {total_failed} failed, {total_skipped} skipped")
-    print(f"Files:   {len(tests)} test files ({len(tests) - len(failures)} ok, {len(failures)} failed)")
-    print("=" * 50)
-
-    if failures:
-        print(f"\nFailed: {', '.join(str(f) for f in failures)}")
+    if args.json:
+        print(json.dumps({
+            "total_passed": total_passed,
+            "total_failed": total_failed,
+            "total_skipped": total_skipped,
+            "files": file_results,
+        }, indent=2))
+    else:
+        print()
+        print("=" * 50)
+        print(f"Results: {total_passed} passed, {total_failed} failed, {total_skipped} skipped")
+        print(f"Files:   {len(tests)} test files ({len(tests) - len(failures)} ok, {len(failures)} failed)")
+        print("=" * 50)
+        if failures:
+            print(f"\nFailed: {', '.join(str(f) for f in failures)}")
 
     return 1 if failures else 0
 

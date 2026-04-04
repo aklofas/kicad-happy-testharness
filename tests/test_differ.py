@@ -1,5 +1,7 @@
 """Unit tests for regression/_differ.py — semantic diff engine."""
 
+TIER = "unit"
+
 import sys
 from pathlib import Path
 

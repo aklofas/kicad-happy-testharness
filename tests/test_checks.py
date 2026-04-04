@@ -1,5 +1,7 @@
 """Unit tests for regression/checks.py — assertion evaluation engine."""
 
+TIER = "unit"
+
 import sys
 from pathlib import Path
 
