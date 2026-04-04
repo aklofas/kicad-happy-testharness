@@ -1,0 +1,107 @@
+{
+  "file_pattern": "dl-050-115v.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~375 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 363,
+        "max": 387
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~563 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 546,
+        "max": 580
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "3 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "7 protection_devices detected",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Has 71 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 53
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 80 diode(s)",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "min_count",
+        "value": 60
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Has 34 fuse(s)",
+      "check": {
+        "path": "statistics.component_types.fuse",
+        "op": "min_count",
+        "value": 25
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 61 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 45
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Has 128 other(s)",
+      "check": {
+        "path": "statistics.component_types.other",
+        "op": "min_count",
+        "value": 96
+      }
+    }
+  ]
+}
