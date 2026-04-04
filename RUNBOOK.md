@@ -76,7 +76,7 @@ If new fields appeared, run `auto-seed` to generate assertions for them.
 
 See Checklist 5 (Issue Management) below.
 
-### 1f½. Audit constants and equations
+### 1g. Audit constants and equations
 
 Run after ANY code change to catch new/changed constants that need verification:
 
@@ -88,7 +88,7 @@ python3 validate/audit_equations.py scan --diff
 If new constants or equations appear, follow Checklist 11 to verify them before
 merging. New constants without authoritative sources are a hallucination risk.
 
-### 1g. Update status.md
+### 1h. Update status.md
 
 Record what was tested, pass rates, and any new findings.
 
@@ -158,8 +158,10 @@ regressions.
 python3 regression/check_staleness.py
 ```
 
-If many assertions are stale (outputs newer than assertions), re-seed:
+If many assertions are stale (outputs newer than assertions), prune then re-seed:
 ```bash
+python3 regression/seed.py --all --type {type} --prune-stale --dry-run  # preview removals
+python3 regression/seed.py --all --type {type} --prune-stale            # remove stale
 python3 regression/seed.py --all --type {type}
 python3 regression/seed_structural.py --all --type {type}
 ```
@@ -236,7 +238,18 @@ python3 run/run_{type}.py --jobs 16
 python3 regression/snapshot.py --repo {repo}
 ```
 
-### 4d. Re-seed assertions
+### 4d. Prune stale seed assertions
+
+```bash
+python3 regression/seed.py --all --type {type} --prune-stale --dry-run  # preview
+python3 regression/seed.py --all --type {type} --prune-stale            # remove
+```
+
+Removes seed assertion files whose outputs no longer meet seeding thresholds
+(e.g., sub-sheets with <10 components). Do this BEFORE re-seeding to avoid
+re-generating assertions that will immediately be stale again.
+
+### 4e. Re-seed assertions
 
 ```bash
 python3 regression/seed.py --all --type {type}
@@ -245,29 +258,38 @@ python3 regression/seed_structural.py --all --type {type}
 
 SEED tolerance scales with count: <50 items →10%, 50-200 →5%, >200 →3%.
 
-### 4d½. Regenerate bugfix assertions
+### 4f. Regenerate and audit bugfix assertions
 
 ```bash
 python3 regression/generate_bugfix_assertions.py --apply
+python3 regression/audit_bugfix_paths.py
 ```
 
-This ensures BUGFIX-* assertions stay in sync with the bugfix registry after
-re-seeding. Skipping this step can leave stale BUGFIX assertions that reference
-old output structures.
+The first command ensures BUGFIX-* assertions stay in sync with the bugfix registry.
+The second verifies all bugfix assertions resolve to actual output files — any
+"unmatched" entries indicate wrong `project` or `source_file` paths in the registry.
+Fix them before proceeding.
 
-### 4e. Run assertions to verify 100% pass
+### 4g. Run assertions to verify 100% pass
 
 ```bash
 python3 regression/run_checks.py --type {type}
 ```
 
-### 4f. Promote to reference
+### 4h. Promote to reference
 
 ```bash
 python3 regression/promote.py --repo {repo} --apply
 ```
 
-### 4g. Update status.md with new assertion counts
+### 4i. Update status.md and reset health baseline
+
+```bash
+python3 generate_health_report.py --reset-baseline "re-seed after {reason}"
+```
+
+This sets the new assertion count as the comparison baseline so the next health
+report doesn't flag the intentional count change as a regression.
 
 ---
 
@@ -416,6 +438,17 @@ If the kicad-happy agent added/changed constants, verify them:
 python3 validate/verify_constants_online.py --limit 10    # spot-check via DigiKey
 ```
 
+### 7d. Verify the change-impact map is current
+
+```bash
+python3 detect_changes.py generate-map
+```
+
+Checks whether the hand-maintained file-to-types map in `detect_changes.py` matches
+what the import graph says. If divergences are reported, the hand-maintained map may
+need updating so that `detect_changes.py` correctly identifies which analyzer types
+are affected by future changes.
+
 ---
 
 ## Checklist 8: Generating negative assertions from findings
@@ -499,13 +532,13 @@ Must be 270/270 passed. If not, fix before ending.
 - **FIXED.md** — Add details for any issues fixed this session
 - **TODO-test-improvements.md** — Mark completed items, add new ideas (local file, not git-tracked)
 
-### 10b⅓. Update RUNBOOK.md
+### 10c. Update RUNBOOK.md
 
 If any new workflow pattern was established during the session, add or update a
 checklist in this file. Checklists should stay current with actual practice — don't
 let the runbook drift from reality.
 
-### 10b½. Update memory files if project state changed
+### 10d. Update memory files if project state changed
 
 Update the relevant memory files under
 `~/.claude/projects/-home-aklofas-Projects-kicad-happy-testharness/memory/`:
@@ -518,13 +551,13 @@ Update the relevant memory files under
 - **`project_repo_expansion.md`** — if repos were added to or removed from the corpus
 - **`project_layer3_status.md`** — if Layer 3 reviews were conducted
 
-### 10c. Log health metrics
+### 10e. Log health metrics
 
 ```bash
 python3 generate_health_report.py --log
 ```
 
-### 10d. Review uncommitted changes
+### 10f. Review uncommitted changes
 
 All changes are uncommitted until the user explicitly requests a commit. List what
 changed so the user can review:
@@ -1349,7 +1382,7 @@ If the test plan required harness changes (e.g., adding `--extra-args` to a runn
 - Update status.md with the test session results
 - Update ISSUES.md / FIXED.md as appropriate
 
-### 17i½. Update memory files
+### 17j. Update memory files
 
 If the session changed project state (assertion counts, issue tracker numbers,
 implementation status), update the relevant memory files under
@@ -1451,12 +1484,17 @@ call volume.
 | Mutation test effectiveness | `python3 validate/mutation_test.py --repo X --type schematic` |
 | Detector coverage matrix | `python3 coverage_detector_map.py` |
 | Upstream change impact | `python3 detect_changes.py` |
+| Generate change-impact map | `python3 detect_changes.py generate-map` |
 | Schema drift detection | `python3 validate/validate_schema.py auto-seed` |
 | Schema inventory scan | `python3 validate/validate_schema.py scan` |
 | Negative assertion preview | `python3 regression/seed_negative.py --all --dry-run` |
 | DigiKey constant check | `python3 validate/verify_constants_online.py --dry-run` |
 | Health report + log | `python3 generate_health_report.py --log` |
+| Reset health baseline | `python3 generate_health_report.py --reset-baseline "reason"` |
+| Prune stale seed assertions | `python3 regression/seed.py --all --type {type} --prune-stale` |
+| Audit bugfix paths | `python3 regression/audit_bugfix_paths.py` |
 | Unit tests | `python3 run_tests.py --unit` |
+| Unit tests (tier filter) | `python3 run_tests.py --tier unit\|online\|all` |
 | Re-seed assertions | `python3 regression/seed.py --all --type {type}` |
 | Promote to reference | `python3 regression/promote.py --repo {repo} --apply` |
 | Full validation pipeline | `python3 validate_all.py` |
@@ -1486,7 +1524,9 @@ call volume.
 | `results/outputs/` | Current analyzer outputs (git-ignored) |
 | `results/outputs/{type}/_timing.json` | Per-type timing data |
 | `results/outputs/{type}/_aggregate.json` | Per-type summary stats |
+| `reference/smoke_pack.txt` | Curated repos for `--smoke` mode |
 | `reference/health_log.jsonl` | Health metric history |
+| `reference/health_baseline.json` | Health report comparison baseline |
 | `reference/constants_registry.json` | Hardcoded constant audit |
 | `reference/equation_registry.json` | Equation tracking registry |
 | `reference/schema_inventory.json` | Output field inventory |
