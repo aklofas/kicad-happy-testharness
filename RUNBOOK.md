@@ -1524,7 +1524,7 @@ call volume.
 | `results/outputs/` | Current analyzer outputs (git-ignored) |
 | `results/outputs/{type}/_timing.json` | Per-type timing data |
 | `results/outputs/{type}/_aggregate.json` | Per-type summary stats |
-| `reference/smoke_pack.txt` | Curated repos for `--smoke` mode |
+| `reference/smoke_pack.md` | Curated repos for `--smoke` mode |
 | `reference/health_log.jsonl` | Health metric history |
 | `reference/health_baseline.json` | Health report comparison baseline |
 | `reference/constants_registry.json` | Hardcoded constant audit |

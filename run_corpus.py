@@ -22,7 +22,7 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent
 HEALTH_LOG = HARNESS_DIR / "reference" / "health_log.jsonl"
 CORPUS_LOG = HARNESS_DIR / "results" / "corpus_run.json"
-SMOKE_PACK = HARNESS_DIR / "reference" / "smoke_pack.txt"
+SMOKE_PACK = HARNESS_DIR / "reference" / "smoke_pack.md"
 
 
 def _run_step(name, cmd, timeout=600, abort_on_fail=False):
