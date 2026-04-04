@@ -18,19 +18,31 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from utils import OUTPUTS_DIR, DATA_DIR, safe_load_json
 
-# Canonical detector list from seed.py
-DETECTORS = [
-    "addressable_led_chains", "bms_systems", "bridge_circuits",
-    "buzzer_speaker_circuits", "crystal_circuits", "current_sense",
-    "ethernet_interfaces", "feedback_networks", "hdmi_dvi_interfaces",
-    "isolation_barriers", "key_matrices", "lc_filters", "memory_interfaces",
-    "opamp_circuits", "power_regulators", "protection_devices", "rc_filters",
-    "rf_chains", "rf_matching", "snubbers", "transistor_circuits",
-    "voltage_dividers",
-]
-
 EQUATION_REGISTRY = DATA_DIR / "equation_registry.json"
 CONSTANTS_REGISTRY = DATA_DIR / "constants_registry.json"
+SCHEMA_INVENTORY = DATA_DIR / "schema_inventory.json"
+
+
+def _load_detectors():
+    """Load detector list from schema inventory (auto-discovered)."""
+    if SCHEMA_INVENTORY.exists():
+        try:
+            inv = json.loads(SCHEMA_INVENTORY.read_text())
+            detectors = sorted(inv.get("schematic", {}).keys())
+            if detectors:
+                return detectors
+        except (json.JSONDecodeError, OSError):
+            pass
+    # Fallback
+    return sorted([
+        "addressable_led_chains", "bms_systems", "bridge_circuits",
+        "buzzer_speaker_circuits", "crystal_circuits", "current_sense",
+        "ethernet_interfaces", "feedback_networks", "hdmi_dvi_interfaces",
+        "isolation_barriers", "key_matrices", "lc_filters", "memory_interfaces",
+        "opamp_circuits", "power_regulators", "protection_devices", "rc_filters",
+        "rf_chains", "rf_matching", "snubbers", "transistor_circuits",
+        "voltage_dividers",
+    ])
 
 
 def count_corpus_hits():
@@ -38,7 +50,8 @@ def count_corpus_hits():
 
     Returns dict of {detector: hit_count}.
     """
-    hits = {d: 0 for d in DETECTORS}
+    detectors = _load_detectors()
+    hits = {d: 0 for d in detectors}
     sch_dir = OUTPUTS_DIR / "schematic"
     if not sch_dir.exists():
         return hits
@@ -55,9 +68,10 @@ def count_corpus_hits():
                 try:
                     data = json.loads(f.read_text())
                     sa = data.get("signal_analysis", {})
-                    for det in DETECTORS:
-                        items = sa.get(det, [])
+                    for det, items in sa.items():
                         if isinstance(items, list) and len(items) > 0:
+                            if det not in hits:
+                                hits[det] = 0
                             hits[det] += 1
                 except Exception:
                     continue
@@ -71,7 +85,7 @@ def count_assertions():
     Returns dict of {detector: {SEED: n, STRUCT: n, FND: n, BUGFIX: n}}.
     """
     counts = {d: {"SEED": 0, "STRUCT": 0, "FND": 0, "BUGFIX": 0}
-              for d in DETECTORS}
+              for d in _load_detectors()}
 
     if not DATA_DIR.exists():
         return counts
@@ -83,7 +97,7 @@ def count_assertions():
             aid = a.get("id", "")
             prefix = aid.split("-")[0] if "-" in aid else ""
             # Match detector from path like "signal_analysis.voltage_dividers"
-            for det in DETECTORS:
+            for det in _load_detectors():
                 if f"signal_analysis.{det}" in path:
                     if prefix in counts[det]:
                         counts[det][prefix] += 1
@@ -97,11 +111,11 @@ def count_equations():
 
     Returns dict of {detector: count}.
     """
-    eqs = {d: 0 for d in DETECTORS}
+    eqs = {d: 0 for d in _load_detectors()}
     data = safe_load_json(EQUATION_REGISTRY, {})
     for eq in data.get("equations", []):
         context = eq.get("context", "").lower()
-        for det in DETECTORS:
+        for det in _load_detectors():
             short = det.replace("_", " ").replace("circuits", "").strip()
             if short in context or det in context:
                 eqs[det] += 1
@@ -114,11 +128,11 @@ def constants_status():
 
     Returns dict of {detector: {total: n, verified: n}}.
     """
-    status = {d: {"total": 0, "verified": 0} for d in DETECTORS}
+    status = {d: {"total": 0, "verified": 0} for d in _load_detectors()}
     data = safe_load_json(CONSTANTS_REGISTRY, {})
     for c in data.get("constants", []):
         scope = (c.get("scope", "") + " " + c.get("name", "")).lower()
-        for det in DETECTORS:
+        for det in _load_detectors():
             short = det.replace("_", " ").replace("circuits", "").strip()
             if short in scope or det in scope:
                 status[det]["total"] += 1
@@ -136,7 +150,7 @@ def build_matrix():
     constants = constants_status()
 
     rows = []
-    for det in DETECTORS:
+    for det in _load_detectors():
         a = assertions[det]
         c = constants[det]
         total_assertions = sum(a.values())

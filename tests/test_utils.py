@@ -64,6 +64,33 @@ def test_resolve_none_value():
     assert resolve_path({"x": None}, "x") is None
 
 
+# === resolve_path bracket notation ===
+
+def test_resolve_bracket_simple():
+    data = {"items": [{"name": "a"}, {"name": "b"}]}
+    assert resolve_path(data, "items[0].name") == "a"
+
+def test_resolve_bracket_index1():
+    data = {"items": [{"name": "a"}, {"name": "b"}]}
+    assert resolve_path(data, "items[1].name") == "b"
+
+def test_resolve_bracket_out_of_range():
+    data = {"items": [{"name": "a"}]}
+    assert resolve_path(data, "items[5].name") is None
+
+def test_resolve_bracket_nested():
+    data = {"signal_analysis": {"crystal_circuits": [{"frequency": 8000000}]}}
+    assert resolve_path(data, "signal_analysis.crystal_circuits[0].frequency") == 8000000
+
+def test_resolve_bracket_missing_key():
+    data = {"items": [{"name": "a"}]}
+    assert resolve_path(data, "missing[0].name") is None
+
+def test_resolve_bracket_not_list():
+    data = {"items": "not a list"}
+    assert resolve_path(data, "items[0]") is None
+
+
 # === Runner ===
 
 if __name__ == "__main__":

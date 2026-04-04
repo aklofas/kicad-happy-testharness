@@ -19,7 +19,12 @@ from utils import run_analyzer
 
 def _summarize(data):
     s = data.get("statistics", {})
-    return f"components={s.get('total_components', 0)} nets={s.get('total_nets', 0)}"
+    sa = data.get("signal_analysis", {})
+    hits = sum(1 for v in sa.values() if isinstance(v, list) and v)
+    base = f"components={s.get('total_components', 0)} nets={s.get('total_nets', 0)}"
+    if hits:
+        base += f" detectors={hits}"
+    return base
 
 
 if __name__ == "__main__":

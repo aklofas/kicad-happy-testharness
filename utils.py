@@ -43,11 +43,26 @@ def safe_load_json(path, default=None):
 
 
 def resolve_path(data: dict, path: str):
-    """Navigate a dotted path through nested dicts. Returns None if any key is missing."""
+    """Navigate a dotted path through nested dicts/lists.
+
+    Supports bracket notation for array indexing: "items[0].name".
+    Returns None if any key is missing or index is out of range.
+    """
+    import re as _re
     parts = path.split(".")
     current = data
     for part in parts:
-        if isinstance(current, dict) and part in current:
+        if current is None:
+            return None
+        m = _re.match(r'^(\w+)\[(\d+)\]$', part)
+        if m:
+            key, idx = m.group(1), int(m.group(2))
+            current = current.get(key) if isinstance(current, dict) else None
+            if isinstance(current, list) and idx < len(current):
+                current = current[idx]
+            else:
+                return None
+        elif isinstance(current, dict) and part in current:
             current = current[part]
         else:
             return None
@@ -311,6 +326,34 @@ def _run_one(analyzer, file_path, outfile, errfile, extra_args=None):
         return None, outfile, time.time() - t0
 
 
+def _print_detector_aggregate(sch_output_dir):
+    """Print per-detector hit summary after a schematic batch run."""
+    from collections import defaultdict
+    detector_files = defaultdict(int)
+    detector_items = defaultdict(int)
+    for owner_dir in sorted(sch_output_dir.iterdir()):
+        if not owner_dir.is_dir():
+            continue
+        for repo_dir in owner_dir.iterdir():
+            if not repo_dir.is_dir():
+                continue
+            for f in repo_dir.glob("*.json"):
+                try:
+                    data = json.loads(f.read_text())
+                    sa = data.get("signal_analysis", {})
+                    for det, items in sa.items():
+                        if isinstance(items, list) and items:
+                            detector_files[det] += 1
+                            detector_items[det] += len(items)
+                except Exception:
+                    continue
+    if detector_files:
+        print(f"\n=== Detector Summary ===")
+        for det in sorted(detector_files, key=lambda d: -detector_files[d]):
+            print(f"  {det:30s} {detector_files[det]:5d} files, "
+                  f"{detector_items[det]:6d} items")
+
+
 def run_analyzer(config, args=None):
     """Shared runner for all analyzer types.
 
@@ -467,6 +510,10 @@ def run_analyzer(config, args=None):
                 sorted(timings, key=lambda x: x[0])],
     }
     timing_file.write_text(json.dumps(timing_data, indent=2))
+
+    # Detector aggregate for schematic runs
+    if output_subdir == "schematic":
+        _print_detector_aggregate(OUTPUTS_DIR / output_subdir)
 
     # JSON summary line (for machine consumption by run_corpus.py)
     if getattr(args, "json", False):

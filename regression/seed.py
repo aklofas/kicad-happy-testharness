@@ -46,8 +46,9 @@ _QUALITY_CHECKS = {
     "feedback_networks": ("r_top.ref", "r_top ref present", r"^(None|)$"),
 }
 
-# Signal detectors that are lists (for empty-detector assertions)
-_LIST_DETECTORS = [
+# Known detectors loaded dynamically from schema inventory.
+# Fallback used only if schema_inventory.json doesn't exist.
+_FALLBACK_DETECTORS = [
     "addressable_led_chains", "bms_systems", "bridge_circuits",
     "buzzer_speaker_circuits", "crystal_circuits", "current_sense",
     "ethernet_interfaces", "feedback_networks", "hdmi_dvi_interfaces",
@@ -56,6 +57,128 @@ _LIST_DETECTORS = [
     "rf_chains", "rf_matching", "snubbers", "transistor_circuits",
     "voltage_dividers",
 ]
+
+_known_detectors_cache = None
+
+def _load_known_detectors():
+    """Load known detector names from schema inventory (auto-discovered)."""
+    global _known_detectors_cache
+    if _known_detectors_cache is not None:
+        return _known_detectors_cache
+    inventory_file = DATA_DIR / "schema_inventory.json"
+    if inventory_file.exists():
+        try:
+            inv = json.loads(inventory_file.read_text())
+            detectors = sorted(inv.get("schematic", {}).keys())
+            if detectors:
+                _known_detectors_cache = detectors
+                return detectors
+        except (json.JSONDecodeError, OSError):
+            pass
+    _known_detectors_cache = _FALLBACK_DETECTORS
+    return _FALLBACK_DETECTORS
+
+
+# Field specs for domain-specific detectors. Defines expected fields and
+# enum constraints. Used by _field_spec_assertions() to auto-generate
+# quality assertions during seeding. Add entries for new detectors here.
+_DETECTOR_FIELD_SPECS = {
+    "battery_chargers": {
+        "required_fields": ["charger_reference", "charger_type"],
+        "enum_fields": {
+            "charger_type": ["single_cell_linear", "single_cell_switching",
+                            "standalone_protection"],
+        },
+    },
+    "motor_drivers": {
+        "required_fields": ["driver_reference", "driver_type"],
+        "enum_fields": {
+            "driver_type": ["stepper", "dc_brushed_h_bridge"],
+        },
+    },
+    "esd_coverage_audit": {
+        "required_fields": ["connector_ref", "coverage", "risk_level"],
+        "enum_fields": {
+            "coverage": ["full", "partial", "none"],
+            "risk_level": ["high_risk", "medium_risk", "low_risk"],
+        },
+    },
+    "debug_interfaces": {
+        "required_fields": ["connector_ref", "interface_type"],
+        "enum_fields": {
+            "interface_type": ["swd", "jtag", "debug"],
+        },
+    },
+    "power_path": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["load_switch", "ideal_diode", "power_mux",
+                     "usb_pd_controller"],
+        },
+    },
+}
+
+
+def _field_spec_assertions(sig_type, detections, ast_num):
+    """Generate field-spec assertions for domain detectors.
+
+    Returns (assertions_list, next_ast_num).
+    """
+    spec = _DETECTOR_FIELD_SPECS.get(sig_type)
+    if not spec:
+        return [], ast_num
+
+    assertions = []
+
+    # Required fields: every item should have non-empty value
+    for field in spec.get("required_fields", []):
+        # Check if all items actually have the field before asserting
+        has_field = all(
+            item.get(field) not in (None, "", [])
+            for item in detections
+            if isinstance(item, dict)
+        )
+        if has_field:
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"All {sig_type} have {field}",
+                "check": {
+                    "path": f"signal_analysis.{sig_type}",
+                    "op": "not_contains_match",
+                    "field": field,
+                    "pattern": r"^(None||)$",
+                },
+            })
+            ast_num += 1
+
+    # Enum fields: values must be in allowed set
+    for field, allowed in spec.get("enum_fields", {}).items():
+        pattern = "^(" + "|".join(allowed) + ")$"
+        # Check if all items have valid values before asserting
+        all_valid = all(
+            item.get(field) in allowed
+            for item in detections
+            if isinstance(item, dict) and item.get(field) is not None
+        )
+        if all_valid and any(
+            item.get(field) is not None
+            for item in detections
+            if isinstance(item, dict)
+        ):
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"All {sig_type} {field} values are valid",
+                "check": {
+                    "path": f"signal_analysis.{sig_type}",
+                    "op": "count_matches",
+                    "field": field,
+                    "pattern": pattern,
+                    "value": len(detections),
+                },
+            })
+            ast_num += 1
+
+    return assertions, ast_num
 
 
 def _quality_assertions(sig_type, detections, ast_num):
@@ -181,11 +304,13 @@ def generate_schematic_assertions(data, tolerance=0.10, include_empty=False):
         # Field-completeness: critical fields must be non-zero/present
         qa, ast_num = _quality_assertions(sig_type, detections, ast_num)
         assertions.extend(qa)
+        fsa, ast_num = _field_spec_assertions(sig_type, detections, ast_num)
+        assertions.extend(fsa)
 
     # Empty-detector assertions: detectors with 0 items stay at 0
     # Only for schematics with enough components to be meaningful
     if include_empty and total_comps >= 50:
-        for det in _LIST_DETECTORS:
+        for det in _load_known_detectors():
             det_items = sa.get(det, [])
             if isinstance(det_items, list) and len(det_items) == 0:
                 assertions.append({

@@ -14,7 +14,7 @@ from seed import (
     generate_spice_assertions,
     generate_datasheets_assertions,
     _QUALITY_CHECKS,
-    _LIST_DETECTORS,
+    _load_known_detectors,
 )
 
 
@@ -131,7 +131,7 @@ def test_quality_unknown_detector():
 def test_quality_checks_coverage():
     """All quality check detectors are recognized signal types."""
     for det in _QUALITY_CHECKS:
-        assert det in _LIST_DETECTORS or det in (
+        assert det in _load_known_detectors() or det in (
             "voltage_dividers", "rc_filters", "lc_filters",
             "current_sense", "power_regulators", "crystal_circuits",
             "opamp_circuits", "transistor_circuits", "feedback_networks",

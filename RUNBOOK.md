@@ -1488,6 +1488,72 @@ call volume.
 
 ---
 
+## Checklist 19: Testing a new domain-specific detector
+
+Use when a new signal detector (e.g., `adc_signal_conditioning`) is added to
+kicad-happy's `signal_detectors.py`. The harness auto-discovers new detectors
+from outputs — no code changes needed for basic seeding. But field-level quality
+assertions require a spec entry.
+
+### 19a. Run full schematic batch
+
+```bash
+python3 run/run_schematic.py --jobs 16
+```
+
+Verify 0 crashes. Check the Detector Summary at the end — the new detector should
+appear with corpus hit counts.
+
+### 19b. Check field distributions
+
+```bash
+python3 validate/detector_dashboard.py --detector {name}
+```
+
+Review field presence %, enum value distributions, and numeric ranges. Flag any
+unexpected values or low-presence required fields.
+
+### 19c. Verify auto-seeding works
+
+```bash
+python3 regression/seed.py --all --type schematic --dry-run | grep {name}
+```
+
+Should show `min_count` assertions being generated for the new detector.
+
+### 19d. Add field spec (if the detector has structured fields)
+
+Edit `regression/seed.py` — add an entry to `_DETECTOR_FIELD_SPECS`:
+
+```python
+_DETECTOR_FIELD_SPECS["{name}"] = {
+    "required_fields": ["ref", "type"],
+    "enum_fields": {"type": ["value1", "value2"]},
+}
+```
+
+### 19e. Re-seed with field-level quality assertions
+
+```bash
+python3 regression/seed.py --all --type schematic
+python3 regression/run_checks.py --type schematic   # verify 100%
+```
+
+### 19f. Update schema inventory
+
+```bash
+python3 validate/validate_schema.py scan
+```
+
+### 19g. Run EMC batch (if detector output affects EMC)
+
+```bash
+python3 run/run_emc.py --jobs 16
+python3 regression/run_checks.py --type emc
+```
+
+---
+
 ## Quick reference: Common commands
 
 | Task | Command |
@@ -1500,6 +1566,7 @@ call volume.
 | Cross-analyzer consistency | `python3 validate/cross_analyzer.py --summary` |
 | Mutation test effectiveness | `python3 validate/mutation_test.py --repo X --type schematic` |
 | Detector coverage matrix | `python3 coverage_detector_map.py` |
+| Detector field dashboard | `python3 validate/detector_dashboard.py` |
 | Upstream change impact | `python3 detect_changes.py` |
 | Generate change-impact map | `python3 detect_changes.py generate-map` |
 | Schema drift detection | `python3 validate/validate_schema.py auto-seed` |
