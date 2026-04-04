@@ -28,7 +28,6 @@ HARNESS_DIR = Path(__file__).resolve().parent
 CATALOG_JSON = DATA_DIR / "repo_catalog.json"
 CATALOG_MD = DATA_DIR / "repo_catalog.md"
 REPOS_MD = HARNESS_DIR / "repos.md"
-PRIORITY_MD = HARNESS_DIR / "priority.md"
 
 
 # --- KiCad generation mapping ---
@@ -58,22 +57,27 @@ def _classify_generation(file_version, kicad_version=""):
 # --- Category parsing ---
 
 def _load_categories():
-    """Parse priority.md to build {repo_name: category} mapping."""
+    """Parse repos.md section headers to build {repo_name: category} mapping.
+
+    repos.md is organized with '## Category' headers followed by repo URLs.
+    Each repo inherits the category of its section.
+    """
     cats = {}
+    current_category = "Uncategorized"
     try:
-        text = PRIORITY_MD.read_text()
+        text = REPOS_MD.read_text()
     except OSError:
         return cats
     for line in text.splitlines():
-        if not line.startswith("| ") or "/" not in line:
+        if line.startswith("## "):
+            current_category = line[3:].strip()
             continue
-        parts = line.split("|")
-        if len(parts) < 3:
-            continue
-        repo_field = parts[1].strip()
-        cat = parts[2].strip()
-        if "/" in repo_field and cat and cat != "Category":
-            cats[repo_field.strip()] = cat
+        if line.strip().startswith("- http"):
+            url = line.strip()[2:].split(" @")[0].split(" (")[0].strip()
+            parts = url.rstrip("/").removesuffix(".git").split("/")
+            if len(parts) >= 2:
+                repo_name = f"{parts[-2]}/{parts[-1]}"
+                cats[repo_name] = current_category
     return cats
 
 

@@ -6,7 +6,7 @@ batch Layer 3 reviews across the test corpus.
 
 Usage:
     python3 regression/review.py --repo X                 # select files for review
-    python3 regression/review.py --batch 50               # top 50 from priority.md
+    python3 regression/review.py --batch 50               # first 50 repos
     python3 regression/review.py --repo X --dry-run       # list files only
     python3 regression/review.py --repo X --count 3       # override file count
     python3 regression/review.py --repo X --prompts       # print review prompts
@@ -257,41 +257,19 @@ def import_findings(repo_name, project_name, findings_file):
 
 
 def read_priority_repos(count):
-    """Read top N repos from priority.md 'To test' section."""
-    pfile = HARNESS_DIR / "priority.md"
-    if not pfile.exists():
+    """Read first N repos from list_repos() for batch review."""
+    try:
+        repos = list_repos()[:count]
+        return repos
+    except Exception:
         return []
 
-    repos = []
-    in_table = False
-    for line in pfile.read_text().splitlines():
-        if line.startswith("| #"):
-            in_table = True
-            continue
-        if line.startswith("|--"):
-            continue
-        if in_table and line.startswith("|"):
-            parts = [p.strip() for p in line.split("|")]
-            if len(parts) >= 3:
-                repo_field = parts[2]
-                # Extract repo directory name (after last /)
-                if "/" in repo_field:
-                    repo_name = repo_field.split("/")[-1]
-                else:
-                    repo_name = repo_field
-                repos.append(repo_name)
-                if len(repos) >= count:
-                    break
-        elif in_table and not line.startswith("|"):
-            break
-
-    return repos
 
 
 def main():
     parser = argparse.ArgumentParser(description="Orchestrate Layer 3 reviews")
     parser.add_argument("--repo", help="Select files from this repo")
-    parser.add_argument("--batch", type=int, help="Select top N repos from priority.md")
+    parser.add_argument("--batch", type=int, help="Select first N repos for batch review")
     parser.add_argument("--count", type=int, help="Override files per repo")
     parser.add_argument("--dry-run", action="store_true",
                         help="List files without generating prompts")
@@ -318,9 +296,9 @@ def main():
     elif args.batch:
         repos = read_priority_repos(args.batch)
         if not repos:
-            print("Error: could not read priority.md")
+            print("Error: no repos found")
             sys.exit(1)
-        print(f"Selected {len(repos)} repos from priority.md\n")
+        print(f"Selected {len(repos)} repos for review\n")
     else:
         print("Error: specify --repo, --batch, --status, or --save")
         sys.exit(1)

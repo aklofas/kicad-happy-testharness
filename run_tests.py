@@ -53,37 +53,28 @@ def discover_tests(dirs, tier_filter=None):
     return tests
 
 
-def _parse_tested_repos(priority_file, count=5):
-    """Parse first N repos from the 'Tested' section of priority.md."""
+def _load_smoke_repos(count=5):
+    """Load first N repos from smoke_pack.md for quick sanity checks."""
+    smoke_file = HARNESS_DIR / "reference" / "smoke_pack.md"
     repos = []
-    in_tested = False
     try:
-        text = priority_file.read_text()
+        for line in smoke_file.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            repos.append(line)
+            if len(repos) >= count:
+                break
     except OSError:
-        return repos
-    for line in text.splitlines():
-        if line.strip() == "## Tested":
-            in_tested = True
-            continue
-        if in_tested and line.startswith("| ") and "/" in line:
-            # "| user/repo | Category |" → extract "user/repo"
-            parts = line.split("|")
-            if len(parts) >= 3:
-                repo = parts[1].strip()
-                if "/" in repo:
-                    # Repo name in repos/ uses the last component
-                    repos.append(repo.split("/")[-1] if "/" in repo else repo)
-                    if len(repos) >= count:
-                        break
+        pass
     return repos
 
 
 def run_quick_sanity():
-    """Run assertions on 5 repos from priority.md as a quick sanity check."""
-    priority_file = HARNESS_DIR / "priority.md"
-    repos = _parse_tested_repos(priority_file, count=5)
+    """Run assertions on 5 repos from smoke_pack.md as a quick sanity check."""
+    repos = _load_smoke_repos(count=5)
     if not repos:
-        print("  SKIP  quick-sanity (no repos found in priority.md)")
+        print("  SKIP  quick-sanity (no repos found in smoke_pack.md)")
         return 0
 
     run_checks = HARNESS_DIR / "regression" / "run_checks.py"
