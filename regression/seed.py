@@ -116,6 +116,79 @@ _DETECTOR_FIELD_SPECS = {
                      "usb_pd_controller"],
         },
     },
+    # Batch 4
+    "adc_circuits": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["external_adc", "voltage_reference"],
+        },
+    },
+    "reset_supervisors": {
+        "required_fields": ["type"],
+        "enum_fields": {
+            "type": ["voltage_supervisor", "watchdog", "rc_reset"],
+        },
+    },
+    "clock_distribution": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["clock_generator", "pll", "oscillator_output"],
+        },
+    },
+    # Batch 5
+    "display_interfaces": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["display", "touch_controller"],
+        },
+    },
+    "sensor_interfaces": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["motion", "environmental", "magnetic"],
+        },
+    },
+    "level_shifters": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["level_shifter_ic", "discrete_level_shifter"],
+        },
+    },
+    # Batch 6
+    "audio_circuits": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["audio_amplifier", "audio_codec"],
+        },
+    },
+    "led_driver_ics": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["pwm_led_driver", "matrix_led_driver",
+                     "constant_current_led_driver", "rgb_led_driver",
+                     "led_driver"],
+        },
+    },
+    "rtc_circuits": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["rtc"],
+        },
+    },
+    # Batch 7
+    "led_audit": {
+        "required_fields": ["ref", "type", "drive_method"],
+        "enum_fields": {
+            "type": ["indicator_led"],
+            "drive_method": ["resistor_limited", "direct_drive", "ic_direct"],
+        },
+    },
+    "thermocouple_rtd": {
+        "required_fields": ["ref", "type"],
+        "enum_fields": {
+            "type": ["thermocouple_amplifier", "rtd_interface"],
+        },
+    },
 }
 
 
@@ -131,8 +204,11 @@ def _field_spec_assertions(sig_type, detections, ast_num):
     assertions = []
 
     # Required fields: every item should have non-empty value
+    # Skip fields that have enum constraints (the enum check validates them)
+    enum_fields = set(spec.get("enum_fields", {}).keys())
     for field in spec.get("required_fields", []):
-        # Check if all items actually have the field before asserting
+        if field in enum_fields:
+            continue  # validated by enum assertion instead
         has_field = all(
             item.get(field) not in (None, "", [])
             for item in detections
@@ -146,7 +222,7 @@ def _field_spec_assertions(sig_type, detections, ast_num):
                     "path": f"signal_analysis.{sig_type}",
                     "op": "not_contains_match",
                     "field": field,
-                    "pattern": r"^(None||)$",
+                    "pattern": r"^$",
                 },
             })
             ast_num += 1

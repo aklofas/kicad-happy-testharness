@@ -79,6 +79,38 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "20 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -87,7 +119,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
       "description": "All opamp_circuits have reference present",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -97,7 +129,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000014",
       "description": "2 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -106,7 +138,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000015",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -116,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000016",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -125,7 +157,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000017",
       "description": "Has 19 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -134,7 +166,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000018",
       "description": "Has 209 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -143,7 +175,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000019",
       "description": "Has 140 other(s)",
       "check": {
         "path": "statistics.component_types.other",

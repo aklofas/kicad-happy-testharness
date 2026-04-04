@@ -85,6 +85,27 @@
         "op": "min_count",
         "value": 1
       }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All power_path have ref",
+      "check": {
+        "path": "signal_analysis.power_path",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All power_path type values are valid",
+      "check": {
+        "path": "signal_analysis.power_path",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(load_switch|ideal_diode|power_mux|usb_pd_controller)$",
+        "value": 2
+      }
     }
   ]
 }

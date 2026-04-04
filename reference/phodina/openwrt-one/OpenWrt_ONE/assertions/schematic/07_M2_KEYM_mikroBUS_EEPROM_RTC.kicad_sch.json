@@ -67,6 +67,36 @@
         "op": "min_count",
         "value": 1
       }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "1 rtc_circuits detected",
+      "check": {
+        "path": "signal_analysis.rtc_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All rtc_circuits have ref",
+      "check": {
+        "path": "signal_analysis.rtc_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All rtc_circuits type values are valid",
+      "check": {
+        "path": "signal_analysis.rtc_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(rtc)$",
+        "value": 1
+      }
     }
   ]
 }

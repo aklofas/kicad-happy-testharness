@@ -51,6 +51,17 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All battery_chargers charger_type values are valid",
+      "check": {
+        "path": "signal_analysis.battery_chargers",
+        "op": "count_matches",
+        "field": "charger_type",
+        "pattern": "^(single_cell_linear|single_cell_switching|standalone_protection)$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "4 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -59,7 +70,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -69,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

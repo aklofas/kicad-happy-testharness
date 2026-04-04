@@ -42,6 +42,36 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 display_interfaces detected",
+      "check": {
+        "path": "signal_analysis.display_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All display_interfaces have ref",
+      "check": {
+        "path": "signal_analysis.display_interfaces",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All display_interfaces type values are valid",
+      "check": {
+        "path": "signal_analysis.display_interfaces",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(display|touch_controller)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 rf_chains detected",
       "check": {
         "path": "signal_analysis.rf_chains",
@@ -50,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000009",
       "description": "17 rf_matching detected",
       "check": {
         "path": "signal_analysis.rf_matching",
@@ -59,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "Has 25 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -68,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "Has 6 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",

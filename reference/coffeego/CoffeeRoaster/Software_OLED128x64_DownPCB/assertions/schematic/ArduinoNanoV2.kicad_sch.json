@@ -70,6 +70,36 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "1 thermocouple_rtd detected",
+      "check": {
+        "path": "signal_analysis.thermocouple_rtd",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All thermocouple_rtd have ref",
+      "check": {
+        "path": "signal_analysis.thermocouple_rtd",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All thermocouple_rtd type values are valid",
+      "check": {
+        "path": "signal_analysis.thermocouple_rtd",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(thermocouple_amplifier|rtd_interface)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

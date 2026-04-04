@@ -60,6 +60,27 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All power_path have ref",
+      "check": {
+        "path": "signal_analysis.power_path",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All power_path type values are valid",
+      "check": {
+        "path": "signal_analysis.power_path",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(load_switch|ideal_diode|power_mux|usb_pd_controller)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -78,7 +99,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "1 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -87,7 +108,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000012",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",

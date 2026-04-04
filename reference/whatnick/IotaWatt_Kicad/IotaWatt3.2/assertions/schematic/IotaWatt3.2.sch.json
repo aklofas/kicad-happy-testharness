@@ -51,6 +51,36 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "1 rtc_circuits detected",
+      "check": {
+        "path": "signal_analysis.rtc_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All rtc_circuits have ref",
+      "check": {
+        "path": "signal_analysis.rtc_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All rtc_circuits type values are valid",
+      "check": {
+        "path": "signal_analysis.rtc_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(rtc)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 16 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -59,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "Has 21 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -68,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "Has 62 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

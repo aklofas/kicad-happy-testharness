@@ -51,6 +51,27 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All battery_chargers have charger_reference",
+      "check": {
+        "path": "signal_analysis.battery_chargers",
+        "op": "not_contains_match",
+        "field": "charger_reference",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All battery_chargers charger_type values are valid",
+      "check": {
+        "path": "signal_analysis.battery_chargers",
+        "op": "count_matches",
+        "field": "charger_type",
+        "pattern": "^(single_cell_linear|single_cell_switching|standalone_protection)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "2 crystal_circuits detected",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -59,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
       "description": "All crystal_circuits have reference present",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -69,7 +90,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "1 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -78,7 +99,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "8 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -87,7 +108,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000012",
       "description": "7 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -96,7 +117,80 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "5 led_audit detected",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All led_audit have ref",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "All led_audit type values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(indicator_led)$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000019",
+      "description": "All led_audit drive_method values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "drive_method",
+        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000020",
       "description": "2 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -105,7 +199,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000021",
       "description": "4 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -114,7 +208,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000022",
       "description": "All voltage_dividers have non-zero ratio",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -124,7 +218,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000023",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -133,7 +227,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000024",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -142,7 +236,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000025",
       "description": "Has 5 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -151,7 +245,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000026",
       "description": "Has 35 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -160,7 +254,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000027",
       "description": "Has 10 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

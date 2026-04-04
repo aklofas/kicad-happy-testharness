@@ -51,6 +51,36 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "3 sensor_interfaces detected",
+      "check": {
+        "path": "signal_analysis.sensor_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All sensor_interfaces have ref",
+      "check": {
+        "path": "signal_analysis.sensor_interfaces",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All sensor_interfaces type values are valid",
+      "check": {
+        "path": "signal_analysis.sensor_interfaces",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(motion|environmental|magnetic)$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "Has 10 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -59,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",

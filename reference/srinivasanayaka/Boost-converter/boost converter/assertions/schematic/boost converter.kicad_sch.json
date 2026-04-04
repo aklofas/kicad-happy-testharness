@@ -51,6 +51,38 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "1 feedback_networks detected",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -59,7 +91,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "All feedback_networks have r_top ref present",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -69,7 +101,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "1 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -78,7 +110,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "All lc_filters have non-zero resonant_hz",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -88,7 +120,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
       "description": "1 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -97,7 +129,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000014",
       "description": "1 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -106,7 +138,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000015",
       "description": "All voltage_dividers have non-zero ratio",
       "check": {
         "path": "signal_analysis.voltage_dividers",

@@ -42,6 +42,36 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 clock_distribution detected",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All clock_distribution have ref",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All clock_distribution type values are valid",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(clock_generator|pll|oscillator_output)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -50,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000009",
       "description": "2 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -59,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

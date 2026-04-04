@@ -60,6 +60,36 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "1 led_driver_ics detected",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All led_driver_ics have ref",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All led_driver_ics type values are valid",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(pwm_led_driver|matrix_led_driver|constant_current_led_driver|rgb_led_driver|led_driver)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -78,7 +108,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "1 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -87,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
       "description": "All voltage_dividers have non-zero ratio",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -97,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000014",
       "description": "Has 14 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

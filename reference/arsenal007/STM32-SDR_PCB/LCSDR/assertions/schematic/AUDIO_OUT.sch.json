@@ -42,6 +42,36 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audio_circuits detected",
+      "check": {
+        "path": "signal_analysis.audio_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All audio_circuits have ref",
+      "check": {
+        "path": "signal_analysis.audio_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All audio_circuits type values are valid",
+      "check": {
+        "path": "signal_analysis.audio_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(audio_amplifier|audio_codec)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "2 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -50,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000009",
       "description": "All lc_filters have non-zero resonant_hz",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -60,7 +90,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "2 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -69,7 +99,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -79,7 +109,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "Has 11 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

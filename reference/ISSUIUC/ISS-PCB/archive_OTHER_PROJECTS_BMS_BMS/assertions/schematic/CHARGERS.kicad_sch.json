@@ -51,6 +51,27 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "All battery_chargers have charger_reference",
+      "check": {
+        "path": "signal_analysis.battery_chargers",
+        "op": "not_contains_match",
+        "field": "charger_reference",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All battery_chargers charger_type values are valid",
+      "check": {
+        "path": "signal_analysis.battery_chargers",
+        "op": "count_matches",
+        "field": "charger_type",
+        "pattern": "^(single_cell_linear|single_cell_switching|standalone_protection)$",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "5 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -59,7 +80,48 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
+      "description": "8 led_audit detected",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All led_audit have ref",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All led_audit type values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(indicator_led)$",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All led_audit drive_method values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "drive_method",
+        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "Has 8 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -68,7 +130,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000014",
       "description": "Has 12 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

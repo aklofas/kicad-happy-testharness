@@ -60,6 +60,38 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,7 +100,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -78,7 +110,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "Has 5 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -87,7 +119,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
       "description": "Has 15 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

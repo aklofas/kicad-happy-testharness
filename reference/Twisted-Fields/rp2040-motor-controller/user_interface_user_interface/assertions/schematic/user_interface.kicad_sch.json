@@ -78,6 +78,68 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "1 level_shifters detected",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "All level_shifters have ref",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "All level_shifters type values are valid",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -86,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000016",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -96,7 +158,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000017",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -105,7 +167,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000018",
       "description": "Has 8 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -114,7 +176,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000019",
       "description": "Has 11 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -123,7 +185,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000020",
       "description": "Has 8 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

@@ -42,6 +42,36 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "3 level_shifters detected",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All level_shifters have ref",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All level_shifters type values are valid",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -50,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000009",
       "description": "Has 11 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -59,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "Has 17 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -60,6 +60,36 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "1 level_shifters detected",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All level_shifters have ref",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All level_shifters type values are valid",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -68,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "Has 8 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
@@ -77,7 +107,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "Has 8 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -86,7 +116,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
       "description": "Has 7 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

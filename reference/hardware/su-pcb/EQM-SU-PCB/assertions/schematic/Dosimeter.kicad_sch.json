@@ -42,6 +42,36 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "2 clock_distribution detected",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All clock_distribution have ref",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All clock_distribution type values are valid",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(clock_generator|pll|oscillator_output)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "2 crystal_circuits detected",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -50,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000009",
       "description": "All crystal_circuits have reference present",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -60,7 +90,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "1 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -69,7 +99,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "1 power_path detected",
       "check": {
         "path": "signal_analysis.power_path",
@@ -78,7 +108,28 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
+      "description": "All power_path have ref",
+      "check": {
+        "path": "signal_analysis.power_path",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "All power_path type values are valid",
+      "check": {
+        "path": "signal_analysis.power_path",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(load_switch|ideal_diode|power_mux|usb_pd_controller)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -87,7 +138,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000015",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

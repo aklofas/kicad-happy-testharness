@@ -42,6 +42,36 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 adc_circuits detected",
+      "check": {
+        "path": "signal_analysis.adc_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All adc_circuits have ref",
+      "check": {
+        "path": "signal_analysis.adc_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All adc_circuits type values are valid",
+      "check": {
+        "path": "signal_analysis.adc_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(external_adc|voltage_reference)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "11 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -50,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000009",
       "description": "Has 51 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -59,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "Has 10 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -68,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "Has 49 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

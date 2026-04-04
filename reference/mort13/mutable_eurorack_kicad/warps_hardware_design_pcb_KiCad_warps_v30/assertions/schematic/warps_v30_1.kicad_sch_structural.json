@@ -5,6 +5,15 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 audio_circuits",
+      "check": {
+        "path": "signal_analysis.audio_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 2 crystal_circuits",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -13,7 +22,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Q1 in crystal_circuits",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -23,7 +32,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Q2 in crystal_circuits",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -33,12 +42,21 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Exactly 6 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
         "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 1 led_audit",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

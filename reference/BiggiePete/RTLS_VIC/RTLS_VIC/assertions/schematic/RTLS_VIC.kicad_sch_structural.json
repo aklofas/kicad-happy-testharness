@@ -41,6 +41,15 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "Exactly 3 led_audit",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -49,13 +58,22 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "U2 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Exactly 1 sensor_interfaces",
+      "check": {
+        "path": "signal_analysis.sensor_interfaces",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

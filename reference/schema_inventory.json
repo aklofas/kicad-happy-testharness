@@ -102,7 +102,7 @@
     "gerber_sections": 8,
     "pcb_files_scanned": 3503,
     "pcb_sections": 5,
-    "schematic_detectors": 28,
+    "schematic_detectors": 40,
     "schematic_files_scanned": 6862,
     "spice_files_scanned": 6772,
     "spice_sections": 1
@@ -153,6 +153,18 @@
     }
   },
   "schematic": {
+    "adc_circuits": {
+      "consumers": 63,
+      "input_channels": 97,
+      "interface": 97,
+      "output_net": 63,
+      "output_voltage": 63,
+      "ref": 160,
+      "resolution_bits": 97,
+      "type": 160,
+      "value": 160,
+      "vref_source": 5
+    },
     "addressable_led_chains": {
       "chain_length": 754,
       "components": 754,
@@ -162,6 +174,18 @@
       "last_led": 754,
       "led_type": 754,
       "protocol": 754
+    },
+    "audio_circuits": {
+      "amplifier_class": 57,
+      "has_adc": 36,
+      "has_dac": 36,
+      "has_output_filter": 8,
+      "interface": 93,
+      "output_load": 3,
+      "output_nets": 93,
+      "ref": 93,
+      "type": 93,
+      "value": 93
     },
     "battery_chargers": {
       "battery_net": 209,
@@ -202,6 +226,17 @@
       "signal_net": 144,
       "type": 144,
       "value": 144
+    },
+    "clock_distribution": {
+      "consumers": 116,
+      "frequency_hz": 116,
+      "output_net": 116,
+      "outputs": 13,
+      "ref": 156,
+      "reference_input": 13,
+      "series_termination": 116,
+      "type": 156,
+      "value": 156
     },
     "crystal_circuits": {
       "effective_load_pF": 800,
@@ -277,6 +312,18 @@
       "vout_net_mismatch": 119,
       "vref_source": 1196
     },
+    "display_interfaces": {
+      "backlight": 29,
+      "dc_pin_net": 29,
+      "display_type": 29,
+      "interface": 34,
+      "interrupt_connected": 5,
+      "interrupt_net": 5,
+      "ref": 34,
+      "reset_net": 34,
+      "type": 34,
+      "value": 34
+    },
     "esd_coverage_audit": {
       "connector_ref": 22324,
       "connector_value": 22324,
@@ -322,14 +369,14 @@
       "shared_ground_warnings": 2
     },
     "key_matrices": {
-      "col_nets": 318,
-      "columns": 318,
-      "detection_method": 318,
-      "diodes_on_matrix": 318,
-      "estimated_keys": 318,
-      "row_nets": 318,
-      "rows": 318,
-      "switches_on_matrix": 318
+      "col_nets": 301,
+      "columns": 301,
+      "detection_method": 301,
+      "diodes_on_matrix": 301,
+      "estimated_keys": 301,
+      "row_nets": 301,
+      "rows": 301,
+      "switches_on_matrix": 301
     },
     "lc_filters": {
       "capacitor": 1609,
@@ -338,6 +385,37 @@
       "resonant_formatted": 1609,
       "resonant_hz": 1609,
       "shared_net": 1609
+    },
+    "led_audit": {
+      "drive_method": 9717,
+      "driver_source": 5057,
+      "estimated_current_mA": 1455,
+      "issue": 2790,
+      "ref": 9717,
+      "series_resistor": 5844,
+      "supply_net": 2735,
+      "type": 9717,
+      "value": 9717
+    },
+    "led_driver_ics": {
+      "channels": 13,
+      "current_set": 5,
+      "interface": 56,
+      "ref": 56,
+      "type": 56,
+      "value": 56
+    },
+    "level_shifters": {
+      "channel_count": 537,
+      "direction": 537,
+      "gate_net": 49,
+      "ref": 586,
+      "shifted_nets": 537,
+      "side_a": 586,
+      "side_b": 586,
+      "signal_nets": 49,
+      "type": 586,
+      "value": 586
     },
     "memory_interfaces": {
       "connected_processors": 306,
@@ -412,6 +490,11 @@
       "value": 2730,
       "vref_source": 1056
     },
+    "power_sequencing_validation": {
+      "enable_chains": 15,
+      "issues": 94,
+      "power_tree": 6850
+    },
     "protection_devices": {
       "clamp_net": 4316,
       "protected_net": 4316,
@@ -430,6 +513,19 @@
       "resistor": 8565,
       "time_constant_s": 8565,
       "type": 8565
+    },
+    "reset_supervisors": {
+      "monitored_rail": 29,
+      "ref": 29,
+      "ref_c": 57,
+      "ref_r": 57,
+      "reset_active_low": 29,
+      "reset_net": 86,
+      "target_ic": 86,
+      "threshold_voltage": 29,
+      "time_constant_ms": 57,
+      "type": 86,
+      "value": 29
     },
     "rf_chains": {
       "amplifiers": 159,
@@ -451,14 +547,43 @@
       "transceivers": 159
     },
     "rf_matching": {
-      "advisory": 697,
-      "antenna": 697,
-      "antenna_value": 697,
-      "components": 697,
-      "reference_design_check": 77,
-      "target_ic": 131,
-      "target_value": 131,
-      "topology": 697
+      "advisory": 696,
+      "antenna": 696,
+      "antenna_value": 696,
+      "components": 696,
+      "reference_design_check": 76,
+      "target_ic": 130,
+      "target_value": 130,
+      "topology": 696
+    },
+    "rtc_circuits": {
+      "battery_backup": 17,
+      "external_crystal": 29,
+      "has_internal_oscillator": 29,
+      "interface": 29,
+      "interrupt_connected": 2,
+      "interrupt_net": 2,
+      "ref": 29,
+      "type": 29,
+      "value": 29
+    },
+    "sensor_interfaces": {
+      "bus_peers": 308,
+      "interface": 308,
+      "interrupt_pins": 308,
+      "ref": 308,
+      "type": 308,
+      "value": 308
+    },
+    "thermocouple_rtd": {
+      "cold_junction_compensation": 21,
+      "interface": 29,
+      "ref": 29,
+      "reference_resistor": 5,
+      "sensor_input_nets": 26,
+      "sensor_type": 1,
+      "type": 29,
+      "value": 29
     },
     "transistor_circuits": {
       "base_driver_ics": 2411,

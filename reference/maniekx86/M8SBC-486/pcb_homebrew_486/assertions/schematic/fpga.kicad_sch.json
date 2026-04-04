@@ -42,6 +42,36 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "2 clock_distribution detected",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All clock_distribution have ref",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All clock_distribution type values are valid",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(clock_generator|pll|oscillator_output)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "2 crystal_circuits detected",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -50,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000009",
       "description": "All crystal_circuits have reference present",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -60,7 +90,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
       "description": "1 debug_interfaces detected",
       "check": {
         "path": "signal_analysis.debug_interfaces",
@@ -69,7 +99,28 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
+      "description": "All debug_interfaces have connector_ref",
+      "check": {
+        "path": "signal_analysis.debug_interfaces",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All debug_interfaces interface_type values are valid",
+      "check": {
+        "path": "signal_analysis.debug_interfaces",
+        "op": "count_matches",
+        "field": "interface_type",
+        "pattern": "^(swd|jtag|debug)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
       "description": "3 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -78,7 +129,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000014",
       "description": "4 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -87,7 +138,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000015",
       "description": "5 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -96,7 +147,39 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000016",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000019",
       "description": "Has 8 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -105,7 +188,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000020",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

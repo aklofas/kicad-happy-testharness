@@ -60,6 +60,38 @@
     },
     {
       "id": "SEED-00000007",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "2 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -68,7 +100,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -78,7 +110,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "Has 8 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",

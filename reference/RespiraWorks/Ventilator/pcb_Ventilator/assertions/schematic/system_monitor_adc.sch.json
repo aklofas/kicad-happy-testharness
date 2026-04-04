@@ -42,6 +42,36 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 adc_circuits detected",
+      "check": {
+        "path": "signal_analysis.adc_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All adc_circuits have ref",
+      "check": {
+        "path": "signal_analysis.adc_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All adc_circuits type values are valid",
+      "check": {
+        "path": "signal_analysis.adc_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(external_adc|voltage_reference)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

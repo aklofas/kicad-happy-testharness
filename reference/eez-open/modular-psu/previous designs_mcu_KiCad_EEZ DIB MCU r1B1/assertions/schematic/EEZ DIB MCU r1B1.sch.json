@@ -42,6 +42,36 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "1 audio_circuits detected",
+      "check": {
+        "path": "signal_analysis.audio_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All audio_circuits have ref",
+      "check": {
+        "path": "signal_analysis.audio_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All audio_circuits type values are valid",
+      "check": {
+        "path": "signal_analysis.audio_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(audio_amplifier|audio_codec)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "3 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -50,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000009",
       "description": "1 ethernet_interfaces detected",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
@@ -59,7 +89,67 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000010",
+      "description": "1 led_driver_ics detected",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All led_driver_ics have ref",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All led_driver_ics type values are valid",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(pwm_led_driver|matrix_led_driver|constant_current_led_driver|rgb_led_driver|led_driver)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "1 level_shifters detected",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "All level_shifters have ref",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "All level_shifters type values are valid",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,7 +158,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000017",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -78,7 +168,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000018",
       "description": "Has 70 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -87,7 +177,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000019",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -96,7 +186,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000020",
       "description": "Has 17 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -105,7 +195,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000021",
       "description": "Has 9 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
@@ -114,7 +204,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000022",
       "description": "Has 60 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

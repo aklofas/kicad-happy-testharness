@@ -69,6 +69,36 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "1 led_driver_ics detected",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All led_driver_ics have ref",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All led_driver_ics type values are valid",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(pwm_led_driver|matrix_led_driver|constant_current_led_driver|rgb_led_driver|led_driver)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
       "description": "2 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -77,7 +107,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000012",
       "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -87,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000013",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -96,7 +126,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000014",
       "description": "Has 70 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -105,7 +135,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000015",
       "description": "Has 8 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -114,7 +144,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000016",
       "description": "Has 84 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
