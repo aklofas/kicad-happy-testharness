@@ -36,11 +36,11 @@
     },
     {
       "id": "FND-00001757-AST-04",
-      "description": "The usb_compliance check correctly flags cc1_pulldown_5k1=fail and cc2_pulldown_5k1=fail. CC1 and CC2 connect directly from J1 (USB-C connector) to U1 (STUSB4500QTR pins CC1/CC1DB and CC2/CC2DB) with no external pull-down resistors. The STUSB4500 integrates internal CC termination, so external 5.1k pull-downs are absent by design. The compliance check correctly flags this as a fail per standard external resistor check.",
+      "description": "USB-C CC status correctly identifies PD controller (STUSB4500QTR) managing CC termination. CC1/CC2 connect directly to U1 with no external pull-downs — the STUSB4500 integrates internal CC termination. Legacy cc1/cc2_pulldown_5k1 checks report pass (PD-controlled). Only vbus_esd_protection remains as a fail.",
       "created_from": "FND-00001757",
       "check": {
         "path": "usb_compliance.summary.fail",
-        "value": 3,
+        "value": 1,
         "op": "equals"
       }
     },
