@@ -22,6 +22,7 @@ import json
 import re
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from utils import HARNESS_DIR
@@ -251,88 +252,105 @@ def clone_repos(repos, limit):
             print(f"Pinned {pinned} new hashes in repos.md")
 
 
-def check_updates(repos, do_fetch, do_pin, as_json):
+def _check_one_repo(repo, do_fetch):
+    """Check one repo for updates. Returns result dict."""
+    url = repo["url"]
+    repo_name = _repo_name_from_url(url)
+    pinned_hash = repo.get("hash")
+    repo_dir = CLONE_DIR / repo_name
+
+    entry = {"name": repo_name, "url": url, "pinned": pinned_hash}
+
+    if do_fetch and repo_dir.exists():
+        fetch_local(repo_dir)
+
+    remote_hash = get_remote_head(url)
+    entry["remote"] = remote_hash
+
+    if remote_hash is None:
+        entry["status"] = "error"
+    elif not pinned_hash:
+        entry["status"] = "not-pinned"
+    elif (remote_hash.startswith(pinned_hash)
+          or pinned_hash.startswith(remote_hash[:len(pinned_hash)])):
+        entry["status"] = "up-to-date"
+    else:
+        entry["status"] = "update-available"
+
+    return entry
+
+
+def check_updates(repos, do_fetch, do_pin, as_json, jobs=8):
     """Check if tracked repos have upstream updates."""
     results = []
     updated = 0
+    errors = 0
+    total = len(repos)
 
     if not as_json:
-        print(f"Checking {len(repos)} repos for upstream updates...\n")
+        print(f"Checking {total} repos for upstream updates "
+              f"({jobs} parallel workers)...\n")
 
-    for repo in repos:
-        url = repo["url"]
-        repo_name = _repo_name_from_url(url)
-        pinned_hash = repo.get("hash")
-        repo_dir = CLONE_DIR / repo_name
+    # Parallel check
+    done = 0
+    with ThreadPoolExecutor(max_workers=jobs) as pool:
+        futures = {pool.submit(_check_one_repo, repo, do_fetch): repo
+                   for repo in repos}
+        for future in as_completed(futures):
+            entry = future.result()
+            results.append(entry)
+            done += 1
 
-        entry = {
-            "name": repo_name,
-            "url": url,
-            "pinned": pinned_hash,
-        }
+            # Progress every 100 repos
+            if not as_json and done % 100 == 0:
+                print(f"  [{done}/{total}] checked...", flush=True)
 
-        if not as_json:
-            print(f"  {repo_name}...", end="", flush=True)
+    # Sort results back to original order
+    name_order = {_repo_name_from_url(r["url"]): i for i, r in enumerate(repos)}
+    results.sort(key=lambda e: name_order.get(e["name"], 0))
 
-        # Fetch locally if requested
-        if do_fetch and repo_dir.exists():
-            fetch_local(repo_dir)
-
-        remote_hash = get_remote_head(url)
-        entry["remote"] = remote_hash
-
-        if remote_hash is None:
-            entry["status"] = "error"
-            if not as_json:
-                print(" error (could not reach remote)")
-        elif not pinned_hash:
-            entry["status"] = "not-pinned"
-            if not as_json:
-                print(f" not pinned (remote: {remote_hash[:12]})")
-            if do_pin:
-                pin_hash_in_repos_md(url, remote_hash)
-                if not as_json:
-                    print(f"    -> pinned {remote_hash[:12]} in repos.md")
-        elif remote_hash.startswith(pinned_hash) or pinned_hash.startswith(remote_hash[:len(pinned_hash)]):
-            entry["status"] = "up-to-date"
-            if not as_json:
-                print(" up-to-date")
-        else:
-            entry["status"] = "update-available"
+    # Pin hashes (must be sequential — writes to same file)
+    for entry in results:
+        if entry["status"] == "update-available":
             updated += 1
-            if not as_json:
-                print(f" UPDATE AVAILABLE")
-                print(f"    pinned: {pinned_hash[:12]}")
-                print(f"    remote: {remote_hash[:12]}")
-            if do_pin:
-                pin_hash_in_repos_md(url, remote_hash)
-                if not as_json:
-                    print(f"    -> pinned {remote_hash[:12]} in repos.md")
-
-        results.append(entry)
+            if do_pin and entry["remote"]:
+                pin_hash_in_repos_md(entry["url"], entry["remote"])
+        elif entry["status"] == "not-pinned":
+            if do_pin and entry["remote"]:
+                pin_hash_in_repos_md(entry["url"], entry["remote"])
+        elif entry["status"] == "error":
+            errors += 1
 
     if as_json:
         print(json.dumps({
             "total": len(results),
             "updates_available": updated,
+            "errors": errors,
             "repos": results,
         }, indent=2))
     else:
+        up_to_date = sum(1 for r in results if r["status"] == "up-to-date")
+        not_pinned = sum(1 for r in results if r["status"] == "not-pinned")
+
         print(f"\n{'=' * 50}")
         print(f"Total repos:       {len(results)}")
+        print(f"Up to date:        {up_to_date}")
         print(f"Updates available:  {updated}")
-        pinned = sum(1 for r in results if r["status"] == "up-to-date")
-        not_pinned = sum(1 for r in results if r["status"] == "not-pinned")
-        if pinned:
-            print(f"Up to date:        {pinned}")
         if not_pinned:
             print(f"Not pinned:        {not_pinned}")
+        if errors:
+            print(f"Errors:            {errors}")
 
-        if updated:
-            print(f"\nTo update, delete the repo dir and re-run checkout.py:")
+        if updated and not do_pin:
+            print(f"\nRepos with updates:")
             for r in results:
                 if r["status"] == "update-available":
-                    print(f"  rm -rf repos/{r['name']} && python3 checkout.py")
+                    print(f"  {r['name']:40s} {r['pinned'][:12]} -> {r['remote'][:12]}")
+            print(f"\nRe-run with --pin to update hashes in repos.md")
+
+        if do_pin and updated:
+            print(f"\nPinned {updated} new hashes in repos.md")
+            print(f"To apply: delete updated repo dirs and re-run checkout.py")
 
 
 def main():
@@ -350,6 +368,8 @@ def main():
                         help="Also git fetch in local clones (with --check-updates)")
     parser.add_argument("--json", action="store_true",
                         help="Output as JSON (with --check-updates)")
+    parser.add_argument("--jobs", "-j", type=int, default=8,
+                        help="Parallel workers for --check-updates (default: 8)")
     args = parser.parse_args()
 
     if not REPOS_MD.exists():
@@ -360,7 +380,7 @@ def main():
     repos = _filter_repos(repos, args.filter)
 
     if args.check_updates:
-        check_updates(repos, args.fetch, args.pin, args.json)
+        check_updates(repos, args.fetch, args.pin, args.json, args.jobs)
     else:
         clone_repos(repos, args.limit)
 
