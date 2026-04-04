@@ -14,6 +14,17 @@
         "field": "type",
         "pattern": "^jfet$"
       }
+    },
+    {
+      "id": "BUGFIX-KH-145-01",
+      "description": "KH-145: No more than 3 RC filters (was 15 before fix)",
+      "issue": "KH-145",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "max_count",
+        "value": 3
+      }
     }
   ]
 }

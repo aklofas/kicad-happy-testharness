@@ -5,9 +5,10 @@ Collects metrics across all subsystems and outputs a single-page summary.
 Optionally appends to reference/health_log.jsonl for trend tracking.
 
 Usage:
-    python3 generate_health_report.py           # Plain text report
-    python3 generate_health_report.py --json    # Machine-readable JSON
-    python3 generate_health_report.py --log     # Also append to health_log.jsonl
+    python3 generate_health_report.py                          # Plain text report
+    python3 generate_health_report.py --json                   # Machine-readable JSON
+    python3 generate_health_report.py --log                    # Also append to health_log.jsonl
+    python3 generate_health_report.py --reset-baseline "reason" # Set new comparison baseline
 """
 
 import argparse
@@ -21,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from utils import DATA_DIR, OUTPUTS_DIR, HARNESS_DIR, safe_load_json
 
 HEALTH_LOG = DATA_DIR / "health_log.jsonl"
+HEALTH_BASELINE = DATA_DIR / "health_baseline.json"
 REGISTRY_FILE = HARNESS_DIR / "regression" / "bugfix_registry.json"
 SCHEMA_INVENTORY = DATA_DIR / "schema_inventory.json"
 CONSTANTS_REGISTRY = DATA_DIR / "constants_registry.json"
@@ -167,35 +169,75 @@ def main():
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--log", action="store_true",
                         help="Also append to health_log.jsonl")
+    parser.add_argument("--reset-baseline", metavar="REASON",
+                        help="Set current metrics as comparison baseline")
     args = parser.parse_args()
 
     metrics = collect_metrics()
 
-    # Check for assertion count drops vs last logged entry
-    drop_warnings = []
-    if HEALTH_LOG.exists():
+    # Handle --reset-baseline: write baseline file and exit
+    if args.reset_baseline:
+        if args.log:
+            HEALTH_LOG.parent.mkdir(parents=True, exist_ok=True)
+            with open(HEALTH_LOG, "a") as f:
+                f.write(json.dumps(metrics) + "\n")
+        baseline = {
+            "timestamp": metrics["timestamp"],
+            "reason": args.reset_baseline,
+            "assertions": metrics["assertions"],
+            "findings": metrics["findings"],
+            "bugfix": metrics["bugfix"],
+        }
+        HEALTH_BASELINE.parent.mkdir(parents=True, exist_ok=True)
+        HEALTH_BASELINE.write_text(json.dumps(baseline, indent=2) + "\n")
+        print(f"Baseline set: {args.reset_baseline}")
+        print(f"  Assertions: {metrics['assertions']['total']:,}")
+        print(f"  Written to: {HEALTH_BASELINE}")
+        return
+
+    # Determine comparison point: baseline file (if newer) or last log entry
+    prev_assertions = None
+    if HEALTH_BASELINE.exists():
+        try:
+            bl = json.loads(HEALTH_BASELINE.read_text())
+            bl_ts = bl.get("timestamp", "")
+            # Use baseline if it's newer than the last log entry
+            last_log_ts = ""
+            if HEALTH_LOG.exists():
+                lines = HEALTH_LOG.read_text().strip().splitlines()
+                if lines:
+                    last_log_ts = json.loads(lines[-1]).get("timestamp", "")
+            if bl_ts >= last_log_ts:
+                prev_assertions = bl.get("assertions", {})
+        except (json.JSONDecodeError, KeyError):
+            pass
+
+    if prev_assertions is None and HEALTH_LOG.exists():
         try:
             lines = HEALTH_LOG.read_text().strip().splitlines()
             if lines:
-                prev = json.loads(lines[-1])
-                prev_total = prev.get("assertions", {}).get("total", 0)
-                curr_total = metrics["assertions"]["total"]
-                if prev_total > 0 and curr_total < prev_total:
-                    drop_pct = (prev_total - curr_total) / prev_total * 100
-                    drop_warnings.append(
-                        f"Assertion count dropped: {prev_total:,} -> {curr_total:,} "
-                        f"(-{drop_pct:.1f}%)"
-                    )
-                # Check per-type drops
-                for atype in ("SEED", "STRUCT", "FND", "BUGFIX"):
-                    prev_n = prev.get("assertions", {}).get("by_type", {}).get(atype, 0)
-                    curr_n = metrics["assertions"]["by_type"].get(atype, 0)
-                    if prev_n > 0 and curr_n < prev_n * 0.9:
-                        drop_warnings.append(
-                            f"  {atype} dropped: {prev_n:,} -> {curr_n:,}"
-                        )
+                prev_assertions = json.loads(lines[-1]).get("assertions", {})
         except (json.JSONDecodeError, KeyError):
             pass
+
+    # Check for assertion count drops
+    drop_warnings = []
+    if prev_assertions:
+        prev_total = prev_assertions.get("total", 0)
+        curr_total = metrics["assertions"]["total"]
+        if prev_total > 0 and curr_total < prev_total:
+            drop_pct = (prev_total - curr_total) / prev_total * 100
+            drop_warnings.append(
+                f"Assertion count dropped: {prev_total:,} -> {curr_total:,} "
+                f"(-{drop_pct:.1f}%)"
+            )
+        for atype in ("SEED", "STRUCT", "FND", "BUGFIX"):
+            prev_n = prev_assertions.get("by_type", {}).get(atype, 0)
+            curr_n = metrics["assertions"]["by_type"].get(atype, 0)
+            if prev_n > 0 and curr_n < prev_n * 0.9:
+                drop_warnings.append(
+                    f"  {atype} dropped: {prev_n:,} -> {curr_n:,}"
+                )
     metrics["drop_warnings"] = drop_warnings
 
     if args.log:

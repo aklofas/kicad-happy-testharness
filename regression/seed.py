@@ -14,6 +14,7 @@ Usage:
     python3 regression/seed.py --all
     python3 regression/seed.py --repo OpenMower --filter "dcdc*"
     python3 regression/seed.py --tolerance 0.15
+    python3 regression/seed.py --all --type emc --prune-stale --dry-run
 """
 
 import argparse
@@ -770,6 +771,96 @@ def generate_spice_assertions(data, tolerance=0.10):
     return assertions
 
 
+def _meets_seeding_threshold(data, atype, min_components=10):
+    """Check if output data meets the minimum threshold for seeding."""
+    if atype == "schematic":
+        return data.get("statistics", {}).get("total_components", 0) >= min_components
+    elif atype == "pcb":
+        return data.get("statistics", {}).get("footprint_count", 0) >= min_components
+    elif atype == "gerber":
+        return data.get("statistics", {}).get("gerber_files", 0) >= 2
+    elif atype == "spice":
+        return data.get("summary", {}).get("total", 0) >= 1
+    elif atype == "emc":
+        return data.get("summary", {}).get("total_checks", 0) >= 1
+    elif atype == "datasheets":
+        return data.get("extracted", 0) >= 1
+    return False
+
+
+def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
+    """Remove seed assertion files whose outputs no longer meet thresholds.
+
+    Returns (pruned_count, checked_count).
+    """
+    from run_checks import find_output_file
+
+    repo_dir = DATA_DIR / repo_name
+    if not repo_dir.exists():
+        return 0, 0
+
+    pruned = checked = 0
+    for proj_dir in sorted(repo_dir.iterdir()):
+        if not proj_dir.is_dir():
+            continue
+        type_dir = proj_dir / "assertions" / atype
+        if not type_dir.exists():
+            continue
+
+        # Resolve project_path for output file lookup
+        from checks import load_project_metadata
+        pp = load_project_metadata(repo_name, proj_dir.name).get("project_path")
+        if pp is None:
+            try:
+                for p in discover_projects(repo_name):
+                    if p["name"] == proj_dir.name:
+                        pp = p["path"]
+                        break
+            except (ImportError, OSError):
+                pass
+
+        for af in sorted(type_dir.glob("*.json")):
+            # Only prune SEED assertions
+            try:
+                adata = json.loads(af.read_text())
+            except (json.JSONDecodeError, OSError):
+                continue
+            if adata.get("generated_by") != "generate_seed_assertions.py":
+                continue
+
+            checked += 1
+            file_pattern = adata.get("file_pattern", "")
+            out = find_output_file(file_pattern, repo_name, pp, atype)
+
+            should_prune = False
+            reason = ""
+            if out is None:
+                should_prune = True
+                reason = "output missing"
+            else:
+                try:
+                    odata = json.loads(out.read_text())
+                except (json.JSONDecodeError, OSError):
+                    should_prune = True
+                    reason = "output unreadable"
+                else:
+                    if not _meets_seeding_threshold(odata, atype, min_components):
+                        should_prune = True
+                        reason = "below threshold"
+
+            if should_prune:
+                if dry_run:
+                    print(f"  [PRUNE] {repo_name}/{proj_dir.name}/{atype}/{af.name} "
+                          f"({reason})")
+                else:
+                    af.unlink()
+                    print(f"  Pruned {repo_name}/{proj_dir.name}/{atype}/{af.name} "
+                          f"({reason})")
+                pruned += 1
+
+    return pruned, checked
+
+
 def generate_for_repo(repo_name, atype, tolerance, min_components,
                       file_filter, dry_run, include_empty=False):
     """Generate seed assertions for one repo."""
@@ -807,42 +898,22 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
             except Exception:
                 continue
 
+            if not _meets_seeding_threshold(data_content, atype, min_components):
+                skipped += 1
+                continue
+
             if atype == "schematic":
-                comps = data_content.get("statistics", {}).get("total_components", 0)
-                if comps < min_components:
-                    skipped += 1
-                    continue
                 assertions = generate_schematic_assertions(
                     data_content, tolerance, include_empty=include_empty)
             elif atype == "pcb":
-                fps = data_content.get("statistics", {}).get("footprint_count", 0)
-                if fps < min_components:
-                    skipped += 1
-                    continue
                 assertions = generate_pcb_assertions(data_content, tolerance)
             elif atype == "gerber":
-                gerber_files = data_content.get("statistics", {}).get("gerber_files", 0)
-                if gerber_files < 2:
-                    skipped += 1
-                    continue
                 assertions = generate_gerber_assertions(data_content, tolerance)
             elif atype == "spice":
-                total_sims = data_content.get("summary", {}).get("total", 0)
-                if total_sims < 1:
-                    skipped += 1
-                    continue
                 assertions = generate_spice_assertions(data_content, tolerance)
             elif atype == "emc":
-                total_checks = data_content.get("summary", {}).get("total_checks", 0)
-                if total_checks < 1:
-                    skipped += 1
-                    continue
                 assertions = generate_emc_assertions(data_content, tolerance)
             elif atype == "datasheets":
-                extracted = data_content.get("extracted", 0)
-                if extracted < 1:
-                    skipped += 1
-                    continue
                 assertions = generate_datasheets_assertions(data_content, tolerance)
             else:
                 continue
@@ -905,6 +976,8 @@ def main():
                              "(schematics with 50+ components)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print assertions without writing files")
+    parser.add_argument("--prune-stale", action="store_true",
+                        help="Remove seed assertions whose outputs no longer meet thresholds")
     args = parser.parse_args()
 
     if args.repo:
@@ -914,6 +987,19 @@ def main():
     else:
         parser.print_help()
         sys.exit(1)
+
+    if args.prune_stale:
+        grand_pruned = grand_checked = 0
+        for repo in repos:
+            pruned, checked = prune_stale_assertions(
+                repo, args.type, args.min_components,
+                dry_run=args.dry_run)
+            grand_pruned += pruned
+            grand_checked += checked
+        print(f"\n{'[DRY RUN] ' if args.dry_run else ''}"
+              f"Pruned {grand_pruned} stale seed assertions "
+              f"(checked {grand_checked})")
+        sys.exit(0)
 
     grand_files = grand_assertions = grand_skipped = 0
     for repo in repos:

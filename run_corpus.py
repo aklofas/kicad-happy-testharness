@@ -7,7 +7,7 @@ fresh analyzer outputs and then runs the full validation pipeline.
 Usage:
     python3 run_corpus.py --full      # All analyzers, all repos, full validation
     python3 run_corpus.py --quick     # Unit tests + assertions only (no re-run)
-    python3 run_corpus.py --smoke     # 10 repos, all analyzers, full validation
+    python3 run_corpus.py --smoke     # Curated smoke pack, all analyzers, full validation
     python3 run_corpus.py --repo X    # One repo, all analyzers
 """
 
@@ -22,6 +22,7 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent
 HEALTH_LOG = HARNESS_DIR / "reference" / "health_log.jsonl"
 CORPUS_LOG = HARNESS_DIR / "results" / "corpus_run.json"
+SMOKE_PACK = HARNESS_DIR / "reference" / "smoke_pack.txt"
 
 
 def _run_step(name, cmd, timeout=600, abort_on_fail=False):
@@ -67,6 +68,23 @@ def _run_step(name, cmd, timeout=600, abort_on_fail=False):
             "detail": detail[:200]}
 
 
+def _load_smoke_repos():
+    """Load repo list from reference/smoke_pack.txt."""
+    if not SMOKE_PACK.exists():
+        print(f"Error: {SMOKE_PACK} not found", file=sys.stderr)
+        sys.exit(1)
+    repos = []
+    for line in SMOKE_PACK.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        repos.append(line)
+    if not repos:
+        print(f"Error: {SMOKE_PACK} is empty", file=sys.stderr)
+        sys.exit(1)
+    return repos
+
+
 def _last_health():
     """Load last health log entry for comparison."""
     if not HEALTH_LOG.exists():
@@ -89,7 +107,7 @@ def main():
     mode.add_argument("--quick", action="store_true",
                       help="Unit tests + assertions only (no re-run)")
     mode.add_argument("--smoke", action="store_true",
-                      help="10 repos, all analyzers, full validation")
+                      help="Curated smoke pack repos, all analyzers, full validation")
     parser.add_argument("--repo", help="Run on a specific repo (overrides --smoke)")
     parser.add_argument("--json", action="store_true", help="JSON output")
     args = parser.parse_args()
@@ -103,15 +121,8 @@ def main():
     if args.repo:
         repo_args = ["--repo", args.repo]
     elif args.smoke:
-        # Pick first 10 repos from outputs/schematic
-        sch_dir = HARNESS_DIR / "results" / "outputs" / "schematic"
-        if sch_dir.exists():
-            repos = sorted(d.name for d in sch_dir.iterdir() if d.is_dir())[:10]
-            if repos:
-                repo_args = ["--repo", repos[0]]  # Will loop below
-            else:
-                print("No schematic outputs found for smoke test", file=sys.stderr)
-                sys.exit(1)
+        repos = _load_smoke_repos()
+        repo_args = ["--repo", repos[0]]  # Will loop below
 
     # Step 1: Unit tests (always, abort on failure)
     steps.append(_run_step(
@@ -136,9 +147,8 @@ def main():
         ))
 
         if args.smoke and not args.repo:
-            # Smoke: run all analyzers on 10 repos sequentially
-            sch_dir = HARNESS_DIR / "results" / "outputs" / "schematic"
-            repos = sorted(d.name for d in sch_dir.iterdir() if d.is_dir())[:10]
+            # Smoke: run all analyzers on curated repos sequentially
+            repos = _load_smoke_repos()
             for repo in repos:
                 ra = ["--repo", repo]
                 steps.append(_run_step(

@@ -182,7 +182,7 @@
       {
         "repo": "LNA1109",
         "project": "LNA1109",
-        "source_file": "LNA1109.kicad_sch",
+        "source_file": "LNA1109.sch",
         "check": {
           "path": "signal_analysis.rf_chains",
           "op": "min_count",
@@ -193,7 +193,7 @@
       {
         "repo": "LNA1109",
         "project": "LNA1109",
-        "source_file": "LNA1109.kicad_sch",
+        "source_file": "LNA1109.sch",
         "check": {
           "path": "signal_analysis.power_regulators",
           "op": "max_count",
@@ -867,8 +867,8 @@
     "assertions": [
       {
         "repo": "keypad",
-        "project": "KP08Hub",
-        "source_file": "KP08Hub.kicad_sch",
+        "project": "KP08Hub_keypad_KP08Hub_keypad",
+        "source_file": "KP08Hub_keypad.kicad_sch",
         "check": {
           "path": "signal_analysis.power_regulators",
           "op": "not_contains_match",
@@ -904,8 +904,8 @@
     "assertions": [
       {
         "repo": "eurorack-pmod",
-        "project": "eurorack-pmod",
-        "source_file": "eurorack-pmod.kicad_sch",
+        "project": "hardware_eurorack-pmod-r3.5_eurorack-pmod-pcb",
+        "source_file": "eurorack-pmod-pcb.kicad_sch",
         "check": {
           "path": "signal_analysis.rc_filters",
           "op": "max_count",
@@ -1029,7 +1029,7 @@
     "assertions": [
       {
         "repo": "cubesat-boards",
-        "project": "ykts-power",
+        "project": "ykts-power_ykts-power",
         "source_file": "ykts-power.sch",
         "check": {
           "path": "signal_analysis.key_matrices",
@@ -1350,27 +1350,27 @@
     "assertions": [
       {
         "repo": "bitaxe",
-        "project": "Manufacturing Files_gerbers",
-        "source_file": "gerbers",
+        "project": "bitaxeUltra",
+        "source_file": "Manufacturing Files_gerbers",
         "analyzer_type": "gerber",
         "check": {
           "path": "pad_summary.smd_apertures",
-          "op": "min_value",
+          "op": "min_count",
           "value": 100
         },
         "description": "KH-173: bitaxe SMD pad count reflects flash instances (>100), not unique aperture defs (~45)"
       },
       {
         "repo": "bitaxe",
-        "project": "Manufacturing Files_gerbers",
-        "source_file": "gerbers",
+        "project": "bitaxeUltra",
+        "source_file": "Manufacturing Files_gerbers",
         "analyzer_type": "gerber",
         "check": {
-          "path": "pad_summary.smd_ratio",
-          "op": "min_value",
-          "value": 0.7
+          "path": "pad_summary.smd_apertures",
+          "op": "min_count",
+          "value": 200
         },
-        "description": "KH-173: bitaxe SMD ratio >= 0.7 (BGA design, was erroneously 0.44)"
+        "description": "KH-173: bitaxe SMD pad count well above old ~45 (now 364 flash instances)"
       }
     ]
   },

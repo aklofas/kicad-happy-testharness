@@ -13,6 +13,28 @@
         "op": "min_count",
         "value": 100
       }
+    },
+    {
+      "id": "BUGFIX-KH-173-01",
+      "description": "KH-173: bitaxe SMD pad count reflects flash instances (>100), not unique aperture defs (~45)",
+      "issue": "KH-173",
+      "fix_type": "accuracy_fix",
+      "check": {
+        "path": "pad_summary.smd_apertures",
+        "op": "min_count",
+        "value": 100
+      }
+    },
+    {
+      "id": "BUGFIX-KH-173-02",
+      "description": "KH-173: bitaxe SMD pad count well above old ~45 (now 364 flash instances)",
+      "issue": "KH-173",
+      "fix_type": "accuracy_fix",
+      "check": {
+        "path": "pad_summary.smd_apertures",
+        "op": "min_count",
+        "value": 200
+      }
     }
   ]
 }
