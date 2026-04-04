@@ -1366,7 +1366,24 @@ fix any bugs without needing to reproduce the test themselves. If you found a cr
 include the full traceback. If a value was wrong, include expected vs actual. If a
 pattern affects many files, include the corpus-wide count.
 
-### 17h. Delete the test plan file
+### 17h. Write test results file
+
+Write a detailed `TEST-{feature}-{date}.md` file with:
+
+1. **Header** — feature name, test date, kicad-happy commit, verdict
+2. **Features tested** — bullet list of what was covered
+3. **Phase results table** — phase, what, PASS/FAIL/SKIP, key metrics
+4. **Phase details** — per-phase subsections with exact values, not summaries
+5. **Bugs found** — full details per Checklist 17g format, or "None"
+6. **Observations** — non-bug notes (edge cases, coverage gaps, performance)
+
+The filename mirrors the test plan: replace `TODO-` with `TEST-`. For example,
+`TODO-v1.2-engine-features-test-plan.md` becomes `TEST-v1.2-engine-features-test-plan.md`.
+
+Test result files are **committed to git** — they serve as permanent records of
+what was tested and what was found. Unlike test plan files (TODO-*), they persist.
+
+### 17i. Delete the test plan file
 
 Test plan files are temporary. Delete after execution:
 
@@ -1374,7 +1391,7 @@ Test plan files are temporary. Delete after execution:
 rm TODO-{feature}-test-plan.md
 ```
 
-### 17i. Update documentation if needed
+### 17j. Update documentation if needed
 
 If the test plan required harness changes (e.g., adding `--extra-args` to a runner):
 - Update CLAUDE.md directory structure and running commands
@@ -1382,7 +1399,7 @@ If the test plan required harness changes (e.g., adding `--extra-args` to a runn
 - Update status.md with the test session results
 - Update ISSUES.md / FIXED.md as appropriate
 
-### 17j. Update memory files
+### 17k. Update memory files
 
 If the session changed project state (assertion counts, issue tracker numbers,
 implementation status), update the relevant memory files under
