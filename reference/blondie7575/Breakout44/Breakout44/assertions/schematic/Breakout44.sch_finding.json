@@ -1,0 +1,44 @@
+{
+  "file_pattern": "Breakout44.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000437",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000437-AST-01",
+      "description": "The KiCad 5 legacy schematic has clear reference designators: U1 (ATmega32U4-A), P1 (CONN_01X22), P2 (CONN_01X22), P3 (CONN_02X03). These refs appear correctly in statistics.missing_mpn, the BOM entries, net pin entries (e.g. nets reference 'U1', 'P1', 'P2', 'P3'), and subcircuits. However every entry in the top-level components array has ref=null. The KiCad 5 legacy parser correctly extracts refs for nets and BOM but fails to populate them in the structured components list.",
+      "created_from": "FND-00000437",
+      "check": {
+        "path": "components",
+        "op": "not_contains_match",
+        "value": {
+          "ref": null
+        }
+      },
+      "aspirational": true,
+      "aspirational_reason": "KiCad 5 legacy parser bug: components array has ref=null"
+    },
+    {
+      "id": "FND-00000437-AST-02",
+      "description": "The ATmega32U4-A has SPI pins connected to P2: PB2 named '(PDI/MOSI/PCINT2)PB2', PB3 named '(PDO/MISO/PCINT3)PB3', PB1 named '(SCLK/PCINT1)PB1', and PB0 named '(SS/PCINT0)PB0'. All four SPI signals are routed to P2 connector pins. The I2C detector correctly finds 'SCL' within '(OC0B/SCL/INT0)PD0' and 'SDA' within '(SDA/INT1)PD1' using substring matching, but the SPI detector fails to find 'MOSI', 'MISO', 'SCLK', and 'SS' within the same style of composite ATmega pin names. bus_analysis.spi is empty.",
+      "created_from": "FND-00000437",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000437-AST-03",
+      "description": "The ATmega32U4-A has UART pins connected to P2: PD3 named '(TXD/INT3)PD3' and PD2 named '(RXD/INT2)PD2'. Both are routed to P2 connector pins. The I2C detector works by substring matching pin names, but the UART detector misses 'TXD' within '(TXD/INT3)PD3' and 'RXD' within '(RXD/INT2)PD2'. bus_analysis.uart is empty.",
+      "created_from": "FND-00000437",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

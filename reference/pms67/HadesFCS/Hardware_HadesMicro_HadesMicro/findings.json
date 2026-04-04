@@ -1,0 +1,58 @@
+{
+  "findings": [
+    {
+      "id": "FND-00000300",
+      "repo": "pms67/HadesFCS",
+      "project": "Hardware_HadesMicro_HadesMicro",
+      "created": "2026-03-18T04:16:33.304866+00:00",
+      "status": "new",
+      "analyzer_type": "gerber",
+      "source_file": "Hardware/HadesMicro/gerbers/",
+      "summary": "Gerber review: 4-layer mini flight controller (50x50mm). Combined drill=unknown, has_pth=false",
+      "correct": [
+        {
+          "type": "drill_classification",
+          "description": "172 vias all at 0.4mm, consistent single-via-size design",
+          "analyzer_section": "drill_classification",
+          "check": {
+            "path": "drill_classification",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "unit_conversion",
+          "description": "Drill extent coordinates not normalized to mm -- values 1000x too large. Affects alignment.layer_extents for drill entries",
+          "analyzer_section": "alignment.layer_extents",
+          "severity": "major",
+          "related_issue": "KH-183"
+        },
+        {
+          "type": "pad_summary",
+          "description": "pad_summary.smd_apertures=0 and smd_ratio=0.0 wrong -- F.Paste has hundreds of flashes",
+          "analyzer_section": "pad_summary",
+          "severity": "major",
+          "related_issue": "KH-177"
+        },
+        {
+          "type": "drill_type",
+          "description": "Combined PTH+NPTH drill file classified as 'unknown', has_pth_drill=false and has_npth_drill=false despite vias and press-fit holes",
+          "analyzer_section": "completeness",
+          "severity": "major",
+          "related_issue": "KH-184"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "should_become_assertion": false,
+      "related_issues": [
+        "KH-177",
+        "KH-183",
+        "KH-184"
+      ],
+      "datasheets_used": []
+    }
+  ]
+}

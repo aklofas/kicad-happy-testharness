@@ -1,0 +1,116 @@
+# Findings: SparkFun_Qwiic_GNSS_SAM-M8Q / Hardware_Production_SparkFun_Qwiic_GNSS_SAM-M8Q_panelized
+
+## FND-00001453: Component counts are accurate: 48 total, 3 ICs, 5 caps, 10 resistors, 5 connectors, 5 jumpers, 3 diodes, 2 LEDs, 4 fiducials, 4 mounting holes, 2 test points, 1 battery; Power rails correctly ident...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: Hardware_SparkFun_Qwiic_GNSS_SAM-M8Q.kicad_sch
+- **Created**: 2026-03-24
+
+### Correct
+- The schematic lists 48 total components. Manually reconciling: U1 (SAM-M8Q), U4 (CH340E), U6 (RT9080-3.3) = 3 ICs; C1,C9,C10,C11,C14 = 5 capacitors; R2,R3,R4,R5,R6,R7,R8,R10,R11,R12 = 10 resistors; J1,J2,J4,J6,J7 = 5 connectors; JP1–JP5 = 5 jumpers; D3 (TVS), D5 (Schottky), D7 (ESD array) = 3 diodes (correct — D1 and D2 are LEDs); FID1–FID4 = 4 fiducials; ST1–ST4 = 4 mounting holes; TP1,TP3 = 2 test points; BT1 = 1 battery; G1,G2,G3 (logos) = 3 other. The 3+5+10+5+5+3+2+4+4+2+1+3 = 47, plus G4 (OSHW logo, in_bom=false) accounts for 48 total when counted. Counts are consistent.
+- The three power rails 3.3V (from RT9080-3.3 LDO), GND, and VBUS (from USB-C connector) are all correctly identified. V_BCKP is listed as a signal net rather than a power rail, which is appropriate as it is the backup battery rail for the GNSS module's RTC.
+- The power_regulators section correctly identifies U6 as an LDO with input_rail=VBUS, output_rail=3.3V, topology=LDO, and estimated_vout=3.3 via fixed_suffix detection. This matches the schematic where U6 is a 600mA LDO converting USB VBUS to 3.3V for U1 (SAM-M8Q) and other 3.3V consumers.
+- D7 is a PESD3V3L4UG quad ESD protection array in SOT-353 (SC-70-5), correctly classified as esd_ic protecting the V_BCKP rail. The PESD0402 TVS diode (D3) is also correctly identified protecting VBUS.
+- The bus_analysis.uart section correctly identifies TX and RX signal nets associated with the CH340E USB-UART bridge (U4) connected to the SAM-M8Q GNSS module (U1) via series resistors R12 (470 ohm on TX) and R11 (470 ohm on RX) and solder jumpers JP4/JP5.
+- The decoupling_analysis correctly lists 2 capacitors on the 3.3V rail (10.1uF total) and 1 capacitor on VBUS (1uF). C9 (1uF backup battery decoupling) is not listed under 3.3V because it is on V_BCKP, which is correct.
+- The schematic reports 45 total nets, 3 power rails (3.3V, GND, VBUS), and 42 additional nets including named signals (SCL, SDA, TX, RX, PPS, EN, EXTINT, ~{RST}, ~{SAFE}, V_BCKP) and unnamed nets. This is consistent with the PCB output which also reports 45 nets.
+- D5 is a Schottky diode in SOD-323 whose anode connects to 3.3V and whose cathode connects to the V_BCKP net through R7. This forms the battery charging/protection path allowing the coin cell (BT1/ML414H) to maintain GNSS backup power. The component is correctly typed as 'diode' with Schottky description.
+- J4 (USB_C_Receptacle) correctly shows VBUS power, GND, differential pair nets (Net-(U4-UD+) and Net-(U4-UD-)) routed to the CH340E USB bridge, and CC1/CC2 resistors (R4 and R2, both 5.1k to GND) for USB-C sink current configuration. The 5.1k CC pull-down resistors correctly indicate USB-C power sink at 5V.
+- The erc_warnings correctly flag EN, SCL, EXTINT, ~{SAFE}, and ~{RST} as having no active driver. These nets are driven by the external host controller via connectors J6/J7 and are expected to have no on-board driver. This is accurate — the analyzer correctly identifies these as passive interface signals.
+
+### Incorrect
+- The analyzer detected an RC low-pass filter (R7=1k, C9=1uF, cutoff=159.15 Hz) on the V_BCKP net. However, this is not a signal filter: R7 is a current-limiting/isolation resistor between the 3.3V rail and the backup battery node, and C9 is the decoupling capacitor for U1's V_BCKP pin. The 'input_net' is __unnamed_21 (D5 cathode / R7 junction), which is the 3.3V-to-battery charge path through a Schottky diode D5. Calling this a low-pass RC filter is misleading — it is a backup power supply circuit, not a filter in a signal path.
+  (signal_analysis)
+
+### Missed
+- The design_observations and bus_analysis sections both report has_pullup=false for SCL and SDA nets. However, R6 (2.2k) connects between 3.3V (via JP2 jumper pad B, which is the center/3.3V pad) and SCL, and R8 (2.2k) connects between 3.3V (via JP2) and SDA. These are the I2C pull-up resistors controlled by solder jumper JP2. The analyzer fails to trace through the JP2 net-tie structure to identify R6 and R8 as pull-ups on SCL and SDA respectively.
+  (signal_analysis)
+- In ic_pin_analysis for U1 (SAM-M8Q), the 'function' field is an empty string. The lib_id is 'SparkFun-GNSS:SAM-M8Q' and the description is 'GPS ublox M8 variant', but the analyzer doesn't assign a recognized function tag (e.g. 'GNSS', 'GPS') to this component. For U4 (CH340E), the function is correctly set to 'USB-UART bridge'. U1 is the core GNSS IC of this design and should be categorized accordingly.
+  (ic_pin_analysis)
+- In protection_devices, D7 (PESD3V3L4UG) has 'clamp_net': null. This quad ESD array has its anode (pin 2) connected to GND and its cathodes connected to 3.3V (pin 3/K2), V_BCKP (pin 5/K4), and two unconnected pins. The common anode is GND and the 3.3V clamp is the upper rail. The null clamp_net is an incomplete characterization — the actual clamp configuration is GND (common anode) to individual signal rails.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001454: PCB footprint count (73) is consistent with schematic component count plus board-only graphics; 4-layer stackup (F.Cu, In1.Cu, In2.Cu, B.Cu) correctly detected with 3.3V plane on In1.Cu and GND pla...
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: Hardware_SparkFun_Qwiic_GNSS_SAM-M8Q.kicad_pcb
+- **Created**: 2026-03-24
+
+### Correct
+- The PCB reports 73 footprints total: 51 front-side, 22 back-side. This includes 24 kibuzzard logo/graphic footprints (board_only, exclude_from_bom) plus the schematic-linked components. The actual electrical components placed match the schematic, including U1 on B.Cu, front-side components U4/U6/J4/etc., and rear-side jumpers JP1-JP5.
+- The PCB correctly identifies 4 copper layers. Two copper zone fills are detected: a GND zone spanning F.Cu, B.Cu, and In2.Cu (filled_area=1133.53 mm²), and a 3.3V zone on In1.Cu only (filled_area=456.63 mm²). This correctly reflects the power-plane arrangement for this dense GNSS breakout board.
+- The board_outline correctly reports a 25.4 x 25.4 mm (1" x 1") rectangle, which is consistent with the SparkFun Qwiic mini form factor. Routing is complete (0 unrouted nets), and all 45 nets are accounted for.
+- The via analysis correctly identifies U1 (SAM-M8Q, 100-pad LCC module on B.Cu) as requiring extensive fanout vias (57 vias for 17 unique nets). All vias are through-hole 0.56/0.3 mm (0.3 mm drill), with 0.13 mm annular ring. This is accurate for the u-blox SAM-M8Q 10x10 mm module.
+- The analyzer detects 5 via-in-pad instances. The U1 GND pad has a via_in_pad with same_net=true (correct, GND thermal via). BT1 has 2 vias near its negative pad with same_net=false, which may be flagged due to GND pour proximity rather than a true electrical via-in-pad issue. TP3 pad 1 also has a via with same_net=true.
+- The track width analysis shows 5 unique widths: 0.1778 mm (signal, 262 segments), 0.2616 mm (14 segments), 0.3048 mm (21 segments), 0.3490 mm (11 segments), and 0.4064 mm (26 segments, power). The minimum signal trace is 0.1778 mm (7 mil), appropriate for this dense board.
+- Both the schematic and PCB analyzers report 45 total nets, confirming correct cross-tool net list consistency. The PCB connectivity shows 29 routed nets (nets with actual copper traces) and 0 unrouted connections.
+- U1 is correctly identified as residing on B.Cu with layer='B.Cu' and type='smd'. The SAM-M8Q module in this SparkFun design is placed on the bottom of the 25.4x25.4 mm board with its integrated patch antenna facing outward, which is the correct orientation.
+- The zones section correctly identifies a GND zone on F.Cu+B.Cu+In2.Cu (filled_area_mm2=1133.53, outline_area=645.16, fill_ratio=1.757 which accounts for multiple layers) and a 3.3V zone on In1.Cu only (filled_area=456.63 mm²). The fill_ratio>1 for GND is correct since filled_area sums across multiple layers.
+
+### Incorrect
+- ST1, ST2, ST3, ST4 are SparkFun-Hardware:Standoff footprints for mechanical mounting screws. They have a single pad (a NPTH drill hole) but are classified as type='smd' in the PCB output. A standoff with a drill hole should be classified as 'through_hole' or 'npth'. This is a misclassification — standoff holes are not SMD pads.
+  (component_groups)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001455: Edge.Cuts layer reported as missing but the GKO file is present and contains the board outline; GKO (Edge.Cuts) file incorrectly mapped to layer_type 'B.Mask' instead of 'Edge.Cuts'; Gerber layer c...
+
+- **Status**: promoted
+- **Analyzer**: gerber
+- **Source**: Hardware_Production
+- **Created**: 2026-03-24
+
+### Correct
+- All 8 required non-Edge-Cuts gerber layers are present: F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS. The drill file is present with 1350 holes total. The layer_count=4 and drill classification (1065 via holes at 0.3mm, 225 component holes, 60 mounting holes at 3.1mm NPTH) is correct for this panelized design.
+- The gerber drill file reports 1065 via holes at 0.3mm diameter. The PCB analyzer reports 71 vias at 0.56/0.3mm. The panelized gerber contains 15 copies of the board (1065 / 71 = 15), which is consistent with a panelized gerber set. The component hole counts (225 PTH, 60 NPTH at 3.1mm) are also consistent with a 15-up panel (15 boards x 4 mounting holes = 60).
+- The alignment check correctly reports aligned=true with no alignment issues. The copper layer extents (B.Cu and F.Cu both 81.375 x 143.288 mm) are correctly matched, reflecting the panelized board dimensions. The silkscreen and paste layers have smaller extents (expected, as they don't cover the entire panel outline).
+- The drill file has a T2 tool (0.6mm diameter, 0 holes) which is unused. T3 (1.016mm, 180 holes) are PTH component holes, T4 (0.65mm, 30 holes) and T5 (2.3mm, 15 holes) are NPTH component holes, T6 (3.1mm, 60 holes) are NPTH mounting holes. The classification_method='x2_attributes' is correct. The 2.3mm NPTH holes are likely the edge castellations on the board.
+- The pad_summary reports smd_apertures=1806, via_apertures=2130, tht_holes=225, smd_ratio=0.89. The high SMD ratio is correct for this board dominated by SMD components. In the panel, the SAM-M8Q 100-pad LCC contributes heavily to the B.Paste flash count (1200 flashes on B.Paste from U1's 100 pads x 15 panels... wait, 1200/15=80, but U1 has 100 pads). The B.Paste only shows 1200 flashes with 2 apertures, suggesting the GNSS module pads use 2 aperture sizes on the bottom paste layer.
+
+### Incorrect
+- The completeness check reports missing_required=['Edge.Cuts'] and complete=false. However, there is a file 'SparkFun_Qwiic_GNSS_SAM-M8Q_panelized.GKO' in the gerber set. GKO is the legacy Altium/KiCad extension for board outline (Edge.Cuts). The analyzer correctly parses this file (758 draw_count, Profile aperture function), but the layer type is incorrectly mapped to 'B.Mask' instead of 'Edge.Cuts'. Because it is mis-identified as B.Mask rather than Edge.Cuts, the completeness check concludes Edge.Cuts is missing. This is a layer-type classification error in the gerber analyzer.
+  (completeness)
+- The file SparkFun_Qwiic_GNSS_SAM-M8Q_panelized.GKO has x2_attributes FileFunction='Soldermask,Bot' which would indicate B.Mask, but this is actually the board outline file. The .GKO extension is the standard KiCad extension for the board outline (Edge.Cuts). The x2 attribute 'Soldermask,Bot' appears to be incorrect metadata in the file itself, or the analyzer is failing to use the file extension as a fallback hint. The Profile aperture function in the aperture_analysis is correctly detected, but the layer_type assignment is wrong.
+  (completeness)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00001456: Panelized PCB file yields 69 unique component refs (15x panel with shared component ref groups recognized)
+
+- **Status**: new
+- **Analyzer**: pcb
+- **Source**: SparkFun_Qwiic_GNSS_SAM-M8Q_panelized.kicad_pcb
+- **Created**: 2026-03-24
+
+### Correct
+- The panelized PCB output shows 69 unique component_refs including kibuzzard graphics refs. The panelization of 15 boards results in multiplied footprint counts (U1 has 1200 pads in pads_per_component, which is 15 x 80 — but the SAM-M8Q has 100 pads, not 80; the 1200/15=80 suggests only 80 of the 100 pads are electrical, the remaining being GND tie pads). Front_side=50, back_side=19 unique refs (not total instances) are reported, which is the expected deduplicated view.
+
+### Incorrect
+(none)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "SPD_DC_MotorHBridge.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001410",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001410-AST-01",
+      "description": "Board outline correctly parsed as 4-segment rectangle, 70.04 \u00d7 20.066 mm (matching the gerber edge-cuts extents of 70.04 \u00d7 20.07 mm to 3 decimal places). DFM tier 'challenging' is appropriate: minimum annular ring = 0.075 mm is below both the 0.125 mm standard and 0.1 mm advanced thresholds. The DFM violation message is accurate.",
+      "created_from": "FND-00001410",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "value": 70.04,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001410-AST-02",
+      "description": "INCORRECT: The PCB analyzer reports via_count=141 (121 \u00d7 0.45/0.3mm + 20 \u00d7 0.8/0.5mm through vias). The Gerber drill file contains only 91 holes classified as vias (all 0.3mm) and 45 component holes; total 136 drilled holes. The 20 PCB vias sized 0.8/0.5mm likely correspond to drilled component pad holes that the PCB analyzer is counting as vias due to the size ambiguity between large vias (0.5mm drill) and small THT pads (also 0.5mm). The gerber-based classification (91 vias) is more accurate since it uses actual fabrication output.",
+      "created_from": "FND-00001410",
+      "check": {
+        "path": "statistics.via_count",
+        "value": 121,
+        "op": "max_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

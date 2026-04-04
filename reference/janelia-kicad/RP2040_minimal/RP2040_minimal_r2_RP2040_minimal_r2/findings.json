@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "RP2040_minimal_r2.kicad_sch",
+      "status": "promoted",
+      "summary": "LDO regulator (U1 NCP1117), RP2040 (U3), W25Q128 flash (U2) all correctly identified; Crystal Y1 (ABM8-272-T3) frequency not parsed \u2014 returns null instead of 12MHz; QSPI_SCLK net categorized as 'i2...",
+      "correct": [
+        {
+          "description": "Power regulators, memory interface, crystal circuit, USB compliance (ESD fail), and decoupling analysis all produced correct results. No false pwr_flag warnings. Cross-domain QSPI signals correctly detected with needs_level_shifter=False.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "ABM8-272-T3 is a 12MHz crystal from Abracon. The value string does not contain a parseable frequency (no 'MHz' substring), so frequency=null. The analyzer should handle part numbers where frequency is only in the datasheet/MPN, but as a fallback should at least note inability to parse rather than silently returning null.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "test_coverage.uncovered_key_nets lists QSPI_SCLK with category='i2c'. QSPI_SCLK is clearly a QSPI/SPI clock net, not I2C. This is a net-category misclassification in the test coverage detector.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "janelia-kicad/RP2040_minimal",
+      "project": "RP2040_minimal_r2_RP2040_minimal_r2",
+      "created": "2026-03-24T00:02:16.227812+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001233"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "RP2040_minimal_r2.kicad_pcb",
+      "status": "new",
+      "summary": "2-layer 52x51mm board, 34 footprints, routing complete, DFM standard tier correctly assessed",
+      "correct": [
+        {
+          "description": "PCB stats are consistent with schematic: 34 footprints (34 schematic components), 52 nets, routing_complete=true, DFM standard tier with min track 0.15mm. Edge clearance warnings for J1/J4/J3 at 0-0.07mm are marginal but plausible for edge connectors. Decoupling placement correctly identifies 2 caps near U1 LDO and 13 near U3 RP2040.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "janelia-kicad/RP2040_minimal",
+      "project": "RP2040_minimal_r2_RP2040_minimal_r2",
+      "created": "2026-03-24T00:02:16.227833+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001234"
+    }
+  ]
+}

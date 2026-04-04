@@ -1,0 +1,94 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "LittleSixteen.sch.json",
+      "status": "promoted",
+      "summary": "45 false no_driver ERC warnings from KiCad 5 legacy pin-type misclassification; L7812 topology reported as 'LDO' \u2014 it is a fixed linear regulator; Hierarchical multi-sheet parse correctly consolida...",
+      "correct": [
+        {
+          "description": "The top-level LittleSixteen.sch correctly traverses all 14 sub-sheets (cpu, ted, ram, rom, keyboard, datasette, exp_port, misc, pla, joysticks, avout, userport, sid). Component counts (368 total, 35 ICs, 88 caps, 65 resistors, 58 ferrite beads) and 3 crystal circuits are plausible for a Commodore Plus/4 clone. UART detection on rxd_ttl/txd_ttl nets is reasonable.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Nets like ~CAS, ~RAS, k0-k7 are flagged as 'no_driver' because the MOS 8360/7501 CPU/TED chips in the KiCad 5 library define their output/bidirectional pins as 'input'. These are global labels driven by the CPU/TED across sheets. 45 of 48 ERC warnings appear to be false positives from legacy library pin type data.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The power_regulators detector classifies U7 (L7812, 12V fixed linear regulator) with topology='LDO'. The L7812 is a standard 3-terminal linear regulator, not a low-dropout regulator. This is a misclassification \u2014 LDO implies a different architecture (low dropout voltage, often adjustable). Should be 'linear' or 'fixed_linear'.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SukkoPera/LittleSixteen",
+      "project": "LittleSixteen",
+      "created": "2026-03-23T22:54:01.237689+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000822"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "keyboard.sch.json",
+      "status": "promoted",
+      "summary": "Key matrix not detected despite 8 diodes and keyboard controller (MOS 6529) in keyboard.sch",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "keyboard.sch contains 8 diodes (keyboard matrix protection), 2 ICs, and a connector in a pattern consistent with a Commodore Plus/4 keyboard matrix. The analyzer returns key_matrices=[] both for the sub-sheet and the full hierarchical parse. This is a missed detection for a clear keyboard matrix circuit.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SukkoPera/LittleSixteen",
+      "project": "LittleSixteen",
+      "created": "2026-03-23T22:54:01.237707+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000823"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "LittleSixteen.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB analysis correctly captures a large 2-layer THT-dominant retro board",
+      "correct": [
+        {
+          "description": "Board stats (389x136mm, 366 footprints, 320 THT/12 SMD, 2-layer, 375 nets, fully routed) are accurate for a Commodore Plus/4 clone mainboard. DFM tier='advanced' due to 0.1mm annular ring is plausible. Power net routing and current capacity analysis for +9V and VCC rails look correct. File version 20171130 (KiCad 5) correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "SukkoPera/LittleSixteen",
+      "project": "LittleSixteen",
+      "created": "2026-03-23T22:54:01.237710+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000824"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_keebs_CustomKeyboard_1_CustomKeyboard.sch.json",
+      "status": "promoted",
+      "summary": "90 keyboard key switches (keyboard_parts:KEYSW) misclassified as 'relay' in component statistics; Key matrix reports switches_on_matrix=0 due to key switches being misclassified as relays",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "In the legacy KiCad 5 schematic, 90 key switch components with references K_* and lib_id keyboard_parts:KEYSW are classified as type 'relay' (visible in both statistics.component_types and the per-component 'type' field). The part uses a two-pin relay symbol shape in the library, which triggers the relay classifier. These are clearly MX-socket keyboard switches, not relays. This cascades into key_matrix detection reporting switches_on_matrix=0 even though 90 switches exist.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.relay",
+            "op": "equals",
+            "value": 0
+          }
+        },
+        {
+          "description": "The key_matrices detector correctly identifies the 7\u00d718 matrix from row/col net names and finds 90 diodes on the matrix. However, switches_on_matrix=0 because the 90 K_* components have type='relay' rather than 'switch', so the key matrix scanner does not count them as switches. The matrix relies on net-name detection for its existence but cannot correlate switches to it. The estimated_keys=90 is correct but switch_count reporting is wrong.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "samlee91/keebs",
+      "project": "CustomKeyboard_1_CustomKeyboard",
+      "created": "2026-03-24T08:33:51.554427+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002230"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber_keebs_CustomKeyboard_1_Gerber Files.json",
+      "status": "new",
+      "summary": "Gerber set correctly identified as complete and aligned for a large full-size keyboard PCB",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies all 9 expected layers (F.Cu, B.Cu, F/B.Mask, F/B.Paste, F/B.SilkS, Edge.Cuts), finds both PTH and NPTH drill files, and confirms alignment is good. Board dimensions (352.5mm \u00d7 128.7mm) match the expected full-size keyboard form factor. The DFM violation for board_size (>100mm) is correctly flagged for this large board.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "samlee91/keebs",
+      "project": "CustomKeyboard_1_CustomKeyboard",
+      "created": "2026-03-24T08:33:51.554443+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002231"
+    }
+  ]
+}

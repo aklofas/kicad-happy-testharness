@@ -1,0 +1,174 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "cores_wwfss_sch_wwfsstar.kicad_sch.json",
+      "status": "new",
+      "summary": "WWF Super Stars arcade PCB (Technos/JOTEGO reverse-engineering) with 68000 CPU, Z80 sound, YM2151/OKI6295 audio, 4x HA17558 opamps; massive varistor misclassification of 128 VIC/VR/V-prefix components (actually 74LS logic ICs and resistors) and false power rail detection of video timing counter signals",
+      "correct": [
+        {
+          "description": "Correctly identified 333 unique components across 20 hierarchical sheets",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 333
+          }
+        },
+        {
+          "description": "Detected 3 crystal circuits: X1 (3.579545 MHz color burst), X2 (1.05 MHz), X3 (20 MHz active oscillator)",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 3
+          }
+        },
+        {
+          "description": "Detected 12 opamp circuit units from 4 HA17558 dual opamps including 7 buffer configurations and 1 transimpedance",
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 12
+          }
+        },
+        {
+          "description": "Detected 4 BF457 BJT transistor circuits (TR1-TR4) driving coin counter and lock solenoid outputs",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "Detected 7 RC filters in the audio section with reasonable cutoff frequencies (1-10 kHz range)",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 7
+          }
+        },
+        {
+          "description": "Correctly identified M51516L as a power regulator",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Correctly identified key ICs: 68000D CPU, Z80CPU, YM2151 FM synth, YM3012 DAC, OKI6295 ADPCM",
+          "analyzer_section": "components",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "VJ1 and VJ2 (50-pin connectors with V prefix) correctly classified as connectors",
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types.connector",
+            "op": "equals",
+            "value": 5
+          }
+        },
+        {
+          "description": "VC4-VC19 capacitors correctly classified as capacitors despite V prefix",
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types.capacitor",
+            "op": "min_count",
+            "value": 61
+          }
+        },
+        {
+          "description": "Detected VCC and VSS as power rails",
+          "analyzer_section": "statistics.power_rails",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "contains_match",
+            "field": "",
+            "pattern": "VCC"
+          }
+        },
+        {
+          "description": "Detected 20 hierarchical sheets matching the actual referenced sheet hierarchy",
+          "analyzer_section": "sheets",
+          "check": {
+            "path": "sheets",
+            "op": "min_count",
+            "value": 19
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "128 components classified as varistor are actually 74LS-series logic ICs, SRAMs, ROMs, and resistors. The VIC prefix (Video IC), VR prefix (Video Resistor), V prefix, and VU prefix are section-naming conventions in the original Technos arcade board schematics, not varistor designators. The analyzer should check lib_id (jt74:*, jt_rom:*, Device:R_US) not just the reference prefix",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "128 false protection devices reported: all 128 'varistors' in protection_devices are actually misclassified 74LS ICs, SRAMs, and resistors, not actual protection circuits",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "V1* through V128* signals (video vertical counter bits) misidentified as power rails. These are timing counter output nets in the timing sub-sheet, not power supply rails. No power symbols or PWR_FLAG are connected to these nets",
+          "analyzer_section": "statistics.power_rails"
+        },
+        {
+          "description": "IC85 (BF457, lib_id=Transistor_BJT:BF457) classified as type 'ic' instead of 'transistor'. The IC prefix overrides the lib_id-based classification. Should be counted as a transistor since lib_id clearly indicates BJT",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "C61 value '25V' parsed as 25 pF capacitance (2.5e-11 F in decoupling analysis). The '25V' is a voltage rating, not a capacitance value. This causes incorrect decoupling analysis for the VCC rail",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        },
+        {
+          "description": "IC count of 95 is drastically undercounted because ~122 ICs with VIC/VU prefixes are misclassified as varistors. True IC count should be approximately 217",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "Resistor count of 33 is undercounted because 6 resistors with VR/V prefix (Device:R_US, 470 Ohm) are misclassified as varistors. True resistor count should be 39",
+          "analyzer_section": "statistics.component_types"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No memory_interfaces detected despite design having multiple RAM (RAM_2016/SRAM2K8B, 6 instances) and ROM (27C1000, 27C256, 24J series, TC534000AP) chips with address/data buses",
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No buzzer_speaker_circuits detected despite SPEAKER_H and SPEAKER_L nets driving a speaker through M51516L power amplifier via opamp mixing stage",
+          "analyzer_section": "signal_analysis.buzzer_speaker_circuits",
+          "check": {
+            "path": "signal_analysis.buzzer_speaker_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Component type classification should prioritize lib_id over reference prefix. Components with lib_id containing '74LS', '74xx:', 'jt74:', 'jt_rom:', 'jt_ram:', 'CPU:', 'Transistor_BJT:' etc. should be classified based on the library, not the V/VIC/VR prefix. This is a common pattern in arcade board reverse-engineering where section prefixes (V=Video, S=Sound, etc.) are prepended to standard IC/R/C designators.",
+        "Power rail detection should require connection to a power symbol (PWR_FLAG, power:VCC, etc.) or have a voltage-like name pattern. Net names like V1*, V4*, V8*, V128* following binary-weighted patterns are almost certainly counter bits, not power rails.",
+        "The varistor classification heuristic based on 'V' prefix is too aggressive. Consider requiring lib_id to contain 'Varistor' or 'Device:Varistor' rather than inferring from the reference designator alone.",
+        "C61 with value '25V' should be flagged as an unparseable capacitance value (voltage rating only) rather than silently converting to 25 pF."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "jotego/jtcores",
+      "project": "cores_wwfss_sch_wwfsstar",
+      "created": "2026-03-23T18:10:35.142321+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

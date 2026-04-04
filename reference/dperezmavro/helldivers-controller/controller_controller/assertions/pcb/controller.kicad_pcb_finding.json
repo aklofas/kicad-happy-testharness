@@ -1,0 +1,19 @@
+{
+  "file_pattern": "controller.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002125",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002125-AST-01",
+      "description": "INCORRECT: The PCB stackup defines 4 copper layers (F.Cu, In1.Cu, In2.Cu, B.Cu), which is a 4-layer PCB template. However, no tracks exist on In1.Cu or In2.Cu \u2014 all routing uses only F.Cu and B.Cu. The statistics correctly report copper_layers_used=2, but the layers array includes In1.Cu and In2.Cu as signal layers, which could mislead tools expecting an actual 4-layer board. The gerber B.Cu is exported as L4 (confirming a 4-layer stackup was used), so the board order will be for a 4-layer PCB with two unused inner layers. The analyzer does not flag this as a potential unnecessary cost issue.",
+      "created_from": "FND-00002125",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 2
+      },
+      "aspirational": false
+    }
+  ]
+}

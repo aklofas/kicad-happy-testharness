@@ -1,0 +1,86 @@
+{
+  "file_pattern": "alps64.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001959",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001959-AST-01",
+      "description": "The analyzer correctly identifies the keyboard matrix as 8 rows and 8 columns (row0-7, col0-7) using the net_name detection method. It correctly finds 64 diodes (D00-D77) on the matrix. The estimated_keys=64 matches the keyboard's actual key count. The crystal (X1) and its 10pF load capacitors (C3, C4) are also correctly detected.",
+      "created_from": "FND-00001959",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "contains_match",
+        "value": {
+          "rows": 8,
+          "columns": 8,
+          "diodes_on_matrix": 64
+        }
+      },
+      "aspirational": false,
+      "aspirational_reason": "contains_match does not support dict value matching"
+    },
+    {
+      "id": "FND-00001959-AST-02",
+      "description": "X1 (XTAL_GND, a 16MHz crystal for ATMega32U2) is detected with its two 10pF load capacitors C3 and C4. The effective load capacitance is computed as 8pF (series combination plus stray). This is a standard USB HID keyboard crystal circuit and is correctly identified.",
+      "created_from": "FND-00001959",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001959-AST-03",
+      "description": "The analyzer correctly identifies USB D+ and D- nets with R2 and R1 (22-ohm series resistors for USB signal integrity) connected to J1 (USB-C receptacle). The observation correctly notes no ESD protection, which matches the schematic \u2014 there are no TVS diodes or dedicated ESD protection ICs on the USB lines.",
+      "created_from": "FND-00001959",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "contains_match",
+        "value": {
+          "category": "usb_data",
+          "has_esd_protection": false
+        }
+      },
+      "aspirational": false,
+      "aspirational_reason": "contains_match does not support dict value matching"
+    },
+    {
+      "id": "FND-00001959-AST-04",
+      "description": "The decoupling analysis correctly finds three capacitors on the +5V rail: C1 (4.7uF bulk), C5 and C6 (0.1uF bypass). Total capacitance is 4.9uF. C2 (1uF) appears to be on a different net. This is correct decoupling for an ATMega32U2 USB keyboard controller.",
+      "created_from": "FND-00001959",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "contains_match",
+        "value": {
+          "rail": "+5V",
+          "cap_count": 3
+        }
+      },
+      "aspirational": false,
+      "aspirational_reason": "contains_match does not support dict value matching"
+    },
+    {
+      "id": "FND-00001959-AST-05",
+      "description": "INCORRECT: The alps64 matrix.sch contains 86 KEYSW components (keyboard switches with refs K00-K77 plus split-key variants like K30_1, K40_1, etc.). The analyzer assigns them component_type='relay' rather than 'switch'. The schematic stats confirm: relay=86, switch=1 (where the 1 switch is SW100, a separate reset/boot button). KEYSW is a keyboard switch symbol from the keyboard_parts library and should be typed as 'switch'. This misclassification causes switches_on_matrix=0 in the key matrix analysis.",
+      "created_from": "FND-00001959",
+      "check": {
+        "path": "statistics.component_types.relay",
+        "op": "equals",
+        "value": 86
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001959-AST-06",
+      "description": "INCORRECT: The key matrix detector correctly identifies an 8x8 matrix via row/col net names, and correctly finds 64 diodes. However switches_on_matrix=0 because KEYSW components are typed as 'relay' instead of 'switch', so the matrix scanner does not count them. The actual number of key switch positions is 64 standard plus additional split-key variants (86 total KEYSW refs). The estimated_keys=64 from the 8x8 grid is correct for the logical key count.",
+      "created_from": "FND-00001959",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

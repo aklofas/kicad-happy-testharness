@@ -1,0 +1,30 @@
+{
+  "file_pattern": "Peripherals_gl850a_small_hub_gl850a_small_hub.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002472",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002472-AST-01",
+      "description": "The bus_analysis.i2c section reports the '+3.3V' net as an SCL line with 5 devices listed as U2 (the GL850G), all repeated. There is no SCL net or I2C label anywhere in the source schematic. The GL850G is a USB hub IC and has no I2C interface. The +3.3V net name appears to have triggered the SCL heuristic incorrectly.",
+      "created_from": "FND-00002472",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002475-AST-02",
+      "description": "The design has 5 USB differential pairs (U0+/U0- through U4+/U4-) connecting to the GL850G USB 2.0 hub IC. The differential_pairs section correctly identifies these as differential pairs, but classifies them with type='differential' rather than 'usb'. No USB interface detection appears in signal_analysis. The analyzer's USB detection heuristics apparently do not recognize the GL850G as a USB hub, and the U0+-style naming convention for USB ports on this hub is not matched by USB detection patterns.",
+      "created_from": "FND-00002475",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 5
+      },
+      "aspirational": true
+    }
+  ]
+}

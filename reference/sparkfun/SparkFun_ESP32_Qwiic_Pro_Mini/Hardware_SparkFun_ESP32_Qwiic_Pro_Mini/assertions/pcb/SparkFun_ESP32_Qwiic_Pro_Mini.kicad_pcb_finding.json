@@ -1,0 +1,49 @@
+{
+  "file_pattern": "SparkFun_ESP32_Qwiic_Pro_Mini.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001396",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001396-AST-01",
+      "description": "The board outline is a single rectangle from (129.54, 114.3) to (162.56, 132.08), giving 33.02\u00d717.78mm (~1.3\"\u00d70.7\"). This is consistent with a Pro Mini variant sized to fit an ESP32 module. Board thickness is 1.6mm FR4 with 2-layer stackup, both plausible for a production SparkFun design.",
+      "created_from": "FND-00001396",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "value": 33.02,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001396-AST-02",
+      "description": "statistics reports 82 footprints total: 43 front, 39 back. The high back count is driven by 55 kibuzzard graphic/logo items (board_only, exclude_from_bom). Actual electrical components are 24 (U1, U2, 4C, 2D, 2FID, 5R, 4J, 1JP, 2SW, G2, U3, Ref**) plus kibuzzard decorators. The split is credible given extensive artwork on this SparkFun board.",
+      "created_from": "FND-00001396",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 82,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001396-AST-03",
+      "description": "The PCB reports 63 vias and 40 nets vs the schematic's 39 nets \u2014 the extra net is due to the PCB including unconnected stubs (e.g., unconnected-(J5-NC-PadNC1/2)) treated separately. routing_complete=true with 0 unrouted nets. The track count of 364 segments and 572.5mm total length is plausible for a compact 33\u00d718mm 2-layer ESP32 board.",
+      "created_from": "FND-00001396",
+      "check": {
+        "path": "statistics.routing_complete",
+        "value": true,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001396-AST-04",
+      "description": "INCORRECT: The PCB statistics report only 19 SMD and 3 THT footprints, but the actual board has ~24 electrical components (U1 at 61 pads, U2, 4C, 5R, 2D, 2SW, 2FID, plus connectors). The discrepancy is because the smd/tht counts only reflect footprints where the type is unambiguously set; the kibuzzard board_only items (55 of them) are excluded correctly, but several real SMD components may be misclassified. The counts 19+3=22 are too low relative to the 26 schematic components.",
+      "created_from": "FND-00001396",
+      "check": {
+        "path": "statistics.smd_count",
+        "value": 19,
+        "op": "min_count"
+      },
+      "aspirational": false
+    }
+  ]
+}

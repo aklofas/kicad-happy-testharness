@@ -1,0 +1,18 @@
+{
+  "file_pattern": "emberone.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002041",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002041-AST-01",
+      "description": "The PCB analyzer correctly identifies the 6-copper-layer stackup (F.Cu, In1..In4.Cu, B.Cu), 395 footprints (140 front, 255 back), 3368 track segments, 1010 vias, 36 zones, and 128x128mm board size. DFM correctly flags annular ring at 0.1mm (advanced process tier) and board size exceeding JLCPCB's 100x100mm standard pricing tier. Routing is complete (365 nets, 0 unrouted). The GND zone spans 4 copper layers (F.Cu, In1, In3, In4) with 175 stitching vias \u2014 correctly identified as a thermal/ground plane.",
+      "created_from": "FND-00002041",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 6
+      }
+    }
+  ]
+}

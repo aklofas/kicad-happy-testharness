@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Manufacturing",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001784",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001784-AST-01",
+      "description": "INCORRECT: The Dial Module's Manufacturing/ folder contains files named 'Modular MacroPad-*.gbr' (from the full Mini Module design), not Dial-Module-specific gerbers. The analyzer processed these wrong gerbers, reporting 97 component_refs (which match the Mini Module's ~95 footprints), while the Dial Module PCB has only 49 footprints. The gerber board_dimensions (102.2x99.2mm) also match the Mini Module (102x99mm), not the Dial Module (100x100mm). This is a repo organization issue (developer stored wrong gerbers in the Dial Module folder), but it results in the gerber output being entirely mismatched to the Dial Module PCB/schematic.",
+      "created_from": "FND-00001784",
+      "check": {
+        "path": "board_dimensions.width_mm",
+        "op": "equals",
+        "value": 102.2
+      },
+      "aspirational": false
+    }
+  ]
+}

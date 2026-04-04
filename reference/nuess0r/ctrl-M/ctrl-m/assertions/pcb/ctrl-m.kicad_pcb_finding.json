@@ -1,0 +1,29 @@
+{
+  "file_pattern": "ctrl-m.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002321",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002321-AST-01",
+      "description": "The analyzer correctly identifies ctrl-M as a 2-layer board (B.Cu, F.Cu) with components on both sides (21 front, 18 back), 10 through-hole and 18 SMD parts, 445 track segments, 52 vias, routing_complete=true with 0 unrouted nets. The 4 extra footprints (PCB count 39 vs schematic 35) are accounted for by REF** silkscreen markers and additional connector footprints not in the schematic component list.",
+      "created_from": "FND-00002321",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00002321-AST-02",
+      "description": "INCORRECT: All 39 footprints in the PCB output have side=null, even though each footprint correctly has a 'layer' field ('F.Cu' or 'B.Cu'). The statistics correctly derive front_side=21 and back_side=18 from the layer data, but the per-footprint 'side' field is never populated. The same null-side bug appears in crimpdeq-pcb. Similarly, PCB zones have layer=null despite having copper fill on specific layers. This affects any consumer that reads per-footprint or per-zone side/layer fields.",
+      "created_from": "FND-00002321",
+      "check": {
+        "path": "statistics.front_side",
+        "op": "equals",
+        "value": 21
+      },
+      "aspirational": false
+    }
+  ]
+}

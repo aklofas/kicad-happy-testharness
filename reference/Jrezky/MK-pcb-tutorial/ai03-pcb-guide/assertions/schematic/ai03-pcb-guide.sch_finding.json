@@ -1,0 +1,29 @@
+{
+  "file_pattern": "ai03-pcb-guide.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000853",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000853-AST-01",
+      "description": "Y1/C3/C4 crystal circuit and load capacitance calculation is correct. Decoupling on +5V with 4 caps also correctly identified.",
+      "created_from": "FND-00000853",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000853-AST-02",
+      "description": "The design has an ATmega32U4 USB controller with D+/D- global labels, USB1 connector, and R1/R2 (22-ohm) USB series resistors. The bus_analysis section reports no USB interfaces and differential_pairs is empty. These are textbook USB FS termination resistors that should be recognized.",
+      "created_from": "FND-00000853",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

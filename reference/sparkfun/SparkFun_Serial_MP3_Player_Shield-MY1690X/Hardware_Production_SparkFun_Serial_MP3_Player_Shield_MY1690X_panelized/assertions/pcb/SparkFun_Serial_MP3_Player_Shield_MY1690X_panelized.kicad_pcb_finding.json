@@ -1,0 +1,29 @@
+{
+  "file_pattern": "SparkFun_Serial_MP3_Player_Shield_MY1690X_panelized.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001487",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001487-AST-01",
+      "description": "The panelized board (6 copies on a 120.88mm x 203.93mm panel) correctly shows 631 footprints (6 \u00d7 ~105), 1512 track segments, 270 vias, and 6 zones. The routing_complete=false with 40 unrouted nets is accurate: all 40 unrouted nets are 'unconnected-' prefixed nets representing intentionally unconnected Arduino shield pins (B1), which have multiple pads per panel instance but no routes between them.",
+      "created_from": "FND-00001487",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": false
+      }
+    },
+    {
+      "id": "FND-00001487-AST-02",
+      "description": "The 40 unrouted nets in the panelized board all have names matching 'unconnected-(B1-...' pattern, corresponding to Arduino Uno shield pins intentionally left unconnected in the schematic (marked as no_connect). The analyzer reports routing_complete=false which is technically accurate per the ratsnest data, but there is no annotation that these 40 'unrouted' nets are deliberate no-connects rather than missing routes. A note distinguishing intentional no-connects from real routing omissions would improve analysis utility.",
+      "created_from": "FND-00001487",
+      "check": {
+        "path": "connectivity.unrouted_count",
+        "op": "equals",
+        "value": 40
+      },
+      "aspirational": false
+    }
+  ]
+}

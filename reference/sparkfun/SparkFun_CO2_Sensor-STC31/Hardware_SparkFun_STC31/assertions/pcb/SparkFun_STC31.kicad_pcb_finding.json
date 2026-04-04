@@ -1,0 +1,51 @@
+{
+  "file_pattern": "SparkFun_STC31.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001382",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001382-AST-01",
+      "description": "statistics.board_width_mm=25.4 and board_height_mm=25.4, consistent with bounding_box (123.266 to 148.666 = 25.4mm in X, 85.406 to 110.806 = 25.4mm in Y). This is the standard SparkFun Qwiic 1-inch square form factor. The single rectangular Edge.Cuts outline (edge_count=1, type=rect) is plausible for this simple board.",
+      "created_from": "FND-00001382",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "value": 25.4,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001382-AST-02",
+      "description": "decoupling_placement shows U3 (STC31) with C1 at 3.03mm and C3 at 4.21mm, and U4 (SHTC3) with C3 at 2.22mm and C1 at 6.67mm \u2014 all on F.Cu, all sharing 3.3V/GND nets. These are plausible placement distances for a compact 25.4mm board with only two bypass caps serving two sensors. The shared_nets check correctly confirms the caps are wired to the IC's power nets.",
+      "created_from": "FND-00001382",
+      "check": {
+        "path": "decoupling_placement[0].closest_cap_mm",
+        "value": 5.0,
+        "op": "max_count"
+      }
+    },
+    {
+      "id": "FND-00001382-AST-03",
+      "description": "zones[0] shows a GND fill spanning both copper layers with fill_ratio=1.333 (filled_area=859.71mm2 vs outline_area=645.16mm2, expected for a zone that fills both sides of a 25.4x25.4=645mm2 board). The thermal_analysis.zone_stitching correctly counts 23 GND vias at 3.6/cm2 density. This matches the net_lengths entry for GND showing via_count=23.",
+      "created_from": "FND-00001382",
+      "check": {
+        "path": "zones[0].net_name",
+        "value": "GND",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected GND, got None"
+    },
+    {
+      "id": "FND-00001382-AST-04",
+      "description": "INCORRECT: statistics.footprint_count=58 includes 25 kibuzzard-* graphic/decorative footprints (all board_only, exclude_from_bom, pad_count=0) plus multiple G*** logo footprints. The actual electrically-relevant component count is closer to 28-30. The component_groups breakdown shows kibuzzard:25 and G:5 groups. While the count itself is not wrong (it is a footprint count), the practical component count for assembly purposes is overstated. The front_side=33/back_side=25 split is similarly skewed by these decoration-only items.",
+      "created_from": "FND-00001382",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 58,
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

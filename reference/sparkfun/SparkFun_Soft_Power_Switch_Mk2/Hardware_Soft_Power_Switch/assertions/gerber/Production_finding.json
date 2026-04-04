@@ -1,0 +1,67 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001459",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001459-AST-01",
+      "description": "The panelized gerbers show 1995 total holes: 1645 vias (35 \u00d7 47), 210 component holes (35 \u00d7 6 THT), and 140 mounting holes (35 \u00d7 4 NPTH). This is consistent with a 35-up panel of the single PCB design which has 47 vias, 6 THT holes (J3 connector), and 4 mounting holes (standoffs). The multiplication factor of 35 is consistent across all hole types.",
+      "created_from": "FND-00001459",
+      "check": {
+        "path": "statistics.total_holes",
+        "op": "equals",
+        "value": 1995
+      },
+      "aspirational": false,
+      "aspirational_reason": "agent-generated check failed: expected 1995, got 57"
+    },
+    {
+      "id": "FND-00001459-AST-02",
+      "description": "The panelized gerber alignment check reports aligned=true with no issues. The layer extents are consistent: F.Cu and B.Cu share the same 128.491mm \u00d7 184.975mm bounding box, confirming correct coordinate alignment across all copper layers in the panel. Mask and silkscreen layers have slightly different extents due to expansion rules, which is expected.",
+      "created_from": "FND-00001459",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001459-AST-03",
+      "description": "The panelized gerbers report the same two conductor widths as the single PCB gerbers: 0.1778mm and 0.5588mm. This is expected since the panel is composed of repeated copies of the same PCB design. The consistency across both gerber outputs confirms the panelization preserved all electrical design rules.",
+      "created_from": "FND-00001459",
+      "check": {
+        "path": "trace_widths.unique_widths_mm",
+        "op": "equals",
+        "value": [
+          0.1778,
+          0.5588
+        ]
+      }
+    },
+    {
+      "id": "FND-00001459-AST-04",
+      "description": "INCORRECT: The gerber output reports missing_required=[\"Edge.Cuts\"] and complete=false. However, a file named Soft_Power_Switch_panelized.GKO is present in the gerber set (it appears in the gerbers array). The .GKO extension is the KiCad convention for the board outline (Edge.Cuts layer). The analyzer correctly parses GKO as having FileFunction \"Soldermask,Bot\" from its X2 attribute \u2014 but this is wrong. The GKO file's X2 attribute says Soldermask,Bot which is incorrect for an Edge.Cuts file; however the aperture_analysis shows a 'Profile' aperture function, indicating it IS the board outline file. The completeness check is failing to recognize GKO as Edge.Cuts despite the Profile aperture function evidence.",
+      "created_from": "FND-00001459",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001459-AST-05",
+      "description": "INCORRECT: The analyzer classifies Soft_Power_Switch_panelized.GKO as layer_type='B.Mask' because its X2 FileFunction attribute reads 'Soldermask,Bot'. However, GKO is the well-established KiCad extension for Edge.Cuts/board outline, and the file contains a 'Profile' aperture function which unambiguously identifies it as a board outline layer. The analyzer should fall back to extension-based classification when the FileFunction attribute appears misconfigured. This causes the 'Edge.Cuts missing' false alarm.",
+      "created_from": "FND-00001459",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "equals",
+        "value": [
+          "Edge.Cuts"
+        ]
+      },
+      "aspirational": false
+    }
+  ]
+}

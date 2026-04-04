@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_icepi-sbc_hardware_cpu.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Ethernet PHY differential nets EPHY_RX+/- and EPHY_TX+/- falsely reported as UART signals in bus_analysis.uart; eMMC 8-bit bus correctly detected in cpu schematic with all 10 signals (CLK, CMD, D0-...",
+      "correct": [
+        {
+          "description": "The SDIO detector correctly identifies the eMMC bus connected to the Allwinner H3 SoC (U1) with bus_width=8, bus_id='EMMC', and all 10 signals (eMMC_CLK, eMMC_CMD, eMMC_D0 through eMMC_D7). This is a non-trivial detection on a complex multi-sheet SoC schematic.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.sdio",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Both EPHY_RX+/EPHY_RX- and EPHY_TX+/EPHY_TX- are correctly classified as differential pairs under design_analysis.differential_pairs, each showing has_esd=true. The DDR3 strobe pairs DQS0+/- and DQS1+/- and four HDMI/GPDI differential pairs are also correctly detected.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 6
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The UART detector fires on EPHY_RX+ and EPHY_RX- (and EPHY_TX+ / EPHY_TX-) because their net names contain substrings matching TX/RX patterns. However, these are Ethernet PHY differential pair signals on the Allwinner H3 SoC (U1), correctly identified as differential pairs elsewhere in the same output under differential_pairs. The four EPHY nets appear in the uart list with pin_count=1 each, which is a false positive.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "max_count",
+            "value": 6
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "cheyao/icepi-sbc",
+      "project": "hardware_cm0",
+      "created": "2026-03-24T08:33:50.666345+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002217"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_icepi-sbc_hardware_power.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Six switching buck regulators (U3-U8 with inductors L1-L6) not identified as voltage regulators \u2014 only their feedback dividers are detected",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The power schematic contains 6 switching regulators generating +3V3_WIFI, +3V3_IO, +3V3_RTC, +1V5, +1V2_SYSTEM, and +1V1_CPUX rails from a +5V input, each with an inductor and multiple output capacitors. The analyzer correctly finds their feedback voltage dividers (is_feedback=true) but does not report any regulator topology, switcher type, or inductor-based power stage. There is no 'regulators' or 'switching_regulators' section in the output, leaving the core power architecture undescribed.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 4
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "cheyao/icepi-sbc",
+      "project": "hardware_cm0",
+      "created": "2026-03-24T08:33:50.666364+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002218"
+    }
+  ]
+}

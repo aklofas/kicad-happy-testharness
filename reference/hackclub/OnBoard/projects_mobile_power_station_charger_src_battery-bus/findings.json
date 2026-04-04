@@ -1,0 +1,109 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/OnBoard/projects/mobile_power_station_charger/src/battery-bus.kicad_sch",
+      "status": "confirmed",
+      "summary": "Battery charger/power station with LT3790 buck-boost, ESP32-C3, USB-C PD. Major component classification failure: 105 of 136 components classified as other due to non-standard reference designator prefixes (Cch_, Rch_, Cc_, Ruc, etc).",
+      "correct": [
+        {
+          "description": "AMS1117-3.3 LDO correctly identified"
+        },
+        {
+          "description": "LMR36520FADDAR switching regulator detected"
+        },
+        {
+          "description": "USB differential pair (D+/D-) detected"
+        },
+        {
+          "description": "ESP32-C3 missing decoupling correctly flagged in design_observations"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "105 of 136 components (77%) classified as other \u2014 components with non-standard prefixes like Cch_, Rch_, Cc_, Ruc, Lch, Qch_, Dch are not recognized as capacitors/resistors/inductors/transistors/diodes",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "Only 4 capacitors counted in statistics despite ~35 capacitor-type BOM entries with Cc_/Cch_ prefixes",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "BOM sum (126) does not match total_components (136) \u2014 10 missing, mounting_hole(3) only partially explains gap",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "LT3790 buck-boost converter not detected as power regulator \u2014 classified as other",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No voltage dividers detected despite many 200K/100K/33K resistors likely forming feedback networks",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No current sense detection despite Rch_Ibat (0.013 ohm) and Rch_Iin (0.003 ohm) sense resistors",
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No charger circuit detection for LT3790 buck-boost charger",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USB-C PD controller (CYPD3177) not recognized",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "ACS712 current sensor IC not detected",
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "MCP4725 DAC not recognized as analog output device",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Component classifier should parse reference prefixes more flexibly \u2014 strip trailing underscores/numbers and match first letter (C=capacitor, R=resistor, L=inductor, Q=transistor, D=diode)",
+        "Non-standard prefixes like Cch_, Rch_ are user conventions for hierarchical sheets and should still be classified by first letter"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000098",
+      "repo": "hackclub/OnBoard",
+      "project": "projects_mobile_power_station_charger_src_battery-bus",
+      "created": "2026-03-14T07:25:47.207686+00:00"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "template-module.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002114",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002114-AST-01",
+      "description": "INCORRECT: The board has a single GND copper zone that spans F&B.Cu, is filled (filled_area_mm2=1018.52 with regions on both B.Cu and F.Cu), yet statistics.copper_layers_used is 0 and copper_layer_names is empty. The zone fill is the only copper on this template board, so the counter for copper layers used does not account for zone-only copper usage.",
+      "created_from": "FND-00002114",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

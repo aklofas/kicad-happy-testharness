@@ -1,0 +1,155 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "SparkFun_Ideal_Diode_Breakout.kicad_sch",
+      "status": "promoted",
+      "summary": "Component count of 23 is accurate; Power rails correctly enumerate 9 nets (VIN1-VIN4, VOUT1-VOUT4, GND); Four ideal diode circuits not recognized as protection_devices; 8 transistors correctly iden...",
+      "correct": [
+        {
+          "description": "The design has 8 P-MOSFETs (Q1-Q8: 4x DMG2305UX + 4x BCM857BS dual PNP), 8 resistors (R1-R8, 100k), 2 connectors (J1, J2, 1x05), 2 fiducials (FID1, FID4), 3 others (G1 SparkFun logo on-board, G2 SparkFun logo off-board, G3 OSHW logo). Total = 23, which matches statistics.total_components=23.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 23
+          }
+        },
+        {
+          "description": "statistics.power_rails correctly lists GND, VIN1, VIN2, VIN3, VIN4, VOUT1, VOUT2, VOUT3, VOUT4. These correspond to the 4 independent ideal diode circuits each with a separate input and output power rail, all sharing GND. The enumeration is accurate.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 9
+          }
+        },
+        {
+          "description": "signal_analysis.transistor_circuits correctly identifies all 8 transistors: 4x DMG2305UX P-MOSFET (Q2, Q4, Q6, Q8) with gate_pulldown resistors R2, R4, R6, R8 respectively, and 4x BCM857BS dual-PNP BJT (Q1, Q3, Q5, Q7) with base resistors R1, R3, R5, R7. The is_pchannel=true for the MOSFETs is correct for DMG2305UX (P-channel). The BJT base_net and collector_net both resolving to unnamed nets is expected since the base-collector feedback loop creates unnamed internal nets.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 8
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer classifies Q1, Q3, Q5, Q7 (BCM857BS dual PNP) with emitter_net pointing to VIN1/VIN2/VIN3/VIN4 respectively. The BCM857BS is a dual PNP transistor acting as a comparator/controller driving the P-MOSFET gate. In the ideal diode circuit, the BJT collector drives the MOSFET gate; the emitter connects to VIN. The analyzer's emitter assignment to VIN is consistent with the schematic nets, but the collector_net and base_net are both resolving to the same unnamed internal net (__unnamed_X), which suggests the dual transistor's internal feedback connection (base of transistor A connected to collector of transistor B for the cross-coupled control) is not properly decomposed. This causes the 'collector_is_power=false' and 'load_type=resistive' which are somewhat misleading for this gate-drive application.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "value": {
+              "reference": "Q1",
+              "type": "bjt"
+            }
+          }
+        },
+        {
+          "description": "The component_types shows 2 fiducials (FID1, FID4) and 3 others (G1, G2, G3). However the BOM lists only FID4 and FID1 as fiducials, which is correct \u2014 there are indeed 2 fiducials. G1, G2, G3 are logos (3 others). But G3 is the OSHW_Logo with in_bom=false and is excluded from the statistics count, while G1 and G2 are SparkFun logos with in_bom values of true and true/false respectively. The 3 'other' count includes G1 (on_board=false, in_bom=true), G2 (on_board=false, in_bom=true), and G3 (on_board=true, in_bom=false). This count is technically correct given the in_bom/on_board flags, but may be confusing since G3 is not in the BOM.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.fiducial",
+            "op": "equals",
+            "value": 2
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The design implements 4 identical ideal diode circuits, each consisting of a P-MOSFET (DMG2305UX, Q2/Q4/Q6/Q8) controlled by a dual PNP transistor pair (BCM857BS, Q1/Q3/Q5/Q7) with a 100k gate drive resistor. This is a classic ideal diode / ORing controller circuit using discrete components. signal_analysis.protection_devices is empty, missing 4 instances of this protection topology. The transistor_circuits array correctly identifies the 8 transistors but classifies them as generic mosfet/bjt switches rather than as components of an ideal diode protection circuit.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 0
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_Ideal_Diode_Breakout",
+      "project": "Hardware_SparkFun_Ideal_Diode_Breakout",
+      "created": "2026-03-24T00:41:59.768641+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001465"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "SparkFun_Ideal_Diode_Breakout.kicad_pcb",
+      "status": "promoted",
+      "summary": "Board dimensions 12.7x15.24mm, 2-layer, 17 nets correct; Footprint count of 37 with 18 SMD and 2 THT is correct; Two copper zones correctly identified: VOUT4 small zone and large GND zone; Layer tr...",
+      "correct": [
+        {
+          "description": "PCB correctly reports board_width_mm=12.7, board_height_mm=15.24 (a 0.5x0.6 inch SparkFun Qwiic-size board), copper_layers_used=2, net_count=17, routing_complete=true. The 17 nets (GND + 4xVIN + 4xVOUT + 8 unnamed internal control nets) match the schematic's 17 total nets.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "op": "equals",
+            "value": 17
+          }
+        },
+        {
+          "description": "footprint_count=37 includes 8 Q (transistors, SOT-23 SMD), 8 R (resistors, 0402 SMD), 2 J (connectors, 1x05 THT), 2 FID (fiducials, SMD), and decoration footprints (G3 OSHW logo, 14 kibuzzard, 1 Ref**). smd_count=18 (8Q+8R+2FID) and tht_count=2 (J1+J2) are accurate.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 37
+          }
+        },
+        {
+          "description": "thermal_analysis.zone_stitching correctly identifies 2 zones: a small VOUT4 zone (1.2mm2, F.Cu only, 2 vias \u2014 likely a copper pour for a current-carrying trace) and a large GND zone (193.6mm2, F&B.Cu, 4 vias). zone_count=2 in statistics is confirmed.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.zone_count",
+            "op": "equals",
+            "value": 2
+          }
+        },
+        {
+          "description": "layer_transitions correctly identifies VOUT1-VOUT4 each using 2 vias to transition between F.Cu and B.Cu, consistent with the board routing 4 output power lines that need both-side copper. The via positions are plausible for a densely packed 12.7x15.24mm board.",
+          "analyzer_section": "layer_transitions",
+          "check": {
+            "path": "layer_transitions",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "placement_analysis.density reports front_density_per_cm2=16.0 on a 1.94cm2 board. This is appropriate given 31 front-side footprints (8Q, 8R, 2FID, G3, 14 kibuzzard decoration footprints) in a small form factor, though the decoration footprints inflate this metric.",
+          "analyzer_section": "placement_analysis",
+          "check": {
+            "path": "placement_analysis.density.board_area_cm2",
+            "op": "range",
+            "min": 1.8,
+            "max": 2.1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "placement_analysis.edge_clearance_warnings includes G3 (OSHW logo) at edge_clearance_mm=-86.99. G3 is placed at x=215.265mm which is far outside the board boundary (board spans approximately 115-128mm in X). This is a PCB-level aesthetic footprint placed at schematic coordinates, not physically on the board. The analyzer should exclude footprints placed far outside the board outline or with no pad nets from edge clearance analysis.",
+          "analyzer_section": "placement_analysis",
+          "check": {
+            "path": "placement_analysis.edge_clearance_warnings",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_Ideal_Diode_Breakout",
+      "project": "Hardware_SparkFun_Ideal_Diode_Breakout",
+      "created": "2026-03-24T00:41:59.768664+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001466"
+    }
+  ]
+}

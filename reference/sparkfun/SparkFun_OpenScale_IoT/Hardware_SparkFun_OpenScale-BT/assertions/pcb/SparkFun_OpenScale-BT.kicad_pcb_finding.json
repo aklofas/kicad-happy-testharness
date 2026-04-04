@@ -1,0 +1,63 @@
+{
+  "file_pattern": "SparkFun_OpenScale-BT.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001468",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001468-AST-01",
+      "description": "The PCB reports 195 footprints total (131 front, 64 back) versus 96 in the schematic. This discrepancy is correct: 97 kibuzzard footprints are board_only/exclude_from_bom decorative graphics, and 98 footprints match real components (the extra 2 vs 96 are G2 OSHW_Logo and SparkFun_Logo marked board-only in the schematic). The Gerber analysis correctly deduplicates to 168 unique component refs in its component_analysis.",
+      "created_from": "FND-00001468",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 195
+      }
+    },
+    {
+      "id": "FND-00001468-AST-02",
+      "description": "The PCB is a 2-layer board (F.Cu and B.Cu) with routing_complete: true, unrouted_net_count: 0. Statistics show 596 track segments and 146 vias. Board dimensions are 55.88mm x 46.99mm which match the Edge.Cuts bounding box. Four copper pour zones are present.",
+      "created_from": "FND-00001468",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001468-AST-03",
+      "description": "The thermal_pad_vias section correctly identifies U6 (ESP32-PICO-V3-02) as having exposed thermal pads (49.1 through 49.9, each 1.45x1.45mm on GND) with via_count: 0 and adequacy: 'none'. This is a real concern for the design \u2014 the ESP32 module's exposed GND pads have no thermal vias connecting to the back copper pour.",
+      "created_from": "FND-00001468",
+      "check": {
+        "path": "thermal_pad_vias",
+        "op": "contains_match",
+        "value": {
+          "component": "U6",
+          "adequacy": "none"
+        }
+      }
+    },
+    {
+      "id": "FND-00001468-AST-04",
+      "description": "The dfm section correctly identifies a track_spacing violation: approximate spacing of 0.1257mm is below the standard 0.127mm limit and requires an advanced process. Min track width of 0.1778mm is correctly detected. This is accurate given the ESP32-PICO-MINI module's fine-pitch pads.",
+      "created_from": "FND-00001468",
+      "check": {
+        "path": "dfm.violation_count",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001468-AST-05",
+      "description": "INCORRECT: The PCB reports smd_count: 71 and tht_count: 14. The 14 THT components appear to be the screw terminal connectors (J7 J15 3-pin, J13 J14 2-pin screw terminals) and header connectors (J1-J4 3-pin, J10 6-pin, J11 2-pin, J12 5-pin, J5 1-pin) plus standoffs. The 71 SMD count seems low given the schematic has 26 resistors + 15 caps + 6 Q + 5 U + 4 LED + 4 TP + 2 switches + 8 JP + FID = ~72 true SMD components, so the count is approximately correct, but excluding board-only footprints means counts are lower than expected. The discrepancy is because kibuzzard/board-only items are excluded from SMD/THT counting.",
+      "created_from": "FND-00001468",
+      "check": {
+        "path": "statistics.smd_count",
+        "op": "range",
+        "min": 65,
+        "max": 90
+      },
+      "aspirational": false
+    }
+  ]
+}

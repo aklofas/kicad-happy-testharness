@@ -1,0 +1,29 @@
+{
+  "file_pattern": "controller.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002124",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002124-AST-01",
+      "description": "The BOM correctly enumerates SW2/SW3/SW4/SW5 as SW_SPDT and SW8/SW9/SW10/SW11 as SW_Push with their custom footprints. Power rails +5V and GND are correctly identified. The design_observations note correctly flags U1 has no local decoupling cap on the +5V rail.",
+      "created_from": "FND-00002124",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "FND-00002124-AST-02",
+      "description": "SW2/SW3/SW4/SW5 each have pin A=GND and pin C=+5V with the wiper (pin B) going directly to ATmega32U4 GPIO pins. This makes each switch deliver either 0V or 5V to the GPIO. The analyzer does not detect this SPDT-as-voltage-selector topology. The signal_analysis.voltage_dividers list is empty even though this is effectively a 2-state voltage source. This is also correct because the ATmega32U4 on the Pro Micro is a 5V device so no damage risk, but the pattern is worth flagging as a non-standard switch wiring.",
+      "created_from": "FND-00002124",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": false
+    }
+  ]
+}

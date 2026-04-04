@@ -1,0 +1,30 @@
+{
+  "file_pattern": "cpu.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000533",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000533-AST-01",
+      "description": "The schematic has explicit named nets ESP_SO, ESP_SI, ESP_CLK, ESP_CS connecting U5 (ESP8266EX, the SPI master) to U3 (BY25Q64ASSIG SPI flash). The analyzer outputs spi:[] in both cpu.sch.json and main.sch.json. The root cause is U3's pins:[] preventing the detector from finding the shared nets, combined with the SPI signal-name heuristic apparently not triggering on U5's pin-net mappings alone. The memory_interfaces section in main.sch.json does partially recognize the U3\u2194U5 connection (2 shared_signal_nets) but does not promote this to a full SPI bus detection.",
+      "created_from": "FND-00000533",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000533-AST-02",
+      "description": "cpu.sch contains two crystal circuits: XT1 (6MHz, lib: Crystal) with load capacitors C10 and C12 connected to STM32F334 U1 pins OSC_IN/OSC_OUT, and XT2 (6MHz, lib: Crystal) with load capacitors C39 and C44 connected to ESP8266EX U5 pins XTAL_I/XTAL_O. The analyzer outputs crystal_circuits:[] in both cpu.sch.json and main.sch.json. The crystals do appear in the BOM as component_type='crystal', so the classification is correct, but the circuit topology (crystal + capacitors + IC pins) is not assembled into a crystal_circuits detection entry.",
+      "created_from": "FND-00000533",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "PowerSupplay.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001264",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001264-AST-01",
+      "description": "PowerSupplay.sch has three power regulation ICs: U4 (AP1117-33, 3.3V LDO in SOT-223), U5 and U7 (MC34063 DC-DC converters). signal_analysis.power_regulators=[] \u2014 all three are missed. The AP1117-33 is a well-known part that should be identified as a linear regulator.",
+      "created_from": "FND-00001264",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "file_pattern": "ethersweep.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000150",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000150-AST-02",
+      "description": "TMC2209-LA (U7) correctly identified as motor driver with 29 pins mapped",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000150-AST-03",
+      "description": "I2C bus between STM32 (U3) and AS5600 (U5) with pull-ups R24, R27",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000150-AST-04",
+      "description": "SPI signals CS/SCK/MISO/MOSI correctly classified as chip_select/clock/data",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "bus_topology",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000150-AST-05",
+      "description": "Power rails +28V, +3.3V, +3.3VA, DD4012SA enumerated",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000150-AST-06",
+      "description": "INCORRECT: R4, R5 (33 ohm) falsely detected as current sense shunts -- these are Ethernet differential pair series termination resistors between W5500 TX/RX and HR911105A RJ45",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "not_contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R4$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000150-AST-07",
+      "description": "INCORRECT: DD4012SA (U4, Diodes Inc buck converter) classified as power_symbol because lib_id is 'power:DD4012SA' with in_bom=yes -- excluded from components, ic_pin_analysis, and power_regulators entirely",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U4$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000150-AST-08",
+      "description": "+28V motor power rail missing from power_budget despite 11 power symbol instances feeding TMC2209 via DD4012SA",
+      "created_from": "FND-00000150",
+      "check": {
+        "path": "signal_analysis.power_budget",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

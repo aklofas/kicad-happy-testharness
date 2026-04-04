@@ -1,0 +1,19 @@
+{
+  "file_pattern": "keeb-x3.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002229",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002229-AST-01",
+      "description": "INCORRECT: The keeb-x3 PCB defines its board outline as a single gr_poly element containing four arc segments (with rounded corners) on the Edge.Cuts layer. The analyzer reports edge_count=0, empty edges array, and null bounding_box. The source file clearly contains `(gr_poly ... (layer \"Edge.Cuts\"))` with arc-based pts. The analyzer appears to only parse gr_line/gr_arc/gr_rect primitives, not gr_poly with arc children, causing it to silently miss the entire board boundary.",
+      "created_from": "FND-00002229",
+      "check": {
+        "path": "board_outline.edge_count",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

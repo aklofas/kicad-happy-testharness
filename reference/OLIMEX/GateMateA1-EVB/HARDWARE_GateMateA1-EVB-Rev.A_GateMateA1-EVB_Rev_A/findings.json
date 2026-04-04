@@ -1,0 +1,203 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "HARDWARE_GateMateA1-EVB-Rev.C_GateMateA1-EVB_Rev_C.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Component classification correct across all categories; 5 TPS62A02A switching regulators correctly detected with proper inductor associations; Memory interface correctly detected: LY68S3200SLT SPI ...",
+      "correct": [
+        {
+          "description": "286 total components (Rev.C) with correct type breakdown: 122 caps, 73 resistors, 13 ICs, 5 inductors, 2 ferrite beads, 1 oscillator (CR1 = MEMS SX5M10), 1 crystal (Q1 = 12MHz XTAL), 22 DNP parts. BOM type assignments are accurate throughout.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "U11-U15 (TPS62A02ADRLR) each correctly identified as switching topology with inductors L3-L7 respectively, input rail +5V_USB, and estimated output voltages (1.1V, 1.2V, 1.8V, 2.5V, 3.3V) matching the design rails for the GateMate1 FPGA power domains.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "U8 (LY68S3200SLT SOIC-8 SPI PSRAM) linked to U10 (RP2040) via 6 shared signal nets. This is correct \u2014 the RP2040 manages FPGA configuration via SPI and uses the PSRAM for buffering.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Analyzer flags C11, C36, R33, R34, R46, R48, U8 as duplicate references. Inspection confirms these are genuine schematic annotation errors: C11 appears 3\u00d7 with different UUIDs (same value, true dupe), R33 appears 2\u00d7 with different values (866R and 2.2k \u2014 different components with same ref), U8 appears 3\u00d7 including once with W25Q16BV lib_id that should be U3.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "TVS1-TVS5 (GG0402052R542P) all have NA(...) value prefix indicating DNP status. The analyzer correctly returns protection_devices=0 since none are installed. Not a missed detection \u2014 the parts are intentionally unpopulated.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USB-C1 connector CC1/CC2 resistor checks pass (5.1k pull-downs present for UFP). VBUS ESD protection is correctly flagged as fail \u2014 no TVS on VBUS is present (TVS diodes are all DNP). USB data lines lack ESD protection (R55/R56 are series resistors, no dedicated ESD device).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Q1 spec is 20pF load capacitance. C110 and C111 are 18pF each in series = 9pF effective, plus stray yields ~12pF reported. This is a slight under-estimation (typical stray ~3-5pF would give 12-14pF vs 20pF spec), but the calculation methodology is sound and the under-load observation is worth noting.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "4 voltage dividers detected (R67/R71, R60/R64, R68/R72, R61/R65) matching the regulator feedback resistor pairs for VOUT sense networks on U11-U15. These are legitimately classified as both voltage_dividers and feedback_networks, which is accurate for regulator feedback topology.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The file uses (version 20230121) which corresponds to KiCad 7.x. The analyzer reads file_version correctly as '20230121' but reports kicad_version as 'unknown'. The kicad_version field should map file format versions to app version strings (20230121 = KiCad 7.x). This affects all three revisions identically.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Six power rails (+1V8, +3V3, +1V2, +5V_USB, +2V5, GND) are flagged as missing PWR_FLAG. However, all FPGA supply rails are directly driven by TPS62A02A switching regulator outputs (power_out pins) \u2014 these do not need PWR_FLAGs. The +5V_USB is sourced from USB-C connector. The warnings appear because the analyzer checks for PWR_FLAG symbols but the regulator output pins may not be recognized as power drivers on those nets. This is a high-confidence false positive for this design topology.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Each TPS62A02A regulator (U11-U15) has a 1.0uH power inductor (L3-L7) in series with the output followed by large bulk capacitors (22uF + 47uF). These are classic LC output filter topologies. The lc_filters detector returns 0 results. The detector likely only looks for passive LC networks not associated with a regulator, missing this important class of LC filter entirely.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The GateMate FPGA has JTAG configuration pins and the board includes a JTAG_LED1 indicator and JTAG-related labels (TCK, TDI, TDO, TMS visible in bus signals and global labels). The analyzer does not report any JTAG interface detection. Bus signal detector does find CFG_MD[0..3] and clock signals, but a dedicated JTAG bus protocol detector is absent.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "OLIMEX/GateMateA1-EVB",
+      "project": "HARDWARE_GateMateA1-EVB-Rev.A_GateMateA1-EVB_Rev_A",
+      "created": "2026-03-23T20:50:13.994700+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000596"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "HARDWARE_GateMateA1-EVB-Rev.A_GateMateA1-EVB_Rev_A.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "GateMateA1-EVB evaluation board for Cologne Chip CCGM1A1 FPGA with RP2040 co-processor, five SY8089 buck regulators, VGA output, PS2 port, PSRAM, and SPI flash. Analyzer correctly classifies most components but has four issues: VDD_CORE regulator output unnamed, RC filter false positive from feedback network, TVS diodes missed, and BSS138 level shifters misclassified as inductive load.",
+      "correct": [
+        {
+          "description": "Identified all five SY8089AAAC switching regulators (U11-U15) with correct inductors (L3-L7). Four of five have correct feedback divider and output voltage.",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Correctly detected Q1 (12 MHz crystal) with load capacitors C111/C110 (18pF each, 12pF effective).",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "Correctly classified CR1 as an active oscillator (10 MHz) with output on pin 3.",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "Correctly identified PSRAM U8 (LY68S3200SLT) connected to RP2040 U10 via 6 shared QSPI signal nets.",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "Correctly detected USB-C1 CC1/CC2 5.1k pull-down resistors and VBUS decoupling; accurately flagged missing VBUS ESD protection.",
+          "analyzer_section": "usb_compliance"
+        },
+        {
+          "description": "Correctly detected power-sequencing RC delay networks for regulator enable pins: R69/C122, R63/C117, R62/C116, R70/C123.",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "Correctly identified component counts: 73 resistors, 121 capacitors, 5 inductors, 2 ferrite beads, 13 ICs, 6 LEDs, 5 switches.",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "Correctly identified 14 named power rails including FPGA supply domains: VDD_NA, VDD_NB, VDD_EB, VDD_PLL, VDD_SER, VDD_SER_PLL.",
+          "analyzer_section": "statistics.power_rails"
+        },
+        {
+          "description": "Button debounce filter R28 (10k) + C89 (100nF) correctly detected as 159 Hz LP filter on FPGA button input.",
+          "analyzer_section": "signal_analysis.rc_filters"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U15 (SY8089AAAC) output_rail reported as '__unnamed_7' instead of VDD_CORE. Feedback divider R73=1k/R78=2k not detected, so estimated_vout absent. Vout = 0.6*(1+1k/2k) = 0.9V nominal.",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "R73 (1k) + C125 (47uF) incorrectly paired as a 3.39 Hz RC low-pass filter. R73 is actually the top feedback resistor for U15 (VDD_CORE to U15 FB), and C125 is the output bulk cap.",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "FET1 and FET2 (BSS138 N-MOSFETs) classified with load_type='inductive', but these are open-drain level shifters for PS2 keyboard interface. No inductive load present.",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Five TVS protection diodes (TVS1-TVS5, GG0402052R542P) on VGA signal lines absent from protection_devices. TVS1-3 protect RGB, TVS4-5 protect sync signals.",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "VGA weighted-resistor DAC not detected. FPGA drives 4-bit Red, 5-bit Green, 4-bit Blue channels into resistor-ladder DACs feeding VGA1.",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "suggestions": [
+        "In power_regulators, trace feedback divider from regulator output rail through resistor to FB pin to catch cases like U15 where Rtop connects output-to-FB.",
+        "In RC filter detector, exclude resistor-capacitor pairs where the resistor is part of a regulator feedback network.",
+        "Add N-MOSFET open-drain level shifter topology recognition: drain tied to pull-up rail, gate driven by logic signal, classify as 'level_shifter' not 'inductive'.",
+        "Extend protection_devices to recognize TVS diodes by lib_id/value patterns and topology."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002503",
+      "repo": "OLIMEX/GateMateA1-EVB",
+      "project": "HARDWARE_GateMateA1-EVB-Rev.A_GateMateA1-EVB_Rev_A",
+      "created": "2026-03-30T23:05:37.545989+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

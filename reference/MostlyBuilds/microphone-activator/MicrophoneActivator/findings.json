@@ -1,0 +1,38 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002405",
+      "source_file": "MicrophoneActivator.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "False pwr_flag_warning on GND: two PWR_FLAG symbols are correctly wired to GND but not recognised",
+      "details": "pwr_flag_warnings reports that GND has power_in pins but no power_out or PWR_FLAG. However, the schematic contains two PWR_FLAG symbols (#FLG01 and #FLG02), both wired into the GND net.",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "max_count",
+        "value": 0
+      }
+    },
+    {
+      "id": "FND-00002406",
+      "source_file": "MicrophoneActivator.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "Footprint mismatch on R3 correctly detected via footprint_filter_warnings",
+      "details": "R3 (value 33K) has footprint 'Capacitor_SMD:C_1206_3216Metric' - a capacitor footprint on a resistor. The analyzer correctly flags this in footprint_filter_warnings."
+    },
+    {
+      "id": "FND-00002407",
+      "source_file": "MicrophoneActivator.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "missed",
+      "summary": "No transistor circuit detection for LSK389C dual JFET balanced microphone amplifier",
+      "details": "signal_analysis.transistor_circuits is empty, but Q1 and Q2 are LSK389C dual N-channel JFETs configured as a balanced XLR microphone amplifier.",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

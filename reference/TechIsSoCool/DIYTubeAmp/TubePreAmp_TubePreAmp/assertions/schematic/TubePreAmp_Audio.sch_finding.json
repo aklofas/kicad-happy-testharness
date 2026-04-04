@@ -1,0 +1,62 @@
+{
+  "file_pattern": "Audio.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000458",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000458-AST-01",
+      "description": "All 21 components (J2, J3, J4, J5, RV1, C10\u2013C13, R12\u2013R21, U1, U2) are correctly identified with correct values (1uF, AudioJack2, 4K7, 470K, 200, 100K, 50K, CK5654). Component types are correctly classified. Power rails +28V and GND are identified.",
+      "created_from": "FND-00000458",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000458-AST-02",
+      "description": "U1 and U2 are CK5654 pentode vacuum tubes (footprint Valve:Valve_Noval_P, datasheet http://www.r-type.org/pdfs/5654.pdf). The analyzer classifies them as type 'ic'. There is no 'vacuum_tube' or 'valve' component type. The subcircuit analysis lists them as ICs with zero neighbor_components in Audio.sch (because no net connectivity is traced in the single-sheet parse). This misclassification affects downstream signal analysis \u2014 e.g. no amplifier or valve circuit is detected.",
+      "created_from": "FND-00000458",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000458-AST-03",
+      "description": "RV1 is a Device:R_POT_Dual (dual-gang 50K potentiometer). The analyzer classifies it as type 'resistor'. The BOM entry also places it as a resistor. A dual-gang pot is a distinct component used as a stereo volume control \u2014 the Audio.sch uses RV1 to attenuate both the left (J2) and right (J3) input channels simultaneously before the tube grid. There is no 'potentiometer' component type in the analyzer's taxonomy.",
+      "created_from": "FND-00000458",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000458-AST-04",
+      "description": "C10 and C11 are series AC-coupling capacitors placed between RV1 wiper outputs and the grids (via R13/R12 and R15/R14) of U1 and U2. C12 and C13 are output coupling capacitors from the tube plates to J4/J5 load resistors R20/R21 (100K to GND). These form classic audio high-pass coupling networks (RC high-pass with 100K and 1uF: fc \u2248 1.59 Hz, which is correct and is detected in the hierarchical run). In the single-sheet Audio.sch output, the signal_analysis.rc_filters list is empty \u2014 no RC filters are detected at all. This is because the connectivity graph is incomplete in the single-sheet parse (named nets have no pin memberships).",
+      "created_from": "FND-00000458",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000458-AST-05",
+      "description": "In Audio.sch, R13 (4K7) and R15 (470K) form a voltage divider between the -28V rail and the tube U1 grid (pin G1/CG3 via grid resistor R17). Similarly R12 (4K7) and R14 (470K) bias U2. These are grid-bias resistor networks for the pentode. The analyzer reports zero voltage_dividers in signal_analysis for the Audio.sch output, due to the connectivity tracing failure in single-sheet mode.",
+      "created_from": "FND-00000458",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

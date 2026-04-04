@@ -1,0 +1,83 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/OnBoard/projects/onboard-live-icepi-zero/src/icepi-zero.kicad_sch",
+      "status": "confirmed",
+      "summary": "ECP5 FPGA board with SDRAM, SPI flash, and FTDI USB. MEMS oscillator SIT8008 misidentified as crystal. Good power regulation and memory interface detection. Feedback networks duplicated with voltage dividers.",
+      "correct": [
+        {
+          "description": "Three switching regulators (TLV62569DBV) correctly detected with feedback dividers"
+        },
+        {
+          "description": "W9825G6KH SDRAM interface detected with ECP5 FPGA connection"
+        },
+        {
+          "description": "W25Q128JVS SPI flash interface detected with 6 shared signal nets"
+        },
+        {
+          "description": "TPD2EUSB30A ESD protection correctly identified on USB data lines"
+        },
+        {
+          "description": "Multiple power domains correctly identified: +1V1, +2V5, +3V3, +5V"
+        },
+        {
+          "description": "Decoupling analysis covers 4 rails with appropriate capacitance"
+        },
+        {
+          "description": "Three differential pairs detected for USB interfaces"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "SIT8008 MEMS oscillator classified as crystal \u2014 it is a packaged oscillator, not a crystal requiring load caps",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "All 3 voltage dividers duplicated in feedback_networks (same R5/R6, R9/R10, R13/R14 pairs)",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "TLV62569 estimated Vout=1.1V for all three regulators despite different output rails (+1V1, +2V5, +3V3)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "BOM sum (116) does not match total_components (121) \u2014 5 missing, only mounting_hole(4) accounted for",
+          "analyzer_section": "statistics"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No FPGA-specific analysis (ECP5 I/O banks, SERDES, PLL configuration)",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "FTDI FT2232 USB bridge not recognized as bus bridge/protocol converter",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Distinguish MEMS oscillators from crystals (no load caps needed)",
+        "Deduplicate voltage_dividers and feedback_networks when they share the same components",
+        "Verify regulator Vout estimates use correct feedback ratios per instance"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000088",
+      "repo": "hackclub/OnBoard",
+      "project": "projects_onboard-live-icepi-zero_src_icepi-zero",
+      "created": "2026-03-14T07:24:50.669950+00:00"
+    }
+  ]
+}

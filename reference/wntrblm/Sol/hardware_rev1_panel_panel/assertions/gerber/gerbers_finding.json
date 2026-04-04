@@ -1,0 +1,19 @@
+{
+  "file_pattern": "gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001379",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001379-AST-01",
+      "description": "INCORRECT: The gerber analyzer reports aligned=false with issue 'Width varies by 17.6mm across copper/edge layers'. The Edge.Cuts is 40.3mm wide while B.Cu is only 22.7mm wide. For a Eurorack front panel, the back copper layer typically only has pads for mounting hardware on one side (not spanning the full board width), making this width variation legitimate and expected \u2014 not an actual misalignment. The analyzer's heuristic incorrectly treats asymmetric feature placement as a coordinate misalignment.",
+      "created_from": "FND-00001379",
+      "check": {
+        "path": "alignment.aligned",
+        "value": true,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

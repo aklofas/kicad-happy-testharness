@@ -1,0 +1,204 @@
+{
+  "file_pattern": "SparkFun_RTK_Postcard.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001481",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001481-AST-01",
+      "description": "The statistics section correctly enumerates all component types. 84 total_components matches the actual schematic content. The 20 resistors (R1-R20), 12 capacitors (C1-C12), 5 ICs (U1-U5), 5 LEDs (D1,D2,D4,D6,D9), 4 non-LED diodes (D3,D5,D7,D8), 8 connectors (J1-J11 minus J3/J9/J10), 8 jumpers (JP1-JP8), 4 mounting holes, 4 fiducials, 5 test points, 1 transistor, 1 inductor, 1 fuse, 1 battery, 2 switches are all correct.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 84
+      }
+    },
+    {
+      "id": "FND-00001481-AST-02",
+      "description": "All five power rails are correctly extracted from the schematic. VCC_RF is the GNSS RF supply rail from the LG290P. VBUS is the raw USB bus voltage. 5V is the post-fuse USB power. 3.3V is regulated LDO output.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": {
+          "item": "VCC_RF"
+        }
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 5 items"
+    },
+    {
+      "id": "FND-00001481-AST-03",
+      "description": "The power_regulators section correctly identifies U2 as an LDO topology with input_rail 5V and output_rail 3.3V, estimated_vout 3.3V from the part number suffix.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "value": {
+          "ref": "U2",
+          "topology": "LDO",
+          "input_rail": "5V",
+          "output_rail": "3.3V"
+        }
+      }
+    },
+    {
+      "id": "FND-00001481-AST-04",
+      "description": "D3 (PESD0402 TVS on antenna net), D7 (PESD0603-240 TVS on 3.3V) and D8 (BAT60A Schottky for reverse polarity VBUS\u21925V) are all found in protection_devices. F1 (PPTC fuse) is also correctly listed.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001481-AST-05",
+      "description": "The rc_filters section correctly identifies R13 (10k) and C11 (1uF) as a low-pass filter on the ESP_RESET net with a 15.92 Hz cutoff, which is the classic RC reset filter for ESP32 auto-reset circuit.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "value": {
+          "resistor": {
+            "ref": "R13"
+          },
+          "capacitor": {
+            "ref": "C11"
+          },
+          "output_net": "ESP_~{RESET}"
+        }
+      }
+    },
+    {
+      "id": "FND-00001481-AST-06",
+      "description": "The lc_filters section identifies L1 (68nH) with C6 (100pF) with a resonant frequency of 61.03 MHz. This is a valid GNSS band RF supply filter (GPS L1 at 1575.42 MHz requires careful supply filtering; the LC values tune to the GNSS frequency range).",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "value": {
+          "inductor": {
+            "ref": "L1"
+          },
+          "capacitor": {
+            "ref": "C6"
+          }
+        }
+      }
+    },
+    {
+      "id": "FND-00001481-AST-07",
+      "description": "8 UART nets detected: LG-TXD3/RXD3 (GNSS debug UART to external header J5), ESP3/RX + ESP1/TX (ESP32\u2194CH342F channel 0), LG-RXD1/TXD1 (GNSS UART1\u2194CH342F), and LG-TXD2/RXD2 (GNSS UART2\u2194ESP32). This correctly reflects the multi-UART architecture with the dual-channel USB UART CH342F.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "FND-00001481-AST-08",
+      "description": "The voltage_dividers section correctly identifies R15 (3.3k) over R12 (10k) forming a 3.3V \u2192 ESP35/DeviceSense \u2192 GND divider with ratio 0.75188. This is connected to ESP32 analog input pin IA35 and test point TP6.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "value": {
+          "r_top": {
+            "ref": "R15"
+          },
+          "r_bottom": {
+            "ref": "R12"
+          },
+          "top_net": "3.3V"
+        }
+      }
+    },
+    {
+      "id": "FND-00001481-AST-09",
+      "description": "The usb_compliance section correctly identifies the USB-C connector J1 and passes the cc1_pulldown_5k1 and cc2_pulldown_5k1 checks (R1 and R2 are 5.1k resistors on CC1 and CC2). The USB ESD IC (U1, DT1042-04SO) is also correctly detected.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "usb_compliance.connectors",
+        "op": "contains_match",
+        "value": {
+          "connector": "J1",
+          "is_type_c": true
+        }
+      }
+    },
+    {
+      "id": "FND-00001481-AST-10",
+      "description": "INCORRECT: The assembly_complexity section reports tht_count: 0 and all 85 components as SMD. However, J11 (1x10 2.54mm header) and J5 (1x09 2.54mm header) are through-hole pin headers. The PCB analyzer correctly counts 3 THT footprints (J1 USB-C has THT anchor pads, J5, J11). The schematic-level assembly complexity analyzer may not be detecting connector THT type from schematic symbol types, only from footprint names.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "assembly_complexity.tht_count",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001481-AST-11",
+      "description": "The bus_analysis.spi array is empty. However, nets SHLD_SCK, SHLD_PICO, SHLD_POCI, and SHLD_~{CS} are present and connected from U5 (ESP32-PICO-V3-02) to J5 (9-pin shield header), forming a complete SPI bus. The net_classification section does classify SHLD_SCK as 'spi', but the bus analysis does not aggregate them into a detected SPI bus. The four SPI signals use ESP32 pins IOA32 (SCK), IOA26 (MOSI/PICO), IOA25 (MISO/POCI), and a chip select pin.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001481-AST-12",
+      "description": "The bus_analysis.i2c entries for SDA_1 and SCL_1 both report has_pull_up: false and empty pull_ups arrays. However, R17 (2.2k) connects to SDA_1 and R18 (2.2k) connects to SCL_1 as pull-up resistors for the Qwiic connector I2C bus (J4 and J7). The other end of R17 and R18 connects through jumper JP6 to 3.3V, allowing the pull-up to be enabled or disabled. The analyzer fails to detect these because the pull-up resistors connect through a solder jumper rather than directly to a power rail. The schematic note explicitly says 'I\u00b2C pins have internal 2.2k pull-ups' (referring to U5/ESP32 internal pull-ups being present, separate from these external ones).",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "contains_match",
+        "value": {
+          "net": "SDA_1",
+          "has_pull_up": true
+        }
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001481-AST-13",
+      "description": "Q2 is a dual NPN transistor (MBT3904DW1 in SOT-363) used as the classic ESP32 auto-reset circuit. Transistor A is driven by CH342-DTR (via R16 base resistor) with collector to ESP_RESET, and transistor B is driven by CH342-RTS (via R11 base resistor) with collector to ESP0/BOOT. This is the standard DTR/RTS auto-programming circuit. The transistor_circuits list is empty despite Q2 being present and forming a well-defined switching circuit. The circuit includes base resistors R11 and R16 (2.2k each).",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001481-AST-14",
+      "description": "The rf_chains and rf_matching arrays are both empty. The board has a clear RF front-end: J2 (SMA edge), J6 (U.FL), antenna selector JP4 (3-pole jumper), D3 (ESD protection on antenna net), R20 (0-ohm DNP series), L1 (68nH) + C6 (100pF) LC matching/filter, and U3 (LG290P GNSS) pin RF_IN on net ANT_IN. This is a complete RF signal chain from antenna input to GNSS receiver that should be detected.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001481-AST-15",
+      "description": "D5 (PMEG4005EJ Schottky diode in SOD-323) is connected with its anode to 3.3V and cathode to Net-(D5-K), which then connects to the V_BCKP backup battery supply net. This is a power isolation/ORing diode used for the ML414H backup battery (BT1) circuit, preventing the main 3.3V rail from backfeeding into the backup battery. It should be detected as a protection device (or at minimum as a power isolation diode), but protection_devices only lists D3, D7, D8, and F1.",
+      "created_from": "FND-00001481",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "value": {
+          "ref": "D5"
+        }
+      },
+      "aspirational": false
+    }
+  ]
+}

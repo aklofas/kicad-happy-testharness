@@ -1,0 +1,45 @@
+# Findings: esp32 / esp32_esp32
+
+## FND-00002042: 6 (NC)-suffixed components not flagged as DNP; ESP32 auto-reset circuit (EN/IO0 via S8050 transistors) correctly extracted
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_esp32_esp32_esp32.sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- The two S8050 NPN transistors (Q1, Q2) forming the standard ESP32 auto-reset circuit (DTR/RTS from CP2102N driving EN and IO0) are correctly identified as transistor_circuits with their base resistors (R21, R22 at 12K). The CP2102N USB-UART bridge (U3) and NCP1117-3.3 LDO regulator (U2) are also correctly identified in the subcircuits and signal_analysis.power_regulators sections.
+
+### Incorrect
+- Components R15, R19, R20, R25, R7, and C23 all have '(NC)' in their value strings (e.g., '5K(1%)(NC)', '0R(1%)(NC)'), indicating they are not to be placed. The analyzer reports dnp_parts=0 and dnp=false for all of them. This is a common convention in KiCad 5 designs where the DNP flag did not exist, and the (NC) suffix in the value field was used instead. The analyzer should recognize this pattern and count/flag them as DNP.
+  (statistics)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002043: copper_layers_used reported as 0 on a 4-layer board with zone-plane inner layers
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: pcb_esp32_esp32_esp32.kicad_pcb.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- The PCB defines 4 copper layers: F.Cu (0), Gnd (1), Vdd (2), and B.Cu (31). Layers Gnd and Vdd are inner planes filled entirely with GND and +3V3 zones respectively (both zones are filled, area ~15808 mm2). However copper_layers_used=0 and copper_layer_names=[] because the counter only counts layers with track segments, not zones. Zone-only planes are copper and should be included in the layer count. The board is a 4-layer design, not a 0-layer design.
+  (statistics)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

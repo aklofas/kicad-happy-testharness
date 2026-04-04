@@ -1,0 +1,60 @@
+{
+  "file_pattern": "Neo6502PC-CPU_Rev_B.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000171",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000171-AST-01",
+      "description": "All 8 ICs correctly identified (RP2040, W65C02S, etc.)",
+      "created_from": "FND-00000171",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000171-AST-02",
+      "description": "SPI bus between RP2040 and peripheral ICs not detected",
+      "created_from": "FND-00000171",
+      "check": {
+        "path": "signal_analysis.bus_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000177-AST-01",
+      "description": "All 8 ICs correctly identified (RP2040, W65C02S, CH217K, CH334S, ZD25Q16B, 3x 74LVC245)",
+      "created_from": "FND-00000177",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000177-AST-02",
+      "description": "USB-C CC 5.1k pulldowns pass compliance",
+      "created_from": "FND-00000177",
+      "check": {
+        "path": "usb_compliance",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000177-AST-03",
+      "description": "SPI bus (SPI1_RX/CSn/SCK/TX) not detected despite clear net names",
+      "created_from": "FND-00000177",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

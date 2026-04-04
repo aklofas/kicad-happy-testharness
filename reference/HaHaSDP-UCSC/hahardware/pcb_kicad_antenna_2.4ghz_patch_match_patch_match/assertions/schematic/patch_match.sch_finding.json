@@ -1,0 +1,19 @@
+{
+  "file_pattern": "patch_match.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002169",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002169-AST-01",
+      "description": "INCORRECT: AE1 with value 'Antenna_Shield' and footprint 'Antennas:Patch_Antenna_2.4GHz' is classified as type 'ic'. This is a PCB patch antenna (a copper structure on the PCB), not an integrated circuit. The component has two pins (feed/ground) and represents the radiating element in a 2.4GHz impedance matching network schematic. Similar misclassification occurs in pcb_kicad_antenna_2.4ghz_patch_balun_patch_balun.sch.json where 'Antenna_Shield' is also classified as IC.",
+      "created_from": "FND-00002169",
+      "check": {
+        "path": "components[?reference=='AE1'].type",
+        "op": "equals",
+        "value": "ic"
+      },
+      "aspirational": true
+    }
+  ]
+}

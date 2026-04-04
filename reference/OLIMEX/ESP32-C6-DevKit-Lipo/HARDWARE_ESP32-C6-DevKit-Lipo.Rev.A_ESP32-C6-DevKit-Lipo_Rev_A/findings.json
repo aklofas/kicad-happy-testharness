@@ -1,0 +1,83 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "HARDWARE_ESP32-C6-DevKit-Lipo.Rev.A_ESP32-C6-DevKit-Lipo_Rev_A.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Systemic reference resolution bug: analyzer reads property 'Reference' instead of project-specific instance reference, producing 15 wrong refs and 28 missing/wrong component refs; I2C SDA bus repor...",
+      "correct": [
+        {
+          "description": "The power_regulators section correctly identifies U2 (TPS62A02ADRLR) as a switching regulator with inductor L1, feedback network R15 (180k) / R17 (40.2k), and estimates Vout = 3.287V using Vref = 0.6V heuristic. This is close to the datasheet formula: Vout = 0.6 * (1 + 180k/40.2k) = 0.6 * 5.478 = 3.287V. The output and input rails are correctly identified. U2 is one component that happens to have the same reference in both the property and the instances block for this project.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The usb_compliance section correctly identifies both USB-C connectors as Type-C (is_type_c: true) and passes the cc1_pulldown_5k1 and cc2_pulldown_5k1 checks for both. This matches the schematic: R24, R25, R26, R27 (all 5.1k) are placed on the CC1/CC2 pins of the two USB-C receptacles as required for a USB device. VBUS ESD protection correctly fails (no ESD diode on VBUS is visible). These refs (R24-R27) happen to match between the property Reference and the instance Reference, so this detection is unaffected by the instance-ref bug.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The ic_pin_analysis entry for U1 (ESP32-C6-MINI-1-N4) shows total_pins: 53 (53 pin UUIDs in the components entry) and unconnected_pins: 0. GPIO pin names are correctly mapped to their net labels (e.g. pin 15 IO6/LP_I2C_SDA \u2192 GPIO6{slash}LP_I2C_SDA, pin 16 IO7/LP_I2C_SCL \u2192 GPIO7{slash}LP_I2C_SCL, pin 17 USB_D- \u2192 USB_D-, pin 18 USB_D+ mapped). The 4 NC pins (21, 32, 33, 34, 35) and multiple GND paddle pins (1, 2, 11, 14, 36\u201353) are reflected correctly. The ESP32 module is one of the components where the instance Reference matches the property Reference (both 'U1'), so this analysis is not corrupted.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Despite 77 component objects in the components array (due to multi-project ref duplication), the statistics.total_components = 62 correctly equals the count of unique reference strings (Counter of refs shows 62 unique values). This means the stats counter is doing unique-ref deduplication rather than raw list length. The 15 extra entries are 'phantom' components from other projects that share the same default property Reference. While the deduplication produces the right total, the uniqueness is illusory \u2014 'C36' appears 4 times representing 4 completely different physical capacitors, not 4 copies of the same.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "This is an Olimex multi-project shared schematic file where components belong to multiple projects and the correct per-project reference is stored in the `instances` block under the matching project name ('ESP32-C6-DevKit-Lipo_Rev_A'), not in the `property \"Reference\"` field. The analyzer reads the property-level Reference (e.g. 'U1', 'R7', 'C36') instead of the instance-level reference. Confirmed misassignments include: TP4054-42-SOT25-R battery charger should be U3 but is labeled U1 (creating a false duplicate with the actual U1 ESP32-C6 module); CH340X USB-UART bridge should be U4 but is labeled U5; UEXT connector should be UEXT1 but is labeled UEXT_3V3; user button should be USER1 but is labeled RST?; resistor R29 is labeled R?; capacitors C2, C9, C12, C13 are all labeled C36. In total 28 expected project-specific refs (C1, C2, C4, C5, C6, C9, C11, C12, C13, U3, U4, UEXT1, USER1, R1, R3, R5, R11, R12, R13, R16, R18, R19, R20, R29, etc.) are missing from output and 13 wrong refs appear instead (R66, R67, R68, C35, C36, C63, C64, D15, D16, RST?, R?, UEXT_3V3, U5 from other projects). The `annotation_issues.duplicate_references` list correctly identifies C36, R7, R8, R9, D1, etc. as duplicates but this is a symptom of the root bug rather than actual ERC errors in the design.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The design_analysis.bus_analysis.i2c and signal_analysis.design_observations both report GPIO6/LP_I2C_SDA as having no pullup (has_pull_up: false, pullup_resistor: null). In reality R7 (2.2k/R0402) has pin 1 on +3.3V and pin 2 on the GPIO6{slash}LP_I2C_SDA net, making it a valid 2.2k SDA pullup to 3.3V. The false negative is a secondary consequence of the duplicate-ref bug: R7 appears three times in the components list (3 different physical components in other projects all resolving to 'R7'), causing the net analyzer to attach R7 to multiple contradictory nets and likely failing to clearly identify R7 as a SCL/SDA pullup for this specific project. The SCL pullup (R8, reported as 10k to +5V) is also suspect \u2014 the actual R8 in this project is 2.2k to +3.3V for SCL, not 10k to +5V.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The TP4054-42-SOT25-R / BL4054B-42TPRN battery charger IC has lib_id 'OLIMEX_IC:BL4054B-42TPRN(SOT23-5)'. Its project-specific instance reference in ESP32-C6-DevKit-Lipo_Rev_A is U3, but the analyzer assigns it reference U1. This creates two components with reference U1 in the output. Downstream effects: (1) design_analysis.power_domains.ic_power_rails shows U1 with value 'TP4054-42-SOT25-R' on rails VBAT and unnamed_29 \u2014 these belong to U3, not U1; (2) design_analysis.design_observations shows a decoupling warning for 'U1' with value 'TP4054-42-SOT25-R' missing VBAT decap \u2014 but this observation is attributed to the wrong ref; (3) ic_pin_analysis contains two U1 entries (one ESP32, one TP4054); (4) subcircuits contains two U1 subcircuits. The actual U3 (TP4054) is absent from the output entirely.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The statistics and annotation_issues report RST? and R? as unannotated components. The schematic source shows these two symbols have project-specific instance references 'USER1' (a YTS-A016-X user button, reference RST? only in the ESP32-C3-DevKit-Lipo_Rev_B project) and 'R29' (100R/R0402, reference R? only in the ESP32-C3-DevKit-Lipo_Rev_B project). For ESP32-C6-DevKit-Lipo_Rev_A the instances block gives them USER1 and R29 respectively. Since the analyzer uses the property-level Reference ('RST?' and 'R?') instead of the instance-level reference, it incorrectly reports annotation errors. The 'unannotated' list in annotation_issues should be empty for this project.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The pwr_flag_warnings section says +5V, +3.3V, and GND have 'power_in pins but no power_out or PWR_FLAG'. The schematic has 7 PWR_FLAG power symbols placed on nets in the design. However, all 7 are reported in power_symbols with net_name 'PWR_FLAG' rather than with the net they are actually connected to (e.g., +5V, +3.3V, GND). The PWR_FLAG power symbol contributes a 'power_out' pin to whatever net it touches. If the analyzer is recording the PWR_FLAG symbol's own net name (its label) rather than the wire net it connects to, it cannot properly credit the rails as having PWR_FLAG markers. This appears to be a separate issue from the instance-reference bug, possibly in how PWR_FLAG symbol connectivity is resolved.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Two RC filter detections list C36 as the capacitor (refs R10+C36 and R?+C36). With correct reference resolution, C36 in this project is actually C9 (a DNP 120pF cap in the feedback network) or C12 (100nF bypass cap). Specifically: the low-pass filter 'R10 + C36 (100nF) on GPIO9/USER_BUT net' should reference the actual capacitor ref (likely C11 or similar) not C36. Additionally the RC filter 'R? + C36' uses the unannotated R? which should be R29 \u2014 the RC filter detection is proceeding on wrong component identities throughout. The subcircuit for U5 (CH340X, actual ref U4) also lists C35 and D15/D16 as neighbors \u2014 these should have different refs in this project.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "OLIMEX/ESP32-C6-DevKit-Lipo",
+      "project": "HARDWARE_ESP32-C6-DevKit-Lipo.Rev.A_ESP32-C6-DevKit-Lipo_Rev_A",
+      "created": "2026-03-23T20:32:16.145100+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000510"
+    }
+  ]
+}

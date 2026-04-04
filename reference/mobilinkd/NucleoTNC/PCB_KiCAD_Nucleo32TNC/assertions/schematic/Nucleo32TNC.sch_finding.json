@@ -1,0 +1,50 @@
+{
+  "file_pattern": "Nucleo32TNC.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000993",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000993-AST-01",
+      "description": "9 RC filters detected including the audio path filters: 32.88 Hz output coupling cap (R4/C2), 5.31 kHz anti-aliasing filters (R7/C6, R16/C7), 9.18 kHz (R14 with parallel C6+C8). These match the audio TNC use case.",
+      "created_from": "FND-00000993",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000993-AST-02",
+      "description": "52 components correctly counted with correct breakdown: 3 ICs, 2 transistors, 22 resistors, 13 capacitors, 4 LEDs, 2 diodes, 1 connector, 4 mounting holes, 1 switch. BOM values and footprints correctly extracted.",
+      "created_from": "FND-00000993",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000993-AST-03",
+      "description": "The schematic has a 24LC32 I2C EEPROM (U2) with I2C_SCL and I2C_SDA nets and 2K2 pull-up resistors (R17, R18), but bus_analysis.i2c is empty. Root cause: U2 has pins:[] in the output (KiCad 5 .sch IC pin connections not parsed), so the I2C bus detector finds no IC pins on the I2C nets.",
+      "created_from": "FND-00000993",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000993-AST-04",
+      "description": "Q1 and Q2 are 2N7000 N-channel MOSFETs used as PTT (push-to-talk) switches. transistor_circuits in signal_analysis is empty. The transistor detector is missing these, likely because pin connections to the FET are not parsed (same KiCad 5 pin extraction issue).",
+      "created_from": "FND-00000993",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "file_pattern": "Kyeboard.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000637",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000637-AST-01",
+      "description": "footprint_count=241, copper_layers=4 (F.Cu/In1.Cu/In2.Cu/B.Cu), via_count=725, routing_complete=true, unrouted=0, board size 375.1x120.49mm all correct.",
+      "created_from": "FND-00000637",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000637-AST-02",
+      "description": "J1 (1x13 pin socket at x=134.4mm) and J4 (1x24 pin socket at x=171.2mm) have courtyards that overlap in the x=[111.0,136.2] region. The 87.192mm\u00b2 overlap value is geometrically correct. These are likely adjacent MCU breakout connectors placed in the same row.",
+      "created_from": "FND-00000637",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000637-AST-03",
+      "description": "Board dimensions 375.1x120.49mm correctly identified as exceeding the 100x100mm standard pricing tier threshold at JLCPCB.",
+      "created_from": "FND-00000637",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000637-AST-04",
+      "description": "The PCB contains 74 SW* (Cherry MX switch) footprints and 72 BAT60A diodes in a regular grid pattern forming an 80-key keyboard matrix. The placement analysis doesn't characterize this as a key matrix layout, which would be useful context for understanding the board's primary function.",
+      "created_from": "FND-00000637",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

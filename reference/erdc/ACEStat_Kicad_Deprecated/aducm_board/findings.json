@@ -1,0 +1,159 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ADM715x.sch.json",
+      "status": "promoted",
+      "summary": "ADM7154 LDO regulator not detected in power_regulators",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "U3 (ADM7154, an Analog Devices ultra-low noise LDO regulator from the ADM715x family) is present with VIN/VOUT/EN pins and 5 decoupling capacitors, but signal_analysis.power_regulators is empty []. The subcircuits section captures U3 as a neighbor-IC cluster but does not classify it as a linear regulator. The lib_id 'SIB_Footprint:ADM7514' and value 'ADM7154' both contain 'ADM7' which should be matchable. Correct output would include a power_regulator entry with regulator_type='linear', input_rail='+VIN', output_rail='+VOUT'.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "erdc/ACEStat_Kicad_Deprecated",
+      "project": "aducm_board",
+      "created": "2026-03-23T18:41:56.810271+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000332"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ADM751x.sch.json",
+      "status": "promoted",
+      "summary": "ADM7514 LDO regulator not detected in power_regulators",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "U3 (ADM7514, Analog Devices ultra-low noise LDO from the ADM751x family) is present with VIN/VOUT/EN/BYP/REF/REF_SENSE pins and 5 decoupling capacitors. signal_analysis.power_regulators is empty []. The ADM7514 is clearly a linear regulator (pins named VOUT, VIN, EN confirm this). A power_regulator entry with regulator_type='linear', input_rail='+VIN', output_rail='+VOUT' should be generated.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "erdc/ACEStat_Kicad_Deprecated",
+      "project": "aducm_board",
+      "created": "2026-03-23T18:41:56.810290+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000333"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "FTDI.sch.json",
+      "status": "promoted",
+      "summary": "Net connectivity errors: named nets assigned to wrong FT232RQ pins; UART interface not detected for FT232RQ USB-to-UART bridge",
+      "correct": [
+        {
+          "description": "The net assignments for U2 (FT232RQ) are systematically incorrect. In the source, USBD+ label connects to pin 14 (USBDP) and USBD- connects to pin 15 (USBDM). In the JSON, net 'USBD+' contains pin 18 (RESET#) and 'USBD-' contains pin 23 (NC) \u2014 both wrong. Similarly, '5VUSB' is assigned to pin 27 (OSCI) and '3V3VOUT' contains pin 14 (USBDP) and pin 28 (OSCO). The custom SIB_Footprint:FT232RQ symbol has pins at non-standard coordinates, causing the wire-endpoint to pin-position matching to map named nets to the wrong pins. This produces incorrect differential_pairs reporting (esd_protection wrongly attributed), wrong erc_warnings, and the USBD+/USBD- differential pair is built from incorrect pin associations.",
+          "analyzer_section": "nets",
+          "check": {
+            "path": "nets.USBD+.pins[0].pin_name",
+            "op": "eq",
+            "value": "USBDP"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "U2 is an FT232RQ, a USB full-speed to UART/serial bridge. The design has hierarchical labels SIN and SOUT (mapped to CBUS4 and CBUS3 in the net table, though this itself may be an artifact of the pin-mapping error). The bus_analysis.uart array is empty. Given the device name FT232RQ and the presence of TXD/RXD/RTS/CTS/DTR/DSR pins (visible in the component pins list), a UART interface should be detected.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "erdc/ACEStat_Kicad_Deprecated",
+      "project": "aducm_board",
+      "created": "2026-03-23T18:41:56.810294+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000334"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "VXO7803-500-M.sch.json",
+      "status": "promoted",
+      "summary": "PS1 (VXO7803-500-M) net connectivity inverted: GND and +VIN pins swapped; VXO7803-500-M DC-DC converter not detected as power_regulator and misclassified as connector",
+      "correct": [
+        {
+          "description": "In the source schematic, PS1 pin 1 is named '+VIN' (type=input) and pin 2 is named 'GND' (type=power_in). However the JSON nets show: net 'GND' contains PS1 pin_number='1' (pin_name='+VIN') and net '+VIN' contains PS1 pin_number='2' (pin_name='GND'). The pin-to-net assignment is inverted \u2014 the +VIN pin is placed on the GND net and the GND pin is placed on the +VIN net. This is a pin-coordinate resolution error for the custom SIB_Footprint:VXO7803-500-M symbol. Additionally, PS1's +VO output pin (pin 3) is on '__unnamed_0' which is not connected to +VOUT (the +VOUT net only has L1 pin 1), confirming the output path of the converter is also not correctly traced.",
+          "analyzer_section": "nets",
+          "check": {
+            "path": "nets.+VIN.pins[0].pin_name",
+            "op": "eq",
+            "value": "+VIN"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "PS1 (CUI VXO7803-500-M) is a 3.3V/500mA isolated DC-DC converter module. It is classified as type='connector' because it uses a custom lib_id 'SIB_Footprint:VXO7803-500-M' with no keyword matching. signal_analysis.power_regulators is empty. The component has +VIN input, GND, +VO output, and ON/OFF control pins \u2014 a clear switching power supply topology. The output LC filter (L1 10-47uH with C36/C37 22uF output caps) is also not detected under lc_filters. The component should be classified as ic/power_converter rather than connector, and power_regulators should include an entry for PS1.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "erdc/ACEStat_Kicad_Deprecated",
+      "project": "aducm_board",
+      "created": "2026-03-23T18:41:56.810298+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000335"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ECSensor.sch.json",
+      "status": "new",
+      "summary": "Ferrite bead pins not resolved: FB3, FB4, FB5 have empty pins arrays",
+      "correct": [
+        {
+          "description": "All three ferrite beads (FB3, FB4, FB5 from Device:Ferrite_Bead) have 'pins': [] in the component entries, and the WE and RE nets have empty pins lists (0 component connections despite having point_count of 5 and 3 respectively). In the source schematic, each ferrite bead is placed at 90-degree rotation and connects the electrode signals (CE, WE, RE) to the EC sensor connector pins. The pin-position resolution for rotated KiCad 5 legacy ferrite_bead symbols fails, leaving the nets WE and RE without any driving component connections. The CE net also only shows C33 pin 2, with no FB3 connection even though FB3 is wired between CE and J3 pin 1.",
+          "analyzer_section": "components",
+          "check": {
+            "path": "components[2].pins",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "erdc/ACEStat_Kicad_Deprecated",
+      "project": "aducm_board",
+      "created": "2026-03-23T18:41:56.810300+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000336"
+    }
+  ]
+}

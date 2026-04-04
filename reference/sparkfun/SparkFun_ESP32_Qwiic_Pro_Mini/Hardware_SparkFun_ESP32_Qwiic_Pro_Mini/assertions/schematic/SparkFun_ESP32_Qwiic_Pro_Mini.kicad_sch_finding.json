@@ -1,0 +1,61 @@
+{
+  "file_pattern": "SparkFun_ESP32_Qwiic_Pro_Mini.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001395",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001395-AST-01",
+      "description": "The schematic reports 26 total_components with correct type distribution: 4C, 2D (LED), 2FID, 4 connectors, 1 jumper, 5R, 2SW, 3 ICs (U1=ESP32, U2=LDO, U3=aesthetic), 2 logo graphics (G1, G3). The BOM de-duplicates correctly into 19 unique parts. All refs match what is visible in the design.",
+      "created_from": "FND-00001395",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 26,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001395-AST-02",
+      "description": "power_regulators correctly identifies U2 as an LDO topology with input_rail=VCC, output_rail=+3.3V, estimated_vout=3.3V via fixed_suffix detection. The power budget also correctly assigns U1 (ESP32) load to the +3.3V rail at 240mA, which is within the AP2112K-3.3's 600mA rating.",
+      "created_from": "FND-00001395",
+      "check": {
+        "path": "signal_paths.power_regulators[0].topology",
+        "value": "LDO",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001395-AST-03",
+      "description": "bus_analysis.uart contains two entries for ESP_1{slash}TX and ESP_3{slash}RX, each connected to U1 (ESP32). The debug connector J1 (6-pin UART header) is also correctly identified as a UART debug connector in test_coverage.debug_connectors. Net naming conventions (slash-notation for TX/RX) are handled correctly.",
+      "created_from": "FND-00001395",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "value": 2,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001395-AST-04",
+      "description": "The design has a Qwiic (JST-SH 4-pin I2C) connector J5, and R3/R4 (both 2.2k) are I2C pull-up resistors on the +3.3V rail. The bus_analysis.i2c array is empty. The ESP32-PICO-V3-02 exposes I2C on IO21/IO22 (ESP_21/ESP_22 nets), which are broken out on J3. The analyzer should have detected the Qwiic connector by footprint name or description ('4 pin JST 1mm polarized connector for I2C') and the pull-up topology.",
+      "created_from": "FND-00001395",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001395-AST-05",
+      "description": "U1 is an ESP32-PICO-V3-02 \u2014 a module with integrated 2.4GHz WiFi and Bluetooth. The rf_chains and rf_matching arrays are both empty, and no wireless protocol is identified in the signal detectors. The component keywords field contains 'RF Radio BT ESP ESP32 Espressif onboard PCB antenna', which should be sufficient for the analyzer to flag this as a WiFi+BT capable device and surface it under a wireless or rf_module detector.",
+      "created_from": "FND-00001395",
+      "check": {
+        "path": "signal_paths.rf_chains",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

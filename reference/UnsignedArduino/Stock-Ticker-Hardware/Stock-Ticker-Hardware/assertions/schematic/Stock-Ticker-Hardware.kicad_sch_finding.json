@@ -1,0 +1,71 @@
+{
+  "file_pattern": "Stock-Ticker-Hardware.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001591",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001591-AST-01",
+      "description": "The schematic correctly identifies 19 unique components: 1 IC (74AHCT125, classified as ic), 1 module (RaspberryPi_Pico_W), 4 capacitors, 2 resistors, 6 connectors, 4 mounting holes, 1 switch. Power rails (+3.3V, +5V, GND) and 41 nets are correct. The 23 component instances vs 19 unique reflect the 5-unit representation of U1 in the schematic.",
+      "created_from": "FND-00001591",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 19
+      }
+    },
+    {
+      "id": "FND-00001591-AST-02",
+      "description": "INCORRECT: C3 ('10 \u03bcF') is parsed as farads=1e-11 (should be 1e-5 F). C1, C2, C4 ('0.1 \u03bcF') are parsed as farads=0.1 (should be 1e-7 F). The Unicode \u00b5 prefix is not handled, treating '0.1 \u03bcF' as 0.1 F (100,000 \u00b5F) and '10 \u03bcF' as something around 10 pF. This cascades to decoupling analysis (total_capacitance_uF reports 200000.0 \u00b5F instead of ~10.2 \u00b5F) and RC filter time constants (RC = 100s instead of ~100\u00b5s for R=1k\u03a9, C=0.1\u00b5F).",
+      "created_from": "FND-00001591",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "contains_match",
+        "value": {
+          "rail": "+5V",
+          "total_capacitance_uF": {
+            "less_than": 100
+          }
+        }
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001591-AST-03",
+      "description": "INCORRECT: Two RC filter instances are detected (R2+C4 and R1+C4), both reporting cutoff_hz=0.0 and enormous time constants (100s and 1000s respectively). The correct cutoff for R2(1k\u03a9)+C4(0.1\u00b5F) is ~1592 Hz and for R1(10k\u03a9)+C4(0.1\u00b5F) is ~159 Hz. The root cause is the \u00b5F\u2192F conversion bug. Additionally, R1 (10k\u03a9 pull-up) and C4 do not actually form a standalone RC filter \u2014 C4 is the SW1 debounce capacitor connected between the switch output and GND, not between R1 and GND, making one of the two detections a false positive.",
+      "created_from": "FND-00001591",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "value": {
+          "cutoff_hz": {
+            "greater_than": 100
+          }
+        }
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001591-AST-04",
+      "description": "INCORRECT: The assembly_complexity section reports smd_count=11 and tht_count=12, with package_breakdown showing other_SMD:11. However, only A1 (RaspberryPi_Pico_W_SMD_HandSolder) has an SMD footprint; all other components (U1 DIP-14, C1-C4 THT caps, R1-R2 axial THT, SW1 push button THT, J1-J6 connectors THT, H1-H4 mounting holes) are through-hole. The PCB analyzer correctly reports smd_count=1 and tht_count=14. The schematic assembly analyzer overcounts SMD by treating the 5 repeated units of U1 plus connectors as SMD.",
+      "created_from": "FND-00001591",
+      "check": {
+        "path": "assembly_complexity.smd_count",
+        "op": "less_than",
+        "value": 3
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001591-AST-05",
+      "description": "The schematic has nets named CLK, CS, and DOUT routed through a 74AHCT125 quad bus buffer to connector J1 (JST 5-pin, likely for a display module such as MAX7219 or similar). These three nets constitute a 3-wire SPI-like bus (write-only / half-duplex). The analyzer reports spi: [] in bus_analysis despite the presence of these named signals.",
+      "created_from": "FND-00001591",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

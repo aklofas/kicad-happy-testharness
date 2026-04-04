@@ -1,0 +1,19 @@
+{
+  "file_pattern": "LoRa_Click.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002391",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002391-AST-01",
+      "description": "The bus_analysis reports 4 SPI buses for a single-IC (U1) design that has two physical SPI interfaces (SCK/MOSI/MISO and vSCK/vMOSI/vMISO). Each physical bus is detected twice: bus_id '0' and 'pin_J0' both reference the SCK/MOSI/MISO nets, and bus_id 'V' and 'pin_M1' both reference vSCK/vMOSI/vMISO. This appears to be a deduplication bug where the same signal group is matched from different starting anchor points.",
+      "created_from": "FND-00002391",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "max_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

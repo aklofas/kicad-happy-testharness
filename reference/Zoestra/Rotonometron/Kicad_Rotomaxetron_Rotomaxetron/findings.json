@@ -1,0 +1,205 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Rotomaxetron.kicad_sch",
+      "status": "new",
+      "summary": "RP1 (RP2040+ dev board) classified as 'resistor' due to 'RP' reference prefix heuristic",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "lib_id is 'Custom:RP2040+', value is 'RP2040+'. The analyzer apparently mapped the 'RP' prefix to resistor (resistor pack convention). Should be 'ic' or 'mcu'. Also PWR_FLAG warnings fire on GND/+5V for this handwired board \u2014 likely false positives for a board using a dev board as power source.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Zoestra/Rotonometron",
+      "project": "Kicad_Rotomaxetron_Rotomaxetron",
+      "created": "2026-03-24T00:01:01.887989+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001217"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Kicad_Rotonometron_PCB_Rotonometron_PCB.kicad_sch",
+      "status": "promoted",
+      "summary": "Key matrix with 44 switches not detected; also Antenna_Dipole misclassified as 'ic'",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "Board has 44 switches routed via PCA9506BS I2C I/O expanders (not a direct row/col net pattern), so key_matrices=[] is understandable \u2014 but worth noting. Separately, 'Antenna_Dipole' (ref AE1) is typed as 'ic' instead of 'connector' or 'other'. The addressable LED chain (31x SK6812) is correctly detected.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Zoestra/Rotonometron",
+      "project": "Kicad_Rotomaxetron_Rotomaxetron",
+      "created": "2026-03-24T00:01:01.888005+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001218"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Kicad_Rotonometron_PCB_rev2_Rotonometron_V2_Rotonometron_V2.kicad_sch",
+      "status": "new",
+      "summary": "Component classification, power rail detection, and statistics look accurate",
+      "correct": [
+        {
+          "description": "111 components correctly parsed with proper type breakdown (switches, LEDs, resistor_network, ICs). Power rails +5V/GND detected. Missing MPN list is complete. The resistor_network type for RA* refs is correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Zoestra/Rotonometron",
+      "project": "Kicad_Rotomaxetron_Rotomaxetron",
+      "created": "2026-03-24T00:01:01.888008+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001219"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Rotomaxetron.kicad_pcb",
+      "status": "new",
+      "summary": "Handwired board correctly shows 0 tracks/nets/copper layers despite 61 footprints",
+      "correct": [
+        {
+          "description": "Rotomaxetron is explicitly a handwired keyboard (title: 'RotoMaxetron Handwired'). PCB file is used only for footprint placement/reference, not routing. analyzer correctly reports copper_layers_used=0, track_segments=0. Board outline at 217x168mm is also correctly computed.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Zoestra/Rotonometron",
+      "project": "Kicad_Rotomaxetron_Rotomaxetron",
+      "created": "2026-03-24T00:01:01.888010+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001220"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Kicad_Rotonometron_PCB_Rotonometron_PCB.kicad_pcb",
+      "status": "new",
+      "summary": "board_width_mm/board_height_mm are null despite 56 Edge.Cuts entries present",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The Edge.Cuts geometry is embedded inside footprint fp_rect entries rather than as top-level gr_line/gr_arc objects. The analyzer only parses top-level board outline graphics, so it reports 0 edges and null dimensions. This is a known limitation \u2014 the analyzer cannot extract board dimensions when the outline lives inside footprint courtyard/edge rectangles. The 4-layer routed board (3160 segments, 147 footprints, net_count=184) is otherwise correctly analyzed.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Zoestra/Rotonometron",
+      "project": "Kicad_Rotomaxetron_Rotomaxetron",
+      "created": "2026-03-24T00:01:01.888012+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001221"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Kicad_Rotonometron_PCB_rev2_Rotonometron_V2_RotoSplit_RotoSplit.kicad_pcb",
+      "status": "new",
+      "summary": "net_count=0 is correct \u2014 all 72 track segments are on net 0 (unassigned), incomplete design",
+      "correct": [
+        {
+          "description": "Source file confirms all segments use '(net 0)', meaning this is a partially-placed board where routes haven't been assigned to named nets yet. routing_complete=true is technically correct (no ratsnest unrouted count). Board dimensions 168x154mm are correctly computed from top-level Edge.Cuts.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Zoestra/Rotonometron",
+      "project": "Kicad_Rotomaxetron_Rotomaxetron",
+      "created": "2026-03-24T00:01:01.888014+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001222"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "Kicad_Rotonometron_PCB_rev2_Rotonometron_V2_rotonometron gerber",
+      "status": "new",
+      "summary": "gerber_files=0 and all required layers missing despite drill files correctly parsed \u2014 gerber files not found/read",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The directory contains drill files (.drl) which are correctly parsed (770 total holes, PTH/NPTH classified). However gerber_files=0 and found_layers=[] with all 5 required layers missing. The gerber .gbr/.gtl/.gbl files are either not present in this directory or have non-standard extensions not recognized by the analyzer. This triggers a false 'incomplete=true' but the drill data itself is fully correct.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Zoestra/Rotonometron",
+      "project": "Kicad_Rotomaxetron_Rotomaxetron",
+      "created": "2026-03-24T00:01:01.888016+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001223"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "Kicad_Rotonometron_PCB_rotonometron gerber",
+      "status": "new",
+      "summary": "Both PCB gerber directories produce identical drill analysis \u2014 correctly represents drill-only exports",
+      "correct": [
+        {
+          "description": "Both gerber directories (PCB and PCB_rev2) contain only drill files, no copper/mask/silkscreen gerbers. The drill classification using X2 attributes is accurate: 223 vias at 0.4mm, component holes, and mounting holes all correctly identified. The layer_count=4 sourced from X2 FileFunction attribute is correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Zoestra/Rotonometron",
+      "project": "Kicad_Rotomaxetron_Rotomaxetron",
+      "created": "2026-03-24T00:01:01.888018+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001224"
+    }
+  ]
+}

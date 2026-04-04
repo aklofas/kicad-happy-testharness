@@ -1,0 +1,172 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_esp32bb_main_pcb_esp32bb.sch.json",
+      "status": "promoted",
+      "summary": "NCP1117ST33T3G LDO (U2) not detected as power regulator; RC filter input/output direction swapped for R3+C1 reset timing circuit on EN pin; RC filter type labeled 'RC-network' instead of 'low-pass'...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "U2 is an NCP1117ST33T3G 3.3V LDO regulator \u2014 one of the most common linear regulators \u2014 but it does not appear in signal_analysis.power_regulators. The component uses a local rescue library ('esp32bb-rescue:NCP1117ST33T3G') and pin names VI/VO/GND rather than the standard IN/OUT naming, which prevents the regulator detector from recognizing it. power_regulators is empty despite a clear LDO being present.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The RC filter (R3=10K, C1=1nF) is reported with input_net='EN' and output_net='+3.3V', but the actual topology is the reverse: +3.3V feeds through R3, the mid-node (EN rail) is the filtered output, and C1 connects from EN to GND. The analyzer used the resistor's pin1 net as 'input_net', but R3 pin1 connects to EN (the output node) while R3 pin2 connects to +3.3V (the source). The direction assignment is wrong.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters[0].input_net",
+            "op": "equals",
+            "value": "+3.3V"
+          }
+        },
+        {
+          "description": "The same reset timing circuit topology (R to EN, C to GND, power rail as source) is labeled 'low-pass' in esp32-s3-testboard but 'RC-network' in esp32bb. Both use 10K resistor and microfarad-range capacitor on the EN pin of an ESP32 module. The inconsistency suggests the type classification depends on secondary factors (net classification, power rail detection) rather than topology, and may produce non-deterministic results.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters[0].type",
+            "op": "equals",
+            "value": "low-pass"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "asukiaaa/esp32bb",
+      "project": "bottom_pcb_bottom_pcb",
+      "created": "2026-03-24T07:52:22.759879+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002051"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_esp32bb_main_pcb_esp32bb.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "Thermal pad analysis reports duplicate entries: P3 pad 6 appears 4 times, U3 pad 29 appears 4 times; Duplicate P3 reference in PCB file not flagged",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The thermal_analysis.thermal_pads list contains 9 entries for only 3 unique component+pad combinations: P3/pad6 appears 4 times (with varying nearby_thermal_vias: 0,1,0,0), U3/pad29 appears 4 times (all with nearby_thermal_vias=1), and U1/pad39 appears once. This is a bug in the thermal pad detection \u2014 the same pad is being reported multiple times, likely because the search algorithm iterates over multiple search radii or footprint instances and collects duplicates without deduplication.",
+          "analyzer_section": "thermal_analysis",
+          "check": {
+            "path": "thermal_analysis.thermal_pads",
+            "op": "max_count",
+            "value": 3
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The PCB file contains two footprints with reference 'P3' (the USB OTG connector), visible in both the footprint reference list and the silkscreen values_visible_on_silk list which shows 'P3' twice. The PCB connector P3 is likely a through-hole USB connector with a mechanical mounting footprint duplicated. The analyzer does not flag this duplicate reference anywhere \u2014 not in DFM, placement, connectivity, or any other section. A duplicate reference check should be part of PCB validation.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "asukiaaa/esp32bb",
+      "project": "bottom_pcb_bottom_pcb",
+      "created": "2026-03-24T07:52:22.759899+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002052"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber_esp32bb_main_pcb_plots.json",
+      "status": "promoted",
+      "summary": "Gerber alignment flagged as failed due to copper-to-edge-cuts height variation, but it is not an alignment error; Missing F.Paste gerber correctly flagged as missing_recommended",
+      "correct": [
+        {
+          "description": "The main_pcb gerber set (7 files) is missing F.Paste and B.Paste layers. The analyzer correctly identifies F.Paste in missing_recommended. Given the board has SMD components (27 SMD of 30 total footprints), the paste layer should have been exported for solder stencil production. This is a real omission in the exported gerber set.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.missing_recommended",
+            "op": "contains_match",
+            "value": "/F\\.Paste/"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The alignment check reports aligned=false with 'Height varies by 9.3mm across copper/edge layers' because the copper layers (B.Cu: 51.68mm, F.Cu: 51.68mm) are shorter in height than the Edge.Cuts outline (60.96mm). This is not a misalignment \u2014 the copper simply does not extend to the top portion of the board outline, which is a common and intentional design choice (e.g., a connector zone or mechanical margin). The alignment algorithm incorrectly treats this as an error rather than a routing boundary.",
+          "analyzer_section": "alignment",
+          "check": {
+            "path": "alignment.aligned",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "asukiaaa/esp32bb",
+      "project": "bottom_pcb_bottom_pcb",
+      "created": "2026-03-24T07:52:22.759903+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002053"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber_esp32bb_bottom_pcb_gerbers.json",
+      "status": "promoted",
+      "summary": "bottom_pcb marked complete=false because it has only NPTH drill holes, but it is a valid mechanical PCB",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The bottom_pcb is a pure mechanical PCB (0 electronic components, 4 NPTH mounting holes, no SMD or THT components). The completeness check sets complete=false because has_pth_drill=false. For mechanical or panel PCBs with only mounting holes, NPTH-only drill files are expected and correct. The completeness algorithm should not require PTH drill when the board has no electronic components.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "asukiaaa/esp32bb",
+      "project": "bottom_pcb_bottom_pcb",
+      "created": "2026-03-24T07:52:22.759906+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002054"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_esp32bb_bottom_pcb_bottom_pcb.sch.json",
+      "status": "promoted",
+      "summary": "Empty schematics (bottom_pcb, spacer_pcb) handled gracefully with zero-count stats",
+      "correct": [
+        {
+          "description": "The bottom_pcb and spacer_pcb schematics are stub files (72 bytes each, no components). The analyzer correctly handles them without errors, returning all zero counts for components, nets, wires, and no_connects. No false detections occur on empty files.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "asukiaaa/esp32bb",
+      "project": "bottom_pcb_bottom_pcb",
+      "created": "2026-03-24T07:52:22.759908+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002055"
+    }
+  ]
+}

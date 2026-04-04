@@ -1,0 +1,173 @@
+{
+  "file_pattern": "repos_USB-GIGABIT_HARDWARE_USB-GIGABIT-Rev.E_USB-GIGABIT_Rev_E.kicad_sch",
+  "analyzer_type": "analyze_schematic",
+  "created_from": "FND-00001899",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001899-AST-01",
+      "description": "X1 (25MHz, 20pF spec) detected with C7 and C8 (39pF each) as load capacitors. Effective load calculated as 22.5pF (39/2 + ~3pF stray), which is close to but slightly over the 20pF spec \u2014 a reasonable observation. Crystal circuit section is correctly populated.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "signal_analysis.crystal_circuits[0].reference",
+        "value": "X1",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-02",
+      "description": "U4 detected as a switching regulator with inductor L1, feedback resistors R15/R12 (1.1k/1.1k ratio 0.5), output rail V12, estimated Vout=1.2V (Vref=0.6V assumed). This matches the RTL8153 core voltage domain requirement. Input rail recorded as '__unnamed_0' (the VBUS net after ferrite bead FB1).",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].estimated_vout",
+        "value": 1.2,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-03",
+      "description": "All 4 Ethernet MDI pairs (M0\u2013M3) and 3 USB pairs (U3SRX, U3TX, U2/U2D) identified. U2D_P/N has series resistors R2/R3 noted. All pairs routed to correct ICs (RTL8153 and/or TM211Q01FM22 magnetics connector).",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "value": 9,
+        "op": "count_eq"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-04",
+      "description": "Power sequencing analysis correctly shows U4 (SY8089AAAC) enable pin is driven from a net controlled by U3, FB1, and C12, indicating the 1.2V core rail is soft-start controlled from the USB-to-GbE bridge.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "power_sequencing.dependencies[0].regulator",
+        "value": "U4",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-05",
+      "description": "usb_compliance shows 2 failures: no VBUS ESD TVS and no VBUS decoupling capacitor on USB1 (USB1065 Type-A connector). The design relies on the host for VBUS protection; the dongle does not add its own. These are real gaps even if acceptable by design intent.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "usb_compliance.summary.fail",
+        "value": 2,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-06",
+      "description": "sourcing_audit shows 0/48 MPN coverage. The design uses Olimex-internal value-only component designations (e.g. '100nF/10V/X5R /20%/0402') without DigiKey/Mouser/LCSC part numbers populated in schematic properties. This is accurate.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "sourcing_audit.mpn_percent",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-07",
+      "description": "connectivity_issues shows empty unconnected_pins, single_pin_nets, and multi_driver_nets lists. Routing is complete with all pins connected as expected for this production design.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "connectivity_issues.unconnected_pins",
+        "value": 0,
+        "op": "count_eq"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-08",
+      "description": "INCORRECT: ic_pin_analysis assigns U3 function='Ethernet PHY'. The RTL8153VC-CG is a USB 3.0 to Gigabit Ethernet bridge/controller IC that integrates both the USB 3.0 device interface and the Ethernet MAC+PHY. Classifying it as merely 'Ethernet PHY' misses the USB side. A more accurate label would be 'USB-to-Gigabit Ethernet bridge' or 'USB-Ethernet controller'. This also flows into ethernet_interfaces where the magnetics list is empty \u2014 the analyzer looks for a discrete magnetics IC rather than recognizing that the TM211Q01FM22 MagJack connector has integrated magnetics.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "ic_pin_analysis[?reference=='U3'].function",
+        "value": "Ethernet PHY",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-09",
+      "description": "INCORRECT: bus_analysis.i2c reports two nets as I2C: __unnamed_5 (U3 pin SPISDI/SDA/EEDI to U2 DI) and __unnamed_7 (U3 pin EECS/SCL to U2 CS). The RTL8153VC-CG uses a proprietary serial EEPROM interface (not standard I2C) to read configuration from 93LC46 (U2, a Microwire/SPI EEPROM). Pin 40 is 'EECS' (EEPROM Chip Select), not SCL. No I2C pull-up resistors are present, and the I2C 'no pull-up' warning is technically a consequence of this misclassification. The analyzer infers I2C from SDA/SCL substrings in multi-mode pin names.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "value": 0,
+        "op": "count_eq"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-10",
+      "description": "INCORRECT: test_coverage.debug_connectors lists USB1 (USB1065, USB Type-A male plug) with interface='uart'. USB1 is the main functional USB 3.0 connector connecting the dongle to the host PC. Nets U3SRX_P/N and U3STX_P/N are USB 3.0 SuperSpeed differential pairs (RX and TX). The 'UART' classification arises from pattern-matching 'RX'/'TX' substrings in net names. This misidentification misleads: there is no debug UART on this board.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "test_coverage.debug_connectors[0].interface",
+        "value": "uart",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-11",
+      "description": "INCORRECT: The schematic header contains '(version 20230121) (generator eeschema)' which corresponds to KiCad 7. The analyzer extracts file_version correctly but leaves kicad_version as 'unknown'. The same issue occurs for the PCB (file_version 20221018, KiCad 6). The version mapping integer\u2192product is not implemented.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "kicad_version",
+        "value": "unknown",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-12",
+      "description": "INCORRECT: The schematic uses the power net symbol '+3.3V' (statistics.power_rails and decoupling_analysis.rail), while the PCB netlist names the same rail '+3V3'. These are two different strings for the same net. The analyzer reports each file independently without flagging this naming inconsistency across the schematic/PCB pair. This is a genuine design inconsistency in the source files that ideally would be surfaced.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "statistics.power_rails",
+        "value": "+3.3V",
+        "op": "contains_match"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-13",
+      "description": "ethernet_interfaces[0].magnetics is empty []. The TM211Q01FM22 (also known as LPJG16402AQNL) is a RJ-45 jack with integrated Bob Smith termination and magnetics. The analyzer looks for a separate discrete magnetics transformer component rather than recognizing that this connector has built-in magnetics. A complete analysis would note that the design does not require a separate transformer because LAN1 provides integrated magnetics.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces[0].magnetics",
+        "value": 0,
+        "op": "count_eq"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-14",
+      "description": "ic_pin_analysis shows U2 value='NA(93LC46)' with function='' and category left as 'ic'. The 93LC46 is a well-known Microwire/SPI serial EEPROM (Microchip). The component description field is empty in the schematic properties, so the analyzer has no description text to categorize it. However, the part number '93LC46' is present in the value field and could be matched to a known EEPROM pattern.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "ic_pin_analysis[?reference=='U2'].function",
+        "value": "",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001899-AST-15",
+      "description": "test_coverage.test_point_count=0 and test_points=[]. This is accurate: the design has no dedicated TP* test point footprints. This is worth flagging as a design observation (small form-factor dongle without testability features) but the analyzer does not surface it as a notable absence in the design observations section.",
+      "created_from": "FND-00001899",
+      "check": {
+        "path": "test_coverage.test_point_count",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

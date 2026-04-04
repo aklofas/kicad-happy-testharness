@@ -1,0 +1,52 @@
+{
+  "file_pattern": "RS485-Gassensor.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000202",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000202-AST-10",
+      "description": "Dual MCU design correctly parsed: U1 (STM32G031K8Tx, in_bom=yes) and U2 (STM32G031K8Ux, dnp=yes) with matching pin counts",
+      "created_from": "FND-00000202",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000202-AST-11",
+      "description": "4 mounting holes (H1-H4) and 2 fiducials (FID1-FID2) correctly classified",
+      "created_from": "FND-00000202",
+      "check": {
+        "path": "statistics.component_types",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000202-AST-13",
+      "description": "INCORRECT: Current sense detection claims R12 (R220=0.22 ohm) is a shunt resistor with U7 (LT1785xS8) as sense IC on RS485-A/RS485-B nets. However, U7 is an RS485 transceiver, not a current sense amplifier. R12 is likely a termination or bias resistor, not a current shunt.",
+      "created_from": "FND-00000202",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "not_contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R12$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000202-AST-14",
+      "description": "INCORRECT: U4 (OKI-78SR-5_1.5-W36-C) estimated_vout=1.5V is wrong; it outputs 5V. The '1.5' in the part name refers to the 1.5A current rating, not the output voltage. The output rail is correctly labeled +5V.",
+      "created_from": "FND-00000202",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U4$"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "file_pattern": "main_logic.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000571",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000571-AST-01",
+      "description": "The 5 capacitors in main_logic (C10, C14, C15, C16, C7 \u2014 all 330pF) are connected to signal pins forming RC filters, not to VCC. The analyzer correctly identifies 0 decoupling caps in this subsheet and instead flags the relevant ICs (U3A, U3E, U3C, etc.) in design_observations as lacking local decoupling \u2014 those caps exist in the parent sheet.",
+      "created_from": "FND-00000571",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000571-AST-02",
+      "description": "These are Apple II bus signals (address lines, control signals) that arrive via hierarchical labels from the parent sheet. In the subsheet context they have no local driver \u2014 this is an accurate ERC observation. The parent sheet shows these same hierarchical labels as 'unconnected_hierarchical', confirming they are driven externally.",
+      "created_from": "FND-00000571",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000571-AST-03",
+      "description": "The subsheet has power pins for VCC and GND but no PWR_FLAG symbol or power_out driver within its scope. These are valid ERC warnings for a subsheet analyzed in isolation. The parent sheet correctly shows 0 PWR_FLAG warnings because the connector P2 provides power_out context there.",
+      "created_from": "FND-00000571",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000571-AST-04",
+      "description": "The NCR 5380 is a dedicated SCSI bus controller IC. The analyzer's memory_interfaces and bus_analysis detectors return empty, missing the opportunity to identify this as a SCSI bus interface. The B_D0-B_D7 bus connecting the 5380, ROM (U3A), RAM (U5C), and bus buffer (U4E) is a classic SCSI data path that could be flagged as a memory/peripheral bus topology.",
+      "created_from": "FND-00000571",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

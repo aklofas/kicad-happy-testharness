@@ -1,0 +1,30 @@
+{
+  "file_pattern": "MicrophoneActivator.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002405",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002405-AST-01",
+      "description": "pwr_flag_warnings reports that GND has power_in pins but no power_out or PWR_FLAG. However, the schematic contains two PWR_FLAG symbols (#FLG01 and #FLG02), both wired into the GND net.",
+      "created_from": "FND-00002405",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002407-AST-02",
+      "description": "signal_analysis.transistor_circuits is empty, but Q1 and Q2 are LSK389C dual N-channel JFETs configured as a balanced XLR microphone amplifier.",
+      "created_from": "FND-00002407",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "gerber-ESP32-HELP-Button-18650",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002086",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002086-AST-01",
+      "description": "INCORRECT: The gerber directory contains ESP32-HELP-Button-18650.GML with header 'TF.FileFunction,Profile,NP' \u2014 the standard Gerber X2 attribute identifying an Edge.Cuts (board outline) layer. The analyzer does not parse .GML files at all: it reports gerber_files=9 when 10 gerber files exist (excluding drill), the GML file does not appear in the gerbers list, and completeness reports missing_required=['Edge.Cuts']. This false negative affects all espressif gerber sets (gerber-18650, gerber-CR2032, gerber, and all three Gerber-ESP32-Mix sets), all of which use the .GML extension for the board outline.",
+      "created_from": "FND-00002086",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    }
+  ]
+}

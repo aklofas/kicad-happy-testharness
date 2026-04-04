@@ -1,0 +1,258 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "SparkFun_OpenScale-BT.kicad_sch",
+      "status": "promoted",
+      "summary": "Component counts and types are accurate for OpenScale-BT schematic; LDO regulator U4 (RT9080-3.3) correctly detected as LDO with 5V input, 3.3V output; MOSFET level shifters Q5/Q6 correctly identif...",
+      "correct": [
+        {
+          "description": "Schematic reports 96 total components with correct type breakdown: 26 resistors, 15 capacitors, 15 connectors, 8 jumpers, 6 transistors, 5 ICs, 4 LEDs, 4 test points, 4 mounting holes, 2 switches, 2 fiducials, 1 fuse, 1 inductor. This matches the BOM and component list in the source file. Power rails 3.3V, 5V, DVDD, GND, PWR_EN, VBUS, VDDA are all correctly identified.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 96
+          }
+        },
+        {
+          "description": "The power_regulators section correctly identifies U4 (RT9080-3.3) as an LDO with topology LDO, input_rail 5V, output_rail 3.3V, and estimated_vout 3.3 via fixed_suffix detection. The design_observations section also confirms this with the regulator_voltage category.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": {
+              "ref": "U4",
+              "topology": "LDO",
+              "input_rail": "5V",
+              "output_rail": "3.3V"
+            }
+          }
+        },
+        {
+          "description": "Q5 (RE1C002UNTCL, N-MOSFET) is correctly detected as a level_shifter connecting TX1 to Interface_TX1, with gate on 3.3V and gate resistor R17. Q6 is similarly detected for RX1/Interface_RX1 with gate resistor R22. The gate_driver_ics list includes U2 (TMP102) which is a minor issue as TMP102 is on the 3.3V bus not the gate, but the topology detection is correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "value": {
+              "reference": "Q5",
+              "topology": "level_shifter"
+            }
+          }
+        },
+        {
+          "description": "F2 (6V/0.5A/1A, resettable fuse) is correctly identified in protection_devices with type 'fuse', protected_net '5V', and clamp_net 'VBUS'. This accurately reflects the PPTC fuse placed between VBUS and the 5V rail.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "value": {
+              "ref": "F2",
+              "type": "fuse"
+            }
+          }
+        },
+        {
+          "description": "U3 (HX711) is classified as ic_with_internal_regulator, which is correct \u2014 the HX711 has an integrated regulator producing DVDD from its analog supply. The design_observations also correctly flag that DVDD lacks a dedicated decoupling cap (rails_without_caps: [DVDD]) while C4 decouples VDDA/5V.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": {
+              "ref": "U3",
+              "topology": "ic_with_internal_regulator"
+            }
+          }
+        },
+        {
+          "description": "The differential_pairs section correctly identifies two differential pairs: A+/A- shared between J12 and J15 (with series resistors R5 and R8 at 100 ohm), and B+/B- shared between J11, J13, and U3 (HX711). The B+/B- pair is also correctly noted as having ESD protection via U3 (the HX711 has internal ESD on its inputs). Series resistors R5/R8 on A+/A- are correctly listed.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "The bus_analysis.uart correctly finds UART nets ESP1/TX0 and ESP3/RX0 shared between U5 (CH340C) and U6 (ESP32), and also identifies Interface_TX1/Interface_RX1 and RX1/TX1 as additional UART nets used for the external interface. This correctly reflects the design which has a UART between ESP32 and CH340C USB bridge, plus an external UART interface.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "min_count",
+            "value": 4
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The rc_filters section lists two 'RC-network' type filters: R8+C1 (100 ohm, 0.1uF) with output_net A- and input_net __unnamed_9, and R5+C1 (100 ohm, 0.1uF) with output_net A+ and input_net __unnamed_15. These are actually series protection resistors on the load cell differential inputs, not RC filters. C1 is shared between both and does not form a proper low-pass RC filter; the 'ground_net' labeling is also incorrect. The R18+C14 filter for ESP_~{RESET} (15.92 Hz low-pass) is correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The bus_analysis.i2c reports has_pull_up: false and pull_ups: [] for both SDA and SCL nets. However, R7 (2.2k) is on the SDA net and R2 (10k) is on an unnamed net. Looking at the PCB data, R7 connects SDA to Net-(JP2-C) and R2 connects Net-(JP5-B) to DVDD. The JP2 jumper (I2C) is a 3-pole jumper bridging I2C pullups. The SDA pullup R7 connects SDA to JP2-C rather than directly to 3.3V, causing the pullup detector to miss it. This is a false negative for I2C pullup detection when resistors are routed through jumpers.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "contains_match",
+            "value": {
+              "category": "i2c_bus",
+              "net": "SDA",
+              "has_pullup": false
+            }
+          }
+        },
+        {
+          "description": "The HX711 uses a proprietary two-wire serial interface on nets LD_SCK and LD_DOUT (and ESP32_LD_SCK/ESP32_LD_DOUT). These nets are classified as clock/signal in net_classification but the bus_analysis.spi is empty. While this is not standard SPI, the HX711's SCK/DOUT interface is a serial data acquisition bus that could reasonably be flagged as a custom SPI variant. The nets are present in the PCB connectivity but no SPI detection is performed.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_OpenScale_IoT",
+      "project": "Hardware_SparkFun_OpenScale-BT",
+      "created": "2026-03-24T00:41:59.910800+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001467"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "SparkFun_OpenScale-BT.kicad_pcb",
+      "status": "promoted",
+      "summary": "PCB footprint count correctly includes 97 kibuzzard decorative graphics as board-only; PCB routing confirmed complete with 146 vias, 596 track segments on 2-layer board; ESP32-PICO-MINI (U6) therma...",
+      "correct": [
+        {
+          "description": "The PCB reports 195 footprints total (131 front, 64 back) versus 96 in the schematic. This discrepancy is correct: 97 kibuzzard footprints are board_only/exclude_from_bom decorative graphics, and 98 footprints match real components (the extra 2 vs 96 are G2 OSHW_Logo and SparkFun_Logo marked board-only in the schematic). The Gerber analysis correctly deduplicates to 168 unique component refs in its component_analysis.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 195
+          }
+        },
+        {
+          "description": "The PCB is a 2-layer board (F.Cu and B.Cu) with routing_complete: true, unrouted_net_count: 0. Statistics show 596 track segments and 146 vias. Board dimensions are 55.88mm x 46.99mm which match the Edge.Cuts bounding box. Four copper pour zones are present.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "op": "equals",
+            "value": true
+          }
+        },
+        {
+          "description": "The thermal_pad_vias section correctly identifies U6 (ESP32-PICO-V3-02) as having exposed thermal pads (49.1 through 49.9, each 1.45x1.45mm on GND) with via_count: 0 and adequacy: 'none'. This is a real concern for the design \u2014 the ESP32 module's exposed GND pads have no thermal vias connecting to the back copper pour.",
+          "analyzer_section": "thermal_pad_vias",
+          "check": {
+            "path": "thermal_pad_vias",
+            "op": "contains_match",
+            "value": {
+              "component": "U6",
+              "adequacy": "none"
+            }
+          }
+        },
+        {
+          "description": "The dfm section correctly identifies a track_spacing violation: approximate spacing of 0.1257mm is below the standard 0.127mm limit and requires an advanced process. Min track width of 0.1778mm is correctly detected. This is accurate given the ESP32-PICO-MINI module's fine-pitch pads.",
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm.violation_count",
+            "op": "equals",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The PCB reports smd_count: 71 and tht_count: 14. The 14 THT components appear to be the screw terminal connectors (J7 J15 3-pin, J13 J14 2-pin screw terminals) and header connectors (J1-J4 3-pin, J10 6-pin, J11 2-pin, J12 5-pin, J5 1-pin) plus standoffs. The 71 SMD count seems low given the schematic has 26 resistors + 15 caps + 6 Q + 5 U + 4 LED + 4 TP + 2 switches + 8 JP + FID = ~72 true SMD components, so the count is approximately correct, but excluding board-only footprints means counts are lower than expected. The discrepancy is because kibuzzard/board-only items are excluded from SMD/THT counting.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.smd_count",
+            "op": "range",
+            "min": 65,
+            "max": 90
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_OpenScale_IoT",
+      "project": "Hardware_SparkFun_OpenScale-BT",
+      "created": "2026-03-24T00:41:59.910820+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001468"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "Production",
+      "status": "promoted",
+      "summary": "GKO board outline file misclassified as B.Mask instead of Edge.Cuts; Drill file in ZIP archive not parsed; drill statistics show 0 holes despite a drill file being present; Gerber layer set correct...",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies 9 gerber files covering B.Cu, B.SilkS, B.Paste, B.Mask, F.Cu, F.SilkS, F.Paste, F.Mask, and the GKO outline. X2 net and pin counts are consistent (F.Cu: 95 nets, 284 pins; B.Cu: 39 nets, 65 pins matching back-side components). The F.Paste layer with 236 flashes and 268 SMD apertures matches the SMD pad count. Alignment checks pass with consistent layer extents.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.gerber_files",
+            "op": "equals",
+            "value": 9
+          }
+        },
+        {
+          "description": "The zip_archives section correctly identifies SparkFun_OpenScale-BT_v11.zip with vs_loose_files: 'loose_files_newer' and age_delta_hours: 1249.1 hours (~52 days). This accurately reflects that the loose gerber files were regenerated more recently than the ZIP archive, which is a useful production workflow observation.",
+          "analyzer_section": "zip_archives",
+          "check": {
+            "path": "zip_archives",
+            "op": "contains_match",
+            "value": {
+              "vs_loose_files": "loose_files_newer"
+            }
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The file SparkFun_OpenScale-BT.GKO is assigned layer_type 'B.Mask' but it is the board outline (Edge.Cuts). The file's X2 attribute FileFunction says 'Soldermask,Bot' and FilePolarity 'Negative' \u2014 this appears to be a bug in the KiCad Gerber output for this specific version where the GKO file received wrong X2 attributes. However, the aperture_analysis correctly identifies a 'Profile' aperture function within the file, which is the Edge.Cuts indicator. The analyzer should use the Profile aperture function to override the FileFunction and correctly classify this as Edge.Cuts. As a result, 'Edge.Cuts' appears in missing_required even though the board outline file is present.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.missing_required",
+            "op": "contains_match",
+            "value": "Edge.Cuts"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The top-level statistics show drill_files: 0 and total_holes: 0 with empty drills: [] and drill_tools: {}. However, the zip_archives section reveals SparkFun_OpenScale-BT_v11.zip contains 1 drill file and 9 gerber files. The loose gerber files are parsed (9 gerbers) but the drill file within the ZIP is not extracted and analyzed. The PCB has 146 vias and 14 THT components, so substantial drill data exists but goes undetected. The drill_classification shows all zeros as a consequence.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.drill_files",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_OpenScale_IoT",
+      "project": "Hardware_SparkFun_OpenScale-BT",
+      "created": "2026-03-24T00:41:59.910825+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001469"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/splitflap/electronics/sensor_smd/sensor_smd.kicad_sch",
+      "status": "promoted",
+      "summary": "KiCad 6+ hall effect sensor board. Small design with 7 components and 5 nets. 1 signal path detected (design observation about missing decoupling cap). Component extraction and net connectivity are correct. This is a simple but well-analyzed design.",
+      "correct": [
+        {
+          "description": "All 7 components correctly extracted: HX6286 hall sensor, LED, 1k resistor, solder jumper, 3-pin connector, 2 mounting holes"
+        },
+        {
+          "description": "Component types correctly classified: ic, led, resistor, jumper, connector, mounting_hole"
+        },
+        {
+          "description": "Net connectivity correct: VDD, GND, SIGNAL nets with proper pin associations"
+        },
+        {
+          "description": "LED indicator circuit correctly traced: VDD -> JP1 (solder jumper) -> R1 (1k) -> D1 (LED) -> SIGNAL"
+        },
+        {
+          "description": "Decoupling observation correctly notes U1 VDD rail has no bypass capacitor"
+        },
+        {
+          "description": "LCSC part numbers extracted for D1 (C2286), R1 (C21190), U1 (C495736)"
+        },
+        {
+          "description": "Footprint filter warnings correctly flag custom library footprints not matching standard filter patterns"
+        },
+        {
+          "description": "Assembly complexity correctly rated as low (score 36/100)"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "SIGNAL net listed as a power rail for U1 in power_domains - the VOUT pin is open-collector output, not a power rail. SIGNAL should be classified as signal/output only",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "PWR_FLAG warnings claim GND and VDD have no PWR_FLAG, but the schematic has 2 PWR_FLAG symbols visible in power_symbols section. The PWR_FLAG detection is not recognizing them as satisfying the ERC requirement",
+          "analyzer_section": "pwr_flag_warnings"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Hall sensor output circuit (open-collector with indicator LED) not detected as a signal pattern. The HX6286 VOUT drives LED indicator through solder jumper and series resistor - this is a common hall sensor indicator topology",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The solder jumper JP1 as an LED enable/disable feature is not noted as a design pattern",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Open-collector sensor output with indicator LED is a common pattern worth detecting",
+        "Fix power_domains to not classify open-collector outputs as power rails",
+        "Fix PWR_FLAG detection to properly recognize existing PWR_FLAG symbols"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": true,
+      "id": "FND-00000081",
+      "repo": "scottbez1/splitflap",
+      "project": "electronics_sensor_smd_sensor_smd",
+      "created": "2026-03-14T07:23:46.643777+00:00"
+    }
+  ]
+}

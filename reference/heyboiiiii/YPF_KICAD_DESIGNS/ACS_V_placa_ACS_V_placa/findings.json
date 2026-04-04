@@ -1,0 +1,350 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ACS_V_placa.kicad_sch.json",
+      "status": "new",
+      "summary": "7 components correctly identified with accurate types and net connectivity; Voltage divider R2/R1 correctly detected on ACS output conditioning network; Voltage divider R7/R8 (battery voltage measu...",
+      "correct": [
+        {
+          "description": "All 7 components (J2, J3, R1, R2, R7, R8, U7) are correctly extracted with proper references, values, footprints, and net assignments. The 7 nets (GND, VCC, VBAT_OUT, VBAT+, VBAT_U, ACS, __unnamed_0) match the schematic topology.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 7,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The analyzer correctly identifies R2 (10k) and R1 (10k) forming a voltage divider from the ACS712 OUT pin (unnamed_0) to GND with midpoint at the 'ACS' net, ratio 0.5. The output-conditioning voltage divider is properly characterized.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "value": 1,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "The design_observations correctly flags U7 (ACS712 current sensor module) as having VCC connected but no decoupling capacitor on that rail, which is a real design gap in this schematic.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "value": 1,
+            "op": "min_count"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The net 'ACS' (design_analysis.net_classification) is classified as 'chip_select'. In this design, ACS refers to the ACS712 current sensor \u2014 'ACS' is an analog signal (the conditioned current sense output routed to an external connector), not a chip-select line. The name match on the 'CS' suffix pattern is a false positive.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.net_classification.ACS",
+            "value": "chip_select",
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The schematic assembly_complexity reports smd_count=3, tht_count=4. The PCB analysis reports smd_count=1 (only J2 with custom SMD footprint), tht_count=6. J3 (TerminalBlock_MaiXu) and U7 (PinHeader_1x03) are through-hole components but are classified as 'other_SMD' by the schematic analyzer, likely because their footprint names do not include a THT keyword. The PCB pad-type analysis is authoritative.",
+          "analyzer_section": "assembly_complexity",
+          "check": {
+            "path": "assembly_complexity.smd_count",
+            "value": 3,
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "R7 (10K, VBAT+ to VBAT_U) and R8 (10k, VBAT_U to GND) form a clear 50% battery voltage divider for measuring the car battery level. This divider is not detected in signal_analysis.voltage_dividers. The R2/R1 divider IS detected, so the failure is specific to this topology \u2014 likely because VBAT+ is a global_label acting as the top net with no other connections on that net in this sheet.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "value": 2,
+            "op": "min_count"
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix: 'ACS' net incorrectly classified as 'chip_select' in net_classification",
+        "Fix: Assembly complexity SMD count (3) disagrees with PCB-derived count (1)"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "heyboiiiii/YPF_KICAD_DESIGNS",
+      "project": "ACS_V_placa_ACS_V_placa",
+      "created": "2026-03-24T01:48:20.227978+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001832"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "ACS_V_placa.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB correctly identifies unrouted state and 5 unrouted nets; PCB net topology matches schematic: 7 nets with correct pad assignments",
+      "correct": [
+        {
+          "description": "The board has no tracks (0 segments), 5 nets flagged as unrouted (ACS, GND, Net-(U7-OUT), VBAT+, VBAT_U), and routing_complete=false. This matches the source PCB which has no copper traces \u2014 the board is in placement-only state.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "value": false,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "All 7 nets (GND, ACS, Net-(U7-OUT), VBAT_U, VBAT+, VCC, VBAT_OUT) are present. Pad-to-net assignments for R1, R2, R7, R8, J2, J3, U7 match the schematic connectivity. The unnamed schematic net __unnamed_0 appears as Net-(U7-OUT) in the PCB, consistent with KiCad's net naming convention.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "value": 7,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "heyboiiiii/YPF_KICAD_DESIGNS",
+      "project": "ACS_V_placa_ACS_V_placa",
+      "created": "2026-03-24T01:48:20.228000+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001833"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "SHIELD_LORA_SHIELD_LORA.kicad_sch.json",
+      "status": "new",
+      "summary": "2 components (LoRa module U1 and shield connector U2) correctly extracted; SPI bus detected between U1 and U2 via MOSI, SCLK, NSS signals; SPI bus reported twice (duplicate entries for same physica...",
+      "correct": [
+        {
+          "description": "U1 (xl1278-smt LoRa transceiver, 12 pins) and U2 (LORA_SHIELD connector, 6 pins) are correctly identified with proper footprints and pin connectivity. All 12 nets are present. The design correctly shows no power symbols (empty power_rails array).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 2,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The analyzer correctly detects SPI signals (MOSI on __unnamed_6, SCLK on __unnamed_7, NSS on __unnamed_8) shared between U1 (xl1278 LoRa) and U2 (shield connector). This represents the SPI interface between the LoRa module and its carrier shield.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "value": 1,
+            "op": "min_count"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Two separate SPI bus entries are emitted: 'pin_U1' (full_duplex, includes MISO) and 'pin_U2' (half_duplex, MISO excluded). These represent the same physical SPI bus analyzed from each device's perspective independently. One bus entry should be sufficient. The U2 entry omitting MISO (since U2 has no MISO pin) results in spurious full_duplex vs half_duplex mode disagreement for the same bus.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "value": 2,
+            "op": "max_count"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "heyboiiiii/YPF_KICAD_DESIGNS",
+      "project": "ACS_V_placa_ACS_V_placa",
+      "created": "2026-03-24T01:48:20.228006+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001834"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "SHIELD_LORA_SHIELD_LORA.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB routing reported as complete with 6 routed signal nets and 6 unconnected stubs; Ground domain split correctly identified: U1 pad 12 (GND) isolated from main GND",
+      "correct": [
+        {
+          "description": "The PCB has 12 tracks on F.Cu routing 6 active nets (GND, VCC, MOSI, SCLK, NSS, REST) between U1 and U2. The 6 'unconnected-' prefix nets (DIO0, DIO1, DIO2, DIO3, MISO, GND_pad12) are intentionally isolated \u2014 KiCad treats them as complete. routing_complete=true and unrouted_count=0 accurately reflect the PCB state.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "value": true,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The PCB correctly identifies two ground domains: the main GND net shared by U1.pin1 and U2.pin1, and the isolated 'unconnected-(U1-GND-Pad12)' net on U1.pin12. U1 appears as a multi-domain component. This is an accurate representation of the LoRa module having two GND pads where only one is connected to the shield.",
+          "analyzer_section": "ground_domains",
+          "check": {
+            "path": "ground_domains.domain_count",
+            "value": 2,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "heyboiiiii/YPF_KICAD_DESIGNS",
+      "project": "ACS_V_placa_ACS_V_placa",
+      "created": "2026-03-24T01:48:20.228009+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001835"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "auto_auto.kicad_sch.json",
+      "status": "new",
+      "summary": "23 components correctly identified across 7 types including GPS, MPU6050, ESP32, TFT display, LoRa; L7805 linear voltage regulator detected with VIN input and VCC output rails; L7805 classified as ...",
+      "correct": [
+        {
+          "description": "All 23 components are correctly extracted: 2 NPN transistors (Q1, Q2 as 2N3904), 6 ICs (U1=GPS, U2=MPU6050, U3=TFT, U4=ESP32, U6=L7805, U8=LoRa shield), 4 resistors, 1 fuse, 2 capacitors, 4 connectors, 4 switches. Component types match the schematic library IDs.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 23,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "U6 (L7805) is correctly identified in power_regulators with input_rail='VIN' and output_rail='VCC'. The decoupling analysis correctly associates C1 (1uF) with VIN and C2 (0.33uF) with VCC, matching the standard L7805 application circuit.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "value": 1,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "Q1 (2N3904) is correctly identified as collector-to-VCC load type 'connector' with base resistor R4 and emitter resistor R3. Q2 (2N3904) is correctly identified with base resistor R5 and emitter driving J4 (buzzer). Both circuits have proper base_resistors identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "value": 2,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "The I2C bus between U2 (MPU6050) and U4 (ESP32) via SCL_MPU and SDA_MPU is correctly identified. The UART link between U1 (GPS) and U4 (ESP32) via RX_GPS and TX_GPS is correctly detected. Both buses correctly flag missing pull-up resistors on I2C.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "value": 1,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "The analyzer correctly identifies that 3.3V, SCK_Lora_TFT, MOSI_Lora_TFT, RST_Lora, and CS_Lora signals cross between the VBAT_U domain (ESP32) and the 3.3V domain (LoRa shield), flagging needs_level_shifter=true. This is a real design concern since the ESP32 GPIO output voltage may not match the LoRa module's VCC.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.cross_domain_signals",
+            "value": 1,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "The footprint_filter_warnings correctly identify that C1 (1uF) and C2 (0.33uF) are assigned the Resistor_THT axial footprint instead of a capacitor footprint, which is a real design error in the schematic. These appear to be footprint assignment mistakes by the designer.",
+          "analyzer_section": "footprint_filter_warnings",
+          "check": {
+            "path": "footprint_filter_warnings",
+            "value": 2,
+            "op": "min_count"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The L7805 (Regulator_Linear:L7805) is classified with topology='LDO' in power_regulators. The L7805 is a traditional series-pass linear regulator requiring a minimum ~2V dropout, not a Low-Dropout (LDO) device. LDO regulators have dropout voltages below ~0.5V. This is a generic misclassification affecting all linear regulators in the analyzer.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "value": [
+              {
+                "path": "topology",
+                "value": "LDO",
+                "op": "equals"
+              }
+            ],
+            "op": "contains_match"
+          }
+        },
+        {
+          "description": "The detected_bus_signals entry for prefix 'Option' reports width=6 and range 'Option1..Option3'. There are only 3 distinct Option nets (Option1, Option2, Option3), so the correct bus width is 3. The width=6 appears to count the total number of global_label instances (6 label occurrences across the schematic: 2 each of Option1, Option2, Option3) rather than the number of unique net names.",
+          "analyzer_section": "bus_topology",
+          "check": {
+            "path": "bus_topology.detected_bus_signals",
+            "value": [
+              {
+                "path": "width",
+                "value": 3,
+                "op": "equals"
+              }
+            ],
+            "op": "contains_match"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Fix: L7805 classified as 'LDO' topology \u2014 it is a series-pass linear regulator, not LDO",
+        "Fix: Bus topology 'Option' bus reports width=6 instead of correct width=3"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "heyboiiiii/YPF_KICAD_DESIGNS",
+      "project": "ACS_V_placa_ACS_V_placa",
+      "created": "2026-03-24T01:48:20.228018+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001836"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "auto_auto.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB correctly reports 23 footprints, fully routed on single F.Cu layer; SPI shared bus between U3 (TFT), U4 (ESP32), and U8 (LoRa) correctly reflected in net names; No board outline detected \u2014 corr...",
+      "correct": [
+        {
+          "description": "The PCB has 23 footprints matching the schematic's 23 components. 190 track segments totaling 1848.77mm on F.Cu only. routing_complete=true, unrouted_count=0. The board uses a single copper layer consistent with a relatively simple PCB design.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 23,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The PCB correctly shows SCK_Lora_TFT and MOSI_Lora_TFT nets connecting U3 (TFT display), U4 (ESP32), and U8 (LoRa shield), consistent with the schematic's shared SPI bus. CS_Lora and CS_TFT are separate chip-select nets for each device.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "value": 58,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The auto PCB has no Edge.Cuts polygon defining the board outline (edge_count=0, bounding_box=null, board_width_mm=null). This is accurate \u2014 the designer has not added board outline geometry to the PCB file.",
+          "analyzer_section": "board_outline",
+          "check": {
+            "path": "board_outline.edge_count",
+            "value": 0,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "heyboiiiii/YPF_KICAD_DESIGNS",
+      "project": "ACS_V_placa_ACS_V_placa",
+      "created": "2026-03-24T01:48:20.228022+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001837"
+    }
+  ]
+}

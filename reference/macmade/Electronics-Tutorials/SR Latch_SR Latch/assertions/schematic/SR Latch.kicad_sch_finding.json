@@ -1,0 +1,38 @@
+{
+  "file_pattern": "SR Latch.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000507",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000507-AST-01",
+      "description": "All components are correctly identified: 10 resistors (R1-R10), 4 transistors (Q1-Q4 BC547), 2 LEDs (D1 'Q', D2 '~Q'), 1 connector (J1), 2 switches (SW1 'SET', SW2 'RESET'). Named nets Q, ~Q, A, B, VCC, GND are correctly extracted. The cross-coupled latch topology is reflected in the net graph: Q net connects Q1 collector + D1 anode + R6-pin2 + R1-pin2; ~Q net connects Q3 collector + D2 anode + R3-pin2 + R4-pin2.",
+      "created_from": "FND-00000507",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000507-AST-02",
+      "description": "SW1 and SW2 use the custom lib symbol XS:Tactile-Omron-B3W-900X-X1X, which has ki_keywords 'LED diode' and ki_description 'Light emitting diode' \u2014 these are copy-paste errors in the symbol definition. The analyzer correctly classifies SW1 and SW2 as type 'switch' (not led) based on the SW reference prefix, which is the right approach. The BOM also correctly groups them separately from the LEDs.",
+      "created_from": "FND-00000507",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000507-AST-03",
+      "description": "The SR latch uses two stacked NPN pairs: Q4 (bottom, E\u2192GND) drives Q3 (top, E\u2192Q4 collector) forming a series switch stack. The nets correctly show Q4 emitter on GND, Q3 emitter on __unnamed_7 (which is also Q4 collector), and Q3 collector on ~Q. Similarly Q2 emitter is on GND and Q1 emitter on __unnamed_2 (Q2 collector). The transistor_circuits section correctly reports emitter_is_ground=false for Q3 and Q1 (upper transistors).",
+      "created_from": "FND-00000507",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

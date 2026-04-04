@@ -1,0 +1,19 @@
+{
+  "file_pattern": "esp32.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002043",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002043-AST-01",
+      "description": "INCORRECT: The PCB defines 4 copper layers: F.Cu (0), Gnd (1), Vdd (2), and B.Cu (31). Layers Gnd and Vdd are inner planes filled entirely with GND and +3V3 zones respectively (both zones are filled, area ~15808 mm2). However copper_layers_used=0 and copper_layer_names=[] because the counter only counts layers with track segments, not zones. Zone-only planes are copper and should be included in the layer count. The board is a 4-layer design, not a 0-layer design.",
+      "created_from": "FND-00002043",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": false
+    }
+  ]
+}

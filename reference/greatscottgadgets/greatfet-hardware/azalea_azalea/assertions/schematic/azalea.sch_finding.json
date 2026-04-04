@@ -1,0 +1,19 @@
+{
+  "file_pattern": "azalea.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002153",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002153-AST-01",
+      "description": "INCORRECT: azalea_azalea.sch.json reports four I2C bus entries. Two are legitimate (I2C0_SDA and I2C0_SCL on the LPC4330 MCU). The other two are false positives: the net 'USB1_D+' is reported as SCL for U1 (LPC4330FBD144), and 'P2_4' is reported as SDA. USB1_D+ is a USB full-speed/high-speed differential signal and has nothing to do with I2C. This false positive likely occurs because the LPC4330 has multiplexed pins where the USB D+ pin's KiCad symbol pin name contains 'SCL' as an alternate function label.",
+      "created_from": "FND-00002153",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "max_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

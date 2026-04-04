@@ -1,0 +1,59 @@
+{
+  "file_pattern": "SIPM02.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001246",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001246-AST-01",
+      "description": "39 components, 16 nets, 10 connectors, 12 resistors, 10 capacitors, 2 ICs, 1 diode all correctly parsed. Power rails +28V, +3.3V, +3V6, GND correctly identified.",
+      "created_from": "FND-00001246",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001246-AST-02",
+      "description": "Three-stage low-pass RC filter on the +28V \u2192 SiPM bias path (R1/C1+C2 at 964 Hz, R2/C5 at 159 kHz, R4/C9+C6 at 144 kHz) correctly detected and characterized.",
+      "created_from": "FND-00001246",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001246-AST-03",
+      "description": "U2 OPA836IDB correctly classified as transimpedance_or_buffer configuration with 12k feedback resistor R10 between output and inverting input. This is accurate for a SiPM readout transimpedance amplifier.",
+      "created_from": "FND-00001246",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001246-AST-04",
+      "description": "Nets driven externally through connectors (J7=DIRECT_OUT, J10=#PD, J8=OUT) correctly flagged as having no output driver within the schematic. These are legitimate ERC warnings for a module with external signal entry points.",
+      "created_from": "FND-00001246",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001246-AST-05",
+      "description": "+3.3V \u2192 R3(100R) \u2192 D1 \u2192 +3V6 forms a reverse-biased diode clamp (limiting +3V6 to 3.3V - Vf). The voltage_dividers list is empty and no power regulator or protection device was detected for this path. This is a noteworthy signal path missed by all detectors.",
+      "created_from": "FND-00001246",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

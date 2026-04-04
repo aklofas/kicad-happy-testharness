@@ -1,0 +1,89 @@
+{
+  "file_pattern": "darkadv.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 7 opamp_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^opamp_circuit$",
+        "value": 7
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "A_G4 simulated as opamp_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bA_G4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "A_B2 simulated as opamp_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bA_B2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "A_F3 simulated as opamp_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bA_F3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "A_E3 simulated as opamp_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bA_E3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "TR2 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bTR2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "TR1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bTR1\\b"
+      }
+    }
+  ]
+}

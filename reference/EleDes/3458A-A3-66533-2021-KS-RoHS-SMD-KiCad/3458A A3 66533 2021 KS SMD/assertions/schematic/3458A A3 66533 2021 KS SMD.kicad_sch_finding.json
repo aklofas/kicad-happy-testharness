@@ -1,0 +1,54 @@
+{
+  "file_pattern": "3458A A3 66533 2021 KS SMD.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000267",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000267-AST-04",
+      "description": "All 8 power regulators correct: 79L05/78L05 pairs for isolated \u00b15V rails, +3.3V and +1.8V LDOs",
+      "created_from": "FND-00000267",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000267-AST-06",
+      "description": "INCORRECT: U151/U160/U165 (LT1001) classified as comparator_or_open_loop \u2014 each has capacitor-only feedback (C151/C160/C165) from output to inverting input, making them integrators in the voltage reference regulation loops",
+      "created_from": "FND-00000267",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U151$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000267-AST-07",
+      "description": "INCORRECT: U111 (AD817A) classified as compensator with R118 as feedback_resistor \u2014 R118 connects two different opamps' inverting inputs (inter-stage coupling), not U111's output; C118 is the sole feedback element (integrator)",
+      "created_from": "FND-00000267",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U111$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000267-AST-08",
+      "description": "INCORRECT: U140 (AD817A) classified as transimpedance_or_buffer \u2014 has R140=1k to ground and R141=18.7k feedback, making it a non-inverting amplifier at gain 19.7x",
+      "created_from": "FND-00000267",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U140$"
+      },
+      "aspirational": true
+    }
+  ]
+}

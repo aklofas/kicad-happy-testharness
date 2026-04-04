@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Adapter-HRT902-TPN31A_Adapter-HRT902-TPN31A.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Component count and BOM correct; Net topology correctly traced; assembly_complexity misclassifies all components as SMD; kicad_version reported as 'unknown' despite parseable version field; P1 NC p...",
+      "correct": [
+        {
+          "description": "9 total symbols, 5 BOM parts (excluding non-BOM AC_Symbol ~1 and H1/H2/H3 grouped), all refs and types match source.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "4 nets extracted; J1->P1.D, J2->P1.M, J3->JP1->P1.P, and mounting holes + NC pins on shared net all match wire connections in source.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Pins 3-6 of P1 (type 'free', name 'NC') share __unnamed_0 with H1/H2/H3 and JP1 pin A, consistent with the wire routing in the schematic.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "P1 has value '~' (blank) in source; flagging it in annotation_issues.missing_value is correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Reports smd_count=9, tht_count=0. SolderWire footprints (J1/J2/J3) and MountingHole pads (H1/H2/H3) are not SMD components; the custom HRT902 footprint (P1) is also ambiguous. No component here is a conventional SMD part.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "File has (version 20230121) which corresponds to KiCad 7.x. The output reports kicad_version: 'unknown' instead of resolving the date-format version number to a KiCad release.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "goscickiw/Adapter-HRT902-TPN31A",
+      "project": "Adapter-HRT902-TPN31A_Adapter-HRT902-TPN31A",
+      "created": "2026-03-23T20:38:50.544512+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000543"
+    }
+  ]
+}

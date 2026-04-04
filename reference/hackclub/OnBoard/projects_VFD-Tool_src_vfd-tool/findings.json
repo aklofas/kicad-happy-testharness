@@ -1,0 +1,93 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/OnBoard/projects/VFD-Tool/src/vfd-tool.kicad_sch",
+      "status": "confirmed",
+      "summary": "RP2040-based VFD driver tool with USB-C. Good signal detection overall. TPS562200 estimated Vout only computed for one of two identical regulators. W25Q32 flash memory interface correctly detected.",
+      "correct": [
+        {
+          "description": "Three voltage dividers correctly identified for voltage sensing/feedback"
+        },
+        {
+          "description": "W25Q32JVSS flash memory interface detected with 6 shared signal nets to RP2040"
+        },
+        {
+          "description": "Three TPS562200/TPS54331 switching regulators detected"
+        },
+        {
+          "description": "CMS04 reverse polarity protection correctly identified"
+        },
+        {
+          "description": "Three crystal circuits detected (32.768kHz, 24MHz, 12MHz)"
+        },
+        {
+          "description": "USB differential pairs detected (multiple USB ports) with ESD protection"
+        },
+        {
+          "description": "FUSB302 USB-C controller recognized"
+        },
+        {
+          "description": "6 RC filters and 5 LC filters detected"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TPS562200 U7 estimated Vout=2.58V but U8 (identical part) has no estimated Vout",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U7$"
+          }
+        },
+        {
+          "description": "TPS54331DR U10 has no estimated Vout despite likely having feedback divider",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U10$"
+          }
+        },
+        {
+          "description": "BOM sum (171) does not match total_components (174) \u2014 3 missing, test_points=4 but test_points appear in BOM for other projects",
+          "analyzer_section": "statistics"
+        }
+      ],
+      "missed": [
+        {
+          "description": "VFD (vacuum fluorescent display) driver circuitry not detected \u2014 this is the main function of the board",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No current sense detection despite likely having sense resistors for VFD filament drive",
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Ensure estimated_vout is computed consistently for all switching regulators with feedback dividers",
+        "Consider VFD driver detection as a signal path"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000087",
+      "repo": "hackclub/OnBoard",
+      "project": "projects_VFD-Tool_src_vfd-tool",
+      "created": "2026-03-14T07:24:33.622869+00:00"
+    }
+  ]
+}

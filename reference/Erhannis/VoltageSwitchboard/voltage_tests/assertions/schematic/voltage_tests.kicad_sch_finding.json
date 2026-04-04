@@ -1,0 +1,40 @@
+{
+  "file_pattern": "voltage_tests.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001675",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001675-AST-01",
+      "description": "The voltage_tests top-level schematic aggregates all sub-sheets. 68 total components is correct (7+7+6+6+3+4+6+8+1 sub-sheet components = 48 plus 17 connectors + 3 extras from USB sub-sheet). Component types: connector:18, capacitor:18, resistor:13, ic:6, diode:4, switch:2, inductor:2, mounting_hole:4, other:1 are all accurate. 46 nets and 241 wires match the hierarchical design.",
+      "created_from": "FND-00001675",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 68,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001675-AST-02",
+      "description": "INCORRECT: The statistics.power_rails list includes items like '/201ab4ae-b835-4fcf-b591-c6b37cf9a2b1/VIN' and '/7cdd2df5-332b-4860-ac66-fea4c590218c/V+' instead of the human-readable sheet names (e.g., '/DC Boost 10v/VIN'). This makes the power rail list harder to interpret. The power_net_routing section in the PCB output uses the correct readable names ('/DC Boost 10v/VIN'), confirming the schematic analyzer is not resolving sheet names from the hierarchical sheet labels.",
+      "created_from": "FND-00001675",
+      "check": {
+        "path": "statistics.power_rails",
+        "value": 7,
+        "op": "min_count"
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001675-AST-03",
+      "description": "voltage_tests aggregates all sub-sheets and finds 6 power_regulators, but should find 8: LM337L_SO8 x2 (negative LDOs), APE8865N-18-HF-3 x1 (positive LDO), AP2112K-3.3 x1 (USB LDO), TC7662Bx0A x2 (inverters), LM27313XMF x2 (boost converters). POW1_10B1 and POW1_85B1 are missing because they are typed 'switch' not 'ic'. This is the same issue as in the individual dc_boost schematics.",
+      "created_from": "FND-00001675",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 8,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

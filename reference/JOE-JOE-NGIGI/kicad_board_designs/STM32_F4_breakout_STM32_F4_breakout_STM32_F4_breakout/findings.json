@@ -1,0 +1,69 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002489",
+      "source_file": "schematic/kicad_board_designs/stm32f103_stm32f103.sch.json",
+      "analyzer_type": "schematic",
+      "category": "missed",
+      "summary": "Bus protocols not detected for STM32F103 despite USB D+/D- signals present in schematic",
+      "details": "The bus_analysis section reports empty lists for i2c, spi, uart, and can. The STM32F103C8T6 has USB FS capability and the source schematic contains net labels USB_D+ and USB_D-. However the analyzer found no bus signals because the GPIO labels (PA3, PB6, etc.) are used instead of functional names (UART_TX, SPI_MOSI). The USB D+/D- labels in the schematic are present but the analyzer has no USB bus detector. The absence of a USB bus detector means this class of interface is entirely missed across all designs using this MCU family.",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 0
+      }
+    },
+    {
+      "id": "FND-00002490",
+      "source_file": "schematic/kicad_board_designs/stm32f103_stm32f103.sch.json",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "Correctly detected analog power domain (+3.3VA) with ferrite bead isolation and separate decoupling",
+      "details": "The analyzer identified +3.3VA as a distinct power rail with its own decoupling capacitors (1uF + 100nF) and separately classified it from the digital +3.3V domain. The FB1 ferrite bead (100R) in the schematic creates this analog supply. The decoupling_analysis correctly reports two entries \u2014 one for +3.3V and one for +3.3VA \u2014 reflecting a proper analog/digital domain split. Component types correctly include ferrite_bead as a distinct category.",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "contains_match",
+        "value": null
+      }
+    },
+    {
+      "id": "FND-00002491",
+      "source_file": "schematic/kicad_board_designs/power_supply_power_supply.sch.json",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "LDO regulator input rails reported as unnamed nets instead of resolving to the actual supply rail name",
+      "details": "The power_regulators list shows both U1 (LD1117S33) and U2 (LD1117S50) with input_rail values of '__unnamed_1' and '__unnamed_3' respectively. Examining the net contents, these unnamed nets connect the regulator VI pin to fuse outputs and input capacitors, meaning the upstream supply (likely a raw DC input connector) was not given a named power symbol in the schematic. While technically correct per the netlist, the analyzer could attempt to resolve a descriptive name from the connected components (e.g., 'VIN' via the fuse chain), or at minimum flag this as an unresolved input rail rather than silently using an unnamed net identifier.",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "value": null
+      }
+    },
+    {
+      "id": "FND-00002492",
+      "source_file": "pcb/kicad_board_designs/STM32_F4_breakout_STM32_F4_breakout_STM32_F4_breakout.kicad_pcb.json",
+      "analyzer_type": "pcb",
+      "category": "correct",
+      "summary": "DFM tier correctly classified as 'advanced' due to 0.1mm annular ring below standard 0.125mm threshold",
+      "details": "The analyzer detected that the minimum annular ring across all vias is 0.1mm, which falls below the standard process limit of 0.125mm but meets the advanced process limit of 0.1mm. The design is therefore classified as 'advanced' DFM tier with a single violation noted. The 4-layer stackup (266 tracks, 14 vias, 50x50mm) with the fine annular ring is consistent with a professional breakout board targeting advanced PCB fabrication services.",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "op": "equals",
+        "value": "advanced"
+      }
+    },
+    {
+      "id": "FND-00002493",
+      "source_file": "schematic/kicad_board_designs/STM32_F4_breakout_STM32_F4_breakout_STM32_F4_breakout.sch.json",
+      "analyzer_type": "schematic",
+      "category": "missed",
+      "summary": "STM32F405 USB OTG interface not detected \u2014 no USB bus analyzer exists",
+      "details": "The STM32F405RGT6 has a full-speed USB OTG peripheral, but the bus_analysis section has no USB category at all. Connectors in the schematic (J4 as 2x5 header, likely SWD/JTAG, and J5 as 4-pin, likely USB or power) are not identified by function. The UART detection did find USART1 signals correctly, and I2C/SPI were also found. However, USB D+/D- are not present as net names in this design (the F4 signals may use pin names like PA11/PA12), so USB detection would require pin-function mapping from the MCU symbol \u2014 a capability the analyzer currently lacks.",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "contains_match",
+        "value": null
+      }
+    }
+  ]
+}

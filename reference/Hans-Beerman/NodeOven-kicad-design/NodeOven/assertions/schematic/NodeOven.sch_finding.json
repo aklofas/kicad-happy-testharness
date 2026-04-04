@@ -1,0 +1,29 @@
+{
+  "file_pattern": "NodeOven.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000988",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000988-AST-01",
+      "description": "Component classification correctly identifies K1 as relay type with THT footprint. D1/D2 as 1N4004 diodes correctly typed. 3 NPN transistors (BC547) correctly identified. Power rails +12V, +3.3V, +5V, GND all correctly extracted.",
+      "created_from": "FND-00000988",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000988-AST-02",
+      "description": "The design has 3x BC547 NPN transistors each driving what appears to be relay-related loads, with 1N4004 flyback diodes (D1/D2) for inductive protection. signal_analysis.protection_devices is empty and snubbers is empty. The relay K1 is not identified in a relay_driver_circuits section. A relay driver detector or inductive protection detector would surface this pattern.",
+      "created_from": "FND-00000988",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "file_pattern": "SparkFun_LIS3DH_Micro.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001544",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001544-AST-01",
+      "description": "The analyzer correctly reports: board 19.05mm x 7.62mm (standard SparkFun Micro form factor), 2 copper layers (F.Cu, B.Cu), 35 footprints, 92 track segments, 15 vias, 1 zone, 17 nets, routing_complete=true, 0 unrouted nets. SMD count 17 and THT count 2 (J1 and J5 are PTH connectors, standoff ST1 is another) \u2014 actually smd_count=17 and tht_count=2 seems low given ST1 is a standoff hole but board_only items may be excluded.",
+      "created_from": "FND-00001544",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "op": "equals",
+        "value": 19.05
+      }
+    },
+    {
+      "id": "FND-00001544-AST-02",
+      "description": "The PCB net list correctly contains 17 nets matching the schematic: 3.3V, GND, SDA, SCL, ADDR/SDO, INT1, Net-(D1-A), Net-(JP1-A), Net-(JP2-A), Net-(JP2-C), and 5 unconnected-* nets for U1 unused pins plus 2 unconnected Qwiic NC pins. The unconnected nets for ADC1/ADC2/ADC3/CS/INT2 on U1 and the NC pins on J2 correctly match the schematic no-connects.",
+      "created_from": "FND-00001544",
+      "check": {
+        "path": "statistics.net_count",
+        "op": "equals",
+        "value": 17
+      }
+    },
+    {
+      "id": "FND-00001544-AST-03",
+      "description": "INCORRECT: The schematic has 11 real SMD components (U1, C3, C4, D1, R1, R2, R3, R6, JP1, JP2, JP3, J2, FID3, FID4) plus logo footprints. The PCB reports smd_count=17 and tht_count=2. The tht_count=2 appears to count only J1 and J5 (the two PTH pin connectors), while ST1 (standoff) may be excluded or treated differently. This count is likely correct for the actual through-hole pads present, but is worth noting as the standoff footprint type may vary.",
+      "created_from": "FND-00001544",
+      "check": {
+        "path": "statistics.tht_count",
+        "op": "equals",
+        "value": 2
+      },
+      "aspirational": false
+    }
+  ]
+}

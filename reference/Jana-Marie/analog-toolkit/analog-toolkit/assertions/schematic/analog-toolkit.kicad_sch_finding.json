@@ -1,0 +1,28 @@
+{
+  "file_pattern": "analog-toolkit.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000070",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000070-AST-03",
+      "description": "Decoupling analysis correct: +3V3 (4x caps, 5.0uF), VBUS (1x 4.7uF), +3.3VA (1x 100nF)",
+      "created_from": "FND-00000070",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000070-AST-04",
+      "description": "I2C bus detected with correct no-pull-up observation; UART TX/RX detected",
+      "created_from": "FND-00000070",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

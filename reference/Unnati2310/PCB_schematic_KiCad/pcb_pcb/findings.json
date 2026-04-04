@@ -1,0 +1,59 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "pcb.kicad_sch.json",
+      "status": "promoted",
+      "summary": "STM32 board (104 components). Crystal Y1 present but not detected. Multi-driver VCC conflict (2 regulators driving same net). 3 regulators detected. 7 components missing value.",
+      "correct": [
+        {
+          "description": "3 regulators detected",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Multi-driver VCC conflict: 2 regulators driving same net not flagged",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Crystal Y1 present in schematic but not detected",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
+        },
+        {
+          "description": "7 components missing value field",
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Detect crystals even when value field is missing",
+        "Flag multi-driver conflicts on power rails"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000242",
+      "repo": "Unnati2310/PCB_schematic_KiCad",
+      "project": "pcb_pcb",
+      "created": "2026-03-16T12:00:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

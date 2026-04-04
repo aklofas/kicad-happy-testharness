@@ -1,0 +1,52 @@
+{
+  "file_pattern": "switch-plate.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~91 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 86,
+        "max": 96
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Has 17 mounting_hole(s)",
+      "check": {
+        "path": "statistics.component_types.mounting_hole",
+        "op": "min_count",
+        "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "Has 74 switch(s)",
+      "check": {
+        "path": "statistics.component_types.switch",
+        "op": "min_count",
+        "value": 55
+      }
+    }
+  ]
+}

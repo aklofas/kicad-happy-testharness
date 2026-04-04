@@ -1,0 +1,51 @@
+{
+  "file_pattern": "2000ATX.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000280",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000280-AST-01",
+      "description": "67 RC filters correctly detected including 60 Zorro bus 1k+1nF snubbers",
+      "created_from": "FND-00000280",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000280-AST-03",
+      "description": "MC7905 -5V regulator correctly detected",
+      "created_from": "FND-00000280",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000280-AST-06",
+      "description": "INCORRECT: Q200/Q201 MMBFJ211 (lib Transistor_FET:BF545C) N-channel JFETs classified as type='mosfet' \u2014 signal_detectors.py hardcodes mosfet for all G/D/S transistors",
+      "created_from": "FND-00000280",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^Q200$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000280-AST-07",
+      "description": "INCORRECT: VC800 (CTRIM 22-47pF trimmer cap, lib 2000ATX-rescue:CTRIM-Device) misclassified as 'varistor' \u2014 VC prefix has no entry in type_map, falls to single-char V->varistor. Missing from Y800 crystal load_caps (shows only C810, should be C810+VC800)",
+      "created_from": "FND-00000280",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^Y800$"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "file_pattern": "LCD4x20.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000220",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000220-AST-01",
+      "description": "Zero voltage dividers, RC filters, LC filters, feedback networks, crystal circuits, transistor circuits all confirmed correct \u2014 no passive networks present",
+      "created_from": "FND-00000220",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000220-AST-02",
+      "description": "17 total components correctly counted, BOM values verified",
+      "created_from": "FND-00000220",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000220-AST-03",
+      "description": "Power rails correctly not reported \u2014 design uses Arduino Nano onboard regulators",
+      "created_from": "FND-00000220",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

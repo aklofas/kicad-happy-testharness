@@ -1,0 +1,39 @@
+{
+  "file_pattern": "Kyeboard.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000635",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000635-AST-01",
+      "description": "U1 detected with input_rail=Vbus_5V and U2 with input_rail=__unnamed_50 (U1 output), forming a two-stage adjustable linear regulator chain for LED power. Topology classified as LDO which, while not perfectly accurate (LM317 is adjustable linear, ~1.25V dropout), is functionally reasonable.",
+      "created_from": "FND-00000635",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000635-AST-02",
+      "description": "The top-level sheet reports 27 components while the PCB has 241 footprints. The 214-component gap comes from 72 instances of Button.sch (each instance has SW+D+LED) that are only parsed once in the KiCad 5 hierarchical model. The analyzer correctly parses what is in the schematic files; the instance multiplication is a known limitation of KiCad 5 legacy format.",
+      "created_from": "FND-00000635",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000635-AST-03",
+      "description": "The schematic uses hierarchical nets named C_0 through C_16 (17 columns) and R_0 through R_4 (5 rows) for an 85-key matrix. The key_matrices detector returns an empty list. The switch/diode pairs are in hierarchically-repeated Button.sch sub-sheets (72 instances), so the individual SW/D components aren't directly visible in the top sheet, but the row/column net labels are present and could be used for detection.",
+      "created_from": "FND-00000635",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

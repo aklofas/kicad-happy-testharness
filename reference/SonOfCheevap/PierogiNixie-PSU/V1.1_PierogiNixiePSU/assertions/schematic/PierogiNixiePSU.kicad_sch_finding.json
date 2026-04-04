@@ -1,0 +1,29 @@
+{
+  "file_pattern": "PierogiNixiePSU.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001127",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001127-AST-01",
+      "description": "Current sense detection correctly identifies R2=50m as shunt resistor with U1=MAX1771CSAT as the sense IC. This is accurate \u2014 R2 is the current sense shunt in the MAX1771 CS-pin feedback loop.",
+      "created_from": "FND-00001127",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001127-AST-02",
+      "description": "MAX1771 is a dedicated step-up (boost) DC-DC controller. The circuit has the classic boost topology: L1 between VIN and MOSFET drain, D1 from drain to output, output cap C1/C4. The topology field in power_regulators is 'unknown' for all three versions. The analyzer should detect this as 'boost' given the characteristic inductor-MOSFET-diode configuration.",
+      "created_from": "FND-00001127",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

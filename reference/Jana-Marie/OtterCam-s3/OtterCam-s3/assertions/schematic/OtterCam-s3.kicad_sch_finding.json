@@ -1,0 +1,80 @@
+{
+  "file_pattern": "OtterCam-s3.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000166",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000166-AST-01",
+      "description": "U1 Allwinner S3 SoC correctly identified as main IC",
+      "created_from": "FND-00000166",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000166-AST-03",
+      "description": "TVS protection devices correctly classified",
+      "created_from": "FND-00000166",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000180-AST-01",
+      "description": "U1 AllWinner-S3 correctly identified with 234 pins",
+      "created_from": "FND-00000180",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000180-AST-03",
+      "description": "Two SDIO buses correctly detected",
+      "created_from": "FND-00000180",
+      "check": {
+        "path": "design_analysis.bus_analysis.sdio",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000180-AST-04",
+      "description": "5 MIPI differential pairs detected",
+      "created_from": "FND-00000180",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000180-AST-05",
+      "description": "Ethernet PHY interface not detected",
+      "created_from": "FND-00000180",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000180-AST-06",
+      "description": "DDR memory interface not detected",
+      "created_from": "FND-00000180",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

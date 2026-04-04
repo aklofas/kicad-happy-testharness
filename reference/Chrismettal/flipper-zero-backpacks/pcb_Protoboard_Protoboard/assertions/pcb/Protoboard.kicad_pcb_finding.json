@@ -1,0 +1,18 @@
+{
+  "file_pattern": "Protoboard.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002095",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002095-AST-01",
+      "description": "The Protoboard is a Flipper Zero backpack protoboard with a 2.54mm grid of plated through-holes. The analyzer correctly reports 337 THT and 18 SMD footprints (the SMD ones are the connector pads). The 358 total footprint count vs 355 (337+18) discrepancy of 3 is unexplained but minor. Board dimensions (66.42x48.1mm), 0 vias, 0 zones, and routing_complete=true are all consistent with a manual proto-pad board with only edge connector routing.",
+      "created_from": "FND-00002095",
+      "check": {
+        "path": "statistics.tht_count",
+        "op": "greater_than",
+        "value": 300
+      }
+    }
+  ]
+}

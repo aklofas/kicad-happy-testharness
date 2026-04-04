@@ -1,0 +1,72 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001509",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001509-AST-01",
+      "description": "The gerber set correctly identifies B.Cu, B.Mask, B.Paste, B.SilkS, F.Cu, F.Mask, F.Paste, and F.SilkS layers (though Edge.Cuts is misidentified \u2014 see separate finding). The alignment check correctly reports aligned=true with SameCoordinates=Original in X2 attributes, indicating all gerbers share the same coordinate system.",
+      "created_from": "FND-00001509",
+      "check": {
+        "path": "completeness.found_layers",
+        "op": "contains_match",
+        "value": "F.Cu"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 8 items"
+    },
+    {
+      "id": "FND-00001509-AST-02",
+      "description": "The panelized set's drill files are correctly classified: 3240 via holes (0.3mm, the same as in the single-board PCB x54), 378 component holes (1.016mm, for J2 through-hole header x54), and 8 NPTH mounting holes (3.302mm, panel tooling/mounting holes). The v01b set has a smaller panel with 256 vias, 24 component holes (1.016mm), 4 component holes (0.95mm), and 8 NPTH holes.",
+      "created_from": "FND-00001509",
+      "check": {
+        "path": "drill_classification.vias.count",
+        "op": "greater_than",
+        "value": 3000
+      }
+    },
+    {
+      "id": "FND-00001509-AST-03",
+      "description": "The analyzer correctly finds three unique trace widths in the panelized gerbers: 0.2mm and 0.2032mm for signal routes, and 0.508mm for power traces. These match the PCB analyzer's track width distribution (0.2: 69 segments, 0.2032: 89 segments, 0.508: 19 segments). The min_trace_mm=0.2mm is correctly reported.",
+      "created_from": "FND-00001509",
+      "check": {
+        "path": "trace_widths.width_count",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "FND-00001509-AST-04",
+      "description": "The gerber component analysis shows 54 unique components per layer (front_side=31, back_side=23), consistent with the panelized PCB having 54 instances of the design. The pads_per_component counts (e.g., C1: 108 = 2 pads x 54 instances) are internally consistent.",
+      "created_from": "FND-00001509",
+      "check": {
+        "path": "component_analysis.total_unique",
+        "op": "equals",
+        "value": 54
+      }
+    },
+    {
+      "id": "FND-00001509-AST-05",
+      "description": "INCORRECT: The gerber completeness check reports missing_required=['Edge.Cuts'] and complete=false. However, both SparkFun_BMV080_panelized.GKO and SparkFun_BMV080_panelized_v01b.GKO contain the board outline \u2014 they use 'Profile' aperture function in their content. The problem is that these .GKO files have the X2 attribute FileFunction=Soldermask,Bot instead of the expected FileFunction,Profile. This causes the analyzer to classify the GKO files as B.Mask (layer_type='B.Mask') instead of Edge.Cuts. This appears to be a KiCad export bug where the panelizer tool embedded the wrong X2 FileFunction attribute in the outline file. The analyzer's behavior (classifying by X2 attribute) is technically correct, but the underlying board outline IS present.",
+      "created_from": "FND-00001509",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "contains_match",
+        "value": "Edge.Cuts"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001509-AST-06",
+      "description": "INCORRECT: The gerber set contains files from two panel versions (panelized and panelized_v01b), each a 2-layer board. The analyzer computes layer_count by counting copper gerber files: 2 per version x 2 versions = 4. This is misleading because a reader would expect layer_count to represent the PCB stack-up copper layer count (which is 2). The actual copper layer stack-up is F.Cu (L1) and B.Cu (L2) for both designs.",
+      "created_from": "FND-00001509",
+      "check": {
+        "path": "layer_count",
+        "op": "equals",
+        "value": 4
+      },
+      "aspirational": false
+    }
+  ]
+}

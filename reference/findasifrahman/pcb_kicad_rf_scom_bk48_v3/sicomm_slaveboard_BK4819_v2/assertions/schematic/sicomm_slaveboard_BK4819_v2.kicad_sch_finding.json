@@ -1,0 +1,50 @@
+{
+  "file_pattern": "sicomm_slaveboard_BK4819_v2.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000222",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000222-AST-01",
+      "description": "2 RF matching networks correctly identified: LNA_IN1 (antenna to CMX994E1) and ANT1 (antenna to RF switch), topologies and components verified",
+      "created_from": "FND-00000222",
+      "check": {
+        "path": "signal_analysis.rf_matching",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000222-AST-02",
+      "description": "123 total components, 58 unique parts correctly counted. BOM values verified across 72 caps, 22 resistors, 14 inductors, 7 ICs",
+      "created_from": "FND-00000222",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000222-AST-03",
+      "description": "Hierarchical schematic properly analyzed across 3 sheets (Amplifier, SCT3811, PCB_sicomm_bk4819)",
+      "created_from": "FND-00000222",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000222-AST-04",
+      "description": "INCORRECT: 23 LC filters overcounted \u2014 analyzer pairs every inductor-capacitor sharing a net. In RF designs these are impedance matching components, not discrete LC filters. L7 alone generates 4 pairs.",
+      "created_from": "FND-00000222",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L7$"
+      },
+      "aspirational": true
+    }
+  ]
+}

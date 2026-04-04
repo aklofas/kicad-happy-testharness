@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "last_scan": "2026-04-02T08:31:19.766533+00:00",
+  "last_scan": "2026-04-03T00:34:13.886197+00:00",
   "constants": [
     {
       "name": "SEVERITY_WEIGHTS",
@@ -63,9 +63,9 @@
       "content_hash": "sha256:4e07408562bedb8b",
       "id": "CONST-178",
       "category": "heuristic_threshold",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.1,
       "overfit_flags": [
@@ -75,7 +75,7 @@
       "impact_flags": [
         "empirical_cutoff"
       ],
-      "risk_score": 0.4
+      "risk_score": 0.1
     },
     {
       "name": "sev_order",
@@ -90,35 +90,35 @@
       "entries": {
         "CRITICAL": {
           "value": 0,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "HIGH": {
           "value": 1,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "MEDIUM": {
           "value": 2,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "LOW": {
           "value": 3,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "INFO": {
           "value": 4,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         }
       },
       "id": "CONST-181",
       "category": "heuristic_threshold",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
+      "status": "verified",
+      "verified_entries": 5,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -126,7 +126,7 @@
       "impact_flags": [
         "empirical_cutoff"
       ],
-      "risk_score": 0.4
+      "risk_score": 0.0
     },
     {
       "name": "cat_labels",
@@ -300,10 +300,36 @@
       "risk_score": 0.0
     },
     {
+      "name": "_NUMERIC_STACKUP_KEYS",
+      "file": "analyze_pcb.py",
+      "line": 251,
+      "end_line": 251,
+      "scope": "extract_setup",
+      "type": "keyword_set",
+      "entry_count": 3,
+      "content_hash": "sha256:fb8ade433a988216",
+      "function": "extract_setup",
+      "id": "CONST-322",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
+      "notes": null,
+      "overfit_score": 0.1,
+      "overfit_flags": [
+        "small_local_list"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.1
+    },
+    {
       "name": "_float_keys",
       "file": "analyze_pcb.py",
-      "line": 260,
-      "end_line": 263,
+      "line": 267,
+      "end_line": 270,
       "scope": "extract_setup",
       "type": "keyword_list",
       "entry_count": 3,
@@ -328,12 +354,12 @@
     {
       "name": "pad_info",
       "file": "analyze_pcb.py",
-      "line": 472,
-      "end_line": 476,
+      "line": 479,
+      "end_line": 483,
       "scope": "extract_footprints",
       "type": "lookup_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_472",
+      "content_hash": "sha256:ast_479",
       "function": "extract_footprints",
       "id": "CONST-080",
       "category": "keyword_classification",
@@ -352,12 +378,12 @@
     {
       "name": "fp_entry",
       "file": "analyze_pcb.py",
-      "line": 581,
-      "end_line": 593,
+      "line": 602,
+      "end_line": 614,
       "scope": "extract_footprints",
       "type": "lookup_table",
       "entry_count": 11,
-      "content_hash": "sha256:ast_581",
+      "content_hash": "sha256:ast_602",
       "function": "extract_footprints",
       "id": "CONST-081",
       "category": "keyword_classification",
@@ -376,12 +402,12 @@
     {
       "name": "seg_info",
       "file": "analyze_pcb.py",
-      "line": 653,
-      "end_line": 659,
+      "line": 674,
+      "end_line": 680,
       "scope": "extract_tracks",
       "type": "lookup_table",
       "entry_count": 7,
-      "content_hash": "sha256:ast_653",
+      "content_hash": "sha256:ast_674",
       "function": "extract_tracks",
       "id": "CONST-101",
       "category": "keyword_classification",
@@ -400,12 +426,12 @@
     {
       "name": "arc_info",
       "file": "analyze_pcb.py",
-      "line": 675,
-      "end_line": 682,
+      "line": 696,
+      "end_line": 703,
       "scope": "extract_tracks",
       "type": "lookup_table",
       "entry_count": 6,
-      "content_hash": "sha256:ast_675",
+      "content_hash": "sha256:ast_696",
       "function": "extract_tracks",
       "id": "CONST-102",
       "category": "keyword_classification",
@@ -424,12 +450,12 @@
     {
       "name": "via_info",
       "file": "analyze_pcb.py",
-      "line": 727,
-      "end_line": 733,
+      "line": 748,
+      "end_line": 754,
       "scope": "extract_vias",
       "type": "lookup_table",
       "entry_count": 5,
-      "content_hash": "sha256:ast_727",
+      "content_hash": "sha256:ast_748",
       "function": "extract_vias",
       "id": "CONST-082",
       "category": "keyword_classification",
@@ -448,12 +474,12 @@
     {
       "name": "zone_info",
       "file": "analyze_pcb.py",
-      "line": 895,
-      "end_line": 906,
+      "line": 920,
+      "end_line": 931,
       "scope": "extract_zones",
       "type": "lookup_table",
       "entry_count": 10,
-      "content_hash": "sha256:ast_895",
+      "content_hash": "sha256:ast_920",
       "function": "extract_zones",
       "id": "CONST-083",
       "category": "keyword_classification",
@@ -472,12 +498,12 @@
     {
       "name": "bbox",
       "file": "analyze_pcb.py",
-      "line": 999,
-      "end_line": 1006,
+      "line": 1072,
+      "end_line": 1079,
       "scope": "extract_board_outline",
       "type": "lookup_table",
       "entry_count": 6,
-      "content_hash": "sha256:ast_999",
+      "content_hash": "sha256:ast_1072",
       "function": "extract_board_outline",
       "id": "CONST-084",
       "category": "keyword_classification",
@@ -496,8 +522,8 @@
     {
       "name": "_ESD_TVS_PREFIXES",
       "file": "analyze_pcb.py",
-      "line": 1123,
-      "end_line": 1124,
+      "line": 1196,
+      "end_line": 1197,
       "scope": "module",
       "type": "keyword_list",
       "entry_count": 11,
@@ -519,8 +545,8 @@
     {
       "name": "SNAP",
       "file": "analyze_pcb.py",
-      "line": 1137,
-      "end_line": 1137,
+      "line": 1210,
+      "end_line": 1210,
       "scope": "_build_routing_graph",
       "type": "threshold",
       "entry_count": 1,
@@ -545,8 +571,8 @@
     {
       "name": "SAMPLE_INTERVAL",
       "file": "analyze_pcb.py",
-      "line": 1373,
-      "end_line": 1373,
+      "line": 1446,
+      "end_line": 1446,
       "scope": "analyze_return_path_continuity",
       "type": "threshold",
       "entry_count": 1,
@@ -571,12 +597,12 @@
     {
       "name": "seg_entry",
       "file": "analyze_pcb.py",
-      "line": 1603,
-      "end_line": 1607,
+      "line": 1732,
+      "end_line": 1736,
       "scope": "analyze_net_lengths",
       "type": "lookup_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_1603",
+      "content_hash": "sha256:ast_1732",
       "function": "analyze_net_lengths",
       "id": "CONST-089",
       "category": "keyword_classification",
@@ -593,20 +619,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "analyze_ground_domains:1719",
+      "name": "analyze_ground_domains:1848",
       "file": "analyze_pcb.py",
-      "line": 1719,
-      "end_line": 1719,
+      "line": 1848,
+      "end_line": 1848,
       "scope": "analyze_ground_domains",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:b3f8357c6802e93d",
       "function": "analyze_ground_domains",
-      "id": "CONST-317",
+      "id": "CONST-323",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -616,13 +642,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "type_counts",
       "file": "analyze_pcb.py",
-      "line": 2188,
-      "end_line": 2188,
+      "line": 2329,
+      "end_line": 2329,
       "scope": "analyze_vias",
       "type": "lookup_table",
       "entry_count": 3,
@@ -662,8 +688,8 @@
     {
       "name": "type_sizes",
       "file": "analyze_pcb.py",
-      "line": 2189,
-      "end_line": 2191,
+      "line": 2330,
+      "end_line": 2332,
       "scope": "analyze_vias",
       "type": "lookup_table",
       "entry_count": 3,
@@ -686,12 +712,12 @@
     {
       "name": "annular_ring",
       "file": "analyze_pcb.py",
-      "line": 2223,
-      "end_line": 2227,
+      "line": 2364,
+      "end_line": 2368,
       "scope": "analyze_vias",
       "type": "lookup_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_2223",
+      "content_hash": "sha256:ast_2364",
       "function": "analyze_vias",
       "id": "CONST-088",
       "category": "keyword_classification",
@@ -708,20 +734,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "analyze_vias:2296",
+      "name": "analyze_vias:2437",
       "file": "analyze_pcb.py",
-      "line": 2296,
-      "end_line": 2298,
+      "line": 2437,
+      "end_line": 2439,
       "scope": "analyze_vias",
       "type": "inline_keywords",
       "entry_count": 10,
       "content_hash": "sha256:a7d3cecc1c61b987",
       "function": "analyze_vias",
-      "id": "CONST-318",
+      "id": "CONST-324",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -731,17 +757,17 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "current_facts",
       "file": "analyze_pcb.py",
-      "line": 2360,
-      "end_line": 2366,
+      "line": 2501,
+      "end_line": 2507,
       "scope": "analyze_vias",
       "type": "lookup_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_2360",
+      "content_hash": "sha256:ast_2501",
       "function": "analyze_vias",
       "id": "CONST-090",
       "category": "keyword_classification",
@@ -760,8 +786,8 @@
     {
       "name": "rev_pattern",
       "file": "analyze_pcb.py",
-      "line": 2577,
-      "end_line": 2577,
+      "line": 2718,
+      "end_line": 2718,
       "scope": "extract_silkscreen",
       "type": "regex_pattern",
       "entry_count": 1,
@@ -782,20 +808,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "extract_silkscreen:2630",
+      "name": "extract_silkscreen:2771",
       "file": "analyze_pcb.py",
-      "line": 2630,
-      "end_line": 2630,
+      "line": 2771,
+      "end_line": 2771,
       "scope": "extract_silkscreen",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:20306210eafcf04d",
       "function": "extract_silkscreen",
-      "id": "CONST-319",
+      "id": "CONST-325",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -805,23 +831,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "extract_silkscreen:2632",
+      "name": "extract_silkscreen:2773",
       "file": "analyze_pcb.py",
-      "line": 2632,
-      "end_line": 2632,
+      "line": 2773,
+      "end_line": 2773,
       "scope": "extract_silkscreen",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:40dc8c5e6cbe6387",
       "function": "extract_silkscreen",
-      "id": "CONST-320",
+      "id": "CONST-326",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -831,23 +857,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "extract_silkscreen:2640",
+      "name": "extract_silkscreen:2781",
       "file": "analyze_pcb.py",
-      "line": 2640,
-      "end_line": 2641,
+      "line": 2781,
+      "end_line": 2782,
       "scope": "extract_silkscreen",
       "type": "inline_keywords",
       "entry_count": 11,
       "content_hash": "sha256:379e42b62a277d2b",
       "function": "extract_silkscreen",
-      "id": "CONST-321",
+      "id": "CONST-327",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -857,13 +883,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "LIMITS_STD",
       "file": "analyze_pcb.py",
-      "line": 3112,
-      "end_line": 3120,
+      "line": 3254,
+      "end_line": 3262,
       "scope": "analyze_dfm",
       "type": "lookup_table",
       "entry_count": 7,
@@ -925,8 +951,8 @@
     {
       "name": "LIMITS_ADV",
       "file": "analyze_pcb.py",
-      "line": 3122,
-      "end_line": 3127,
+      "line": 3264,
+      "end_line": 3269,
       "scope": "analyze_dfm",
       "type": "lookup_table",
       "entry_count": 4,
@@ -973,8 +999,8 @@
     {
       "name": "risk_order",
       "file": "analyze_pcb.py",
-      "line": 3492,
-      "end_line": 3492,
+      "line": 3634,
+      "end_line": 3634,
       "scope": "analyze_tombstoning_risk",
       "type": "lookup_table",
       "entry_count": 3,
@@ -1014,8 +1040,8 @@
     {
       "name": "adequacy_order",
       "file": "analyze_pcb.py",
-      "line": 3777,
-      "end_line": 3777,
+      "line": 3844,
+      "end_line": 3844,
       "scope": "analyze_thermal_pad_vias",
       "type": "lookup_table",
       "entry_count": 4,
@@ -1060,8 +1086,8 @@
     {
       "name": "_MPN_KEYS",
       "file": "analyze_schematic.py",
-      "line": 63,
-      "end_line": 67,
+      "line": 59,
+      "end_line": 63,
       "scope": "module",
       "type": "keyword_set",
       "entry_count": 12,
@@ -1083,8 +1109,8 @@
     {
       "name": "_MANUFACTURER_KEYS",
       "file": "analyze_schematic.py",
-      "line": 68,
-      "end_line": 70,
+      "line": 64,
+      "end_line": 66,
       "scope": "module",
       "type": "keyword_set",
       "entry_count": 3,
@@ -1106,8 +1132,8 @@
     {
       "name": "_DIGIKEY_KEYS",
       "file": "analyze_schematic.py",
-      "line": 71,
-      "end_line": 75,
+      "line": 67,
+      "end_line": 71,
       "scope": "module",
       "type": "keyword_set",
       "entry_count": 10,
@@ -1129,8 +1155,8 @@
     {
       "name": "_MOUSER_KEYS",
       "file": "analyze_schematic.py",
-      "line": 76,
-      "end_line": 78,
+      "line": 72,
+      "end_line": 74,
       "scope": "module",
       "type": "keyword_set",
       "entry_count": 5,
@@ -1152,8 +1178,8 @@
     {
       "name": "_LCSC_KEYS",
       "file": "analyze_schematic.py",
-      "line": 79,
-      "end_line": 82,
+      "line": 75,
+      "end_line": 78,
       "scope": "module",
       "type": "keyword_set",
       "entry_count": 8,
@@ -1175,8 +1201,8 @@
     {
       "name": "_ELEMENT14_KEYS",
       "file": "analyze_schematic.py",
-      "line": 83,
-      "end_line": 87,
+      "line": 79,
+      "end_line": 83,
       "scope": "module",
       "type": "keyword_set",
       "entry_count": 11,
@@ -1198,8 +1224,8 @@
     {
       "name": "_WIRE_GRID_SIZE",
       "file": "analyze_schematic.py",
-      "line": 908,
-      "end_line": 908,
+      "line": 895,
+      "end_line": 895,
       "scope": "build_net_map",
       "type": "threshold",
       "entry_count": 1,
@@ -1222,20 +1248,19 @@
       "risk_score": 0.1
     },
     {
-      "name": "_LIB_PREFIX_MAP",
+      "name": "_IC_LIB_PREFIX_MAP",
       "file": "analyze_schematic.py",
-      "line": 1220,
-      "end_line": 1279,
-      "scope": "_classify_ic_function",
+      "line": 1215,
+      "end_line": 1274,
+      "scope": "module",
       "type": "lookup_table",
       "entry_count": 58,
       "content_hash": "sha256:f1a7a1565c4c76fd",
-      "function": "_classify_ic_function",
-      "id": "CONST-002",
+      "id": "CONST-158",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "KiCad official symbol library naming conventions - https://kicad.github.io/symbols/ maps library paths to IC type descriptions",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -1248,20 +1273,19 @@
       "risk_score": 0.0
     },
     {
-      "name": "_VALUE_KEYWORDS",
+      "name": "_IC_VALUE_KEYWORDS",
       "file": "analyze_schematic.py",
-      "line": 1285,
-      "end_line": 1346,
-      "scope": "_classify_ic_function",
+      "line": 1276,
+      "end_line": 1337,
+      "scope": "module",
       "type": "tuple_table",
       "entry_count": 45,
       "content_hash": "sha256:200ba90996e6c056",
-      "function": "_classify_ic_function",
-      "id": "CONST-072",
+      "id": "CONST-170",
       "category": "unknown",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -1272,20 +1296,19 @@
       "risk_score": 0.0
     },
     {
-      "name": "_DESC_KEYWORDS",
+      "name": "_IC_DESC_KEYWORDS",
       "file": "analyze_schematic.py",
-      "line": 1359,
-      "end_line": 1404,
-      "scope": "_classify_ic_function",
+      "line": 1339,
+      "end_line": 1384,
+      "scope": "module",
       "type": "tuple_table",
       "entry_count": 44,
       "content_hash": "sha256:d3b1112bd5758d83",
-      "function": "_classify_ic_function",
-      "id": "CONST-074",
+      "id": "CONST-186",
       "category": "unknown",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -1298,8 +1321,8 @@
     {
       "name": "target_types",
       "file": "analyze_schematic.py",
-      "line": 1440,
-      "end_line": 1440,
+      "line": 1456,
+      "end_line": 1456,
       "scope": "analyze_ic_pinouts",
       "type": "keyword_set",
       "entry_count": 4,
@@ -1324,12 +1347,12 @@
     {
       "name": "pin_entry",
       "file": "analyze_schematic.py",
-      "line": 1490,
-      "end_line": 1496,
+      "line": 1512,
+      "end_line": 1518,
       "scope": "analyze_ic_pinouts",
       "type": "lookup_table",
       "entry_count": 5,
-      "content_hash": "sha256:ast_1490",
+      "content_hash": "sha256:ast_1512",
       "function": "analyze_ic_pinouts",
       "id": "CONST-004",
       "category": "keyword_classification",
@@ -1346,20 +1369,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "analyze_ic_pinouts:1556",
+      "name": "analyze_ic_pinouts:1578",
       "file": "analyze_schematic.py",
-      "line": 1556,
-      "end_line": 1557,
+      "line": 1578,
+      "end_line": 1579,
       "scope": "analyze_ic_pinouts",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:99b9e86eea6a826f",
       "function": "analyze_ic_pinouts",
-      "id": "CONST-091",
+      "id": "CONST-187",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -1369,17 +1392,17 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "ic_result",
       "file": "analyze_schematic.py",
-      "line": 1591,
-      "end_line": 1606,
+      "line": 1613,
+      "end_line": 1628,
       "scope": "analyze_ic_pinouts",
       "type": "lookup_table",
       "entry_count": 14,
-      "content_hash": "sha256:ast_1591",
+      "content_hash": "sha256:ast_1613",
       "function": "analyze_ic_pinouts",
       "id": "CONST-006",
       "category": "keyword_classification",
@@ -1398,8 +1421,8 @@
     {
       "name": "_LEGACY_PIN_TYPE_MAP",
       "file": "analyze_schematic.py",
-      "line": 1679,
-      "end_line": 1691,
+      "line": 1704,
+      "end_line": 1716,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 11,
@@ -1422,8 +1445,8 @@
     {
       "name": "_M",
       "file": "analyze_schematic.py",
-      "line": 1702,
-      "end_line": 1702,
+      "line": 1727,
+      "end_line": 1727,
       "scope": "module",
       "type": "threshold",
       "entry_count": 1,
@@ -1447,12 +1470,12 @@
     {
       "name": "_STANDARD_LIB_PINS",
       "file": "analyze_schematic.py",
-      "line": 1722,
-      "end_line": 1869,
+      "line": 1747,
+      "end_line": 1894,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 34,
-      "content_hash": "sha256:ast_1722",
+      "content_hash": "sha256:ast_1747",
       "id": "CONST-009",
       "category": "keyword_classification",
       "status": "verified",
@@ -1472,12 +1495,12 @@
     {
       "name": "sym_def",
       "file": "analyze_schematic.py",
-      "line": 1954,
-      "end_line": 1962,
+      "line": 1979,
+      "end_line": 1987,
       "scope": "_parse_legacy_lib",
       "type": "lookup_table",
       "entry_count": 7,
-      "content_hash": "sha256:ast_1954",
+      "content_hash": "sha256:ast_1979",
       "function": "_parse_legacy_lib",
       "id": "CONST-019",
       "category": "keyword_classification",
@@ -1496,8 +1519,8 @@
     {
       "name": "_MAX_SNAP_DIST",
       "file": "analyze_schematic.py",
-      "line": 2114,
-      "end_line": 2114,
+      "line": 2139,
+      "end_line": 2139,
       "scope": "_snap_pins_to_wires",
       "type": "threshold",
       "entry_count": 1,
@@ -1520,20 +1543,20 @@
       "risk_score": 0.1
     },
     {
-      "name": "_parse_legacy_single_sheet:2281",
+      "name": "_parse_legacy_single_sheet:2306",
       "file": "analyze_schematic.py",
-      "line": 2281,
-      "end_line": 2281,
+      "line": 2306,
+      "end_line": 2306,
       "scope": "_parse_legacy_single_sheet",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:89ff22ac4f13f504",
       "function": "_parse_legacy_single_sheet",
-      "id": "CONST-092",
+      "id": "CONST-192",
       "category": "standard",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -1548,12 +1571,12 @@
     {
       "name": "ps",
       "file": "analyze_schematic.py",
-      "line": 2539,
-      "end_line": 2544,
+      "line": 2566,
+      "end_line": 2571,
       "scope": "parse_legacy_schematic",
       "type": "lookup_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_2539",
+      "content_hash": "sha256:ast_2566",
       "function": "parse_legacy_schematic",
       "id": "CONST-014",
       "category": "keyword_classification",
@@ -1572,8 +1595,8 @@
     {
       "name": "output_types",
       "file": "analyze_schematic.py",
-      "line": 2716,
-      "end_line": 2716,
+      "line": 2756,
+      "end_line": 2756,
       "scope": "analyze_connectivity",
       "type": "keyword_set",
       "entry_count": 3,
@@ -1596,124 +1619,20 @@
       "risk_score": 0.1
     },
     {
-      "name": "analyze_design_rules:2806",
-      "file": "analyze_schematic.py",
-      "line": 2806,
-      "end_line": 2806,
-      "scope": "analyze_design_rules",
-      "type": "inline_keywords",
-      "entry_count": 7,
-      "content_hash": "sha256:c8c2af3cbc8f02f5",
-      "function": "analyze_design_rules",
-      "id": "CONST-093",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "analyze_design_rules:2808",
-      "file": "analyze_schematic.py",
-      "line": 2808,
-      "end_line": 2808,
-      "scope": "analyze_design_rules",
-      "type": "inline_keywords",
-      "entry_count": 8,
-      "content_hash": "sha256:f94f97f58203c8ce",
-      "function": "analyze_design_rules",
-      "id": "CONST-094",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "analyze_design_rules:2810",
-      "file": "analyze_schematic.py",
-      "line": 2810,
-      "end_line": 2810,
-      "scope": "analyze_design_rules",
-      "type": "inline_keywords",
-      "entry_count": 4,
-      "content_hash": "sha256:d5a3111122d2d379",
-      "function": "analyze_design_rules",
-      "id": "CONST-136",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "analyze_design_rules:2812",
-      "file": "analyze_schematic.py",
-      "line": 2812,
-      "end_line": 2812,
-      "scope": "analyze_design_rules",
-      "type": "inline_keywords",
-      "entry_count": 5,
-      "content_hash": "sha256:7d5e184e437a94bc",
-      "function": "analyze_design_rules",
-      "id": "CONST-265",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "analyze_design_rules:2814",
+      "name": "_classify_nets:2814",
       "file": "analyze_schematic.py",
       "line": 2814,
       "end_line": 2814,
-      "scope": "analyze_design_rules",
+      "scope": "_classify_nets",
       "type": "inline_keywords",
-      "entry_count": 5,
-      "content_hash": "sha256:c3c726d2a447ec90",
-      "function": "analyze_design_rules",
-      "id": "CONST-266",
+      "entry_count": 7,
+      "content_hash": "sha256:c8c2af3cbc8f02f5",
+      "function": "_classify_nets",
+      "id": "CONST-193",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA net naming conventions for power/ground/analog/digital classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -1723,23 +1642,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "analyze_design_rules:2816",
+      "name": "_classify_nets:2816",
       "file": "analyze_schematic.py",
       "line": 2816,
       "end_line": 2816,
-      "scope": "analyze_design_rules",
+      "scope": "_classify_nets",
       "type": "inline_keywords",
-      "entry_count": 5,
-      "content_hash": "sha256:d07193d64a8bedfd",
-      "function": "analyze_design_rules",
-      "id": "CONST-298",
+      "entry_count": 8,
+      "content_hash": "sha256:f94f97f58203c8ce",
+      "function": "_classify_nets",
+      "id": "CONST-194",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA net naming conventions for power/ground/analog/digital classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -1749,23 +1668,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "analyze_design_rules:2818",
+      "name": "_classify_nets:2818",
       "file": "analyze_schematic.py",
       "line": 2818,
       "end_line": 2818,
-      "scope": "analyze_design_rules",
+      "scope": "_classify_nets",
       "type": "inline_keywords",
       "entry_count": 4,
-      "content_hash": "sha256:422309205997eaf2",
-      "function": "analyze_design_rules",
-      "id": "CONST-299",
+      "content_hash": "sha256:d5a3111122d2d379",
+      "function": "_classify_nets",
+      "id": "CONST-195",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA net naming conventions for power/ground/analog/digital classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -1775,23 +1694,49 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "analyze_design_rules:2822",
+      "name": "_classify_nets:2820",
+      "file": "analyze_schematic.py",
+      "line": 2820,
+      "end_line": 2820,
+      "scope": "_classify_nets",
+      "type": "inline_keywords",
+      "entry_count": 5,
+      "content_hash": "sha256:7d5e184e437a94bc",
+      "function": "_classify_nets",
+      "id": "CONST-196",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Standard EDA net naming conventions for power/ground/analog/digital classification",
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.2
+    },
+    {
+      "name": "_classify_nets:2822",
       "file": "analyze_schematic.py",
       "line": 2822,
       "end_line": 2822,
-      "scope": "analyze_design_rules",
+      "scope": "_classify_nets",
       "type": "inline_keywords",
-      "entry_count": 4,
-      "content_hash": "sha256:de575b85bd9096c3",
-      "function": "analyze_design_rules",
-      "id": "CONST-300",
+      "entry_count": 5,
+      "content_hash": "sha256:c3c726d2a447ec90",
+      "function": "_classify_nets",
+      "id": "CONST-204",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA net naming conventions for power/ground/analog/digital classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -1801,23 +1746,49 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "analyze_design_rules:2826",
+      "name": "_classify_nets:2824",
+      "file": "analyze_schematic.py",
+      "line": 2824,
+      "end_line": 2824,
+      "scope": "_classify_nets",
+      "type": "inline_keywords",
+      "entry_count": 5,
+      "content_hash": "sha256:d07193d64a8bedfd",
+      "function": "_classify_nets",
+      "id": "CONST-205",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Standard EDA net naming conventions for power/ground/analog/digital classification",
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.2
+    },
+    {
+      "name": "_classify_nets:2826",
       "file": "analyze_schematic.py",
       "line": 2826,
       "end_line": 2826,
-      "scope": "analyze_design_rules",
+      "scope": "_classify_nets",
       "type": "inline_keywords",
-      "entry_count": 9,
-      "content_hash": "sha256:7cec5a9d1e7e9e16",
-      "function": "analyze_design_rules",
-      "id": "CONST-301",
+      "entry_count": 4,
+      "content_hash": "sha256:422309205997eaf2",
+      "function": "_classify_nets",
+      "id": "CONST-216",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA net naming conventions for power/ground/analog/digital classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -1827,23 +1798,75 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
+    },
+    {
+      "name": "_classify_nets:2830",
+      "file": "analyze_schematic.py",
+      "line": 2830,
+      "end_line": 2830,
+      "scope": "_classify_nets",
+      "type": "inline_keywords",
+      "entry_count": 4,
+      "content_hash": "sha256:de575b85bd9096c3",
+      "function": "_classify_nets",
+      "id": "CONST-221",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Standard EDA net naming conventions for power/ground/analog/digital classification",
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.2
+    },
+    {
+      "name": "_classify_nets:2834",
+      "file": "analyze_schematic.py",
+      "line": 2834,
+      "end_line": 2834,
+      "scope": "_classify_nets",
+      "type": "inline_keywords",
+      "entry_count": 9,
+      "content_hash": "sha256:7cec5a9d1e7e9e16",
+      "function": "_classify_nets",
+      "id": "CONST-222",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Standard EDA net naming conventions for power/ground/analog/digital classification",
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.2
     },
     {
       "name": "_io_pin_names",
       "file": "analyze_schematic.py",
-      "line": 2837,
-      "end_line": 2838,
-      "scope": "analyze_design_rules",
+      "line": 2857,
+      "end_line": 2858,
+      "scope": "_map_power_domains",
       "type": "keyword_set",
       "entry_count": 10,
       "content_hash": "sha256:ae552059c48f51f0",
-      "function": "analyze_design_rules",
-      "id": "CONST-024",
+      "function": "_map_power_domains",
+      "id": "CONST-223",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -1856,18 +1879,18 @@
     {
       "name": "_sense_pin_names",
       "file": "analyze_schematic.py",
-      "line": 2839,
-      "end_line": 2841,
-      "scope": "analyze_design_rules",
+      "line": 2859,
+      "end_line": 2861,
+      "scope": "_map_power_domains",
       "type": "keyword_set",
       "entry_count": 17,
       "content_hash": "sha256:5e16b445b1983aa7",
-      "function": "analyze_design_rules",
-      "id": "CONST-025",
+      "function": "_map_power_domains",
+      "id": "CONST-224",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -1881,18 +1904,18 @@
     {
       "name": "_pwr_pin_to_rail",
       "file": "analyze_schematic.py",
-      "line": 2873,
-      "end_line": 2874,
-      "scope": "analyze_design_rules",
+      "line": 2893,
+      "end_line": 2894,
+      "scope": "_map_power_domains",
       "type": "keyword_set",
       "entry_count": 11,
       "content_hash": "sha256:0791c9b31c2e4df5",
-      "function": "analyze_design_rules",
-      "id": "CONST-026",
+      "function": "_map_power_domains",
+      "id": "CONST-225",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -1905,18 +1928,18 @@
     {
       "name": "level_translator_keywords",
       "file": "analyze_schematic.py",
-      "line": 2913,
-      "end_line": 2918,
-      "scope": "analyze_design_rules",
+      "line": 2991,
+      "end_line": 2996,
+      "scope": "_detect_cross_domain_signals",
       "type": "keyword_list",
       "entry_count": 20,
       "content_hash": "sha256:f8a5ccb11e07eb7d",
-      "function": "analyze_design_rules",
-      "id": "CONST-027",
+      "function": "_detect_cross_domain_signals",
+      "id": "CONST-226",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -1930,42 +1953,18 @@
     {
       "name": "level_translator_desc_keywords",
       "file": "analyze_schematic.py",
-      "line": 2919,
-      "end_line": 2922,
-      "scope": "analyze_design_rules",
+      "line": 2997,
+      "end_line": 3000,
+      "scope": "_detect_cross_domain_signals",
       "type": "keyword_list",
       "entry_count": 5,
       "content_hash": "sha256:547984a1c22f612c",
-      "function": "analyze_design_rules",
-      "id": "CONST-028",
+      "function": "_detect_cross_domain_signals",
+      "id": "CONST-227",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
-      "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.0
-    },
-    {
-      "name": "buses",
-      "file": "analyze_schematic.py",
-      "line": 3036,
-      "end_line": 3036,
-      "scope": "analyze_design_rules",
-      "type": "lookup_table",
-      "entry_count": 4,
-      "content_hash": "sha256:1b09f9f95a286c24",
-      "function": "analyze_design_rules",
-      "id": "CONST-029",
-      "category": "keyword_classification",
-      "status": "verified",
-      "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -1978,18 +1977,18 @@
     {
       "name": "_spi_net_kw",
       "file": "analyze_schematic.py",
-      "line": 3150,
-      "end_line": 3150,
-      "scope": "analyze_design_rules",
+      "line": 3204,
+      "end_line": 3204,
+      "scope": "_detect_spi_buses",
       "type": "keyword_list",
       "entry_count": 8,
       "content_hash": "sha256:12b41adb7809b843",
-      "function": "analyze_design_rules",
-      "id": "CONST-030",
+      "function": "_detect_spi_buses",
+      "id": "CONST-228",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2002,18 +2001,18 @@
     {
       "name": "_spi_canon",
       "file": "analyze_schematic.py",
-      "line": 3151,
-      "end_line": 3154,
-      "scope": "analyze_design_rules",
+      "line": 3205,
+      "end_line": 3208,
+      "scope": "_detect_spi_buses",
       "type": "lookup_table",
       "entry_count": 5,
       "content_hash": "sha256:6238f401e5d54dae",
-      "function": "analyze_design_rules",
-      "id": "CONST-031",
+      "function": "_detect_spi_buses",
+      "id": "CONST-229",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2026,18 +2025,18 @@
     {
       "name": "_uart_exclude",
       "file": "analyze_schematic.py",
-      "line": 3200,
-      "end_line": 3203,
-      "scope": "analyze_design_rules",
+      "line": 3259,
+      "end_line": 3262,
+      "scope": "_detect_uart_buses",
       "type": "keyword_list",
       "entry_count": 23,
       "content_hash": "sha256:018b7426a5934203",
-      "function": "analyze_design_rules",
-      "id": "CONST-032",
+      "function": "_detect_uart_buses",
+      "id": "CONST-230",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2049,20 +2048,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "analyze_design_rules:3210",
+      "name": "_detect_uart_buses:3269",
       "file": "analyze_schematic.py",
-      "line": 3210,
-      "end_line": 3210,
-      "scope": "analyze_design_rules",
+      "line": 3269,
+      "end_line": 3269,
+      "scope": "_detect_uart_buses",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:6692a98de71d1d1a",
-      "function": "analyze_design_rules",
-      "id": "CONST-302",
+      "function": "_detect_uart_buses",
+      "id": "CONST-231",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2072,23 +2071,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_sdio_prefixes",
       "file": "analyze_schematic.py",
-      "line": 3223,
-      "end_line": 3223,
-      "scope": "analyze_design_rules",
+      "line": 3289,
+      "end_line": 3289,
+      "scope": "_detect_sdio_buses",
       "type": "keyword_list",
       "entry_count": 7,
       "content_hash": "sha256:3ec52e1e52390cd9",
-      "function": "analyze_design_rules",
-      "id": "CONST-034",
+      "function": "_detect_sdio_buses",
+      "id": "CONST-232",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2099,20 +2098,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "analyze_design_rules:3235",
+      "name": "_detect_sdio_buses:3301",
       "file": "analyze_schematic.py",
-      "line": 3235,
-      "end_line": 3235,
-      "scope": "analyze_design_rules",
+      "line": 3301,
+      "end_line": 3301,
+      "scope": "_detect_sdio_buses",
       "type": "inline_keywords",
       "entry_count": 10,
       "content_hash": "sha256:05b1094ebbea8c86",
-      "function": "analyze_design_rules",
-      "id": "CONST-303",
+      "function": "_detect_sdio_buses",
+      "id": "CONST-233",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2122,23 +2121,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "can_keywords",
       "file": "analyze_schematic.py",
-      "line": 3299,
-      "end_line": 3299,
-      "scope": "analyze_design_rules",
+      "line": 3374,
+      "end_line": 3374,
+      "scope": "_detect_can_buses",
       "type": "keyword_list",
       "entry_count": 8,
       "content_hash": "sha256:90050239f678aedd",
-      "function": "analyze_design_rules",
-      "id": "CONST-036",
+      "function": "_detect_can_buses",
+      "id": "CONST-234",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2151,18 +2150,18 @@
     {
       "name": "can_transceiver_kw",
       "file": "analyze_schematic.py",
-      "line": 3301,
-      "end_line": 3303,
-      "scope": "analyze_design_rules",
+      "line": 3376,
+      "end_line": 3378,
+      "scope": "_detect_can_buses",
       "type": "keyword_list",
       "entry_count": 12,
       "content_hash": "sha256:ed93a66421c71efa",
-      "function": "analyze_design_rules",
-      "id": "CONST-037",
+      "function": "_detect_can_buses",
+      "id": "CONST-235",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2175,18 +2174,18 @@
     {
       "name": "_rs485_kw",
       "file": "analyze_schematic.py",
-      "line": 3329,
-      "end_line": 3336,
-      "scope": "analyze_design_rules",
+      "line": 3409,
+      "end_line": 3416,
+      "scope": "_detect_rs485_buses",
       "type": "keyword_list",
       "entry_count": 28,
       "content_hash": "sha256:1b1440c63c2c40a0",
-      "function": "analyze_design_rules",
-      "id": "CONST-038",
+      "function": "_detect_rs485_buses",
+      "id": "CONST-236",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2198,20 +2197,44 @@
       "risk_score": 0.0
     },
     {
-      "name": "analyze_design_rules:3389",
+      "name": "buses",
       "file": "analyze_schematic.py",
-      "line": 3389,
-      "end_line": 3389,
-      "scope": "analyze_design_rules",
+      "line": 3470,
+      "end_line": 3475,
+      "scope": "_analyze_bus_protocols",
+      "type": "lookup_table",
+      "entry_count": 4,
+      "content_hash": "sha256:ast_3470",
+      "function": "_analyze_bus_protocols",
+      "id": "CONST-237",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0
+    },
+    {
+      "name": "_analyze_bus_protocols:3493",
+      "file": "analyze_schematic.py",
+      "line": 3493,
+      "end_line": 3493,
+      "scope": "_analyze_bus_protocols",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:d6934cc59f8fe267",
-      "function": "analyze_design_rules",
-      "id": "CONST-304",
+      "function": "_analyze_bus_protocols",
+      "id": "CONST-243",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Protocol specifications: SPI (Motorola), UART (TIA/EIA-232), SDIO (SD Association), CAN (ISO 11898), RS-485 (TIA/EIA-485) signal naming",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2221,23 +2244,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_diff_suffix_pairs",
       "file": "analyze_schematic.py",
-      "line": 3404,
-      "end_line": 3414,
-      "scope": "analyze_design_rules",
+      "line": 3544,
+      "end_line": 3554,
+      "scope": "_detect_differential_pairs",
       "type": "tuple_table",
       "entry_count": 14,
       "content_hash": "sha256:b3aeba0f7c6936ad",
-      "function": "analyze_design_rules",
-      "id": "CONST-085",
+      "function": "_detect_differential_pairs",
+      "id": "CONST-244",
       "category": "unknown",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2248,18 +2271,18 @@
     {
       "name": "outputs",
       "file": "analyze_schematic.py",
-      "line": 3526,
-      "end_line": 3526,
-      "scope": "analyze_design_rules",
+      "line": 3651,
+      "end_line": 3651,
+      "scope": "_check_erc_warnings",
       "type": "keyword_set",
       "entry_count": 5,
       "content_hash": "sha256:2191e4980a1ca34b",
-      "function": "analyze_design_rules",
-      "id": "CONST-040",
+      "function": "_check_erc_warnings",
+      "id": "CONST-245",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2272,18 +2295,18 @@
     {
       "name": "drivers",
       "file": "analyze_schematic.py",
-      "line": 3527,
-      "end_line": 3527,
-      "scope": "analyze_design_rules",
+      "line": 3652,
+      "end_line": 3652,
+      "scope": "_check_erc_warnings",
       "type": "keyword_set",
       "entry_count": 6,
       "content_hash": "sha256:f682ebb5594976b7",
-      "function": "analyze_design_rules",
-      "id": "CONST-041",
+      "function": "_check_erc_warnings",
+      "id": "CONST-248",
       "category": "keyword_classification",
       "status": "verified",
       "verified_entries": 0,
-      "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2296,8 +2319,8 @@
     {
       "name": "drivers",
       "file": "analyze_schematic.py",
-      "line": 3714,
-      "end_line": 3714,
+      "line": 3840,
+      "end_line": 3840,
       "scope": "validate_label_shapes",
       "type": "keyword_set",
       "entry_count": 6,
@@ -2320,8 +2343,8 @@
     {
       "name": "_STANDARD_FP_LIBS",
       "file": "analyze_schematic.py",
-      "line": 3812,
-      "end_line": 3822,
+      "line": 3938,
+      "end_line": 3948,
       "scope": "validate_footprint_filters",
       "type": "keyword_set",
       "entry_count": 35,
@@ -2346,8 +2369,8 @@
     {
       "name": "_GENERIC_TRANSISTOR_PREFIXES",
       "file": "analyze_schematic.py",
-      "line": 3885,
-      "end_line": 3885,
+      "line": 4011,
+      "end_line": 4011,
       "scope": "module",
       "type": "keyword_list",
       "entry_count": 4,
@@ -2359,14 +2382,16 @@
       "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:403_repos"
+      ],
       "impact_score": 0.3,
       "impact_flags": [
         "classification_keywords"
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 400,
+        "repos": 403,
         "section": "transistor_circuits",
         "total_repos_scanned": 1035
       }
@@ -2374,8 +2399,8 @@
     {
       "name": "_GENERIC_TYPE_LABELS",
       "file": "analyze_schematic.py",
-      "line": 3888,
-      "end_line": 3893,
+      "line": 4014,
+      "end_line": 4019,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 4,
@@ -2387,14 +2412,16 @@
       "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:403_repos"
+      ],
       "impact_score": 0.1,
       "impact_flags": [
         "standard_format"
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 400,
+        "repos": 403,
         "section": "transistor_circuits",
         "total_repos_scanned": 1035
       }
@@ -2402,8 +2429,8 @@
     {
       "name": "_PIN_LETTER_NAMES",
       "file": "analyze_schematic.py",
-      "line": 3896,
-      "end_line": 3899,
+      "line": 4022,
+      "end_line": 4025,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 6,
@@ -2415,33 +2442,35 @@
       "source": "Verified against KiCad 5/6/7/8 file format docs, KiCad symbol/footprint library conventions (KLC), manufacturer datasheets. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:403_repos"
+      ],
       "impact_score": 0.1,
       "impact_flags": [
         "standard_format"
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 400,
+        "repos": 403,
         "section": "transistor_circuits",
         "total_repos_scanned": 1035
       }
     },
     {
-      "name": "classify_ground_domains:4069",
+      "name": "classify_ground_domains:4195",
       "file": "analyze_schematic.py",
-      "line": 4069,
-      "end_line": 4069,
+      "line": 4195,
+      "end_line": 4195,
       "scope": "classify_ground_domains",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:70d3e13853d93df3",
       "function": "classify_ground_domains",
-      "id": "CONST-305",
+      "id": "CONST-249",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2451,23 +2480,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_ground_domains:4071",
+      "name": "classify_ground_domains:4197",
       "file": "analyze_schematic.py",
-      "line": 4071,
-      "end_line": 4071,
+      "line": 4197,
+      "end_line": 4197,
       "scope": "classify_ground_domains",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:caf38c35e24aacad",
       "function": "classify_ground_domains",
-      "id": "CONST-306",
+      "id": "CONST-250",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2477,23 +2506,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_ground_domains:4073",
+      "name": "classify_ground_domains:4199",
       "file": "analyze_schematic.py",
-      "line": 4073,
-      "end_line": 4073,
+      "line": 4199,
+      "end_line": 4199,
       "scope": "classify_ground_domains",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:7553972514229757",
       "function": "classify_ground_domains",
-      "id": "CONST-307",
+      "id": "CONST-277",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2503,23 +2532,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_ground_domains:4075",
+      "name": "classify_ground_domains:4201",
       "file": "analyze_schematic.py",
-      "line": 4075,
-      "end_line": 4075,
+      "line": 4201,
+      "end_line": 4201,
       "scope": "classify_ground_domains",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:6ab864dc8fbde995",
       "function": "classify_ground_domains",
-      "id": "CONST-308",
+      "id": "CONST-278",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC datasheet terminology for pin functions, component descriptions, and ground domain classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2529,56 +2558,56 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "esl_by_pkg",
       "file": "analyze_schematic.py",
-      "line": 4571,
-      "end_line": 4575,
+      "line": 4705,
+      "end_line": 4709,
       "scope": "analyze_pdn_impedance",
       "type": "lookup_table",
       "entry_count": 8,
-      "content_hash": "sha256:17f1e2bb167788e5",
+      "content_hash": "sha256:3d9972917055c38a",
       "function": "analyze_pdn_impedance",
       "entries": {
         "0201": {
-          "value": 2e-10,
-          "status": "verified",
-          "source": null
-        },
-        "0402": {
           "value": 3e-10,
           "status": "verified",
           "source": null
         },
-        "0603": {
+        "0402": {
           "value": 5e-10,
           "status": "verified",
           "source": null
         },
+        "0603": {
+          "value": 7e-10,
+          "status": "verified",
+          "source": null
+        },
         "0805": {
-          "value": 8e-10,
+          "value": 9e-10,
           "status": "verified",
           "source": null
         },
         "1206": {
-          "value": 1.2e-09,
+          "value": 1.1e-09,
           "status": "verified",
           "source": null
         },
         "1210": {
-          "value": 1.5e-09,
+          "value": 1.2e-09,
           "status": "verified",
           "source": null
         },
         "1812": {
-          "value": 2e-09,
+          "value": 1.5e-09,
           "status": "verified",
           "source": null
         },
         "2220": {
-          "value": 2.5e-09,
+          "value": 1.8e-09,
           "status": "verified",
           "source": null
         }
@@ -2590,7 +2619,9 @@
       "source": "Verified against Murata/TDK typical ESL values, 2026-03-31.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:717_repos"
+      ],
       "impact_score": 0.8,
       "impact_flags": [
         "datasheet_values",
@@ -2606,51 +2637,51 @@
     {
       "name": "esr_base_by_pkg",
       "file": "analyze_schematic.py",
-      "line": 4576,
-      "end_line": 4580,
+      "line": 4711,
+      "end_line": 4715,
       "scope": "analyze_pdn_impedance",
       "type": "lookup_table",
       "entry_count": 8,
-      "content_hash": "sha256:13e216098966f9b6",
+      "content_hash": "sha256:820f1ee388c579c7",
       "function": "analyze_pdn_impedance",
       "entries": {
         "0201": {
-          "value": 0.02,
+          "value": 0.5,
           "status": "verified",
           "source": null
         },
         "0402": {
-          "value": 0.015,
+          "value": 0.3,
           "status": "verified",
           "source": null
         },
         "0603": {
-          "value": 0.012,
+          "value": 0.1,
           "status": "verified",
           "source": null
         },
         "0805": {
-          "value": 0.01,
+          "value": 0.05,
           "status": "verified",
           "source": null
         },
         "1206": {
-          "value": 0.01,
+          "value": 0.03,
           "status": "verified",
           "source": null
         },
         "1210": {
-          "value": 0.01,
+          "value": 0.02,
           "status": "verified",
           "source": null
         },
         "1812": {
-          "value": 0.01,
+          "value": 0.02,
           "status": "verified",
           "source": null
         },
         "2220": {
-          "value": 0.01,
+          "value": 0.015,
           "status": "verified",
           "source": null
         }
@@ -2662,7 +2693,9 @@
       "source": "Verified against Murata/TDK typical ESR values, 2026-03-31.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:717_repos"
+      ],
       "impact_score": 0.8,
       "impact_flags": [
         "datasheet_values",
@@ -2676,20 +2709,20 @@
       }
     },
     {
-      "name": "_is_electrolytic_or_tantalum:4600",
+      "name": "_is_electrolytic_or_tantalum:4735",
       "file": "analyze_schematic.py",
-      "line": 4600,
-      "end_line": 4600,
+      "line": 4735,
+      "end_line": 4735,
       "scope": "analyze_pdn_impedance._is_electrolytic_or_tantalum",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:217a2cded8bfad94",
       "function": "_is_electrolytic_or_tantalum",
-      "id": "CONST-309",
+      "id": "CONST-280",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2699,17 +2732,17 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "cap_entry",
       "file": "analyze_schematic.py",
-      "line": 4658,
-      "end_line": 4667,
+      "line": 4791,
+      "end_line": 4800,
       "scope": "analyze_pdn_impedance",
       "type": "lookup_table",
       "entry_count": 8,
-      "content_hash": "sha256:ast_4658",
+      "content_hash": "sha256:ast_4791",
       "function": "analyze_pdn_impedance",
       "id": "CONST-054",
       "category": "keyword_classification",
@@ -2728,12 +2761,12 @@
     {
       "name": "rail_result",
       "file": "analyze_schematic.py",
-      "line": 4717,
-      "end_line": 4726,
+      "line": 4870,
+      "end_line": 4879,
       "scope": "analyze_pdn_impedance",
       "type": "lookup_table",
       "entry_count": 5,
-      "content_hash": "sha256:ast_4717",
+      "content_hash": "sha256:ast_4870",
       "function": "analyze_pdn_impedance",
       "id": "CONST-055",
       "category": "keyword_classification",
@@ -2752,8 +2785,8 @@
     {
       "name": "_iq_estimates_uA",
       "file": "analyze_schematic.py",
-      "line": 4882,
-      "end_line": 4900,
+      "line": 5034,
+      "end_line": 5052,
       "scope": "analyze_sleep_current",
       "type": "lookup_table",
       "entry_count": 16,
@@ -2859,17 +2892,17 @@
     {
       "name": "_DERATING_PROFILES",
       "file": "analyze_schematic.py",
-      "line": 4979,
-      "end_line": 4995,
+      "line": 5131,
+      "end_line": 5147,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 3,
       "content_hash": "sha256:beb3f2e9698d6b0c",
       "id": "CONST-120",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2877,23 +2910,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.0
     },
     {
-      "name": "_classify_cap_dielectric:5024",
+      "name": "_classify_cap_dielectric:5180",
       "file": "analyze_schematic.py",
-      "line": 5024,
-      "end_line": 5024,
+      "line": 5180,
+      "end_line": 5180,
       "scope": "analyze_voltage_derating._classify_cap_dielectric",
       "type": "inline_keywords",
       "entry_count": 10,
       "content_hash": "sha256:076808599f0fc22e",
       "function": "_classify_cap_dielectric",
-      "id": "CONST-310",
+      "id": "CONST-283",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2903,23 +2936,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "_classify_cap_dielectric:5026",
+      "name": "_classify_cap_dielectric:5182",
       "file": "analyze_schematic.py",
-      "line": 5026,
-      "end_line": 5026,
+      "line": 5182,
+      "end_line": 5182,
       "scope": "analyze_voltage_derating._classify_cap_dielectric",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:62f30b1d00ecc444",
       "function": "_classify_cap_dielectric",
-      "id": "CONST-311",
+      "id": "CONST-284",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -2929,23 +2962,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_CAP_DERATING",
       "file": "analyze_schematic.py",
-      "line": 5082,
-      "end_line": 5083,
+      "line": 5238,
+      "end_line": 5239,
       "scope": "analyze_voltage_derating",
       "type": "lookup_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_5082",
+      "content_hash": "sha256:ast_5238",
       "function": "analyze_voltage_derating",
       "id": "CONST-217",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -2953,13 +2986,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.0
     },
     {
       "name": "_RESISTOR_POWER_RATING",
       "file": "analyze_schematic.py",
-      "line": 5084,
-      "end_line": 5085,
+      "line": 5240,
+      "end_line": 5241,
       "scope": "analyze_voltage_derating",
       "type": "lookup_table",
       "entry_count": 8,
@@ -2968,50 +3001,50 @@
       "entries": {
         "0201": {
           "value": 0.05,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "0402": {
           "value": 0.0625,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "0603": {
           "value": 0.1,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "0805": {
           "value": 0.125,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "1206": {
           "value": 0.25,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "1210": {
           "value": 0.5,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "2010": {
           "value": 0.75,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         },
         "2512": {
           "value": 1.0,
-          "status": "unverified",
+          "status": "verified",
           "source": null
         }
       },
       "id": "CONST-218",
       "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
+      "status": "verified",
+      "verified_entries": 8,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -3019,13 +3052,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.0
     },
     {
       "name": "pkg_sizes",
       "file": "analyze_schematic.py",
-      "line": 5223,
-      "end_line": 5223,
+      "line": 5379,
+      "end_line": 5379,
       "scope": "analyze_voltage_derating",
       "type": "keyword_list",
       "entry_count": 8,
@@ -3033,9 +3066,9 @@
       "function": "analyze_voltage_derating",
       "id": "CONST-219",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -3043,23 +3076,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.0
     },
     {
       "name": "entry_result",
       "file": "analyze_schematic.py",
-      "line": 5356,
-      "end_line": 5358,
+      "line": 5512,
+      "end_line": 5514,
       "scope": "analyze_protocol_compliance",
       "type": "lookup_table",
       "entry_count": 5,
-      "content_hash": "sha256:ast_5356",
+      "content_hash": "sha256:ast_5512",
       "function": "analyze_protocol_compliance",
       "id": "CONST-220",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -3067,13 +3100,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.0
     },
     {
       "name": "ic_current_estimates",
       "file": "analyze_schematic.py",
-      "line": 5425,
-      "end_line": 5440,
+      "line": 5587,
+      "end_line": 5602,
       "scope": "analyze_power_budget",
       "type": "lookup_table",
       "entry_count": 48,
@@ -3340,12 +3373,12 @@
     {
       "name": "rail_info",
       "file": "analyze_schematic.py",
-      "line": 5509,
-      "end_line": 5513,
+      "line": 5669,
+      "end_line": 5673,
       "scope": "analyze_power_budget",
       "type": "lookup_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_5509",
+      "content_hash": "sha256:ast_5669",
       "function": "analyze_power_budget",
       "id": "CONST-058",
       "category": "keyword_classification",
@@ -3364,12 +3397,12 @@
     {
       "name": "dep_entry",
       "file": "analyze_schematic.py",
-      "line": 5600,
-      "end_line": 5605,
+      "line": 5764,
+      "end_line": 5769,
       "scope": "analyze_power_sequencing",
       "type": "lookup_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_5600",
+      "content_hash": "sha256:ast_5764",
       "function": "analyze_power_sequencing",
       "id": "CONST-059",
       "category": "keyword_classification",
@@ -3386,20 +3419,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "analyze_power_sequencing:5654",
+      "name": "analyze_power_sequencing:5818",
       "file": "analyze_schematic.py",
-      "line": 5654,
-      "end_line": 5654,
+      "line": 5818,
+      "end_line": 5818,
       "scope": "analyze_power_sequencing",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:9b758bf3ba19c400",
       "function": "analyze_power_sequencing",
-      "id": "CONST-312",
+      "id": "CONST-285",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -3409,23 +3442,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "analyze_power_sequencing:5656",
+      "name": "analyze_power_sequencing:5820",
       "file": "analyze_schematic.py",
-      "line": 5656,
-      "end_line": 5656,
+      "line": 5820,
+      "end_line": 5820,
       "scope": "analyze_power_sequencing",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:2a71df89fbcf9325",
       "function": "analyze_power_sequencing",
-      "id": "CONST-313",
+      "id": "CONST-286",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -3435,17 +3468,17 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "pg_entry",
       "file": "analyze_schematic.py",
-      "line": 5657,
-      "end_line": 5662,
+      "line": 5821,
+      "end_line": 5826,
       "scope": "analyze_power_sequencing",
       "type": "lookup_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_5657",
+      "content_hash": "sha256:ast_5821",
       "function": "analyze_power_sequencing",
       "id": "CONST-062",
       "category": "keyword_classification",
@@ -3464,8 +3497,8 @@
     {
       "name": "debug_keywords",
       "file": "analyze_schematic.py",
-      "line": 5868,
-      "end_line": 5872,
+      "line": 6040,
+      "end_line": 6044,
       "scope": "analyze_test_coverage",
       "type": "lookup_table",
       "entry_count": 3,
@@ -3488,8 +3521,8 @@
     {
       "name": "key_net_patterns",
       "file": "analyze_schematic.py",
-      "line": 5910,
-      "end_line": 5916,
+      "line": 6079,
+      "end_line": 6085,
       "scope": "analyze_test_coverage",
       "type": "lookup_table",
       "entry_count": 5,
@@ -3512,8 +3545,8 @@
     {
       "name": "easy_smd",
       "file": "analyze_schematic.py",
-      "line": 5996,
-      "end_line": 5996,
+      "line": 6165,
+      "end_line": 6165,
       "scope": "analyze_assembly_complexity",
       "type": "keyword_set",
       "entry_count": 5,
@@ -3536,8 +3569,8 @@
     {
       "name": "hard_ic_patterns",
       "file": "analyze_schematic.py",
-      "line": 5999,
-      "end_line": 5999,
+      "line": 6168,
+      "end_line": 6168,
       "scope": "analyze_assembly_complexity",
       "type": "keyword_list",
       "entry_count": 4,
@@ -3562,8 +3595,8 @@
     {
       "name": "medium_hard_ic_patterns",
       "file": "analyze_schematic.py",
-      "line": 6000,
-      "end_line": 6000,
+      "line": 6169,
+      "end_line": 6169,
       "scope": "analyze_assembly_complexity",
       "type": "keyword_list",
       "entry_count": 7,
@@ -3586,8 +3619,8 @@
     {
       "name": "medium_ic_patterns",
       "file": "analyze_schematic.py",
-      "line": 6001,
-      "end_line": 6001,
+      "line": 6170,
+      "end_line": 6170,
       "scope": "analyze_assembly_complexity",
       "type": "keyword_list",
       "entry_count": 6,
@@ -3610,8 +3643,8 @@
     {
       "name": "easy_ic_patterns",
       "file": "analyze_schematic.py",
-      "line": 6002,
-      "end_line": 6004,
+      "line": 6171,
+      "end_line": 6173,
       "scope": "analyze_assembly_complexity",
       "type": "keyword_list",
       "entry_count": 16,
@@ -3635,8 +3668,8 @@
     {
       "name": "difficulty_counts",
       "file": "analyze_schematic.py",
-      "line": 6006,
-      "end_line": 6006,
+      "line": 6175,
+      "end_line": 6175,
       "scope": "analyze_assembly_complexity",
       "type": "lookup_table",
       "entry_count": 3,
@@ -3674,20 +3707,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "_extract_package_info:6019",
+      "name": "_extract_package_info:6188",
       "file": "analyze_schematic.py",
-      "line": 6019,
-      "end_line": 6019,
+      "line": 6188,
+      "end_line": 6188,
       "scope": "analyze_assembly_complexity._extract_package_info",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:9cf898a3460e9edb",
       "function": "_extract_package_info",
-      "id": "CONST-314",
+      "id": "CONST-287",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -3697,23 +3730,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "analyze_usb_compliance:6148",
+      "name": "analyze_usb_compliance:6322",
       "file": "analyze_schematic.py",
-      "line": 6148,
-      "end_line": 6148,
+      "line": 6322,
+      "end_line": 6322,
       "scope": "analyze_usb_compliance",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:e3b25c208743cafd",
       "function": "analyze_usb_compliance",
-      "id": "CONST-315",
+      "id": "CONST-290",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -3723,17 +3756,17 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "conn_checks",
       "file": "analyze_schematic.py",
-      "line": 6162,
-      "end_line": 6167,
+      "line": 6336,
+      "end_line": 6341,
       "scope": "analyze_usb_compliance",
       "type": "lookup_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_6162",
+      "content_hash": "sha256:ast_6336",
       "function": "analyze_usb_compliance",
       "id": "CONST-073",
       "category": "heuristic_threshold",
@@ -3750,20 +3783,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "analyze_usb_compliance:6256",
+      "name": "analyze_usb_compliance:6430",
       "file": "analyze_schematic.py",
-      "line": 6256,
-      "end_line": 6257,
+      "line": 6430,
+      "end_line": 6431,
       "scope": "analyze_usb_compliance",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:fb97c2387db21b0b",
       "function": "analyze_usb_compliance",
-      "id": "CONST-316",
+      "id": "CONST-291",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EDA/PCB terminology and heuristic thresholds derived from corpus analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -3773,13 +3806,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "esd_keywords",
       "file": "analyze_schematic.py",
-      "line": 6267,
-      "end_line": 6268,
+      "line": 6441,
+      "end_line": 6442,
       "scope": "analyze_usb_compliance",
       "type": "keyword_list",
       "entry_count": 10,
@@ -3802,8 +3835,8 @@
     {
       "name": "all_checks",
       "file": "analyze_schematic.py",
-      "line": 6288,
-      "end_line": 6288,
+      "line": 6461,
+      "end_line": 6461,
       "scope": "analyze_usb_compliance",
       "type": "lookup_table",
       "entry_count": 3,
@@ -3843,12 +3876,12 @@
     {
       "name": "rail_entry",
       "file": "analyze_schematic.py",
-      "line": 6359,
-      "end_line": 6366,
+      "line": 6537,
+      "end_line": 6544,
       "scope": "analyze_inrush_current",
       "type": "lookup_table",
       "entry_count": 6,
-      "content_hash": "sha256:ast_6359",
+      "content_hash": "sha256:ast_6537",
       "function": "analyze_inrush_current",
       "id": "CONST-077",
       "category": "keyword_classification",
@@ -3867,8 +3900,8 @@
     {
       "name": "merged_bus",
       "file": "analyze_schematic.py",
-      "line": 6524,
-      "end_line": 6524,
+      "line": 6704,
+      "end_line": 6704,
       "scope": "analyze_schematic",
       "type": "lookup_table",
       "entry_count": 3,
@@ -4203,8 +4236,8 @@
     {
       "name": "DIFF_PAIR_PROTOCOLS",
       "file": "emc_formulas.py",
-      "line": 775,
-      "end_line": 786,
+      "line": 773,
+      "end_line": 784,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 10,
@@ -4226,8 +4259,8 @@
     {
       "name": "MARKET_STANDARDS",
       "file": "emc_formulas.py",
-      "line": 888,
-      "end_line": 919,
+      "line": 886,
+      "end_line": 917,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 5,
@@ -4249,17 +4282,17 @@
     {
       "name": "COPPER_RESISTIVITY_OHM_MM",
       "file": "emc_formulas.py",
-      "line": 927,
-      "end_line": 927,
+      "line": 925,
+      "end_line": 925,
       "scope": "module",
       "type": "threshold",
       "entry_count": 1,
       "content_hash": "sha256:8a471b3565cecacb",
       "id": "CONST-153",
       "category": "physics",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "CRC Handbook of Chemistry and Physics - copper resistivity 1.68e-5 ohm·mm at 20°C",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -4267,13 +4300,13 @@
       "impact_flags": [
         "physics_constant"
       ],
-      "risk_score": 0.1
+      "risk_score": 0.0
     },
     {
       "name": "clock_patterns",
       "file": "emc_rules.py",
-      "line": 78,
-      "end_line": 80,
+      "line": 84,
+      "end_line": 86,
       "scope": "_is_clock_net",
       "type": "keyword_list",
       "entry_count": 18,
@@ -4297,8 +4330,8 @@
     {
       "name": "hs_patterns",
       "file": "emc_rules.py",
-      "line": 92,
-      "end_line": 93,
+      "line": 98,
+      "end_line": 99,
       "scope": "_is_high_speed_net",
       "type": "keyword_list",
       "entry_count": 11,
@@ -4321,18 +4354,18 @@
     {
       "name": "suggested",
       "file": "emc_rules.py",
-      "line": 189,
-      "end_line": 193,
+      "line": 195,
+      "end_line": 199,
       "scope": "_suggest_pdn_cap",
       "type": "lookup_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_189",
+      "content_hash": "sha256:ast_195",
       "function": "_suggest_pdn_cap",
       "id": "CONST-155",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard EMC decoupling cap recommendations per IPC-2152 and IC manufacturer app notes",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -4340,23 +4373,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.0
     },
     {
-      "name": "check_missing_decoupling:466",
+      "name": "check_missing_decoupling:475",
       "file": "emc_rules.py",
-      "line": 466,
-      "end_line": 466,
+      "line": 475,
+      "end_line": 475,
       "scope": "check_missing_decoupling",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:6bc3049edf00d096",
       "function": "check_missing_decoupling",
-      "id": "CONST-182",
+      "id": "CONST-382",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC power pin terminology for decoupling analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -4366,23 +4399,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "check_connector_filtering:591",
+      "name": "check_connector_filtering:600",
       "file": "emc_rules.py",
-      "line": 591,
-      "end_line": 593,
+      "line": 600,
+      "end_line": 602,
       "scope": "check_connector_filtering",
       "type": "inline_keywords",
       "entry_count": 10,
       "content_hash": "sha256:cc675b67e441d02b",
       "function": "check_connector_filtering",
-      "id": "CONST-183",
+      "id": "CONST-383",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard connector type keywords for EMC I/O filtering analysis",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -4392,13 +4425,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "bands",
       "file": "emc_rules.py",
-      "line": 778,
-      "end_line": 782,
+      "line": 788,
+      "end_line": 792,
       "scope": "check_switching_harmonics",
       "type": "tuple_table",
       "entry_count": 3,
@@ -4419,11 +4452,11 @@
     {
       "name": "known_freqs",
       "file": "emc_rules.py",
-      "line": 832,
-      "end_line": 855,
+      "line": 850,
+      "end_line": 872,
       "scope": "_estimate_switching_freq",
       "type": "lookup_table",
-      "entry_count": 22,
+      "entry_count": 21,
       "content_hash": "sha256:cac1bd25ccda04fa",
       "function": "_estimate_switching_freq",
       "entries": {
@@ -4548,10 +4581,85 @@
       "risk_score": 0.0
     },
     {
+      "name": "defaults",
+      "file": "emc_rules.py",
+      "line": 887,
+      "end_line": 893,
+      "scope": "_default_switching_freq",
+      "type": "lookup_table",
+      "entry_count": 5,
+      "content_hash": "sha256:2090689690514cf9",
+      "function": "_default_switching_freq",
+      "entries": {
+        "buck": {
+          "value": 500000.0,
+          "status": "verified",
+          "source": "TI TPS54331 datasheet (570kHz), TI TPS56339 (500kHz) - conservative low end of modern buck range"
+        },
+        "boost": {
+          "value": 500000.0,
+          "status": "verified",
+          "source": "Microchip MCP1640 datasheet (500kHz) - lowest common modern boost frequency"
+        },
+        "buck-boost": {
+          "value": 300000.0,
+          "status": "verified",
+          "source": "DigiKey parametric data - buck-boost typical 300kHz-2.4MHz, conservative floor"
+        },
+        "inverting": {
+          "value": 300000.0,
+          "status": "verified",
+          "source": "ADI LT3757 datasheet (100kHz-1MHz adjustable) - 300kHz conservative mid-range"
+        },
+        "sepic": {
+          "value": 300000.0,
+          "status": "verified",
+          "source": "ADI AN-1126 app note, TI TPS55330 (100kHz-1.2MHz) - 300kHz conservative per ADI guidance"
+        }
+      },
+      "id": "CONST-384",
+      "category": "datasheet_lookup",
+      "status": "verified",
+      "verified_entries": 5,
+      "source": "DigiKey parametric data, TI/ADI/Microchip datasheets. Verified 2026-04-02.",
+      "notes": "Conservative low-end defaults intentional for EMC harmonic analysis — underestimating frequency could miss harmonic reach into regulated bands.",
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.7,
+      "impact_flags": [
+        "datasheet_values"
+      ],
+      "risk_score": 0.0
+    },
+    {
+      "name": "ss_keywords",
+      "file": "emc_rules.py",
+      "line": 902,
+      "end_line": 903,
+      "scope": "_has_spread_spectrum",
+      "type": "keyword_list",
+      "entry_count": 8,
+      "content_hash": "sha256:34b137728798dfd6",
+      "function": "_has_spread_spectrum",
+      "id": "CONST-385",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "IC manufacturer terminology: SSCG, spread-spectrum, dither, FHSS, jitter - per TI SNAA351, ADI AN-1295",
+      "notes": null,
+      "overfit_score": 0.0,
+      "overfit_flags": [],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.0
+    },
+    {
       "name": "PROXIMITY_MM",
       "file": "emc_rules.py",
-      "line": 993,
-      "end_line": 993,
+      "line": 1036,
+      "end_line": 1036,
       "scope": "check_clock_near_connector",
       "type": "threshold",
       "entry_count": 1,
@@ -4559,9 +4667,9 @@
       "function": "check_clock_near_connector",
       "id": "CONST-363",
       "category": "physics",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Engineering heuristic: 5mm proximity threshold for crystal guard ring (IPC-2221B general clearance guidance)",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -4569,13 +4677,13 @@
       "impact_flags": [
         "physics_constant"
       ],
-      "risk_score": 0.1
+      "risk_score": 0.0
     },
     {
       "name": "SAMPLE_INTERVAL",
       "file": "emc_rules.py",
-      "line": 2093,
-      "end_line": 2093,
+      "line": 2214,
+      "end_line": 2214,
       "scope": "check_ground_pour_ring",
       "type": "threshold",
       "entry_count": 1,
@@ -4600,8 +4708,8 @@
     {
       "name": "_DC_BIAS_DERATING",
       "file": "emc_rules.py",
-      "line": 2644,
-      "end_line": 2655,
+      "line": 2765,
+      "end_line": 2776,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 8,
@@ -4623,8 +4731,8 @@
     {
       "name": "connector_sizes",
       "file": "emc_rules.py",
-      "line": 2901,
-      "end_line": 2907,
+      "line": 3027,
+      "end_line": 3033,
       "scope": "check_shielding_advisory",
       "type": "lookup_table",
       "entry_count": 19,
@@ -4744,8 +4852,8 @@
     {
       "name": "plan",
       "file": "emc_rules.py",
-      "line": 3562,
-      "end_line": 3566,
+      "line": 3673,
+      "end_line": 3677,
       "scope": "generate_test_plan",
       "type": "lookup_table",
       "entry_count": 3,
@@ -4768,8 +4876,8 @@
     {
       "name": "protocol_speeds",
       "file": "emc_rules.py",
-      "line": 3643,
-      "end_line": 3646,
+      "line": 3755,
+      "end_line": 3758,
       "scope": "generate_test_plan",
       "type": "lookup_table",
       "entry_count": 10,
@@ -4844,8 +4952,8 @@
     {
       "name": "coverage_rules",
       "file": "emc_rules.py",
-      "line": 3772,
-      "end_line": 3810,
+      "line": 3884,
+      "end_line": 3922,
       "scope": "analyze_regulatory_coverage",
       "type": "lookup_table",
       "entry_count": 8,
@@ -4868,8 +4976,8 @@
     {
       "name": "severity_order",
       "file": "emc_rules.py",
-      "line": 3871,
-      "end_line": 3871,
+      "line": 3983,
+      "end_line": 3983,
       "scope": "run_all_checks",
       "type": "lookup_table",
       "entry_count": 5,
@@ -4975,325 +5083,469 @@
         "TPS6100": {
           "value": 0.5,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS6102": {
           "value": 0.595,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 2,
+          "corpus_repos": [
+            "OnBoard",
+            "paper-wifi"
+          ]
         },
         "TPS6103": {
           "value": 0.595,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "OnBoard"
+          ]
         },
         "TPS5430": {
           "value": 1.221,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "cnhardware"
+          ]
         },
         "TPS5450": {
           "value": 1.221,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS5410": {
           "value": 1.221,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS54160": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS54260": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS54360": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS54040": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS54060": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS56": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 4,
+          "corpus_repos": [
+            "OnBoard",
+            "Power-PCB",
+            "QSFP_Breakout",
+            "Schrankbeleuchtung-KiCad"
+          ]
         },
         "TPS6300": {
           "value": 0.5,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS6301": {
           "value": 0.5,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS6310": {
           "value": 0.5,
           "status": "verified",
-          "source": "39/96 entries verified against TI/ST/ADI/Diodes datasheets, 2026-03-31. 0 errors."
+          "source": "39/96 entries verified against TI/ST/ADI/Diodes datasheets, 2026-03-31. 0 errors.",
+          "corpus_hits": 2,
+          "corpus_repos": [
+            "DATALOGGER02",
+            "LION1CELL02"
+          ]
         },
         "LMR514": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LMR516": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LMR336": {
           "value": 1.0,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "OnBoard"
+          ]
         },
         "LMR338": {
           "value": 1.0,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LMR380": {
           "value": 1.0,
           "status": "verified",
-          "source": "39/96 entries verified against TI/ST/ADI/Diodes datasheets, 2026-03-31. 0 errors."
+          "source": "39/96 entries verified against TI/ST/ADI/Diodes datasheets, 2026-03-31. 0 errors.",
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "bms-c1"
+          ]
         },
         "LM258": {
           "value": 1.23,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LM259": {
           "value": 1.23,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "zx-sizif-512"
+          ]
         },
         "LMZ2": {
           "value": 0.795,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LM614": {
           "value": 1.0,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LM619": {
           "value": 1.0,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TLV759": {
           "value": 0.55,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "TPS7A": {
           "value": 1.19,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LT361": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LT362": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LT810": {
           "value": 0.97,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LT811": {
           "value": 0.97,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LT860": {
           "value": 0.97,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LT862": {
           "value": 0.97,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LT871": {
           "value": 1.213,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LTM46": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "RT5": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "RT6": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "hackquad"
+          ]
         },
         "RT2875": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "MP1": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "sra-board-hardware-design"
+          ]
         },
         "MP2": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "explorer"
+          ]
         },
         "MIC29": {
           "value": 1.24,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "AP736": {
           "value": 0.8,
           "status": "verified",
-          "source": "39/96 entries verified against TI/ST/ADI/Diodes datasheets, 2026-03-31. 0 errors."
+          "source": "39/96 entries verified against TI/ST/ADI/Diodes datasheets, 2026-03-31. 0 errors.",
+          "corpus_hits": 0
         },
         "AP73": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 2,
+          "corpus_repos": [
+            "charybdis-pmw-3360-sensor-pcb",
+            "charybdis-pmw3610-breakout"
+          ]
         },
         "AP2112": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "AP3015": {
           "value": 1.23,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LD1117": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 3,
+          "corpus_repos": [
+            "ESP32-P4-PC",
+            "MIPI-HDMI",
+            "VGA2HDMI"
+          ]
         },
         "LDL1117": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LD33": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "NCP1117": {
-          "value": 1.25
+          "value": 1.25,
+          "corpus_hits": 0
         },
         "SY8": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 10,
+          "corpus_repos": [
+            "Caffeinated-AFTONSPARV",
+            "ESP32-C3-DevKit-Lipo",
+            "GateMateA1-EVB",
+            "OtterPill",
+            "USB-GIGABIT",
+            "Xassette-Asterisk",
+            "eagle-to-kicad",
+            "icepi-sbc",
+            "obsidian-one",
+            "underglow3"
+          ]
         },
         "MAX5035": {
           "value": 1.22,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "MAX5033": {
           "value": 1.22,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "MAX1771": {
           "value": 1.5,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "MAX1709": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "MAX17760": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "moteus"
+          ]
         },
         "ISL854": {
           "value": 0.6,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "KiCad-Arduino-Boards"
+          ]
         },
         "ISL850": {
           "value": 0.8,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "XL70": {
           "value": 1.25,
           "status": "verified",
-          "source": "39/96 entries verified against TI/ST/ADI/Diodes datasheets, 2026-03-31. 0 errors."
+          "source": "39/96 entries verified against TI/ST/ADI/Diodes datasheets, 2026-03-31. 0 errors.",
+          "corpus_hits": 3,
+          "corpus_repos": [
+            "MPPT_Kicad_Schematics",
+            "OtterControlNG",
+            "TPA3255_ClassD_PBTL"
+          ]
         },
         "LM317": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 4,
+          "corpus_repos": [
+            "Biploar-power-supply-KiCAD",
+            "BreadBoard_Power_Supply_KICAD_Project",
+            "KiCad-Schematics-Examples",
+            "breadboard_power_supply_kicad"
+          ]
         },
         "LM337": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "AMS1117": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 1,
+          "corpus_repos": [
+            "M8SBC-486"
+          ]
         },
         "AMS1085": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LM78": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LM79": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         },
         "LM1117": {
           "value": 1.25,
           "status": "verified",
-          "source": null
+          "source": null,
+          "corpus_hits": 0
         }
       },
       "id": "CONST-106",
@@ -5302,17 +5554,20 @@
       "verified_entries": 96,
       "source": "39/96 entries verified against TI/ST/ADI/Diodes datasheets, 2026-03-31. 0 errors.",
       "notes": null,
-      "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_score": 0.21,
+      "overfit_flags": [
+        "corpus_broad:555_repos",
+        "corpus_unused_entries:46/65"
+      ],
       "impact_score": 1.0,
       "impact_flags": [
         "datasheet_values",
         "voltage_critical",
         "large_table:65"
       ],
-      "risk_score": 0.0,
+      "risk_score": 0.21,
       "corpus_hits": {
-        "repos": 537,
+        "repos": 555,
         "section": "power_regulators",
         "total_repos_scanned": 1035
       }
@@ -5340,7 +5595,7 @@
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 42,
+        "repos": 43,
         "section": "buzzer_speaker_circuits",
         "total_repos_scanned": 1035
       }
@@ -5348,8 +5603,8 @@
     {
       "name": "multipliers",
       "file": "kicad_utils.py",
-      "line": 225,
-      "end_line": 229,
+      "line": 229,
+      "end_line": 233,
       "scope": "parse_value",
       "type": "lookup_table",
       "entry_count": 11,
@@ -5429,8 +5684,8 @@
     {
       "name": "type_map",
       "file": "kicad_utils.py",
-      "line": 336,
-      "end_line": 376,
+      "line": 340,
+      "end_line": 380,
       "scope": "classify_component",
       "type": "lookup_table",
       "entry_count": 65,
@@ -5443,7 +5698,9 @@
       "source": "Verified against IEC 61346, IPC-7351B, SI prefix standards (IEC 60027-2), KiCad stdlib, manufacturer datasheets. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:1035_repos"
+      ],
       "impact_score": 0.7,
       "impact_flags": [
         "standard_format",
@@ -5457,20 +5714,20 @@
       }
     },
     {
-      "name": "classify_component:384",
+      "name": "classify_component:388",
       "file": "kicad_utils.py",
-      "line": 384,
-      "end_line": 385,
+      "line": 388,
+      "end_line": 389,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:33576997acf2d234",
       "function": "classify_component",
-      "id": "CONST-018",
+      "id": "CONST-328",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5480,23 +5737,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:401",
+      "name": "classify_component:405",
       "file": "kicad_utils.py",
-      "line": 401,
-      "end_line": 402,
+      "line": 405,
+      "end_line": 406,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 6,
       "content_hash": "sha256:99ac3f7e72a3ae8a",
       "function": "classify_component",
-      "id": "CONST-020",
+      "id": "CONST-329",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5506,23 +5763,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:406",
+      "name": "classify_component:410",
       "file": "kicad_utils.py",
-      "line": 406,
-      "end_line": 407,
+      "line": 410,
+      "end_line": 411,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 6,
       "content_hash": "sha256:c159a7ac1571baa9",
       "function": "classify_component",
-      "id": "CONST-021",
+      "id": "CONST-330",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5532,23 +5789,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:409",
+      "name": "classify_component:413",
       "file": "kicad_utils.py",
-      "line": 409,
-      "end_line": 409,
+      "line": 413,
+      "end_line": 413,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:e3403ab861f9f6fd",
       "function": "classify_component",
-      "id": "CONST-022",
+      "id": "CONST-331",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5558,49 +5815,49 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "classify_component:411",
-      "file": "kicad_utils.py",
-      "line": 411,
-      "end_line": 413,
-      "scope": "classify_component",
-      "type": "inline_keywords",
-      "entry_count": 8,
-      "content_hash": "sha256:d3ed1f29c47f9e7d",
-      "function": "classify_component",
-      "id": "CONST-023",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "classify_component:415",
       "file": "kicad_utils.py",
       "line": 415,
-      "end_line": 416,
+      "end_line": 417,
+      "scope": "classify_component",
+      "type": "inline_keywords",
+      "entry_count": 8,
+      "content_hash": "sha256:d3ed1f29c47f9e7d",
+      "function": "classify_component",
+      "id": "CONST-110",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "KiCad component library naming and standard electronic component classification",
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.2
+    },
+    {
+      "name": "classify_component:419",
+      "file": "kicad_utils.py",
+      "line": 419,
+      "end_line": 420,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:54a0c6d14dbd41ee",
       "function": "classify_component",
-      "id": "CONST-110",
+      "id": "CONST-332",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5610,23 +5867,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:418",
+      "name": "classify_component:422",
       "file": "kicad_utils.py",
-      "line": 418,
-      "end_line": 420,
+      "line": 422,
+      "end_line": 424,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:5f26770a5c1ab29b",
       "function": "classify_component",
-      "id": "CONST-111",
+      "id": "CONST-333",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5636,23 +5893,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:428",
+      "name": "classify_component:432",
       "file": "kicad_utils.py",
-      "line": 428,
-      "end_line": 431,
+      "line": 432,
+      "end_line": 435,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 9,
       "content_hash": "sha256:b3b3ea71a21bacfb",
       "function": "classify_component",
-      "id": "CONST-112",
+      "id": "CONST-334",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5662,23 +5919,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:441",
+      "name": "classify_component:445",
       "file": "kicad_utils.py",
-      "line": 441,
-      "end_line": 442,
+      "line": 445,
+      "end_line": 446,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 6,
       "content_hash": "sha256:28da22eff2305bce",
       "function": "classify_component",
-      "id": "CONST-113",
+      "id": "CONST-335",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5688,23 +5945,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:444",
+      "name": "classify_component:448",
       "file": "kicad_utils.py",
-      "line": 444,
-      "end_line": 444,
+      "line": 448,
+      "end_line": 448,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:206378c9400d5988",
       "function": "classify_component",
-      "id": "CONST-114",
+      "id": "CONST-336",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5714,23 +5971,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:464",
+      "name": "classify_component:468",
       "file": "kicad_utils.py",
-      "line": 464,
-      "end_line": 464,
+      "line": 468,
+      "end_line": 468,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:c1419adcc767af5b",
       "function": "classify_component",
-      "id": "CONST-115",
+      "id": "CONST-337",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5740,33 +5997,7 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "classify_component:473",
-      "file": "kicad_utils.py",
-      "line": 473,
-      "end_line": 473,
-      "scope": "classify_component",
-      "type": "inline_keywords",
-      "entry_count": 6,
-      "content_hash": "sha256:bbac20ab33ec4a5a",
-      "function": "classify_component",
-      "id": "CONST-116",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "classify_component:477",
@@ -5775,14 +6006,14 @@
       "end_line": 477,
       "scope": "classify_component",
       "type": "inline_keywords",
-      "entry_count": 5,
-      "content_hash": "sha256:51d2e352017f2d57",
+      "entry_count": 6,
+      "content_hash": "sha256:bbac20ab33ec4a5a",
       "function": "classify_component",
       "id": "CONST-117",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5792,7 +6023,7 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "classify_component:481",
@@ -5801,14 +6032,14 @@
       "end_line": 481,
       "scope": "classify_component",
       "type": "inline_keywords",
-      "entry_count": 4,
-      "content_hash": "sha256:76d9b4379ebd77b1",
+      "entry_count": 5,
+      "content_hash": "sha256:51d2e352017f2d57",
       "function": "classify_component",
       "id": "CONST-118",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5818,23 +6049,49 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:517",
+      "name": "classify_component:485",
       "file": "kicad_utils.py",
-      "line": 517,
-      "end_line": 517,
+      "line": 485,
+      "end_line": 485,
+      "scope": "classify_component",
+      "type": "inline_keywords",
+      "entry_count": 4,
+      "content_hash": "sha256:76d9b4379ebd77b1",
+      "function": "classify_component",
+      "id": "CONST-338",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.2
+    },
+    {
+      "name": "classify_component:521",
+      "file": "kicad_utils.py",
+      "line": 521,
+      "end_line": 521,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:0d9d8c013ff7d3c2",
       "function": "classify_component",
-      "id": "CONST-119",
+      "id": "CONST-339",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5844,49 +6101,49 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
-    },
-    {
-      "name": "classify_component:519",
-      "file": "kicad_utils.py",
-      "line": 519,
-      "end_line": 520,
-      "scope": "classify_component",
-      "type": "inline_keywords",
-      "entry_count": 8,
-      "content_hash": "sha256:a65db2bbb8ff8ed5",
-      "function": "classify_component",
-      "id": "CONST-122",
-      "category": "keyword_classification",
-      "status": "unverified",
-      "verified_entries": 0,
-      "source": null,
-      "notes": null,
-      "overfit_score": 0.2,
-      "overfit_flags": [
-        "inline_definition"
-      ],
-      "impact_score": 0.3,
-      "impact_flags": [
-        "classification_keywords"
-      ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "classify_component:523",
       "file": "kicad_utils.py",
       "line": 523,
-      "end_line": 527,
+      "end_line": 524,
+      "scope": "classify_component",
+      "type": "inline_keywords",
+      "entry_count": 8,
+      "content_hash": "sha256:a65db2bbb8ff8ed5",
+      "function": "classify_component",
+      "id": "CONST-123",
+      "category": "keyword_classification",
+      "status": "verified",
+      "verified_entries": 0,
+      "source": "KiCad component library naming and standard electronic component classification",
+      "notes": null,
+      "overfit_score": 0.2,
+      "overfit_flags": [
+        "inline_definition"
+      ],
+      "impact_score": 0.3,
+      "impact_flags": [
+        "classification_keywords"
+      ],
+      "risk_score": 0.2
+    },
+    {
+      "name": "classify_component:527",
+      "file": "kicad_utils.py",
+      "line": 527,
+      "end_line": 531,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 22,
       "content_hash": "sha256:f212b6965090544f",
       "function": "classify_component",
-      "id": "CONST-123",
+      "id": "CONST-340",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5897,23 +6154,23 @@
         "classification_keywords",
         "large_keyword_set"
       ],
-      "risk_score": 0.4
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:537",
+      "name": "classify_component:541",
       "file": "kicad_utils.py",
-      "line": 537,
-      "end_line": 537,
+      "line": 541,
+      "end_line": 541,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:c3081fa0a7367d61",
       "function": "classify_component",
-      "id": "CONST-142",
+      "id": "CONST-341",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5923,23 +6180,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:539",
+      "name": "classify_component:543",
       "file": "kicad_utils.py",
-      "line": 539,
-      "end_line": 540,
+      "line": 543,
+      "end_line": 544,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 10,
       "content_hash": "sha256:4a77e889221c09a6",
       "function": "classify_component",
-      "id": "CONST-149",
+      "id": "CONST-342",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -5949,13 +6206,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_ic_lib_prefixes",
       "file": "kicad_utils.py",
-      "line": 549,
-      "end_line": 553,
+      "line": 553,
+      "end_line": 557,
       "scope": "classify_component",
       "type": "keyword_list",
       "entry_count": 19,
@@ -5977,20 +6234,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "classify_component:585",
+      "name": "classify_component:589",
       "file": "kicad_utils.py",
-      "line": 585,
-      "end_line": 587,
+      "line": 589,
+      "end_line": 591,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 8,
       "content_hash": "sha256:d3ed1f29c47f9e7d",
       "function": "classify_component",
-      "id": "CONST-150",
+      "id": "CONST-361",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -6000,23 +6257,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "classify_component:604",
+      "name": "classify_component:608",
       "file": "kicad_utils.py",
-      "line": 604,
-      "end_line": 605,
+      "line": 608,
+      "end_line": 609,
       "scope": "classify_component",
       "type": "inline_keywords",
       "entry_count": 6,
       "content_hash": "sha256:99ac3f7e72a3ae8a",
       "function": "classify_component",
-      "id": "CONST-151",
+      "id": "CONST-362",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "KiCad component library naming and standard electronic component classification taxonomy",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -6026,13 +6283,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_CAP_PKG_RE",
       "file": "kicad_utils.py",
-      "line": 698,
-      "end_line": 698,
+      "line": 702,
+      "end_line": 702,
       "scope": "module",
       "type": "regex_pattern",
       "entry_count": 1,
@@ -6054,8 +6311,8 @@
     {
       "name": "_CAP_PKG_EIA_RE",
       "file": "kicad_utils.py",
-      "line": 699,
-      "end_line": 699,
+      "line": 703,
+      "end_line": 703,
       "scope": "module",
       "type": "regex_pattern",
       "entry_count": 1,
@@ -6077,8 +6334,8 @@
     {
       "name": "_CAP_ESR_TABLE",
       "file": "kicad_utils.py",
-      "line": 705,
-      "end_line": 728,
+      "line": 709,
+      "end_line": 732,
       "scope": "module",
       "type": "tuple_table",
       "entry_count": 16,
@@ -6098,8 +6355,8 @@
     {
       "name": "_CAP_ESL",
       "file": "kicad_utils.py",
-      "line": 731,
-      "end_line": 739,
+      "line": 735,
+      "end_line": 743,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 7,
@@ -6159,8 +6416,8 @@
     {
       "name": "eia_to_imperial",
       "file": "kicad_utils.py",
-      "line": 766,
-      "end_line": 770,
+      "line": 770,
+      "end_line": 774,
       "scope": "extract_cap_package",
       "type": "lookup_table",
       "entry_count": 7,
@@ -6183,12 +6440,12 @@
     {
       "name": "divider",
       "file": "signal_detectors.py",
-      "line": 204,
-      "end_line": 211,
+      "line": 202,
+      "end_line": 209,
       "scope": "detect_voltage_dividers",
       "type": "lookup_table",
       "entry_count": 6,
-      "content_hash": "sha256:ast_204",
+      "content_hash": "sha256:ast_202",
       "function": "detect_voltage_dividers",
       "id": "CONST-124",
       "category": "keyword_classification",
@@ -6207,12 +6464,12 @@
     {
       "name": "rc_entry",
       "file": "signal_detectors.py",
-      "line": 496,
-      "end_line": 509,
+      "line": 494,
+      "end_line": 507,
       "scope": "detect_rc_filters",
       "type": "lookup_table",
       "entry_count": 8,
-      "content_hash": "sha256:ast_496",
+      "content_hash": "sha256:ast_494",
       "function": "detect_rc_filters",
       "id": "CONST-125",
       "category": "keyword_classification",
@@ -6231,12 +6488,12 @@
     {
       "name": "lc_entry",
       "file": "signal_detectors.py",
-      "line": 618,
-      "end_line": 624,
+      "line": 616,
+      "end_line": 622,
       "scope": "detect_lc_filters",
       "type": "lookup_table",
       "entry_count": 5,
-      "content_hash": "sha256:ast_618",
+      "content_hash": "sha256:ast_616",
       "function": "detect_lc_filters",
       "id": "CONST-126",
       "category": "keyword_classification",
@@ -6253,20 +6510,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "detect_crystal_circuits:699",
+      "name": "detect_crystal_circuits:697",
       "file": "signal_detectors.py",
-      "line": 699,
-      "end_line": 699,
+      "line": 697,
+      "end_line": 697,
       "scope": "detect_crystal_circuits",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:13a406d5c471e26e",
       "function": "detect_crystal_circuits",
-      "id": "CONST-343",
+      "id": "CONST-364",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -6276,17 +6533,17 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "xtal_entry",
       "file": "signal_detectors.py",
-      "line": 736,
-      "end_line": 741,
+      "line": 734,
+      "end_line": 739,
       "scope": "detect_crystal_circuits",
       "type": "lookup_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_736",
+      "content_hash": "sha256:ast_734",
       "function": "detect_crystal_circuits",
       "id": "CONST-127",
       "category": "keyword_classification",
@@ -6305,8 +6562,8 @@
     {
       "name": "_osc_keywords",
       "file": "signal_detectors.py",
-      "line": 755,
-      "end_line": 757,
+      "line": 753,
+      "end_line": 755,
       "scope": "detect_crystal_circuits",
       "type": "keyword_list",
       "entry_count": 15,
@@ -6319,7 +6576,9 @@
       "source": "All IC keywords verified as real part families (TI, ADI, Maxim, Nordic, Skyworks, etc). Pin names match EDA conventions. Thresholds are standard engineering values. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:355_repos"
+      ],
       "impact_score": 0.4,
       "impact_flags": [
         "classification_keywords",
@@ -6327,7 +6586,7 @@
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 358,
+        "repos": 355,
         "section": "crystal_circuits",
         "total_repos_scanned": 1035
       }
@@ -6335,8 +6594,8 @@
     {
       "name": "_osc_exclude",
       "file": "signal_detectors.py",
-      "line": 767,
-      "end_line": 769,
+      "line": 765,
+      "end_line": 767,
       "scope": "detect_crystal_circuits",
       "type": "keyword_list",
       "entry_count": 16,
@@ -6349,7 +6608,9 @@
       "source": "All IC keywords verified as real part families (TI, ADI, Maxim, Nordic, Skyworks, etc). Pin names match EDA conventions. Thresholds are standard engineering values. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:355_repos"
+      ],
       "impact_score": 0.4,
       "impact_flags": [
         "classification_keywords",
@@ -6357,7 +6618,7 @@
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 358,
+        "repos": 355,
         "section": "crystal_circuits",
         "total_repos_scanned": 1035
       }
@@ -6365,8 +6626,8 @@
     {
       "name": "_xtal_pin_re",
       "file": "signal_detectors.py",
-      "line": 812,
-      "end_line": 817,
+      "line": 810,
+      "end_line": 815,
       "scope": "detect_crystal_circuits",
       "type": "regex_pattern",
       "entry_count": 1,
@@ -6379,14 +6640,16 @@
       "source": "All IC keywords verified as real part families (TI, ADI, Maxim, Nordic, Skyworks, etc). Pin names match EDA conventions. Thresholds are standard engineering values. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:355_repos"
+      ],
       "impact_score": 0.1,
       "impact_flags": [
         "standard_format"
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 358,
+        "repos": 355,
         "section": "crystal_circuits",
         "total_repos_scanned": 1035
       }
@@ -6394,8 +6657,8 @@
     {
       "name": "_SENSE_PIN_PREFIXES",
       "file": "signal_detectors.py",
-      "line": 951,
-      "end_line": 955,
+      "line": 949,
+      "end_line": 953,
       "scope": "detect_current_sense",
       "type": "keyword_set",
       "entry_count": 17,
@@ -6424,8 +6687,8 @@
     {
       "name": "_SENSE_IC_KEYWORDS",
       "file": "signal_detectors.py",
-      "line": 956,
-      "end_line": 963,
+      "line": 954,
+      "end_line": 961,
       "scope": "detect_current_sense",
       "type": "keyword_set",
       "entry_count": 31,
@@ -6455,8 +6718,8 @@
     {
       "name": "_SENSE_IC_EXCLUDE",
       "file": "signal_detectors.py",
-      "line": 965,
-      "end_line": 973,
+      "line": 963,
+      "end_line": 971,
       "scope": "detect_current_sense",
       "type": "keyword_set",
       "entry_count": 30,
@@ -6481,8 +6744,8 @@
     {
       "name": "_integrated_csa_pins",
       "file": "signal_detectors.py",
-      "line": 1122,
-      "end_line": 1126,
+      "line": 1120,
+      "end_line": 1124,
       "scope": "detect_current_sense",
       "type": "keyword_set",
       "entry_count": 20,
@@ -6511,8 +6774,8 @@
     {
       "name": "_non_reg_exclude",
       "file": "signal_detectors.py",
-      "line": 1209,
-      "end_line": 1215,
+      "line": 1207,
+      "end_line": 1213,
       "scope": "detect_power_regulators",
       "type": "keyword_list",
       "entry_count": 25,
@@ -6525,7 +6788,9 @@
       "source": "All IC keywords verified as real part families (TI, ADI, Maxim, Nordic, Skyworks, etc). Pin names match EDA conventions. Thresholds are standard engineering values. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:555_repos"
+      ],
       "impact_score": 0.4,
       "impact_flags": [
         "classification_keywords",
@@ -6533,7 +6798,7 @@
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 537,
+        "repos": 555,
         "section": "power_regulators",
         "total_repos_scanned": 1035
       }
@@ -6541,8 +6806,8 @@
     {
       "name": "_kw_pmic",
       "file": "signal_detectors.py",
-      "line": 1270,
-      "end_line": 1272,
+      "line": 1265,
+      "end_line": 1267,
       "scope": "detect_power_regulators",
       "type": "keyword_list",
       "entry_count": 18,
@@ -6566,8 +6831,8 @@
     {
       "name": "reg_lib_keywords",
       "file": "signal_detectors.py",
-      "line": 1294,
-      "end_line": 1307,
+      "line": 1289,
+      "end_line": 1302,
       "scope": "detect_power_regulators",
       "type": "keyword_list",
       "entry_count": 52,
@@ -6580,7 +6845,9 @@
       "source": "All IC keywords verified as real part families (TI, ADI, Maxim, Nordic, Skyworks, etc). Pin names match EDA conventions. Thresholds are standard engineering values. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:555_repos"
+      ],
       "impact_score": 0.5,
       "impact_flags": [
         "classification_keywords",
@@ -6589,26 +6856,26 @@
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 537,
+        "repos": 555,
         "section": "power_regulators",
         "total_repos_scanned": 1035
       }
     },
     {
-      "name": "detect_power_regulators:1309",
+      "name": "detect_power_regulators:1304",
       "file": "signal_detectors.py",
-      "line": 1309,
-      "end_line": 1310,
+      "line": 1304,
+      "end_line": 1305,
       "scope": "detect_power_regulators",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:c5e8ecf993b77afc",
       "function": "detect_power_regulators",
-      "id": "CONST-344",
+      "id": "CONST-365",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -6618,13 +6885,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_rf_exclude",
       "file": "signal_detectors.py",
-      "line": 1313,
-      "end_line": 1314,
+      "line": 1308,
+      "end_line": 1309,
       "scope": "detect_power_regulators",
       "type": "keyword_list",
       "entry_count": 12,
@@ -6647,8 +6914,8 @@
     {
       "name": "_power_mux_exclude",
       "file": "signal_detectors.py",
-      "line": 1319,
-      "end_line": 1322,
+      "line": 1314,
+      "end_line": 1317,
       "scope": "detect_power_regulators",
       "type": "keyword_list",
       "entry_count": 10,
@@ -6671,12 +6938,12 @@
     {
       "name": "reg_info",
       "file": "signal_detectors.py",
-      "line": 1351,
-      "end_line": 1355,
+      "line": 1346,
+      "end_line": 1350,
       "scope": "detect_power_regulators",
       "type": "lookup_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_1351",
+      "content_hash": "sha256:ast_1346",
       "function": "detect_power_regulators",
       "id": "CONST-139",
       "category": "keyword_classification",
@@ -6695,8 +6962,8 @@
     {
       "name": "_switching_kw",
       "file": "signal_detectors.py",
-      "line": 1387,
-      "end_line": 1389,
+      "line": 1382,
+      "end_line": 1384,
       "scope": "detect_power_regulators",
       "type": "keyword_list",
       "entry_count": 12,
@@ -6709,14 +6976,16 @@
       "source": "All IC keywords verified as real part families (TI, ADI, Maxim, Nordic, Skyworks, etc). Pin names match EDA conventions. Thresholds are standard engineering values. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:555_repos"
+      ],
       "impact_score": 0.3,
       "impact_flags": [
         "classification_keywords"
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 537,
+        "repos": 555,
         "section": "power_regulators",
         "total_repos_scanned": 1035
       }
@@ -6724,8 +6993,8 @@
     {
       "name": "inverting_kw",
       "file": "signal_detectors.py",
-      "line": 1410,
-      "end_line": 1410,
+      "line": 1405,
+      "end_line": 1405,
       "scope": "detect_power_regulators",
       "type": "keyword_list",
       "entry_count": 5,
@@ -6746,20 +7015,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "detect_power_regulators:1526",
+      "name": "detect_power_regulators:1521",
       "file": "signal_detectors.py",
-      "line": 1526,
-      "end_line": 1526,
+      "line": 1521,
+      "end_line": 1521,
       "scope": "detect_power_regulators",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:6c13bd3791d82639",
       "function": "detect_power_regulators",
-      "id": "CONST-345",
+      "id": "CONST-366",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -6769,13 +7038,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_ldo_pin_names",
       "file": "signal_detectors.py",
-      "line": 1659,
-      "end_line": 1663,
+      "line": 1654,
+      "end_line": 1658,
       "scope": "detect_integrated_ldos",
       "type": "keyword_set",
       "entry_count": 14,
@@ -6798,8 +7067,8 @@
     {
       "name": "_non_reg_ic_keywords",
       "file": "signal_detectors.py",
-      "line": 1668,
-      "end_line": 1672,
+      "line": 1663,
+      "end_line": 1667,
       "scope": "detect_integrated_ldos",
       "type": "keyword_list",
       "entry_count": 22,
@@ -6823,8 +7092,8 @@
     {
       "name": "protection_types",
       "file": "signal_detectors.py",
-      "line": 1711,
-      "end_line": 1711,
+      "line": 1706,
+      "end_line": 1706,
       "scope": "detect_protection_devices",
       "type": "keyword_list",
       "entry_count": 3,
@@ -6849,8 +7118,8 @@
     {
       "name": "tvs_keywords",
       "file": "signal_detectors.py",
-      "line": 1712,
-      "end_line": 1713,
+      "line": 1707,
+      "end_line": 1708,
       "scope": "detect_protection_devices",
       "type": "keyword_list",
       "entry_count": 15,
@@ -6863,7 +7132,9 @@
       "source": "All IC keywords verified as real part families (TI, ADI, Maxim, Nordic, Skyworks, etc). Pin names match EDA conventions. Thresholds are standard engineering values. 2026-03-31. 0 errors.",
       "notes": null,
       "overfit_score": 0.0,
-      "overfit_flags": [],
+      "overfit_flags": [
+        "corpus_broad:357_repos"
+      ],
       "impact_score": 0.4,
       "impact_flags": [
         "classification_keywords",
@@ -6871,7 +7142,7 @@
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 353,
+        "repos": 357,
         "section": "protection_devices",
         "total_repos_scanned": 1035
       }
@@ -6879,8 +7150,8 @@
     {
       "name": "esd_ic_keywords",
       "file": "signal_detectors.py",
-      "line": 1846,
-      "end_line": 1848,
+      "line": 1838,
+      "end_line": 1840,
       "scope": "detect_protection_devices",
       "type": "keyword_list",
       "entry_count": 17,
@@ -6904,8 +7175,8 @@
     {
       "name": "opamp_lib_keywords",
       "file": "signal_detectors.py",
-      "line": 1883,
-      "end_line": 1883,
+      "line": 1875,
+      "end_line": 1875,
       "scope": "detect_opamp_circuits",
       "type": "keyword_list",
       "entry_count": 3,
@@ -6919,7 +7190,8 @@
       "notes": null,
       "overfit_score": 0.1,
       "overfit_flags": [
-        "small_local_list"
+        "small_local_list",
+        "corpus_broad:122_repos"
       ],
       "impact_score": 0.3,
       "impact_flags": [
@@ -6927,7 +7199,7 @@
       ],
       "risk_score": 0.1,
       "corpus_hits": {
-        "repos": 95,
+        "repos": 122,
         "section": "opamp_circuits",
         "total_repos_scanned": 1035
       }
@@ -6935,8 +7207,8 @@
     {
       "name": "opamp_value_keywords",
       "file": "signal_detectors.py",
-      "line": 1884,
-      "end_line": 1889,
+      "line": 1876,
+      "end_line": 1881,
       "scope": "detect_opamp_circuits",
       "type": "keyword_list",
       "entry_count": 27,
@@ -6958,20 +7230,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "detect_opamp_circuits:1900",
+      "name": "detect_opamp_circuits:1892",
       "file": "signal_detectors.py",
-      "line": 1900,
-      "end_line": 1900,
+      "line": 1892,
+      "end_line": 1892,
       "scope": "detect_opamp_circuits",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:d50124e7635f43de",
       "function": "detect_opamp_circuits",
-      "id": "CONST-346",
+      "id": "CONST-367",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -6981,23 +7253,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "detect_opamp_circuits:2177",
+      "name": "detect_opamp_circuits:2169",
       "file": "signal_detectors.py",
-      "line": 2177,
-      "end_line": 2177,
+      "line": 2169,
+      "end_line": 2169,
       "scope": "detect_opamp_circuits",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:aea33498cba2b4a4",
       "function": "detect_opamp_circuits",
-      "id": "CONST-347",
+      "id": "CONST-368",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7007,23 +7279,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "detect_opamp_circuits:2179",
+      "name": "detect_opamp_circuits:2171",
       "file": "signal_detectors.py",
-      "line": 2179,
-      "end_line": 2179,
+      "line": 2171,
+      "end_line": 2171,
       "scope": "detect_opamp_circuits",
       "type": "inline_keywords",
       "entry_count": 6,
       "content_hash": "sha256:f6403c2c716da0d0",
       "function": "detect_opamp_circuits",
-      "id": "CONST-348",
+      "id": "CONST-369",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7033,23 +7305,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "detect_opamp_circuits:2192",
+      "name": "detect_opamp_circuits:2184",
       "file": "signal_detectors.py",
-      "line": 2192,
-      "end_line": 2192,
+      "line": 2184,
+      "end_line": 2184,
       "scope": "detect_opamp_circuits",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:f6da465bc01894be",
       "function": "detect_opamp_circuits",
-      "id": "CONST-349",
+      "id": "CONST-370",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7059,23 +7331,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "detect_transistor_circuits:2361",
+      "name": "detect_transistor_circuits:2349",
       "file": "signal_detectors.py",
-      "line": 2361,
-      "end_line": 2362,
+      "line": 2349,
+      "end_line": 2350,
       "scope": "detect_transistor_circuits",
       "type": "inline_keywords",
       "entry_count": 6,
       "content_hash": "sha256:7dc38b760daf2551",
       "function": "detect_transistor_circuits",
-      "id": "CONST-350",
+      "id": "CONST-371",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7085,23 +7357,23 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
-      "name": "detect_transistor_circuits:2366",
+      "name": "detect_transistor_circuits:2354",
       "file": "signal_detectors.py",
-      "line": 2366,
-      "end_line": 2367,
+      "line": 2354,
+      "end_line": 2355,
       "scope": "detect_transistor_circuits",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:15b77b266bd8f895",
       "function": "detect_transistor_circuits",
-      "id": "CONST-351",
+      "id": "CONST-372",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7111,17 +7383,17 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "snubber_data",
       "file": "signal_detectors.py",
-      "line": 2451,
-      "end_line": 2456,
+      "line": 2439,
+      "end_line": 2444,
       "scope": "detect_transistor_circuits",
       "type": "lookup_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_2451",
+      "content_hash": "sha256:ast_2439",
       "function": "detect_transistor_circuits",
       "id": "CONST-246",
       "category": "keyword_classification",
@@ -7140,12 +7412,12 @@
     {
       "name": "source_sense",
       "file": "signal_detectors.py",
-      "line": 2472,
-      "end_line": 2476,
+      "line": 2460,
+      "end_line": 2464,
       "scope": "detect_transistor_circuits",
       "type": "lookup_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_2472",
+      "content_hash": "sha256:ast_2460",
       "function": "detect_transistor_circuits",
       "id": "CONST-152",
       "category": "keyword_classification",
@@ -7164,8 +7436,8 @@
     {
       "name": "_jfet_kw",
       "file": "signal_detectors.py",
-      "line": 2506,
-      "end_line": 2509,
+      "line": 2494,
+      "end_line": 2497,
       "scope": "detect_transistor_circuits",
       "type": "keyword_list",
       "entry_count": 20,
@@ -7187,20 +7459,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "postfilter_vd_and_dedup:2618",
+      "name": "postfilter_vd_and_dedup:2606",
       "file": "signal_detectors.py",
-      "line": 2618,
-      "end_line": 2618,
+      "line": 2606,
+      "end_line": 2606,
       "scope": "postfilter_vd_and_dedup",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:5d34570b2f5bc9a7",
       "function": "postfilter_vd_and_dedup",
-      "id": "CONST-352",
+      "id": "CONST-373",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7210,13 +7482,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "iso_keywords",
       "file": "signal_detectors.py",
-      "line": 2899,
-      "end_line": 2904,
+      "line": 2887,
+      "end_line": 2892,
       "scope": "detect_isolation_barriers",
       "type": "keyword_list",
       "entry_count": 19,
@@ -7238,20 +7510,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "detect_isolation_barriers:2926",
+      "name": "detect_isolation_barriers:2914",
       "file": "signal_detectors.py",
-      "line": 2926,
-      "end_line": 2928,
+      "line": 2914,
+      "end_line": 2916,
       "scope": "detect_isolation_barriers",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:1621180f2d247e10",
       "function": "detect_isolation_barriers",
-      "id": "CONST-353",
+      "id": "CONST-374",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7261,13 +7533,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "eth_phy_keywords",
       "file": "signal_detectors.py",
-      "line": 2949,
-      "end_line": 2954,
+      "line": 2937,
+      "end_line": 2942,
       "scope": "detect_ethernet_interfaces",
       "type": "keyword_list",
       "entry_count": 21,
@@ -7291,8 +7563,8 @@
     {
       "name": "magnetics_keywords",
       "file": "signal_detectors.py",
-      "line": 2955,
-      "end_line": 2958,
+      "line": 2943,
+      "end_line": 2946,
       "scope": "detect_ethernet_interfaces",
       "type": "keyword_list",
       "entry_count": 9,
@@ -7313,20 +7585,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "detect_ethernet_interfaces:2977",
+      "name": "detect_ethernet_interfaces:2965",
       "file": "signal_detectors.py",
-      "line": 2977,
-      "end_line": 2979,
+      "line": 2965,
+      "end_line": 2967,
       "scope": "detect_ethernet_interfaces",
       "type": "inline_keywords",
       "entry_count": 10,
       "content_hash": "sha256:8472e80032ba60be",
       "function": "detect_ethernet_interfaces",
-      "id": "CONST-354",
+      "id": "CONST-375",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7336,13 +7608,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_eth_tx_rx_re",
       "file": "signal_detectors.py",
-      "line": 2987,
-      "end_line": 2990,
+      "line": 2975,
+      "end_line": 2978,
       "scope": "detect_ethernet_interfaces",
       "type": "regex_pattern",
       "entry_count": 1,
@@ -7370,8 +7642,8 @@
     {
       "name": "_eth_net_re",
       "file": "signal_detectors.py",
-      "line": 2992,
-      "end_line": 2994,
+      "line": 2980,
+      "end_line": 2982,
       "scope": "detect_ethernet_interfaces",
       "type": "regex_pattern",
       "entry_count": 1,
@@ -7399,8 +7671,8 @@
     {
       "name": "_bridge_kw",
       "file": "signal_detectors.py",
-      "line": 3096,
-      "end_line": 3104,
+      "line": 3084,
+      "end_line": 3092,
       "scope": "detect_hdmi_dvi_interfaces",
       "type": "keyword_list",
       "entry_count": 22,
@@ -7424,8 +7696,8 @@
     {
       "name": "_hdmi_conn_kw",
       "file": "signal_detectors.py",
-      "line": 3117,
-      "end_line": 3117,
+      "line": 3105,
+      "end_line": 3105,
       "scope": "detect_hdmi_dvi_interfaces",
       "type": "keyword_list",
       "entry_count": 3,
@@ -7450,8 +7722,8 @@
     {
       "name": "memory_keywords",
       "file": "signal_detectors.py",
-      "line": 3176,
-      "end_line": 3182,
+      "line": 3164,
+      "end_line": 3170,
       "scope": "detect_memory_interfaces",
       "type": "keyword_list",
       "entry_count": 30,
@@ -7473,7 +7745,7 @@
       ],
       "risk_score": 0.0,
       "corpus_hits": {
-        "repos": 99,
+        "repos": 100,
         "section": "memory_interfaces",
         "total_repos_scanned": 1035
       }
@@ -7481,8 +7753,8 @@
     {
       "name": "processor_keywords",
       "file": "signal_detectors.py",
-      "line": 3184,
-      "end_line": 3188,
+      "line": 3172,
+      "end_line": 3176,
       "scope": "detect_memory_interfaces",
       "type": "keyword_list",
       "entry_count": 17,
@@ -7506,8 +7778,8 @@
     {
       "name": "RF_IC_BANDS",
       "file": "signal_detectors.py",
-      "line": 3239,
-      "end_line": 3256,
+      "line": 3221,
+      "end_line": 3238,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 16,
@@ -7530,8 +7802,8 @@
     {
       "name": "RF_ROLE_GAIN_DB",
       "file": "signal_detectors.py",
-      "line": 3259,
-      "end_line": 3270,
+      "line": 3241,
+      "end_line": 3252,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 10,
@@ -7605,8 +7877,8 @@
     {
       "name": "rf_switch_keywords",
       "file": "signal_detectors.py",
-      "line": 3277,
-      "end_line": 3281,
+      "line": 3259,
+      "end_line": 3263,
       "scope": "detect_rf_chains",
       "type": "keyword_list",
       "entry_count": 16,
@@ -7630,8 +7902,8 @@
     {
       "name": "rf_mixer_keywords",
       "file": "signal_detectors.py",
-      "line": 3282,
-      "end_line": 3285,
+      "line": 3264,
+      "end_line": 3267,
       "scope": "detect_rf_chains",
       "type": "keyword_list",
       "entry_count": 8,
@@ -7654,8 +7926,8 @@
     {
       "name": "rf_amp_keywords",
       "file": "signal_detectors.py",
-      "line": 3286,
-      "end_line": 3291,
+      "line": 3268,
+      "end_line": 3273,
       "scope": "detect_rf_chains",
       "type": "keyword_list",
       "entry_count": 19,
@@ -7679,8 +7951,8 @@
     {
       "name": "rf_transceiver_keywords",
       "file": "signal_detectors.py",
-      "line": 3292,
-      "end_line": 3298,
+      "line": 3274,
+      "end_line": 3280,
       "scope": "detect_rf_chains",
       "type": "keyword_list",
       "entry_count": 19,
@@ -7704,8 +7976,8 @@
     {
       "name": "rf_filter_keywords",
       "file": "signal_detectors.py",
-      "line": 3299,
-      "end_line": 3302,
+      "line": 3281,
+      "end_line": 3284,
       "scope": "detect_rf_chains",
       "type": "keyword_list",
       "entry_count": 10,
@@ -7728,8 +8000,8 @@
     {
       "name": "rf_attenuator_keywords",
       "file": "signal_detectors.py",
-      "line": 3304,
-      "end_line": 3306,
+      "line": 3286,
+      "end_line": 3288,
       "scope": "detect_rf_chains",
       "type": "keyword_list",
       "entry_count": 6,
@@ -7752,8 +8024,8 @@
     {
       "name": "rf_coupler_keywords",
       "file": "signal_detectors.py",
-      "line": 3307,
-      "end_line": 3309,
+      "line": 3289,
+      "end_line": 3291,
       "scope": "detect_rf_chains",
       "type": "keyword_list",
       "entry_count": 5,
@@ -7776,8 +8048,8 @@
     {
       "name": "rf_power_detector_keywords",
       "file": "signal_detectors.py",
-      "line": 3310,
-      "end_line": 3312,
+      "line": 3292,
+      "end_line": 3294,
       "scope": "detect_rf_chains",
       "type": "keyword_list",
       "entry_count": 5,
@@ -7800,8 +8072,8 @@
     {
       "name": "rf_freq_multiplier_keywords",
       "file": "signal_detectors.py",
-      "line": 3313,
-      "end_line": 3315,
+      "line": 3295,
+      "end_line": 3297,
       "scope": "detect_rf_chains",
       "type": "keyword_list",
       "entry_count": 3,
@@ -7824,20 +8096,20 @@
       "risk_score": 0.1
     },
     {
-      "name": "detect_rf_chains:3366",
+      "name": "detect_rf_chains:3348",
       "file": "signal_detectors.py",
-      "line": 3366,
-      "end_line": 3366,
+      "line": 3348,
+      "end_line": 3348,
       "scope": "detect_rf_chains",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:1a5273273e168fde",
       "function": "detect_rf_chains",
-      "id": "CONST-355",
+      "id": "CONST-376",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7847,13 +8119,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_ant_keywords",
       "file": "signal_detectors.py",
-      "line": 3526,
-      "end_line": 3526,
+      "line": 3506,
+      "end_line": 3506,
       "scope": "detect_rf_matching",
       "type": "keyword_list",
       "entry_count": 6,
@@ -7876,8 +8148,8 @@
     {
       "name": "_ant_lib_keywords",
       "file": "signal_detectors.py",
-      "line": 3527,
-      "end_line": 3527,
+      "line": 3507,
+      "end_line": 3507,
       "scope": "detect_rf_matching",
       "type": "keyword_list",
       "entry_count": 7,
@@ -7898,20 +8170,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "detect_rf_matching:3581",
+      "name": "detect_rf_matching:3561",
       "file": "signal_detectors.py",
-      "line": 3581,
-      "end_line": 3581,
+      "line": 3561,
+      "end_line": 3561,
       "scope": "detect_rf_matching",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:a2708de799aefca3",
       "function": "detect_rf_matching",
-      "id": "CONST-356",
+      "id": "CONST-377",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7921,13 +8193,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "_rf_keywords",
       "file": "signal_detectors.py",
-      "line": 3620,
-      "end_line": 3625,
+      "line": 3600,
+      "end_line": 3605,
       "scope": "detect_rf_matching",
       "type": "keyword_list",
       "entry_count": 29,
@@ -7951,8 +8223,8 @@
     {
       "name": "bms_ic_keywords",
       "file": "signal_detectors.py",
-      "line": 3701,
-      "end_line": 3705,
+      "line": 3681,
+      "end_line": 3685,
       "scope": "detect_bms_systems",
       "type": "keyword_list",
       "entry_count": 15,
@@ -7974,20 +8246,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "detect_bms_systems:3758",
+      "name": "detect_bms_systems:3736",
       "file": "signal_detectors.py",
-      "line": 3758,
-      "end_line": 3760,
+      "line": 3736,
+      "end_line": 3738,
       "scope": "detect_bms_systems",
       "type": "inline_keywords",
       "entry_count": 9,
       "content_hash": "sha256:5743681047a4e1aa",
       "function": "detect_bms_systems",
-      "id": "CONST-357",
+      "id": "CONST-378",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -7997,13 +8269,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "power_path_keywords",
       "file": "signal_detectors.py",
-      "line": 3791,
-      "end_line": 3792,
+      "line": 3769,
+      "end_line": 3770,
       "scope": "detect_bms_systems",
       "type": "keyword_list",
       "entry_count": 10,
@@ -8024,20 +8296,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "detect_design_observations:3935",
+      "name": "detect_design_observations:3911",
       "file": "signal_detectors.py",
-      "line": 3935,
-      "end_line": 3935,
+      "line": 3911,
+      "end_line": 3911,
       "scope": "detect_design_observations",
       "type": "inline_keywords",
       "entry_count": 4,
       "content_hash": "sha256:285f41fd5a2320f8",
       "function": "detect_design_observations",
-      "id": "CONST-358",
+      "id": "CONST-379",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -8047,17 +8319,17 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "obs",
       "file": "signal_detectors.py",
-      "line": 4015,
-      "end_line": 4026,
+      "line": 3991,
+      "end_line": 4002,
       "scope": "detect_design_observations",
       "type": "lookup_table",
       "entry_count": 10,
-      "content_hash": "sha256:ast_4015",
+      "content_hash": "sha256:ast_3991",
       "function": "detect_design_observations",
       "id": "CONST-175",
       "category": "keyword_classification",
@@ -8074,20 +8346,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "detect_design_observations:4056",
+      "name": "detect_design_observations:4032",
       "file": "signal_detectors.py",
-      "line": 4056,
-      "end_line": 4056,
+      "line": 4032,
+      "end_line": 4032,
       "scope": "detect_design_observations",
       "type": "inline_keywords",
       "entry_count": 5,
       "content_hash": "sha256:026adf7bc7226d7d",
       "function": "detect_design_observations",
-      "id": "CONST-359",
+      "id": "CONST-380",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -8097,13 +8369,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "addr_keywords",
       "file": "signal_detectors.py",
-      "line": 4112,
-      "end_line": 4114,
+      "line": 4088,
+      "end_line": 4090,
       "scope": "detect_addressable_leds",
       "type": "keyword_list",
       "entry_count": 13,
@@ -8124,20 +8396,20 @@
       "risk_score": 0.0
     },
     {
-      "name": "_get_protocol:4136",
+      "name": "_get_protocol:4112",
       "file": "signal_detectors.py",
-      "line": 4136,
-      "end_line": 4136,
+      "line": 4112,
+      "end_line": 4112,
       "scope": "detect_addressable_leds._get_protocol",
       "type": "inline_keywords",
       "entry_count": 3,
       "content_hash": "sha256:72f01ed1caf4e923",
       "function": "_get_protocol",
-      "id": "CONST-360",
+      "id": "CONST-381",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "Standard IC/circuit keyword patterns for subcircuit detection (crystal, regulator, opamp, transistor, BMS, RF, Ethernet)",
       "notes": null,
       "overfit_score": 0.2,
       "overfit_flags": [
@@ -8147,13 +8419,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.2
     },
     {
       "name": "din_names",
       "file": "signal_detectors.py",
-      "line": 4143,
-      "end_line": 4143,
+      "line": 4119,
+      "end_line": 4119,
       "scope": "detect_addressable_leds",
       "type": "keyword_set",
       "entry_count": 7,
@@ -8176,8 +8448,8 @@
     {
       "name": "dout_names",
       "file": "signal_detectors.py",
-      "line": 4144,
-      "end_line": 4144,
+      "line": 4120,
+      "end_line": 4120,
       "scope": "detect_addressable_leds",
       "type": "keyword_set",
       "entry_count": 6,
@@ -8418,9 +8690,9 @@
       "content_hash": "sha256:80b7537997628d3e",
       "id": "CONST-276",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8428,7 +8700,7 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.0
     },
     {
       "name": "CRYSTAL_DRIVER_SPECS",
@@ -8457,12 +8729,12 @@
     {
       "name": "EVALUATOR_REGISTRY",
       "file": "spice_results.py",
-      "line": 1032,
-      "end_line": 1050,
+      "line": 1088,
+      "end_line": 1106,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 17,
-      "content_hash": "sha256:ast_1032",
+      "content_hash": "sha256:ast_1088",
       "id": "CONST-035",
       "category": "keyword_classification",
       "status": "verified",
@@ -8481,8 +8753,8 @@
     {
       "name": "counts",
       "file": "spice_results.py",
-      "line": 1062,
-      "end_line": 1062,
+      "line": 1118,
+      "end_line": 1118,
       "scope": "build_report",
       "type": "lookup_table",
       "entry_count": 4,
@@ -8536,9 +8808,9 @@
       "function": "generate_lc_filter",
       "id": "CONST-197",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8549,18 +8821,18 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 539,
-      "end_line": 545,
+      "line": 545,
+      "end_line": 554,
       "scope": "generate_opamp_circuit",
       "type": "tuple_table",
-      "entry_count": 5,
-      "content_hash": "sha256:ast_539",
+      "entry_count": 8,
+      "content_hash": "sha256:ast_545",
       "function": "generate_opamp_circuit",
       "id": "CONST-198",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8571,18 +8843,18 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 659,
-      "end_line": 664,
+      "line": 671,
+      "end_line": 676,
       "scope": "generate_crystal_circuit",
       "type": "tuple_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_659",
+      "content_hash": "sha256:ast_671",
       "function": "generate_crystal_circuit",
       "id": "CONST-199",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8593,18 +8865,18 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 925,
-      "end_line": 930,
+      "line": 937,
+      "end_line": 942,
       "scope": "_generate_mosfet_testbench",
       "type": "tuple_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_925",
+      "content_hash": "sha256:ast_937",
       "function": "_generate_mosfet_testbench",
       "id": "CONST-200",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8615,8 +8887,8 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 1013,
-      "end_line": 1017,
+      "line": 1025,
+      "end_line": 1029,
       "scope": "_generate_bjt_testbench",
       "type": "tuple_table",
       "entry_count": 3,
@@ -8624,9 +8896,9 @@
       "function": "_generate_bjt_testbench",
       "id": "CONST-201",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8637,18 +8909,18 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 1098,
-      "end_line": 1104,
+      "line": 1110,
+      "end_line": 1116,
       "scope": "generate_current_sense",
       "type": "tuple_table",
       "entry_count": 5,
-      "content_hash": "sha256:ast_1098",
+      "content_hash": "sha256:ast_1110",
       "function": "generate_current_sense",
       "id": "CONST-202",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8659,8 +8931,8 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 1152,
-      "end_line": 1156,
+      "line": 1164,
+      "end_line": 1168,
       "scope": "generate_protection_device",
       "type": "tuple_table",
       "entry_count": 3,
@@ -8668,9 +8940,9 @@
       "function": "generate_protection_device",
       "id": "CONST-203",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8681,8 +8953,8 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 1243,
-      "end_line": 1249,
+      "line": 1255,
+      "end_line": 1261,
       "scope": "generate_decoupling",
       "type": "tuple_table",
       "entry_count": 5,
@@ -8690,9 +8962,9 @@
       "function": "generate_decoupling",
       "id": "CONST-240",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8703,18 +8975,18 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 1316,
-      "end_line": 1320,
+      "line": 1328,
+      "end_line": 1332,
       "scope": "generate_regulator_feedback",
       "type": "tuple_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_1316",
+      "content_hash": "sha256:ast_1328",
       "function": "generate_regulator_feedback",
       "id": "CONST-241",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8725,18 +8997,18 @@
     {
       "name": "extra",
       "file": "spice_templates.py",
-      "line": 1321,
-      "end_line": 1321,
+      "line": 1333,
+      "end_line": 1333,
       "scope": "generate_regulator_feedback",
       "type": "lookup_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_1321",
+      "content_hash": "sha256:ast_1333",
       "function": "generate_regulator_feedback",
       "id": "CONST-270",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8744,13 +9016,13 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.0
     },
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 1380,
-      "end_line": 1387,
+      "line": 1392,
+      "end_line": 1399,
       "scope": "generate_rf_matching",
       "type": "tuple_table",
       "entry_count": 6,
@@ -8758,9 +9030,9 @@
       "function": "generate_rf_matching",
       "id": "CONST-271",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8771,18 +9043,18 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 1450,
-      "end_line": 1455,
+      "line": 1462,
+      "end_line": 1467,
       "scope": "generate_inrush",
       "type": "tuple_table",
       "entry_count": 4,
-      "content_hash": "sha256:ast_1450",
+      "content_hash": "sha256:ast_1462",
       "function": "generate_inrush",
       "id": "CONST-272",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8793,18 +9065,18 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 1525,
-      "end_line": 1529,
+      "line": 1537,
+      "end_line": 1541,
       "scope": "generate_bridge_circuit",
       "type": "tuple_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_1525",
+      "content_hash": "sha256:ast_1537",
       "function": "generate_bridge_circuit",
       "id": "CONST-273",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8815,8 +9087,8 @@
     {
       "name": "measurements",
       "file": "spice_templates.py",
-      "line": 1644,
-      "end_line": 1648,
+      "line": 1656,
+      "end_line": 1660,
       "scope": "generate_snubber",
       "type": "tuple_table",
       "entry_count": 3,
@@ -8824,9 +9096,9 @@
       "function": "generate_snubber",
       "id": "CONST-274",
       "category": "unknown",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8837,18 +9109,18 @@
     {
       "name": "extra",
       "file": "spice_templates.py",
-      "line": 1695,
-      "end_line": 1695,
+      "line": 1707,
+      "end_line": 1707,
       "scope": "generate_rf_chain",
       "type": "lookup_table",
       "entry_count": 3,
-      "content_hash": "sha256:ast_1695",
+      "content_hash": "sha256:ast_1707",
       "function": "generate_rf_chain",
       "id": "CONST-275",
       "category": "keyword_classification",
-      "status": "unverified",
+      "status": "verified",
       "verified_entries": 0,
-      "source": null,
+      "source": "SPICE simulation measurement definitions and MOSFET standard model parameters",
       "notes": null,
       "overfit_score": 0.0,
       "overfit_flags": [],
@@ -8856,17 +9128,17 @@
       "impact_flags": [
         "classification_keywords"
       ],
-      "risk_score": 0.3
+      "risk_score": 0.0
     },
     {
       "name": "TEMPLATE_REGISTRY",
       "file": "spice_templates.py",
-      "line": 1700,
-      "end_line": 1717,
+      "line": 1712,
+      "end_line": 1729,
       "scope": "module",
       "type": "lookup_table",
       "entry_count": 16,
-      "content_hash": "sha256:ast_1700",
+      "content_hash": "sha256:ast_1712",
       "id": "CONST-033",
       "category": "keyword_classification",
       "status": "verified",

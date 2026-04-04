@@ -260,16 +260,19 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
 
     all_assertions = []
 
-    # Walk data/{repo}/{project}/assertions/{type}/*.json
+    # Walk data/{owner}/{repo}/{project}/assertions/{type}/*.json
     repo_dirs = []
     if repo_name:
         rd = data_dir / repo_name
         if rd.exists() and rd.is_dir():
             repo_dirs.append(rd)
     else:
-        for d in sorted(data_dir.iterdir()):
-            if d.is_dir() and not d.name.startswith("."):
-                repo_dirs.append(d)
+        for owner_dir in sorted(data_dir.iterdir()):
+            if not owner_dir.is_dir() or owner_dir.name.startswith("."):
+                continue
+            for repo_dir in sorted(owner_dir.iterdir()):
+                if repo_dir.is_dir() and not repo_dir.name.startswith("."):
+                    repo_dirs.append(repo_dir)
 
     for repo_dir in repo_dirs:
         for proj_dir in sorted(repo_dir.iterdir()):
@@ -281,13 +284,14 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
 
             # Resolve project_path for output file mapping.
             # Try baselines metadata first, then discover from repo.
+            repo_key = f"{repo_dir.parent.name}/{repo_dir.name}"
             project_path = load_project_metadata(
-                repo_dir.name, proj_dir.name).get("project_path")
+                repo_key, proj_dir.name).get("project_path")
             if project_path is None:
                 # Fallback: look up from discover_projects if repo is checked out
                 try:
                     from utils import discover_projects
-                    for p in discover_projects(repo_dir.name):
+                    for p in discover_projects(repo_key):
                         if p["name"] == proj_dir.name:
                             project_path = p["path"]
                             break
@@ -318,7 +322,7 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
                             for w in warnings:
                                 print(f"WARNING: {w}", file=sys.stderr)
                         # Annotate with location info for output mapping
-                        data["_repo"] = repo_dir.name
+                        data["_repo"] = repo_key
                         data["_project"] = proj_dir.name
                         data["_project_path"] = project_path
                         data["_source_file"] = str(f)

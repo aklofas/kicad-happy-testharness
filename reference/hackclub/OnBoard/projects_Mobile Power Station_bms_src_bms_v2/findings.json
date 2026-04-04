@@ -1,0 +1,117 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/OnBoard/projects/Mobile Power Station/bms/src/bms_v2.kicad_sch",
+      "status": "confirmed",
+      "summary": "BMS v2 board with TPS2491 hot-swap controller, BQ7721605 battery protector, 8x HY2213-BB3A cell balancers, MOSFETs for power switching. Massive misclassification: 84 components as other.",
+      "correct": [
+        {
+          "description": "Correctly identified TPS2491DGSR as IC"
+        },
+        {
+          "description": "Correctly identified fuse 0154010.DR for protection"
+        },
+        {
+          "description": "Correctly identified thermistor NTCS0603E3103JHT"
+        },
+        {
+          "description": "Correctly identified 7 connectors"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "84 components classified as other - should include: 18 capacitors (100n), 1 capacitor (33n), 8 MOSFETs (AO3400A), 1 MOSFET (MS50N06), 1 MOSFET (NCE40P40K), 2 MOSFETs (2N7002), 24+8 resistors, 1 zener diode, 8 ICs (HY2213-BB3A cell balancers), 1 IC (BQ7721605PWR battery protector)",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "Only 1 IC detected but board has 10 ICs: TPS2491, BQ7721605PWR, and 8x HY2213-BB3A",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "IC pin analysis treats connectors and copper pads as ICs instead of actual ICs",
+          "analyzer_section": "ic_pin_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "BQ7721605PWR is a battery protection/management IC for 3-7 cell lithium batteries - not detected as IC or analyzed",
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "HY2213-BB3A x8 are single-cell lithium battery balancer ICs - not detected, critical for an 8S BMS design",
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "MOSFET classification completely missed: AO3400A (N-ch), MS50N06 (N-ch power), NCE40P40K (P-ch power), 2N7002 (N-ch small signal)",
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No voltage regulator detection despite TPS2491 being a hot-swap/eFuse controller",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No current sense detection despite RF10=6mohm being a current sense resistor",
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "8S battery configuration not analyzed - this is a multi-cell BMS with balancing, protection, and hot-swap",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "D_Zener 12V (DF1) not classified as protection device",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Component classifier needs to handle EasyEDA-imported parts with non-standard naming (CB/CP/RB/RP/QB/QF prefixes)",
+        "MOSFET detection should use footprint (SOT-23, TO-252) and value patterns (AO3400A, 2N7002)",
+        "BMS-specific analysis: cell balancer detection, battery protection IC identification",
+        "Current sense resistor detection for very low ohm values (milliohm range)",
+        "Hot-swap controller (TPS2491) should be identified and analyzed"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000108",
+      "repo": "hackclub/OnBoard",
+      "project": "projects_Mobile Power Station_bms_src_bms_v2",
+      "created": "2026-03-14T07:26:56.265659+00:00"
+    }
+  ]
+}

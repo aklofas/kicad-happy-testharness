@@ -1,0 +1,60 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_esp32-audio-player_hardware_esp32_pcm56_st-s505_esp32_pcm56_st-s505.kicad_sch.json",
+      "status": "promoted",
+      "summary": "LM79L05 negative voltage regulator misclassified as topology='LDO'; AC/DC mains power module (TMLM10105) not detected as an isolation barrier; Parallel PCM bus to PCM56 DAC not detected; Op-amp inv...",
+      "correct": [
+        {
+          "description": "The 4570 dual op-amp (U7, Amplifier_Operational:RC4560) is correctly identified in inverting configuration for both left and right channels (units 1 and 2), with accurate gain calculation of -2.061 (6.3 dB), correctly identifying the feedback resistor (R22/R23 at 6.8k) and input resistor (R24/R25 at 3.3k), and identifying the feedback capacitor (C34/C35) for the HF rolloff. Output nets 'DAC Out (L)' and 'DAC Out (R)' are correctly named.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 2
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U2 (LM79L05_TO92) is a negative-voltage linear regulator from the LM79 family. It takes a negative input rail and outputs a regulated negative voltage (-Vreg). The analyzer classifies it as topology='LDO', which is architecturally misleading \u2014 LDO implies a low-dropout positive regulator. The analyzer should recognize LM79xx lib_id prefixes as negative linear regulators and use a distinct topology label (e.g., 'negative_linear') to avoid confusion with positive LDO regulators.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": "/LM79.*topology.*LDO/"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "PS1 is a TMLM10105 from the KiCad library 'Converter_ACDC' \u2014 a TRACO POWER isolated AC/DC module with mains input (AC (L), AC (N), 12V AC (L)) producing isolated DC output. The schematic also has raw AC mains nets. The analyzer: (1) classifies PS1 as type='ic' instead of recognizing it as a power converter, (2) leaves isolation_barriers=[] despite a clear mains-to-SELV isolation boundary, and (3) does not flag the presence of mains voltages (AC (L), AC (N)) in the design. This is a safety-relevant omission.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The design uses a parallel PCM bus (PCM_CLK, PCM_LE, PCM_CH1, PCM_CH2) to drive two PCM56 16-bit DACs (U5 and U6). This is a well-defined audio interface. The analyzer detects an SPI bus on the SD card (correctly) and a UART, but does not identify the PCM parallel bus at all. PCM_CLK and PCM_LE are named nets clearly indicating a parallel PCM interface. The PCM56 DACs themselves are classified only as generic 'ic' type with no audio-specific annotation.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "contains_match",
+            "value": "/pcm|PCM|i2s|I2S/"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "gameinstance/esp32-audio-player",
+      "project": "hardware_esp32_pcm56_st-s505_esp32_pcm56_st-s505",
+      "created": "2026-03-24T07:52:22.321808+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002046"
+    }
+  ]
+}

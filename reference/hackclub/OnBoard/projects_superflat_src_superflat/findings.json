@@ -1,0 +1,58 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/OnBoard/projects/superflat/src/superflat.kicad_sch",
+      "status": "confirmed",
+      "summary": "Low-profile wireless keyboard with BQ24075 battery charger and XC6206 LDO. Key matrix and power chain correctly identified. BOM matches perfectly.",
+      "correct": [
+        {
+          "description": "BOM quantity sum (94) matches total_components (94) exactly"
+        },
+        {
+          "description": "Key matrix correctly detected: 5 rows x 6 cols, 30 switches, 30 diodes"
+        },
+        {
+          "description": "BQ24075RGT battery charger correctly identified with input +5V and output +VSW"
+        },
+        {
+          "description": "XC6206 LDO correctly identified: input +VSW, output +3.3V"
+        },
+        {
+          "description": "Battery voltage divider R12(806k)/R11(2M) for VSENSE correctly detected"
+        },
+        {
+          "description": "BSD3C051V diode protection and 750mA fuse correctly identified"
+        },
+        {
+          "description": "2N7002 MOSFET transistor circuit detected (SYSOFF control)"
+        },
+        {
+          "description": "Decoupling analysis covers 5 rails including Earth and +BATT"
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "No wireless/Bluetooth module detection despite being a wireless keyboard",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Consider wireless module detection for keyboard designs"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000094",
+      "repo": "hackclub/OnBoard",
+      "project": "projects_superflat_src_superflat",
+      "created": "2026-03-14T07:25:31.237056+00:00"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "TARS-MK4-FCB.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-086-01",
+      "description": "KH-086: No SPI nets falsely reported as I2C on TARS-MK4-FCB",
+      "issue": "KH-086",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "not_contains_match",
+        "field": "net",
+        "pattern": "SPI"
+      }
+    }
+  ]
+}

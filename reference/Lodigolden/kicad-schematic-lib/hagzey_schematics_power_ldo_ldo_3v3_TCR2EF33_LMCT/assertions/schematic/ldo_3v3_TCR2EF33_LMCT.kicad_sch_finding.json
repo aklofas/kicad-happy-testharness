@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ldo_3v3_TCR2EF33_LMCT.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002266",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002266-AST-01",
+      "description": "INCORRECT: The TCR2EF33 LDO VOUT pin connects to an unnamed internal net (the junction between VOUT, C2, and FB1 pin 1). The named '+3V3' power rail is on the other side of FB1. The analyzer correctly identifies the LDO topology and estimates Vout=3.3V from the part suffix, but reports output_rail as '__unnamed_0' in power_regulators. The design_observations also flag a missing output cap because C2 is on the unnamed net, not on '+3V3'. In reality C2 is the output decoupling cap \u2014 just separated from the '+3V3' label by the ferrite bead. The analyzer should trace through ferrite beads to associate the output rail with the named net.",
+      "created_from": "FND-00002266",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "value": "/\\+3V3/"
+      },
+      "aspirational": false
+    }
+  ]
+}

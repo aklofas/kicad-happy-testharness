@@ -1,0 +1,94 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "_DRC.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Stepper driver schematic correctly identifies 14 components across 4 types with proper power rails; Decoupling warnings claim C1/C2 caps missing on +5V/+12V, but caps exist on GND/signal nets (not ...",
+      "correct": [
+        {
+          "description": "14 components (4R, 2C, 4J, 3IC, 1LED), power rails [+12V, +5V, GND, GNDPWR], net count=18 all match source. Component classification correct for U1=A4988, VR1=LM2596S, U2=LM555.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "design_observations flags U1, VR1, U2 as lacking decoupling caps. C1 (0.01uF) is on GND and a signal net to U2 (timer cap), C2 (1uF) is on GND and a pot-connected signal net. These are functional caps, not bypass caps. The warning is technically correct that no bypass cap exists directly between +5V/+12V and GND, but the analyzer should differentiate functional caps vs bypass caps.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ManlishPotato/KiCad_DRC",
+      "project": "_DRC",
+      "created": "2026-03-23T22:24:29.346198+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000738"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "_DRC.kicad_pcb.json",
+      "status": "new",
+      "summary": "B.Cu reported as having 4 track segments but source file has zero B.Cu segment lines",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "tracks.layer_distribution shows {'F.Cu': 83, 'B.Cu': 4} and net_lengths for +5V shows 4 B.Cu segments. However grep of the source PCB confirms 0 actual 'segment' primitives on B.Cu \u2014 all 14 footprints happen to be placed on B.Cu side. The 4 'B.Cu segments' appear to be pad stubs or via-to-pad connections miscounted as track segments.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ManlishPotato/KiCad_DRC",
+      "project": "_DRC",
+      "created": "2026-03-23T22:24:29.346215+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000739"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "_Export.json",
+      "status": "new",
+      "summary": "Gerber completeness check correctly reports 'complete' based on gbrjob definition; Drill classification correctly identifies 6 vias (0.8mm), 52 component holes, and 0 mounting holes",
+      "correct": [
+        {
+          "description": "gbrjob lists only F.Cu and Edge.Cuts as expected layers. Analyzer finds exactly those two files and reports complete=True. This is accurate per-gbrjob, though the underlying PCB has components on B.Cu \u2014 this is a design/export decision, not an analyzer error.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "X2 attributes used for classification. Drill sizes (0.8, 1.0, 1.3, 2.0mm), hole counts, and split between PTH and NPTH all look correct. 58 total holes matches 6 vias + 52 component holes.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "ManlishPotato/KiCad_DRC",
+      "project": "_DRC",
+      "created": "2026-03-23T22:24:29.346218+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000740"
+    }
+  ]
+}

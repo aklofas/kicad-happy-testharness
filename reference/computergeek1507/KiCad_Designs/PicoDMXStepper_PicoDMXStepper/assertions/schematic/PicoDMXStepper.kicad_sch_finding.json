@@ -1,0 +1,40 @@
+{
+  "file_pattern": "PicoDMXStepper.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002275",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002275-AST-01",
+      "description": "design_analysis.bus_analysis.rs485 correctly identifies U3 (SP3485EN) as the RS-485 transceiver, resolving its A/B differential nets, DI (transmit data), RO (DMX_OUT receive), and combined DE/RE enable net. This is a complete and accurate detection for a DMX512 protocol interface.",
+      "created_from": "FND-00002275",
+      "check": {
+        "path": "design_analysis.bus_analysis.rs485",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002275-AST-02",
+      "description": "INCORRECT: U1 (VR10S05) is classified as topology='LDO' because it uses the Regulator_Linear:L7805 lib_id. The VR10S05 is a Murata SIL-package isolated DC/DC switching converter, not a linear regulator. The classifier relies solely on lib_id family and does not check the component value string for known switching regulator part numbers. This is the same root cause as the OKI-78SR-5 misclassification.",
+      "created_from": "FND-00002275",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00002275-AST-03",
+      "description": "U4 and U5 are LTV-214G phototransistor optocouplers used to isolate limit switch inputs from the Pico's GPIO. signal_analysis.isolation_barriers is empty. The isolation_barriers detector does not recognize optocouplers by lib_id pattern (LTV-214:LTV-214G) or value string. The subcircuits section does identify these as neighbor components of the Pico, but no structural isolation analysis is performed.",
+      "created_from": "FND-00002275",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

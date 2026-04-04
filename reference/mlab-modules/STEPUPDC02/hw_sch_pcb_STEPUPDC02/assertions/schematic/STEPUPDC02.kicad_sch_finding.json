@@ -1,0 +1,49 @@
+{
+  "file_pattern": "STEPUPDC02.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001336",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001336-AST-01",
+      "description": "18 components (1 IC, 4 capacitors, 1 inductor, 2 diodes, 3 resistors, 4 mounting holes, 3 connectors) correctly parsed. Voltage divider R2/R4 at FB pin and feedback_network detected. Boost switching topology with L1, D1 (Schottky) correctly identified.",
+      "created_from": "FND-00001336",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001336-AST-02",
+      "description": "D1 is the rectifier diode in the boost output path; D2 is a 5.6V Zener on the input clamping the enable network. Both correctly typed as diodes, though the Zener is not specifically identified as a protection_device or zener clamp.",
+      "created_from": "FND-00001336",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001336-AST-03",
+      "description": "The schematic includes 4 single-pin nets for M1-M4 mounting holes (__unnamed_2 through __unnamed_5), which are not electrical nets in the PCB. The PCB's 6 nets (GND, /Power, /PowerOUT, /ENABLE, Net-(D1-Pad2), Net-(C1-Pad2)) correspond accurately to the actual circuit connections.",
+      "created_from": "FND-00001336",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001336-AST-04",
+      "description": "D2 (ZSMD-5V6, a 5.6V Zener on the Power/input net alongside R1 and J1) is an input overvoltage clamp but appears in protection_devices: []. The analyzer sees it as a plain diode in the neighbor list.",
+      "created_from": "FND-00001336",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

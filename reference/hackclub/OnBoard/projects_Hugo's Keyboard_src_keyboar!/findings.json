@@ -1,0 +1,82 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/OnBoard/projects/Hugo's Keyboard/src/keyboar!.kicad_sch",
+      "status": "confirmed",
+      "summary": "Hugo keyboard with KB2040 MCU, 76-key matrix using GPIO naming (A0-A3, D0-D13 etc). Matrix not detected, IC/connector refs missing, KiCad version unknown.",
+      "correct": [
+        {
+          "description": "Correctly identified 76 switches and 76 diodes in a keyboard layout"
+        },
+        {
+          "description": "Correctly identified USB-C receptacle, JST SH, and 2.54mm connectors"
+        },
+        {
+          "description": "Correctly identified 5.1K CC resistors for USB-C"
+        },
+        {
+          "description": "Correctly flagged missing decoupling caps on +3V3 and VBUS rails"
+        },
+        {
+          "description": "Correctly flagged RST pin lacking pullup resistor"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "IC pin analysis shows ref=? for all components - reference designators not populated",
+          "analyzer_section": "ic_pin_analysis"
+        },
+        {
+          "description": "IC function field is ? for KB2040 - should be identified as RP2040-based dev board/microcontroller",
+          "analyzer_section": "ic_pin_analysis"
+        },
+        {
+          "description": "KiCad version reported as unknown despite file_version 20211123 indicating KiCad 6.x",
+          "analyzer_section": "kicad_version"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Key matrix not detected despite 76 switches with diodes connected to GPIO nets (A0-A3 rows, D0-D13+MISO+MOSI+SCK columns) - net names use Arduino-style GPIO names instead of ROW/COL",
+          "analyzer_section": "signal_analysis.key_matrices",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USB data lines D+/D- not flagged for ESD protection analysis",
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "KB2040 is an Adafruit RP2040 dev board - could provide more context about the module",
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Key matrix detector should handle arbitrary GPIO net names, not just ROW/COL patterns",
+        "IC pin analysis should populate ref fields from component data",
+        "File version 20211123 should map to KiCad 6.x"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000096",
+      "repo": "hackclub/OnBoard",
+      "project": "projects_Hugo's Keyboard_src_keyboar!",
+      "created": "2026-03-14T07:25:37.249163+00:00"
+    }
+  ]
+}

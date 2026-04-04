@@ -1,0 +1,19 @@
+{
+  "file_pattern": "DDR3.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000832",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000832-AST-01",
+      "description": "DDR3.sch contains IC301 (MT41K128M16JT-125K FBGA96 DDR3 SDRAM) with a full DDR3 bus (DDR3_CK_P/N, DDR3_DQS0/1_P/N, DDR3_A[0..14], DDR3_nRAS/nCAS/nWE). The LogAn.sch.json output reports memory_interfaces: 0 items. The differential pairs for DDR3_CK and DDR3_DQS are correctly detected, but the memory interface itself is not recognized.",
+      "created_from": "FND-00000832",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "LED_BAR.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001712",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001712-AST-01",
+      "description": "INCORRECT: The PCB analyzer reports copper_layers_used=1 with copper_layer_names=['B.Cu'] only. However the generated gerbers include both F.Cu and B.Cu files, with F.Cu containing pad data (25.4mm wide extent). The discrepancy arises because the analyzer counts copper usage from routed tracks and zones (all on B.Cu), ignoring component pad copper that physically exists on F.Cu. This leads the gerber analyzer to flag alignment warnings when comparing F.Cu (25.4mm) to Edge.Cuts (30.48mm), but the underlying cause is that F.Cu only contains pads (not tracks), which the PCB analyzer correctly excludes from 'copper layers used for routing'.",
+      "created_from": "FND-00001712",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "value": 1,
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

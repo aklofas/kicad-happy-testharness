@@ -1,0 +1,40 @@
+{
+  "file_pattern": "icezum.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002219",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002219-AST-01",
+      "description": "The analyzer correctly follows the 7-sheet hierarchy (icezum.sch + 6 sub-sheets), consolidating 211 components, 464 nets, and 78 no-connects. Power regulators (TPS62133 switching regulator, AP7361 LDO, TLV711 LDO) are all detected, along with SPI, I2C, UART buses, USB differential pair, and crystal oscillator (DSC1001). The multi-domain power analysis correctly identifies 1.2V, 1.8V, 3.3V, and 5V domains.",
+      "created_from": "FND-00002219",
+      "check": {
+        "path": "sheets_parsed",
+        "op": "equals",
+        "value": 7
+      }
+    },
+    {
+      "id": "FND-00002219-AST-02",
+      "description": "INCORRECT: 11 LEDs with references LD0\u2013LD9 and LD10 (footprint Icezum:LED_0603, values 'Green' and 'Yellow') are classified as type 'inductor' instead of 'led'. The reference prefix 'LD' is an abbreviation for 'LED diode' in Spanish (this is a Spanish open-hardware FPGA board). The footprint name explicitly contains 'LED_0603' but the classifier is keying on the 'L' prefix, treating them as inductors. The statistics show only 1 LED (D12) but 15 inductors, whereas there should be 12 LEDs and at most 4 non-bead inductors (L1, L2, L3, L5).",
+      "created_from": "FND-00002219",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "greater_than",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002219-AST-03",
+      "description": "INCORRECT: F2 (value 'ESDUSB', footprint SOT-563) is classified as type 'fuse' because its reference starts with 'F'. The ESDUSB part is a TVS diode array for USB ESD protection, not a fuse. This propagates to the USB differential pair analysis: the differential_pairs entry shows 'has_esd: false' because the ESD device is never recognized as such \u2014 it's treated as a protection device of type 'fuse' rather than an ESD clamp, so the has_esd flag on the USB pair is incorrectly false.",
+      "created_from": "FND-00002219",
+      "check": {
+        "path": "signal_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

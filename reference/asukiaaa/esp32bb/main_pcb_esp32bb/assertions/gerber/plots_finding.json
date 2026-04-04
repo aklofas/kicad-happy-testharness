@@ -1,0 +1,29 @@
+{
+  "file_pattern": "plots",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002053",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002053-AST-01",
+      "description": "The main_pcb gerber set (7 files) is missing F.Paste and B.Paste layers. The analyzer correctly identifies F.Paste in missing_recommended. Given the board has SMD components (27 SMD of 30 total footprints), the paste layer should have been exported for solder stencil production. This is a real omission in the exported gerber set.",
+      "created_from": "FND-00002053",
+      "check": {
+        "path": "completeness.missing_recommended",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002053-AST-02",
+      "description": "INCORRECT: The alignment check reports aligned=false with 'Height varies by 9.3mm across copper/edge layers' because the copper layers (B.Cu: 51.68mm, F.Cu: 51.68mm) are shorter in height than the Edge.Cuts outline (60.96mm). This is not a misalignment \u2014 the copper simply does not extend to the top portion of the board outline, which is a common and intentional design choice (e.g., a connector zone or mechanical margin). The alignment algorithm incorrectly treats this as an error rather than a routing boundary.",
+      "created_from": "FND-00002053",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    }
+  ]
+}

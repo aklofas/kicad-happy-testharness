@@ -1,0 +1,40 @@
+{
+  "file_pattern": "ice4pi.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002215",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002215-AST-01",
+      "description": "Bus 'ICE' correctly identifies the iCE_MOSI, iCE_MISO, and iCE_SCK nets connecting U1 (ICE40HX1K-TQ144) and U2 (W25Q32JVSSIQ), with chip_select_count=1 (iCE_SS_B). This is the FPGA configuration flash bus, accurately identified.",
+      "created_from": "FND-00002215",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002215-AST-02",
+      "description": "INCORRECT: The SPI bus between U1 (ICE40HX1K FPGA) and U2 (W25Q32 flash) is reported as two separate buses. Bus 'ICE' is correct (MOSI=iCE_MOSI, MISO=iCE_MISO, SCK=iCE_SCK, 1 chip select). Bus 'pin_U2' is a phantom detection anchored on the flash's pin perspective, with MOSI and MISO swapped and 0 chip selects. This is a false positive: there is only one SPI bus between FPGA and flash.",
+      "created_from": "FND-00002215",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "max_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002215-AST-03",
+      "description": "INCORRECT: The analyzer reports an I2C bus on nets PIO0_20 (SDA) and PIO0_21 (SCL) because the ICE40HX1K FPGA has pins with alternate names 'SDA/GPIO2' and 'SCL/GPIO3'. However, PIO0_20 and PIO0_21 are generic FPGA I/O nets connected only to the Raspberry Pi connector (J2) \u2014 there is no external I2C peripheral or pull-up resistors. Both detected I2C signals have has_pull_up=false and only a single device (U1). This is a false positive based on FPGA pin-name aliases.",
+      "created_from": "FND-00002215",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

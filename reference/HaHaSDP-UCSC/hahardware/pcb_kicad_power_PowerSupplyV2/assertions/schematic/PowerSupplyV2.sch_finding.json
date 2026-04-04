@@ -1,0 +1,30 @@
+{
+  "file_pattern": "PowerSupplyV2.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002163",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002163-AST-01",
+      "description": "INCORRECT: U3 LM2574 is detected as a power_regulator but assigned topology 'LDO'. The LM2574 is a 500mA Step-Down (Buck) Switching Voltage Regulator with an external inductor on the output \u2014 not a linear/LDO regulator. This is a fundamentally different circuit topology. LM317K (U6) is also in this schematic and IS correctly an LDO, which may explain how the LDO logic fired for both.",
+      "created_from": "FND-00002163",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].topology",
+        "op": "equals",
+        "value": "LDO"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002163-AST-02",
+      "description": "INCORRECT: D7 with value '15AmpTriac' is assigned type 'diode' by the component classifier. A TRIAC is a bidirectional thyristor (semiconductor switching device) used in AC power control \u2014 it is structurally and functionally entirely different from a diode. The 'D' reference designator prefix caused the misclassification. The schematic uses the TRIAC with a MOC3043M optocoupler (U2) for isolated AC load switching.",
+      "created_from": "FND-00002163",
+      "check": {
+        "path": "components[?reference=='D7'].type",
+        "op": "equals",
+        "value": "diode"
+      },
+      "aspirational": true
+    }
+  ]
+}

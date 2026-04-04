@@ -1,0 +1,48 @@
+# Findings: ESP32-PRO / HARDWARE_REV-B_ESP32-PRO_Rev_B
+
+## ?: Olimex ESP32-PRO development board with ESP32-D0WDQ6, PIC32MX270F256D co-processor, MCP73833 LiPo charger, SY8089 buck converter, SY6280 USB power switch, LY68S3200SLT PSRAM, MX25U3235F SPI flash, ATECC508A crypto, and micro SD. Analyzer produced strong results on crystal circuits, decoupling, I2C, and memory interfaces.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: HARDWARE_REV-B_ESP32-PRO_Rev_B.sch.json
+
+### Correct
+- Three crystal circuits correctly detected: Q1 (8.0MHz/20pF) with C13/C14 (33pF) giving 19.5pF effective load, Q2 (32.768KHz/12.5pF) with C15/C16 (33pF), and Q3 (40.000MHz/12pF) with C20/C21 (22pF) giving 14pF effective load
+- D2 (SMBJ6.0A) correctly detected as TVS protection diode on +5V rail clamping to GND
+- D1 (1N5822/SS34) correctly detected as reverse polarity protection between +5V_EXT and +5V
+- I2C bus correctly detected on SCL (RB8/SCL1) and SDA (RB9/SDA1) nets with pullups R42/R43 to +3.3V, devices U6 (ATECC508A), U1 (PIC32MX), U5 (ESP32)
+- Memory interface U8 (LY68S3200SLT PSRAM) correctly detected with 3 shared signals to U5 (ESP32)
+- Memory interface U7 (MX25U3235F flash) correctly detected connected to U5 (ESP32)
+- Decoupling analysis: +5V rail with 3x 47uF (141uF total), +3.3V with 12 caps (49.8uF), +1.8V with 3 caps (1.2uF) all correctly tallied
+- LC filter L5 (2.4nH)/C30 (4.7pF) resonating at 1.50 GHz correctly detected - this is the ESP32 2.4GHz antenna matching network
+- RC filter R1/C1 at 159 Hz and R2/C1+C17 at 723 Hz correctly detected on MCLR reset circuit
+- Voltage divider R23/R22 (4.99k/10k) at ratio 0.667 feeding USB-OTG fault detection pin correctly detected
+- 131 components, 8 ICs, 47 resistors, 41 caps, 6 inductors, 3 crystals - all counts match the schematic
+- 6 fiducials correctly classified as fiducial type
+
+### Incorrect
+- U3 (SY8089AAAC) switching regulator detected with input_rail=GND which is wrong. The SY8089 input comes from +5V rail. The analyzer may be confusing the GND pin with the VIN pin
+  (signal_analysis.power_regulators)
+- U3 (SY8089) regulator is missing output_rail and inductor detection. The SY8089 LX pin connects to the inductor and the output should be +3.3V
+  (signal_analysis.power_regulators)
+- Voltage divider R18/R19 (4.99k/1.1k) mid_point connected to U3 pin 3 (LX). This is actually the feedback divider for the SY8089 buck converter (FB pin, not LX), suggesting pin mapping is incorrect for this part
+  (signal_analysis.voltage_dividers)
+- Voltage divider R10/R11 (1.1k/10k) at ratio 0.90 with mid_point connection to THERM1 is detected as a voltage divider. While technically a divider, this is a thermistor circuit for battery temperature sensing, not a signal divider
+  (signal_analysis.voltage_dividers)
+- Regulator caps observation says missing input cap on GND for U3 - this is a consequence of the incorrect input_rail=GND detection
+  (signal_analysis.design_observations)
+
+### Missed
+- MCP73833 (U2) LiPo battery charger IC not detected in bms_systems. It manages battery charging with STAT1/STAT2 outputs and PG (power good) indicator
+  (signal_analysis.bms_systems)
+- SY6280AAC (U4) USB power switch not detected. It controls +5V_USB-OTG power with overcurrent/fault protection - this is a notable power management component
+  (signal_analysis.protection_devices)
+- ESP32 antenna matching network (L5/C30 LC detected) should also include the nearby components L4, C29, C28 which form the complete RF matching network to ANT1
+  (signal_analysis.rf_matching)
+
+### Suggestions
+- Fix SY8089/SY8009 pin mapping - the FB and LX pins appear swapped, causing incorrect regulator detection
+- Add MCP73833 to bms_systems/charger detection
+- Add SY6280 and similar USB power switches to protection_devices or a new power_switch category
+
+---

@@ -1,0 +1,176 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Meshinger_EPD_Driver.sch.json",
+      "status": "new",
+      "summary": "SS2040FL (U1, U2, U3) classified as 'ic' type instead of 'diode'; LC filter correctly detected between L1 (10uH) and C3 (4.7uF) sharing unnamed net, with accurate resonant frequency calculation",
+      "correct": [
+        {
+          "description": "Two LC filter configurations are detected: L1+C3 at 23.22 kHz and L1+(C2||C1) at 47.99 kHz. These are plausible EPD power supply filters. The parallel capacitor grouping for C2+C1 is correct.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "SS2040FL is a Schottky diode in SOD-123FL package. The analyzer assigns type 'ic' to all three instances because it doesn't recognize the part name. Should be type 'diode'. This same misclassification occurs in EthernetAndPower.sch (U6) and the top-level Meshinger.sch.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Meshinger/Meshinger",
+      "project": "Meshinger_Meshinger-before-autoroute",
+      "created": "2026-03-23T23:03:20.120437+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000901"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Meshinger_EthernetAndPower.sch.json",
+      "status": "new",
+      "summary": "LAN1_TX+/TX-/RX+/RX- classified as UART bus instead of Ethernet differential pairs; BAT+/BAT- detected as a differential signal pair; FAN53610AUC33X correctly identified as switching regulator with...",
+      "correct": [
+        {
+          "description": "IC1 (FAN53610AUC33X) correctly identified as switching regulator with topology 'switching'. BOM correctly carries MPN and Mouser part number. Decoupling observation for +3.3V rail is accurate.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Battery holder U7 has MPN, Mouser number, and correct description propagated. Correctly typed as 'ic' (generic fallback for non-standard part).",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "bus_analysis.uart contains LAN1_TX+, LAN1_TX-, LAN1_RX+, LAN1_RX- \u2014 these are Ethernet differential pairs (already correctly detected as differential pairs separately), not UART signals. Net name pattern matching is too aggressive.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "differential_pairs includes BAT+/BAT- as type 'differential'. These are DC battery power bus terminals, not a differential signal pair. The +/- naming pattern is too broadly triggering differential pair detection.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Meshinger/Meshinger",
+      "project": "Meshinger_Meshinger-before-autoroute",
+      "created": "2026-03-23T23:03:20.120459+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000902"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Meshinger_Meshinger.sch.json",
+      "status": "new",
+      "summary": "Power regulator IC1 fb_net incorrectly set to 'BAT+' (input supply, not feedback/output); Q2 (NTR2101P P-channel MOSFET) has is_pchannel=false and drain/source on same net; Many single-pin nets fro...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "FAN53610AUC33X is a buck regulator. The power_regulators entry shows fb_net='BAT+' which is the input voltage, not the regulated output. The actual output is +3V3. The regulator topology detection has input/output reversed.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "NTR2101P is a P-channel MOSFET but is_pchannel=false. Additionally drain_net and source_net are both '__unnamed_18', which is clearly wrong \u2014 the S/D pins cannot share a net in normal operation. Pin mapping from schematic library symbol is failing for this part.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The design_observations single_pin_nets lists 11 nets. Several are genuinely unconnected SKW92A pins (which may be intentional for an IoT module). However, net name/pin name mismatches (e.g., ROW1 connected to pin named 'WAN_PORT_RX+', ROW4 to 'LAN_PORT2_RX-') indicate that the net name in the PCB doesn't match the symbol pin names in the schematic library. The analyzer is correctly surfacing this but the cross-referencing creates confusing output.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Meshinger/Meshinger",
+      "project": "Meshinger_Meshinger-before-autoroute",
+      "created": "2026-03-23T23:03:20.120463+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000903"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Meshinger_SkylabModule.sch.json",
+      "status": "new",
+      "summary": "Key matrix (ROW1-ROW7, COL1-COL5) not detected despite BBQ10KBD keyboard controller presence; Dual power rails (+3.3V and +3V3) correctly detected and treated as distinct nets",
+      "correct": [
+        {
+          "description": "The design uses both +3.3V and +3V3 power symbols (inconsistently named). The analyzer correctly reports both as separate power rails. This is a real design issue faithfully captured.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "SkylabModule.sch contains U4 (BBQ10KBD keyboard controller) with 7 ROW and 5 COL signals connected. The key_matrices section is empty. This is a real key matrix that should be detected.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Meshinger/Meshinger",
+      "project": "Meshinger_Meshinger-before-autoroute",
+      "created": "2026-03-23T23:03:20.120466+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000904"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Meshinger_Meshinger.kicad_pcb.json",
+      "status": "new",
+      "summary": "Routing completeness, layer usage, via count, and board dimensions all accurately detected; kicad_version reported as 'unknown' for a clearly KiCad 5 format file (version 20171130); U5 (SKW92A WiFi...",
+      "correct": [
+        {
+          "description": "42 footprints, 2 copper layers (F.Cu/B.Cu), 2033 track segments, 44 vias, 71 nets with 0 unrouted \u2014 all consistent with a fully routed board. Board dimensions 82.2 x 101.3mm are realistic.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "fanout_patterns correctly identifies U5 with 48 pads, 28 fanout vias across 19 unique nets. This is a realistic BGA-style fanout pattern for the Skylab SKW92A module.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "File version 20171130 is the KiCad 5 PCB format. The analyzer reports kicad_version='unknown' instead of '5'. Same issue on Meshinger-before-autoroute.kicad_pcb. The version mapping for legacy PCB format dates is missing.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Meshinger/Meshinger",
+      "project": "Meshinger_Meshinger-before-autoroute",
+      "created": "2026-03-23T23:03:20.120468+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000905"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Meshinger_Meshinger-before-autoroute.kicad_pcb.json",
+      "status": "new",
+      "summary": "Correctly identified as partially-routed early-stage board with 48 unrouted nets on single layer",
+      "correct": [
+        {
+          "description": "23 footprints, only F.Cu used, 37 track segments, 0 vias, routing_complete=false, unrouted_net_count=48. This accurately reflects a pre-autoroute board state.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "Meshinger/Meshinger",
+      "project": "Meshinger_Meshinger-before-autoroute",
+      "created": "2026-03-23T23:03:20.120470+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000906"
+    }
+  ]
+}

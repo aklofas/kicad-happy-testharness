@@ -1,0 +1,29 @@
+{
+  "file_pattern": "analog-toolkit.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-041-01",
+      "description": "KH-041: No false RF matching on non-RF analog design",
+      "issue": "KH-041",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "signal_analysis.rf_matching",
+        "op": "max_count",
+        "value": 0
+      }
+    },
+    {
+      "id": "BUGFIX-KH-042-01",
+      "description": "KH-042: 25 DNP resistor instances correctly counted",
+      "issue": "KH-042",
+      "fix_type": "count_change_fix",
+      "check": {
+        "path": "statistics.dnp_parts",
+        "op": "equals",
+        "value": 25
+      }
+    }
+  ]
+}

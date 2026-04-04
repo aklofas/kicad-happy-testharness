@@ -1,0 +1,30 @@
+{
+  "file_pattern": "DellAdapter_3.1.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002312",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002312-AST-01",
+      "description": "INCORRECT: statistics.smd_count is 0 and tht_count is 2, yet the PCB source file contains numerous 'smd' pad definitions \u2014 the USB-C connector J2 (GCT USB4151-GF-C_REVA) has all SMD pads. The analyzer is misclassifying footprints: the USB-C connector's 'smd' pads with a drill offset (used for board-edge contacts) may be confusing the footprint-type classifier into calling them through-hole or virtual.",
+      "created_from": "FND-00002312",
+      "check": {
+        "path": "statistics.smd_count",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002312-AST-02",
+      "description": "The PCB analyzer reports board_height_mm as 20.828, while the gerber analyzer reports board_dimensions.height_mm as 50.29 for the same design. The gerber measurement is based on edge_cuts_extents and is likely correct for the full panel. The PCB analyzer appears to derive dimensions from the bounding box of only part of the edge cuts geometry (24 edges), possibly due to parsing arcs or complex cutouts in the board outline incorrectly.",
+      "created_from": "FND-00002312",
+      "check": {
+        "path": "statistics.board_height_mm",
+        "op": "greater_than",
+        "value": 40.0
+      },
+      "aspirational": true
+    }
+  ]
+}

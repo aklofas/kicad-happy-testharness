@@ -1,0 +1,51 @@
+{
+  "file_pattern": "SparkFun_Qwiic_1U_Breakout.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001390",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001390-AST-01",
+      "description": "statistics.total_components=37. The BOM lists: 4 mounting holes, 8 resistors, 4 jumpers, 2 test points, 3 logos/aesthetic, 4 fiducials, 1 diode (D1 LED), 1 Schottky (D2), 2 capacitors, 3 connectors (J1/J2 Qwiic + J3 6-pin), 1 IC (U5), 1 inductor, 2 transistors (Q1/Q2 BSS138). That sums to 37. Power rails [3.3V, 5V, GND, VCC] are all correct.",
+      "created_from": "FND-00001390",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 37,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001390-AST-02",
+      "description": "INCORRECT: The AP3012 (U5) is a step-up (boost) switching regulator. The PCB netlist confirms a 5V net exists. The analyzer sets input_rail='3.3V' and output_rail='3.3V' \u2014 treating it as a buck or non-boosting converter. The inductor L1 and Schottky D2 are in the boost topology, and the output should connect to the 5V net. The output_rail should be '5V', not '3.3V'. This also causes the vout_net_mismatch check to flag the wrong rail.",
+      "created_from": "FND-00001390",
+      "check": {
+        "path": "subcircuits[0].power_regulators[0].output_rail",
+        "value": "3.3V",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001390-AST-03",
+      "description": "INCORRECT: transistor_circuits for Q1 and Q2 both list gate_driver_ics=[{reference:'U5', value:'AP3012'}]. The BSS138 gates are connected to the 3.3V power net, not to an output of U5/AP3012. The analyzer is incorrectly propagating gate-net neighbors to find a driving IC, picking up U5 because it shares the 3.3V net. The correct classification is that the gate is pulled to a power rail (3.3V) \u2014 there is no gate-driver IC.",
+      "created_from": "FND-00001390",
+      "check": {
+        "path": "subcircuits[0].transistor_circuits[0].gate_driver_ics[0].reference",
+        "value": "U5",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001390-AST-04",
+      "description": "This board has a classic bi-directional I2C level-shifter circuit: Q1/Q2 (BSS138 N-MOSFETs) with 2.2k pull-ups (R4/R5/R7/R8) bridging 3.3V SCL/SDA to HV_SCL/HV_SDA. The nets SCL, SDA, HV_SCL, HV_SDA are clearly I2C. The transistor_circuits section detects Q1/Q2 but misidentifies U5 (AP3012) as their gate_driver_ic \u2014 it's the 3.3V rail that gates them. bus_analysis.i2c is empty [], missing both the LV and HV sides of the I2C bus.",
+      "created_from": "FND-00001390",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

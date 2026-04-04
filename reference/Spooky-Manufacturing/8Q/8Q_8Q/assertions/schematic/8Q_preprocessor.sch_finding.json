@@ -1,0 +1,19 @@
+{
+  "file_pattern": "preprocessor.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000341",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000341-AST-01",
+      "description": "preprocessor.sch contains IS42S16400J-xC (lib_id: Memory_RAM:IS42S16400J-xC) and STM32F429BITx (MCU_ST_STM32F4:STM32F429BITx, has built-in FMC SDRAM interface). The schematic has 0 nets because it is a stub (components placed but not wired), so memory_interfaces detection correctly fires no circuit-topology match. However, the analyzer could emit a design_observation noting 'SDRAM chip present (IS42S16400J-xC) paired with MCU having SDRAM interface (STM32F429BITx)' based purely on lib_id pattern matching, independent of net connectivity. Currently design_observations is empty for this file. This is a minor gap: lib_id-aware design notes for recognizable chip combinations do not fire when net context is absent.",
+      "created_from": "FND-00000341",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "eq",
+        "value": []
+      },
+      "aspirational": true
+    }
+  ]
+}

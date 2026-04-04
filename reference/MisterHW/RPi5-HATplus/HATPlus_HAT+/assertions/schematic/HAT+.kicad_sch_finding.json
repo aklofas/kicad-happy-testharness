@@ -1,0 +1,39 @@
+{
+  "file_pattern": "HAT+.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001225",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001225-AST-01",
+      "description": "U2 is marked dnp=true in the schematic and the analyzer correctly captures it. R9/R10 are identified as pull-ups on SDA/SCL and R11 as a pull-down on A0, all with correct directions and values (3.9k). PWR_FLAG warning on GND is valid since this hat has no PWR_FLAG symbol.",
+      "created_from": "FND-00001225",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001225-AST-02",
+      "description": "The connector J1 has many GPIO pins routed to single-pin nets (GPIO15_RXD, GPIO17, etc.) since this HAT only uses I2C. The connectivity_issues.single_pin_nets list correctly captures all of these, which is useful for design review.",
+      "created_from": "FND-00001225",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001225-AST-03",
+      "description": "U1/U2 are AT24CS64 I2C EEPROMs with SDA/SCL pins connected through pull-up resistors R9/R10 to the RPi5 ID EEPROM bus. The signal_analysis.memory_interfaces list is empty and design_observations is empty \u2014 the I2C EEPROM circuit should be detected. The pull-up resistors (3.9k) on SDA/SCL are present and correctly wired.",
+      "created_from": "FND-00001225",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

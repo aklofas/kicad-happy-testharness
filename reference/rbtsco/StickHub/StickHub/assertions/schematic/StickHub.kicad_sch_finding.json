@@ -1,0 +1,80 @@
+{
+  "file_pattern": "StickHub.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001588",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001588-AST-01",
+      "description": "94 total components correctly identified: 38 capacitors (10\u00d70.1uF bypass, 8\u00d70.1uF 100V, 15\u00d722uF, 2\u00d710uF, 1\u00d71uF, 1\u00d715nF, 1\u00d7330uF), 13 resistors, 18 diodes (16 TVS AR0521P1 + 2 D5V0H1B2LP), 7 LEDs (dual-color USB status), 2 ICs (U1 XR22417 hub + U2 SLG5NT1487V power switch), 1 crystal, 9 connectors, 1 jumper, 1 mounting hole, 4 graphic logos. PCB footprint count matches at 94.",
+      "created_from": "FND-00001588",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 94
+      }
+    },
+    {
+      "id": "FND-00001588-AST-02",
+      "description": "crystal_circuits detects Y1 (12MHz 50ppm 16-20pF) with frequency=12000000 Hz and load_caps=[]. The XR22417 USB hub IC integrates internal crystal load capacitors and does not require external load caps. The XI and XO nets only connect Y1 pins to U1 (XR22417) pins with no capacitors, confirming load_caps=[] is accurate.",
+      "created_from": "FND-00001588",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001588-AST-03",
+      "description": "18 protection devices correctly identified: 14 TVS diodes (AR0521P1, 0.5pF 3.3V) on U1D+/U1D- through U7D+/U7D- (7 downstream port pairs), 2 TVS on D+/D- (upstream), and 2 diodes D24/D25 (5V D5V0H1B2LP) on VIN and +5V. All 16 TVS diodes and 2 ESD diodes for power are correctly attributed.",
+      "created_from": "FND-00001588",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 16
+      }
+    },
+    {
+      "id": "FND-00001588-AST-04",
+      "description": "differential_pairs correctly identifies 8 pairs: D+/D- (upstream, shared with J1 and U1) and U1D+/U1D- through U7D+/U7D- (downstream ports, each shared with a JST connector and U1). has_esd=true for all pairs via the TVS diodes on each differential pair net. This accurately represents the 7-port hub topology.",
+      "created_from": "FND-00001588",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "FND-00001588-AST-05",
+      "description": "voltage_dividers correctly identifies the VBUS sensing network: R1 (10k top) and R2 (100k bottom) between +5V and GND, midpoint connected to U1 pin 41 (VBUS_SENSE). Ratio 0.909 is correct (10k/(10k+100k) \u2248 0.909, which actually makes the mid-point higher than a simple 5V divider midpoint \u2014 this senses the 5V VBUS rail adequately for the XR22417).",
+      "created_from": "FND-00001588",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001588-AST-06",
+      "description": "INCORRECT: bus_analysis.i2c detects net 'LED1' as SCL and unnamed net as SDA. The XR22417 has a dual-function pin 'LED1/SCL'. In this design the pin is used as LED1 (driving a status LED), confirmed by the schematic net label 'LED1'. There is no I2C master or slave device connected. The analyzer matches '/SCL' in the pin name and triggers a false positive. The net label 'LED1' should take precedence over the pin name suffix.",
+      "created_from": "FND-00001588",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001588-AST-07",
+      "description": "power_regulators=[] but the XR22417 (U1) has a '1V8_OUT' pin that generates the +1V8 rail (decoupled by C4, C11, C12, C13). The +1V8 rail powers the internal logic of the hub IC. While this is an integrated regulator (not a standalone IC), the analyzer could flag the IC pin named '1V8_OUT' as a power output. This is a missed detection for integrated power generation.",
+      "created_from": "FND-00001588",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "max_count",
+        "value": 0
+      },
+      "aspirational": false
+    }
+  ]
+}

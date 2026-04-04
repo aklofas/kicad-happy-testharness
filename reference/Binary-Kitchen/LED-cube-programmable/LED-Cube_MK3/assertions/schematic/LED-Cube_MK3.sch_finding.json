@@ -1,0 +1,39 @@
+{
+  "file_pattern": "LED-Cube_MK3.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000800",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000800-AST-01",
+      "description": "The scrclk net drives ~OE (active-low output enable) of both 74HC595s. A dedicated GPIO should drive this pin rather than leaving it with no explicit driver source. The ERC correctly identifies this.",
+      "created_from": "FND-00000800",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000800-AST-02",
+      "description": "Arduino Nano runs at 3.3V logic, 74HC595s run at 5V. The sr_latch net crosses domains correctly identified as needing a level shifter.",
+      "created_from": "FND-00000800",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000800-AST-03",
+      "description": "The Arduino drives U1/U2 (74HC595) via mosi, scrclk, sr_latch signals which form an SPI-like interface. The bus_analysis shows spi=[] even though MOSI-equivalent data and clock signals are present. The non-standard net names (not labeled MOSI/SCK) likely prevent SPI detection.",
+      "created_from": "FND-00000800",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

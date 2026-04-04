@@ -1,0 +1,94 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "laemp_led_board_laemp_led_board.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "LED board with 44 SK6812 addressable LEDs in a daisy chain with per-LED 100nF decoupling capacitors, dual 4-pin connectors for power and data. Analyzer correctly detects the full 44-LED chain and VBUS decoupling.",
+      "correct": [
+        {
+          "description": "44-LED SK6812 daisy chain correctly detected from D1 through D44 with DIN input net and single-wire WS2812 protocol",
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Estimated current of 2640mA (44 LEDs x 60mA) correctly calculated",
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "All 44 SK6812 LEDs correctly classified as type 'led'",
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "All 44 100nF capacitors correctly classified as type 'capacitor'",
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "J1 Conn_01x04 and J2 Conn_01x04 correctly classified as connectors",
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "VBUS decoupling rail correctly detected with 44 bypass caps totaling 4.4uF",
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Design observation correctly notes VBUS rail has bypass but no bulk capacitor",
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Component count accurate: 90 total (44 LEDs + 44 caps + 2 connectors)",
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "id": "FND-00000210",
+      "repo": "Jana-Marie/LAEMP-Prism",
+      "project": "laemp_led_board_laemp_led_board",
+      "created": "2026-03-15T22:45:46.619232+00:00",
+      "datasheets_used": [],
+      "should_become_assertion": false
+    }
+  ]
+}

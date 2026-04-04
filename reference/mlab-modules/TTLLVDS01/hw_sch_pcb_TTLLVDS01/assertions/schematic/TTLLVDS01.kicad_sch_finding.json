@@ -1,0 +1,82 @@
+{
+  "file_pattern": "TTLLVDS01.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001631",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001631-AST-01",
+      "description": "design_analysis.differential_pairs reports two pairs: '1+' / '1-' with series_resistors=['R3'], and '2+' / '2-' with series_resistors=['R4']. The SN65LVDS9638D drives two differential LVDS channels; R3 and R4 (100 \u03a9) are series termination resistors. Net names and resistor assignments are correct.",
+      "created_from": "FND-00001631",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001631-AST-02",
+      "description": "INCORRECT: TTLLVDS01 uses KiCad 6 format where symbol placements have empty Value properties (property 'Value' '') and the actual instance-level overrides are stored at the end of the file in a per-project (instances) section. The instances section records: C2='100nF', D1='BZV55C-3,6V', R1=R2='33R', R3=R4='100', U1='SN65LVDS9638D'. The analyzer reads the symbol placement's Value field (empty) and falls back to the lib-symbol name, so it reports: C2='C_Small', D1='D_ZENER', R1=R2=R3=R4='R'. All footprints are also empty for the same reason \u2014 the instance footprint overrides are in the same (instances) section.",
+      "created_from": "FND-00001631",
+      "check": {
+        "path": "bom",
+        "op": "contains_match",
+        "value": {
+          "references": [
+            "C2"
+          ],
+          "value": "100nF"
+        }
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001631-AST-03",
+      "description": "INCORRECT: The TTLLVDS01 schematic contains two PWR_FLAG symbols: one at (242.57,24.13) wired to the VCC symbol at (242.57,22.86), and one at (242.57,34.29) wired to the GND symbol at (242.57,35.56). As with other designs, the analyzer assigns both to a 'PWR_FLAG' net rather than the nets they are wired to, causing false 'no PWR_FLAG' warnings for both VCC and GND.",
+      "created_from": "FND-00001631",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001631-AST-04",
+      "description": "INCORRECT: Both detected differential pairs (1+/1- and 2+/2-) have has_esd=true and esd_protection=['U1']. U1 is the SN65LVDS9638D dual LVDS line driver \u2014 it drives the signals, not a TVS/ESD suppressor. R3 and R4 (100 \u03a9 each, correctly identified as series_resistors) are impedance-matching resistors. The LVDS driver being shared on both nets appears to trigger the ESD-protection heuristic incorrectly.",
+      "created_from": "FND-00001631",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "not_contains_match",
+        "value": {
+          "esd_protection": [
+            "U1"
+          ]
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001631-AST-05",
+      "description": "INCORRECT: All 17 components appear in missing_footprint because the analyzer reads the symbol-placement Footprint property (which is empty in TTLLVDS01's instance format) rather than the (instances) section footprint overrides. The PCB has all 17 footprints correctly populated with real library references (e.g., Package_SO:SOIC-8_3.9x4.9mm_P1.27mm for U1, Diode_SMD:D_MiniMELF for D1).",
+      "created_from": "FND-00001631",
+      "check": {
+        "path": "statistics.missing_footprint",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001631-AST-06",
+      "description": "C2 has pin 1 on VCC and pin 2 on GND; the PCB footprint confirms value '100nF'. Because the schematic analyzer reads the empty instance Value field and falls back to the symbol name 'C_Small', parsed_value is None. The decoupling detector requires a valid capacitance, so C2 is excluded and decoupling_analysis returns an empty list. The design_observations also incorrectly states U1's VCC rail has no decoupling caps at all.",
+      "created_from": "FND-00001631",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

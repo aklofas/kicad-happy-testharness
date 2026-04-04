@@ -1,0 +1,42 @@
+{
+  "file_pattern": "eurorack-pmod-pcb.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000262",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000262-AST-01",
+      "description": "TL074/TL072 opamp configurations correctly identified",
+      "created_from": "FND-00000262",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000262-AST-02",
+      "description": "INCORRECT: 14 of 15 RC filters are opamp feedback pairs, only R33+C27 (VREF filter) is genuine",
+      "created_from": "FND-00000262",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R33$"
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000262-AST-03",
+      "description": "INCORRECT: U9 unit 2 TL072 classified as 'comparator_or_open_loop' \u2014 feedback through RN7 (resistor_network type) missed because 2-hop detection only looks for 'resistor' type, not 'resistor_network'",
+      "created_from": "FND-00000262",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U9$"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "file_pattern": "Hardware_SparkFun_XRP_Controller.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001896",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001896-AST-01",
+      "description": "statistics.copper_layers_used=6, copper_layer_names=['B.Cu', 'F.Cu', 'In1.Cu', 'In2.Cu', 'In3.Cu', 'In4.Cu']. Board dimensions 63.5\u00d753.975mm. footprint_count=387, via_count=510, zone_count=57, routing_complete=True, unrouted_net_count=0. All correct.",
+      "created_from": "FND-00001896",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "value": 6,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001896-AST-02",
+      "description": "thermal_analysis.thermal_pads lists: U1 (RP2350B QFN-80 3.4\u00d73.4mm EPAD) with 24 thermal vias, U2 (Flash WDFN-8) with 9 thermal vias, U7 and U8 (DRV8411A) each with 9 thermal vias. All thermal pads are on GND net. The via counts are consistent with the PCB layout strategy for heat dissipation.",
+      "created_from": "FND-00001896",
+      "check": {
+        "path": "thermal_analysis.thermal_pads",
+        "value": 4,
+        "op": "count_eq"
+      },
+      "aspirational": true,
+      "aspirational_reason": "unknown operator count_eq not supported by checks engine"
+    },
+    {
+      "id": "FND-00001896-AST-03",
+      "description": "U4 (AP63357DV-7, PowerVFDFN-13 package) has an exposed pad that should have thermal via stitching. It is not included in thermal_analysis.thermal_pads. The four detected parts (U1, U2, U7, U8) are correct but U4 with its power package is missed. This may be due to the package name 'PowerVFDFN-13' not matching the thermal pad detection heuristic.",
+      "created_from": "FND-00001896",
+      "check": {
+        "path": "thermal_analysis.thermal_pads",
+        "value": 5,
+        "op": "count_eq"
+      },
+      "aspirational": true
+    }
+  ]
+}

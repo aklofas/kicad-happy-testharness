@@ -1,0 +1,74 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "MOT_Photodiode.kicad_sch.json",
+      "status": "new",
+      "summary": "LT3032-12 dual-output LDO not detected as a power regulator; U2 ADA4898-1 classified as 'compensator' instead of transimpedance amplifier (TIA); V- flagged as cross-domain signal needing level shif...",
+      "correct": [
+        {
+          "description": "C1/C2 (10\u00b5F) on \u00b115V and C5 (10\u00b5F) on V+ are all correctly identified as bulk decoupling with no high-frequency bypass caps. The design_observations flags missing bypass caps for all three rails, which is accurate.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The design is powered via J1 (3-pin supply connector) providing +15V/-15V/GND with no PWR_FLAG symbols. The pwr_flag_warnings correctly identify that KiCad ERC will flag these rails. This is expected behavior for connector-powered designs.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The opamp configuration is reported as 'compensator'. The actual circuit is a TIA: J3 (photodiode) connects to the inverting input, GND connects to the non-inverting input, and R3||C8 is the feedback network from output to inverting input. This is a canonical transimpedance amplifier topology, not a compensator. The 'compensator' label is misleading for this photocurrent-to-voltage converter.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "design_analysis.cross_domain_signals reports the V- net (U1 OUTN \u2192 U2 V-) as needing a level shifter between domains '-15V' and 'V+'. This is a false positive: V- is the negative supply output of the LT3032 dual LDO (power_out pin), feeding the opamp's negative supply input (power_in). Supply rails connecting regulator outputs to IC supply pins should not be flagged as cross-domain signals requiring level shifters.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "U1 (LT3032-12, lib_id Regulator_Linear:LT3032-12) is a dual-output positive/negative LDO providing +V and -V rails to the opamp, but signal_analysis.power_regulators is empty. The IC is classified as type 'ic' with no regulator topology assigned. This is a missed detection \u2014 the LT3032 family should be recognized by its lib_id prefix.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "TU-Darmstadt-APQ/MOT_Photodiode",
+      "project": "MOT_Photodiode",
+      "created": "2026-03-23T23:04:10.654584+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000921"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "MOT_Photodiode.kicad_pcb.json",
+      "status": "new",
+      "summary": "Routing completeness correctly reconciles 14 nets with 4 no-connect pads; DFM correctly identifies 0.1mm annular ring as requiring advanced process tier; U2 exposed pad (EP) on V- net correctly fla...",
+      "correct": [
+        {
+          "description": "PCB has 14 nets total; 4 are unconnected-(...) nets from NC pins. routed_nets=10, unrouted_count=0 is correct \u2014 the 10 signal/power nets are fully routed, the 4 NC-pad nets need no routing.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "min_annular_ring_mm=0.1 is flagged as below the 0.125mm standard limit, requiring advanced process. The DFM tier is reported as 'advanced'. This is accurate for this compact 32\u00d725mm board.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "U2 ADA4898-1 SOIC-8-1EP has its exposed pad on the V- (negative supply) net with 0 nearby_thermal_vias. The thermal_pad_vias analysis correctly identifies this, which is a legitimate thermal concern for a high-speed op amp.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "TU-Darmstadt-APQ/MOT_Photodiode",
+      "project": "MOT_Photodiode",
+      "created": "2026-03-23T23:04:10.654602+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000922"
+    }
+  ]
+}

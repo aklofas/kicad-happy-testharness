@@ -1,0 +1,39 @@
+{
+  "file_pattern": "Macropad_Mini_Module.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001781",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001781-AST-01",
+      "description": "PCB analysis correctly reports footprint_count=95, copper_layers_used=4 (F.Cu, B.Cu, In1.Cu, In2.Cu), board_width_mm=102, board_height_mm=99, routing_complete=True, via_count=174. These match the physical .kicad_pcb source file.",
+      "created_from": "FND-00001781",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 95
+      }
+    },
+    {
+      "id": "FND-00001781-AST-02",
+      "description": "The Mini Module PCB is 102x99mm which correctly exceeds the standard 100x100mm tier at JLCPCB. The analyzer correctly identifies this as a pricing-tier DFM issue. The Dial and Slider Module PCBs at 100x100mm have 0 violations, which is also correct.",
+      "created_from": "FND-00001781",
+      "check": {
+        "path": "dfm.violation_count",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001781-AST-03",
+      "description": "INCORRECT: U4 (ESP32-S3-MINI-1) is placed at (186.9, 132.7) with -135 degree rotation on a 102x99mm board. A clearance of -21.1mm implies the component extends 21.1mm outside the board edge, which is impossible for a placed module. The same module in the Dial Module PCB at 90 degree rotation shows -3.65mm. The severity correlates with rotation angle, strongly indicating a bounding-box calculation bug for rotated footprints in the edge clearance analysis. The Dial Module also shows J2 (-0.08mm) and J3 (-0.21mm) which are edge-mounted connectors intentionally placed at the board perimeter \u2014 those negative values are plausible, but U4 at -21.1mm is not.",
+      "created_from": "FND-00001781",
+      "check": {
+        "path": "placement_analysis.overlap_count",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

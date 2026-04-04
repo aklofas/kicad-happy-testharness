@@ -1,0 +1,40 @@
+{
+  "file_pattern": "dac-breakout-ad5689.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001372",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001372-AST-01",
+      "description": "The statistics show 8 total components matching exactly the BOM entries: U1 (AD5689R DAC), C1 (10uF), C2 (100nF), JP1-JP4 (four solder jumpers for GAIN and RESET config), and J1 (8-pin connector). Component types and quantities all verified against the component list.",
+      "created_from": "FND-00001372",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 8,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001372-AST-02",
+      "description": "INCORRECT: In the legacy KiCad 5 .sch parser, the 'VDD' net entry has U1 pin 4 with pin_name 'GND', and the 'GND' net entry has U1 pin 5 with pin_name 'VDD'. For the AD5689R, pin 4 is GND and pin 5 is VDD, so the net label correctly matches but the stored pin_name within each net is swapped relative to the net name. This means the pin_name field is sourced from the symbol pin definitions rather than the net connection, and the association is inverted. This could indicate a legacy .sch pin-to-net resolution bug where the pin_name stored in the net structure is misassigned for mirrored components (mirror_x: true on U1).",
+      "created_from": "FND-00001372",
+      "check": {
+        "path": "nets.VDD.pins[0].pin_name",
+        "value": "VDD",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001372-AST-03",
+      "description": "The bus_analysis.spi array contains two entries for what is effectively one SPI interface on U1 (AD5689R). Bus 'pin_U1' maps MOSI to the 'OUTB' net (U1 pin 7, VOUTB \u2014 a DAC analog output, not an SPI data pin) and SCK to an unnamed net driving the SCLK and RESET jumpers. This is a false SPI detection: the analyzer confused the DAC's analog output net (OUTB) with an SPI MOSI line. Additionally, the 'SDO' net is labeled on VOUTB which further confuses the SPI detector.",
+      "created_from": "FND-00001372",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "value": 1,
+        "op": "max_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

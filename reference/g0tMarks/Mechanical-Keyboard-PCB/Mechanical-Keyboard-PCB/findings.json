@@ -1,0 +1,62 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Mechanical-Keyboard-PCB.kicad_sch.json",
+      "status": "new",
+      "summary": "Key matrix (6x14, 67 keys), USB-C compliance, ESD protection, fuse, ATmega32U4, duplicate annotation all correctly detected; Key matrix: switches_on_matrix=0 despite 67 key switches (K1-K67) being ...",
+      "correct": [
+        {
+          "description": "Key matrix detected with rows=6, cols=14, 67 diodes via net_name method. USB compliance: CC pulldowns pass, DP/DM series resistors pass, VBUS ESD and decoupling fail (accurate). annotation_issues correctly flags duplicate C1, C2, C3 on the same sheet (real annotation error in design). PRTR5V0U2X ESD IC and 500mA fuse correctly identified in protection_devices.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The matrix detection correctly identifies 67 diodes via net names, but reports switches_on_matrix=0. The 67 key switches (KEYSW lib_id) are on the matrix nets but are classified as 'relay' (K* reference prefix triggers relay classification), so the switch-counting logic does not count them. This is a compound issue: K-prefixed key switches misclassified as relays, and the matrix counter missing them.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "statistics.component_types reports relay=67 instead of switch=67. The lib_id is 'keyboard_parts:KEYSW' and footprint is 'marbastlib-mx:SW_MX_HS_1u', both clearly keyboard switches. The K* reference prefix triggers relay classification. This also causes the key matrix to report switches_on_matrix=0.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "XTAL component (value='16MHz', type expected 'crystal') is listed in missing_footprint, suggesting it exists in the schematic. signal_analysis.crystal_circuits=[] despite it being a standard keyboard MCU oscillator circuit. The analyzer likely misclassifies XTAL or fails to find its load caps.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "g0tMarks/Mechanical-Keyboard-PCB",
+      "project": "Mechanical-Keyboard-PCB",
+      "created": "2026-03-23T23:02:22.096461+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000883"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Mechanical-Keyboard-PCB.kicad_pcb.json",
+      "status": "new",
+      "summary": "Empty PCB stub file correctly analyzed as having zero footprints/tracks",
+      "correct": [
+        {
+          "description": "The actual .kicad_pcb file is a 50-byte stub '(kicad_pcb (version 20221018) (generator pcbnew)\\n)' with no content. The analyzer correctly reports footprint_count=0, track_segments=0, routing_complete=true, board_outline edge_count=0. No false warnings generated for an intentionally empty file.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "g0tMarks/Mechanical-Keyboard-PCB",
+      "project": "Mechanical-Keyboard-PCB",
+      "created": "2026-03-23T23:02:22.096481+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000884"
+    }
+  ]
+}

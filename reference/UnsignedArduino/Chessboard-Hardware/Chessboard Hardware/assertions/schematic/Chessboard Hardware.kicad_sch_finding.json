@@ -1,0 +1,41 @@
+{
+  "file_pattern": "Chessboard Hardware.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000438",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000438-AST-01",
+      "description": "INCORRECT: The detected_bus_signals entry for the COM bus reports width=24 with range=COM0..COM7. There are exactly 8 unique COM net signals (COM0 through COM7) in the design, confirmed by the nets dictionary. The width of 24 equals 8 signals \u00d7 3 label occurrences per signal in the root sheet, meaning the analyzer is counting total label occurrences rather than the number of unique parallel bus signals. The correct width should be 8.",
+      "created_from": "FND-00000438",
+      "check": {
+        "path": "bus_topology.detected_bus_signals[0].width",
+        "op": "equals",
+        "value": 8
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000438-AST-02",
+      "description": "INCORRECT: design_analysis.cross_domain_signals reports 12 entries, all claiming signals cross between the 'VCC' domain and '__unnamed_11'. However, __unnamed_11 is a single-pin net containing only A1 pin 30 (VIN \u2014 the Arduino Nano's unconnected power input). VIN is floating/unconnected and is not a real power domain. Both the Arduino (A1) and all mux ICs (U5, U14, U23, U32, U41, U50, U59, U68) are powered solely by VCC. All COM0\u2013COM7, A, B, C, and INH signals are intra-domain connections within VCC and should not trigger cross-domain warnings.",
+      "created_from": "FND-00000438",
+      "check": {
+        "path": "design_analysis.cross_domain_signals",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000438-AST-03",
+      "description": "The design implements a clear sensor-to-ADC readout chain: 64 SS49E Hall sensors are grouped 8-per-mux, feeding 8 SN74HC4851N 8:1 analog multiplexers, whose COM outputs (COM0\u2013COM7) connect to the Arduino Nano analog inputs (A0\u2013A7 implied through J1 connector). The address bus (A, B, C) and inhibit (INH) from the Arduino select which sensor is read. Signal analysis produces no entries for this analog mux topology \u2014 no detector fires for the analog switching network. The design_observations section also has no entry describing this architecture.",
+      "created_from": "FND-00000438",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

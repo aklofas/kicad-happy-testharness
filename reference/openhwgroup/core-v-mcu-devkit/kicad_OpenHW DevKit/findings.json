@@ -1,0 +1,89 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/core-v-mcu-devkit/kicad/OpenHW DevKit.kicad_sch",
+      "status": "confirmed",
+      "summary": "RISC-V dev kit with CORE-V MCU: strong bus protocol and power regulation detection, voltage sense dividers correctly found for power monitoring",
+      "correct": [
+        {
+          "description": "Four-rail LDO cascade correctly identified: AMS1117-3.3 (VDC->3.3V), AP2127K-1.8 (3.3V->1.8V), AP2127K-ADJ (3.3V->0.8V), AP2127K-2.8 (3.3V->2.8V)"
+        },
+        {
+          "description": "I2C buses detected at two voltage levels: 3.3V domain (sda/scl with 4.7k pull-ups) and 1.8V domain (i2c_sda/i2c_scl with 4.7k pull-ups)"
+        },
+        {
+          "description": "SPI bus correctly identified connecting SOC to flash (MISO0_SOC, MOSI0_SOC, SCLK0_SOC) and MikroBUS click socket"
+        },
+        {
+          "description": "Voltage sense dividers for power monitoring detected: 1.8V sense (R36/R37), 3.3V sense (R34/R35), 0.8V sense (R38/R39) feeding SENSE pins"
+        },
+        {
+          "description": "Two crystal circuits found: 12MHz main oscillator and 32.768kHz RTC crystal with 12.5pF load caps, plus 10MHz active oscillator (ECS-2520MVLC)"
+        },
+        {
+          "description": "Differential pair d+/d- detected with ESD protection via U2"
+        },
+        {
+          "description": "JTAG debug interface signals detected on UART nets"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Differential pair typed as generic \"differential\" rather than \"USB\" despite d+/d- naming convention matching USB data lines",
+          "analyzer_section": "design_analysis.differential_pairs"
+        }
+      ],
+      "missed": [
+        {
+          "description": "JTAG/debug interface (jtag signals visible in nets) not identified as a debug bus protocol",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "MikroBUS click socket interface not identified - standardized expansion bus with SPI, I2C, UART, and GPIO",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Camera interface connector not detected as a parallel camera bus (MIPI CSI or parallel)",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "AWS ExpressLink module interface not identified as a cloud connectivity subsystem",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Detect JTAG interfaces (TCK, TMS, TDI, TDO, nRST) as a debug bus protocol",
+        "Identify MikroBUS socket pinouts as standardized expansion interfaces",
+        "Recognize d+/d- net naming as USB differential pairs"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000132",
+      "repo": "openhwgroup/core-v-mcu-devkit",
+      "project": "kicad_OpenHW DevKit",
+      "created": "2026-03-14T07:51:29.891897+00:00"
+    }
+  ]
+}

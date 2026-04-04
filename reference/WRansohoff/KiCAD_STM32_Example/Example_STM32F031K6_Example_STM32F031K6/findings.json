@@ -1,0 +1,88 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Example_STM32F031K6_Example_STM32F031K6.sch.json",
+      "status": "promoted",
+      "summary": "LDO regulator (AP2210/AP1117-33) detected with correct topology; Regulator output rail is an unnamed internal net instead of the named +3.3V rail; Decoupling analysis flags missing caps on +3.3V bu...",
+      "correct": [
+        {
+          "description": "Identified U1 as LDO with input_rail '__unnamed_1' (VPP via Schottky D1) and output_rail '__unnamed_0' (to LED indicator D2). Topology, lib_id, and neighbor extraction are all accurate.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "21 total components (2 ICs, 10 caps, 1 Schottky diode, 1 LED, 2 resistors, 1 crystal, 1 switch, 3 connectors) match the design. Power rails +3.3V, GND, VPP correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The LDO output should be '+3.3V' \u2014 the named power rail that actually connects to the STM32, decoupling caps, and GPIO headers. Instead it reports '__unnamed_0' which is only the two-pin local net between U1-VO and D2-A (the power-on LED). The +3.3V rail appears to be connected via a different net segment. This is a net topology/continuity bug in the KiCad 5 legacy parser.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "design_observations reports 'rails_without_caps: [+3.3V]' for U1, and regulator_caps reports 'missing_caps: {input, output}'. In reality C10, C9, C4 (100nF each) are on the +3.3V rail powering U2, and C3/C2 (4.7uF) are in the circuit. The false report stems from the output rail being misidentified as '__unnamed_0' instead of '+3.3V', so the cap association fails.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Y1 (8MHz) has 20pF load caps C5 and C8 present in the design. The analyzer outputs 'load_caps: []' for the crystal circuit. The nets connecting Y1 pins to C5 and C8 are the unnamed KiCad 5 legacy nets \u2014 the crystal load cap detection likely fails to trace through unnamed nets in legacy .sch format.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "ic_power_rails for U2 reports power_rails: ['A2', 'SWCLK']. A2 is a GPIO net connected to U2 pin 1 (VDD) and SWCLK is a debug signal. This is a KiCad 5 legacy pin-type misclassification: the library declares VDD/VSS pins as 'input' type rather than 'power_in', causing the analyzer to misidentify signal nets as power rails.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Ten 'no_driver' warnings are generated for GPIO nets (A0-A15, B0-B7, SWDIO, etc.) all driven by U2 bidirectional pins and routed to J1/J3 connectors. Pin type is 'input' in the KiCad 5 lib, so the ERC checker treats them as undriven. These are false positives \u2014 the bidirectional GPIO pads connected to passive connector pins are not ERC errors in practice.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "WRansohoff/KiCAD_STM32_Example",
+      "project": "Example_STM32F031K6_Example_STM32F031K6",
+      "created": "2026-03-23T22:24:28.688314+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000728"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Example_STM32F031K6_Example_STM32F031K6.kicad_pcb.json",
+      "status": "new",
+      "summary": "STM32 breakout PCB stats are internally consistent: 21 footprints, 2-layer, 32 nets, fully routed",
+      "correct": [
+        {
+          "description": "footprint_count=21 matches schematic component count, routing_complete=true, board dimensions 17.78x33.02mm are plausible for a small STM32F031K6 (LQFP-32) breakout. kicad_version='unknown' and file_version='4' are correct for a KiCad 5 legacy .kicad_pcb.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "WRansohoff/KiCAD_STM32_Example",
+      "project": "Example_STM32F031K6_Example_STM32F031K6",
+      "created": "2026-03-23T22:24:28.688336+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000729"
+    }
+  ]
+}

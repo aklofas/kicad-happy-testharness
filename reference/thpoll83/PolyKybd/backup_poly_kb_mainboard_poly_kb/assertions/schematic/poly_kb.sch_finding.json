@@ -1,0 +1,61 @@
+{
+  "file_pattern": "poly_kb.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000292",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000292-AST-03",
+      "description": "3 I2C buses correctly flagged as missing pullup resistors",
+      "created_from": "FND-00000292",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000292-AST-06",
+      "description": "SPI buses with W25N01G NAND flash correctly detected",
+      "created_from": "FND-00000292",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000292-AST-07",
+      "description": "ERC no_driver warnings for misrouted pins (FLASH_NHOLD on VREF+, FLASH_NWP on VCAP_2) are genuine schematic errors",
+      "created_from": "FND-00000292",
+      "check": {
+        "path": "design_analysis.erc_warnings",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000292-AST-08",
+      "description": "INCORRECT: Spurious RC filter R9(22ohm)+C1(1u) at 7.23kHz \u2014 R9 is SWD debug header series protection, C1 is shared NRST cap",
+      "created_from": "FND-00000292",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R9$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000292-AST-09",
+      "description": "Key matrix not detected \u2014 KRow0-7/KCol0-20 GPIO matrix exists but switch components are on keyboard daughterboard, not in parsed sheets",
+      "created_from": "FND-00000292",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "coffeecaller.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002347",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002347-AST-01",
+      "description": "The analyzer correctly identifies D1-D4 as a WS2812E-V5 chain of length 4, with data_in_net '__unnamed_35', protocol 'single-wire (WS2812)', and estimated current 240mA (4 \u00d7 60mA). The associated level-shifter MOSFET Q2 and data resistor R15 (820R) are also correctly linked.",
+      "created_from": "FND-00002347",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002347-AST-02",
+      "description": "INCORRECT: The transistor circuit analysis for Q2 (2N7002 level shifter) shows gate_net as '+3V3' (correct \u2014 this is a source-follower level shifter with gate tied to supply). However, gate_driver_ics lists U4 (XC6206P332MR LDO regulator) and U5 (SHT40-CD1B-R3 humidity sensor) multiple times as gate drivers, simply because they are connected to the +3V3 rail. These are power supply and sensor ICs, not gate drivers. Only U1 (nRF52840) is a plausible signal driver here, and even that interpretation is debatable since the gate is statically biased.",
+      "created_from": "FND-00002347",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

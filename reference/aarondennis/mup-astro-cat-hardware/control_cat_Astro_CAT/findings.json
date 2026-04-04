@@ -1,0 +1,33 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002466",
+      "source_file": "control_cat/Astro_CAT.sch",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "Multi-protocol design correctly identified: RS-232 (ST3232), stepper driver (DRV8805), EEPROM (24C32), buck regulator (LM2576), UART and I2C buses",
+      "details": "The analyzer correctly identified 4 ICs with proper types, 6 connectors, 33 total components on +12V/+5V/+3.3V power rails. UART nets (Rx/Tx/PI_RX/PI_TX) and I2C bus (unnamed SDA/SCL nets connected to 24C32 EEPROM) are both detected. 1-wire bus label is captured in the net list. The LM2576 buck regulator topology with L1 inductor and schottky diodes D2/D3 is present in BOM.",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00002467",
+      "source_file": "control_cat/Astro_CAT.sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "I2C bus reports no pull-up resistors, but the SDA/SCL nets use unnamed internal nets making pull-up association impossible",
+      "details": "The I2C bus analysis reports has_pull_up: false for both SDA (__unnamed_83) and SCL (__unnamed_84) lines, even though 10k pull-up resistors (R3, R4, R5) exist in the schematic. The unnamed net system prevents the analyzer from correlating the resistors to the I2C lines. Four 10k resistors are present in the design, of which R3/R4/R5 likely serve as pull-ups for I2C and other signal lines. This is a limitation of unnamed net tracking rather than an outright bug, but the result is a false negative on pull-up detection."
+    },
+    {
+      "id": "FND-00002468",
+      "source_file": "control_cat/Astro_CAT.kicad_pcb",
+      "analyzer_type": "pcb",
+      "category": "correct",
+      "summary": "B.Cu layer type 'jumper' faithfully reproduced from KiCad 5 legacy PCB source",
+      "details": "The KiCad 5 PCB file explicitly defines layer 31 (B.Cu) as type 'jumper' in the layer table, which is an unusual but valid KiCad 5 layer designation. The PCB analyzer correctly passes this through verbatim. Routing is complete (0 unrouted nets), 2-layer board with GND copper pour on both layers confirmed via zone_stitching."
+    }
+  ]
+}

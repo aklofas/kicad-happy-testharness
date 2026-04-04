@@ -1,0 +1,49 @@
+{
+  "file_pattern": "SparkFun_Qwiic_5V_Boost_AP3012K.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001499",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001499-AST-01",
+      "description": "The PCB correctly reports a 2-layer board (F.Cu, B.Cu), 25.4x25.4mm dimensions, 69 total footprints (28 SMD + 1 THT + 35 board-only + 4 solder mask bridge + 1 exclude-from-pos), 153 track segments, 94 vias, 5 zones, 21 nets, and routing_complete=true. The high via count (94) reflects heavy GND stitching on the small board.",
+      "created_from": "FND-00001499",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001499-AST-02",
+      "description": "The thermal analysis correctly identifies a GND zone spanning both F.Cu and B.Cu (645.2mm\u00b2 area) with 77 stitching vias at 11.9/cm\u00b2 density. Separate 3.3V (41.7mm\u00b2) and 5V (33.9mm\u00b2) zones on F.Cu are also correctly identified. The zone analysis reflects the compact 25.4\u00d725.4mm board with heavy power plane coverage.",
+      "created_from": "FND-00001499",
+      "check": {
+        "path": "thermal_analysis.zone_stitching",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001499-AST-03",
+      "description": "DFM reports dfm_tier='standard', min_track_width=0.254mm, min_drill=0.3mm, min_annular_ring=0.13mm, and zero violations. These metrics are appropriate for a standard Qwiic breakout board manufactured at typical PCB fab tolerances.",
+      "created_from": "FND-00001499",
+      "check": {
+        "path": "dfm.violation_count",
+        "op": "equals",
+        "value": 0
+      }
+    },
+    {
+      "id": "FND-00001499-AST-04",
+      "description": "INCORRECT: The KiCad schematic file is shared across multiple projects. The schematic analyzer reads the 'co2' project instance references (U1 for AP3012) while the PCB uses references from a different project instance (U5). Both correctly point to the same physical AP3012 IC, but cross-referencing schematic vs PCB analysis outputs is misleading. The PCB component_groups 'U' group lists only U5.",
+      "created_from": "FND-00001499",
+      "check": {
+        "path": "component_groups.U.references",
+        "op": "contains_match",
+        "value": "U5"
+      },
+      "aspirational": true
+    }
+  ]
+}

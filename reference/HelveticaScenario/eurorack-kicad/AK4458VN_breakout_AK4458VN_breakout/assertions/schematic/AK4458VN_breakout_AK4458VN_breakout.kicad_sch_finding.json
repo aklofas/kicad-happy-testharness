@@ -1,0 +1,53 @@
+{
+  "file_pattern": "AK4458VN_breakout.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000258",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000258-AST-01",
+      "description": "AK4458VN correctly classified as IC",
+      "created_from": "FND-00000258",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000258-AST-02",
+      "description": "INCORRECT: RC filter R32(150ohm)+C14(120pF) falsely groups C11(1nF) as parallel \u2014 C11 shares only the input node, not the output node. Reported fc=947kHz vs correct 8.84MHz",
+      "created_from": "FND-00000258",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R32$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000258-AST-03",
+      "description": "INCORRECT: NE5532 differential-to-single-ended output stages (U4-U7) classified as 'compensator' instead of difference amplifier",
+      "created_from": "FND-00000258",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U4$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000258-AST-04",
+      "description": "I2S/TDM serial audio interface not detected \u2014 all 4 AK4458VN data bus signals present (MCLK, BICK, LRCK, SDTI1-4) but no I2S detector exists",
+      "created_from": "FND-00000258",
+      "check": {
+        "path": "signal_analysis.bus_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

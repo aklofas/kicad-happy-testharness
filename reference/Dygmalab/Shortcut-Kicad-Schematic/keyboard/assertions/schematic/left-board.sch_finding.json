@@ -1,0 +1,31 @@
+{
+  "file_pattern": "left-board.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001352",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001352-AST-01",
+      "description": "left-board.sch (2 sheets: left-board + left-thumb sub-sheet) reports a 4\u00d77 matrix with switches_on_matrix=26 and diodes_on_matrix=33 via net_name detection. The 15 left-board switches (SW16, SW24\u2013SW37) and 8 thumb diodes (for S3/S4 alps_4way contacts) account for 23 of the 33 diodes; the discrepancy reflects how estimated_keys is derived from matrix dimensions rather than actual switch count. The row/col net naming (row1\u2013row4, col1\u2013col7) is correctly parsed. Power rails (+5V, Earth) are also correctly identified.",
+      "created_from": "FND-00001352",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].rows",
+        "value": 4,
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected 4, got None"
+    },
+    {
+      "id": "FND-00001352-AST-02",
+      "description": "INCORRECT: The left-board.sch 4\u00d77 matrix reports estimated_keys=33 but the actual diode count is 23 (15 left-board + 8 left-thumb). The value 33 appears to be row\u00d7col\u00d7something or an artifact of how the detector counts net intersections. A 4\u00d77 matrix has at most 28 positions; adding the 4\u00d72 thumb sub-matrix gives 36 theoretical max. The 33 figure does not correspond to any physically meaningful count and will mislead LLM reviewers about keyboard size.",
+      "created_from": "FND-00001352",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].estimated_keys",
+        "value": 28,
+        "op": "max_count"
+      },
+      "aspirational": false
+    }
+  ]
+}

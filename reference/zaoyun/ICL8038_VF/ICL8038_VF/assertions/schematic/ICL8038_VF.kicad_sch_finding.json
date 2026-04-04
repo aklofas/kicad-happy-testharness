@@ -1,0 +1,40 @@
+{
+  "file_pattern": "ICL8038_VF.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000600",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000600-AST-01",
+      "description": "The R4 (12K) / R5 (15K) resistor divider from VCC to GND, with midpoint connected to IC1 pin 1 (duty cycle adjustment), is correctly identified as a voltage divider with ratio 0.556.",
+      "created_from": "FND-00000600",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000600-AST-02",
+      "description": "IC1 is an ICL8038 precision waveform generator with SINE_OUT, TRIANGLE_OUT, SQUARE_OUT outputs and a TIMING_CAP pin. The analyzer produces no oscillator, waveform generator, or function generator detection for this IC. The signal_analysis has no relevant category; crystal_circuits and feedback_networks are both empty.",
+      "created_from": "FND-00000600",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000600-AST-03",
+      "description": "Q1 is an S8050 NPN transistor connected on nets __unnamed_3 (collector via R15), __unnamed_14 (base via R14/R13 divider), and __unnamed_16 (emitter via R17). The transistor_circuits list is empty. This is likely because all ICL8038 pins are typed 'passive', causing net classification to fail for base/collector/emitter identification.",
+      "created_from": "FND-00000600",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

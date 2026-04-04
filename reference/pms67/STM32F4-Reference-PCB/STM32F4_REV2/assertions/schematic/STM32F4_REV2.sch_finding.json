@@ -1,0 +1,39 @@
+{
+  "file_pattern": "STM32F4_REV2.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001306",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001306-AST-01",
+      "description": "Feedback network correctly identified: R3=47k, R5=270 with output ratio 0.0057 into BUCK_FB pin of MP2359. Power regulator topology correctly identified as switching with input on unnamed net.",
+      "created_from": "FND-00001306",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001306-AST-02",
+      "description": "Y1 (16MHz) with C15/C16 (12pF each) gives effective CL = 9pF \u2014 correctly computed as (12p*12p)/(12p+12p) + stray.",
+      "created_from": "FND-00001306",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001306-AST-03",
+      "description": "No ic_pin_analysis, connectivity_issues, pwr_flag_warnings, footprint_filter_warnings, label_shape_warnings, ground_domains, sourcing_audit, pdn_impedance, assembly_complexity, test_coverage, usb_compliance sections present. This is a systematic gap for legacy .sch files \u2014 the legacy parser produces a reduced output.",
+      "created_from": "FND-00001306",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "file_pattern": "fab_Rev2.0_gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002283",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002283-AST-01",
+      "description": "INCORRECT: The analyzer reports aligned=False with 'Width varies by 23.1mm' and 'Height varies by 19.5mm' across copper/edge layers. However, on a 83x83mm board the B.Cu layer spans 59.9x63.5mm \u2014 components on the back copper layer simply do not cover the full board area, which is completely normal. The Edge.Cuts extent (83x83mm) represents the board boundary, and any copper layer that doesn't fill the board edge-to-edge will trigger this false alarm. The F.Cu layer at 75.3x75.3mm is only 3.85mm from the edge on each side, which is a normal keepout margin. This same false positive also fires on the Rev1.0 gerbers.",
+      "created_from": "FND-00002283",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    }
+  ]
+}

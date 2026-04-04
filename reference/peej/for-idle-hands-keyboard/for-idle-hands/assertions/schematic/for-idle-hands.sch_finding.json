@@ -1,0 +1,30 @@
+{
+  "file_pattern": "for-idle-hands.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002069",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002069-AST-01",
+      "description": "INCORRECT: The 12 key switch components (K1:1, K1:2, K2:1, K2:2, K3:1\u2013K3:4, K4:1\u2013K4:4) use the KiCad 5 library part 'KEYSW' with reference prefix 'K'. In kicad_utils.py, 'K' maps to 'relay' in the type_map. The relay override at line 404\u2013410 only converts relay\u2192switch for 'mx', 'cherry', 'kailh', 'gateron', 'alps_hybrid', and 'key_switch' substrings in lib_lower. The library name 'keysw' does not match any of these patterns. The PCB footprints confirm these are Cherry MX-compatible keyboard switch cutouts (idle-hands:MX_CUTOUT). Fix: add 'keysw' to the relay\u2192switch override list in detect_component_type.",
+      "created_from": "FND-00002069",
+      "check": {
+        "path": "statistics.component_types.relay",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002069-AST-02",
+      "description": "INCORRECT: The key_matrix detection found a 4-row \u00d7 6-column matrix via net name heuristics (row1\u2013row4, col1\u2013col6) with estimated_keys=12 (from diode count) and switches_on_matrix=0. The 12 physical key switches are present (KEYSW footprints idle-hands:MX_CUTOUT) but since they are typed as 'relay' rather than 'switch', the switch counting step skips them. This is a downstream consequence of the KEYSW\u2192relay misclassification above. If correctly typed as 'switch', switches_on_matrix would equal 12.",
+      "created_from": "FND-00002069",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

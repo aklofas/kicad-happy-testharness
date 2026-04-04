@@ -1,0 +1,44 @@
+{
+  "file_pattern": "gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001191",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001191-AST-01",
+      "description": "All 9 gerber layers detected (F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, Edge.Cuts). Missing required and missing recommended are both empty. Alignment=true.",
+      "created_from": "FND-00001191",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001191-AST-02",
+      "description": "Via count 34 matches PCB analyzer. NPTH mounting holes (4\u00d72.7mm) match the 4 MountingHole_2.7mm footprints in the schematic. PTH component holes 87 = 74\u00d71.0mm (header pins) + 9\u00d70.35mm + 2\u00d70.65mm + 2\u00d70.7mm. All plausible.",
+      "created_from": "FND-00001191",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00001191-AST-03",
+      "description": "PCB statistics show back_side=0 (all 34 footprints on F.Cu), so an empty B.Paste gerber is expected and correct. The analyzer correctly reports 0 apertures/flashes without flagging it as an error.",
+      "created_from": "FND-00001191",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

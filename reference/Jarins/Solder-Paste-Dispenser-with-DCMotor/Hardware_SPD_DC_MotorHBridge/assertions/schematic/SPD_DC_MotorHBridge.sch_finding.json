@@ -1,0 +1,30 @@
+{
+  "file_pattern": "SPD_DC_MotorHBridge.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001409",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001409-AST-01",
+      "description": "INCORRECT: statistics.component_types shows 'transformer': 2 for components T0 and T1, but both have lib_id='archive:Mechanical_MountingHole_Pad' and value='MountingHole_Pad'. The 'T' prefix is being interpreted as transformer when these are clearly padded mounting holes. The 5 correctly-classified mounting holes (MP1, MP2, MP3, VM1, IM1) use the same lib_id but have 'M'-prefix or 'V'/'I'-prefix refs. The component type classifier is using reference prefix 'T' \u2192 transformer heuristic which collides with non-standard pad mounting hole designators.",
+      "created_from": "FND-00001409",
+      "check": {
+        "path": "statistics.component_types.transformer",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001409-AST-02",
+      "description": "The design has Y1 (TSX-3225 16MHz crystal, lib_id='archive:Device_Crystal_GND24_Small', type=crystal) connected to the STM32F103C8Tx MCU (U2). Despite the type field being correctly set to 'crystal' and the crystal being present, signal_analysis.crystal_circuits=[] \u2014 no crystal circuit was extracted. This is likely a failure to match the GND24_Small footprint variant or the archive-prefixed lib_id against the detector's crystal template patterns.",
+      "created_from": "FND-00001409",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

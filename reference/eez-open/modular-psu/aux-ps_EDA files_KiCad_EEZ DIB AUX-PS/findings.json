@@ -1,0 +1,80 @@
+{
+  "findings": [
+    {
+      "id": "FND-00000304",
+      "repo": "eez-open/modular-psu",
+      "project": "aux-ps_EDA files_KiCad_EEZ DIB AUX-PS",
+      "created": "2026-03-18T04:16:33.304866+00:00",
+      "status": "promoted",
+      "analyzer_type": "gerber",
+      "source_file": "aux-ps/EDA files/",
+      "summary": "Gerber review: Eagle vs KiCad across 16 sets. Three HIGH Eagle bugs: .TXT drill, .G2L inner layers, inch units",
+      "correct": [
+        {
+          "type": "kicad_output",
+          "description": "KiCad gerber sets (aux-ps, bp3c) produce comprehensive correct analysis: X2 attributes, gbrjob, correct mm units, trace widths",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "type": "eagle_layer_mapping",
+          "description": "Standard 7 Eagle layers (.GTL/.GBL/.GTS/.GBS/.GTO/.GBO/.GKO) correctly identified via Protel extension map",
+          "analyzer_section": "gerbers",
+          "check": {
+            "path": "gerbers",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "drill_discovery",
+          "description": "Eagle .TXT Excellon drill files not recognized -- only globs *.drl. All 12 Eagle sets show drill_files=0, total_holes=0",
+          "analyzer_section": "drill_classification",
+          "severity": "major",
+          "related_issue": "KH-178"
+        },
+        {
+          "type": "unit_conversion",
+          "description": "Eagle board dimensions in inches mislabeled as mm. aux-ps Eagle: 9.07x2.36 'mm' should be 230.6x60.1mm",
+          "analyzer_section": "board_dimensions",
+          "severity": "major",
+          "related_issue": "KH-180"
+        },
+        {
+          "type": "layer_discovery",
+          "description": "Eagle .G2L/.G3L inner copper layers not discovered -- file glob misses 3-char Protel extensions. DCP405/MCU 4-layer boards reported as 2-layer",
+          "analyzer_section": "layer_count",
+          "severity": "major",
+          "related_issue": "KH-179"
+        },
+        {
+          "type": "mounting_holes",
+          "description": "KiCad aux-ps: 3.0/3.2mm NPTH mounting holes classified as component_holes via X2 ComponentDrill",
+          "analyzer_section": "drill_classification.mounting_holes",
+          "severity": "minor",
+          "related_issue": "KH-186"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Add .TXT to drill glob",
+        "Add .G2L/.G3L to layer glob",
+        "Convert inches to mm"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "KH-178",
+        "KH-179",
+        "KH-180",
+        "KH-186"
+      ],
+      "datasheets_used": []
+    }
+  ]
+}

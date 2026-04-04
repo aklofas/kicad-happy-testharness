@@ -1,0 +1,129 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "airboost-kicad.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Component count and types correctly identified (8 total: 2 switches, 1 resistor, 1 buzzer, 1 LED, 3 ICs); I2C bus correctly detected on SCL/SDA nets with three devices (SCD30, OLED, Arduino); Missi...",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies all 8 components. A1 (Arduino Nano), U1 (OLED Display), and U2 (SCD30 CO2 sensor) are classified as 'ic'. R1 is a 150-ohm LED current limiting resistor, BZ1 is a buzzer, D1 is a dual-color LED (LED_Dual_AKA), SW1 and SW2 are push buttons. Component types match the actual schematic.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 8
+          }
+        },
+        {
+          "description": "The analyzer correctly identifies an I2C bus on I2C.SCL and I2C.SDA with devices U2 (SCD30), U1 (OLED Display), and A1 (Arduino Nano). The has_pullup=False detection is accurate: R1 (150 ohm) is an LED current limiter connected between D1 cathode and GND, not an I2C pull-up resistor. There are genuinely no I2C pull-up resistors in this design.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "contains_match",
+            "value": {
+              "category": "i2c_bus",
+              "has_pullup": false
+            }
+          }
+        },
+        {
+          "description": "The analyzer correctly identifies that R1, BZ1, and D1 have no footprint assigned in the schematic. These three components are in missing_footprint, which matches the source: their footprint fields are empty strings in the .kicad_sch file.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.missing_footprint",
+            "op": "equals",
+            "value": [
+              "R1",
+              "BZ1",
+              "D1"
+            ]
+          }
+        },
+        {
+          "description": "BZ1 is driven directly from Arduino Nano D8 (pin 11) with no transistor or driver IC in between. The analyzer correctly reports has_transistor_driver=false and direct_gpio_drive=true. The driver_ic is listed as A1 (Arduino Nano).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.buzzer_speaker_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The +5V rail is sourced from the Arduino Nano VIN pin (which in PCB net terms appears as a power_in pin type) with no explicit PWR_FLAG symbol. The GND rail similarly lacks a PWR_FLAG. KiCad ERC would flag these, and the analyzer correctly warns about both.",
+          "analyzer_section": "pwr_flag_warnings",
+          "check": {
+            "path": "pwr_flag_warnings",
+            "op": "min_count",
+            "value": 2
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer flags the I2C.SCL and I2C.SDA nets as needing level shifters because U2 (SCD30) is on the 3V3 domain and A1 (Arduino) is on +5V. However, in this design the SCD30 is powered from the Arduino's 3V3 output pin, and the SCD30 datasheet specifies its I2C pins are 5V tolerant (VIH max = VDD+0.5V is a common spec, but the SCD30 is actually 5V tolerant on I2C). The real concern is that SDA/SCL are pulled to neither 3V3 nor 5V (no pull-ups exist), making the level-shifter flag secondary to the missing pull-up issue. The cross-domain flag is technically conservative but misleading for this common Arduino+sensor topology.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.cross_domain_signals",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ric03/airboost-kicad-schematics",
+      "project": "airboost-kicad",
+      "created": "2026-03-24T06:36:07.059065+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001957"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "airboost-kicad.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB correctly identified as unrouted with 5 footprints and no traces; No board outline detected (edge_count=0, null dimensions) \u2014 correct for this early-stage PCB; F.Cu layer type reported as 'jump...",
+      "correct": [
+        {
+          "description": "The PCB has 5 footprints (A1, SCD1, U1, SW1, SW2) matching the schematic components that have footprints assigned. The three schematic components without footprints (R1, BZ1, D1) are absent from the PCB. Track segments = 0, routing_complete = false, unrouted_net_count = 6 are all correct for an early-stage layout with no routing done.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 5
+          }
+        },
+        {
+          "description": "The airboost PCB file has no Edge.Cuts geometry. The analyzer correctly reports edge_count=0 and null board dimensions. This is consistent with a schematic-only design where the PCB layout has not been started beyond placing footprints.",
+          "analyzer_section": "board_outline",
+          "check": {
+            "path": "board_outline.edge_count",
+            "op": "equals",
+            "value": 0
+          }
+        },
+        {
+          "description": "The airboost .kicad_pcb file stores F.Cu with type 'jumper' (the literal value in the file), which is an unusual but valid KiCad designation. The analyzer faithfully reports this. The copper_layers_used=0 is also correct since there are no track segments.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.copper_layers_used",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "ric03/airboost-kicad-schematics",
+      "project": "airboost-kicad",
+      "created": "2026-03-24T06:36:07.059094+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001958"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "LoRa.sch.json",
+      "status": "promoted",
+      "summary": "RF chain not detected for LoRa module U1 (SX1276-based) despite ANT pin present; Most U1 pins on isolated single-pin unnamed nets \u2014 KiCad 5 net resolution problem; SPI bus detected on U1 with SCK/M...",
+      "correct": [
+        {
+          "description": "bus_analysis.spi correctly identifies the SPI interface on U1 with SCK, MISO, MOSI signals in full_duplex mode. NSS chip select not counted (0) because it is on an unnamed single-pin net.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "14 unnamed nets each containing only 1 pin of U1, indicating the KiCad 5 net tracing failed to connect U1 pins to J1 connector pins despite them being routed together on the PCB. The PCB correctly shows all U1/J1 nets linked. The schematic analyzer loses connectivity for this KiCad 5 file.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "rf_chains is empty. U1 LORA1276 has an ANT pin (pin 14, net __unnamed_5) connected to J1 via PCB trace. The analyzer has no detection for LoRa/SX127x modules as RF chains. This is a coverage gap.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "eugeniobaglieri/LoRa1276-breakout-board",
+      "project": "LoRa",
+      "created": "2026-03-23T22:54:02.596988+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000862"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "LoRa.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "C1 courtyard bounding box has zero width (min_x == max_x = 137.16); Single-layer routing (F.Cu only) correctly identified, routing 100% complete",
+      "correct": [
+        {
+          "description": "copper_layers_used=1, all 42 track segments on F.Cu, via_count=0, routing_complete=true. Accurate for this minimal LoRa breakout board.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "C1 courtyard: min_x=137.16, max_x=137.16, min_y=76.01, max_y=78.76 \u2014 a degenerate zero-width bounding box. This indicates the courtyard polygon data for the CP_Radial footprint was not parsed correctly, potentially causing false courtyard overlap analysis.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "eugeniobaglieri/LoRa1276-breakout-board",
+      "project": "LoRa",
+      "created": "2026-03-23T22:54:02.597002+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000863"
+    }
+  ]
+}

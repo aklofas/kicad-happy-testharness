@@ -1,0 +1,30 @@
+{
+  "file_pattern": "Greenhouse.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002107",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002107-AST-01",
+      "description": "INCORRECT: The analyzer reports Q1 (IRLB8721PBF N-channel) with drain_net=GND and source_net=LED_ON, and drain_is_power=True while source_is_ground=False. This is a faithful reading of the KiCad 5 legacy schematic where the designer appears to have placed the Q_NMOS_GDS symbol with D (pin 2) connecting to GND and S (pin 3) to the LED load net, which is the reverse of a typical N-channel low-side switch. The analyzer correctly reports what is in the schematic but does not flag that drain=GND and source=load is an unusual and likely erroneous topology for an N-ch low-side switch.",
+      "created_from": "FND-00002107",
+      "check": {
+        "path": "signal_analysis.transistor_circuits[0].drain_net",
+        "op": "equals",
+        "value": "GND"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002107-AST-02",
+      "description": "U1 (TL2575-05IN) with external inductor L1 (330uH) and freewheeling diode D1 (1N5819) forms a classic Simple Switcher step-down buck converter topology converting +9V to +5V. The analyzer returns power_regulators: [] despite having all the circuit elements present (regulator IC, inductor, catch diode). The pin-name mapping in the KiCad 5 legacy symbol is unusual (GND at V_IN pin, multiple NC pins for a DIP-16 symbol), which may interfere with detection.",
+      "created_from": "FND-00002107",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

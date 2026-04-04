@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ESP32-epaper-adapter.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002084",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002084-AST-01",
+      "description": "INCORRECT: VCCEPD is the e-paper display power supply rail, fed from the boost converter inductor L1 output. The net drives the VCC pin of the display and multiple bypass capacitors (C2, C4, etc.). Despite being a power distribution net, the analyzer classifies it as 'chip_select' \u2014 apparently because the name begins with 'VCC' and contains 'EPD' which may pattern-match to a chip-enable or select signal. All three occurrences of this net name (VCCEPD, VCCEPD_16) receive the same incorrect chip_select classification.",
+      "created_from": "FND-00002084",
+      "check": {
+        "path": "design_analysis.net_classification.VCCEPD",
+        "op": "equals",
+        "value": "power"
+      },
+      "aspirational": true
+    }
+  ]
+}

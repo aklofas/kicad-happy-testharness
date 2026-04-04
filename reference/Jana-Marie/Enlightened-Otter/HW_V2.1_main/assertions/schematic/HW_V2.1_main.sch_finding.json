@@ -1,0 +1,39 @@
+{
+  "file_pattern": "main.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000535",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000535-AST-01",
+      "description": "main.sch contains IC1 (RT9466 battery charger IC) which has both SDA and SCL pins connected to the I2C bus. The bus_analysis.i2c section in main.sch.json correctly lists IC1 on the SDA net, but the SCL net analysis only lists U1 (STM32F334) as a device \u2014 IC1 is absent from the SCL entry. This asymmetry (IC1 on SDA but not SCL) suggests an incomplete net trace for the SCL global label in the hierarchical context, or a pin-mapping issue where IC1's SCL pin is not resolved to the SCL net.",
+      "created_from": "FND-00000535",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000537-AST-01",
+      "description": "main.sch reports sheets_parsed=3 covering main.sch, power.sch, cpu.sch. Component totals (173 components, 49 unique parts, 213 nets) are plausible for this multi-sheet design. Power rails include all expected rails: 3V3, GND, VBAT, VBAT+, VBUS, VSYS, VSYS_SK6812, GNDD.",
+      "created_from": "FND-00000537",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000537-AST-02",
+      "description": "Six single-LED SK6812 chains detected (LED1-LED5 on power sheet, plus related chains). Protocol correctly identified as 'single-wire (WS2812)' with 60mA estimated current per LED. The SK6812_EN gate-switched power supply (Q4) is also correctly identified.",
+      "created_from": "FND-00000537",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

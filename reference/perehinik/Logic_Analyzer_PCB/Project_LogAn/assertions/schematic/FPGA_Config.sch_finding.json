@@ -1,0 +1,19 @@
+{
+  "file_pattern": "FPGA_Config.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000831",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000831-AST-01",
+      "description": "FPGA_Config.sch and LogAn.sch contain clear JTAG net names (TCK, TMS, TDI_FPGA, TDO_FPGA) used for FPGA programming/debugging. The bus_analysis output has no 'jtag' key at all, and the FPGA_Config output shows zero items across all bus types. This is a missed JTAG bus detection.",
+      "created_from": "FND-00000831",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

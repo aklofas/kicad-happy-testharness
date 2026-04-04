@@ -1,0 +1,19 @@
+{
+  "file_pattern": "SparkFun_NEO-F10N_panelized.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001565",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001565-AST-01",
+      "description": "INCORRECT: The panelized PCB shows unrouted_count=31 and routing_complete=false. All 31 unrouted nets have names starting with 'unconnected-' (e.g., unconnected-D2-K1-Pad1, unconnected-J1-NC-PadA8) which correspond to intentional no-connect pins. In a 6-unit panel, each single-board no-connect net appears 6 times with pad_count=6, forming nets across panel copies that have no ratsnest connections but appear unrouted. The main single board correctly reports routing_complete=true.",
+      "created_from": "FND-00001565",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    }
+  ]
+}

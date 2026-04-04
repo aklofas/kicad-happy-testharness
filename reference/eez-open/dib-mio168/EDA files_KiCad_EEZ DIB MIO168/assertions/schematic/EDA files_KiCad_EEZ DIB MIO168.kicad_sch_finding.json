@@ -1,0 +1,69 @@
+{
+  "file_pattern": "EEZ DIB MIO168.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000291",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000291-AST-02",
+      "description": "14 RC filters correctly detected including DAC output post-filters and ADIB connector filters",
+      "created_from": "FND-00000291",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000291-AST-03",
+      "description": "LP5907, L78L15, L79L15 regulators correctly identified",
+      "created_from": "FND-00000291",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000291-AST-04",
+      "description": "OPA2196 inverting amplifiers with gain -0.121 correctly identified",
+      "created_from": "FND-00000291",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000291-AST-05",
+      "description": "W9812G6KH-6 SDRAM memory interface correctly detected",
+      "created_from": "FND-00000291",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000291-AST-07",
+      "description": "SI8641 digital isolator and WE-750315371 transformer correctly in isolation_barriers",
+      "created_from": "FND-00000291",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000291-AST-08",
+      "description": "INCORRECT: OPA376 (IC16) buffer has spurious input_resistor R17 (9K09) \u2014 R17 belongs to IC19's feedback path on shared 1V25_REF net",
+      "created_from": "FND-00000291",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^R17$"
+      }
+    }
+  ]
+}

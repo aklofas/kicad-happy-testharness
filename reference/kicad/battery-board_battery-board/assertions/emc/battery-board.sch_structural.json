@@ -16,13 +16,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "7 io_filtering finding(s)",
+      "description": "8 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 7
+        "value": 8
       }
     },
     {
@@ -97,6 +97,16 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "ANT2 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bANT2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "P4 in EMC findings",
       "check": {
         "path": "findings",

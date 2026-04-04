@@ -1,0 +1,29 @@
+{
+  "file_pattern": "ESP32-PoE_Rev_L1.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000515",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000515-AST-01",
+      "description": "L1.sch correctly identifies Q1 as a 12 MHz crystal with load caps C4 and C5 (27pF each), computed effective load capacitance 16.5 pF (series combination + ~3 pF stray). This component was removed in the M1 revision (not present in M1.kicad_sch), which is consistent with the ESP32-WROOM module revision using an internal crystal. M1.sch (legacy snapshot of M1) still shows Q1, confirming the .sch file predates the removal.",
+      "created_from": "FND-00000515",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000515-AST-02",
+      "description": "L1.sch signal_analysis.power_regulators is empty []. U7 is a SY8089AAAC synchronous buck converter with L2, R29/R30 feedback divider, C6 output cap, and D3 bootstrap diode \u2014 a classic switching regulator subcircuit. M1.kicad_sch correctly detects U7 (TPS62A02ADRLR, the M1 revision equivalent) with topology='switching', inductor='L2', output_rail='+3.3V', and estimated_vout=3.245V. The detection failure in L1.sch is caused by the net connectivity error described above: the FB pin is not linked to the feedback divider midpoint, so the regulator topology cannot be inferred.",
+      "created_from": "FND-00000515",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

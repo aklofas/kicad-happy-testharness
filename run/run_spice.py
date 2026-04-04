@@ -59,7 +59,7 @@ def find_pcb_output(schematic_json):
     Given results/outputs/schematic/{repo}/{name}.kicad_sch.json,
     looks for results/outputs/pcb/{repo}/{name}.kicad_pcb.json.
     """
-    repo_name = schematic_json.parent.name
+    repo_name = f"{schematic_json.parent.parent.name}/{schematic_json.parent.name}"
     pcb_dir = OUTPUTS_DIR / "pcb" / repo_name
     if not pcb_dir.exists():
         return None
@@ -231,7 +231,7 @@ def main():
     def process_one(input_json):
         nonlocal parasitics_extracted
         # Mirror the repo directory structure
-        repo_name = input_json.parent.name
+        repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
         out_dir = spice_out_dir / repo_name
         out_dir.mkdir(parents=True, exist_ok=True)
         output_json = out_dir / input_json.name

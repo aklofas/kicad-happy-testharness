@@ -1,0 +1,29 @@
+{
+  "file_pattern": "nixie.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000501",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000501-AST-01",
+      "description": "All 49 components are extracted: 6x IN-12B (NT1-NT6), 4x IN-3 (NT7-NT10), 4x TLP627-2 (U2, U3, U4, U7), 1x TLP627 (U6), 1x SN74141 (U5), 6x 300-ohm R (R7-R12 optocoupler input resistors), 6x 300-ohm R (R13-R18 LED resistors), 3x 300-ohm R (R19-R20, R22 col/dot resistors), 6x 20k R (R1-R6 high-voltage cathode limiters), 2x 100k R (R21, R23), 6x LED (D1-D6), 4x CONN_02X05 (P1-P4). Values and footprints are accurate. Power rails (+3.3V, +5V, GND) and 85 nets are correct.",
+      "created_from": "FND-00000501",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000501-AST-02",
+      "description": "The nixie sub-sheet (analyzed independently) contains 5 optocoupler ICs (U2, U3, U4, U6, U7 \u2014 TLP627-2 and TLP627) forming an isolation barrier between the 3.3V ESP32 domain and the high-voltage nixie cathode domain. The standalone nixie.sch JSON output shows signal_analysis.isolation_barriers as an empty array, while the top-level nixie_clock.sch correctly detects the isolation barrier. This confirms the per-sheet analysis misses cross-sheet context, which is expected, but users relying on per-sheet outputs will not see this important circuit feature.",
+      "created_from": "FND-00000501",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

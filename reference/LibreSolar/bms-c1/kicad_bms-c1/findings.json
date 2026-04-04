@@ -1,0 +1,127 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "kicad_bms-c1.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Libre Solar BMS C1, 16-cell battery management system with BQ76952. Overall excellent analysis: BMS system, current sense, transistor circuits, and cell input RC filters all correctly identified. Switching regulator Vout estimate is incorrect due to wrong Vref assumption.",
+      "correct": [
+        {
+          "description": "BQ76952 BMS system correctly detected with 16 cells, 17 cell voltage pins, 17 balance resistors, charge/discharge FETs (Q2-Q5 IPT012N08N5, Q12 ZXMP10A17GTA), and NTC sensors (RT1, RT2)",
+          "analyzer_section": "signal_analysis.bms_systems",
+          "check": {
+            "path": "signal_analysis.bms_systems",
+            "op": "contains_match",
+            "field": "bms_reference",
+            "pattern": "^U4$"
+          }
+        },
+        {
+          "description": "Current sense shunt R45 (300uOhm) correctly detected between BAT- and PACK- with BQ76952 as sense IC",
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "contains_match",
+            "field": "shunt.ref",
+            "pattern": "^R45$"
+          }
+        },
+        {
+          "description": "Feedback voltage divider R28 (82k) / R31 (35.7k) correctly identified as feedback for U3 LMR38010 FB pin with is_feedback=true",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R28$"
+          }
+        },
+        {
+          "description": "16 cell input RC filters correctly detected (R2-R17 with C1-C16 pairs, 20 ohm + 220nF parallel caps, ~18 kHz cutoff) for BQ76952 cell voltage measurement inputs",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R2$"
+          }
+        },
+        {
+          "description": "Shunt sense RC filters R19/C28 and R20/C28 (100 ohm + 100nF, ~15.9 kHz) correctly detected for SRP/SRN current sense inputs",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R19$"
+          }
+        },
+        {
+          "description": "12 MOSFET transistor circuits correctly analyzed including Q2-Q5 (IPT012N08N5 charge/discharge), Q12 (ZXMP10A17GTA P-channel), Q1 (DMN10H220LE) with gate resistors identified",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q2$"
+          }
+        },
+        {
+          "description": "ESD protection diodes D3/D4 (ESD5B5.0ST1G) on USB data lines and D8 (PESD2CANFD) on CAN bus correctly detected",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D3$"
+          }
+        },
+        {
+          "description": "I2C bus with pull-ups R32/R33 on I2C_SDA/I2C_SCL correctly detected connecting U4 (BQ76952) and U5",
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "RT1 and RT2 (10k NTC thermistors) correctly classified as thermistor type in component_types",
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U3 LMR38010 estimated_vout=1.978V is wrong. The analyzer assumed Vref=0.6V (heuristic) but LMR38010 actual Vref is 1.0V per datasheet. Correct Vout = 1.0 / 0.303 = 3.30V, matching the +3V3 output rail",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U3$"
+          }
+        },
+        {
+          "description": "Design observation vout_net_mismatch reports 40.1% difference between estimated 1.978V and +3V3 rail, but this mismatch is caused by the wrong Vref assumption, not a real circuit error",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Add LMR38010/LMR38020 to the Vref lookup table with Vref=1.0V to avoid heuristic fallback"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000211",
+      "repo": "LibreSolar/bms-c1",
+      "project": "kicad_bms-c1",
+      "created": "2026-03-15T22:46:40.208051+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

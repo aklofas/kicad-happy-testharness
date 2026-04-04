@@ -1,0 +1,19 @@
+{
+  "file_pattern": "SparkFun_GNSS_mosaic-G5_P3_panelized.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001435",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001435-AST-01",
+      "description": "INCORRECT: Same issue as the ZED-X20P panelized board: unrouted_count=30, all entries are 'unconnected-(NC-Pad)' nets with 4 pads each (panel has 4 instances of the board). For example, 'unconnected-(D12-K1-Pad1)' appears with 4 pads ['D12.1', 'D12.1', 'D12.1', 'D12.1']. All 30 unrouted nets are NC pads from J1 USB-C, D12/D13 ESD ICs, and U3 reserved pins. The single-board mosaic-G5 PCB file correctly shows routing_complete=true. Panel dimensions are 115.8 x 100.56 mm, consistent with a 2x2 array of 43.18mm boards with V-score rails.",
+      "created_from": "FND-00001435",
+      "check": {
+        "path": "statistics.routing_complete",
+        "value": true,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

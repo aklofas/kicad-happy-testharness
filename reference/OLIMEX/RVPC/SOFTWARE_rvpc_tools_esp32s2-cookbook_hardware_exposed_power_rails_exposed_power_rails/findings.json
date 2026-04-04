@@ -1,0 +1,68 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "SOFTWARE_rvpc_tools_esp32s2-cookbook_hardware_exposed_power_rails_exposed_power_rails.kicad_sch.json",
+      "status": "promoted",
+      "summary": "OLIMEX RVPC ESP32-S2 power rails board (37 components). All 6 HX6306P332MR LDO regulators correctly identified with accurate 3.3V output estimates. Crystal Y1 40MHz with correct load caps. RC filter R6/C2 correct. False positive: decoupling analysis reports missing output caps on regulators but caps are connected via global labels to shared rails that DO have proper decoupling.",
+      "correct": [
+        {
+          "description": "6 LDO regulators (U1-U4, U6, U7, all HX6306P332MR) correctly identified with LDO topology and 3.3V estimated output",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U1$"
+          }
+        },
+        {
+          "description": "Y1 40MHz crystal with C9/C10 (10pF) correctly detected, effective load 8pF within ESP32-S2 spec",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
+        },
+        {
+          "description": "R6(5.1k)/C2(1uF) RC filter (31.21Hz cutoff) correctly detected on GPIO0 reset path",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R6$"
+          }
+        },
+        {
+          "description": "BOM accurate: 14 capacitors, 10 resistors, 7 ICs, 3 connectors, 1 diode, 1 LED, 1 crystal",
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Decoupling analysis reports missing output capacitors on all 6 regulators, but caps are present via global label connectivity (VBUS, VDD3P3, etc. rails each have 2-4uF). Analyzer doesn't trace global label connections for decoupling verification.",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Enhance decoupling analysis to trace global labels and include shared-rail capacitors in per-IC decoupling assessment"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000230",
+      "repo": "OLIMEX/RVPC",
+      "project": "SOFTWARE_rvpc_tools_esp32s2-cookbook_hardware_exposed_power_rails_exposed_power_rails",
+      "created": "2026-03-16T08:30:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

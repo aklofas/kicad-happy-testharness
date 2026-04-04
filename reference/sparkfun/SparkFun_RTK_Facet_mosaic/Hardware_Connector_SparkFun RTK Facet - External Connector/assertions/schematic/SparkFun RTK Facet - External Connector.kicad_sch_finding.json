@@ -1,0 +1,43 @@
+{
+  "file_pattern": "SparkFun RTK Facet - External Connector.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001535",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001535-AST-01",
+      "description": "F1 (6V/0.5A/1A on VBATT line) and F3 (6V/2.0A/4.0A on VUSB line) are correctly detected as fuse-type protection devices. The DT1042-04SO 4-line ESD protector D1 is correctly identified as an esd_ic protecting USB_DM, USB_DP, and the additional VBUS/battery lines.",
+      "created_from": "FND-00001535",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "FND-00001535-AST-02",
+      "description": "16 total components with accurate type breakdown: 2 resistors (R16, R17 = 5.1k), 7 connectors, 2 fuses, 1 diode (DT1042-04SO ESD), 1 jumper (JP0), 3 other (logos/OSHW). The missing_footprint list correctly identifies G1 and G2 (logo symbols with no footprint).",
+      "created_from": "FND-00001535",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 16
+      }
+    },
+    {
+      "id": "FND-00001535-AST-03",
+      "description": "INCORRECT: The usb_data design observation for USB_DP reports has_esd_protection=false, but this is wrong. The DT1042-04SO (D1) pin 6 is connected directly to USB_DP as confirmed by net analysis. The protection_devices entry correctly lists USB_DP in D1's protected_nets. There is an inconsistency between the protection_devices detection (correct) and the usb_data observation (incorrect).",
+      "created_from": "FND-00001535",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "not_contains_match",
+        "value": {
+          "category": "usb_data",
+          "net": "USB_DP",
+          "has_esd_protection": false
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "PDM_MIC_ARRAY.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001679",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001679-AST-01",
+      "description": "The analyzer correctly identifies two SPI busses: one for the TFT LCD (LCD_SCK, LCD_MOSI, half-duplex with CS) and one for a touchscreen (TP_MISO, TP_MOSI, TP_SCK, full-duplex with CS). Both are correctly detected from the TFT_LCD_SPI component pin names.",
+      "created_from": "FND-00001679",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "value": 2,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001679-AST-02",
+      "description": "INCORRECT: The raw PDM_MIC_ARRAY.sch contains 10 non-power components: U1, U3, U2, U4 (4x AE_SPM0405HD4H), U? (TFT_LCD_SPI), J1 (Conn_01x05), J? (Conn_01x03), J? (Conn_01x05), J? (Conn_01x05), J? (Conn_01x04). The output reports total_components=7 and bom reflects only 4 entries (merging duplicate refs). The components list correctly shows 10 entries, but total_components stat undercounts by collapsing duplicate unannotated references. The BOM also omits three of the four J? connectors (only showing Conn_01x05 once), losing the Conn_01x03 and Conn_01x04 variants.",
+      "created_from": "FND-00001679",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 7,
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "file_pattern": "microcontrollers.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000699",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000699-AST-01",
+      "description": "Analyzer found 47 components matching PCB footprint count. Component type breakdown (capacitor=9, resistor=13, mounting_hole=4, connector=19, ic=2) matches manual inspection of the schematic.",
+      "created_from": "FND-00000699",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000699-AST-02",
+      "description": "Analyzer correctly identified I2C_SCL and I2C_SDA nets, detected R16 (2.2K) and R17 (2.2K) pull-ups to +3V3, and associated U8 (ESP32) as the I2C master device.",
+      "created_from": "FND-00000699",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000699-AST-03",
+      "description": "Analyzer correctly identified RX_GPS and TX_GPS nets as UART lines driven by U8 (ESP32 IO17/IO16). These connect to J3 (GPS connector).",
+      "created_from": "FND-00000699",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000699-AST-04",
+      "description": "U1 unit 1 has output feeding back to input via RV1/R1 divider (wiper-to-inverting) with R2 to GND \u2014 this is a comparator topology with hysteresis. Configuration classification as 'comparator_or_open_loop' is accurate.",
+      "created_from": "FND-00000699",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000699-AST-05",
+      "description": "The design has 4 LDR sensor circuits: each LDR (at Jx connector) pairs with a 10k resistor (R21-R24) forming a voltage divider to ground, with the midpoint going to ESP32 ADC pins. These are standard resistive dividers for LDR sensing. The analyzer reports voltage_dividers=[] but should detect these R/LDR pairs as voltage dividers (or sensor conditioning networks).",
+      "created_from": "FND-00000699",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000699-AST-06",
+      "description": "The design_observations notes U1 (LM358) has +12V rail without decoupling caps, but no ERC warning is raised about this. erc_warnings=[] despite this being a real issue. The observation exists but could be promoted to an ERC/passive warning.",
+      "created_from": "FND-00000699",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

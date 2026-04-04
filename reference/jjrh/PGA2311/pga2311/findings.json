@@ -1,0 +1,73 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "pga2311.sch.json",
+      "status": "promoted",
+      "summary": "SPI bus not aggregated despite SCLK/SDI/CS/SDO nets being present and classified; -5V net classified as 'signal' instead of 'power'; PGA2311 component types and BOM correctly parsed from KiCad 5 le...",
+      "correct": [
+        {
+          "description": "22 components extracted (1 IC, 6 caps, 8 connectors, 3 LEDs, 3 resistors, 1 jumper). Power rails with analog/digital split (+5V/+5VD, GNDA/GNDD) correctly identified. KiCad 5 legacy format parsed without errors.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The -5V net is a negative supply rail powering the PGA2311 analog section (connected to VEE/AVSS). It is classified as 'signal' in net_classification instead of 'power' or 'negative_supply'. This is the same class of V- classification bug seen in PDH_photodiode.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The PGA2311 is an SPI-controlled stereo volume control. Nets SCLK, SDI, CS, SDO are present and individually classified as clock/data/chip_select/data, but bus_analysis.spi is empty []. The analyzer correctly classifies net types but fails to aggregate them into an SPI bus topology.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "jjrh/PGA2311",
+      "project": "pga2311",
+      "created": "2026-03-23T23:30:30.117438+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001037"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pga2311.kicad_pcb.json",
+      "status": "new",
+      "summary": "KiCad 4-format PCB (file_version=4) correctly parsed with full statistics",
+      "correct": [
+        {
+          "description": "26 footprints all on front side, mixed SMD/THT (13 each), 2-layer, routing complete. DFM tier classified as advanced due to min track/drill metrics.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "jjrh/PGA2311",
+      "project": "pga2311",
+      "created": "2026-03-23T23:30:30.117460+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001038"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "file_pattern": "clearance_example.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000744",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000744-AST-01",
+      "description": "Component types, connectivity (7 nets), and pin mappings all match the source. NSL-32 optocoupler correctly typed as 'ic'. All nets correctly traced through the optocoupler's LED-input and photocell-output sides.",
+      "created_from": "FND-00000744",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000744-AST-02",
+      "description": "signal_analysis.isolation_barriers is empty despite U2 being an NSL-32 optocoupler (lib_id 'Isolator:NSL-32'). The subcircuits section correctly identifies U2 with J1/J2 neighbors, but isolation_barriers is not populated. The Isolator lib namespace should trigger detection.",
+      "created_from": "FND-00000744",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

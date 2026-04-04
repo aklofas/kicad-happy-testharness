@@ -1,0 +1,28 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "corne-cherry.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Split keyboard (18 components). All components have broken references (LED?, U?, D? placeholders), making all detection unreliable. 2 addressable LED chains and 5 ESD ICs detected but with annotation issues.",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "All component references are placeholders (LED?, U?, D?) - broken annotation makes all detections unreliable",
+          "analyzer_section": "components"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Flag schematics with placeholder references as potentially unreliable"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000236",
+      "repo": "foostan/crkbd",
+      "project": "pcbs_corne-cherry_hotswap_corne-cherry",
+      "created": "2026-03-16T12:00:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

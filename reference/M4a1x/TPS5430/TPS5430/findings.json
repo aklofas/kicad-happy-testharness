@@ -1,0 +1,297 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "TPS5430.kicad_sch.json",
+      "status": "promoted",
+      "summary": "pwr_flag_warnings fires for GND, VCC, and VDD even though all three nets have PWR_FLAG symbols placed on them; C9 and C10 (100 \u00b5F tantalum) missing from VDD decoupling analysis due to {slash} value...",
+      "correct": [
+        {
+          "description": "signal_analysis.power_regulators reports U1 as topology=switching, inductor=L1, has_bootstrap=true, input_rail=VCC, output_rail=VDD. This accurately reflects the schematic: L1 (47 \u00b5H) is the output inductor, the BOOT cap network is present, and the design converts VCC to VDD.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": {
+              "ref": "U1",
+              "topology": "switching",
+              "inductor": "L1",
+              "has_bootstrap": true
+            }
+          }
+        },
+        {
+          "description": "transistor_circuits reports Q1 as mosfet, is_pchannel=true, source_net=VCC, load_type=high_side_switch, with gate_pulldown R1 (100 k\u03a9). This matches the schematic: Q1 is a P-channel MOSFET enabling/disabling power to the regulator.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "value": {
+              "reference": "Q1",
+              "is_pchannel": true,
+              "load_type": "high_side_switch"
+            }
+          }
+        },
+        {
+          "description": "decoupling_analysis for rail VCC reports capacitors C3, C1, C2, C4 all 10 \u00b5F/50 V, totalling 40 \u00b5F with cap_count=4. This matches the schematic: four 10 \u00b5F 1206 bulk caps on the VCC input rail.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "contains_match",
+            "value": {
+              "rail": "VCC",
+              "total_capacitance_uF": 40.0,
+              "cap_count": 4
+            }
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The schematic contains three PWR_FLAG symbol instances: one wired to GND (at 74.93,52.07), one wired to VDD (at 172.72,118.11 on the L1 output rail), and one wired to VCC (at 140.97,41.91). The analyzer tracks each PWR_FLAG symbol as belonging to its own 'PWR_FLAG' net rather than resolving which power net the symbol's pin is wired to, so it never credits any of the three actual power rails with having a PWR_FLAG. All three warnings ('GND has power_in pins but no PWR_FLAG', 'VDD \u2026', 'VCC \u2026') are false positives.",
+          "analyzer_section": "pwr_flag_warnings",
+          "check": {
+            "path": "pwr_flag_warnings",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "C9 and C10 both have value '100u{slash}6.3V' \u2014 KiCad encodes the slash character as '{slash}' in the S-expression file. The value parser does not substitute {slash} back to '/', so parsed_value is null for both capacitors. As a result they are absent from the decoupling_analysis for the VDD rail, which reports only C7 (10 \u00b5F, total 10 \u00b5F) instead of C7+C9+C10 (210 \u00b5F). C5 (100n{slash}50V) and C8 (4n7{slash}50V) are similarly affected but are signal capacitors, not decoupling caps on a named rail.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "contains_match",
+            "value": {
+              "rail": "VDD",
+              "total_capacitance_uF": 210.0
+            }
+          }
+        },
+        {
+          "description": "F1 is a Littelfuse 1206L300SLTHYR resettable polyfuse placed in series between J1 (barrel-jack input) and the Q1 P-MOSFET drain, providing overcurrent protection on the input rail. D2 is a ZMM5V6 Zener diode with its cathode on VCC and anode on the gate of Q1, clamping the gate drive voltage. Neither is reported in signal_analysis.protection_devices, which returns an empty list.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "M4a1x/TPS5430",
+      "project": "TPS5430",
+      "created": "2026-03-24T01:15:45.442885+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001625"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "TPS5430.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "Thermal pad vias for TPS5430DDA PowerPAD correctly evaluated as adequate; Board dimensions and layer completeness correctly reported for 2-layer 55\u00d720 mm board; statistics.tht_count is 0 but actual...",
+      "correct": [
+        {
+          "description": "thermal_pad_vias reports U1 pad 9 (2.6\u00d73.1 mm solder pad) with 8 footprint via-pads (thermal vias embedded in footprint), via density 0.993/mm\u00b2, and adequacy='adequate'. The recommended minimum is 5 vias and ideal is 9; 8 meets the threshold. The PCB file confirms 8 thru-hole via-pads plus additional standalone vias in the vicinity.",
+          "analyzer_section": "thermal_pad_vias",
+          "check": {
+            "path": "thermal_pad_vias",
+            "op": "contains_match",
+            "value": {
+              "component": "U1",
+              "adequacy": "adequate"
+            }
+          }
+        },
+        {
+          "description": "statistics reports board 55\u00d720 mm, 2 copper layers, routing_complete=true (0 unrouted nets). Gerber confirms Edge.Cuts extents 55\u00d720 mm matching PCB. DFM tier=standard with no violations, min track 0.25 mm, min drill 0.4 mm.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.board_width_mm",
+            "op": "equals",
+            "value": 55.0
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The schematic assembly_complexity reports smd_count=41 and tht_count=0. The PCB correctly identifies J2 (TerminalBlock_Phoenix, through-hole screw terminal) as tht_count=1, smd_count=30. The discrepancy in the schematic analyzer is because footprint technology type (THT/SMD) is stored in the footprint library, not the schematic S-expression, so the schematic analyzer cannot distinguish them and classifies everything as SMD.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.tht_count",
+            "op": "equals",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "M4a1x/TPS5430",
+      "project": "TPS5430",
+      "created": "2026-03-24T01:15:45.442908+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001626"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "jlcpcb.json",
+      "status": "new",
+      "summary": "TPS5430 gerber set complete and aligned: 9 layer files + 2 drill files, Edge.Cuts 55\u00d720 mm",
+      "correct": [
+        {
+          "description": "completeness: found_layers=[B.Cu, B.Mask, B.Paste, B.SilkS, Edge.Cuts, F.Cu, F.Mask, F.Paste, F.SilkS], missing_required=[], missing_recommended=[], complete=true. alignment.aligned=true, no issues. board_dimensions.width_mm=55.0, height_mm=20.0 matches PCB.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "M4a1x/TPS5430",
+      "project": "TPS5430",
+      "created": "2026-03-24T01:15:45.442912+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001627"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "TPS5430.kicad_sch.json.json",
+      "status": "promoted",
+      "summary": "Switching buck regulator topology correctly detected with U1=TPS5430DDA, L1, D1; Feedback voltage divider R5/R6 correctly detected on Feedback net; Q1 P-FET load switch and Q2 NPN BJT detected as t...",
+      "correct": [
+        {
+          "description": "signal_analysis.power_regulators identifies U1 as a switching regulator. The inductor L1 (47uH) and Schottky diode D1 (SS34) are the correct components for this TPS5430 synchronous buck design.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[0].topology",
+            "value": "switching",
+            "op": "equals"
+          }
+        },
+        {
+          "description": "signal_analysis.voltage_dividers identifies R5 (5k6) and R6 (270R) on the Feedback net, consistent with the TPS5430 output voltage programming network.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.voltage_dividers[0].resistors[0].ref",
+            "value": "R5",
+            "op": "equals"
+          }
+        },
+        {
+          "description": "signal_analysis.transistor_circuits identifies both Q1 (AO3401A, P-channel MOSFET) and Q2 (MMBT3904, NPN BJT). Q1 functions as a high-side load switch and Q2 as the gate drive/control transistor.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "value": 2,
+            "op": "count_gte"
+          }
+        },
+        {
+          "description": "design_analysis.erc_warnings includes a no_driver warning for the net connected to U1 pin 5 (EN). The EN pin is intentionally left floating in this design variant, which is a real design concern for an active-low enable input.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.erc_warnings",
+            "value": 1,
+            "op": "count_gte"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "signal_analysis.decoupling_analysis for VDD rail only includes C7 (10uF). The schematic also has C9 and C10 (100uF tantalum electrolytic) on the VDD output rail, which are the primary bulk storage capacitors. The total decoupling on VDD is 210uF, not 10uF. This is likely because the capacitor value parser does not recognise the 100u or 100uF tantalum values, or the net connectivity for C9/C10 pins is not resolved to VDD.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis[?(@.rail=='VDD')].total_capacitance_uF",
+            "value": 100.0,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "signal_analysis.protection_devices is empty. F1 is a polyfuse (resettable fuse) on the VCC input rail providing overcurrent protection. Polyfuses should be classified as protection devices alongside TVS diodes and Zener clamps.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "value": 0,
+            "op": "count_eq"
+          }
+        },
+        {
+          "description": "signal_analysis.snubbers is empty. The TPS5430 schematic includes an RC snubber (a resistor and capacitor) on the SW switching node to suppress ringing. This should be classified in signal_analysis.snubbers.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.snubbers",
+            "value": 0,
+            "op": "count_eq"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "M4a1x/TPS5430",
+      "project": "TPS5430",
+      "created": "2026-03-24T06:14:03.644053+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001879"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "TPS5430.kicad_pcb.json.json",
+      "status": "new",
+      "summary": "Board dimensions 55.0 x 20.0 mm and 4-layer copper zone count accurate; 44 footprints reported including 4 mounting holes and 1 logo not in schematic BOM; SMD/THT split correct: 30 SMD pads, 1 THT ...",
+      "correct": [
+        {
+          "description": "board.dimensions.width_mm=55.0, height_mm=20.0, and 8 copper zones reported. These match the PCB source file edge cuts and zone definitions.",
+          "analyzer_section": "board",
+          "check": {
+            "path": "board.dimensions.width_mm",
+            "value": 55.0,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "schematic has 41 components; PCB has 44 footprints. The 3 extras are mounting holes H1-H4 (counted as 4-1=3 net extra) and LOGO1 mechanical \u2014 matching a typical production-ready board.",
+          "analyzer_section": "footprints",
+          "check": {
+            "path": "footprints.total_count",
+            "value": 44,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "smd=30, tht=1 reported. The single THT component matches the through-hole header/connector in the design.",
+          "analyzer_section": "footprints",
+          "check": {
+            "path": "footprints.by_type.smd",
+            "value": 30,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "M4a1x/TPS5430",
+      "project": "TPS5430",
+      "created": "2026-03-24T06:14:03.644074+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001880"
+    }
+  ]
+}

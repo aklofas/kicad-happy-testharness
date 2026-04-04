@@ -1,0 +1,103 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/rp2040-motor-controller/RP2040_base/RP2040_base.kicad_sch",
+      "status": "confirmed",
+      "summary": "Motor controller base board: good power regulation and CAN bus detection, but missing current sense on base board and isolation components not identified",
+      "correct": [
+        {
+          "description": "Power regulation chain correctly identified: MT2492 switching 12V->5V with feedback divider (R15/R16, estimated 5.0V), TLV1117 LDOs for 3.3V and 3.3VA, TX4139 switching from VMOT"
+        },
+        {
+          "description": "CAN bus differential pairs detected for CAN0 (CAN0_P/CAN0_N) and CAN1 (CAN1_P/CAN1_N) with ESD protection noted"
+        },
+        {
+          "description": "USB differential pairs found for both RP2040 CPUs (USB_D+/- and USB_D_2+/-) with USBLC6 ESD protection"
+        },
+        {
+          "description": "I2C buses correctly detected with pull-ups: SDA1/SCL1 with 10k to +3V3, and ADC_DATA I2C line found (missing pull-up flagged)"
+        },
+        {
+          "description": "Dual RP2040 architecture detected with supporting flash memory (W25Q128JVSIQ), crystals (12MHz with 20pF load caps)"
+        },
+        {
+          "description": "P-channel MOSFET Q3 (NCE40P05Y) correctly identified as high-side power switch on 12V rail with gate resistor"
+        },
+        {
+          "description": "Isolation barrier detected between GND and GND_ISO domains with isolated power rails (+5V_ISO, +5V_ISO_FILT)"
+        },
+        {
+          "description": "MCP2515 CAN controller and CA-IS3052G isolated CAN transceiver identified in IC analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TX4139 regulator feedback divider shows input as +12V but R96/R97 ratio gives 8.97V output - the input should be VMOT not +12V for the voltage divider top_net",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R96$"
+          }
+        },
+        {
+          "description": "Isolation barrier lists no isolation_components despite SFH617A optocoupler and LTV-208 dual optocouplers being present in the design",
+          "analyzer_section": "signal_analysis.isolation_barriers"
+        }
+      ],
+      "missed": [
+        {
+          "description": "E-stop circuit with optocoupler-based safety interlock (Q7 NMOS on GND_ISO, SFH617A optocoupler crossing isolation barrier) not identified as a safety/interlock circuit",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No SPI bus detected despite ADC081S021 and ADS7822 ADCs communicating via SPI (MISO/MOSI/SCLK lines)",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Level shifters TXS0101DCKR not identified in the signal path between isolated and non-isolated domains",
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Dual CAN bus architecture (MCP2515+CA-IS3052G for CAN0, separate path for CAN1) not described as a redundant/dual CAN topology",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Detect optocouplers (SFH617A, LTV-827S) as isolation_components in isolation barrier analysis",
+        "Identify SPI buses from ADC data lines (MISO/MOSI/SCLK naming patterns)",
+        "Recognize e-stop/safety interlock circuits as a distinct signal type",
+        "Link level shifters to isolation barrier analysis"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000123",
+      "repo": "Twisted-Fields/rp2040-motor-controller",
+      "project": "RP2040_base_RP2040_base",
+      "created": "2026-03-14T07:50:48.514944+00:00"
+    }
+  ]
+}

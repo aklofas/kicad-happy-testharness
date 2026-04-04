@@ -1,0 +1,19 @@
+{
+  "file_pattern": "usb_joystick.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002353",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002353-AST-01",
+      "description": "INCORRECT: U1 has lib_id 'Connector_Generic:Conn_02x16_Counter_Clockwise' (a generic connector symbol used as MCU placeholder) but value='MCU'. The analyzer classifies it as type 'ic' because the value contains 'MCU', overriding the lib_id-based classification. This results in component_types reporting 1 IC and only 2 connectors when there are actually 3 connectors (J1, J2, and U1). The USB detection (USB_D+/USB_D- nets) and crystal circuit detection still work correctly because they rely on net names rather than component type.",
+      "created_from": "FND-00002353",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "equals",
+        "value": 2
+      },
+      "aspirational": false
+    }
+  ]
+}

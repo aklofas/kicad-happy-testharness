@@ -1,0 +1,136 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ai-camera-rev2_ai-camera-rev2.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Tokay-lite AI camera rev2 (ESP32, 176 components). Multiple issues: Q8 false LED driver association (no net connectivity to D7). 3 TVS diodes (BSD5C051L) missed in protection_devices. USB-C CC pull-down check fails despite correct 5.1k resistors (relies on net names not connectivity). MT9284 LED driver misclassified as voltage regulator with output_rail=VBUS. I2C bus_analysis reports has_pull_up=false despite pull-ups present.",
+      "correct": [
+        {
+          "description": "Power regulators correctly detected (SY8089 buck, RT9166 LDO, XC6206 LDO)",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Q1/Q2 bidirectional I2C level shifters correctly identified",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
+        },
+        {
+          "description": "USB D+/D- differential pair correctly detected",
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Q8 AO3401A false led_driver for D7/R25 \u2014 D7 is on net __unnamed_32 (USR_LED), Q8 drain is on __unnamed_4; no connectivity. R25 (215k) is Q10 gate pull-down, not LED current resistor",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q8$"
+          }
+        },
+        {
+          "description": "Q5/Q7/Q9 has_snubber=true false positive \u2014 R18 (215k) is an open-drain pull-up, not a snubber",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q5$"
+          }
+        },
+        {
+          "description": "I2C bus_analysis has_pull_up=false for CAM.SDA/SCL despite R29/R30 (10k to +3V3) present; design_observations correctly detects them",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "U11 MT9284-28J LED driver misclassified as switching regulator with output_rail=VBUS and estimated_vout=2.8V \u2014 drives 10 IR LEDs, not a voltage output",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U11$"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "LED driver association requires net connectivity between transistor drain and LED",
+        "TVS detection should scan diodes with 'TVS' in keywords",
+        "USB CC check should trace connectivity from CC pins, not rely on net names",
+        "Snubber detection should require low R (<1k) in RC pair across drain-source",
+        "Reconcile I2C pull-up detection between bus_analysis and design_observations",
+        "LED driver ICs should not be classified as voltage regulators"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000278",
+      "repo": "maxlab-io/tokay-lite-pcb",
+      "project": "ai-camera-rev2_ai-camera-rev2",
+      "created": "2026-03-16T21:08:26.587623+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ai-camera-rev3.1_ai-camera-rev3.1.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Tokay-lite AI camera rev3.1 (176 components). Same issues as rev2. Additionally, U8/U7 input_rail degrades to __unnamed_0 (was +3.3VA in rev2 \u2014 power label removed in this revision).",
+      "correct": [
+        {
+          "description": "Power regulators correctly detected",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Same Q8 false LED driver, TVS missed, CC check fail, snubber false positive, I2C pull-up inconsistency, MT9284 misclassification as rev2",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "U8/U7 input_rail=__unnamed_0 instead of named rail \u2014 +3.3VA label removed between rev2 and rev3.1",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U8$"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "When regulator input rail is unnamed, infer name from upstream ferrite bead connection to named rail"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000279",
+      "repo": "maxlab-io/tokay-lite-pcb",
+      "project": "ai-camera-rev2_ai-camera-rev2",
+      "created": "2026-03-16T21:08:26.619933+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

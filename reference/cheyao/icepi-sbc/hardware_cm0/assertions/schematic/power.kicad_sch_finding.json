@@ -1,0 +1,19 @@
+{
+  "file_pattern": "power.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002218",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002218-AST-01",
+      "description": "The power schematic contains 6 switching regulators generating +3V3_WIFI, +3V3_IO, +3V3_RTC, +1V5, +1V2_SYSTEM, and +1V1_CPUX rails from a +5V input, each with an inductor and multiple output capacitors. The analyzer correctly finds their feedback voltage dividers (is_feedback=true) but does not report any regulator topology, switcher type, or inductor-based power stage. There is no 'regulators' or 'switching_regulators' section in the output, leaving the core power architecture undescribed.",
+      "created_from": "FND-00002218",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 4
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "file_pattern": "test_project.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002252",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002252-AST-01",
+      "description": "The analyzer correctly identifies J1 as an HDMI_A connector, and detects all 8 differential pairs: 4 TMDS pairs (ADV7611_D0/D1/D2/CK) and 4 HDMI-labeled pairs (hdmi_in.D0/D1/D2/CK). ESD protection is correctly noted on the ADV7611 TMDS pairs.",
+      "created_from": "FND-00002252",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "FND-00002252-AST-02",
+      "description": "INCORRECT: The power_symbols array contains 59 entries but every item has null reference and null net fields (while a flat schematic like kicad-keyboards correctly returns net_name, x, y, lib_id). This means pwr_flag_warnings fire on DVDDIO, GND, +5V, DVDD, and +3V3 even though PWR_FLAG appears in the statistics power_rails list (the symbol exists in a sub-sheet). This is a parsing bug for power symbols in hierarchical/multi-sheet schematics.",
+      "created_from": "FND-00002252",
+      "check": {
+        "path": "power_symbols",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00002252-AST-03",
+      "description": "The HDMI bus alias defines 12 members (D2+, D2-, D1+, D1-, D0+, D0-, CK+, CK-, HPD, SDA, SCL, CEC). The analyzer reports present_labels=0 and resolved_nets=0 for all 12, listing them all as unresolved. However, the actual nets use dot-notation: hdmi_in.D2+, hdmi_in.D1+, hdmi_in.CK+, etc., which are present in the nets dict. The analyzer matches bare member names ('D2+') but not 'busname.member' form \u2014 a systematic miss for bus alias resolution when bus signals are labeled with the 'busname.signal' convention.",
+      "created_from": "FND-00002252",
+      "check": {
+        "path": "bus_topology.aliases",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00002252-AST-04",
+      "description": "U6 is an RT9742AGJ5F, a 500mA LDO regulator from Richtek in the Power_Management library. Only U4 (AP2112K-1.8) is detected in signal_analysis.power_regulators. U6 appears only in power_budget.rails.+3V3.ics. The RT9742AGJ5F is not in the analyzer's known-regulator list, causing a false negative for regulator detection.",
+      "created_from": "FND-00002252",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

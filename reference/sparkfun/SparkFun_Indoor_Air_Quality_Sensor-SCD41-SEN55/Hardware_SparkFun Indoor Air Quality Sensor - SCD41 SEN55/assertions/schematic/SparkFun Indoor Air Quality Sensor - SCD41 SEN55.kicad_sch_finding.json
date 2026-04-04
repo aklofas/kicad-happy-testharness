@@ -1,0 +1,147 @@
+{
+  "file_pattern": "SparkFun Indoor Air Quality Sensor - SCD41 SEN55.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001441",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001441-AST-01",
+      "description": "The design_analysis.bus_analysis.i2c array contains entries for both SDA and SCL nets, correctly identifying U6 (SEN55_Connector) and U3 (SCD41) as the I2C devices. The bus topology is correctly recognized.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001441-AST-02",
+      "description": "The design_observations entry for category 'switching_regulator' correctly identifies U1=AP3012 with inductor=L1 and input_rail=3.3V. The detection of the boost topology is correct even though the output rail is misidentified.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "contains_match",
+        "value": {
+          "category": "switching_regulator",
+          "component": "U1",
+          "inductor": "L1"
+        }
+      }
+    },
+    {
+      "id": "FND-00001441-AST-03",
+      "description": "The statistics.power_rails correctly lists ['3.3V', '5V', 'GND'], matching the actual schematic power net structure.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": "5V"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 3 items"
+    },
+    {
+      "id": "FND-00001441-AST-04",
+      "description": "The decoupling_analysis correctly identifies C1 (0.1uF) and C4 (4.7uF) on the 3.3V rail, and C5 (0.1uF) plus C2 (22uF) on the 5V rail. Rail coverage observations (has_bulk, has_bypass) are accurate.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001441-AST-05",
+      "description": "U3/SCD41 is correctly identified as type 'ic', with function recognized as photoacoustic CO2 sensor. Its I2C pins (SCL pin 9, SDA pin 10) are correctly mapped to the SCL and SDA nets. GND pads (6, 20, 21) and VDD/VDDH power pins are correctly resolved.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001441-AST-06",
+      "description": "INCORRECT: The signal_analysis.power_regulators entry for U1/AP3012 reports input_rail='3.3V' and output_rail='3.3V'. This is wrong: the AP3012 is a step-up (boost) converter. Its IN pin (pin 5) is on the 3.3V rail, while the 5V output net (via diode D1/PMEG4005EJ anode and capacitor C2) feeds the SEN55 connector. The feedback network (R2=100k, R3=33k) sets the output voltage, which the decoupling analysis confirms is associated with the 5V rail. The analyzer incorrectly resolved the output rail by tracing the FB pin resistors to the 5V net but still reports 3.3V as output.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "value": {
+          "ref": "U1",
+          "topology": "switching"
+        }
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001441-AST-07",
+      "description": "INCORRECT: The BOM reports D1 as value 'PMEG4005EJ', type 'diode', with quantity 1. However, the components array shows D1 appearing twice: once as PMEG4005EJ (Schottky diode, uuid 7f530a75) and once as 'Red' LED (uuid fd234bde, type 'led'). These appear to be genuinely two different schematic symbols both using reference D1 \u2014 one is the boost converter's catch diode (PMEG4005EJ, Schottky) and the other is a power-indicator LED. The BOM only captures one D1 entry. The ic_pin_analysis for U1/AP3012 SW pin connects to 'D1' value 'Red' (the LED), further confirming the analyzer is confusing the two D1 components.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001441-AST-08",
+      "description": "INCORRECT: The schematic statistics report 32 total_components. However, the components array contains duplicate ref 'C1' (two distinct entries: 1.0uF at uuid 10b30d4b and 0.1uF at uuid 154a09c4; both in_bom=true, same ref). Similarly, 'C5' appears twice (1.0uF at uuid 50d7428e and 0.1uF at uuid 8a6daf3c). 'R3' appears three times with different values (2.2k, 4.7k, 33k). 'D1' appears twice. This suggests the schematic has components with shared/reused reference designators or the parser is duplicating entries. The PCB uses entirely different ref numbering (U5 for AP3012, L2 for inductor, D2 for Schottky, R1/R2/R5/R6 instead of R3/R4/R2). The component count of 32 likely undercounts the actual unique components.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 32
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001441-AST-09",
+      "description": "INCORRECT: The design_analysis.cross_domain_signals section flags both SDA and SCL as crossing domains from 3.3V (U3/SCD41) to 5V (U6/SEN55_Connector) and asserts needs_level_shifter=true. However, the Sensirion SEN55 I2C interface operates at 3.3V logic levels \u2014 it is powered by 5V but its SDA/SCL logic is 3.3V-compatible. The analyzer infers that U6 is a 5V device because its VDD is on the 5V rail, but the SEN55 I2C interface uses 3.3V signaling. No level shifter is needed or present, and flagging this as a requirement is a false positive.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "design_analysis.cross_domain_signals",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001441-AST-10",
+      "description": "The schematic has R3 (2.2k) connected between 3.3V and SDA, and R4 (2.2k) connected between 3.3V and SCL. These are classic I2C pull-up resistors. The design_observations i2c_bus entries for both SDA and SCL report has_pullup=false and pullup_resistor=null. The bus_analysis.i2c entries similarly show empty pull_ups arrays and has_pull_up=false. Looking at the net data, on the SDA net R3 pin 1 connects directly to the SDA line, and on the SCL net R4 pin 2 connects directly to SCL \u2014 the analyzer failed to recognize these as pull-ups. (Note: in the schematic the pull-up resistors for the I2C bus connecting to the Qwiic connectors are R3=2.2k/SDA and R4=2.2k/SCL; there is also JP2 which can disconnect them.)",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "not_contains_match",
+        "value": {
+          "category": "i2c_bus",
+          "has_pullup": false
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001441-AST-11",
+      "description": "R2 (100k) connects from the 5V output rail to the AP3012 FB pin, and R3 (33k) connects from the FB pin to GND (via JP2 and a net to GND). This classic resistive voltage divider sets the boost converter output voltage. The signal_analysis.voltage_dividers list is empty. The feedback_networks list is also empty. The ic_pin_analysis shows both resistors on pin 3 (FB) of U1 but the voltage divider pattern was not recognized.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001441-AST-12",
+      "description": "The signal_analysis.protection_devices list is empty. D1 (PMEG4005EJ, 40V/500mA Schottky diode) serves as the catch/freewheeling diode in the AP3012 boost converter circuit \u2014 a standard component in switching regulator topologies. It is connected between the SW node (U1 pin 1) and the 5V output rail. The analyzer did not detect this protection/rectification diode.",
+      "created_from": "FND-00001441",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "file_pattern": "ArduinoDigitalPotShield.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000366",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000366-AST-01",
+      "description": "INCORRECT: Component 5kohms1 uses lib_id 'Device:R', value 'R', and keywords 'R res resistor' \u2014 it is a standard KiCad resistor. However, its type is reported as 'other' because the reference designator does not start with 'R'. This causes component_types.resistor to be reported as 2 instead of the correct 3, and the BOM entry for 5kohms1 has type 'other'. The classifier should use lib_id or keywords to identify resistors, not just the reference prefix.",
+      "created_from": "FND-00000366",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "eq",
+        "value": 3
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000366-AST-02",
+      "description": "The MCP4151 digital potentiometer is connected to the Arduino shield via SPI: U2 pin 1 (~CS) \u2192 XA1.D10_CS, U2 pin 2 (SCK) \u2192 XA1.D13, U2 pin 3 (SDI/SDO) \u2192 XA1.D11. The bus_analysis.spi array is empty and no SPI detection appears anywhere in the output. The analyzer should detect at least one SPI bus involving U2 (MCP4151) with the Arduino shield XA1 as the controller.",
+      "created_from": "FND-00000366",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_value",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

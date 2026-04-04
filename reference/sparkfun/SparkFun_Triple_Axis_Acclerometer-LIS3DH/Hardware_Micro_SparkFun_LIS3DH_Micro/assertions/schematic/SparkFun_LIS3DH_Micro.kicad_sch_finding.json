@@ -1,0 +1,111 @@
+{
+  "file_pattern": "SparkFun_LIS3DH_Micro.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001542",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001542-AST-01",
+      "description": "The analyzer correctly identifies 25 total components with the right breakdown: 4 resistors (R1, R2, R3, R6), 2 capacitors (C3, C4), 1 LED (D1), 1 IC (U1 LIS3DH), 3 jumpers (JP1, JP2, JP3), 3 connectors (J1, J2, J5), 4 test points (TP5, TP6, TP7, TP8), 2 fiducials (FID3, FID4), 3 aesthetic symbols (G1, G2, G3), 1 mounting hole (ST1), and 1 OSHW logo (G4 not-in-BOM). Power rails 3.3V and GND are correctly identified. 17 nets and 5 no-connects are correct.",
+      "created_from": "FND-00001542",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 25
+      }
+    },
+    {
+      "id": "FND-00001542-AST-02",
+      "description": "The analyzer correctly identifies U1's VDD (pin 14) and VDDIO (pin 1) on 3.3V with decoupling caps C3 (0.1uF) and C4 (10uF). GND pins 5 and 12 are on GND. RES (pin 10) tied to GND is correctly captured. ADC1/ADC2/ADC3 pins left unconnected are correctly noted. Total decoupling of 10.1uF on 3.3V rail is correctly computed.",
+      "created_from": "FND-00001542",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "contains_match",
+        "value": {
+          "rail": "3.3V",
+          "cap_count": 2,
+          "total_capacitance_uF": 10.1
+        }
+      }
+    },
+    {
+      "id": "FND-00001542-AST-03",
+      "description": "SCL is correctly classified as 'clock', SDA as 'data', ADDR/SDO as 'data', INT1 as 'interrupt', 3.3V as 'power', GND as 'ground'. The 10 unnamed single-ended nets are classified as 'signal', which is reasonable for the no-connect and internal jumper nets.",
+      "created_from": "FND-00001542",
+      "check": {
+        "path": "design_analysis.net_classification.SCL",
+        "op": "equals",
+        "value": "clock"
+      }
+    },
+    {
+      "id": "FND-00001542-AST-04",
+      "description": "The analyzer correctly identifies U1 (LIS3DH) as an IMU/motion sensor. The subcircuit analysis correctly groups all neighboring components (C3, C4, J1, J2, JP1, JP2, JP3, R1, R2, R6, TP5, TP6, TP7) around U1. The LIS3DH is a triple-axis accelerometer which is a type of IMU/motion sensor.",
+      "created_from": "FND-00001542",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "contains_match",
+        "value": {
+          "reference": "U1",
+          "function": "IMU/motion sensor"
+        }
+      }
+    },
+    {
+      "id": "FND-00001542-AST-05",
+      "description": "The analyzer correctly shows R2 (10k) connected between ADDR/SDO net (U1 pin 7) and 3.3V, acting as an address pull-up. JP3 (open jumper) allows optionally pulling ADDR/SDO to GND to change the I2C address. The signal pin analysis for pin 7 correctly notes R2 as a series resistor to 3.3V net.",
+      "created_from": "FND-00001542",
+      "check": {
+        "path": "ic_pin_analysis",
+        "op": "contains_match",
+        "value": {
+          "reference": "U1"
+        }
+      }
+    },
+    {
+      "id": "FND-00001542-AST-06",
+      "description": "The design_observations entry for decoupling_coverage on 3.3V correctly identifies has_bulk=true (C4 at 10uF) and has_bypass=true (C3 at 0.1uF). has_high_freq=false is correct since there is no ceramic cap in the nF range. Total 10.1uF is correctly computed.",
+      "created_from": "FND-00001542",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "contains_match",
+        "value": {
+          "category": "decoupling_coverage",
+          "rail": "3.3V",
+          "has_bulk": true,
+          "has_bypass": true
+        }
+      }
+    },
+    {
+      "id": "FND-00001542-AST-07",
+      "description": "INCORRECT: The Micro design has R1 (2.2k) on SDA and R6 (2.2k) on SCL as I2C pull-up resistors. Both connect from the I2C signal net through JP2 (a 3-pole closed/bridged solder jumper, value 'I2C') to 3.3V. The analyzer reports has_pullup=false and pull_ups=[] for both SCL and SDA in design_observations and bus_analysis. The resistors do appear on the I2C nets in ic_pin_analysis but the pull-up topology is not recognized. The jumper intervenes between the resistor free end and the 3.3V rail, creating an indirect path the analyzer does not traverse.",
+      "created_from": "FND-00001542",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "contains_match",
+        "value": {
+          "category": "i2c_bus",
+          "net": "SCL",
+          "has_pullup": true
+        }
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001542-AST-08",
+      "description": "The bus_analysis.i2c entries for SCL and SDA report pull_ups=[] even though R6 (2.2k) and R1 (2.2k) are clearly acting as pull-up resistors for SCL and SDA respectively. The resistors are connected in series from the signal net through JP2 (closed) to 3.3V. A correct analysis would list R6 and R1 as pull-up resistors with value 2.2k and rail 3.3V.",
+      "created_from": "FND-00001542",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "contains_match",
+        "value": {
+          "net": "SCL",
+          "has_pull_up": true
+        }
+      },
+      "aspirational": false
+    }
+  ]
+}

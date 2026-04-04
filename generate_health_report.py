@@ -71,11 +71,17 @@ def _count_findings():
 
 
 def _count_repos_in_reference():
-    """Count repo directories in reference/."""
+    """Count repo directories (owner/repo) in reference/."""
     if not DATA_DIR.exists():
         return 0
-    return sum(1 for d in DATA_DIR.iterdir()
-               if d.is_dir() and not d.name.startswith("."))
+    count = 0
+    for owner_dir in DATA_DIR.iterdir():
+        if not owner_dir.is_dir() or owner_dir.name.startswith("."):
+            continue
+        for repo_dir in owner_dir.iterdir():
+            if repo_dir.is_dir() and not repo_dir.name.startswith("."):
+                count += 1
+    return count
 
 
 def _bugfix_coverage():

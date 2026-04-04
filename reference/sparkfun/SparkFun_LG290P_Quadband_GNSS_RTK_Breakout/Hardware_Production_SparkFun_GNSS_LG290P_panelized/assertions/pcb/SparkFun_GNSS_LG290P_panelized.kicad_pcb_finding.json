@@ -1,0 +1,29 @@
+{
+  "file_pattern": "SparkFun_GNSS_LG290P_panelized.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001447",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001447-AST-01",
+      "description": "The panelized PCB footprint count of 1103 = 8 \u00d7 138 (single board footprints) + small deviation from panelization artifacts. The board dimensions 109.704 \u00d7 187.92mm represent the full panel. Via count of 1288 = 8 \u00d7 161 (single board) confirms an 8-up panel arrangement.",
+      "created_from": "FND-00001447",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 1103
+      }
+    },
+    {
+      "id": "FND-00001447-AST-02",
+      "description": "INCORRECT: The panelized PCB (Hardware/Production/SparkFun_GNSS_LG290P_panelized.kicad_pcb) reports routing_complete=false and unrouted_net_count=36. However, all 36 'unrouted' nets are named with the 'unconnected-*' pattern (NC pins on J1, J2, J4, J7, J8, U1, U2, U3, U4), which are intentional no-connects, not genuine routing failures. The panelization process appears to have created ratsnest entries for NC pads across the 8-up panel. The single-board PCB correctly shows routing_complete=true.",
+      "created_from": "FND-00001447",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": false
+    }
+  ]
+}

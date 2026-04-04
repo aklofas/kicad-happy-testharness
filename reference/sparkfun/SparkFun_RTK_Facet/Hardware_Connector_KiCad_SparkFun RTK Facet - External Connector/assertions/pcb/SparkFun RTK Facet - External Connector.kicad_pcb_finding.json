@@ -1,0 +1,39 @@
+{
+  "file_pattern": "SparkFun RTK Facet - External Connector.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001524",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001524-AST-01",
+      "description": "38 footprints match the 38 found in the source PCB. Board dimensions 53.0 \u00d7 23.0mm are correct. Net count of 31 matches the schematic. The board is fully routed (routing_complete=true, unrouted_net_count=0) with 132 track segments and 29 vias. GND zone stitching correctly detected on both copper layers.",
+      "created_from": "FND-00001524",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 38
+      }
+    },
+    {
+      "id": "FND-00001524-AST-02",
+      "description": "SMD=10 (R16, R17, D1, F1, F3, J1, J2, J3, J4, J9) and THT=3 (J11, J12, J5/USB-C) are correct based on attr flags in source. J5 (USB-C) is classified THT because its shell/mechanical pins are thru_hole; the signal pads are SMD. The 25 remaining footprints are logos, graphics, and panel elements excluded from the smd/tht counts.",
+      "created_from": "FND-00001524",
+      "check": {
+        "path": "statistics.tht_count",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "FND-00001524-AST-03",
+      "description": "INCORRECT: JP0 (Jumper_2_PTH_SMD_Combo-NC) has KiCad attribute (attr allow_soldermask_bridges). The analyzer takes the first attr flag as the footprint type, resulting in type='allow_soldermask_bridges'. This is not a valid mount category\u2014the footprint should be classified as 'smd' or 'through_hole' based on its pads (it has both SMD and THT pads). The allow_soldermask_bridges flag is a DFM setting unrelated to mount type. This also means JP0 is not counted in smd_count (10) or tht_count (3).",
+      "created_from": "FND-00001524",
+      "check": {
+        "path": "statistics.smd_count",
+        "op": "equals",
+        "value": 10
+      },
+      "aspirational": false
+    }
+  ]
+}

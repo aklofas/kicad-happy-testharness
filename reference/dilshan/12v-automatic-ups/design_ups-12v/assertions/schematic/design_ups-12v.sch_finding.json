@@ -1,0 +1,96 @@
+{
+  "file_pattern": "ups-12v.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000308",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000308-AST-01",
+      "description": "INCORRECT: U4 is an LM2576T-12, a fixed 12V switching regulator. The '-12' suffix indicates a fixed 12V output. The analyzer reports estimated_vout: 1.2 and then flags a vout_net_mismatch (90% discrepancy) against the '+12V' net. The correct output voltage is 12V, which matches the +12V power rail \u2014 there is no actual mismatch. The analyzer appears to misparse the '-12' suffix as 1.2V.",
+      "created_from": "FND-00000308",
+      "check": {
+        "path": "signal_analysis.power_regulators[2].estimated_vout",
+        "op": "eq",
+        "value": 12.0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000308-AST-02",
+      "description": "INCORRECT: Q3 (BD135) is driven via RELAY-DRV from the PIC16F688 to switch relay RL1 (G2RL-2-DC12). The transistor_circuits entry for Q3 has load_type='led', which is incorrect. Q3 is a relay driver. D12 (1N4004) is a flyback diode across the relay coil, which may have confused the LED detection.",
+      "created_from": "FND-00000308",
+      "check": {
+        "path": "signal_analysis.transistor_circuits[2].load_type",
+        "op": "eq",
+        "value": "relay"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000308-AST-03",
+      "description": "INCORRECT: The transistor_circuit entry for Q1 (BC547) reports base_net='GND', collector_net='__unnamed_5', and emitter_net='__unnamed_5'. Q1's base is connected to the RV2/RV3 potentiometer adjustment network (not GND), and its collector and emitter should be on different nets. This indicates a net resolution error for Q1's pin connections. Also, base_driver_ics incorrectly includes U4 (LM2576T-12), which is unrelated to Q1.",
+      "created_from": "FND-00000308",
+      "check": {
+        "path": "signal_analysis.transistor_circuits[0].base_net",
+        "op": "not_contains",
+        "value": "GND"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000308-AST-04",
+      "description": "INCORRECT: The design_observations entry for U4 (LM2576T-12) reports a vout_net_mismatch with estimated_vout=1.2 vs net '+12V' at 12.0V (90% discrepancy). This is a cascading false positive from the incorrect voltage parsing of the '-12' suffix (should be 12V not 1.2V). The LM2576T-12 correctly outputs to the +12V rail.",
+      "created_from": "FND-00000308",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "not_contains",
+        "value": "regulator_voltage"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000308-AST-05",
+      "description": "INCORRECT: The design_observations decoupling entry for U5 (LM7805) lists rails_without_caps: ['+5V', '+12L']. However, C10 (0.1MFD) is connected between +12L and GND (the LM7805 input), and C11 (33MFD) is connected between +5V and GND (the LM7805 output). These bypass capacitors exist on the correct rails but were not recognized by the analyzer.",
+      "created_from": "FND-00000308",
+      "check": {
+        "path": "signal_analysis.design_observations[1].rails_without_caps",
+        "op": "eq",
+        "value": []
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000308-AST-06",
+      "description": "INCORRECT: R2 and R4 (both 0.47R) are genuine current sense shunt resistors in the battery charging current path. However, the analyzer identifies U1 (LM350) as the 'sense_ic'. The actual current sensing is performed by Q1 (BC547), which monitors voltage across the shunt to regulate charge current. U1 is the pass transistor/regulator, not the sense IC.",
+      "created_from": "FND-00000308",
+      "check": {
+        "path": "signal_analysis.current_sense[0].sense_ic.ref",
+        "op": "not_contains",
+        "value": "U1"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000308-AST-07",
+      "description": "U3 is a PC817 optocoupler with lib_id 'Isolator:PC817', providing galvanic isolation between the 230V AC mains sensing circuit and the 5V logic side. The analyzer detected 0 isolation_barriers but U3 clearly serves this role. It was instead partially captured under transistor_circuits as a base_driver_ic for Q2.",
+      "created_from": "FND-00000308",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_value",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000308-AST-08",
+      "description": "R3 (22.0K), RV1 (10K trimmer), and R8 (680R) form a series voltage divider from +VBAT to GND, with the wiper of RV1 feeding ADC-IN to the PIC16F688. This is a battery voltage monitoring divider. The analyzer reports 0 voltage_dividers detected.",
+      "created_from": "FND-00000308",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_value",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

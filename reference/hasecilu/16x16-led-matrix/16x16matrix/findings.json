@@ -1,0 +1,80 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "OneMatrix.kicad_sch.json",
+      "status": "promoted",
+      "summary": "SPI bus not detected for MAX7219 interface; MAX7219 LED driver not detected as addressable_led_chain or LED driver subcircuit; PWR_FLAG warnings incorrectly fire despite PWR_FLAG symbols being pres...",
+      "correct": [
+        {
+          "description": "The schematic title_block.title is '8x8 LED matrix' which the analyzer correctly reports. The repo is named '16x16-led-matrix' and the design appears to be one tile of a 16x16 arrangement (connectors allow daisy-chaining multiple MAX7219 units). This is not an analyzer error \u2014 the title is correct for one tile. No action needed; documenting for awareness.",
+          "analyzer_section": "title_block",
+          "check": {
+            "path": "title_block.title",
+            "op": "eq",
+            "value": "8x8 LED matrix"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The pwr_flag_warnings section reports that +5V and GND have no PWR_FLAG. However, two power:PWR_FLAG symbols are placed in the schematic: one at (74.295, 107.315) wired to the GND rail, and one at (74.295, 86.995) wired to the +5V rail. The analyzer records them in power_symbols with net_name 'PWR_FLAG' (their Value property) rather than resolving the actual connected net. This causes the warning to fire incorrectly. The power_rails list even includes 'PWR_FLAG' as a third rail, showing the net resolution failure.",
+          "analyzer_section": "pwr_flag_warnings",
+          "check": {
+            "path": "pwr_flag_warnings",
+            "op": "eq",
+            "value": 0
+          }
+        },
+        {
+          "description": "Nets R0-R7 each have 2 'output' type pins flagged as driver conflicts: one from MAX7219 DIG_x pins (output) and one from the 8x8 LED matrix D4 row pins (also typed 'output' in the KiCad symbol). In reality, the LED matrix row pins are not active drivers \u2014 they are passive anode/cathode connections. The 'output' pin type on D4 is a library symbol choice, not an actual conflicting driver. All 8 ERC output_conflict warnings (R0-R7) are false positives arising from the LED matrix symbol using 'output' pin type for its cathode/anode connections.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.erc_warnings",
+            "op": "max_value",
+            "value": 3
+          }
+        },
+        {
+          "description": "R4 (9.53k) connects from +5V to the MAX7219 ISET pin (pin 18). The analyzer classifies it as a 'pull-up' resistor with direction 'pull-up' to_net '+5V'. Topologically this is correct (resistor between supply and signal pin), but functionally R4 is the LED current-setting resistor \u2014 a dedicated function of the MAX7219 ISET pin, not a pull-up. The classification doesn't cause wrong behavior but could mislead anyone reading the output. A resistor connected to a pin named 'ISET' should be recognized as a current-set resistor.",
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis[0].signal_pins[8].resistors[0].direction",
+            "op": "eq",
+            "value": "pull-up"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The MAX7219 (U4) uses a 3-wire SPI interface. Nets CLK, DIN, and CS (LOAD pin) are all present and connected to connectors J7/J8 for daisy-chaining. The bus_analysis.spi array is empty. The DIN, CLK, and CS net names on an IC with lib_id 'Driver_LED:MAX7219' are clear SPI indicators that should be detected.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_value",
+            "value": 1
+          }
+        },
+        {
+          "description": "The circuit is a MAX7219 8x8 LED matrix driver \u2014 a classic LED driver topology. The signal_analysis.addressable_led_chains array is empty. While the MAX7219 drives a passive LED matrix (not individually addressable WS2812-style LEDs), it should still be detected as an LED driver circuit. The subcircuit section does identify U4 as 'LED driver' function, but no LED-specific signal analysis entry is generated.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "eq",
+            "value": 0
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix: R4 ISET resistor misclassified as pull-up on ISET pin"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "hasecilu/16x16-led-matrix",
+      "project": "16x16matrix",
+      "created": "2026-03-23T18:27:21.025440+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000310"
+    }
+  ]
+}

@@ -27,13 +27,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "8 io_filtering finding(s)",
+      "description": "9 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 8
+        "value": 9
       }
     },
     {
@@ -205,6 +205,16 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bP1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "U4 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU4\\b"
       }
     }
   ]

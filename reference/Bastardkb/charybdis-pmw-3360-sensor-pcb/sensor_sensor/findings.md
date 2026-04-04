@@ -1,0 +1,27 @@
+# Findings: charybdis-pmw-3360-sensor-pcb / sensor_sensor
+
+## FND-00002306: Wrong Vref used for AP7335 LDO causes incorrect estimated output voltage (1.5V instead of 2.0V); Duplicate SPI bus reported: same PMW3360 bus appears twice with different bus_ids; Correctly identif...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_charybdis-pmw-3360-sensor-pcb_sensor_sensor.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+- The PMW3360DM-T2QU is an optical mouse sensor that uses SPI. The analyzer correctly identifies the SPI bus with SCLK, MOSI, MISO nets and correctly classifies them as clock, data, and chip_select in the net_classification. The LDO (IC1001), feedback voltage divider (R1003/R1004 forming 15k/10k), and decoupling capacitors on VDD_2V and VDD_3V3 rails are all correctly identified.
+
+### Incorrect
+- The AP7335-WG-7 is an adjustable LDO with Vref=0.8V. With feedback resistors R1003=15k and R1004=10k, Vout = 0.8×(1 + 15k/10k) = 0.8×2.5 = 2.0V, which exactly matches the 'VDD_2V' output net name. The analyzer uses Vref=0.6V (wrong), computing Vout=1.5V and then flagging a 25% mismatch with the net name voltage. The analyzer's lookup table for the AP7335 has the wrong Vref. The design observation incorrectly reports vout_net_mismatch with percent_diff=25.0 when there is actually no mismatch.
+  (signal_analysis)
+- The bus_analysis.spi array contains two entries for the same physical SPI bus: bus_id='0' (net-topology based, chip_select_count=1) and bus_id='pin_U1001' (pin-name based, chip_select_count=0). Both describe the single SPI connection to U1001 (PMW3360DM-T2QU) with the same SCLK/MOSI/MISO nets. This is a duplicate detection artifact — two different detection passes are both finding the same bus instance and emitting separate entries instead of deduplicating.
+  (design_analysis)
+- The power_rails array includes 'PWR_FLAG' as if it were a real supply net. PWR_FLAG is a KiCad ERC annotation symbol, not a real power rail. It should be filtered from power_rails output just as it should be excluded from PWR_FLAG skip logic elsewhere. This inflates the power rail count and could confuse downstream analysis.
+  (statistics)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

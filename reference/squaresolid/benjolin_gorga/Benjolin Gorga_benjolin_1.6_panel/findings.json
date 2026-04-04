@@ -1,0 +1,159 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Benjolin Gorga.kicad_sch",
+      "status": "promoted",
+      "summary": "Component counts correctly extracted from hierarchical subsheet; Power regulators IC7 (LM78L09) and IC8 (LM79L09) detected with correct topology; Op-amp circuits correctly identified for TL072/TL07...",
+      "correct": [
+        {
+          "description": "The schematic is a hierarchy with one sheet reference to benjolin_1.6_2.kicad_sch. The analyzer correctly resolves 137 total components (66 resistors, 34 capacitors, 13 diodes, 9 ICs, 12 connectors, 1 transistor, 1 switch, 1 jumper) from the subsheet, matching what is in the actual source. The 10k potentiometers (R51-R61) with 5-pad footprints are correctly typed as resistors.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 137
+          }
+        },
+        {
+          "description": "Both linear regulators are identified: IC7 (lm78l09) as LDO with input VCC / output V+, and IC8 (lm79l09) as LDO with input VEE / output V-. This matches the actual schematic where IC7 produces the positive 9V rail and IC8 produces the negative 9V rail.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "Multiple op-amp configurations are detected across IC2, IC4, IC5, IC6, IC9 (TL074D and TL072D). Inverting and comparator/open-loop configurations are correctly identified. The Benjolin is an analog noise/chaos circuit using op-amps as comparators and integrators, and the multi-unit decomposition per op-amp package unit is correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 10
+          }
+        },
+        {
+          "description": "Q1 is detected as BJT with base on unnamed net (driven by IC), collector connected to the rungler circuit, and emitter at GND. Base resistor R17 (100k) is identified. This matches the actual schematic topology.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The net V- is the regulated negative supply output from IC8 (LM79L09). It is connected to the V- power pins of multiple op-amp ICs (pin_type 'power_in'). However, in design_analysis.net_classification it is listed as 'signal' rather than 'power'. Similarly, V- does not appear in statistics.power_rails even though it is a supply rail alongside V+, VCC, and VEE. This misclassification could cause downstream analysis to miss decoupling on this rail.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 5
+          }
+        },
+        {
+          "description": "The design_observations list includes a 'regulator_caps' entry for IC8 (lm79l09) noting missing input and output caps. However, IC7 (lm78l09) similarly lacks dedicated bypass capacitors on VCC (input) and V+ (output) beyond the shared op-amp decoupling caps on V+. IC7's subcircuit shows no neighbor capacitors. The omission of an IC7 regulator_caps observation is asymmetric with the IC8 treatment and likely a false negative.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 3
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "IC3 is an SSM2164S, a four-quadrant voltage-controlled amplifier (VCA) commonly used in analog synthesizers. It is central to the Benjolin's signal processing. The analyzer categorizes it generically as 'ic' with no signal path detection. The SSM2164 library ID is 'digikey-footprints:DIP-16_W7.62mm', and the part appears in the schematic as value 'SSM2164S'. No dedicated VCA or audio-gain-element detector fires for it. This is an expected gap for exotic audio ICs but worth noting.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.ic",
+            "op": "equals",
+            "value": 9
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "squaresolid/benjolin_gorga",
+      "project": "Benjolin Gorga_benjolin_1.6_panel",
+      "created": "2026-03-24T06:35:54.923232+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001949"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Benjolin Gorga.kicad_pcb",
+      "status": "new",
+      "summary": "Footprint count matches gerber component count",
+      "correct": [
+        {
+          "description": "The PCB analyzer reports 140 total footprints (116 front, 24 back), matching the gerber analyzer's 140 unique components in the F.SilkS layer. The smd/tht split (109 SMD, 28 THT) aligns with the mixed SMD+THT design seen in the gerbers.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 140
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "squaresolid/benjolin_gorga",
+      "project": "Benjolin Gorga_benjolin_1.6_panel",
+      "created": "2026-03-24T06:35:54.923256+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001950"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "Benjolin_Gerber",
+      "status": "new",
+      "summary": "Gerber set is complete with correct 2-layer stackup and all expected layers present; Drill classification correctly separates vias (61 x 0.4mm) from component holes (115) and NPTH holes (12); Fab l...",
+      "correct": [
+        {
+          "description": "All 9 expected layers (F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, Edge.Cuts) are found. The gbrjob file correctly drives layer discovery. PTH and NPTH drills are both present. Board dimensions (77.6 x 100.1 mm) are consistent across layers.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        },
+        {
+          "description": "61 via holes at 0.3988mm, 115 component PTH holes across 4 tool sizes (0.8, 0.889, 1.0, 1.016mm), and 12 NPTH holes at 2.1996mm (likely panel mounting) are all correctly identified with appropriate classification methods. Total 176 holes.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_holes",
+            "op": "equals",
+            "value": 176
+          }
+        },
+        {
+          "description": "The F.Fab and B.Fab assembly drawing layers have FileFunction 'AssemblyDrawing,Top/Bot' which does not map to any standard copper/mask/silk type. The analyzer labels them 'unknown', which is the correct fallback rather than misclassifying them.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.missing",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "squaresolid/benjolin_gorga",
+      "project": "Benjolin Gorga_benjolin_1.6_panel",
+      "created": "2026-03-24T06:35:54.923261+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001951"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "file_pattern": "Pedals.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000419",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000419-AST-01",
+      "description": "INCORRECT: The HX711 is a 24-bit ADC specifically designed for weigh scales and load cell interfaces. Its VFB pin is the feedback pin for its built-in excitation voltage regulator for the load cell bridge supply \u2014 not a general-purpose power regulator. Classifying U5, U6, and U7 under power_regulators with topology 'ic_with_internal_regulator' is technically triggered by the VFB feedback divider pattern but is misleading: these are ADC/amplifier ICs, not regulators. The estimated_vout of 2.063V attributed to HX711 is a heuristic misread of the ADC bridge excitation circuit.",
+      "created_from": "FND-00000419",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "value": {
+          "ref": "U5",
+          "topology": "ic_with_internal_regulator"
+        }
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000419-AST-02",
+      "description": "INCORRECT: The net '/0187334c-67e7-4c37-9e56-a2c4a9ea8c19/SCLK' is the SPI clock signal connecting U1 (STM32F072) to U3 (ADC128S102). The bus_analysis.spi section correctly identifies this as a SPI SCK signal. However, in the net_classification cross-domain signals section, this same net is categorized as 'i2c' rather than 'spi'. The net name contains 'SCLK' which is SPI terminology (I2C uses SCL), and the SPI bus detection itself correctly identifies it \u2014 the mismatch in net_classification is an inconsistency.",
+      "created_from": "FND-00000419",
+      "check": {
+        "path": "design_analysis.net_classification",
+        "op": "not_contains_match",
+        "value": {
+          "/0187334c-67e7-4c37-9e56-a2c4a9ea8c19/SCLK": "i2c"
+        }
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000419-AST-03",
+      "description": "D5 is a SMF5V0A unidirectional TVS diode (SOD-123) placed on the USB VBUS line for overvoltage/ESD protection. The schematic shows it connected between the VBUS net and ground. The protection_devices list only contains D4 (VCAN26A2-03GHE3 ESD IC on D+/D-) and F2 (fuse). D5, which is explicitly a protection diode on a power rail, should also appear in protection_devices.",
+      "created_from": "FND-00000419",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "value": {
+          "ref": "D5"
+        }
+      },
+      "aspirational": false
+    }
+  ]
+}

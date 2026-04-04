@@ -1,0 +1,29 @@
+{
+  "file_pattern": "lets-split.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002380",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002380-AST-01",
+      "description": "R1 (9.1k) and R2 (9.1k) form a 0.5-ratio divider from VCC to GND with mid-point HalfSelector connected to MCU pin B2. This is the standard technique used in Let's Split designs to let the MCU detect which half it's on. The analyzer correctly identifies both resistor values, the VCC/GND rails, and the MCU pin connection.",
+      "created_from": "FND-00002380",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002380-AST-03",
+      "description": "J1 is a USB-C receptacle (GCT USB4085). R1 and R2 (both 9.1k) are connected to USB CC lines (PadA5/PadB5 net area) for USB 2.0 downstream-facing port configuration. However the analyzer classifies these resistors only as a voltage divider for the HalfSelector net, not as USB CC configuration resistors. It does not detect the USB 2.0 interface at all \u2014 no USB detection in signal_analysis. The CC resistors should be recognized as part of a USB-C configuration network rather than solely as a voltage divider.",
+      "created_from": "FND-00002380",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "",
+      "status": "promoted",
+      "summary": "Top-level hierarchical schematic: 158 total components across 8 parsed sheet instances (5 unique sheet files; dut.kicad_sch instantiated 4 times for DUT1\u2013DUT4); Four crystal oscillator circuits det...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Top-level hierarchical schematic: 158 total components across 8 parsed sheet instances (5 unique sheet files; dut.kicad_sch instantiated 4 times for DUT1\u2013DUT4)",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 158
+          }
+        },
+        {
+          "description": "Four crystal oscillator circuits detected (Y1\u2013Y4), one per DUT slot, each with two 27pF load caps giving 16.5pF effective load",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "PAC1954x-x4MX four-channel power monitor (U1 in power sheet) not detected as current_sense despite four R_Shunt resistors (R11\u2013R14) on DUT power rails",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "equals",
+            "value": []
+          }
+        },
+        {
+          "description": "Net classifier correctly labels per-DUT JTAG/SWD signals (TCK{slash}SWCLK=clock, TMS{slash}SWDIO=debug, TDI/TDO=debug) and bus protocols (SPI_SCK0=clock, I2C_SDA2=data)",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.net_classification.TCK{slash}SWCLK",
+            "op": "equals",
+            "value": "clock"
+          }
+        },
+        {
+          "description": "Four BSS138 N-channel MOSFETs (Q1\u2013Q4) correctly detected as open-drain reset drivers, one per DUT slot, each gate driven by TXU0102QDCURQ1 level translator",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "100x155mm 4-layer board (F.Cu, In1.Cu, In2.Cu, B.Cu), fully routed (0 unrouted nets), all 158 footprints on front side, 523 vias",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "op": "equals",
+            "value": true
+          }
+        },
+        {
+          "description": "Six edge clearance warnings: mounting holes H2 and H4 at 0.16mm from board edge (below typical 0.2mm minimum), connectors J11/J14/J8/J5 at 0.34\u20130.66mm",
+          "analyzer_section": "placement_analysis",
+          "check": {
+            "path": "placement_analysis.edge_clearance_warnings",
+            "op": "min_count",
+            "value": 6
+          }
+        },
+        {
+          "description": "PCB net count (282) substantially exceeds schematic net count (187) due to hierarchical sheet expansion \u2014 expected for 4-DUT replicated hierarchy",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "op": "equals",
+            "value": 282
+          }
+        },
+        {
+          "description": "KiCad 5 legacy .sch keyboard PCB: 175 components \u2014 77 switches (75 MX-NoLED + RE0 + SW1), 69 diodes (1N4148W), 8 capacitors, 6 mounting holes, 6 resistors, 3 inductors, 2 ICs, 2 connectors, 1 crystal, 1 fuse",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 175
+          }
+        },
+        {
+          "description": "Three decorative graphic symbols misidentified as power rails: 'Logo_Open_Hardware_Small', 'OSHW-Text-Logo', 'mini-eLiXiVy-Logo' appear in statistics.power_rails",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "contains_match",
+            "value": "/Logo_Open_Hardware_Small/"
+          }
+        },
+        {
+          "description": "Key matrix reports switches_on_matrix=130 and estimated_keys=130, but actual matrix is 5 rows x 15 cols = 75 keys; BOM confirms 75 MX-NoLED switch instances",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices[0].switches_on_matrix",
+            "op": "equals",
+            "value": 130
+          }
+        },
+        {
+          "description": "WE-TVS-82400102 (U2) correctly detected as ESD IC protecting USB_D+, USB_D-, MCU_D+, MCU_D-; fuse F1 (500mA) on VCC correctly detected as fuse protection",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "302x93mm 2-layer keyboard PCB, 175 footprints (155 front / 20 back), 77 THT positions matching 77 switch-type components, standard DFM",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.tht_count",
+            "op": "equals",
+            "value": 77
+          }
+        },
+        {
+          "description": "Gerber set complete for 2-layer board: 7 files (F.Cu, B.Cu, F/B.Mask, F/B.SilkS, Edge.Cuts) plus PTH and NPTH drill files; only missing recommended F.Paste",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        },
+        {
+          "description": "rev.1.1 identical layer structure to rev.1; 2 fewer vias (27 vs 29); same flashes and board dimensions",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_holes",
+            "op": "equals",
+            "value": 581
+          }
+        },
+        {
+          "description": "NRF52840-based IoT board: 78 total components \u2014 28 capacitors, 15 resistors, 6 ICs, 5 switches, 4 WS2812 LEDs, 4 mounting holes, 2 transistors, 2 ferrite beads, 2 diodes, plus misclassified: 5 LEDs reported as inductors and 1 tactile switch reported as relay",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 78
+          }
+        },
+        {
+          "description": "32MHz crystal X2 (Q22FA12800025, EPSON FA-128) classified as 'connector' type, causing crystal_circuits to be empty \u2014 NRF52840 USB clock crystal entirely missed",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "equals",
+            "value": []
+          }
+        },
+        {
+          "description": "Five 0603 white LEDs (LD1\u2013LD5, value '0603White light_C2290') classified as 'inductor'; tactile switch KEY1 (TS-1003S-07026) classified as 'relay'",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.relay",
+            "op": "equals",
+            "value": 1
+          }
+        },
+        {
+          "description": "NRF52840 2.4GHz RF matching network (L1=4.7nH, L2=2.2nH, C1=1.0pF, C2=1.2pF) detected as generic lc_filters at 2.1\u20133.1GHz but not as rf_matching",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "min_count",
+            "value": 3
+          }
+        },
+        {
+          "description": "LDO XC6206P332MR correctly detected (VBUSnRF->+3V3), WS2812 4-LED chain correctly detected (240mA estimated), PRTR5V0U2X USB ESD correctly detected",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[0].ref",
+            "op": "equals",
+            "value": "U4"
+          }
+        },
+        {
+          "description": "Q2 (2N7002) used as open-drain level converter with gate tied to +3V3; analyzer incorrectly lists XC6206 LDO (U4) and SHT40 sensor (U5) as gate_driver_ics",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits[0].gate_net",
+            "op": "equals",
+            "value": "+3V3"
+          }
+        },
+        {
+          "description": "64.95x54.0mm 2-layer board, 85 footprints (84 front / 1 back), DFM tier 'challenging': 0.1mm tracks and 0.075mm annular ring below advanced process minimum",
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm.dfm_tier",
+            "op": "equals",
+            "value": "challenging"
+          }
+        },
+        {
+          "description": "Two DFM violations: 0.1mm track width requires advanced process (standard min 0.127mm); 0.075mm annular ring is below even advanced process minimum (0.1mm)",
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm.violation_count",
+            "op": "equals",
+            "value": 2
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Fix: 32MHz crystal X2 (Q22FA12800025, EPSON FA-128) classified as 'connector' type, causing crystal_circuits to be empty \u2014 NRF52840 USB clock crystal entirely missed",
+        "Fix: Five 0603 white LEDs (LD1\u2013LD5, value '0603White light_C2290') classified as 'inductor'; tactile switch KEY1 (TS-1003S-07026) classified as 'relay'"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Netlist-Studio/dut_hub_hw",
+      "project": "dut_hub",
+      "created": "2026-03-24T07:31:19.661787+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002027"
+    }
+  ]
+}

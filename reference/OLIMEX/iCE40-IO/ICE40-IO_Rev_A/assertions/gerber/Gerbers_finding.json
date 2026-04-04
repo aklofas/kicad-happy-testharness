@@ -1,0 +1,18 @@
+{
+  "file_pattern": "Gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002148",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002148-AST-01",
+      "description": "The iCE40-IO gerber set contains all 9 expected layers (F.Cu, B.Cu, F/B Mask, F/B Paste, F/B SilkS, Edge.Cuts) plus one drill file. All layers have correct X2 FileFunction attributes. Gerber/drill alignment is confirmed. Board dimensions (45x50mm) match the PCB analyzer output. The F.SilkS layer extents (59.1 x 63.1mm) exceed the board boundary, which is normal for silkscreen text/logos placed outside the board edge.",
+      "created_from": "FND-00002148",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      }
+    }
+  ]
+}

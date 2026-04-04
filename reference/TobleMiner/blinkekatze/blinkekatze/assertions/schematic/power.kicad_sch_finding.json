@@ -1,0 +1,19 @@
+{
+  "file_pattern": "power.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002285",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002285-AST-01",
+      "description": "The power sub-sheet contains a TPS63001 buck-boost converter (U9) with a 2.2uH inductor (L4), four 10uF capacitors, and a 100nF capacitor \u2014 a complete switching regulator circuit. The detectors section is empty. This is consistent with the missed TL2575HV-ADJ detection in the bldc repo: the schematic analyzer's switching regulator detector does not match TPS63001 or TL2575HV-ADJ part numbers, suggesting the detector relies on a whitelist that is missing common Texas Instruments regulator families.",
+      "created_from": "FND-00002285",
+      "check": {
+        "path": "detectors",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

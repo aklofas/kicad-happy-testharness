@@ -1,0 +1,29 @@
+{
+  "file_pattern": "SparkFun_GNSS_ZED-X20P.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001431",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001431-AST-01",
+      "description": "Board dimensions 43.18 x 43.18 mm (1.7\" x 1.7\" \u2014 standard SparkFun breakout size) are correct. 4-layer stackup with F.Cu, In1.Cu, In2.Cu, B.Cu is correct. Net count 85 matches schematic. footprint_count=143 matches component_groups sum=143. DFM tier=standard with min_track=0.1524mm (6mil), min_drill=0.3mm \u2014 all realistic for a professional board. routing_complete=true with 0 unrouted nets is correct for the single-board file.",
+      "created_from": "FND-00001431",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "value": 43.18,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001431-AST-02",
+      "description": "INCORRECT: placement_analysis.edge_clearance_warnings reports G1 with edge_clearance_mm=-53.97 \u2014 G1 is an OSHW logo silkscreen symbol that is likely placed outside the board outline coordinates, or is a schematic-only symbol with no physical location. Negative clearances of -5.08mm for J2 (PTH connector that intentionally overhangs the board edge) are expected and correct for castellation/edge-mount connectors but the magnitude for G1 is anomalous. J2, J3, J11 are 0.1\" PTH edge connectors designed to overhang \u2014 their negative clearances are correct. G1 at -53.97mm suggests the logo graphic origin is at a very different coordinate than the board boundary.",
+      "created_from": "FND-00001431",
+      "check": {
+        "path": "placement_analysis.edge_clearance_warnings",
+        "value": null,
+        "op": "exists"
+      },
+      "aspirational": false
+    }
+  ]
+}

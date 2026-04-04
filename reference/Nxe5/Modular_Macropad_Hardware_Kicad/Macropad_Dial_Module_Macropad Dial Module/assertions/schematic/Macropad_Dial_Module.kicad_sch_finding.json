@@ -1,0 +1,50 @@
+{
+  "file_pattern": "Macropad_Dial_Module.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001777",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001777-AST-01",
+      "description": "The Dial Module has 4 RotaryEncoder switches (SW1, SW2, SW8, SW9) with no Row/Col matrix nets. The analyzer correctly reports key_matrices=[] (empty). There are no SW_MEC_5G key switches in this module.",
+      "created_from": "FND-00001777",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "equals",
+        "value": []
+      }
+    },
+    {
+      "id": "FND-00001777-AST-02",
+      "description": "Source confirms D1, D2, D3 are all LED_Small (non-addressable), not SK6812MINI. The analyzer correctly reports addressable_led_chains=[] for this module.",
+      "created_from": "FND-00001777",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "equals",
+        "value": []
+      }
+    },
+    {
+      "id": "FND-00001777-AST-03",
+      "description": "The Dial Module has a classic 1S LiPo battery management chain: U3=TP4056 (charger from VBUS), U6=DW01A (protection IC), Q1=FS8205A (dual protection MOSFET), and U7=LTC3536 (boost regulator from BAT+ to +3V3). The bms_systems detector returns [] despite all four components being present and interconnected. The TP4056 charger is not recognized as a charging IC, and the overall BMS topology is missed.",
+      "created_from": "FND-00001777",
+      "check": {
+        "path": "signal_analysis.bms_systems",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001777-AST-04",
+      "description": "U1=AS5600L-ASOM is a magnetic rotary position encoder that provides the core functionality for the dial input. It communicates via I2C. The analyzer does not classify it in any signal analysis category \u2014 it appears only in the raw components list. The design's key sensor (the angle encoder that makes this a 'Dial Module') goes entirely undetected in signal analysis.",
+      "created_from": "FND-00001777",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": false
+    }
+  ]
+}

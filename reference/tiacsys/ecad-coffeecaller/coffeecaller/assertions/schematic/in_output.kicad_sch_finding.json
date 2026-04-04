@@ -1,0 +1,19 @@
+{
+  "file_pattern": "in_output.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002346",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002346-AST-01",
+      "description": "INCORRECT: KEY1 uses lib_id 'EASYEDA:DTSM-24N-V-S-T_R' and value 'TS-1003S-07026'. The datasheet URL explicitly includes 'Tactile-Switches' in the LCSC product path, confirming it is a tactile switch. The analyzer maps this to type 'relay' \u2014 likely because the EASYEDA lib symbol name or footprint path triggered the relay heuristic. It should be classified as type 'switch'. This also inflates component_types.relay (1) and deflates switch counts.",
+      "created_from": "FND-00002346",
+      "check": {
+        "path": "statistics.component_types.relay",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

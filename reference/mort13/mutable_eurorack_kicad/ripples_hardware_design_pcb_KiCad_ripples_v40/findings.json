@@ -1,0 +1,55 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ripples_hardware_design_pcb_KiCad_ripples_v40.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Mutable Instruments Ripples filter module. Eagle-imported schematic with empty instance Values causes catastrophic power symbol net naming failure -- all power/ground connections dumped into single empty-string net.",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "All power symbols (GND, VCC, VEE) have empty net names because instance Value is '' -- lib_symbol has correct values but analyzer never falls back to them. 127 pins in empty-string net.",
+          "analyzer_section": "nets"
+        },
+        {
+          "description": "F1-F4 fiducials (lib_id *:FIDUCIAL1X2) classified as fuse via F->fuse single-char prefix fallback",
+          "analyzer_section": "statistics.component_types"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Zero voltage dividers detected due to empty component values from Eagle import",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Zero RC filters detected due to empty component values",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Fall back to lib_symbol Value when instance Value is empty -- fixes power symbol net naming",
+        "This single fix cascades to fix voltage dividers, RC filters, and op-amp configurations",
+        "Add fiducial override: lib_id containing 'fiducial' should override F->fuse classification"
+      ],
+      "related_issues": [
+        "KH-088"
+      ],
+      "should_become_assertion": true,
+      "id": "FND-00000163",
+      "repo": "mort13/mutable_eurorack_kicad",
+      "project": "ripples_hardware_design_pcb_KiCad_ripples_v40",
+      "created": "2026-03-15T18:55:17.426745+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

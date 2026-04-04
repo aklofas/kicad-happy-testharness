@@ -1,0 +1,19 @@
+{
+  "file_pattern": "H-Bridge.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002474",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002474-AST-01",
+      "description": "The design has 4 power MOSFETs: Q4 and Q7 (IRF9540N, P-channel) and Q5, Q6, Q8 (IRF540N, N-channel), forming complementary pairs for an H-bridge motor driver. The bridge_circuits section reports only a single half_bridge entry pairing Q6+Q5 with the output net '__unnamed_3'. The remaining power MOSFETs Q4, Q7, Q8 are not paired into bridge structures. The design should yield at least one full H-bridge (two half-bridges with a shared motor output). The power_net is listed as 'GND' and ground_net as 'OUT1', suggesting the high/low rail assignments may be swapped in detection logic.",
+      "created_from": "FND-00002474",
+      "check": {
+        "path": "signal_analysis.bridge_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

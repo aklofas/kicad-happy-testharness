@@ -1,0 +1,19 @@
+{
+  "file_pattern": "gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002054",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002054-AST-01",
+      "description": "INCORRECT: The bottom_pcb is a pure mechanical PCB (0 electronic components, 4 NPTH mounting holes, no SMD or THT components). The completeness check sets complete=false because has_pth_drill=false. For mechanical or panel PCBs with only mounting holes, NPTH-only drill files are expected and correct. The completeness algorithm should not require PTH drill when the board has no electronic components.",
+      "created_from": "FND-00002054",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    }
+  ]
+}

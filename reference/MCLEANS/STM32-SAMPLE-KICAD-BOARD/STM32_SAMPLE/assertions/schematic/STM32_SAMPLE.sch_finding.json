@@ -1,0 +1,41 @@
+{
+  "file_pattern": "STM32_SAMPLE.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001346",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001346-AST-01",
+      "description": "U1 (LM1117-3.3) is correctly classified as LDO topology with input_rail=+5V and output_rail=+3.3V, estimated_vout=3.3, vref_source=fixed_suffix. The 13 decoupling caps (22\u00b5F total) on +3.3V and 1 cap on +5V are correctly attributed.",
+      "created_from": "FND-00001346",
+      "check": {
+        "path": "signal_analysis.power_regulators[1].topology",
+        "value": "LDO",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "array index path may not match actual output structure"
+    },
+    {
+      "id": "FND-00001346-AST-02",
+      "description": "7 LEDs (D1-D7) are all correctly classified as 'led' type with 220-ohm current limiting resistors (R2-R7 and R11) on the +3.3V rail. Component types are correctly broken down: 2 ICs, 5 connectors, 16 caps, 11 resistors, 1 switch, 7 LEDs, 3 mounting holes.",
+      "created_from": "FND-00001346",
+      "check": {
+        "path": "statistics.component_types.led",
+        "value": 7,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001346-AST-03",
+      "description": "The STM32F405RGTx (U2) is a 64-pin MCU with multiple UART, SPI, and I2C peripherals. The design has 78 nets with many unnamed (routed through connectors J1-J5). While the schematic does not use named bus nets for these peripherals, the lack of any bus detection at all (bus_analysis.uart=[], spi=[], i2c=[]) means the analyzer has nothing to check. This is borderline acceptable since the design has no named bus nets, but the MCU's USB pins (HSE_IN, HSE_OUT named, USB implicit) should trigger at least a USB detection.",
+      "created_from": "FND-00001346",
+      "check": {
+        "path": "statistics.total_nets",
+        "value": 78,
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

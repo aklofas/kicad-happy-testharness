@@ -1,0 +1,45 @@
+# Findings: DATALOGGER01 / hw_sch_pcb_DATALOGGER01
+
+## FND-00000448: Component inventory accurately extracted: 91 components across all types; I2C bus correctly detected with U3 (ATmega1284P), U4 (PCF85263A RTC), U6 (AT24CS64 EEPROM) on PC0/SCL and PC1/SDA with 10k ...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: hw_sch_pcb_DATALOGGER01.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- The analyzer correctly identified all 91 components: 6 ICs (U1–U6), 34 connectors (J1–J34), 14 resistors, 22 capacitors, 1 inductor (L1), 2 crystals (Y1/Y2), 3 batteries (BT1–BT3), 1 diode (D2), 1 LED (D3), 1 switch (SW1), 2 fuses (F1/F2), 4 mounting holes (M1–M4). Component types match the schematic exactly.
+- The bus_analysis i2c section correctly identifies SCL on net PC0 and SDA on net PC1, with all three I2C participants (U3, U4, U6), and R7 (10k) as SCL pull-up and R6 (10k) as SDA pull-up, both to VDD. This is a complete and accurate detection.
+- UART detection found TX0 (U3 pin 10/PD1) and RX0 (U3 pin 9/PD0) for UART0, and TX1 (U3 pin 12/PD3) and RX1 (U3 pin 11/PD2) for UART1. Each UART net routes to a HEADER_2x01_PARALLEL connector (J18/J17 and J20/J19 respectively). Detection is accurate.
+- The crystal_circuits detector found Y1 (16 MHz) connected to U3 XTAL1 (pin 8) and XTAL2 (pin 7), with C8 (15pF) on the XTAL1 net and C5 (15pF) on the XTAL2 net. Computed effective load capacitance of 10.5 pF (series of 15+15 plus ~3pF stray) is reported correctly.
+- The design_observations reset_pin entry for U3 correctly identifies net RST#_P with has_pullup=true (R9, 10k to VDD) and has_filter_cap=true (C16, 4u7). J31 pin 5 as the ISP header connection to RESET is also included.
+- The memory_interfaces section correctly identifies U6 (AT24CS64-SSHM) connected to U3 (ATMEGA1284P-AU) via 2 shared signal nets (PC0/SCL and PC1/SDA). This matches the schematic topology exactly.
+- The three power rails (VDD, GND, AVCC) are correctly listed in statistics.power_rails. The VDD rail has extensive decoupling (10 capacitors totaling 1.9 µF). AVCC decoupling shows only C6 (100nF) which is correct for the AVCC net itself. The kicad_version='unknown' for file format version 20211123 (KiCad 6.0) is a known analyzer limitation since the generator field in this schematic does not embed the KiCad application version.
+- The pwr_flag_warnings correctly identifies that VDD and GND have no PWR_FLAG or power_out symbol to satisfy KiCad ERC. This schematic uses VDD supplied through battery/fuse circuitry via connectors (J6, J32, J33) without an explicit PWR_FLAG, which would cause ERC warnings in KiCad.
+
+### Incorrect
+- The rc_filters entry describes R9 (10k) and C16 (4u7) as an RC-network with input_net=RST#_P, output_net=VDD, ground_net=RST#. However, net RST# contains only C16 pin 2 and J8 (a HEADER_2x01 ISP reset connector) — not GND. C16 is a filter capacitor between the RESET signal line (RST#_P) and the external ISP RESET pin (J8), and R9 is a pull-up to VDD. The 3.39 Hz cutoff frequency and topology description (treating RST# as ground) is incorrect. This is a standard AVR RESET circuit: R9 pull-up + C16 debounce cap + J8 ISP header access. The 'ground_net' RST# naming is a confusing misnomer in the RC filter detection.
+  (signal_analysis)
+- The bus_topology detected_bus_signals for prefix='PA' reports width=6 and range='PA0..PA2'. The actual named PA nets are only PA0, PA1, and PA2 (U3 pins 37, 36, 35). Width=6 equals the total number of label placements on the schematic (each net label is placed twice: once near the driver and once near the receiver). The true bus width should be 3 unique signals. Similarly PB shows width=16 (label placements) with range PB0..PB7 (8 unique signals), and PC shows width=12 with range PC0..PC6 (7 unique named signals). The 'width' field is the label-occurrence count, not the bus bit-width.
+  (signal_analysis)
+- The bus_topology PC bus signals show missing=['PC4'], but PC4 is connected and present in the schematic: U3 pin 23 (PC4/TDO) is on net named 'INT', which connects to J14 (HEADER_2x01_PARALLEL). The analyzer did not recognize 'INT' as 'PC4' because the net label doesn't have the PC prefix. Similarly, the PC2-PC6 signals (TCK/TMS/TDO/TDI/TOSC1) have net labels (PC2, PC3, INT, PC5, PC6) — 'INT' breaks the PC* naming pattern but the pin is still driven by the ATmega PC4 pad.
+  (signal_analysis)
+- Y2 has value='ABS07-120-32.768KHZ-T' (a Abracon part number rather than a plain frequency string). The analyzer sets frequency=null and load_caps=[] for Y2. The frequency 32.768 kHz is embedded in the part number string. The ABS07 series are tuning-fork crystals that can operate without external load capacitors (PCF85263A has internal capacitors), so empty load_caps is correct, but the null frequency is a parsing miss — the analyzer should extract '32.768KHZ' from the value string.
+  (signal_analysis)
+
+### Missed
+- The ATmega1284P SPI peripheral uses PB5 (MOSI, pin 1) → R2 (100Ω) → SD CMD; PB6 (MISO, pin 2) → R4 (100Ω) → SD DAT0; PB7 (SCK, pin 3) → R3 (100Ω) → SD CLK; PB4 (SS, pin 44) → R1 (100Ω) → SD CD/DAT3. The J31 2x3 ISP header also shares MOSI/MISO/SCK. The bus_analysis spi list is empty. The analyzer likely missed SPI because the nets are named PB5/PB6/PB7 (not MOSI/MISO/SCK) and the connection is indirect through series resistors. Also J34 is a second SD card socket ('kouka z modulu') wired in parallel with J7.
+  (signal_analysis)
+- L1 (10uH LQH32CN100K23L) pin 1 is on VDD and pin 2 is on AVCC. C6 (100nF) is on AVCC to GND. This forms a classic LC power filter for the ATmega's analog supply (AVCC), isolating it from digital VDD noise. The signal_analysis lc_filters list is empty and the decoupling_analysis for AVCC does not note the inductor filter. The C9 (47uF tantalum) and EMI filter C10 appear on a separate supply path (battery input node, not AVCC). This is a significant missed detection for a battery-powered datalogger where ADC noise is critical.
+  (signal_analysis)
+- U2 is a TPS22965-Q1, an 8-channel load switch that takes VIN (pins 1,2,4) from VDD and outputs to VOUT (pins 7,8) on net __unnamed_22, which connects to J10 (a 2x3 parallel header). The ON control signal (pin 3) is driven by U3 PA2. This is a digitally-controlled power switch for SD card or peripheral power management. The analyzer leaves U2 function empty and does not detect it as a load switch in power_regulators or anywhere else. Note: U2 VOUT does not directly connect to the SD_VDD net; SD_VDD (J7/J34 VDD pin) is powered directly from the supply path through J11.
+  (signal_analysis)
+- U1 (ISL21080CIH320Z-TK) is a 3.2V precision voltage reference with Vin=VDD, Vout=AREF, GND=GND. U5 (LM4041CIM3-1.2, marked 'neosazovat' = do not populate) is a 1.2V shunt reference with K=AREF, A=GND. Together they form an alternate voltage reference for the ATmega AREF pin. The ic_pin_analysis function field for both U1 and U5 is empty string. The power_regulators and protection_devices lists are empty. The AREF output net connects via J9 header to the ATmega AREF pin (unnamed_4 net with U3 pin 29).
+  (signal_analysis)
+- Net __unnamed_10 connects U3 pins 41 (PB1/CLKO/T1), 42 (PB2/AIN0/INT2), and 43 (PB3/AIN1/OC0) together, plus J11 pin 1 (a HEADER_2x01 connector). These three distinct I/O pins of the ATmega are electrically shorted. The bus_topology marks PB1, PB2, PB3 as 'missing' from the PB bus (since they have no individual net labels), but no connectivity_issues or ERC warning flags this as potentially unintentional or unusual. The PCF85263A RTC Crystal Y2 connects to U4 OSCI/OSCO normally via unnamed_29 and unnamed_30.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---

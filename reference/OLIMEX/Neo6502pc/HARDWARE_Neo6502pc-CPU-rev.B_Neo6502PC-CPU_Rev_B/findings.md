@@ -1,0 +1,86 @@
+# Findings: Neo6502pc / HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B
+
+## FND-00000171: Neo6502 retro computer board with RP2040 + W65C02S. IDC cables as capacitors, buzzer as switch, expansion bus misclassified, SPI missed, false I2C on HDMI/GPIO.
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_sch.json
+- **Created**: 2026-03-15
+
+### Correct
+- All 8 ICs correctly identified (RP2040, W65C02S, etc.)
+
+### Incorrect
+- Cable-PWR1 and Cable-pUEXT1 IDC cable connectors classified as capacitor
+  (components)
+- SPK1 piezo buzzer classified as switch instead of transducer
+  (components)
+
+### Missed
+- SPI bus between RP2040 and peripheral ICs not detected
+  (signal_analysis.bus_interfaces)
+
+### Suggestions
+- Recognize Cable and IDC connector library symbols as connectors not capacitors
+- Classify buzzer and speaker symbols as transducer not switch
+- Do not classify generic expansion connectors as SWD based solely on pin count
+- Validate I2C detection by requiring SCL+SDA net name patterns, not just any pair of signals on pullup resistors
+- Detect SPI from MOSI/MISO/SCK/CS net name patterns
+
+---
+
+## FND-00000177: Neo6502 retro computer CPU board (122 components). Correct: all 8 ICs, power rails, I2C with pullups, UART, HDMI pairs, USB compliance, 7 DNP parts. Incorrect: Cable-PWR1/Cable-pUEXT1 as capacitor (are IDC cables), SPK1 buzzer as switch, BUS1 40-pin expansion as SWD debug connector, HDMI/GPIO nets falsely detected as I2C. Missed: SPI bus not detected, test points not in test_coverage.
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_sch.json
+- **Created**: 2026-03-15
+
+### Correct
+- All 8 ICs correctly identified (RP2040, W65C02S, CH217K, CH334S, ZD25Q16B, 3x 74LVC245)
+- USB-C CC 5.1k pulldowns pass compliance
+
+### Incorrect
+- BUS1 40-pin expansion bus misidentified as SWD debug connector
+  (test_coverage.debug_connectors)
+
+### Missed
+- SPI bus (SPI1_RX/CSn/SCK/TX) not detected despite clear net names
+  (bus_analysis.spi)
+
+### Suggestions
+- Add Cable/cable lib_id patterns as connector type
+- Add Buzzer/Speaker patterns as speaker type
+- Require majority debug pins for debug connector classification
+- Filter I2C detection to exclude differential pair nets
+
+---
+
+## FND-00000296: Neo6502pc PCB: copper_layers_used includes F.SilkS (non-copper layer), 15 of 19 thermal_pad_vias are paste-only false positives from stencil aperture pads
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B.kicad_pcb.json
+- **Related**: KH-154, KH-156
+- **Created**: 2026-03-17
+
+### Correct
+- Footprint count and SMD/THT mix consistent with retro computer board with DIP ICs
+- Board dimensions match Neo6502pc form factor
+- Routing completeness correctly detected
+- DFM analysis present and reasonable
+
+### Incorrect
+- copper_layers_used includes F.SilkS which is a silkscreen layer, not copper. Board should be 2 copper layers (F.Cu, B.Cu).
+  (statistics.copper_layers_used)
+- 15 of 19 thermal_pad_vias are false positives from paste-only stencil aperture pads with no copper. Same issue as ESP32-P4-PC.
+  (thermal_pad_vias)
+
+### Missed
+(none)
+
+### Suggestions
+- Filter copper_layers_used to only *.Cu layers
+- Filter thermal pad detection to exclude paste-only pads
+
+---

@@ -1,0 +1,49 @@
+# Findings: PolyKybd / backup_poly_kb_mainboard_poly_kb
+
+## FND-00000287: PolyKybd prototype mainboard (STM32F407, 14x 74HCT595, WS2812B per-key LEDs, USB-C, 16MHz HSE). Key matrix missed entirely. Several false positives in differential pairs, level-shifter flags, and ESD attribution. Analyzer correctly surfaces VCAP/NRST/BOOT0 isolation and missing I2C pullups.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: poly_kb.sch.json
+- **Created**: 2026-03-16
+
+### Correct
+- LDO U1 (XC6206P332MR) detected with correct input (+5V) and output (+3.3V) rails
+- Crystal Y1 16MHz detected with 12pF load caps; effective load 9pF calculated correctly
+- Three I2C buses (I2C1, I2C2, I2C3) identified; all correctly flagged as missing external pullup resistors
+- RC filter R2(10k)+C1(1u) on NRST net detected at 15.92 Hz (power-on reset circuit)
+- Two WS2812B addressable LED chains detected in the 4 parsed sheets
+- Decoupling analysis correctly identifies +3.3V (11 caps, 11.2uF), +3.3VA (2 caps), +5V (1 cap)
+- ERC no_driver warnings for FLASH_NHOLD (U2.VREF+ on wrong net), FLASH_NWP (U2.VCAP_2 on wrong net), and KB_LED_ARRAY (floating) are all genuine design issues
+- Single-pin net observations correctly surface U2.NRST (pin 14) isolated on 'PD14' net, U2.VCAP_1 (pin 49) isolated on 'PD10' net, and U2.BOOT0 (pin 94) isolated on 'PD12' net - all are genuine schematic wiring errors
+- Polyfuse F1 (2A) correctly identified as protection device on VCC rail
+- SPI1 and SPI2 buses identified; W25N01GVZEIG NAND flash on SPI2 detected
+
+### Incorrect
+- K_P and K_N misidentified as a differential pair. These are individual keyboard key signals (K_P = P key, K_N = N key), not a matched differential transmission line pair.
+  (design_analysis.differential_pairs)
+- USB differential pair flagged as has_esd=True with U2 (STM32F407 MCU) listed as ESD protection. The MCU is not an ESD protection device; the USB lines have no external ESD diode array.
+  (design_analysis.differential_pairs)
+- Cross-domain level-shifter warnings for SHIFTR_CLK, SHIFTR_DATA, SHIFTR_LATCH_CLK (U2 to U500-U513). Both the STM32F407 I/O and 74HCT595 operate at 3.3V - no level shifter needed. The false alarm arises because U2's VDD pins appear as unnamed isolated nets instead of being resolved to +3.3V.
+  (design_analysis.cross_domain_signals)
+- RC filter R9(22 ohm)+C1(1u) reported at 7.23 kHz with input '__unnamed_3'. R9 is a series resistor on the NRST line of the SWD debug connector (J1 pin 2), not an intentional RC filter. The topology arises incidentally from the shared C1 reset capacitor.
+  (signal_analysis.rc_filters)
+
+### Missed
+- Key matrix not detected (key_matrices=[]). The design has an 8-row x 21-column GPIO matrix on KRow0-7 and KCol0-20 signals driven by the STM32F407, routed to keyboard connectors J3/J4/J7/J10-J12. The absence of explicit key switch components in the mainboard sub-schematic prevents detection.
+  (signal_analysis.key_matrices)
+- 74HCT595 shift register array (U500-U513, 14 chips) not recognized as a keyboard scan engine. The design uses Q-output pins (QC, QD, QF, QG) as the SHIFTR_CLK/RST/LATCH_CLK/NOE bus to keyboard connectors, while individual K_xxx key signals drive the control input pins (SRCLK, RCLK, ~SRCLR, ~OE). This is an unconventional use of shift registers for per-key addressing.
+  (signal_analysis.key_matrices)
+- Addressable LED chain severely undercounted. keyboard.sch has 108 total sheet instances of SSD1306_TO_SPI.sch (one per key position), each containing a WS2812B LED. Only the unique file is parsed once, so the actual per-key LED chain of 100+ WS2812B devices is reduced to 2 chains of length 1.
+  (signal_analysis.addressable_led_chains)
+- SHIFTR_NMASTER_RST global label appears on both mainboard.sch and keyboard.sch but does not resolve to any net in the output. The corresponding SHIFTR_RST net on mainboard connects only to 74HCT595 Q-output pins, not to any MCU reset control source. This net-name mismatch leaves the shift register reset undriven.
+  (nets / signal_analysis)
+
+### Suggestions
+- When a schematic has KRow/KCol or Row/Col net families with the MCU on one side and connectors on the other, infer a key matrix even without explicit switch components in the parsed sheets.
+- Suppress level-shifter warnings when ICs in cross-domain pairs share the same physical voltage (e.g., all STM32 VDD pins and peripheral VCC both on 3.3V); consider resolving unnamed VDD nets by matching them to the known supply voltage of the device.
+- Do not treat single-character net suffix pairs (K_P / K_N) as differential pairs; require the net names to share a longer common prefix with explicit _P/_N or +/- suffixes and have relevant pin types.
+- Do not attribute ESD protection to an MCU simply because its I/O pins appear on a USB differential net; require a dedicated ESD component library ID or TVS/diode designation.
+- When multiple instances of the same sub-sheet file appear (AR Path mechanism), annotate the LED chain count by multiplying per-instance chains by the instance count rather than treating all instances as one.
+
+---

@@ -174,7 +174,7 @@ def find_source_json(emc_json_path):
       results/outputs/schematic/{repo}/{name}.json
       results/outputs/pcb/{repo}/{name}.kicad_pcb.json  (derived from name)
     """
-    repo_name = emc_json_path.parent.name
+    repo_name = f"{emc_json_path.parent.parent.name}/{emc_json_path.parent.name}"
     sch_path = OUTPUTS_DIR / "schematic" / repo_name / emc_json_path.name
     schematic_data = None
     if sch_path.exists():

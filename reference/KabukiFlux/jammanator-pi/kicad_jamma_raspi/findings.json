@@ -1,0 +1,28 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "jamma_raspi.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "JAMMA arcade interface (25 components). Multi-project schematic duplication: analyzer includes ALL project instances instead of filtering to target project (56 counted vs 25 actual). Zero signal detections correct for passive I/O buffer design.",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Component count inflated from 25 actual to 56 reported - analyzer includes all project instances instead of filtering to target project",
+          "analyzer_section": "statistics"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Filter schematic analysis to target project only in multi-project repos"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000249",
+      "repo": "KabukiFlux/jammanator-pi",
+      "project": "kicad_jamma_raspi",
+      "created": "2026-03-16T12:00:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

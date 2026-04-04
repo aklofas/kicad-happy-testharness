@@ -1,0 +1,62 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_le_chiffre_keyboard_stm32_kicad_pcb_stm32_hotswap_chiffre.kicad_sch.json",
+      "status": "promoted",
+      "summary": "USB CC1/CC2 pulldown check incorrectly fails \u2014 5.1k resistors are present but on unnamed nets; Decoupling observations incorrectly flag missing caps for STM32 and LDO that actually have decoupling;...",
+      "correct": [
+        {
+          "description": "The 36-key le_chiffre keyboard matrix is correctly detected with all 4 row nets and 10 column nets. The analyzer correctly reports 36 switches on the matrix against a 4x10=40-capacity grid, accurately reflecting the partially-populated layout. The 11-LED SK6812MINI addressable chain (D101-D111) is also correctly identified with single-wire WS2812 protocol and 660mA estimated current.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The USB compliance check reports cc1_pulldown_5k1 and cc2_pulldown_5k1 as 'fail', but there are two unannotated 5.1k R? resistors that connect directly to J1 pin A5 (CC1) and J1 pin B5 (CC2) via unnamed nets __unnamed_0 and __unnamed_2. The other ends connect to GND (confirmed in the GND net pin list). The correct resistors exist \u2014 the analyzer fails to find them because the USB compliance checker does not resolve CC pin connections through unnamed intermediate nets to locate pulldown resistors.",
+          "analyzer_section": "usb_compliance",
+          "check": {
+            "path": "usb_compliance.connectors",
+            "op": "contains_match",
+            "field": "checks.cc1_pulldown_5k1",
+            "pattern": "pass"
+          }
+        },
+        {
+          "description": "design_observations reports that U1 (STM32F072CBT6) lacks +3V3 decoupling and U? (XC6206 LDO) lacks both +5V and +3V3 caps. However, there are 9 unannotated C? capacitors (100nF and 1uF) all on the GND net, some also on +3V3. Because the components are unannotated (reference = 'C?'), the analyzer cannot resolve their net connections via pin_connections (which is empty for all C?), so it treats them as unconnected. The decoupling check fails to handle unannotated components connected via net membership in the pins list.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "max_count",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The schematic has a full USB 2.0 device stack: USB-C connector (J1), PRTR5V0U2X ESD protection on D_P/D_N, a polyfuse (F1) on VBUS, and an STM32F072CBT6 which has a built-in USB FS peripheral. Despite having all these signals (VBUS, D_P, D_N), the bus_topology.detected_bus_signals contains only GPIO port prefixes (A, B, C, F) and the key matrix signals. No USB peripheral interface is reported in bus_topology or signal_analysis.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "contains_match",
+            "field": "category",
+            "pattern": "usb"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sporkus/le_chiffre_keyboard_stm32",
+      "project": "kicad_pcb_stm32_hotswap_chiffre",
+      "created": "2026-03-24T09:02:04.023199+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002375"
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_mainboard_mainboard.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Eurorack Castor & Pollux synthesizer mainboard. TVS diodes and potentiometers misclassified; I2C and USB detection missing.",
+      "correct": [
+        {
+          "description": "191 components correctly enumerated",
+          "analyzer_section": "statistics.total_components",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "LD1117-3.3 correctly identified as voltage regulator with 3.3V output",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Opamp circuits correctly detected in analog signal path",
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "D3-D6 TVS diodes (D_TVS_Filled footprint) misclassified as LED",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "RV1-RV12 potentiometers (Eurorack_Pot) misclassified as varistor",
+          "analyzer_section": "components"
+        }
+      ],
+      "missed": [
+        {
+          "description": "I2C bus to MCP4728 DAC not detected",
+          "analyzer_section": "signal_analysis.bus_interfaces",
+          "check": {
+            "path": "signal_analysis.bus_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USB connection for programming/configuration not detected",
+          "analyzer_section": "signal_analysis.bus_interfaces",
+          "check": {
+            "path": "signal_analysis.bus_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Recognize D_TVS and D_TVS_Filled library symbols as TVS diodes, not LEDs",
+        "Classify components with 'Pot' in library name as potentiometer, not varistor",
+        "Detect I2C bus from SCL/SDA net names connecting to known DAC parts like MCP4728"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000164",
+      "repo": "wntrblm/Castor_and_Pollux",
+      "project": "hardware_mainboard_mainboard",
+      "created": "2026-03-15T19:51:11.483082+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_mainboard_castor.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Castor oscillator sub-sheet with opamp analog circuits. Potentiometers misclassified as varistors; false voltage divider and ERC warnings.",
+      "correct": [
+        {
+          "description": "Opamp circuits correctly identified: integrator, buffer, inverting stages",
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Q1 PNP transistor correctly identified",
+          "analyzer_section": "components",
+          "check": {
+            "path": "components",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "RV6-RV8 potentiometers (Eurorack_Pot) misclassified as varistor",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "R18/R16 flagged as voltage divider but is actually a transistor bias network for Q1",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R18$"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Classify Eurorack_Pot and similar pot library symbols as potentiometer not varistor",
+        "Check if resistor divider feeds a transistor base before classifying as voltage divider",
+        "Suppress ERC warnings on hierarchical labels when the parent sheet connection is valid"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000165",
+      "repo": "wntrblm/Castor_and_Pollux",
+      "project": "hardware_mainboard_mainboard",
+      "created": "2026-03-15T19:51:12.372245+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_mainboard_mainboard.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Castor & Pollux Eurorack synthesizer mainboard (191 components). Correct: 8 hierarchical sheets, LD1117-3.3 regulator, power rails, opamp circuits, USB ESD protection. Incorrect: D3-D6 TVS diodes (D_TVS_Filled) classified as LED, RV1-RV12 potentiometers (Eurorack_Pot) classified as varistor. Missed: I2C for MCP4728 DAC, USB interface, addressable LED chain.",
+      "correct": [
+        {
+          "description": "LD1117-3.3 correctly detected as LDO with +12V input and +3.3V output",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "191 components with correct breakdown",
+          "analyzer_section": "statistics.total_components",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USBLC6-2SC6 ESD protection correctly detected",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "D3-D6 (Device:D_TVS_Filled) misclassified as LED instead of TVS diode",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "RV1-RV12 (winterbloom:Eurorack_Pot) misclassified as varistor instead of potentiometer",
+          "analyzer_section": "statistics.component_types"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Classify D_TVS_Filled as TVS diode not LED",
+        "Classify symbols with Pot in name as potentiometer not varistor"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000178",
+      "repo": "wntrblm/Castor_and_Pollux",
+      "project": "hardware_mainboard_mainboard",
+      "created": "2026-03-15T19:54:38.281197+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_mainboard_castor.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Castor oscillator sub-sheet (46 components). Correct: opamp circuits (integrator, buffer, inverting stages), Q1 PNP transistor, cross-domain signals, RC filters, decoupling. Incorrect: RV6-RV8 potentiometers classified as varistor, R18/R16 transistor bias reported as voltage divider, false ERC warnings on hierarchical labels. Missed: oscillator core topology not detected, sub-octave divider function not identified.",
+      "correct": [
+        {
+          "description": "U7/U8/U10 opamp circuits correctly analyzed with accurate gains",
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U7$"
+          }
+        },
+        {
+          "description": "Q1 MMBT3906 PNP correctly detected with base resistor",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "RV6-RV8 (winterbloom:Eurorack_Pot) classified as varistor instead of potentiometer",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "R18/R16 transistor bias network reported as voltage divider",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R18$"
+          }
+        },
+        {
+          "description": "Hierarchical label input nets flagged as single_pin_nets",
+          "analyzer_section": "connectivity_issues.single_pin_nets"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Suppress single-pin-net and no-driver warnings for hierarchical label inputs in sub-sheets"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000179",
+      "repo": "wntrblm/Castor_and_Pollux",
+      "project": "hardware_mainboard_mainboard",
+      "created": "2026-03-15T19:54:38.338804+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

@@ -1,0 +1,283 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/ESP32-P4-PC/HARDWARE/ESP32-P4-PC-Rev.B/ESP32-P4-PC_Rev_B.kicad_sch",
+      "status": "confirmed",
+      "summary": "Complex SBC with HDMI, USB hub, Ethernet, audio codec well-analyzed for power regulation but missing HDMI bridge, USB hub, and audio codec subcircuit classification; crystal circuits undetected",
+      "correct": [
+        {
+          "description": "Five power regulators correctly identified: TPS62A02 (3.3V, switching), TPS2116 (power mux, x2), MT3608 (5V boost), CH217K (USB host LDO)"
+        },
+        {
+          "description": "Feedback divider for TPS62A02 (R44/R45 = 30.1k/6.49k) correctly computed with ratio 0.177 giving estimated Vout 3.38V"
+        },
+        {
+          "description": "Feedback divider for MT3608 (R95/R98 = 8.25k/1.05k) correctly computed with ratio 0.113 giving estimated Vout 5.31V"
+        },
+        {
+          "description": "Battery sensing voltage divider R90/R96 (470k/470k) with 0.5 ratio correctly identified"
+        },
+        {
+          "description": "Power sensing voltage divider R36/R94 (220k/470k) correctly detected"
+        },
+        {
+          "description": "VBUSM sensing divider R69/R70 (4.7k/10k) for USB hub FE1.1s correctly found"
+        },
+        {
+          "description": "LDO voltage reference divider for VR1 (R52/R50 = 240R/110R) correctly identified for VCC_1.8V generation"
+        },
+        {
+          "description": "Ethernet PHY IP101GRR correctly detected in ethernet_interfaces"
+        },
+        {
+          "description": "RC filter on ESP_EN pin (R41 10k / C40 100nF, fc=159Hz) correctly found as reset delay circuit"
+        },
+        {
+          "description": "USB data line RC filters (R25/R26 22R with 150pF, fc=48MHz) correctly detected for USB signal conditioning"
+        },
+        {
+          "description": "Audio ADCVREF RC filter (R79 200R / C104 1uF, fc=796Hz) correctly identified"
+        },
+        {
+          "description": "Multiple audio RC filters for mic inputs (MICP/MICN) correctly detected with parallel cap computation"
+        },
+        {
+          "description": "16 power rails correctly enumerated including separate analog domains (+3.3VA, GNDA, VCC_1.8V)"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TPS2116 (U13) classified as LDO but it is actually a power multiplexer/switch (selects between two input supplies), not a voltage regulator",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U13$"
+          }
+        },
+        {
+          "description": "TPS62A02 (U5) detected as switching regulator but missing estimated_vout - the feedback network for FB_DCDC was not linked to the regulator",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U5$"
+          }
+        },
+        {
+          "description": "Crystal oscillator RC filters (R87 1M with C113/C114 27pF, fc=5.9kHz) misidentified as generic low-pass filters - these are actually crystal load capacitor bias resistors for the 40MHz crystal",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R87$"
+          }
+        },
+        {
+          "description": "RC filter R13 10M with C1/C2 22pF classified as 723Hz low-pass but this is the crystal feedback resistor for the main oscillator",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R13$"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "LT8912B HDMI bridge (U12) not identified as display interface subcircuit - this is a MIPI-DSI to HDMI converter, a significant design block",
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "FE1.1s USB hub (U7) not identified as USB hub subcircuit despite being a 4-port USB 2.0 hub IC",
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "ES8311 audio codec (U8) not classified as audio codec subcircuit with I2S/I2C interfaces",
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "W25Q128 SPI flash (U3, 16MB) not identified as memory interface",
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U3$"
+          }
+        },
+        {
+          "description": "No crystal circuits detected despite ESP32-P4 having external crystal oscillator with 22pF load caps (C1/C2) and 10M feedback resistor (R13)",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^P4$"
+          }
+        },
+        {
+          "description": "MIPI-DSI differential pairs (to LT8912B) not detected",
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "MIPI-CSI camera interface not detected",
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "HDMI differential pairs from LT8912B to HDMI connector not detected",
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "RCLAMP0524P ESD protection arrays (U9, U10, U11) not linked to the USB ports they protect",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U9$"
+          }
+        },
+        {
+          "description": "TP4054 battery charger (U15) not identified as charger subcircuit",
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Detect common HDMI bridge/converter ICs (LT8912, IT6613, ADV7533) as display interface subcircuits",
+        "Detect USB hub ICs (FE1.1s, USB2514, USB2517) and map upstream/downstream ports",
+        "Detect audio codec ICs (ES8311, WM8960, MAX98357) and classify I2S/I2C connections",
+        "Crystal circuit detection should look for high-value feedback resistors (1M-10M) between XTAL pins with matched load caps",
+        "Detect SPI flash memory ICs (W25Qxxx, MX25Lxxx) as memory interfaces",
+        "Power multiplexer ICs (TPS2116, TPS2121) should not be classified as LDO"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000112",
+      "repo": "OLIMEX/ESP32-P4-PC",
+      "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
+      "created": "2026-03-14T07:49:07.755469+00:00"
+    },
+    {
+      "id": "FND-00000295",
+      "repo": "OLIMEX/ESP32-P4-PC",
+      "project": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B",
+      "created": "2026-03-17T18:11:48.072700+00:00",
+      "status": "promoted",
+      "analyzer_type": "pcb",
+      "source_file": "HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B.kicad_pcb.json",
+      "summary": "ESP32-P4-PC PCB: paste-only stencil aperture pads misidentified as thermal pads (15/19 false positives), via adequacy formula ignores drill size, connector structural/shield pads misidentified as thermal pads",
+      "correct": [
+        {
+          "description": "Footprint count and board dimensions consistent with ESP32-P4-PC dev kit",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Copper layer count and routing statistics reasonable for 4-layer SBC",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "DFM analysis correctly identifies manufacturing constraints",
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Power net routing analysis covers major supply rails",
+          "analyzer_section": "power_net_routing",
+          "check": {
+            "path": "power_net_routing",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "thermal_pad_vias contains 15+ false positives from paste-only stencil aperture pads that have no copper pad, only solder paste openings for stencil alignment. These are not thermal pads.",
+          "analyzer_section": "thermal_pad_vias",
+          "check": {
+            "path": "thermal_pad_vias",
+            "op": "max_count",
+            "value": 5
+          }
+        },
+        {
+          "description": "Connector structural/shield pads (no net) misidentified as thermal pads. These are mechanical mounting or shield pads on USB/HDMI connectors, not thermal relief pads.",
+          "analyzer_section": "thermal_pad_vias"
+        },
+        {
+          "description": "Thermal via adequacy formula does not account for drill size. A 1.0mm drill via has ~10x the thermal conductivity of a 0.3mm drill via, but both receive the same adequacy rating.",
+          "analyzer_section": "thermal_pad_vias"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Filter thermal pad detection to exclude pads with only paste layers (no copper)",
+        "Filter thermal pad detection to exclude pads with no net assignment",
+        "Include via drill diameter in thermal adequacy calculation"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [
+        "KH-156",
+        "KH-157",
+        "KH-158"
+      ],
+      "datasheets_used": []
+    }
+  ]
+}

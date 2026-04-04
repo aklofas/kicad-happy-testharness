@@ -47,15 +47,19 @@ def _iter_findings_files(repo_name=None):
                 if ff.exists():
                     yield repo_name, proj_dir.name, ff
         return
-    for repo_dir in sorted(DATA_DIR.iterdir()):
-        if not repo_dir.is_dir() or repo_dir.name.startswith("."):
+    for owner_dir in sorted(DATA_DIR.iterdir()):
+        if not owner_dir.is_dir() or owner_dir.name.startswith("."):
             continue
-        for proj_dir in sorted(repo_dir.iterdir()):
-            if not proj_dir.is_dir():
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir() or repo_dir.name.startswith("."):
                 continue
-            ff = proj_dir / "findings.json"
-            if ff.exists():
-                yield repo_dir.name, proj_dir.name, ff
+            repo_key = f"{owner_dir.name}/{repo_dir.name}"
+            for proj_dir in sorted(repo_dir.iterdir()):
+                if not proj_dir.is_dir():
+                    continue
+                ff = proj_dir / "findings.json"
+                if ff.exists():
+                    yield repo_key, proj_dir.name, ff
 
 
 def load_findings(repo_name=None, project_name=None):

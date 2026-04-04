@@ -1,0 +1,64 @@
+{
+  "file_pattern": "SparkFun_SMD_LED_Light_Pipe_Footprint_Test.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001479",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001479-AST-01",
+      "description": "The signal_analysis.addressable_led_chains correctly identifies one chain of 4 APA102-2020 LEDs (D8\u2192D7\u2192D6\u2192D5), data_in_net='APA102 DAT', protocol='SPI (APA102)', estimated_current_mA=160. The daisy-chain topology with CI/CO and DI/DO connections is correctly traced. D5 is correctly noted as the last LED with CO/DO floating.",
+      "created_from": "FND-00001479",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001479-AST-02",
+      "description": "The design has D2 (Blue 0603), D4 (White 1206), D5-D8 (APA102-2020 addressable), R1 and R2 (330 ohm current limiting), J1 (4-pin connector), G1 (SparkFun logo, not on board). All component types and quantities correctly reported in statistics and BOM.",
+      "created_from": "FND-00001479",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "FND-00001479-AST-03",
+      "description": "D5 is the last LED in the chain. Its CO (pin 1) and DO (pin 4) are correctly mapped to single-element nets '__unnamed_4' and '__unnamed_6' respectively, each with only that pin. This accurately reflects the intentional open-circuit termination of the daisy chain.",
+      "created_from": "FND-00001479",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "contains_match",
+        "value": {
+          "last_led": "D5",
+          "chain_length": 4
+        }
+      }
+    },
+    {
+      "id": "FND-00001479-AST-04",
+      "description": "J1 correctly provides 3.3V (pin 1), APA102 CLK (pin 2), APA102 DAT (pin 3), and GND (pin 4). The APA102 CLK and APA102 DAT nets correctly enter D8 CI and DI pins respectively as the start of the chain. ERC warning for missing driver on these nets is appropriate since J1 is a passive connector.",
+      "created_from": "FND-00001479",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": "3.3V"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items"
+    },
+    {
+      "id": "FND-00001479-AST-05",
+      "description": "R1 and R2 are 330 ohm resistors placed in series between GND and the cathodes of D4 (White 1206) and D2 (Blue 0603) respectively, with anodes at 3.3V. These are classic LED current-limiting resistors. The signal_analysis has no entry for these simple LED drive circuits, and no protection_devices or other detection captures them. The design_observations section is also empty.",
+      "created_from": "FND-00001479",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

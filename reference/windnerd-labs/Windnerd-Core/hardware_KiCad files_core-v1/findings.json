@@ -1,0 +1,94 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "core-v1.kicad_sch",
+      "status": "new",
+      "summary": "LDO regulator XC6206P332MR correctly identified with topology and rails; I2C bus correctly detected with pull-up resistors on both SDA and SCL; ESD protection device SP0502BAHT correctly identified...",
+      "correct": [
+        {
+          "description": "U1 (XC6206P332MR) is correctly classified as an LDO, with input rail VCC and output rail +3.3V. The output voltage is not estimated from the lib_id suffix in this case, which is correct since the part name encodes 3.3V but the analyzer does not always parse custom part number suffixes.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The TMAG5273A1QDBVR magnetic sensor (U3) and STM32G031F8Px (U2) share the SDA and SCL nets. The analyzer correctly identifies both I2C lines with 2K pull-ups (R6 on SDA, R5 on SCL) to +3.3V and both devices on each line.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "D1 (SP0502BAHT) is correctly classified as an esd_ic type protection device guarding the TX2 net. The D2 (1N5819WS) Schottky diode is correctly typed as 'diode' in the BOM.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Statistics counts 4 connectors: J1 (XH2.54-3P SMD, in_bom=true), J2 (Conn_01x13_Pin, in_bom=false), J3 (Conn_01x05_Pin, in_bom=true), J4 (Conn_01x01_Pin, in_bom=false). The BOM only shows J1 and J3 because J2 and J4 have in_bom=false, which is correct \u2014 they are mechanical/debug connectors excluded from BOM.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.connector",
+            "op": "equals",
+            "value": 4
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "windnerd-labs/Windnerd-Core",
+      "project": "hardware_KiCad files_core-v1",
+      "created": "2026-03-24T06:36:50.895051+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001971"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "core-v1.kicad_pcb",
+      "status": "new",
+      "summary": "Courtyard overlaps correctly detected on a very narrow board; Routing completeness correctly reported with unconnected INT_N pin noted",
+      "correct": [
+        {
+          "description": "The board is 87.98\u00d717.14 mm (narrow form factor), and the analyzer correctly identifies 3 courtyard overlaps: U2 vs J4 (1.21 mm\u00b2), J2 vs R1 (0.967 mm\u00b2), and C3 vs J4 (0.531 mm\u00b2). It also flags J2 as extending well beyond the board edge (edge_clearance -15.07 mm), indicating J2 is the edge connector hanging over the board boundary by design.",
+          "analyzer_section": "placement_analysis",
+          "check": {
+            "path": "placement_analysis.overlap_count",
+            "op": "equals",
+            "value": 3
+          }
+        },
+        {
+          "description": "The board has 26 nets; 25 have tracks (routed_nets=25) and 1 ('unconnected-(U3-INT_N-Pad5)') is an intentional KiCad no-connect net for the TMAG5273 INT_N pin. routing_complete=true and unrouted_count=0 are both accurate since the no-connect pin is intentionally left without tracks.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "windnerd-labs/Windnerd-Core",
+      "project": "hardware_KiCad files_core-v1",
+      "created": "2026-03-24T06:36:50.895072+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001972"
+    }
+  ]
+}

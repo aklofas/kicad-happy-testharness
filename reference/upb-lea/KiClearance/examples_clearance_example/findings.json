@@ -1,0 +1,82 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "examples_clearance_example.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Simple test schematic: all 6 components correctly extracted (J1, J2, J3, R1, D1, U2); Isolation barrier (NSL-32 optocoupler) not detected in isolation_barriers",
+      "correct": [
+        {
+          "description": "Component types, connectivity (7 nets), and pin mappings all match the source. NSL-32 optocoupler correctly typed as 'ic'. All nets correctly traced through the optocoupler's LED-input and photocell-output sides.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "signal_analysis.isolation_barriers is empty despite U2 being an NSL-32 optocoupler (lib_id 'Isolator:NSL-32'). The subcircuits section correctly identifies U2 with J1/J2 neighbors, but isolation_barriers is not populated. The Isolator lib namespace should trigger detection.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "upb-lea/KiClearance",
+      "project": "examples_clearance_example",
+      "created": "2026-03-23T22:24:29.612481+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000744"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "examples_clearance_example.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "PCB stats correct: 6 footprints (4F/2B), 2 SMD, 4 THT, fully routed 7 nets; layer_transitions reports nets crossing layers without vias \u2014 this is suspicious but real; Board outline missing correctl...",
+      "correct": [
+        {
+          "description": "Footprint count, layer placement, routing completeness, zone data all accurate. Net names match schematic-side names.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The KiClearance test PCB has no Edge.Cuts outline \u2014 the analyzer correctly reports null for all board dimension fields.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Net-(D1-A) and Net-(J3-Pin_1) are reported as spanning both B.Cu and F.Cu with via_count=0. This means tracks cross layers without vias, which would be a DRC error in a real board. However the board has no Edge.Cuts (board_outline edge_count=0), suggesting this is purely a test/demo PCB, not a production design. The analyzer correctly reports this anomaly.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "upb-lea/KiClearance",
+      "project": "examples_clearance_example",
+      "created": "2026-03-23T22:24:29.612501+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000745"
+    }
+  ]
+}

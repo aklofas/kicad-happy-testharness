@@ -1,0 +1,74 @@
+{
+  "file_pattern": "UDVBM-1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001929",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001929-AST-01",
+      "description": "37 components correctly parsed. LM7805 (U3) correctly identified as power regulator. I2C bus on SDA/SCL with devices U2 (ArduinoPro_Mini) and U1 (Si5351A) correctly detected. SPI bus with MOSI/MISO/SCK detected on U2. Missing I2C pull-up resistors correctly flagged (no pull-up R on SDA/SCL in this schematic \u2014 the design relies on module-level pull-ups). Reset pin observation for U2.RST is substantively correct.",
+      "created_from": "FND-00001929",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].ref",
+        "value": "U3",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001929-AST-02",
+      "description": "INCORRECT: U3 (value='LM7805', lib_id='UDVBM-1-rescue:LM7905_TO220-Regulator_Linear') is classified as topology='LDO'. The LM7805 is a classic 3-terminal fixed positive voltage regulator with a minimum dropout of ~2V \u2014 it is definitively NOT a low-dropout regulator. LDO refers to regulators with dropout <1V (e.g., LM1117, AZ1117, MCP1700). The correct topology for LM7805 is 'linear'. Note also the lib_id references 'LM7905' (negative voltage version) while the value is 'LM7805' \u2014 this discrepancy in the source is not flagged.",
+      "created_from": "FND-00001929",
+      "check": {
+        "path": "signal_analysis.power_regulators[0].topology",
+        "value": "LDO",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001929-AST-03",
+      "description": "INCORRECT: The schematic uses '0.10' as the value string for disc ceramic capacitors (C1, C3, C4, C6\u2013C10, C12\u2013C14), meaning 0.10 \u00b5F = 100 nF. The value parser interprets '0.10' as a bare decimal = 0.1 F (farads), then converts to 1.0\u00d710\u2075 \u00b5F per cap. With 11 such caps on +5V, total_capacitance_uF = 1,100,000 \u00b5F (\u22481.1 F). The self_resonant_hz of 15,915 Hz (instead of ~15.9 MHz for 100 nF) confirms the wrong unit interpretation. The correct total should be ~1.1 \u00b5F. Same bug affects nano (1,200,000 \u00b5F for 12 caps) and xiao variants.",
+      "created_from": "FND-00001929",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis[0].total_capacitance_uF",
+        "value": 1100000.0,
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001929-AST-04",
+      "description": "INCORRECT: design_observations includes {category: 'regulator_caps', component: 'U3', missing_caps: {input: '__unnamed_0'}}. However, C2 (10 \u00b5F electrolytic) appears in the nets dict for '__unnamed_0' alongside U3 and R1. The false positive occurs because U3 and C2 have pins=None in the parsed output (net membership is known but pin-level connections are not), so the cap-checking logic cannot confirm that C2 is a bypass cap for U3. Same false positive appears in nano variant for U3, and xiao for U2 (AZ1117-3.3).",
+      "created_from": "FND-00001929",
+      "check": {
+        "path": "signal_analysis.design_observations[0].category",
+        "value": "regulator_caps",
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001929-AST-05",
+      "description": "INCORRECT: signal_analysis.design_observations contains two identical entries for {category: 'reset_pin', component: 'U2', value: 'ArduinoPro_Mini', pin: 'RST', net: 'RST', has_pullup: False, has_filter_cap: False, connected_components: [{ref: 'J3'}, {ref: 'J2'}]}. The same duplication occurs in the nano variant. The substance of the observation (no pull-up, no filter cap, reset connected to breakout headers) is correct, but it should appear only once.",
+      "created_from": "FND-00001929",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "value": 2,
+        "op": "count_where_category_eq_reset_pin"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001929-AST-06",
+      "description": "INCORRECT: All .kicad_sch (file_version 20211123 = KiCad 6.0) and .kicad_pcb (file_version 20211014 = KiCad 6.0) files report kicad_version='unknown'. The file version numbers are sufficient to determine the KiCad generation: 20211123 and 20211014 correspond to KiCad 6.0 release. Also affects .kicad_pcb files from KiCad 5 (file_version 20171130) \u2014 those also report 'unknown'. Only legacy .sch files get correct version detection ('5 (legacy)'). The PCB analyzer should map known file_version ranges to KiCad major versions (e.g., 20171130=KiCad5, 20211014=KiCad6).",
+      "created_from": "FND-00001929",
+      "check": {
+        "path": "kicad_version",
+        "value": "unknown",
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

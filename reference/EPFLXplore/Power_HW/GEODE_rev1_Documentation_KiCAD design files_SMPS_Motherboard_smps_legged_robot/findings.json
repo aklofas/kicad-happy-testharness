@@ -1,0 +1,71 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "GEODE_rev1_Documentation_KiCAD design files_SMPS_Motherboard_Project Architecture.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Top-level architecture sheet for a multi-rail SMPS motherboard powering a legged robot, orchestrating battery precharge, dual power modules, MCU, CAN/Ethernet communication, and auxiliary local generation across 15 sub-sheets. The analyzer correctly identifies the three switching regulators, CAN/Ethernet differential pairs, TVS and ESD protection, and bus topology, but produces one false positive and one missed detection in signal classification.",
+      "correct": [
+        {
+          "description": "Three switching regulators correctly identified: IC1201 (MAX25262AFOF_VY+ boost to +12V with L801), U802 (LMR36506MSC5RPERQ1 with L803 and feedback divider R805/R804), IC801 (TPS629206QDRLRQ1 from +5V to +3V3 with L802)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "TVS protection on power input rails correctly detected: D501/D502 (SMBJ51CD-M3/H on +VBAT) and D503/D504 (SMBJ51CD-M3/H on +VIN) as bidirectional clamp diodes",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "CAN bus ESD protection correctly detected: D1102/D1103 (PESD2CANFD24V-UX on FDCAN1) and D1104/D1105 (PESD2CANFD24V-UX on FDCAN2)",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "FDCAN1 and FDCAN2 differential pairs correctly detected as CAN type with ESD protection, plus Ethernet TXA/RXA/TXB/RXB pairs with series termination resistors via IC1101",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "USB differential pair USB_C+/USB_C- correctly detected with series resistors R407/R408, plus ESD protection via D401 (PRTR5V0U2X)",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "Crystal circuits Y1101 (7M-25.000MAAJ-T, 18pF NP0 load caps C1133/C1136) and Y401 (ABM8W-48.0000MHZ-8, 12pF NP0 load caps C401/C402) with correct effective load capacitance calculation",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "Bus topology correctly resolves bus aliases MA_PM, MB_PM, MA_FAULT_MANA, MB_FAULT_MANA, MA_SHDN_CTRL, MB_SHDN_CTRL, PRE_BUS, SPI_BAT, SPI_DISP, FDCAN1, FDCAN2, ECAT_SPI, ECAT_LAN_IO between MCU sheet and subsystem sheets",
+          "analyzer_section": "bus_topology"
+        },
+        {
+          "description": "MOSFET circuits correctly analyzed: Q1101 (ZXMP10A13F P-ch precharge FET with gate resistors R1103/R1104), Q1102 (BSS123N N-ch with pull-down R1105 and driver U401), Q1401 (PMV90ENER driven by DGD0216WT-7 gate driver U1801)",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "Voltage divider R1501/R1502 correctly detected as EN threshold divider feeding IC1501 pin 1; R805/R804 correctly detected as feedback network for U802 (LMR36506)",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "SW1101 and SW1103 (CAS-220TA DPDT switches) with D1102-D1105 (PESD2CANFD24V-UX CAN ESD ICs) misidentified as a 2x2 key matrix. These are CAN bus termination switches -- each SW_DPDT_x2 routes FDCAN1/FDCAN2 differential pairs to termination resistors, and the PESD devices are dedicated CAN ESD protectors on those nets, not matrix diodes.",
+          "analyzer_section": "signal_analysis.key_matrices"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No current sensing circuits detected despite IC2001 (INA239AQDGSRQ1 I2C current/power monitor) connected IN+/IN- to shunt+/shunt- nets, and IC1501 (TPS2490DGSRG4 hot-swap controller) with its SENSE pin on shunt-. The shunt+/shunt- differential pair clearly forms a high-side current measurement path.",
+          "analyzer_section": "signal_analysis.current_sense"
+        }
+      ],
+      "suggestions": [
+        "The key_matrix detector should exclude switches whose nets are named with CAN-related signal names (FDCAN*, CANH, CANL) or whose fellow net-sharers are CAN transceivers.",
+        "The current_sense detector should match INA23x / INA22x / INA21x part families by lib_id or value substring, and also trigger on hot-swap controllers (TPS2490, LTC4364, etc.) when their SENSE pin connects to a net shared with a shunt-connected passive."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002502",
+      "repo": "EPFLXplore/Power_HW",
+      "project": "GEODE_rev1_Documentation_KiCAD design files_SMPS_Motherboard_smps_legged_robot",
+      "created": "2026-03-30T23:05:03.683587+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

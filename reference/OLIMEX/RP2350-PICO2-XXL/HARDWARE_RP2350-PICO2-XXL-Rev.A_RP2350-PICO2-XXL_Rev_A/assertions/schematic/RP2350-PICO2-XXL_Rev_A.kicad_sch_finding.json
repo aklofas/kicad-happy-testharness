@@ -1,0 +1,69 @@
+{
+  "file_pattern": "RP2350-PICO2-XXL_Rev_A.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001192",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001192-AST-01",
+      "description": "Topology, input/output rails, feedback divider, and estimated Vout (3.245 V from R13/R14) are all plausible and consistent with TPS62A02A datasheet (Vref=0.6 V).",
+      "created_from": "FND-00001192",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001192-AST-02",
+      "description": "Crystal frequency, load capacitors C20/C21 (both 27 pF), and effective load capacitance calculation are accurate for an 18 pF crystal specification.",
+      "created_from": "FND-00001192",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001192-AST-03",
+      "description": "5.1 k\u03a9 to GND on both CC lines is correct for a USB-C device port (Rd termination). vbus_esd_protection:fail and vbus_decoupling:fail are legitimate observations for this design.",
+      "created_from": "FND-00001192",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001192-AST-04",
+      "description": "Pull-up identification with resistance, rail voltage, and has_pull_up=true is accurate for the two real I2C bus lines.",
+      "created_from": "FND-00001192",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001192-AST-05",
+      "description": "82 total components, 5 DNP (C2, C23, C25, R24, U4 confirmed in BOM), 36 unique parts. Missing MPN list reflects Olimex's practice of using value strings instead of formal MPNs.",
+      "created_from": "FND-00001192",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001192-AST-06",
+      "description": "memory_interfaces: 0. The design has three QSPI-connected flash/PSRAM ICs (W25Q128 U1, W25Q128 U4 DNP, APS6404L U5) on dedicated QSPI_SD0-3/QSPI_CLK/QSPI_CSn nets driven by RP2350B's QSPI interface. The memory interface detector does not recognize this topology.",
+      "created_from": "FND-00001192",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

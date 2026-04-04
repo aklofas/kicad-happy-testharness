@@ -1,0 +1,29 @@
+{
+  "file_pattern": "negative_ldo_-10v.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001668",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001668-AST-01",
+      "description": "POW1_N10L1 (LM337L_SO8) is correctly detected as topology 'LDO' in signal_analysis.power_regulators with input_rail '-VIN' and output_rail '-VOUT'. The ic_pin_analysis correctly identifies the ADJ pin connected to R1B (75 ohm) and R2 (240 ohm). 6 components total is correct.",
+      "created_from": "FND-00001668",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001668-AST-02",
+      "description": "INCORRECT: The design_observation with category 'regulator_caps' reports {\"missing_caps\": {\"input\": \"-VIN\", \"output\": \"-VOUT\"}} for POW1_N10L1. However, C1_N10L1 (10uF) is present on -VIN and C2_N10L1 (10uF) is present on -VOUT, confirmed by ic_pin_analysis.decoupling_caps_by_rail. The decoupling_analysis array is empty (because -VIN and -VOUT are not recognized as power rails by the decoupling detector), causing the design_observation to falsely flag missing caps that are actually present and correctly wired. Same error in negative_ldo_-11v.",
+      "created_from": "FND-00001668",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "value": 0,
+        "op": "max_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

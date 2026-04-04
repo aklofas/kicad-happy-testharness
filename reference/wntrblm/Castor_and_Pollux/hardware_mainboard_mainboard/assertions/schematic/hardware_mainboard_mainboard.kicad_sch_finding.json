@@ -1,0 +1,90 @@
+{
+  "file_pattern": "mainboard.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000164",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000164-AST-01",
+      "description": "191 components correctly enumerated",
+      "created_from": "FND-00000164",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000164-AST-02",
+      "description": "LD1117-3.3 correctly identified as voltage regulator with 3.3V output",
+      "created_from": "FND-00000164",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000164-AST-03",
+      "description": "Opamp circuits correctly detected in analog signal path",
+      "created_from": "FND-00000164",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000164-AST-04",
+      "description": "I2C bus to MCP4728 DAC not detected",
+      "created_from": "FND-00000164",
+      "check": {
+        "path": "signal_analysis.bus_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000164-AST-05",
+      "description": "USB connection for programming/configuration not detected",
+      "created_from": "FND-00000164",
+      "check": {
+        "path": "signal_analysis.bus_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000178-AST-01",
+      "description": "LD1117-3.3 correctly detected as LDO with +12V input and +3.3V output",
+      "created_from": "FND-00000178",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000178-AST-02",
+      "description": "191 components with correct breakdown",
+      "created_from": "FND-00000178",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000178-AST-03",
+      "description": "USBLC6-2SC6 ESD protection correctly detected",
+      "created_from": "FND-00000178",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

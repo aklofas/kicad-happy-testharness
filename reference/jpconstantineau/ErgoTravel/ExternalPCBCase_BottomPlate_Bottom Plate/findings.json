@@ -1,0 +1,98 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "PCB_ErgoTravel.sch.json",
+      "status": "promoted",
+      "summary": "KEYSW keyboard switches misclassified as 'relay' (28 instances); key_matrices reports switches_on_matrix=0 due to relay misclassification; I2C SCL net incorrectly mapped to ProMicro pin 15 (GND), S...",
+      "correct": [
+        {
+          "description": "row0-row3 and col0-col6 nets correctly enumerated. 28 diodes on matrix correctly counted. Detection method 'net_name' is appropriate for this design.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "BOM quantities match the schematic source. The 28 key switches and 28 diodes align with the 4x7 matrix. Connector counts are reasonable.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "R2 is correctly identified as the SCL pull-up at 4.7k\u03a9 to VCC. The sdaPM net lacking a pull-up is also correctly noted (it routes through SJ1 solder jumper to 'sda' which has its own pull-up on the expander side).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Components with value 'KEYSW' and lib_id 'ErgoTravel-rescue:KEYSW' are typed as 'relay' in both component_types stats and per-component type fields. They are mechanical key switches (footprint SW_MX_reversible), not relays. Should be 'switch'. This cascades into key_matrices reporting switches_on_matrix=0 because no 'switch'-typed components are found on the matrix nets, even though K1-K28 are all connected to col/row nets.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Because KEYSW parts are classified as 'relay', the key matrix detector finds 0 switches on the matrix (only diodes are found). The actual 28 key switches (K1-K28) are all connected to col nets. switches_on_matrix should be 28.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The nets 'scl' and 'sdaPM' appear in the bus_analysis and erc_warnings as being connected to U1 pins 15 and 16 respectively, both named 'GND'. This is a net-to-pin resolution error in the legacy KiCad 5 parser \u2014 global labels placed on wires near GND pins are being attributed to those GND pins rather than the correct MCU I/O pins. The ProMicro's actual I2C pins (PD1/PD0 or similar) should be the I2C signals.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The design_observation 'reset_pin' says U1 RST pin is on net 'col0' with no pull-up. In this keyboard design the hardware RST pin IS wired to col0 (an unusual but intentional choice for keyboard firmware use). However, the separate 'RESET' net (connected to PF5/SW1/SW2) is the firmware-reset mechanism and is not flagged. The observation is technically accurate about the wire connectivity but contextually misleading \u2014 this is intentional in QMK-based keyboard designs that use RST as a matrix column.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The schematic has nets named SCK, MOSI, MISO routed from U1 to the ICSP header J4 (Conn_01x06). The bus_analysis SPI list is empty. These are clearly SPI/ICSP signals by name and should be detected.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "jpconstantineau/ErgoTravel",
+      "project": "ExternalPCBCase_BottomPlate_Bottom Plate",
+      "created": "2026-03-23T20:38:50.816581+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000546"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "PCB_Choc_ErgoTravel.sch.json",
+      "status": "new",
+      "summary": "Same KEYSW\u2192relay misclassification and switches_on_matrix=0 issue as PCB/ErgoTravel.sch",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Choc variant shows identical patterns: 27 KEYSW classified as relay, switches_on_matrix=0, SCL/SDA pins mapped to GND pins. This confirms the issues are systematic across both files.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "jpconstantineau/ErgoTravel",
+      "project": "ExternalPCBCase_BottomPlate_Bottom Plate",
+      "created": "2026-03-23T20:38:50.816602+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000547"
+    }
+  ]
+}

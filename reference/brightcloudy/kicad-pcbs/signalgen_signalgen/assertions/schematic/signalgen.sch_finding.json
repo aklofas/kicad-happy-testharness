@@ -1,0 +1,51 @@
+{
+  "file_pattern": "signalgen.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002255",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002255-AST-01",
+      "description": "The top-level signalgen.sch correctly parses all 4 sheets (signalgen.sch, mcu.sch, usbbridge.sch, ddscore.sch) and aggregates 54 total components with the full BOM. The individual sub-sheets are also parsed independently as separate outputs. Component types across all sheets are correctly counted: 10 ICs, 29 capacitors, 12 resistors, 3 connectors.",
+      "created_from": "FND-00002255",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 54
+      }
+    },
+    {
+      "id": "FND-00002255-AST-02",
+      "description": "INCORRECT: The analyzer reports U2 (ADP1715-3.3) with input_rail='+3.3V' and output_rail='+5V'. This is backwards: the ADP1715-3.3 is a 3.3V LDO linear regulator that takes +5V on its IN pin and outputs +3.3V on its OUT pin. The PCB net list confirms the +3.3V net is driven by U2's OUT pin (power_out type). The analyzer likely confused the voltage suffix in the part name ('-3.3') with the input rail rather than the output voltage.",
+      "created_from": "FND-00002255",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00002255-AST-03",
+      "description": "INCORRECT: Both U9 and U10 (ADA4805-1 op-amps) are classified as 'comparator_or_open_loop'. U9 has both inverting and non-inverting inputs on the same net (__unnamed_16), which typically indicates a unity-gain buffer or a measurement issue in the net extraction \u2014 not an open-loop comparator. U10 has both inputs connected to VOUT. This is likely an artifact of incomplete net tracing rather than genuinely open-loop configurations. The ADA4805-1 is a precision op-amp used here in an analog signal conditioning stage downstream of the AD9834 DDS.",
+      "created_from": "FND-00002255",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00002255-AST-04",
+      "description": "The design has an AD9834 DDS signal generator (U8) connected via SPI (signals SPI1_SCK, SPI1_MOSI, SPI1_NSS) from the STM32F030F4 MCU (U3), and also an MCP4542 digital potentiometer (U7) on the same SPI bus. The bus_analysis.spi array is empty. These nets have the prefix 'SPI1_' and are connected between the MCU and peripheral ICs, which should be recognizable as an SPI bus.",
+      "created_from": "FND-00002255",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

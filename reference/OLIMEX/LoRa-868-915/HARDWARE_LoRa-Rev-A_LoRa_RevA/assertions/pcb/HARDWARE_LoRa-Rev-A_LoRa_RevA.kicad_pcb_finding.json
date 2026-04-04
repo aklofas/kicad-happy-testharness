@@ -1,0 +1,31 @@
+{
+  "file_pattern": "LoRa_RevA.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000826",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000826-AST-01",
+      "description": "Rev-A: 22.86x26.035mm, 2-layer, 322 segments, 45 vias, 36 footprints (35 SMD), routing_complete=True with 0 unrouted. Two nets (Net-(U1-Pad20) and Net-(U1-Pad27)) correctly identified as zone-only (no tracks, carried by copper pours). DFM tier=standard with no violations. Thermal pad via analysis on U1 QFN EP is present.",
+      "created_from": "FND-00000826",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000826-AST-02",
+      "description": "L5 value in the schematic is '8.2nH' while the PCB footprint value is '6.2nH'. This is a real design inconsistency (likely the PCB was updated but the schematic was not). The analyzer outputs this data in both files but does not cross-reference or flag the mismatch. A cross-check between schematic BOM values and PCB footprint values would catch this.",
+      "created_from": "FND-00000826",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

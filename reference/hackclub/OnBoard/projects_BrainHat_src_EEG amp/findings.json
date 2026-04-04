@@ -1,0 +1,56 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/OnBoard/projects/BrainHat/src/EEG amp.kicad_sch",
+      "status": "confirmed",
+      "summary": "EEG amplifier using AD8232 heart rate monitor IC and TS5A3159A analog switch. Opamp detection is questionable for AD8232 which is not a generic opamp.",
+      "correct": [
+        {
+          "description": "AD8232 correctly identified as IC type with proper description about ECG/biopotential measurement"
+        },
+        {
+          "description": "TS5A3159ADBVR correctly identified as IC (analog switch)"
+        },
+        {
+          "description": "Power rail +3.3V and GND correctly detected"
+        },
+        {
+          "description": "4 LEDs and 4 connectors (Electrodes, Output, Power, Status) correctly classified"
+        },
+        {
+          "description": "BOM entries use MPN-style values (e.g., ARG03BTC1002 for resistors) which are correctly preserved"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "AD8232 detected as opamp in comparator_or_open_loop configuration with inverting input on GND and non-inverting on +3.3V. The AD8232 is an integrated signal conditioning block, not a generic opamp. Its internal opamps are not user-accessible as separate amplifier stages.",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No I2C or SPI bus detected. The AD8232 outputs are analog, so this is correct. However, the OLED or other peripherals may use I2C - would need to verify the full schematic hierarchy.",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "The opamp detector should not flag integrated signal conditioning ICs like AD8232 as opamp circuits. The AD8232 lib_id is from a personal library (Personal:AD8232) which makes heuristic filtering harder, but the description mentions it is an integrated block."
+      ],
+      "related_issues": [],
+      "datasheets_used": [
+        "AD8232 datasheet (Analog Devices)"
+      ],
+      "should_become_assertion": false,
+      "id": "FND-00000095",
+      "repo": "hackclub/OnBoard",
+      "project": "projects_BrainHat_src_EEG amp",
+      "created": "2026-03-14T07:25:33.427288+00:00"
+    }
+  ]
+}

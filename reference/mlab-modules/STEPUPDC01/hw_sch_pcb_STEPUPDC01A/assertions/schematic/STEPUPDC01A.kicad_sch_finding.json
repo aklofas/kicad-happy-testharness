@@ -1,0 +1,29 @@
+{
+  "file_pattern": "STEPUPDC01A.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001300",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001300-AST-01",
+      "description": "missing_footprint lists U1 and D2, which are rescue-library symbols without assigned footprints in this legacy KiCad 5 project. This is accurate.",
+      "created_from": "FND-00001300",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001300-AST-02",
+      "description": "The MAX5026 datasheet shows the feedback network sets Vout. R2=140k connects Vout to FB, R3=6k49 connects FB to GND \u2014 a classic 2-resistor voltage divider. voltage_dividers is empty.",
+      "created_from": "FND-00001300",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

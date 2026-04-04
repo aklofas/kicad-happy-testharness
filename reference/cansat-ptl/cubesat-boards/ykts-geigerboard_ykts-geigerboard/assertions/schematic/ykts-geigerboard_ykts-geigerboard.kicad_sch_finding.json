@@ -1,0 +1,42 @@
+{
+  "file_pattern": "ykts-geigerboard.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000283",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000283-AST-01",
+      "description": "AD8606ARZ dual opamp detected as comparator_or_open_loop \u2014 correct, no feedback network",
+      "created_from": "FND-00000283",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000283-AST-05",
+      "description": "INCORRECT: LM2733YMF (U9) output_rail=__unnamed_18 (same as input) \u2014 true HV output is __unnamed_15 after rectifier diode D4 MBR0520LT, not traced past diode",
+      "created_from": "FND-00000283",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U9$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000283-AST-06",
+      "description": "INCORRECT: Q1/Q2 gate_driver_ics lists 9 ICs via +3V3 power net traversal \u2014 gates are statically biased, not driven by any IC",
+      "created_from": "FND-00000283",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      },
+      "aspirational": true
+    }
+  ]
+}

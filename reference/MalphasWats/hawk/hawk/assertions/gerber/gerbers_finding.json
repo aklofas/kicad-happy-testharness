@@ -1,0 +1,19 @@
+{
+  "file_pattern": "gerbers",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002121",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002121-AST-01",
+      "description": "INCORRECT: The analyzer reports aligned=false with issues 'Width varies by 3.5mm across copper/edge layers' and 'Height varies by 4.1mm across copper/edge layers', comparing B.Cu extent (14.475x29.9mm) against Edge.Cuts (18.0x33.978mm). However, hawk is a single-sided SMD board with a front-side copper pour; B.Cu contains only THT component pad flashes (D03 flash commands from connectors and switch). The spatial extent of THT pads is necessarily smaller than the board outline. The alignment checker should not flag mismatch when B.Cu contains only pad flashes and no routed copper, as this is expected for single-sided or predominantly single-sided designs.",
+      "created_from": "FND-00002121",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": true
+    }
+  ]
+}

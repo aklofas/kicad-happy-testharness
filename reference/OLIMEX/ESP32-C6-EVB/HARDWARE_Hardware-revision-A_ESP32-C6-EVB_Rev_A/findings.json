@@ -1,0 +1,144 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/ESP32-C6-EVB/HARDWARE/Hardware-revision-A/ESP32-C6-EVB_Rev_A.sch",
+      "status": "confirmed",
+      "summary": "Legacy KiCad 5 format parsed but signal analysis almost entirely empty - only 2 design observations (USB data without ESD); I2C/UART buses detected from net names but all subcircuit neighbor_components lists are empty; 11 components misclassified as other",
+      "correct": [
+        {
+          "description": "I2C bus correctly identified from net names GPIO7/LP_I2C_SCL and GPIO6/LP_I2C_SDA"
+        },
+        {
+          "description": "UART correctly identified: LP_UART (GPIO5/4) and U0 UART (GPIO16/17)"
+        },
+        {
+          "description": "USB data lines GPIO13/USB_D+ and GPIO12/USB_D- correctly flagged as lacking ESD protection in design_observations"
+        },
+        {
+          "description": "Component counts correct: 110 total, 50 unique parts"
+        },
+        {
+          "description": "Power rails correctly identified: +3.3V, +5V, +5V_EXT, +5V_USB, GND, VIN"
+        },
+        {
+          "description": "4 relays correctly identified as relay type"
+        },
+        {
+          "description": "4 transformers correctly identified (likely isolation/optocoupler related)"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "11 components classified as type other - these likely include optocouplers (OPT1-OPT4 listed in BOM), ESP-PROG connector, and other identifiable components that should have proper types",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "I2C bus shows has_pull_up: false but these ESP32-C6 I2C lines typically have pull-ups; the analyzer may not be finding them in legacy format",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Zero voltage dividers detected despite the board having a buck regulator (SY8089) that requires a feedback divider",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Zero RC filters detected in the entire design",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Zero power regulators detected - SY8089AAAC (U2) is a buck regulator and TX4138 (U1) is a DC-DC controller, both should be identified",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          }
+        },
+        {
+          "description": "Zero protection devices detected despite SMAJ58A TVS diode (D1) and multiple Schottky diodes for reverse polarity protection",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
+        },
+        {
+          "description": "Zero decoupling analysis despite having 11 capacitors on the board",
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "All subcircuit neighbor_components lists are empty - no neighboring components linked to any IC",
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Optocoupler-isolated relay driver circuits (OPT1-4 driving REL1-4) completely undetected - this is the main function of this EVB",
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Crystal circuit for ESP32-C6 module not detected (12pF cap C5 suggests external crystal)",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^C6$"
+          }
+        },
+        {
+          "description": "No USB interface detected despite USB-OTG1 connector present",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "KiCad 5 legacy format parsing appears to have significantly degraded signal analysis - nearly all detectors return empty results. This is likely KH-016 impact.",
+        "Verify that net connectivity is being properly extracted from legacy .sch format - the empty signal_analysis suggests nets may not be resolved to component pins",
+        "Optocoupler detection should identify OPTx components (or PC817, TLP281 values) as isolation barriers",
+        "Component classification should recognize optocoupler footprints/values rather than defaulting to other"
+      ],
+      "related_issues": [
+        "KH-016"
+      ],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000115",
+      "repo": "OLIMEX/ESP32-C6-EVB",
+      "project": "HARDWARE_Hardware-revision-A_ESP32-C6-EVB_Rev_A",
+      "created": "2026-03-14T07:50:04.743147+00:00"
+    }
+  ]
+}

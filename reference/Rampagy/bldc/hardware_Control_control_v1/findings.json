@@ -1,0 +1,139 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_bldc_hardware_Control_control_v1.sch.json",
+      "status": "promoted",
+      "summary": "Serial signal nets +RX and +TX misclassified as power rails",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The analyzer reports power_rails=['+RX', '+TX', 'GND'] for this sheet. The +RX and +TX nets are differential RS-422 signal lines driven by the DS89C21 transceiver \u2014 they are not power supply rails. The same misclassification appears in hardware_Operator_Operator.sch which reports power_rails=['+RX', '+Tx', 'GND']. KiCad 5 legacy schematics use PWR_FLAG symbols to mark power nets, but the naming convention (+signal) appears to have triggered a false positive in the power rail heuristic.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "max_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Rampagy/bldc",
+      "project": "hardware_Control_control_v1",
+      "created": "2026-03-24T08:48:28.347269+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002278"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_bldc_hardware_Power_bldc_v1.sch.json",
+      "status": "promoted",
+      "summary": "48V, 12V, and 5V power rails not reported in power_rails list",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The power board is a BLDC motor controller with explicit 48v, 12v, and 5v net names visible in the extracted nets list. Only 'GND' appears in statistics.power_rails. The 5v and 12v nets are outputs of gate driver ICs (UCC27211A) and the AD8410 current sense amplifier operates from a supply net; all three voltage levels are clearly power distribution nets. The analyzer apparently requires PWR symbols or specific naming conventions it did not match for these nets.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 3
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Rampagy/bldc",
+      "project": "hardware_Control_control_v1",
+      "created": "2026-03-24T08:48:28.347296+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002279"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_bldc_hardware_Control_powerconverters.sch.json",
+      "status": "promoted",
+      "summary": "TL2575HV-ADJ buck regulators not detected by voltage regulator detector",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The power converters sheet contains two TL2575HV-ADJ adjustable step-down switching regulators (U1, U2), each with the classic inductor-diode-capacitor topology. The component type is correctly identified as 'ic', but detectors is empty \u2014 no voltage_regulators, switching_regulators, or buck_converter entries. This sheet has 1N5819 Schottky diodes, 680uH and 330uH inductors, and large bulk capacitors (330uF, 1.2mF) that together form a canonical buck regulator circuit. The same design also appears in hardware_Control_control_v1.sch (same components) with the same miss.",
+          "analyzer_section": "detectors",
+          "check": {
+            "path": "detectors",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Rampagy/bldc",
+      "project": "hardware_Control_control_v1",
+      "created": "2026-03-24T08:48:28.347300+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002280"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_bldc_hardware_Power_bldc_v1.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "48V, 12V, and 5V power nets excluded from power_net_routing and current_capacity analysis",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The BLDC motor controller PCB has three voltage rails (/48v, /12v, /5v) that all have significant track routing: /48v has 135mm total length with 122 vias and a 4159mm\u00b2 copper zone (the largest zone on the board), /12v has 146mm total length, and /5v has 160mm total length. Despite this, power_net_routing and current_capacity.power_ground_nets only contain '/GND'. The nets appear correctly in net_lengths, showing the analyzer can parse them but fails to classify them as power nets. The leading slash in KiCad hierarchical net names (/48v vs 48v) likely prevents the power-net heuristic from matching them.",
+          "analyzer_section": "power_net_routing",
+          "check": {
+            "path": "power_net_routing",
+            "op": "min_count",
+            "value": 3
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Rampagy/bldc",
+      "project": "hardware_Control_control_v1",
+      "created": "2026-03-24T08:48:28.347305+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002281"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber_bldc_hardware_Control_Gerber.json",
+      "status": "promoted",
+      "summary": "F.SilkS extends 36mm beyond Edge.Cuts height but alignment reported as True",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The layer extents show Edge.Cuts height = 88.9mm while F.SilkS height = 125.03mm \u2014 the silkscreen layer is 36.1mm taller than the board outline. This is a real alignment anomaly (silkscreen text or graphics placed well outside the board boundary), but alignment.aligned is reported as True with an empty issues list. The alignment checker appears to only flag mismatches between copper and edge-cut layers, and silkscreen layers fall outside its comparison scope.",
+          "analyzer_section": "alignment",
+          "check": {
+            "path": "alignment.aligned",
+            "op": "equals",
+            "value": false
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Rampagy/bldc",
+      "project": "hardware_Control_control_v1",
+      "created": "2026-03-24T08:48:28.347308+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002282"
+    }
+  ]
+}

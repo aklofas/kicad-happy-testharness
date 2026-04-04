@@ -1,0 +1,40 @@
+{
+  "file_pattern": "USBasp2ICSP.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001704",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001704-AST-01",
+      "description": "The schematic has exactly 2 components (J1 ICSP 6-pin, J2 USBasp 10-pin), 9 nets (MISO, MOSI, SCK, nRST, +5V, GND, and 3 unnamed unconnected pins 3/4/5 on J2), and 3 no-connects. All correctly reported. Net classification is correct: MISO/MOSI as data, SCK as clock, nRST as control.",
+      "created_from": "FND-00001704",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 2,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001704-AST-02",
+      "description": "INCORRECT: The USB compliance checker detected J2 (value='USBasp') as a USB connector because 'USB' appears in the value string. However, USBasp is an AVR programmer dongle that uses a 10-pin ISP header, not a USB connector. The J2 footprint is PinSocket_2x05_P2.54mm which is a standard 2x5 0.1\" header. This triggers a spurious USB ESD IC recommendation.",
+      "created_from": "FND-00001704",
+      "check": {
+        "path": "usb_compliance.connectors",
+        "value": 0,
+        "op": "max_count"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001704-AST-03",
+      "description": "INCORRECT: The assembly_complexity section reports smd_count=2, tht_count=0 for J1 (PinSocket_2x03_P2.54mm) and J2 (PinSocket_2x05_P2.54mm). Both footprints are through-hole pin sockets with 2.54mm pitch \u2014 definitively THT. The PCB analysis for the same design correctly identifies tht_count=2, smd_count=0. The schematic analyzer is misclassifying 2.54mm pitch PinSocket footprints as SMD.",
+      "created_from": "FND-00001704",
+      "check": {
+        "path": "assembly_complexity.tht_count",
+        "value": 2,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

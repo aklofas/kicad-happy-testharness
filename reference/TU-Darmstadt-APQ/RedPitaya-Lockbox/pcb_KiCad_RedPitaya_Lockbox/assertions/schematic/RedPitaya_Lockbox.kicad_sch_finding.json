@@ -1,0 +1,28 @@
+{
+  "file_pattern": "RedPitaya_Lockbox.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001243",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001243-AST-01",
+      "description": "U1 (LT3045EMSE) and U2 (LT3094EMSE) correctly detected as linear regulators with input/output rails and inverting flag. LT8610 switching regulator (U6) correctly detected with feedback divider and switching topology.",
+      "created_from": "FND-00001243",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001243-AST-02",
+      "description": "Main schematic correctly aggregates all components from 3 sub-sheets (Supply_Ref, Input_Output_Module, plus main). 110 total components, 72 no-connects, 11 opamp circuits, 4 power regulators all detected. kicad_version=8.0 correctly identified.",
+      "created_from": "FND-00001243",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

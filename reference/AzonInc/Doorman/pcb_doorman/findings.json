@@ -1,0 +1,159 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "pcb_doorman.kicad_sch.json",
+      "status": "promoted",
+      "summary": "statistics.dnp_parts reports 0 but 8 DNP components are present; pwr_flag_warnings falsely report +5V, +24V Bus, VCC, GND, +3.3V as missing PWR_FLAG; bus_topology width counts label instances inste...",
+      "correct": [
+        {
+          "description": "All 41 components are correctly identified with accurate references, values, footprints, MPNs, and categories. The 33 non-DNP in-BOM components match the sourcing_audit total of 32 (J6 test point is not in BOM). USB D+/D- differential pair is correctly detected with J1 and U1. CC1/CC2 5.1K pulldown resistors (R3, R4) are correctly identified and the cc1_pulldown_5k1 and cc2_pulldown_5k1 USB compliance checks pass. Voltage dividers (R5/R6 for bus monitoring, R8/R11 for ADC reference) are correctly detected. UART signals (TXD, RXD, BUS_TX) on U1 correctly identified. Q1 (BC817) NPN transistor driving the +24V Bus rail is correctly characterized as a switch-mode circuit.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The warnings correctly flag that SSR, LED_RED, LED_RGB, and BUS_TX have both 'input' and 'output' shaped global labels (inconsistent direction annotations), and that BUS_WIRE1 and BUS_WIRE2 have input-shaped labels but no driver pins \u2014 these are inter-board signals routed through the connector J2 without a local driver, which is accurate for this gateway design.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The schematic has 8 components with (dnp yes): J3 (3V3 Test Pad), J4 (TX Test Pad), J5 (RX Test Pad), J7 (BUS RX Test Pad), C8 (33uF), JP2 (SolderJumper_2_Open), R8 (10K), R11 (10K). All 8 appear correctly in the components list with dnp=true, but statistics.dnp_parts is 0 instead of 8. This is a statistics aggregation bug \u2014 the individual component records are correct but the summary count is wrong.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The schematic places PWR_FLAG power symbols co-located with other power symbols at y=185.42: (+5V at x=24.13, PWR_FLAG at x=24.13), (GND at x=46.99, PWR_FLAG at x=46.99), (+3.3V at x=71.12, PWR_FLAG at x=71.12), (VCC at x=35.56, PWR_FLAG at x=35.56), (+24V Bus at x=58.42, PWR_FLAG at x=58.42). These co-located power symbols form connected nets in KiCad, so each of those rails DOES have a PWR_FLAG. The analyzer fails to correlate co-located power symbols into the same wire net, issuing false pwr_flag_warnings for all five rails.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The bus_topology section reports: BUS_WIRE with width=5 (range BUS_WIRE1..BUS_WIRE2), IO with width=4 (range IO40..IO41), RELAY_WIRE with width=4 (range RELAY_WIRE1..RELAY_WIRE2). In each case the width equals the total number of label placement instances rather than the count of unique signal names. BUS_WIRE1 appears 3 times and BUS_WIRE2 appears 2 times on the schematic (5 instances total, 2 unique signals), so width should be 2. IO40 appears 2 times and IO41 appears 2 times (4 instances, 2 unique signals), so width should be 2. RELAY_WIRE1 appears 2 times and RELAY_WIRE2 appears 2 times (4 instances, 2 unique signals), so width should be 2. The detection threshold of 3 label instances also means BUS_WIRE1 alone triggers bus detection for a two-wire bus.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "U2 is an AP63203WU (Diodes Inc. 2A 3.3V buck switching regulator, lib_id=Regulator_Switching:AP63203WU). It is surrounded by L1 (3.9uH), C3 (470uF), C4 (10uF), C5 (100nF), and D1/D5/D6 (1N5819WS Schottky diodes) \u2014 a textbook switching regulator circuit. However, signal_analysis.power_regulators is empty because the string 'ap63' appears in the _non_reg_exclude list (added in KH-100 to prevent the AP6236 WiFi module from being detected as a regulator). The 'ap63' prefix matches AP63203WU, causing it to be skipped. The exclusion is a known tradeoff from KH-100 but it incorrectly suppresses a legitimate regulator here.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The differential_pairs entry for USB_D+/USB_D- sets has_esd=true and esd_protection=['U1']. The USB_D+ net connects J1 (USB-C receptacle) pin A6/B6 to U1 (ESP32-S3-WROOM-1) pin 14 (IO20). The USB_D- net connects J1 pin A7/B7 to U1 pin 13 (IO19). There is no external ESD diode, TVS diode, or ESD-specific IC (e.g., USBLC6-2SC6, TPD2E009) present on these nets. Classifying U1 itself as ESD protection is incorrect \u2014 while the ESP32-S3 has internal ESD cells, it is the load, not an ESD protection device. Notably, usb_compliance also correctly flags vbus_esd_protection=fail, which contradicts the has_esd=true claim in differential_pairs.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The net named 'SSR' connects U1 (ESP32-S3) pin 35 (IO42) to U3 (GAQY252G3S, a PhotoMOS solid-state relay) pin 1. The analyzer classifies SSR as 'chip_select' because its name matches the CS/SS SPI chip-select pattern heuristic. However, SSR stands for Solid State Relay and drives the optical input of a PhotoMOS relay (U3 = GAQY252G3S). It is a digital control/drive output, not a chip select. The classification is misleading for this specific signal, though it is a minor naming-heuristic limitation rather than a hard error.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "AzonInc/Doorman",
+      "project": "pcb_doorman",
+      "created": "2026-03-23T20:18:24.529699+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000474"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "pcb_slot_doorman_slot.kicad_sch.json",
+      "status": "promoted",
+      "summary": "statistics.dnp_parts reports 0 but actual component DNP status should be checked; bus_topology.detected_bus_signals GPIO width=16 is wrong; only 8 unique GPIO signals present; Power regulator U2 (X...",
+      "correct": [
+        {
+          "description": "U2 is an XC6210B332MR (700mA LDO, lib_id=Regulator_Linear:XC6210B332MR). The signal_analysis.power_regulators correctly identifies it with topology='LDO', input_rail='__unnamed_1', output_rail='+3.3V'. The associated L1 (TBD inductor) connects between +5V and the unnamed VIN net \u2014 the LDO is correctly modeled as using the filtered supply. The XC6210 is correctly classified as LDO not switching despite having an inductor on its input side.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The signal_analysis.voltage_dividers correctly identifies R7 (1M) as top and R8 (160K) as bottom with top_net=TASTA_ONLY_BUS, mid_net=GPIO26, bottom_net=GND, ratio=0.138. The mid-point connections to U3 (ESP32-PICO-MINI-02) pin IO26 and TP7 are correctly captured.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The doorman_slot schematic has no (dnp yes) instances confirmed by source grep. The statistics.dnp_parts=0 is correct for this file. However, the statistics.total_components=36 includes all 10 test point components even though they have in_bom=no. The BOM has 26 components (non-test-point, non-DNP), while sourcing_audit.total_bom_components=26 is consistent.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The bus_topology reports GPIO with width=16 and range GPIO0..GPIO27 with 20 signals listed as missing. The 16 label instances across GPIO0(x2), GPIO4(x2), GPIO12(x2), GPIO13(x2), GPIO14(x2), GPIO15(x2), GPIO26(x2), GPIO27(x2) represent only 8 unique GPIO signals. The width=16 is the raw label instance count, not the unique signal count. The range GPIO0..GPIO27 is also misleading since only 8 of the 28 possible GPIO numbers are actually used. The threshold of >=3 instances to qualify as a bus also means this triggers because GPIO14 appears twice (2 instances each for 8 signals = 16 total).",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The doorman_slot schematic's PWR_FLAG symbols are not visible in the extracted power_symbols list. However, the schematic does use PWR_FLAG (it appears in statistics.power_rails). The pwr_flag_warnings flag +5V and GND as lacking PWR_FLAG, which may be a false positive from the same co-located power symbol resolution issue seen in the main doorman schematic. Without full access to the placement coordinates in the slot schematic, the root cause is the same underlying bug: the analyzer cannot correlate co-located power symbols into the same net.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "AzonInc/Doorman",
+      "project": "pcb_doorman",
+      "created": "2026-03-23T20:18:24.529717+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000475"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "pcb_slot_programmer_doorman_slot_programmer.kicad_sch.json",
+      "status": "promoted",
+      "summary": "pwr_flag_warnings falsely report +5V, +3.3V, and GND as missing PWR_FLAG; bus_topology GPIO width=4, range GPIO0..GPIO27, but only 2 unique GPIO signals present; Component inventory of 13 component...",
+      "correct": [
+        {
+          "description": "All 13 components are correctly identified: J1 (Conn_01x06_Socket), J2 and J3 (70AAJ-4-M0 Bourns modular contacts with correct Mouser PN 652-70AAJ-4-M0), and 10 test points (TP1-TP10) all with in_bom=true as specified in the schematic instances. The single no-connect at J1 is correctly counted. Power rails +3.3V, +5V, GND, and PWR_FLAG are correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The design_analysis.bus_analysis.uart correctly identifies TX and RX nets as UART signals with pin_count=3 (test point, connector pin, and a second connector pin each), reflecting the breakout nature of this programmer board.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Three PWR_FLAG symbols at (x=196.85, y=173.99), (x=208.28, y=173.99), (x=185.42, y=173.99) are co-located exactly with +5V at (196.85, 173.99), GND at (208.28, 173.99), and +3.3V at (185.42, 173.99). In KiCad, co-located power symbols connect to the same net, so +5V, GND, and +3.3V each have a PWR_FLAG. The pwr_flag_warnings erroneously flags all three rails as lacking PWR_FLAG. This is the same co-located-power-symbol resolution bug as in the main doorman schematic.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The programmer schematic has GPIO0 appearing 3 times and GPIO27 appearing once (4 label instances total). The bus_topology reports width=4 and range GPIO0..GPIO27 with 26 signals listed as missing. The correct unique signal count is 2 (GPIO0 and GPIO27). Additionally, GPIO27 alone would not normally constitute a 'bus' \u2014 the detection is triggered solely by the 3 duplicate instances of GPIO0 meeting the >=3 threshold. This is the same label-instance-counting bug as in the other two schematics.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "AzonInc/Doorman",
+      "project": "pcb_doorman",
+      "created": "2026-03-23T20:18:24.529720+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000476"
+    }
+  ]
+}

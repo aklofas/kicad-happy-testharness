@@ -1,0 +1,40 @@
+{
+  "file_pattern": "SparkFun_NEO-F10N.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001564",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001564-AST-01",
+      "description": "The PCB is correctly identified as a 2-layer board (F.Cu/B.Cu). The GND copper zone spanning both layers (F&B.Cu) with 58 thermal via stitching vias at 3.0 vias/cm\u00b2 is correctly captured in thermal_analysis.zone_stitching. DFM metrics (min track 0.1524mm, min drill 0.3mm) match the actual design rules.",
+      "created_from": "FND-00001564",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001564-AST-02",
+      "description": "INCORRECT: The main PCB file (SparkFun_NEO-F10N.kicad_pcb) shows board_outline.edge_count=0 and bounding_box=null, yet the PCB clearly has a board outline \u2014 dimension annotations on Dwgs.User reference dimensions like 50.8mm and 38.1mm. The panelized board output correctly extracts a board size (174.72x90.4mm). The Edge.Cuts layer is present in the layer table but its geometry is not being extracted.",
+      "created_from": "FND-00001564",
+      "check": {
+        "path": "board_outline.edge_count",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001564-AST-03",
+      "description": "INCORRECT: Seven jumper footprints (JP1, JP2, JP3, JP4, JP5, JP7, JP8) have type='allow_soldermask_bridges' in the output rather than 'smd'. These are genuine SMD pad footprints on B.Cu and should contribute to smd_count. The reported smd_count=50 misses these 7 components, resulting in an undercount. Total non-board-only components are 61 (50 smd + 3 tht + 7 allow_soldermask_bridges + 1 exclude_from_bom) but smd_count only reflects 50.",
+      "created_from": "FND-00001564",
+      "check": {
+        "path": "statistics.smd_count",
+        "op": "greater_than",
+        "value": 55
+      },
+      "aspirational": true
+    }
+  ]
+}

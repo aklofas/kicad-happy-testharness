@@ -1,0 +1,62 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Hardware_JST_SparkFun_BlueSMiRF-v2-JST.kicad_sch.json",
+      "status": "promoted",
+      "summary": "SparkFun BlueSMiRF-v2 JST Bluetooth module (38 components). Correct: AP2112K-3.3 LDO detection with 3.3V output, BSS138 level-shifter MOSFETs Q1/Q2 correctly identified, BOM counts and component values verified. Minor: gate resistor topology for level shifters not fully characterized, pull-up resistors R9/R10 not identified as part of level-shifting network.",
+      "correct": [
+        {
+          "description": "U2 AP2112K-3.3 LDO correctly identified with topology=LDO, estimated_vout=3.3V, input/output rails correct",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          }
+        },
+        {
+          "description": "Q1 and Q2 BSS138 N-MOSFETs correctly identified with proper gate/drain/source net mapping and connector load type",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
+        },
+        {
+          "description": "All 38 components correctly counted, BOM values verified (C1=10uF, C2=1.0uF, C3=1.0uF, C4=10uF, 10 resistors)",
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Input/output decoupling capacitors for U2 correctly identified (C1+C2 input, C3+C4 output)",
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [
+        "Consider characterizing pull-up/pull-down resistors associated with MOSFET level-shifter circuits"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000216",
+      "repo": "sparkfun/SparkFun_BlueSMiRF-v2",
+      "project": "Hardware_JST_SparkFun_BlueSMiRF-v2-JST",
+      "created": "2026-03-16T07:15:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

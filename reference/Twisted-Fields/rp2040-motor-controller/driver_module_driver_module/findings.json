@@ -1,0 +1,93 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/rp2040-motor-controller/driver_module/driver_module.kicad_sch",
+      "status": "confirmed",
+      "summary": "BLDC motor driver module: excellent current sense detection with INA240 amplifiers and 3-milliohm shunts, but missing half-bridge gate driver recognition for EG3113",
+      "correct": [
+        {
+          "description": "Three current sense circuits correctly identified: INA240A1D amplifiers with 3-milliohm shunt resistors on phases A, B, C with correct max current estimates (~16.7A at 50mV)"
+        },
+        {
+          "description": "VMOT power rail decoupling correctly analyzed: 448.8uF total (2x 220uF 63V solid + 4x 2.2uF 100V ceramic) - appropriate for motor driver"
+        },
+        {
+          "description": "TPS7A1601DGNT LDO identified for 12V to 3.3V local regulation"
+        },
+        {
+          "description": "TVS protection diodes (SMAJ51A) correctly identified on power inputs"
+        },
+        {
+          "description": "Three PNP BJT transistors identified with 100-ohm base resistors for bootstrap/charge pump circuits"
+        },
+        {
+          "description": "Thermistor (TH1) present in component list for motor temperature monitoring"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Current sense associates two shunts (R113, R105) with same INA240 U21 on A_P/A_N - likely one shunt per phase, check pin mapping",
+          "analyzer_section": "signal_analysis.current_sense",
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "not_contains_match",
+            "field": "shunt.ref",
+            "pattern": "^R113$"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "EG3113 half-bridge gate drivers (3 instances) not recognized as motor gate drivers - they are the key BLDC driver ICs controlling 6 MOSFETs",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Three-phase BLDC bridge topology not detected - 3x EG3113 half-bridge drivers form a complete 3-phase inverter",
+          "analyzer_section": "signal_analysis.bridge_circuits",
+          "check": {
+            "path": "signal_analysis.bridge_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Bootstrap capacitor circuits for high-side gate drive not identified",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Phase outputs (A, B, C motor connections) not linked to the current sense and gate driver circuits as a complete motor drive channel",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Detect half-bridge and full-bridge gate driver ICs (EG3113, IR2110, DRV8301 families) as motor drive components",
+        "Identify 3-phase bridge topologies when 3 half-bridge drivers share motor power rails",
+        "Link current sense circuits to their associated phase in multi-phase motor drives",
+        "Detect bootstrap capacitors on gate driver VB/HO pins"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000127",
+      "repo": "Twisted-Fields/rp2040-motor-controller",
+      "project": "driver_module_driver_module",
+      "created": "2026-03-14T07:51:11.792065+00:00"
+    }
+  ]
+}

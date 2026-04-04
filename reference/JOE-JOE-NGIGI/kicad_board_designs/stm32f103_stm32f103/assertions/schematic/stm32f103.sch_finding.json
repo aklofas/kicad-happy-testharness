@@ -1,0 +1,19 @@
+{
+  "file_pattern": "stm32f103.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002489",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002489-AST-01",
+      "description": "The bus_analysis section reports empty lists for i2c, spi, uart, and can. The STM32F103C8T6 has USB FS capability and the source schematic contains net labels USB_D+ and USB_D-. However the analyzer found no bus signals because the GPIO labels (PA3, PB6, etc.) are used instead of functional names (UART_TX, SPI_MOSI). The USB D+/D- labels in the schematic are present but the analyzer has no USB bus detector. The absence of a USB bus detector means this class of interface is entirely missed across all designs using this MCU family.",
+      "created_from": "FND-00002489",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "min_count",
+        "value": 0
+      },
+      "aspirational": false
+    }
+  ]
+}

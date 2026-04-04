@@ -2,19 +2,19 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-04-01T23:00:09.492413+00:00
+**Last scan:** 2026-04-03T00:45:34.875406+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
-| Total equations | 86 |
-| Verified | 83 |
+| Total equations | 95 |
+| Verified | 95 |
 | Unverified | 0 |
-| Stale | 3 |
-| Critical impact | 9 |
-| High impact | 30 |
-| Medium impact | 32 |
+| Stale | 0 |
+| Critical impact | 10 |
+| High impact | 34 |
+| Medium impact | 36 |
 | Low impact | 15 |
 
 ## analyze_pcb.py
@@ -77,24 +77,33 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-031 | `point_to_segment_distance` | d = perpendicular distance from point to line segment | unknown | medium | **verified** |
 | EQ-032 | `propagation_delay_ps_per_mm` | delay = √((εr+1)/2)/c (microstrip propagation delay) | signal_integrity | medium | **verified** |
 | EQ-033 | `trace_inductance_nh_per_mm` | L/mm = Z₀/v_phase (Wheeler microstrip inductance per mm) | parasitic | high | **verified** |
+| EQ-089 | `cap_value_for_srf` | C = 1 / (4π² × f_SRF² × ESL) (inverse SRF for cap selection) | impedance | high | **verified** |
+| EQ-090 | `round_to_e12` | E12 decade normalization via log10 (standard component value selection) | parasitic | high | **verified** |
+| EQ-091 | `trace_inductance_h` | L = Z₀/v_phase × length (Wheeler microstrip inductance) | parasitic | high | **verified** |
+| EQ-092 | `distributed_pdn_impedance_sweep` | Z_IC = Z_local \|\| (Z_reg + Z_trace) (distributed PDN impedance) | impedance | high | **verified** |
 
 ## emc_rules.py
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
 | EQ-034 | `check_connector_area_stitching` | Via density in connector proximity region | parasitic | high | **verified** |
-| EQ-035 | `check_connector_filtering` | d = √(Δx²+Δy²) (filter-to-connector distance) | filter_design | high | **stale** |
+| EQ-035 | `check_connector_filtering` | d = √(Δx²+Δy²) (filter-to-connector distance) | filter_design | high | **verified** |
 | EQ-036 | `check_diff_pair_cm_radiation` | E_cm from V_cm and cable length using EQ-003 | unknown | medium | **verified** |
-| EQ-037 | `check_emi_filter_effectiveness` | ratio = f_sw/f_cutoff; ratio >= 5 for adequate EMI filter | filter_design | high | **stale** |
+| EQ-037 | `check_emi_filter_effectiveness` | ratio = f_sw/f_cutoff; ratio >= 5 for adequate EMI filter | filter_design | high | **verified** |
 | EQ-038 | `check_esd_protection_path` | V_overshoot = L × dI/dt; dI/dt = 37.5 GA/s for 8kV ESD | unknown | medium | **verified** |
 | EQ-039 | `check_ground_pour_ring` | Edge coverage from GND zone bounding box sampling | unknown | medium | **verified** |
 | EQ-040 | `check_layer_transition_stitching` | Via distance from layer transition vias | parasitic | high | **verified** |
-| EQ-041 | `check_pdn_impedance` | Z_pdn(f) vs Z_target = V×ripple%/(0.5×I_transient) | unknown | medium | **stale** |
+| EQ-041 | `check_pdn_impedance` | Z_pdn(f) vs Z_target = V×ripple%/(0.5×I_transient) | unknown | medium | **verified** |
+| EQ-042 | `check_thermal_emc` | DC bias derating lookup + ferrite µ thermal degradation | thermal | medium | **verified** |
 | EQ-042 | `check_thermal_emc` | DC bias derating lookup + ferrite µ thermal degradation | thermal | medium | **verified** |
 | EQ-043 | `check_via_stitching` | spacing = √(area/count) vs λ/20 (via stitching check) | parasitic | high | **verified** |
 | EQ-086 | `check_decoupling_via_distance` | d = √(Δx²+Δy²) (cap-to-via distance for connection inductance) | parasitic | high | **verified** |
 | EQ-087 | `check_clock_near_connector` | d = √(Δx²+Δy²) (clock trace midpoint to connector distance) | parasitic | high | **verified** |
 | EQ-088 | `check_input_cap_loop_area` | A = polygon_area(cap, IC, inductor) (hot loop area estimation) | unknown | medium | **verified** |
+| EQ-093 | `_suggest_pdn_cap` | C_suggest = 1/(4π²f²ESL) then round to E12 (PDN cap selection) | impedance | medium | **verified** |
+| EQ-094 | `estimate_switching_emissions` | V_n = V_peak × 2/(nπ) × sin(nπD) (trapezoidal harmonic envelope) | emc_radiation | critical | **verified** |
+| EQ-095 | `check_switching_node_area` | A_track = Σ(width_mm × length_mm) (switching node copper area) | emc_radiation | medium | **verified** |
+| EQ-096 | `check_pdn_distributed` | I_reflected = P_downstream / V_upstream (reflected transient current) | impedance | medium | **verified** |
 
 ## extract_parasitics.py
 

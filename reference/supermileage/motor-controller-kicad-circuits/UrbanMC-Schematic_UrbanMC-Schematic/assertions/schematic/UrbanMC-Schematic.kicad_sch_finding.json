@@ -1,0 +1,30 @@
+{
+  "file_pattern": "UrbanMC-Schematic.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002419",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002419-AST-01",
+      "description": "The design has 6 IRF150P220XKMA1 power MOSFETs (Q1-Q6) arranged as three half-bridge pairs driven by three IR2112 gate drivers. Neither the bridge topology nor the individual MOSFET switch circuits are detected.",
+      "created_from": "FND-00002419",
+      "check": {
+        "path": "signal_analysis.bridge_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002420-AST-02",
+      "description": "The motor controller has 9 UF4004 fast-recovery diodes (D1-D9) as flyback/freewheeling diodes for the MOSFET switches and bootstrap circuits. protection_devices=[] despite all 9 diodes being present.",
+      "created_from": "FND-00002420",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 6
+      },
+      "aspirational": true
+    }
+  ]
+}

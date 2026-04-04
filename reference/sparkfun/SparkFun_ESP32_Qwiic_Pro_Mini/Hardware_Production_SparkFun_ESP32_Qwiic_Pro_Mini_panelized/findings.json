@@ -1,0 +1,178 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Hardware_SparkFun_ESP32_Qwiic_Pro_Mini.kicad_sch",
+      "status": "promoted",
+      "summary": "Component count of 26 and BOM breakdown are accurate; LDO regulator (U2 AP2112K-3.3) correctly detected with VCC\u2192+3.3V path; I2C bus not detected despite Qwiic connector and 2.2k pull-up resistors ...",
+      "correct": [
+        {
+          "description": "The schematic reports 26 total_components with correct type distribution: 4C, 2D (LED), 2FID, 4 connectors, 1 jumper, 5R, 2SW, 3 ICs (U1=ESP32, U2=LDO, U3=aesthetic), 2 logo graphics (G1, G3). The BOM de-duplicates correctly into 19 unique parts. All refs match what is visible in the design.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 26,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "power_regulators correctly identifies U2 as an LDO topology with input_rail=VCC, output_rail=+3.3V, estimated_vout=3.3V via fixed_suffix detection. The power budget also correctly assigns U1 (ESP32) load to the +3.3V rail at 240mA, which is within the AP2112K-3.3's 600mA rating.",
+          "analyzer_section": "signal_paths",
+          "check": {
+            "path": "signal_paths.power_regulators[0].topology",
+            "value": "LDO",
+            "op": "equals"
+          }
+        },
+        {
+          "description": "bus_analysis.uart contains two entries for ESP_1{slash}TX and ESP_3{slash}RX, each connected to U1 (ESP32). The debug connector J1 (6-pin UART header) is also correctly identified as a UART debug connector in test_coverage.debug_connectors. Net naming conventions (slash-notation for TX/RX) are handled correctly.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "value": 2,
+            "op": "min_count"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The design has a Qwiic (JST-SH 4-pin I2C) connector J5, and R3/R4 (both 2.2k) are I2C pull-up resistors on the +3.3V rail. The bus_analysis.i2c array is empty. The ESP32-PICO-V3-02 exposes I2C on IO21/IO22 (ESP_21/ESP_22 nets), which are broken out on J3. The analyzer should have detected the Qwiic connector by footprint name or description ('4 pin JST 1mm polarized connector for I2C') and the pull-up topology.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "value": [],
+            "op": "equals"
+          }
+        },
+        {
+          "description": "U1 is an ESP32-PICO-V3-02 \u2014 a module with integrated 2.4GHz WiFi and Bluetooth. The rf_chains and rf_matching arrays are both empty, and no wireless protocol is identified in the signal detectors. The component keywords field contains 'RF Radio BT ESP ESP32 Espressif onboard PCB antenna', which should be sufficient for the analyzer to flag this as a WiFi+BT capable device and surface it under a wireless or rf_module detector.",
+          "analyzer_section": "signal_paths",
+          "check": {
+            "path": "signal_paths.rf_chains",
+            "value": [],
+            "op": "equals"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_ESP32_Qwiic_Pro_Mini",
+      "project": "Hardware_Production_SparkFun_ESP32_Qwiic_Pro_Mini_panelized",
+      "created": "2026-03-24T00:24:55.143171+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001395"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Hardware_SparkFun_ESP32_Qwiic_Pro_Mini.kicad_pcb",
+      "status": "promoted",
+      "summary": "Board dimensions (33.02\u00d717.78 mm) are correct for a Pro Mini form factor; PCB footprint count (82) and side distribution are plausible; Via count (63) and net count (40) are consistent with the sch...",
+      "correct": [
+        {
+          "description": "The board outline is a single rectangle from (129.54, 114.3) to (162.56, 132.08), giving 33.02\u00d717.78mm (~1.3\"\u00d70.7\"). This is consistent with a Pro Mini variant sized to fit an ESP32 module. Board thickness is 1.6mm FR4 with 2-layer stackup, both plausible for a production SparkFun design.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.board_width_mm",
+            "value": 33.02,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "statistics reports 82 footprints total: 43 front, 39 back. The high back count is driven by 55 kibuzzard graphic/logo items (board_only, exclude_from_bom). Actual electrical components are 24 (U1, U2, 4C, 2D, 2FID, 5R, 4J, 1JP, 2SW, G2, U3, Ref**) plus kibuzzard decorators. The split is credible given extensive artwork on this SparkFun board.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 82,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The PCB reports 63 vias and 40 nets vs the schematic's 39 nets \u2014 the extra net is due to the PCB including unconnected stubs (e.g., unconnected-(J5-NC-PadNC1/2)) treated separately. routing_complete=true with 0 unrouted nets. The track count of 364 segments and 572.5mm total length is plausible for a compact 33\u00d718mm 2-layer ESP32 board.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "value": true,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The PCB statistics report only 19 SMD and 3 THT footprints, but the actual board has ~24 electrical components (U1 at 61 pads, U2, 4C, 5R, 2D, 2SW, 2FID, plus connectors). The discrepancy is because the smd/tht counts only reflect footprints where the type is unambiguously set; the kibuzzard board_only items (55 of them) are excluded correctly, but several real SMD components may be misclassified. The counts 19+3=22 are too low relative to the 26 schematic components.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.smd_count",
+            "value": 19,
+            "op": "min_count"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_ESP32_Qwiic_Pro_Mini",
+      "project": "Hardware_Production_SparkFun_ESP32_Qwiic_Pro_Mini_panelized",
+      "created": "2026-03-24T00:24:55.143192+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001396"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "Hardware_Production",
+      "status": "promoted",
+      "summary": "Edge.Cuts (outline) reported as missing but .GKO file is present and contains outline data; Drill file hole counts are consistent and correctly classified; Layer count (9 gerber + 1 drill) and 2-la...",
+      "correct": [
+        {
+          "description": "The drill file contains 2604 total holes: 1484 vias at 0.3mm, 280 vias at 0.305mm, and 840 component THT holes at 1.016mm. The 840 THT holes match 28 panels \u00d7 30 holes per board (J1=6, J2=12, J3=12). The via classification via x2_attributes (Plated,PTH,ViaDrill vs ComponentDrill) is correct.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_holes",
+            "value": 2604,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The set contains 9 gerber files covering F.Cu, B.Cu, F.SilkS, B.SilkS, F.Paste, B.Paste, F.Mask, B.Mask, and the outline (.GKO). This is the standard 9-file set for a 2-layer PCB from KiCad. The B.Paste layer is correctly empty (0 flashes, 0 draws) \u2014 back-side THT components have no paste. The SMD ratio of 0.78 (78% SMD pads) is consistent with the mix of SMD passives and THT connectors.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.gerber_files",
+            "value": 9,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "Three unique trace widths found: 0.1524mm (6mil, minimum \u2014 used for signal routing), 0.4064mm (16mil \u2014 mid-weight), 0.5588mm (22mil \u2014 power traces). The 6mil minimum is tight but acceptable for a professional PCB fab. The widths are consistent between the gerber analysis and what the PCB analyzer would report from the .kicad_pcb file.",
+          "analyzer_section": "trace_widths",
+          "check": {
+            "path": "trace_widths.min_trace_mm",
+            "value": 0.1524,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "completeness.missing_required lists 'Edge.Cuts' and complete=false. The file SparkFun_ESP32_Qwiic_Pro_Mini_panelized.GKO is present in the gerber set (1017 draw strokes, Profile aperture function) but its X2 FileFunction attribute was generated as 'Soldermask,Bot' \u2014 the same tag as the .GBS file. The analyzer uses the X2 FileFunction to classify layers, not the file extension, so it fails to recognize .GKO as the board outline and instead misclassifies it as a second soldermask layer. This is an analyzer bug: when X2 FileFunction is absent or mismatched for a .GKO/.GML file, the extension should be used as fallback.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "value": false,
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_ESP32_Qwiic_Pro_Mini",
+      "project": "Hardware_Production_SparkFun_ESP32_Qwiic_Pro_Mini_panelized",
+      "created": "2026-03-24T00:24:55.143196+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001397"
+    }
+  ]
+}

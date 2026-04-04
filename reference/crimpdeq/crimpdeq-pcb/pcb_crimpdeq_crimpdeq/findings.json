@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_crimpdeq-pcb_pcb_crimpdeq_crimpdeq.kicad_sch.json",
+      "status": "promoted",
+      "summary": "HX711 24-bit ADC misclassified as a power regulator; Crystal Y1 frequency not parsed from value '32.768Hz'; USB ESD protection, switching regulator, and differential pairs correctly detected",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies: SY8088 (U6) as a switching regulator with inductor L1 converting +5V to +3V3; the USB_D+/USB_D- pair as type='USB' with ESD protection via D7, D9, D10 (LESD5D5.0CT1G TVS diodes) and U4; the P-channel MOSFET Q2 (DMG3415U) as a power path switch; and the MCP73831 (U2) as a battery charger on the VBUS/+BATT rails.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": "/SY8088/"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer lists U3 (HX711, lib_id 'Analog_ADC:HX711') under power_regulators with topology='ic_with_internal_regulator'. The HX711 is a 24-bit precision ADC for weigh-scale/load-cell applications; it has an onboard reference but is not a power regulator. It belongs in signal_analysis detectors such as current_sense or a dedicated ADC category, not power_regulators.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "max_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Crystal Y1 has value '32.768Hz' (a 32.768 kHz RTC crystal with a non-standard value string). The analyzer outputs frequency=null and load_caps=[]. The analyzer should extract the numeric frequency from this value string (32.768 Hz or interpreting the context as 32.768 kHz). The null frequency means any downstream frequency-aware analysis (e.g. load capacitance recommendations, RTC detection) is skipped.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "crimpdeq/crimpdeq-pcb",
+      "project": "pcb_crimpdeq_crimpdeq",
+      "created": "2026-03-24T08:50:51.662058+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002318"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "gerber_crimpdeq-pcb_pcb_crimpdeq_production_gerber.json",
+      "status": "new",
+      "summary": "Gerber completeness check correctly validates all 9 required layers including both copper layers",
+      "correct": [
+        {
+          "description": "The gerber analyzer correctly identifies all 9 expected layers (F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, Edge.Cuts) as present with no missing or extra layers, both PTH and NPTH drill files present, sourced from the .gbrjob file. This is consistent with the PCB using both copper layers for routing even though all components are on the front.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "crimpdeq/crimpdeq-pcb",
+      "project": "pcb_crimpdeq_crimpdeq",
+      "created": "2026-03-24T08:50:51.662077+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002319"
+    }
+  ]
+}

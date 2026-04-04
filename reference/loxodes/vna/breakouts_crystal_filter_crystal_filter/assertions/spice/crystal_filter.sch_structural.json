@@ -1,0 +1,119 @@
+{
+  "file_pattern": "crystal_filter.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 rf_matching simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rf_matching$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "L102 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL102\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C101 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "L103 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C102 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC102\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C102 simulated as rf_matching",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC102\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "L104 simulated as rf_matching",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "L103 simulated as rf_matching",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C101 simulated as rf_matching",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "L102 simulated as rf_matching",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL102\\b"
+      }
+    }
+  ]
+}

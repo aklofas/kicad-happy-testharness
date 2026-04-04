@@ -1,0 +1,86 @@
+{
+  "file_pattern": "SparkFun_Red_Vision_Camera_Board_HM01B0.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001518",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001518-AST-01",
+      "description": "Total 46 components correctly identified: 9 resistors, 6 capacitors, 6 jumpers, 4 test points, 4 fiducials, 4 NMOS transistors (Q1-Q4 RE1C002UNTCL), 2 ICs (U1 HM01B0, U2 RT9080), 2 mounting holes, 1 LED, 1 active oscillator (Y1), 3 other. All counts match the schematic.",
+      "created_from": "FND-00001518",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 46
+      }
+    },
+    {
+      "id": "FND-00001518-AST-02",
+      "description": "U2 (RT9080-2.8V) correctly identified as LDO regulator with input_rail=3.3V and output_rail=2.8V. vref_source=fixed_suffix is appropriate since output voltage is encoded in part name. Decoupling capacitors on 2.8V (C8, C2, C7, C5) correctly attributed.",
+      "created_from": "FND-00001518",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "value": {
+          "ref": "U2",
+          "topology": "LDO"
+        }
+      }
+    },
+    {
+      "id": "FND-00001518-AST-03",
+      "description": "Y1 (24MHz, SparkFun-Clock:Oscillator_24MHz_3.2x2.5mm) correctly classified as active_oscillator. It is a 4-pin package with pins GND/VDD/OUT/EN \u2014 an active MEMS/clock oscillator, not a passive crystal. No load_caps reported which is correct: active oscillators have internal load caps.",
+      "created_from": "FND-00001518",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "value": {
+          "reference": "Y1",
+          "type": "active_oscillator"
+        }
+      }
+    },
+    {
+      "id": "FND-00001518-AST-04",
+      "description": "Q1-Q4 (RE1C002UNTCL NMOS) all 4 correctly detected. Q1 (gate=2.8V, drain=SDA, source=CAM_SDA) and Q2 (gate=2.8V, drain=SCL, source=CAM_SCL) are bidirectional I2C level shifters. Q3/Q4 are camera power/control switches (PWDN, RST). All captured in transistor_circuits.",
+      "created_from": "FND-00001518",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001518-AST-05",
+      "description": "Power rails correctly identified: 3.3V (host-supplied input), 2.8V (from RT9080 LDO), 1.5V (camera supply rail), GND. All four domains present. Decoupling analysis covers all three voltage rails accurately.",
+      "created_from": "FND-00001518",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001518-AST-06",
+      "description": "I2C bus not detected despite two I2C buses present: SCL/SDA (3.3V host domain, J1/J2/J3 connectors) and CAM_SCL/CAM_SDA (2.8V camera domain, J4 connector) bridged by Q1/Q2 level-shift MOSFETs. R1/R2 (2.2k) are pull-ups for SDA/SCL connected through JP1 (SolderJumper_3_Bridged123, center pin B = 3.3V). bus_analysis.i2c is empty.",
+      "created_from": "FND-00001518",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001518-AST-07",
+      "description": "I2C pull-ups R1/R2 (2.2k) not recognized because they connect to 3.3V through JP1 solder jumper (SolderJumper_3_Bridged123). The pull-up path is: R1/R2 pin 2 -> unnamed net -> JP1 pin C -> JP1 pin B -> 3.3V. The analyzer does not trace through solder jumpers to find pull-up supply rails.",
+      "created_from": "FND-00001518",
+      "check": {
+        "path": "signal_analysis.pull_up_resistors",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

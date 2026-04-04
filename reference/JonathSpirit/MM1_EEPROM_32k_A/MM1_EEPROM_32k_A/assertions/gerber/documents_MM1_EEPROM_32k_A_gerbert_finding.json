@@ -1,0 +1,20 @@
+{
+  "file_pattern": "documents_MM1_EEPROM_32k_A_gerbert",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00000873",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000873-AST-01",
+      "description": "All three boards: 7 gerber files + 2 drill files, required layers present (F.Cu, B.Cu, F.Mask, B.Mask, F.SilkS, B.SilkS, Edge.Cuts), F.Paste correctly flagged as missing_recommended (these are SMD boards without paste files). Board dimensions 51.5x34.0mm consistent across all three. Layers are aligned (confirmed by SameCoordinates X2 attribute).",
+      "created_from": "FND-00000873",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

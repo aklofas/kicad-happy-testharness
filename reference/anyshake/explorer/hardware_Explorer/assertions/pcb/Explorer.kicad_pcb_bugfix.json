@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Explorer.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-161-01",
+      "description": "KH-161: explorer back_side footprint count >= 50 (was 0 before fix)",
+      "issue": "KH-161",
+      "fix_type": "count_change_fix",
+      "check": {
+        "path": "statistics.back_side",
+        "op": "min_count",
+        "value": 50
+      }
+    },
+    {
+      "id": "BUGFIX-KH-162-01",
+      "description": "KH-162: explorer has at least 1 power_net_routing entry",
+      "issue": "KH-162",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "power_net_routing",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

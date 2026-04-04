@@ -1,0 +1,103 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "RedPitaya_Lockbox.kicad_sch",
+      "status": "promoted",
+      "summary": "LT1236-10 misclassified as LDO with estimated_vout=1.0V; LT3045/LT3094 positive/negative linear regulators detected; Hierarchical sheet references (110 components, 3 sheets) correctly parsed; -12V ...",
+      "correct": [
+        {
+          "description": "U1 (LT3045EMSE) and U2 (LT3094EMSE) correctly detected as linear regulators with input/output rails and inverting flag. LT8610 switching regulator (U6) correctly detected with feedback divider and switching topology.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Main schematic correctly aggregates all components from 3 sub-sheets (Supply_Ref, Input_Output_Module, plus main). 110 total components, 72 no-connects, 11 opamp circuits, 4 power regulators all detected. kicad_version=8.0 correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "LT1236-10 is a precision 10V voltage reference, not an LDO regulator. The analyzer assigns topology='LDO' and estimated_vout=1.0V (parsed from the '-10' suffix as 1.0 instead of 10.0V). The output rail is +10V_ref. Both the topology classification and the Vout estimate are wrong. The vout_net_mismatch (1.0V vs 10.0V, 90% difference) is generated but stems from this fundamental misclassification.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Same issue as IntStab: in design_analysis.net_classification, '-12V' and '-15V' are classified as 'signal'. These are negative power supply rails from linear regulators. The pattern repeats across both repos confirming a systematic analyzer limitation with negative-polarity power nets.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "TU-Darmstadt-APQ/RedPitaya-Lockbox",
+      "project": "pcb_KiCad_RedPitaya_Lockbox",
+      "created": "2026-03-24T00:03:25.184363+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001243"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Supply_Ref.kicad_sch",
+      "status": "promoted",
+      "summary": "Lockbox Supply_Ref LT3032-12 also absent from power_regulators",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "Same issue as IntStab: LT3032-12 is present as ic_pin_analysis entry with function='linear regulator' but produces no entry in signal_analysis.power_regulators. The dual +/-15V outputs are not captured.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "TU-Darmstadt-APQ/RedPitaya-Lockbox",
+      "project": "pcb_KiCad_RedPitaya_Lockbox",
+      "created": "2026-03-24T00:03:25.184382+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001244"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "RedPitaya_Lockbox.kicad_pcb",
+      "status": "new",
+      "summary": "Lockbox PCB 110 footprints, 2-layer, fully routed, DFM violation correct",
+      "correct": [
+        {
+          "description": "110 footprints, 160x100mm 2-layer board. Routing complete with 0 unrouted nets. DFM board_size violation flagged correctly. min_track_width=0.2mm, min_drill=0.3mm extracted. GND pour on both layers with 244 vias.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "TU-Darmstadt-APQ/RedPitaya-Lockbox",
+      "project": "pcb_KiCad_RedPitaya_Lockbox",
+      "created": "2026-03-24T00:03:25.184385+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001245"
+    }
+  ]
+}

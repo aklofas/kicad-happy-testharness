@@ -1,0 +1,372 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Hardware_SparkFun_RTK_Postcard.kicad_sch",
+      "status": "promoted",
+      "summary": "Component counts are accurate: 84 total, 20 resistors, 12 capacitors, 5 ICs, 5 LEDs, 4 diodes; Power rails correctly identified: 3.3V, 5V, GND, VBUS, VCC_RF; LDO regulator U2 (RT9080-3.3) correctly...",
+      "correct": [
+        {
+          "description": "The statistics section correctly enumerates all component types. 84 total_components matches the actual schematic content. The 20 resistors (R1-R20), 12 capacitors (C1-C12), 5 ICs (U1-U5), 5 LEDs (D1,D2,D4,D6,D9), 4 non-LED diodes (D3,D5,D7,D8), 8 connectors (J1-J11 minus J3/J9/J10), 8 jumpers (JP1-JP8), 4 mounting holes, 4 fiducials, 5 test points, 1 transistor, 1 inductor, 1 fuse, 1 battery, 2 switches are all correct.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 84
+          }
+        },
+        {
+          "description": "All five power rails are correctly extracted from the schematic. VCC_RF is the GNSS RF supply rail from the LG290P. VBUS is the raw USB bus voltage. 5V is the post-fuse USB power. 3.3V is regulated LDO output.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "contains_match",
+            "value": {
+              "item": "VCC_RF"
+            }
+          }
+        },
+        {
+          "description": "The power_regulators section correctly identifies U2 as an LDO topology with input_rail 5V and output_rail 3.3V, estimated_vout 3.3V from the part number suffix.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": {
+              "ref": "U2",
+              "topology": "LDO",
+              "input_rail": "5V",
+              "output_rail": "3.3V"
+            }
+          }
+        },
+        {
+          "description": "D3 (PESD0402 TVS on antenna net), D7 (PESD0603-240 TVS on 3.3V) and D8 (BAT60A Schottky for reverse polarity VBUS\u21925V) are all found in protection_devices. F1 (PPTC fuse) is also correctly listed.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "The rc_filters section correctly identifies R13 (10k) and C11 (1uF) as a low-pass filter on the ESP_RESET net with a 15.92 Hz cutoff, which is the classic RC reset filter for ESP32 auto-reset circuit.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "value": {
+              "resistor": {
+                "ref": "R13"
+              },
+              "capacitor": {
+                "ref": "C11"
+              },
+              "output_net": "ESP_~{RESET}"
+            }
+          }
+        },
+        {
+          "description": "The lc_filters section identifies L1 (68nH) with C6 (100pF) with a resonant frequency of 61.03 MHz. This is a valid GNSS band RF supply filter (GPS L1 at 1575.42 MHz requires careful supply filtering; the LC values tune to the GNSS frequency range).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "contains_match",
+            "value": {
+              "inductor": {
+                "ref": "L1"
+              },
+              "capacitor": {
+                "ref": "C6"
+              }
+            }
+          }
+        },
+        {
+          "description": "8 UART nets detected: LG-TXD3/RXD3 (GNSS debug UART to external header J5), ESP3/RX + ESP1/TX (ESP32\u2194CH342F channel 0), LG-RXD1/TXD1 (GNSS UART1\u2194CH342F), and LG-TXD2/RXD2 (GNSS UART2\u2194ESP32). This correctly reflects the multi-UART architecture with the dual-channel USB UART CH342F.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "min_count",
+            "value": 6
+          }
+        },
+        {
+          "description": "The voltage_dividers section correctly identifies R15 (3.3k) over R12 (10k) forming a 3.3V \u2192 ESP35/DeviceSense \u2192 GND divider with ratio 0.75188. This is connected to ESP32 analog input pin IA35 and test point TP6.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "value": {
+              "r_top": {
+                "ref": "R15"
+              },
+              "r_bottom": {
+                "ref": "R12"
+              },
+              "top_net": "3.3V"
+            }
+          }
+        },
+        {
+          "description": "The usb_compliance section correctly identifies the USB-C connector J1 and passes the cc1_pulldown_5k1 and cc2_pulldown_5k1 checks (R1 and R2 are 5.1k resistors on CC1 and CC2). The USB ESD IC (U1, DT1042-04SO) is also correctly detected.",
+          "analyzer_section": "usb_compliance",
+          "check": {
+            "path": "usb_compliance.connectors",
+            "op": "contains_match",
+            "value": {
+              "connector": "J1",
+              "is_type_c": true
+            }
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The assembly_complexity section reports tht_count: 0 and all 85 components as SMD. However, J11 (1x10 2.54mm header) and J5 (1x09 2.54mm header) are through-hole pin headers. The PCB analyzer correctly counts 3 THT footprints (J1 USB-C has THT anchor pads, J5, J11). The schematic-level assembly complexity analyzer may not be detecting connector THT type from schematic symbol types, only from footprint names.",
+          "analyzer_section": "assembly_complexity",
+          "check": {
+            "path": "assembly_complexity.tht_count",
+            "op": "greater_than",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The bus_analysis.spi array is empty. However, nets SHLD_SCK, SHLD_PICO, SHLD_POCI, and SHLD_~{CS} are present and connected from U5 (ESP32-PICO-V3-02) to J5 (9-pin shield header), forming a complete SPI bus. The net_classification section does classify SHLD_SCK as 'spi', but the bus analysis does not aggregate them into a detected SPI bus. The four SPI signals use ESP32 pins IOA32 (SCK), IOA26 (MOSI/PICO), IOA25 (MISO/POCI), and a chip select pin.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The bus_analysis.i2c entries for SDA_1 and SCL_1 both report has_pull_up: false and empty pull_ups arrays. However, R17 (2.2k) connects to SDA_1 and R18 (2.2k) connects to SCL_1 as pull-up resistors for the Qwiic connector I2C bus (J4 and J7). The other end of R17 and R18 connects through jumper JP6 to 3.3V, allowing the pull-up to be enabled or disabled. The analyzer fails to detect these because the pull-up resistors connect through a solder jumper rather than directly to a power rail. The schematic note explicitly says 'I\u00b2C pins have internal 2.2k pull-ups' (referring to U5/ESP32 internal pull-ups being present, separate from these external ones).",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "contains_match",
+            "value": {
+              "net": "SDA_1",
+              "has_pull_up": true
+            }
+          }
+        },
+        {
+          "description": "Q2 is a dual NPN transistor (MBT3904DW1 in SOT-363) used as the classic ESP32 auto-reset circuit. Transistor A is driven by CH342-DTR (via R16 base resistor) with collector to ESP_RESET, and transistor B is driven by CH342-RTS (via R11 base resistor) with collector to ESP0/BOOT. This is the standard DTR/RTS auto-programming circuit. The transistor_circuits list is empty despite Q2 being present and forming a well-defined switching circuit. The circuit includes base resistors R11 and R16 (2.2k each).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The rf_chains and rf_matching arrays are both empty. The board has a clear RF front-end: J2 (SMA edge), J6 (U.FL), antenna selector JP4 (3-pole jumper), D3 (ESD protection on antenna net), R20 (0-ohm DNP series), L1 (68nH) + C6 (100pF) LC matching/filter, and U3 (LG290P GNSS) pin RF_IN on net ANT_IN. This is a complete RF signal chain from antenna input to GNSS receiver that should be detected.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "D5 (PMEG4005EJ Schottky diode in SOD-323) is connected with its anode to 3.3V and cathode to Net-(D5-K), which then connects to the V_BCKP backup battery supply net. This is a power isolation/ORing diode used for the ML414H backup battery (BT1) circuit, preventing the main 3.3V rail from backfeeding into the backup battery. It should be detected as a protection device (or at minimum as a power isolation diode), but protection_devices only lists D3, D7, D8, and F1.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "value": {
+              "ref": "D5"
+            }
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_RTK_Postcard",
+      "project": "Hardware_Production_SparkFun_RTK_Postcard_panelized",
+      "created": "2026-03-24T00:44:05.939247+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001481"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Hardware_SparkFun_RTK_Postcard.kicad_pcb",
+      "status": "new",
+      "summary": "PCB footprint count (151), layer count (4), board dimensions (43.18 x 43.18 mm) are correct; Routing complete with 0 unrouted nets confirmed; In1.Cu correctly identified as GND plane and In2.Cu as ...",
+      "correct": [
+        {
+          "description": "The PCB is a 4-layer design (F.Cu, In1.Cu GND plane, In2.Cu 3.3V plane, B.Cu) with 151 footprints. The board is 43.18mm square, which is consistent with the 1.7-inch form factor described in the RTK Postcard design. Net count (102) matches the schematic net count (102).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 151
+          }
+        },
+        {
+          "description": "routing_complete: true and unrouted_net_count: 0 correctly reflects that the main board PCB is fully routed. The 225 vias and 712 track segments across 4 copper layers represent a complete layout.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "op": "equals",
+            "value": true
+          }
+        },
+        {
+          "description": "Layer aliases are correctly extracted: In1.Cu has alias 'GND' and In2.Cu has alias '3V3'. This confirms proper 4-layer stackup with power and ground planes on inner layers. The stackup shows 0.8mm board thickness with prepreg/core dielectrics.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.copper_layers_used",
+            "op": "equals",
+            "value": 4
+          }
+        },
+        {
+          "description": "The thermal_analysis section correctly identifies the exposed pad on U4 (2.7x2.7mm GND pad with 3 nearby vias) and multiple sub-pads on U5 (ESP32-PICO-MINI with 9 GND thermal pads). U5's pad 49.1 and 49.7 have 4 vias each for good thermal management.",
+          "analyzer_section": "thermal_analysis",
+          "check": {
+            "path": "thermal_analysis.thermal_pads",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "The zone_stitching analysis correctly identifies the GND fill copper zone spanning 3 layers with 136 stitching vias. The 3.3V zone on In2.Cu has 12 vias. Zone area of 1864.5 mm\u00b2 is consistent with the 43.18x43.18 mm board area (~1864 mm\u00b2 total).",
+          "analyzer_section": "thermal_analysis",
+          "check": {
+            "path": "thermal_analysis.zone_stitching",
+            "op": "contains_match",
+            "value": {
+              "net": "GND",
+              "via_count": 136
+            }
+          }
+        },
+        {
+          "description": "The PCB net_count of 102 matches the schematic's total_nets of 102, confirming proper cross-file consistency. The netlist includes 13 no-connect nets from schematic unconnected pins.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "op": "equals",
+            "value": 102
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "sparkfun/SparkFun_RTK_Postcard",
+      "project": "Hardware_Production_SparkFun_RTK_Postcard_panelized",
+      "created": "2026-03-24T00:44:05.939269+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001482"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "SparkFun_RTK_Postcard_panelized.kicad_pcb",
+      "status": "promoted",
+      "summary": "Panelized PCB correctly shows 1207 footprints (8x original board count) on 100.56x203.16mm panel; Panelized board correctly reports routing_complete: false with 39 unrouted nets",
+      "correct": [
+        {
+          "description": "The panelized board has footprint_count 1207 which is approximately 8\u00d7 the single board count (151), consistent with an 8-up panel (2\u00d74 or similar array). The board dimensions (100.56 \u00d7 203.16 mm) correspond to a standard panel size. The net count (102) matches the single board, confirming the panel uses the same netlist.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 1207
+          }
+        },
+        {
+          "description": "The panelized PCB is intentionally not fully routed (the panel stitching and v-score tracks may be excluded from the ratsnest). The 39 unrouted_net_count is expected for a panelized design where the panelizer may not route inter-board connections. Zone count 24 (vs 3 in single board) reflects the replicated copper pours across 8 copies.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "op": "equals",
+            "value": false
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "sparkfun/SparkFun_RTK_Postcard",
+      "project": "Hardware_Production_SparkFun_RTK_Postcard_panelized",
+      "created": "2026-03-24T00:44:05.939273+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001483"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "Hardware_Production",
+      "status": "promoted",
+      "summary": "Edge.Cuts reported as missing but GKO file contains board outline (profile aperture function); Gerber layer count (4 copper + supporting layers), drill classification, and alignment checks are corr...",
+      "correct": [
+        {
+          "description": "The gerber set correctly identifies 4 copper layers (F.Cu, B.Cu, GL2/In1.Cu, GL3/In2.Cu), 9 gerber files, and 1 drill file. Drill classification via X2 attributes works correctly: 1800 vias (0.3mm), 168 component holes (0.65mm and 1.016mm), and 32 mounting holes (3.1mm NPTH). All layers are flagged as aligned. The SMD ratio of 0.94 is reasonable for this mostly-SMD design.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.gerber_files",
+            "op": "equals",
+            "value": 9
+          }
+        },
+        {
+          "description": "The drill_classification section correctly uses X2 attributes to categorize holes. 1800 vias at 0.3mm matches the PCB's via_count of 1800 (panelized, 8 copies \u00d7 225 = 1800). 168 component holes: 16 at 0.65mm and 152 at 1.016mm correspond to the THT connectors. 32 mounting holes at 3.1mm NPTH correspond to 4 mounting holes per board \u00d7 8 boards on the panel.",
+          "analyzer_section": "drill_classification",
+          "check": {
+            "path": "drill_classification.vias.count",
+            "op": "equals",
+            "value": 1800
+          }
+        },
+        {
+          "description": "The gerber component_refs list includes 'Q1' which does not appear in the schematic (the schematic has Q2 as the only transistor). This likely refers to a kibuzzard or board-only footprint in the panel that was not given a proper reference. The PCB's component_groups shows 'G' references including G1 and multiple G*** wildcards. This is a minor discrepancy between gerber-extracted component list and schematic components.",
+          "analyzer_section": "component_analysis",
+          "check": {
+            "path": "component_analysis.total_unique",
+            "op": "equals",
+            "value": 144
+          }
+        },
+        {
+          "description": "The trace_widths section identifies 5 unique widths: 0.1524mm, 0.1778mm, 0.2819mm, 0.349mm, and 0.4064mm. The minimum of 0.1524mm (6 mil) and minimum feature of 0.125mm are appropriate for a standard 4-layer PCB with typical design rules.",
+          "analyzer_section": "trace_widths",
+          "check": {
+            "path": "trace_widths.min_trace_mm",
+            "op": "equals",
+            "value": 0.1524
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The completeness section reports missing_required: ['Edge.Cuts'] and complete: false. However, the file SparkFun_RTK_Postcard_panelized.GKO exists and contains the board outline data (it has %TA.AperFunction,Profile*% aperture function). The GKO file's X2 TF.FileFunction header incorrectly reads '%TF.FileFunction,Soldermask,Bot*%' (which appears to be a KiCad export issue or file naming artifact), but the file content clearly contains profile/outline geometry. The analyzer should detect the Profile aperture function inside the file as Edge.Cuts layer data even when the TF.FileFunction header doesn't say Profile/BoardOutline.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_RTK_Postcard",
+      "project": "Hardware_Production_SparkFun_RTK_Postcard_panelized",
+      "created": "2026-03-24T00:44:05.939279+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001484"
+    }
+  ]
+}

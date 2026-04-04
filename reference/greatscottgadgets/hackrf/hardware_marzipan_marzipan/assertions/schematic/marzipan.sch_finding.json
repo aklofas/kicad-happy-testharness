@@ -1,0 +1,19 @@
+{
+  "file_pattern": "marzipan.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000030",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000030-AST-01",
+      "description": "Legacy parser has no case for \"DESCRIPTION\" field. Custom \"Description\" fields present on components are not extracted.",
+      "created_from": "FND-00000030",
+      "check": {
+        "path": "components[*].description",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

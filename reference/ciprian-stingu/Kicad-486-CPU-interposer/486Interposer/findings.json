@@ -1,0 +1,105 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "486Interposer.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Component enumeration and net extraction correct for 486 interposer; Decoupling warning for 486 socket is a false positive \u2014 interposer passes through signals, doesn't power the CPU; No JTAG bus de...",
+      "correct": [
+        {
+          "description": "Correctly identified 5 components (4 connectors + 486 socket), 119 nets including full address/data/control bus naming, and 2 power rails (VCC, GND). Net names with tilde/slash escaping handled correctly.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "design_observations reports 'rails_without_caps: [VCC]' for U1 (486Socket). This is a passthrough interposer: J4 is the VCC connector that feeds the board. The interposer itself should not have decoupling caps \u2014 those belong on the CPU board. The warning is technically true but misleading for this design topology.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "The net list includes /TCK, /TDI, /TDO, /TMS \u2014 classic JTAG signals. bus_analysis shows i2c/spi/uart/can all empty. A JTAG protocol detector would flag this as a JTAG interface routed through the interposer.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ciprian-stingu/Kicad-486-CPU-interposer",
+      "project": "486Interposer",
+      "created": "2026-03-23T22:43:29.228526+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000777"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "486Interposer.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB correctly identified as all-THT with 5 components, 119 nets, fully routed",
+      "correct": [
+        {
+          "description": "smd_count=0, tht_count=5, footprint_count=5, net_count=119, routing_complete=true. Matches schematic component/net counts perfectly.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "ciprian-stingu/Kicad-486-CPU-interposer",
+      "project": "486Interposer",
+      "created": "2026-03-23T22:43:29.228548+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000778"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "pcb.json",
+      "status": "promoted",
+      "summary": "Gerber completeness check correct \u2014 all 9 required layers plus drill files present; B.Paste and F.Paste empty layers reported but not flagged \u2014 expected for all-THT board",
+      "correct": [
+        {
+          "description": "Layer set complete (F/B Cu, Mask, Paste, SilkS, Edge.Cuts), both PTH and NPTH drill files present. 336 total holes (290 component + 46 vias) consistent with PCB analysis. User_Comments layer classified as 'unknown' with FileFunction 'Other,Comment' \u2014 acceptable.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Both paste layers have aperture_count=0, flash_count=0, draw_count=0, yet completeness shows them as 'found' and the board is marked complete=true. For an all-THT board (smd_ratio=0.0) this is correct behavior, but there is no annotation in the output noting why paste is empty. Minor: not actually incorrect, but could be more informative.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ciprian-stingu/Kicad-486-CPU-interposer",
+      "project": "486Interposer",
+      "created": "2026-03-23T22:43:29.228552+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000779"
+    }
+  ]
+}

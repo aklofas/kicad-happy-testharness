@@ -1,0 +1,40 @@
+{
+  "file_pattern": "SparkFun_GNSS_LG580P.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001427",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001427-AST-01",
+      "description": "77 total components matches the sum of component_types exactly. Power rails [3.3V, 5V, GND] are correct \u2014 unlike DAN-F10N, the LG580P design does not expose VCC_RF or VDD as separate named rails. The RT9080-3.3 LDO (U2) is correctly identified as 5V\u21923.3V. RC filters on both ANT_IN1 and ANT_IN2 supply lines (R12+C14||C15 and R6+C3||C4) are correctly detected at 159 kHz each.",
+      "created_from": "FND-00001427",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 77,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001427-AST-02",
+      "description": "INCORRECT: L1 and L2 (both 68nH) each appear in two LC filter entries: once paired with a single 100pF cap (61 MHz resonance) and once with a parallel 100pF+100pF network (1.93 MHz resonance). The actual circuit has each inductor forming a Pi-network supply filter with two caps on the output node. The same inductor being reported in two separate LC filter instances inflates the lc_filters count from 2 to 4 and the lower-frequency 1.93 MHz entries are an artifact of the parallel cap expansion logic treating the combined node as a separate LC pair.",
+      "created_from": "FND-00001427",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "value": 2,
+        "op": "min_count"
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001427-AST-03",
+      "description": "The design has SPI nets PICO, POCI, SCK, ~{CS} (visible in net list and test_coverage uncovered_key_nets which lists SCK as category 'spi'). The signal_analysis.spi_buses key is None rather than a list of detected SPI buses. The I2C bus with SCL/SDA (connecting to U3 LG580P module) appears only in design_observations as i2c_bus category items, not as a structured i2c_buses list. Both bus detectors produce no structured output despite clear evidence of both buses in the netlist.",
+      "created_from": "FND-00001427",
+      "check": {
+        "path": "statistics.total_nets",
+        "value": 95,
+        "op": "min_count"
+      },
+      "aspirational": false
+    }
+  ]
+}

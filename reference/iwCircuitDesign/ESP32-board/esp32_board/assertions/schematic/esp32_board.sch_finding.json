@@ -1,0 +1,49 @@
+{
+  "file_pattern": "esp32_board.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000497",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000497-AST-01",
+      "description": "All 49 components (3 ICs, 11 capacitors, 12 resistors, 2 switches, 12 connectors, 2 fuses, 3 diodes, 4 LEDs) match the schematic source. BOM groupings are correct: C10/C11 = 47p, C5/C2/C9/C8/C3/C1/C7 = 0.1u, C6/C4 = 100u, R10/R11 = 27 ohm, R3/R4/R2/R5/R9 = 1k, R8/R1/R12 = 10k, R6/R7 = 0 ohm, D5/D6/D3/D7 = LED, D1/D2 = generic diode, D4 = Schottky. Power rails correctly identified: +3.3V, +3.3VP, +5V, +5VD, GND. Total component count of 49 is correct.",
+      "created_from": "FND-00000497",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000497-AST-02",
+      "description": "C2 and C4 are connected to the +5V rail as bypass and bulk capacitors respectively. The decoupling_analysis entry for '+5V' correctly lists both with has_bulk=true and has_bypass=true. Total capacitance 100.1 uF is accurate.",
+      "created_from": "FND-00000497",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000497-AST-03",
+      "description": "R10 and R11 are 27 ohm series resistors on the USB D+/D- lines, and C10/C11 are 47pF caps to GND. The RC low-pass filter calculations (fc = 125.42 MHz) are mathematically correct. While the semantic context (USB line termination/ESD protection) is not labeled as such, the electrical characterization is accurate.",
+      "created_from": "FND-00000497",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000497-AST-04",
+      "description": "The design has two USB connectors: P1 is a USB_A host connector (likely for power input), and P2 is a USB_OTG Mini-B connector feeding F1/D1/FT231X (U2) for USB-to-UART. The FT231X USBDP/USBDM pins (pin 11/12) connect to P2 D+/D- through R10/R11 (27 ohm series resistors) and C10/C11 (47pF caps to GND) \u2014 a classic USB line termination scheme. Neither USB connector nor the USB differential pair is detected. The differential_pairs and ethernet_interfaces lists are empty.",
+      "created_from": "FND-00000497",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

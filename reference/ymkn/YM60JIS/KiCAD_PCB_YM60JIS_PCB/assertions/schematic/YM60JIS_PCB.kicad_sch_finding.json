@@ -1,0 +1,59 @@
+{
+  "file_pattern": "YM60JIS_PCB.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001773",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001773-AST-01",
+      "description": "Source schematic has SW1-SW67 (67 key switches), BTN1 (1 tact switch), D1-D67 (67 diodes), R1-R7 (7 resistors), C1-C17 (17 capacitors), U1-U4 (4 ICs), J1 (1 USB-C connector), Y1 (1 crystal) = 165. Analyzer matches exactly.",
+      "created_from": "FND-00001773",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 165,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001773-AST-02",
+      "description": "The key matrix detector correctly finds 5 rows (ROW0-ROW4) and 14 columns (COL0-COL13), estimated_keys=67, switches_on_matrix=67, diodes_on_matrix=67. This matches the JIS 60% layout with 67 keys.",
+      "created_from": "FND-00001773",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001773-AST-03",
+      "description": "U4 (W25Q16JVUXIQ) flash connected to U3 (RP2040) via 6 shared signal nets is correctly detected as a memory interface. The total_pins=8 matches the W25Q16's package.",
+      "created_from": "FND-00001773",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001773-AST-04",
+      "description": "U1 is correctly identified as a fixed 3.3V LDO (topology=LDO, input=+5V, output=+3V3, estimated_vout=3.3, vref_source=fixed_suffix). The vref is inferred from the part number suffix '332' meaning 3.32V.",
+      "created_from": "FND-00001773",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001773-AST-05",
+      "description": "The RP2040 connects to the W25Q16 flash via QSPI signals: QSPI_SCLK, QSPI_SD0, QSPI_SD1, QSPI_SD2, QSPI_SD3, QSPI_SS. These are global labels in the schematic. The bus analyzer reports spi=[] because it likely matches against SPI-named nets (MOSI, MISO, SCK, etc.) but not QSPI-prefixed names. The memory_interfaces section correctly identifies the connection via shared nets, but the dedicated spi bus analysis is empty.",
+      "created_from": "FND-00001773",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "value": 0,
+        "op": "max_count"
+      },
+      "aspirational": false
+    }
+  ]
+}

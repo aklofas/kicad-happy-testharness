@@ -1,0 +1,19 @@
+{
+  "file_pattern": "MPU6050.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002239",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002239-AST-01",
+      "description": "The MPU6050 schematic has U1=MPU-6050 (I2C IMU), U2=TC2185-3.3VxCTTR (explicit 3.3V LDO regulator with lib_id 'Regulator_Linear:TC2185-3.3VxCTTR'), D1=LED, and 4 resistors. Named nets include SDA, SCL, AD0, INT, XDA, XCL, +3.3V, and VCC. No i2c_bus, voltage_regulator, or led_indicator detector fired. The TC2185 lib_id directly encodes the regulator family and the 3.3V output voltage, making it a clear missed detection for both the regulator and the downstream I2C bus it powers.",
+      "created_from": "FND-00002239",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": "/\\+3\\.3V/"
+      },
+      "aspirational": true
+    }
+  ]
+}

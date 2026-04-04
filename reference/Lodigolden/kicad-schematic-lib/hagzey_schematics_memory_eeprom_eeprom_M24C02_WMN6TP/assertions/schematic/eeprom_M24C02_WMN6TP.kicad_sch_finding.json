@@ -1,0 +1,30 @@
+{
+  "file_pattern": "eeprom_M24C02_WMN6TP.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002265",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002265-AST-01",
+      "description": "INCORRECT: The M24C02-WMN6TP 8-pin I2C EEPROM is assigned reference 'CR1' by the designer and is classified as type 'diode' throughout the output (component_types shows 'diode: 1', BOM type is 'diode', category is 'diode'). The component is clearly an EEPROM IC with 8 pins (VCC, GND, SCL, SDA, E0-E2, WC). The 'CR' prefix is non-standard but the device is categorically an integrated circuit or memory device, not a diode. The misclassification propagates to the assembly_complexity section which counts it as 'other_SMD' and simulation_readiness which treats it as simulatable. The component type should be determined by the symbol's pin structure and lib_id ('hagzey_symbols:eeprom_M24C02-WMN6TP') rather than just the reference prefix.",
+      "created_from": "FND-00002265",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002265-AST-02",
+      "description": "The nets 'I2C.SCL' and 'I2C.SDA' are present and correctly identified in net_classification (as 'clock' and 'data' respectively). The M24C02 EEPROM's SCL and SDA pins are connected to these nets. However, design_analysis.bus_analysis.i2c is empty \u2014 no I2C bus was detected. The analyzer should recognize this as an I2C bus based on the net names and the device's pin names. The single_pin_nets warning for I2C.SCL and I2C.SDA is correct (they're hierarchical labels connecting outward), but the I2C interface itself should still be detected.",
+      "created_from": "FND-00002265",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

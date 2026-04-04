@@ -1,0 +1,20 @@
+{
+  "file_pattern": "Quanta75_Pico.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001154",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001154-AST-01",
+      "description": "The Pico and RP2040Stamp variants have only 648 track segments and 16 vias \u2014 the keyboard matrix column nets are unrouted. The connectivity analysis correctly identifies 35 unrouted nets and sets routing_complete=false. BareRP2040 and RP2040Stamp_JLCPCBA are fully routed and correctly show routing_complete=true.",
+      "created_from": "FND-00001154",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    }
+  ]
+}

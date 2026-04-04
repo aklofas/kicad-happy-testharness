@@ -1,0 +1,90 @@
+{
+  "file_pattern": "splinktegrated.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001942",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001942-AST-01",
+      "description": "The analyzer correctly identifies 42 total components across 10 types (14 capacitors, 9 resistors, 9 connectors, 4 ICs, 1 crystal, 1 fuse, 1 ferrite bead, 1 diode, 1 LED, 1 jumper), 5 power rails (+1V1, +3V3, +5V, GND, Vbus_mother), and extracts the full BOM with LCSC part numbers where present.",
+      "created_from": "FND-00001942",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 42
+      }
+    },
+    {
+      "id": "FND-00001942-AST-02",
+      "description": "Y1 (Crystal_GND24) is correctly detected with its two 15pF load capacitors (C3 and C4), yielding effective load capacitance of 10.5pF (series combination + ~3pF stray). This is the standard RP2040 crystal oscillator configuration.",
+      "created_from": "FND-00001942",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001942-AST-03",
+      "description": "U3 is detected as an LDO with +5V input rail and +3V3 output rail, estimated Vout 3.3V via fixed_suffix recognition. The XC6210B332MR-G is indeed a fixed 3.3V LDO.",
+      "created_from": "FND-00001942",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001942-AST-04",
+      "description": "The SPI bus is detected with NCS and QSPI_~{CS} as two separate chip selects, U1 (RP2040) as the controller, and bus_mode full_duplex. This matches the design: one SPI bus serves the Cirque trackpad (J7) via NCS, and QSPI is used for the flash (U5).",
+      "created_from": "FND-00001942",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001942-AST-05",
+      "description": "U5 (W25Q128JVS) is linked to U1 (RP2040) with 6 shared signal nets (QSPI_D0/D1/D2/D3/SCLK/CS). This is the correct QSPI flash connection for RP2040 designs.",
+      "created_from": "FND-00001942",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001942-AST-06",
+      "description": "F1 (Polyfuse) is detected as a fuse on the Vbus path, and U4 (USBLC6-2P6) is detected as an ESD IC protecting D+_daughter and D-_daughter USB lines. Both are correct.",
+      "created_from": "FND-00001942",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001942-AST-07",
+      "description": "The I2C SDA and SCL nets have devices (U1 only) but no pull-up resistors are detected (has_pullup: false). The design_observations flags the missing pull-ups as individual i2c_bus observations, but does not raise an ERC warning about missing I2C pull-ups. An ERC warning or design observation should flag this as a potential reliability issue since I2C requires pull-up resistors.",
+      "created_from": "FND-00001942",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001942-AST-08",
+      "description": "The design has D1 (LED, footprint LED_0402_1005Metric, type 'led') connected to an 'LED' net which is driven from GPIO on U1. The output also has a 'RGB' net present in the PCB. The addressable_led_chains section is empty despite the design having an LED output. While D1 appears to be a simple indicator LED (not WS2812-type), the 'RGB' net label and the SK6812-type LEDs in the companion flex PCB suggest this connection drives an LED chain. The schematic should at minimum note the LED/RGB signal paths.",
+      "created_from": "FND-00001942",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "min_count",
+        "value": 0
+      },
+      "aspirational": false
+    }
+  ]
+}

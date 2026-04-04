@@ -1,0 +1,39 @@
+{
+  "file_pattern": "MainPCB.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000585",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000585-AST-01",
+      "description": "4 sheets parsed correctly (59 components, 136 nets). MCP1825S LDO identified. ESP32+Si4463 RF chain detected. I2C bus on I2C_SCL/SDA with pull-ups R13/R15 to +3.3V correctly found. BSS138 MOSFETs (Q1/Q2) correctly identified as N-channel with source on +3.3V (level-shifter topology). Voltage divider R12/R9 for supply monitoring correctly extracted.",
+      "created_from": "FND-00000585",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000585-AST-02",
+      "description": "dnp_parts=2, and R14/R16 have dnp:true in BOM. These are also included in gate_resistors for Q2/Q1 respectively with value 'DNP', which is accurate.",
+      "created_from": "FND-00000585",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000585-AST-03",
+      "description": "Q1 and Q2 are BSS138 N-channel MOSFETs with source on +3.3V and drain on I2C_SCL_HV/I2C_SDA_HV \u2014 the classic bidirectional I2C level shifter circuit. The analyzer classifies them as generic transistor_circuits with load_type='transistor' but does not identify the level-shifter pattern. A level-shifter detector or note in design_observations would be valuable.",
+      "created_from": "FND-00000585",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

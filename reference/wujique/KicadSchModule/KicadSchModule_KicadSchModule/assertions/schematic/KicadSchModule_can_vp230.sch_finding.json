@@ -1,0 +1,19 @@
+{
+  "file_pattern": "can_vp230.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000756",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000756-AST-01",
+      "description": "The VP230 is a CAN transceiver. The schematic has CAN_TX and CAN_RX nets correctly identified in bus_analysis.can, but 'devices' list is empty for both. More critically, the CANH and CANL differential pair (the RS-485-line side of the chip) is absent \u2014 only one bus side labeled. For VP230, the physical CAN bus lines would be present as nets but appear to have a no-connect on one pin.",
+      "created_from": "FND-00000756",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

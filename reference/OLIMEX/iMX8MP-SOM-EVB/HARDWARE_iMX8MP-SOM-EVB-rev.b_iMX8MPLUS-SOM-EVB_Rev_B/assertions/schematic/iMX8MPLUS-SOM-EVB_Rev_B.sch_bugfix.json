@@ -1,0 +1,35 @@
+{
+  "file_pattern": "iMX8MPLUS-SOM-EVB_Rev_B.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-092-01",
+      "description": "KH-092: T1 (BC817-40) classified as transistor not transformer",
+      "issue": "KH-092",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "T1",
+        "assert_field": "type",
+        "assert_value": "transistor"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-093-01",
+      "description": "KH-093: VR1 (AMS1117-1.2) classified as IC not varistor",
+      "issue": "KH-093",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "components",
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "VR1",
+        "assert_field": "type",
+        "assert_value": "ic"
+      }
+    }
+  ]
+}

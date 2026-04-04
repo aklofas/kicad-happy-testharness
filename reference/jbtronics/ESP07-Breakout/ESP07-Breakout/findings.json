@@ -1,0 +1,93 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ESP07-Breakout.sch.json",
+      "status": "promoted",
+      "summary": "SW1 pin 2 is placed on __unnamed_0 instead of RST net; U1 (AP1117D33 LDO regulator) not detected as a power regulator; Spurious RC filter detected: R2/C1 reset debounce circuit misidentified as RC ...",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies R11 (10k) as top resistor and R12 (1k) as bottom resistor forming a voltage divider from AIN to ADC to GND, with ratio 0.0909. This matches the schematic where R11 and R12 are in series from the AIN label to GND, with the midpoint labeled ADC going to the ESP8266 ADC input.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The schematic contains exactly 25 components: U1, U2, U3, C1-C5, R1-R12, D3-D5, D4 (LED), SW1, P1, P3. Analyzer reports 25 total_components. BOM entries for all values and footprints match the schematic source. Power rails +3V3, +5V, GND are all correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The analyzer correctly places C2 (100n), C3 (100u), C5 (100n) on +3V3 and C4 (100n) on +5V. Total +3V3 capacitance of 100.2uF and has_bulk=true matches the presence of C3 (100u electrolytic). The +5V rail has only 0.1uF (C4, 100n) with no bulk, which is correct.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "In the schematic, SW1 pin 2 connects via wire to coordinate (1200,4600), which has 'Connection ~' junction and a wire running to the RST text label at (600,4600). This connects SW1 pin 2 to the RST net. The analyzer instead assigns SW1 pin 2 to '__unnamed_0', which has only point_count 2. The RST net should include SW1 pin 2, C1 pin 1, R2 pin 2, and the ESP07 RST pin.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "U1 is an AP1117D33 which is a well-known 3.3V LDO linear voltage regulator in SOT-223 package, converting +5V to +3V3. The signal_analysis.power_regulators list is empty. The analyzer should identify U1 as a regulator given its value 'AP1117D33' and the presence of +5V input and +3V3 output rails with decoupling capacitors. This is a missed detection.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The analyzer reports an RC filter with R2 (5k) and C1 (1u), input_net=RST, output_net=RX, ground_net=+3V3. This is wrong in two ways: (1) C1 connects between RST and +3V3 (not GND), so it is a pull-up capacitor on the RST line, not a ground-referenced RC filter. The 'ground_net' being '+3V3' is a sign the topology is not a true RC low-pass filter. (2) R2 connects RST to RX for the auto-reset circuit (DTR-based auto-programming), not as a series element of an RC filter. This is a false positive RC filter detection.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "U3 has lib_id 'Serial-Header', value 'Serial-Header', and footprint 'Socket_Strips:Socket_Strip_Straight_1x06'. It is a 6-pin serial programming connector (FTDI-style header). It is classified as type 'ic' in both the BOM and components sections, and the statistics show component_types.ic = 3. It should be classified as a 'connector' (like P1 and P3 are). Using a 'U' reference designator for a connector is a schematic convention issue in the source design, but the analyzer should still use the footprint or value to identify it as a connector.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The CH_PD net in the analyzer only lists R1 pin 1 (the pull-up resistor). In the schematic, CH_PD connects via text label at (4300,3650) to U2's CH_PD pin, and also to P1 breakout connector pin via label at (4300,3650). Since U2 has no pins parsed (pins: []) and pin-to-net resolution relies on position matching, the U2 ESP07 module's CH_PD, RST, TX, RX, GPIO0, GPIO2, GPIO5, GPIO15 connections are all absent from their respective nets. This is a systemic issue: U2 (custom library part) has empty pins list, so none of its nets get connected to it.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The GPIO15 net only lists R9 pin 2 (the pull-down resistor). In the schematic there is a text label GPIO15 at (4300,4150) connecting P1 pin 1 to the GPIO15 net. The P1 connector breakout pin for GPIO15 is absent from the GPIO15 net. Similarly GPIO5 net only has P1 pin 12 but is missing the U2 connection via label at (6750,3750).",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "D3 is a ZENER diode with value '3V3' connected between the RX signal line and GND (anode to GND via wire at 6100,6150, cathode toward RX at 6100,5650). It clamps the RX signal to 3.3V to protect the ESP8266 UART input from 5V UART signals. The signal_analysis.protection_devices list is empty. This zener clamp should be detected as a protection device.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The schematic implements the standard ESP8266 auto-reset/auto-program circuit: DTR drives through D5 (diode, SOD-123) to the GPIO0/RST node for auto-entering bootloader mode. DTR also connects to D5 anode, with R10 (10k) pull-up to +3V3 on the D5 cathode side. This is a well-known pattern for CH340/CP2102 auto-programming of ESP modules. The analyzer does not detect or describe this pattern anywhere in signal_analysis or design_analysis.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "jbtronics/ESP07-Breakout",
+      "project": "ESP07-Breakout",
+      "created": "2026-03-23T20:25:22.512583+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000493"
+    }
+  ]
+}

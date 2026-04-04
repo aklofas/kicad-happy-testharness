@@ -1,0 +1,99 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "throwing-star.sch.json",
+      "status": "confirmed",
+      "summary": "Legacy wire-to-pin connectivity completely broken: all 32 RJ45 data pins appear as isolated unnamed nets instead of being connected to SIG1-SIG8 labeled nets",
+      "correct": [
+        {
+          "type": "components",
+          "description": "6 components correctly extracted (2 caps, 4 RJ45 connectors) with correct values, footprints, and MPNs from legacy custom fields"
+        },
+        {
+          "type": "labels",
+          "description": "All 8 labels (SIG1-SIG8) correctly identified"
+        },
+        {
+          "type": "power_rails",
+          "description": "GND correctly identified as only power rail"
+        },
+        {
+          "type": "bom",
+          "description": "BOM correctly extracts MPN (C315C221K1G5TA, RJHSE5080) and manufacturer from legacy Field entries"
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "nets",
+          "description": "32 RJ45 data pins appear as isolated __unnamed_0 through __unnamed_31 single-pin nets. All should be on SIG1-SIG8. SIG1-SIG3,SIG6 have zero pins resolved. SIG4,SIG5,SIG7,SIG8 each only have 1 cap pin (missing 3 RJ45 pins each).",
+          "analyzer_section": "nets"
+        },
+        {
+          "type": "statistics",
+          "description": "Reports 41 nets but actual design has only 9 (GND + SIG1-SIG8). Inflated by 32 spurious single-pin nets from broken wire tracing.",
+          "analyzer_section": "statistics.total_nets"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "This is a minimal repro case for KH-016: only 6 components, 8 signal wires, and pure wire-based connectivity. Good test fixture for debugging the legacy wire tracer."
+      ],
+      "should_become_assertion": false,
+      "related_issues": [
+        "KH-016"
+      ],
+      "id": "FND-00000071",
+      "repo": "greatscottgadgets/throwing-star-lan-tap",
+      "project": "throwing-star-pro",
+      "created": "2026-03-13T20:28:37.707037+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "throwing-star.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "PCB analysis correct overall but copper_layers_used=0 despite tracks on both Front and Back, and front_side/back_side component counts are 0 \u2014 RESOLVED: now reports copper_layers_used=2, front_side=6",
+      "correct": [
+        {
+          "type": "footprints",
+          "description": "All 6 real components + 1 logo correctly identified with correct net assignments"
+        },
+        {
+          "type": "tracks",
+          "description": "Track layer distribution correct: Front:130, Back:74. 204 total segments, 4 vias.",
+          "analyzer_section": "tracks",
+          "check": {
+            "path": "tracks",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "statistics",
+          "description": "copper_layers_used=0 but tracks exist on both Front and Back copper layers",
+          "analyzer_section": "statistics.copper_layers_used"
+        },
+        {
+          "type": "statistics",
+          "description": "front_side=0 and back_side=0 but all 6 components are on Front",
+          "analyzer_section": "statistics.front_side"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "copper_layers_used should count layers from track.layer_distribution",
+        "front_side/back_side should count footprints by their layer"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "id": "FND-00000072",
+      "repo": "greatscottgadgets/throwing-star-lan-tap",
+      "project": "throwing-star-pro",
+      "created": "2026-03-13T20:28:37.708200+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

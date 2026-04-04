@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Teensy35Mega.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001867",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001867-AST-01",
+      "description": "The analyzer reports a DFM violation: board height 114.3mm exceeds the 100mm threshold used for standard JLCPCB pricing tier. The board width (68.58mm) is within 100mm. The message accurately states 'Board size 68.58x114.3mm exceeds 100x100mm \u2014 higher fabrication pricing tier at JLCPCB'. This is a genuine and actionable finding.",
+      "created_from": "FND-00001867",
+      "check": {
+        "path": "dfm.violation_count",
+        "value": 1,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001867-AST-02",
+      "description": "INCORRECT: The PCB stats report smd_count=7 and tht_count=27. The 7 SMD footprints are: REF1, REF2, REF3, REF4, REF5, REF**, and U1 (NCP1117 SOT-223). The REF* references are mounting hole footprints (Mounting_Holes:MountingHole_3.2mm_M3_ISO14580_Pad) with a single SMD pad. These are mechanically-only features, not electrical SMD components. Counting mounting holes as SMD components overstates the SMD assembly complexity. Only U1 is a genuine SMD electrical component.",
+      "created_from": "FND-00001867",
+      "check": {
+        "path": "statistics.smd_count",
+        "value": 1,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

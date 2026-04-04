@@ -1,0 +1,30 @@
+{
+  "file_pattern": "USB-GIGABIT_Rev_C.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001567",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001567-AST-01",
+      "description": "INCORRECT: The Rev.C KiCad 5 legacy schematic reports total_nets=93, but the corresponding PCB has net_count=47, and the equivalent Rev.D/E KiCad 6+ schematics report 51 nets for the same design. The KiCad 5 legacy parser counts wire segments as individual nets rather than tracing electrically connected nodes, inflating the net count by approximately 2x. The Rev.E schematic (KiCad 6+ format) correctly reports 51 nets matching the PCB.",
+      "created_from": "FND-00001567",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "less_than",
+        "value": 60
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001567-AST-02",
+      "description": "INCORRECT: In Rev.C, U1 has value 'USBA30MALE' and lib_id 'USB-GIGABIT_Rev_C:USBA30MALE', clearly a USB Type-A male connector. The analyzer classifies it as type='ic' instead of 'connector'. This causes the connector count to be 1 (only LAN1) while it should be 2, and the ic count to be 4 instead of 3. The component type classification relies on lib_id/value heuristics and fails here because the symbol comes from a local library without a recognizable connector prefix.",
+      "created_from": "FND-00001567",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "equals",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

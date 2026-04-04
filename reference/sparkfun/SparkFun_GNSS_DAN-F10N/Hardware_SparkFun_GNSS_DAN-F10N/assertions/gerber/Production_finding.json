@@ -1,0 +1,50 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001423",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001423-AST-01",
+      "description": "1728 total holes: 1452 vias (0.3mm), 192 PTH component holes (1.016mm), 24 NPTH (0.65mm), 12 NPTH (2.3mm), 48 NPTH mounting holes (3.1mm). The 1452 vias at 0.3mm match the X2-attributed ViaPad flashes exactly. smd_ratio=0.92 is plausible. The panelized board has 12 copies of 4 mounting holes = 48, consistent with a 3\u00d74 or 4\u00d73 panel arrangement. Alignment passes with all layer extents coherent.",
+      "created_from": "FND-00001423",
+      "check": {
+        "path": "statistics.total_holes",
+        "value": 1728,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001423-AST-02",
+      "description": "The panelized gerber has 93 unique component refs: 50 real component refs, 41 kibuzzard decoration items. Pad counts per component are multiples of 12 (e.g. C1=24=2\u00d712, U6=1200=100\u00d712, J1=216=18\u00d712), confirming a 12-up panel. This is consistent with the 48 NPTH mounting holes (4 per board \u00d7 12 panels). The total_pads=2844 divided by 12 = 237 pads per board copy, reasonable for this design. board_dimensions is empty but layer extents (139\u00d7163 mm) match a ~12-up panel at 40.64\u00d740.64 mm per board.",
+      "created_from": "FND-00001423",
+      "check": {
+        "path": "component_analysis.total_unique",
+        "value": 93,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001423-AST-03",
+      "description": "INCORRECT: The .GKO file (SparkFun_GNSS_DAN-F10N_panelized.GKO) contains the board outline and has a Profile aperture function entry in its aperture_analysis. However, its X2 FileFunction attribute reads 'Soldermask,Bot' (a KiCad quirk for panelized outputs). The analyzer maps layer_type from X2 FileFunction rather than from the .GKO file extension or the Profile aperture function. As a result, layer_type='B.Mask' is assigned to the board outline file, Edge.Cuts is reported missing_required, and complete=False. The same issue affects Flex_pHAT and LG580P gerber outputs. The Profile aperture function in the GKO file is the definitive indicator that this is the board outline.",
+      "created_from": "FND-00001423",
+      "check": {
+        "path": "completeness.missing_required",
+        "value": "Edge.Cuts",
+        "op": "contains_match"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001423-AST-04",
+      "description": "The Production directory contains GL2 and GL3 files (verified: X2 FileFunction 'Copper,L2,Inr' and 'Copper,L3,Inr'). Neither appears in the gerbers list in the output. found_layers shows only ['B.Cu', 'B.Mask', 'B.Paste', 'B.SilkS', 'F.Cu', 'F.Mask', 'F.Paste', 'F.SilkS'] \u2014 inner copper layers In1.Cu and In2.Cu are absent. The gerber analyzer does not scan .GL2/.GL3 extensions (or possibly does not parse them successfully), so a 4-layer board appears as 2-layer from the gerber perspective. This issue also affects Flex_pHAT and LG580P.",
+      "created_from": "FND-00001423",
+      "check": {
+        "path": "statistics.gerber_files",
+        "value": 9,
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

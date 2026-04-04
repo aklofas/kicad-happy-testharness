@@ -1,0 +1,29 @@
+{
+  "file_pattern": "RTLS_VIC.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001171",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001171-AST-01",
+      "description": "U2 TPS63900DSKR identified as switching regulator with inductor L1, input +ESC_5V, output +3V3. Correct topology detection.",
+      "created_from": "FND-00001171",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001171-AST-02",
+      "description": "signal_analysis.crystal_circuits is empty. X1 is a 26MHz SMD crystal with 18pF load caps C10/C11 connected to STM32F411 pins XIN/XOT. The crystal circuit detector missed this, likely because the custom lib_id ('lib:CRYSTAL-SMD_4P-L3.2-W2.5-BL_SIT8008BI') isn't recognized as a crystal symbol.",
+      "created_from": "FND-00001171",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

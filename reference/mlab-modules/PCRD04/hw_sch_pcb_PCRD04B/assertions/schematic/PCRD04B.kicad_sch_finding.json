@@ -1,0 +1,28 @@
+{
+  "file_pattern": "PCRD04B.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001053",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001053-AST-01",
+      "description": "All five op-amp configurations correctly identified including transimpedance amplifier (U1 unit1), inverting amplifiers with correct gains (-4.7x), and buffer (U2 unit2). RC filter network on REF rail (R7+C10, 159Hz) also correctly identified.",
+      "created_from": "FND-00001053",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001053-AST-02",
+      "description": "Power comes in from J1 (a 3.6V connector). Since KH-160 only suppresses PWR_FLAG warnings for known power-source footprints, this connector-powered design correctly still reports the warnings \u2014 reflecting the missing ERC annotation.",
+      "created_from": "FND-00001053",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

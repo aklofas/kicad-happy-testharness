@@ -1,0 +1,96 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "pcb",
+      "source_file": "STM32_SAMPLE.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "PCB component_groups shows D1-D6 (6 LEDs) but schematic has D1-D7 (7 LEDs); 2-layer board with mixed front/back placement correctly detected; Large courtyard overlap between J4 and U2 correctly det...",
+      "correct": [
+        {
+          "description": "Board correctly identified as 2-layer (F.Cu, B.Cu only), 30 footprints on front and 15 on back side. 37 SMD and 5 THT (including the SW_PUSH push button and 3 mounting holes + USB connector). Board dimensions 49.403\u00d734.036mm are plausible for a compact STM32F405 breakout board.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.copper_layers_used",
+            "value": 2,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "J4 (5-pin header, 0.5mm pitch horizontal) overlaps U2 (STM32F405 LQFP-64) courtyard by 73.334mm\u00b2 \u2014 a large overlap that would indicate the 5-pin connector footprint is placed on top of the MCU. This is a legitimate layout problem correctly flagged by the analyzer.",
+          "analyzer_section": "placement_analysis",
+          "check": {
+            "path": "placement_analysis.courtyard_overlaps[0].overlap_mm2",
+            "value": 70.0,
+            "op": "min_count"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The schematic lists 7 LEDs (D1 through D7), and the BOM confirms 7 LED references. The PCB component_groups shows only D: {count: 6, references: [D1, D2, D3, D4, D5, D6]} \u2014 D7 is missing from the PCB component list. Either D7 was not placed on the PCB (layout omission) or there is a parsing error dropping the footprint. The footprint_count=45 in statistics matches the schematic's 45 components, so this appears to be a grouping/counting error in the component_groups section rather than a missing footprint.",
+          "analyzer_section": "component_groups",
+          "check": {
+            "path": "component_groups.D.count",
+            "value": 7,
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "MCLEANS/STM32-SAMPLE-KICAD-BOARD",
+      "project": "STM32_SAMPLE",
+      "created": "2026-03-24T00:19:20.478260+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001345"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "STM32_SAMPLE.sch.json",
+      "status": "promoted",
+      "summary": "LM1117-3.3 LDO correctly identified with +5V input and +3.3V output; No UART/SPI bus detection despite STM32F405 with likely named bus nets on connector pins; 7 LED components correctly identified ...",
+      "correct": [
+        {
+          "description": "U1 (LM1117-3.3) is correctly classified as LDO topology with input_rail=+5V and output_rail=+3.3V, estimated_vout=3.3, vref_source=fixed_suffix. The 13 decoupling caps (22\u00b5F total) on +3.3V and 1 cap on +5V are correctly attributed.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[1].topology",
+            "value": "LDO",
+            "op": "equals"
+          }
+        },
+        {
+          "description": "7 LEDs (D1-D7) are all correctly classified as 'led' type with 220-ohm current limiting resistors (R2-R7 and R11) on the +3.3V rail. Component types are correctly broken down: 2 ICs, 5 connectors, 16 caps, 11 resistors, 1 switch, 7 LEDs, 3 mounting holes.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.led",
+            "value": 7,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The STM32F405RGTx (U2) is a 64-pin MCU with multiple UART, SPI, and I2C peripherals. The design has 78 nets with many unnamed (routed through connectors J1-J5). While the schematic does not use named bus nets for these peripherals, the lack of any bus detection at all (bus_analysis.uart=[], spi=[], i2c=[]) means the analyzer has nothing to check. This is borderline acceptable since the design has no named bus nets, but the MCU's USB pins (HSE_IN, HSE_OUT named, USB implicit) should trigger at least a USB detection.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_nets",
+            "value": 78,
+            "op": "equals"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "MCLEANS/STM32-SAMPLE-KICAD-BOARD",
+      "project": "STM32_SAMPLE",
+      "created": "2026-03-24T00:19:20.478284+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001346"
+    }
+  ]
+}

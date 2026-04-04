@@ -1,0 +1,127 @@
+{
+  "file_pattern": "Soft_Power_Switch.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001458",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001458-AST-01",
+      "description": "The PCB reports 63 total footprints. The schematic has 40 real components plus G3 (OSHW logo, exclude_from_bom), plus the board-only kibuzzard annotations (SparkFun graphical elements). The PCB has 35 real component footprints, 4 FIDs, 4 standoffs, 1 SW1, 3 connectors, 2 jumpers, plus 13 board_only kibuzzard annotations and 1 G3 (Creative Commons), 1 G*** (Flame), 1 G*** (LOGO), 1 Ref**. Total matches the 63 reported.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 63
+      }
+    },
+    {
+      "id": "FND-00001458-AST-02",
+      "description": "The PCB correctly identifies the board as a 25.4mm x 25.4mm square. This is confirmed by the board_outline with start [115.57, 99.06] and end [140.97, 124.46], giving exactly 25.4mm in both X and Y dimensions. SparkFun ProtoBoard-style 1-inch square boards are a common SparkFun form factor.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "op": "equals",
+        "value": 25.4
+      }
+    },
+    {
+      "id": "FND-00001458-AST-03",
+      "description": "The PCB reports 47 vias, all 0.56mm outer diameter with 0.3mm drill. The gerber drill file (Hardware_Production_Single_PCB.json) confirms 47 via holes at 0.3mm. The annular ring is a uniform 0.13mm ((0.56-0.3)/2), which is acceptable but tight for standard fabrication. This is consistent across the PCB and gerber outputs.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "statistics.via_count",
+        "op": "equals",
+        "value": 47
+      }
+    },
+    {
+      "id": "FND-00001458-AST-04",
+      "description": "The zone analysis correctly identifies one GND zone spanning F&B.Cu with the fill area (789.23 mm\u00b2) exceeding the outline area (645.16 mm\u00b2) due to the poured fill extending into keepout areas on both layers. The fill_ratio of 1.223 and the layer-specific breakdown (B.Cu: 446.06, F.Cu: 343.17) are consistent with a double-sided pour on a 25.4x25.4mm board.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "zones",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001458-AST-05",
+      "description": "The connectivity section correctly reports routing_complete=true with unrouted_count=0. The PCB has 24 total nets with pads and all are routed. This matches the board which is a production-ready design from SparkFun.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "connectivity.routing_complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001458-AST-06",
+      "description": "The via_in_pad analysis correctly identifies 3 instances: a via in C2 pad 1 (the 47uF tantalum's positive pad) and two vias on J1's NC1 and NC2 pads. The same_net=false flag for all three is accurate \u2014 for C2, the via connects different nets (the timing node Net-(C2-Pad1) vs. via net), and for J1's NC pads these are truly unconnected. This is correctly detected.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "vias.via_analysis.via_in_pad",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "FND-00001458-AST-07",
+      "description": "The PCB reports two track widths: 0.1778mm (7-mil, used for 168 signal segments) and 0.5588mm (22-mil, used for 43 power/wider segments). These match the gerber aperture data which shows the same two conductor widths. The 0.1778mm minimum is appropriate for the small 25.4mm board, though tight for high-current paths \u2014 mitigated by the copper pours.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "tracks.width_distribution",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "FND-00001458-AST-08",
+      "description": "The PCB net list correctly captures all 24 nets including the meaningful signal names: BTN (button sense), EN (enable output from flip-flop), OFF (soft-off control), PUSH (button push output), VOUT (switched output), VIN (input), GND. Unnamed nets follow the KiCad convention Net-(ref-pad). This is consistent with the schematic's 25 nets (1 unnamed phantom net disappears in PCB translation).",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "nets",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "FND-00001458-AST-09",
+      "description": "The PCB setup section correctly reports a 1.6mm board thickness with the standard stackup: F.SilkS / F.Paste / F.Mask (0.01mm) / F.Cu (0.035mm) / core dielectric 1.51mm FR4 (\u03b5=4.5, tan \u03b4=0.02) / B.Cu (0.035mm) / B.Mask (0.01mm) / B.Paste / B.SilkS. This is the standard JLC/OSHPARK 2-layer configuration and is accurately parsed.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "setup.board_thickness_mm",
+        "op": "equals",
+        "value": 1.6
+      }
+    },
+    {
+      "id": "FND-00001458-AST-10",
+      "description": "The PCB component_groups section shows R group with count=10 and references R1 through R10, exactly matching the schematic. All resistors are SMD type on F.Cu layer, correctly reflected in the footprint entries.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "component_groups.R.count",
+        "op": "equals",
+        "value": 10
+      }
+    },
+    {
+      "id": "FND-00001458-AST-11",
+      "description": "SW1 (SMD 5.2\u00d75.2mm tactile switch) is correctly identified as type='smd' with pad_count=4 and placed on F.Cu. The footprint has courtyard bounds consistent with a 5.2mm square push switch. The net connections (GND on pin 1, BTN on pin 2) match the schematic.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "component_groups.SW.count",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001458-AST-12",
+      "description": "INCORRECT: The PCB reports 63 total footprints, front_side=44, back_side=19, smd_count=35, tht_count=1. Counting actual SMD real components from the footprints list: Q3 (6-pin SMD), U2 (5-pin), U3 (5-pin), U4 (6-pin), D1 (SOD-323 SMD), D2, D3 (LED SMD), F1 (SMD 1210 fuse), C1,C2,C3,C4 (SMD caps), R1-R10 (SMD resistors), J1,J2 (SMD JST), JP1,JP2 (SMD jumpers), Q1,Q2 (SOT-23 SMD), SW1 (SMD push button), FID1-FID4 (SMD fiducials), 4 standoffs (classified as 'smd' with pad_count=1) = 35 SMD components. This is correct, though the J3 connector is THT (through_hole with 6 PTH pins) and the 4 ST standoffs are classified as 'smd' which is technically how they appear in KiCad.",
+      "created_from": "FND-00001458",
+      "check": {
+        "path": "statistics.smd_count",
+        "op": "equals",
+        "value": 35
+      },
+      "aspirational": false
+    }
+  ]
+}

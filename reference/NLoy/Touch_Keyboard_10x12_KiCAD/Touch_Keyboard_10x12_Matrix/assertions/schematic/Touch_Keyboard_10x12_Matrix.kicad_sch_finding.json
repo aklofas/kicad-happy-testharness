@@ -1,0 +1,65 @@
+{
+  "file_pattern": "Touch_Keyboard_10x12_Matrix.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001615",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001615-AST-01",
+      "description": "The analyzer reports key_matrices with rows=12, columns=10, estimated_keys=118, switches_on_matrix=118. The 11th column net COLK connects only rotary encoders SW1, SW2, and a U3 GPIO \u2014 correctly excluded from the key matrix. The repo is named 'Touch_Keyboard_10x12_KiCAD' (10 columns x 12 rows), matching the detection.",
+      "created_from": "FND-00001615",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "contains_match",
+        "value": {
+          "rows": 12,
+          "columns": 10
+        }
+      }
+    },
+    {
+      "id": "FND-00001615-AST-02",
+      "description": "INCORRECT: Components T1, T2, T3 use lib_id 'Touch_Keyboard_Symbols:MountingHole' and keywords 'mounting hole', but are classified as type 'transformer' because their reference prefix 'T' triggers the transformer classifier instead of mounting_hole. The statistics report 'transformer': 3 and 'mounting_hole': 15, when it should be 'transformer': 0 and 'mounting_hole': 18.",
+      "created_from": "FND-00001615",
+      "check": {
+        "path": "statistics.component_types.transformer",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001615-AST-03",
+      "description": "INCORRECT: Component M61 uses lib_id 'Touch_Keyboard_Symbols:MX_SW_solder' and keywords 'switch normally-open pushbutton push-button', identical to the 119 MX-prefixed keyboard switches that are correctly classified as switch. Because the reference prefix 'M' is not in the switch prefix list (which handles 'MX'), M61 falls through to 'other'. The statistics report 'switch': 120 (missing M61) and 'other': 1, but M61 is a keyboard switch identical to the MX-prefix variants. The BOM groups M61 with the 1u switch group (qty=109) correctly, showing the inconsistency.",
+      "created_from": "FND-00001615",
+      "check": {
+        "path": "statistics.component_types.other",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001615-AST-04",
+      "description": "INCORRECT: The schematic file header is '(kicad_sch (version 20230121) (generator eeschema)' \u2014 it lacks a 'generator_version' field, which older KiCad 7.x exports omit. The file_version 20230121 definitively maps to KiCad 7.x. The analyzer outputs kicad_version='unknown' instead of inferring '7' from the numeric file version. Compare with UBW32 (file_version 20231120, generator_version '8.0') which correctly outputs kicad_version='8.0'.",
+      "created_from": "FND-00001615",
+      "check": {
+        "path": "kicad_version",
+        "op": "equals",
+        "value": "7"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001615-AST-05",
+      "description": "INCORRECT: The design has 119 SK6812MINI-E addressable LEDs (DIN/DOUT chain protocol) grouped into sections via named nets (LEDS, LEDS0-1, LEDS1-2, LEDS2-3, LEDS3-4, LEDS4-5). The analyzer reports 119 separate chains each with chain_length=1 and data_in_net=''. Inspection of the net list shows all Net-(LED*-DOUT) and Net-(LED*-DIN) nets have zero component-pin entries \u2014 the analyzer fails to map the SK6812's DIN/DOUT pin UUIDs to the LED component references, breaking chain following. The PCB correctly shows LED0 pad 2 on 'Net-(LED0-DOUT)' and pad 4 on 'LEDS', confirming the physical connections exist but are missing from the schematic pin-net map.",
+      "created_from": "FND-00001615",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "max_count",
+        "value": 10
+      },
+      "aspirational": true
+    }
+  ]
+}

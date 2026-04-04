@@ -1,0 +1,25 @@
+# Findings: Arduino_Pro_Mini_Dx / Arduino_Pro_Mini_Dx
+
+## FND-00000375: Crystal load capacitance calculation uses series formula instead of parallel for per-pin caps; RC filter detected between SW1 (reset button) and RESET net via R1+C5 is a topology misidentification;...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: Arduino_Pro_Mini_Dx.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- Y1 (32.768kHz) has two capacitors on each crystal pin: C1=6p8 and C2=1p5 on pin1 (parallel = 8.3pF), C3=6p8 and C4=1p5 on pin2 (parallel = 8.3pF). Correct CL_eff = (8.3pF * 8.3pF)/(8.3pF + 8.3pF) + ~3pF stray = ~7.15pF. The analyzer instead computes (1p5 * 6p8)/(1p5 + 6p8) + 3pF = 4.23pF, applying the series formula to only one pair of capacitors and ignoring that caps on the same crystal pin are in parallel. The note string 'CL_eff = (1p5 * 6p8) / (1p5 + 6p8) + ~3pF stray' confirms the formula is wrong.
+
+### Incorrect
+- The analyzer reports an RC low-pass filter with R1=330Ω and C5=100n (cutoff 4.82kHz, input_net=__unnamed_5, output_net=__unnamed_3). In this circuit, __unnamed_5 is SW1 pin2 (pulled to GND when pressed) and __unnamed_3 is the RESET debounce node. R1 is a current-limiting series resistor in the reset button path, not the source resistor of a signal filter. The actual debounce filter is R2(4k7)+C5 (pull-up + bypass), which is also reported separately. The R1+C5 detection conflates the switch series resistor with the filter capacitor.
+  (signal_analysis)
+- The analyzer reports 6 I2C lines (PA2/SDA, PA3/SCL, PF2/SDA1, PF3/SCL1, PC2/SDA*, PC3/SCL*) as lacking pull-up resistors (has_pull_up: false). These are AVR128DB32 I2C-capable pins exposed via the M1 connector header. For a Pro Mini form factor module, I2C pull-ups are always expected to be placed on the application board, not the MCU module itself. Flagging these as missing pull-ups for every MCU I2C-capable port pin is noise that will be present on any bare MCU module design.
+  (design_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

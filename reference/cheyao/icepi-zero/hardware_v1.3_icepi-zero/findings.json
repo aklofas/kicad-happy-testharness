@@ -1,0 +1,331 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_v1.3_icepi-zero.kicad_sch.json",
+      "status": "new",
+      "summary": "ECP5 FPGA board with SDRAM, SPI flash, HDMI output, 3x USB-C, SD card; HDMI interface missed entirely, ECP5 power domains incomplete, cross-domain warnings are false positives",
+      "correct": [
+        {
+          "description": "Three TLV62569DBV switching regulators correctly identified with feedback dividers: U2 (+5V->+1V1), U3 (+5V->+2V5), U4 (+5V->+3V3)",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 3
+          }
+        },
+        {
+          "description": "Voltage divider ratios and estimated Vout values accurate: U2=1.1V (R6/R7), U3=2.515V (R8/R9), U4=3.327V (R10/R11) with Vref=0.6V",
+          "analyzer_section": "signal_analysis.feedback_networks",
+          "check": {
+            "path": "signal_analysis.feedback_networks",
+            "op": "min_count",
+            "value": 3
+          }
+        },
+        {
+          "description": "W9825G6KH SDRAM (U11) and W25Q128JVS SPI flash (U12) memory interfaces correctly detected with proper processor connections to ECP5 (U1)",
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "Four TPD2EUSB30A ESD protection ICs (U5, U7, U8, U10) correctly identified with protected differential pairs",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "50MHz active oscillator Y1 (SG-8018CG) correctly identified with GLOBAL_CLK output net",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "I2C bus correctly detected with dual-domain pull-ups: 4.7k to +5V (R16/R17) and 3.3k to +3V3 (R18/R19) through PCA9306DC1 level translator (U6)",
+          "analyzer_section": "design_analysis.bus_analysis.i2c",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "SPI flash bus detected with MOSI/MISO signals between U1 and U12",
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "15 differential pairs correctly detected including USB and GPDI TMDS pairs",
+          "analyzer_section": "design_analysis.differential_pairs",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 15
+          }
+        },
+        {
+          "description": "3 USB Type-C connectors (J3, J4, J5) correctly identified with CC pull-down and ESD compliance checks",
+          "analyzer_section": "usb_compliance",
+          "check": {
+            "path": "usb_compliance.connectors",
+            "op": "min_count",
+            "value": 3
+          }
+        },
+        {
+          "description": "PCA9306DC1 (U6) correctly identified as level translator for I2C between 3.3V and 5V domains",
+          "analyzer_section": "design_analysis.cross_domain_signals",
+          "check": {
+            "path": "design_analysis.cross_domain_signals[?level_translators]",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "All 8 hierarchical sheets correctly traversed: root, io, sdram, power, usb, sd, flash, gpdi",
+          "analyzer_section": "sheets",
+          "check": {
+            "path": "sheets",
+            "op": "min_count",
+            "value": 8
+          }
+        },
+        {
+          "description": "Total component count of 162 matches schematic (50 resistors, 54 capacitors, 12 ICs, 6 LEDs, 6 connectors, etc.)",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 162
+          }
+        },
+        {
+          "description": "Decoupling analysis correctly covers all 4 power rails with accurate cap counts and values",
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "UART bus detected between FT231XQ (U9) and ECP5 (U1) on USB_TXD/USB_RXD nets",
+          "analyzer_section": "design_analysis.bus_analysis.uart",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "Power sequencing correctly identifies all 3 regulators as always-on (EN tied to +5V)",
+          "analyzer_section": "power_sequencing",
+          "check": {
+            "path": "power_sequencing.dependencies",
+            "op": "min_count",
+            "value": 3
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Cross-domain level shifter warnings for JTAG/UART signals (JTAG_TDI, JTAG_TDO, JTAG_TCK, JTAG_TMS, USB_TXD, USB_RXD, ~{USB_RTS}, ~{USB_DTR}) between U1 (+3V3) and U9 (+5V) are false positives. The FT231XQ's VCCIO pin (pin 20) is powered from its own 3V3OUT (pin 10), not +5V. Both ICs operate at 3.3V I/O, so no level shifter is needed.",
+          "analyzer_section": "design_analysis.cross_domain_signals"
+        },
+        {
+          "description": "U1 ECP5 FPGA power_rails shows only ['+3V3'] but it actually uses 3 rails: +1V1 (VCC core, 12 caps), +3V3 (VCCIO, 24 caps), and FILTERED_2V5 (VCCAUX, via FB1). The +1V1 and FILTERED_2V5 connections are missed in ic_power_rails.",
+          "analyzer_section": "design_analysis.power_domains.ic_power_rails"
+        },
+        {
+          "description": "FILTERED_2V5 net classified as 'signal' in net_classification, but it is a filtered power rail (2.5V through ferrite bead FB1) supplying ECP5 VCCAUX pins. Should be classified as 'power' or 'power_filtered'.",
+          "analyzer_section": "design_analysis.net_classification"
+        },
+        {
+          "description": "R42/C44 detected as an RC low-pass filter (1.59kHz) but this is actually the FT231XQ's 3V3OUT output decoupling. R42 (1k) connects D14 (LED anode) to 3V3OUT, while C44 (100nF) is decoupling on the 3V3OUT/VCCIO/~{RESET} net. Not a signal filter.",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R42$"
+          }
+        },
+        {
+          "description": "IC pin analysis shows connected_pins=0, no_connect_pins=0, unconnected_pins=0 for every IC. This appears to be a bug since all ICs clearly have connected pins (e.g., U1 has 80+ signal pins, U9 has 21 pins all connected).",
+          "analyzer_section": "ic_pin_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "HDMI/DVI (GPDI) interface not detected. J2 is a GPDI Type-C connector (HDMI mini variant) with 4 TMDS differential pairs (D0+/-, D1+/-, D2+/-, CLK+/-) AC-coupled through 22nF capacitors (C36-C43) from ECP5 FPGA. The lib symbol has ki_keywords='hdmi conn' and ki_fp_filters='HDMI*C*'. This is a complete HDMI output interface.",
+          "analyzer_section": "signal_analysis.hdmi_dvi_interfaces",
+          "check": {
+            "path": "signal_analysis.hdmi_dvi_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "JTAG debug interface not detected. FT231XQ (U9) uses modem control signals for bitbang JTAG: ~{RI}->TDI, ~{CTS}->TDO, ~{DSR}->TCK, ~{DCD}->TMS, connected to ECP5 (U1) dedicated JTAG pins. This is a standard FTDI-based JTAG programming interface with test points (TP9-TP12).",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "contains_key",
+            "value": "jtag"
+          }
+        },
+        {
+          "description": "SPI flash bus missing CLK signal (FLASH_CLK net between U12.CLK and U1.CCLK) and CS signal (~{FLASH_CS} net between U12.~{CS} and U1.CSSPIN). Only MOSI/MISO detected.",
+          "analyzer_section": "design_analysis.bus_analysis.spi",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi[0].signals",
+            "op": "contains_key",
+            "value": "CLK"
+          }
+        },
+        {
+          "description": "SD card interface not detected as a bus. J6 (Micro_SD_Card_Det2) connects to ECP5 (U1) with full 4-bit SD bus: SD_CLK, SD_CMD, SD_DAT0-3, plus card detect (SD_DET).",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "contains_key",
+            "value": "sdio"
+          }
+        },
+        {
+          "description": "Ferrite bead FB1 filtering the +2V5 rail to create FILTERED_2V5 for ECP5 VCCAUX not identified in any signal path detector. This is a common FPGA power supply filtering pattern.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Raspberry Pi compatible GPIO header (J1, Conn_02x20, 40-pin) not identified. This is a Raspberry Pi Zero form-factor board with 28 GPIO signals routed to the ECP5 FPGA.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Add HDMI/DVI interface detection that matches GPDI connectors by ki_keywords containing 'hdmi' and/or TMDS-style differential pairs (D0+/D0-, D1+/D1-, D2+/D2-, CLK+/CLK-) with AC coupling capacitors",
+        "Detect JTAG interfaces by matching TDI/TDO/TCK/TMS net name patterns connected to FPGA/MCU dedicated JTAG pins, even when driven through FTDI bitbang rather than a dedicated JTAG controller",
+        "Track IC power rails across all multi-unit symbols; the ECP5 spans 10 units and has pins on +1V1, +3V3, and FILTERED_2V5 but only +3V3 is reported",
+        "Classify nets connecting to VCCAUX/VCC power_in pins through ferrite beads as filtered power rails, not signals",
+        "When determining U9 FT231XQ power domain, check VCCIO pin connection (which determines I/O voltage) rather than only VCC; VCCIO connects to 3V3OUT making it a 3.3V I/O device",
+        "Add SPI CLK and CS signal detection to complement MOSI/MISO in bus analysis",
+        "Detect SD/SDIO interfaces by matching SD_CLK/SD_CMD/SD_DAT* net name patterns connected to an SD card connector"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "cheyao/icepi-zero",
+      "project": "hardware_v1.3_icepi-zero",
+      "created": "2026-03-23T18:09:24.796606+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_v1.3_icepi-zero.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Icepi Zero v1.3 is a Lattice ECP5 FPGA SBC with RPi-compatible GPIO, 256Mbit SDRAM, 128Mbit SPI flash, GPDI video output, and three USB-C ports. Analyzer correctly identifies most subsystems but has a false-positive level-shifter flag for FT231X signals, incomplete FPGA power domain tracking, and misses the GPDI/HDMI-compatible video interface.",
+      "correct": [
+        {
+          "description": "U1 (ECP5-CABGA256) correctly identified as FPGA with custom lib icepi-lib:LFE5U-25F-6BG256x",
+          "analyzer_section": "ic_pin_analysis"
+        },
+        {
+          "description": "U12 (W25Q128JVS) SPI flash correctly detected with 6 shared signal nets to U1",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "U11 (W9825G6KH) SDRAM correctly detected with 39 shared signal nets to U1",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "Three TLV62569DBV switching regulators U2/U3/U4 correctly identified with inductors and feedback dividers from +5V",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Y1 (SG-8018CG 50MHz MEMS) correctly detected as active_oscillator on GLOBAL_CLK",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "SPI flash bus correctly detected: FLASH_MOSI/FLASH_MISO between U12 and U1",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        },
+        {
+          "description": "I2C bus for GPDI DDC correctly detected with U6 (PCA9306DC1) level translator",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "ESD protection U5/U7/U8/U10 (TPD2EUSB30A) correctly identified on USB differential pairs",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "GPDI differential pairs correctly detected from U1",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "UART bridge U9 (FT231XQ) correctly detected with USB_TXD/USB_RXD to U1",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        },
+        {
+          "description": "USB-C compliance checks correctly passing CC1/CC2 pull-downs and ESD; VBUS ESD fail is accurate",
+          "analyzer_section": "usb_compliance"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "cross_domain_signals flags JTAG and UART signals as 'needs_level_shifter: true' between U1 (+3V3) and U9 (+5V). False positive: U9 (FT231XQ) has VCCIO tied to its own 3V3OUT pin, so all I/O switches at 3.3V.",
+          "analyzer_section": "design_analysis.cross_domain_signals"
+        },
+        {
+          "description": "power_domains for U1 (ECP5) lists only ['+3V3'], omitting +1V1 (VCC core) and FILTERED_2V5 (VCCAUX). ECP5 requires three supply rails.",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "power_budget for +2V5 shows ic_count=0 and load=0mA. U1 VCCAUX is supplied from +2V5 through FB1 (producing FILTERED_2V5). Load missed because filtered net doesn't carry the power symbol.",
+          "analyzer_section": "power_budget"
+        }
+      ],
+      "missed": [
+        {
+          "description": "GPDI/HDMI-compatible interface not detected: J2 carries complete DVI-compatible differential video (GPDI_D0-2+/-, GPDI_CLK+/-) plus DDC I2C, HPD, CEC, UTIL from U1.",
+          "analyzer_section": "signal_analysis.hdmi_dvi_interfaces"
+        }
+      ],
+      "suggestions": [
+        "Fix FT231X level-shifter false positive: when VCCIO is connected to device's own regulated output (3V3OUT), use VCCIO voltage for signal domain classification.",
+        "Fix power_domains to aggregate across all units of multi-unit components (ECP5 has 10 units).",
+        "Fix power_budget to follow one-hop filtered rails through ferrite beads.",
+        "Add GPDI/TMDS interface detection: 4 differential pairs with D0/D1/D2/CLK naming plus HPD/DDC."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002508",
+      "repo": "cheyao/icepi-zero",
+      "project": "hardware_v1.3_icepi-zero",
+      "created": "2026-03-30T23:10:42.821823+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

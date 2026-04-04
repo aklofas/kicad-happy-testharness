@@ -1,0 +1,112 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "TS4231-BOB.kicad_sch.json",
+      "status": "promoted",
+      "summary": "TS4231 light-to-digital converter correctly parsed: 6 components, 8 nets, +3.3V and GND power rails; pwr_flag_warnings for +3.3V and GND are valid \u2014 no PWR_FLAG symbols present in design; C2 (1 \u00b5F ...",
+      "correct": [
+        {
+          "description": "statistics reports total_components=6 (C1, C2, D1, J1, R1, U1), unique_parts=6, total_nets=8, power_rails=[+3.3V, GND]. This is accurate. U1 is the TS4231 IC, D1 is the BPW34S photodiode (Device:D_Photo, classified as 'diode'), C1=100 nF and C2=1 \u00b5F are the supply bypass caps.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 6
+          }
+        },
+        {
+          "description": "The TS4231 schematic has no PWR_FLAG symbols at all (confirmed by searching the source file). The warnings that '+3.3V' and 'GND' have power_in pins but no power_out or PWR_FLAG are accurate and match what KiCad ERC would report.",
+          "analyzer_section": "pwr_flag_warnings",
+          "check": {
+            "path": "pwr_flag_warnings",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "C2 (1 \u00b5F) has pin 1 connected to __unnamed_0 (the AVDD power-in pin of U1) and pin 2 to GND. The net is classified 'power_internal' rather than a named rail, so the decoupling_analysis only reports C1 (100 nF) on +3.3V with cap_count=1, total=0.1 \u00b5F. C2's role as AVDD decoupling for the TS4231's analog supply is not captured. The design_observations correctly notes that +3.3V has no bulk capacitor, but doesn't account for AVDD decoupling.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "contains_match",
+            "value": {
+              "rail": "+3.3V",
+              "cap_count": 1
+            }
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DotBots/TS4231-breakout-board",
+      "project": "TS4231-BOB",
+      "created": "2026-03-24T01:15:45.582515+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001628"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "TS4231-BOB.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "Small 2-layer 12\u00d712.9 mm board with 6 footprints, fully routed, correctly parsed; J1 edge_clearance_mm reported as -7.2 mm \u2014 this is an intentional edge-mounted pin header, not a real clearance vio...",
+      "correct": [
+        {
+          "description": "statistics: footprint_count=6, smd_count=3 (C1, C2, U1), tht_count=3 (D1 SMA, J1 pin-header, R1 \u2014 actually D1 is SMD and J1/R1 are THT-style), routing_complete=true, net_count=8. GND copper pours on both sides with 10 stitching vias. DFM standard tier, no violations.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "J1 is a 1\u00d74 2.54 mm pitch through-hole pin header placed at (129.2, 54.9) rotated 90\u00b0. At 90\u00b0 rotation the four pins extend along the Y axis, reaching to approximately Y=59.7 mm \u2014 well beyond the board edge at Y=56.9 mm. This is a deliberate design choice (connector intended to be soldered flush with the board edge for mating). The edge_clearance_warnings entry with edge_clearance_mm=-7.2 is technically correct but not a manufacturing defect in context.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "DotBots/TS4231-breakout-board",
+      "project": "TS4231-BOB",
+      "created": "2026-03-24T01:15:45.582534+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001629"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "output.json",
+      "status": "new",
+      "summary": "TS4231 gerber set complete: 9 signal/mask/paste/silkscreen layer files + 2 drill map files, board 12\u00d712.9 mm",
+      "correct": [
+        {
+          "description": "completeness: found_layers=[B.Cu, B.Mask, B.Paste, B.SilkS, Edge.Cuts, F.Cu, F.Mask, F.Paste, F.SilkS], complete=true. alignment.aligned=true. board_dimensions 12.0\u00d712.9 mm matches PCB. Note: the 11 gerber files include 2 drill-map .gbr files (PTH-drl_map.gbr, NPTH-drl_map.gbr) in addition to the 9 layer gerbers \u2014 these are included in the statistics.gerber_files count of 11 but are not separate drill files.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "DotBots/TS4231-breakout-board",
+      "project": "TS4231-BOB",
+      "created": "2026-03-24T01:15:45.582538+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001630"
+    }
+  ]
+}

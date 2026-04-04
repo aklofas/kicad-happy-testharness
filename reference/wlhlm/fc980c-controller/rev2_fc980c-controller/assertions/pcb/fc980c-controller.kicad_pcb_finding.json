@@ -1,0 +1,19 @@
+{
+  "file_pattern": "fc980c-controller.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002066",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002066-AST-01",
+      "description": "INCORRECT: The connectivity section reports routing_complete=True and unrouted=0, but routed_nets=32 while total_nets_with_pads=46. The 14-net gap corresponds exactly to pads with 'unconnected-(U2-PadN)' net names \u2014 these are intentional no-connect pads on the STM32F401CBUx (unused GPIO pins). These nets have pads but no tracks because they are deliberately unconnected. The displayed 'routed_nets' metric could be confusing to users who see 32 vs 46 alongside routing_complete=True. Adding a 'no_connect_net_count' field or noting this distinction would improve clarity.",
+      "created_from": "FND-00002066",
+      "check": {
+        "path": "connectivity.routing_complete",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": false
+    }
+  ]
+}

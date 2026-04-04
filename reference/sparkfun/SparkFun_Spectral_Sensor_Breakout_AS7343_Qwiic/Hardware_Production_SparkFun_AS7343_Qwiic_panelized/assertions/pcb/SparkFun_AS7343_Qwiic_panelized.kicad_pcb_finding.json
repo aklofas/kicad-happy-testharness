@@ -1,0 +1,29 @@
+{
+  "file_pattern": "SparkFun_AS7343_Qwiic_panelized.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001495",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001495-AST-01",
+      "description": "The panelized board multiplies the single board's 64 footprints across 24 panel instances (4-column x 6-row), yielding approximately 1519 footprints (24*64=1536 minus panel-specific exclusions). Board dimensions 116.8x168.6mm are consistent with a 4x6 grid of 25.4mm boards with V-score rails. 1848 vias (24*77=1848), 4488 track segments, and 24 GND zones all confirm 24x replication.",
+      "created_from": "FND-00001495",
+      "check": {
+        "path": "statistics.via_count",
+        "op": "equals",
+        "value": 1848
+      }
+    },
+    {
+      "id": "FND-00001495-AST-02",
+      "description": "INCORRECT: The panelized board (24 copies on a panel) shows unrouted_count=5 and routing_complete=false. However, all 5 'unrouted' nets are intentionally-unconnected pad nets: unconnected-(J1-NC-PadNC1), unconnected-(J1-NC-PadNC2), unconnected-(J2-NC-PadNC1), unconnected-(J2-NC-PadNC2), and unconnected-(U1-NC-Pad4). These are NC pins that have 24 pads each (one per board copy) but no routing is expected. The single-board version correctly shows routing_complete=true. This is a false alarm in the panelized context.",
+      "created_from": "FND-00001495",
+      "check": {
+        "path": "connectivity.routing_complete",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": false
+    }
+  ]
+}

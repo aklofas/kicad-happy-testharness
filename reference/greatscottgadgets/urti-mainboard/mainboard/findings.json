@@ -1,0 +1,344 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/urti-mainboard/hardware/mainboard/mainboard.kicad_sch",
+      "status": "promoted",
+      "summary": "Good overall analysis of complex FPGA+RF mainboard with correct unit parsing, proper bus detection, and comprehensive power domain mapping. Key gaps in RF component role identification and opamp configuration analysis.",
+      "correct": [
+        {
+          "description": "Component count (465), net count (471), and type classification correct including 38 DNP parts"
+        },
+        {
+          "description": "Unit parsing correct throughout: capacitor farads in proper SI units (e.g. 1e-07 for 100nF), inductor henries correct"
+        },
+        {
+          "description": "Power regulators correctly identified: 5 LDOs (AP2127K-ADJ for 1V8/1V1/2V5, AP7361EA for 3V3, AP2127K for 3V3A) with proper input/output rail mapping"
+        },
+        {
+          "description": "Memory interfaces correctly identified: HyperRAM (S27KS0641) with 13 shared signals to ECP5, W25Q16 SPI flash with 6 signals"
+        },
+        {
+          "description": "I2C bus detection correct: RX_RCVR.SDA/SCL with 2.2k pullups to 3V3RX"
+        },
+        {
+          "description": "RF chain correctly finds 2x RFFC5072 mixers, MAX2831 transceiver, 5 baluns with connection topology"
+        },
+        {
+          "description": "Differential pairs properly detected: USB D+/D- through multiple stages (MCU, PHY, FPGA), IF pairs (IA+/-, QA+/-)"
+        },
+        {
+          "description": "Reset pin analysis thorough: USB3343 RESET has pullup but no filter cap (noted), RFFC5072 RESETs have both pullup and filter cap"
+        },
+        {
+          "description": "Decoupling coverage with correct totals: 3V3TX 37 caps/28uF, 3V3A 12 caps/19.2uF"
+        },
+        {
+          "description": "RF matching networks detected around antenna connections to RFFC5072 mixers"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "LMV358 opamp circuits both classified as comparator_or_open_loop but one is likely a Sallen-Key active filter (typical in baseband signal conditioning for SDR)",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "UART bus analysis reports 66 entries which is far too many - appears to be matching any 2-pin net as UART, including power nets like 3V3RX",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        },
+        {
+          "description": "TX_MIX_CTRL.SDATA and RX_MIX_CTRL.SDATA detected as I2C SDA but these are RFFC5072 SPI-like control bus data lines",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "Crystal Y1 (TCXO) detected with no frequency - should parse the value or connected IC to determine frequency",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
+        },
+        {
+          "description": "RF chain amplifiers list is empty despite design having baseband amplifier paths and gain stages",
+          "analyzer_section": "signal_analysis.rf_chains"
+        },
+        {
+          "description": "Missing regulator input cap flagged for U24 (LDO-ADJ) input rail __unnamed_82 but this is likely connected through the hierarchical sheet",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No identification of the ECP5 FPGA (U1) as the central hub connecting USB, RF, memory, and debug subsystems",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USB3343-CP (U9) is a USB PHY not just a generic IC - its role in USB signal path (FPGA <-> PHY <-> USB connector) should be noted",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No JTAG/debug bus detection despite signals like TMS, TCK, TDI, TDO being present for FPGA programming",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "DAC output path through opamp filter to mixer not traced as a signal chain",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "HyperRAM interface operating at high speed deserves signal integrity notes (series termination, etc.)",
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Add RFFC5072 serial control bus recognition - SDATA/SCLK/ENX is not I2C",
+        "Fix UART bus detection to avoid matching power nets and generic 2-pin connections",
+        "Add opamp feedback network tracing to distinguish active filters from comparators",
+        "Add JTAG bus detection for TMS/TCK/TDI/TDO signal groups",
+        "Identify USB PHY ICs and trace the complete USB signal chain"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": true,
+      "id": "FND-00000122",
+      "repo": "greatscottgadgets/urti-mainboard",
+      "project": "mainboard",
+      "created": "2026-03-14T07:50:43.395615+00:00"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/urti-mainboard/hardware/mainboard/radio.kicad_sch",
+      "status": "promoted",
+      "summary": "Radio module analysis has correct unit parsing and reasonable RF component detection but misses key RF signal chain elements. The dual-mixer architecture (2x RFFC5072) is detected but amplifier stages and switch components are not identified.",
+      "correct": [
+        {
+          "description": "Component count (214), net count (225), type classification correct including 33 DNP parts"
+        },
+        {
+          "description": "Unit parsing correct: LC filter resonant frequencies in GHz range (1.18 GHz, 738 MHz, etc.) are reasonable for wideband RF frontend"
+        },
+        {
+          "description": "LC filter impedances around 35-67 ohms are physically reasonable for RF matching"
+        },
+        {
+          "description": "RF chain correctly identifies 2x RFFC5072 mixers, MAX2831 transceiver, 5 baluns (RF_BALUN, 2x TXIF_BALUN, 2x RXIF_BALUN)"
+        },
+        {
+          "description": "RF matching networks detected with component lists and target IC identification"
+        },
+        {
+          "description": "LMV358 opamp circuits detected (used in baseband signal conditioning)"
+        },
+        {
+          "description": "I2C pullups correctly identified for RX_RCVR SDA/SCL at 2.2k to 3V3TX"
+        },
+        {
+          "description": "Reset pin analysis correct: both RFFC5072 chips share reset with pullup and filter cap"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "LMV358 opamp circuits classified as comparator_or_open_loop but these form active filters in the baseband signal conditioning path",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "RF chain amplifiers list is empty despite the radio module containing gain stages in the signal path",
+          "analyzer_section": "signal_analysis.rf_chains"
+        },
+        {
+          "description": "RF chain filters list is empty despite multiple LC filter networks being detected separately in lc_filters",
+          "analyzer_section": "signal_analysis.rf_chains"
+        },
+        {
+          "description": "RX_RCVR.SDA/SCL pullup rail shown as 3V3TX but radio.kicad_sch context suggests these should be on the RX power domain",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "16 single-pin nets reported includes hierarchical connections (AFE_SPI.CS, TX_XCVR.SHDN, etc.) that are connected in the parent sheet - not real issues",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No identification of the dual-conversion architecture (two mixer stages for wideband coverage)",
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No PLL loop filter detection for RFFC5072 charge pump outputs (R59/C90/C91/C87 form loop filter)",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "AFE IC (U11) and its SPI control bus not identified as part of the RF signal chain",
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Baseband IQ signal paths (TXBB.I+/-, TXBB.Q+/-, RXBB.I+/-, RXBB.Q+/-) not traced as differential pairs or signal chains",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Cross-reference lc_filters with rf_chains to populate the filters list in rf_chains",
+        "Detect PLL loop filter topology (charge pump -> R-C-R-C -> VCO tune input)",
+        "Trace IQ baseband differential pairs as part of RF signal chain analysis",
+        "Flag single-pin nets from hierarchical labels differently from true unconnected nets"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": true,
+      "id": "FND-00000126",
+      "repo": "greatscottgadgets/urti-mainboard",
+      "project": "mainboard",
+      "created": "2026-03-14T07:51:08.283293+00:00"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/urti-mainboard/hardware/mainboard/rx.kicad_sch",
+      "status": "promoted",
+      "summary": "Receiver chain analysis has correct unit parsing and good LC filter detection with plausible GHz-range resonant frequencies. RF chain topology correctly traces balun-to-mixer connections. Main gap is missing amplifier/filter integration into the RF chain.",
+      "correct": [
+        {
+          "description": "Component count (101), net count (92), type classification correct including 4 DNP parts"
+        },
+        {
+          "description": "LC filter resonant frequencies correct and physically reasonable: 738 MHz to 1.5 GHz range matches wideband receiver frontend"
+        },
+        {
+          "description": "LC filter impedances (35-67 ohms) reasonable for 50-ohm RF system matching"
+        },
+        {
+          "description": "RF chain correctly identifies RFFC5072 (U18) as mixer with 2 baluns (RF_BALUN T1, RXIF_BALUN T2)"
+        },
+        {
+          "description": "RF chain connections correctly traced: T1->U18 via MIX_IN+/-, T2->U18 via MIX_OUT+/-"
+        },
+        {
+          "description": "I2C bus for RX receiver IC (U14) correctly detected with pullups R60/R61 to 3V3RX"
+        },
+        {
+          "description": "Reset pin on RFFC5072 correctly identified with pullup and filter cap"
+        },
+        {
+          "description": "Decoupling coverage for 3V3RX: 19 caps, 11uF total, has_bulk/bypass/high_freq all true"
+        },
+        {
+          "description": "LMV358 opamp circuits detected for baseband conditioning"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "RF chain amplifiers list is empty - the RX path should have LNA stages between antenna and mixer",
+          "analyzer_section": "signal_analysis.rf_chains"
+        },
+        {
+          "description": "RF matching list is empty for RX path despite LC network components being present around the signal chain",
+          "analyzer_section": "signal_analysis.rf_matching"
+        },
+        {
+          "description": "LMV358 opamp classified as comparator_or_open_loop but forms active filter in baseband path",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "6 single-pin nets reported but include hierarchical connections (RXBB.Q+/-, RXBB.I+/-, etc.) connected in parent sheet",
+          "analyzer_section": "signal_analysis.design_observations"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No identification of the RX signal flow: antenna -> matching -> LNA -> mixer -> IF balun -> baseband filter -> ADC",
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "PLL loop filter for RFFC5072 not detected",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Baseband IQ differential outputs (RXBB.I+/-, RXBB.Q+/-) not traced as signal pairs",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "U14 receiver IC not identified by type (likely MAX2831 or similar) and its role in the chain not noted",
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Trace the complete RX signal path from connector through matching, amplification, mixing, and baseband",
+        "Integrate LC filter detection into RF chain analysis for a unified view",
+        "Detect PLL loop filter between charge pump output and VCO tune input",
+        "Distinguish hierarchical label single-pin nets from truly unconnected pins"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": true,
+      "id": "FND-00000131",
+      "repo": "greatscottgadgets/urti-mainboard",
+      "project": "mainboard",
+      "created": "2026-03-14T07:51:28.312633+00:00"
+    }
+  ]
+}

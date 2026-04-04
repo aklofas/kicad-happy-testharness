@@ -1,0 +1,48 @@
+{
+  "file_pattern": "STM32_MULTIPROTOCOL.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001303",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001303-AST-01",
+      "description": "STNDBY1, TX1, RX1 and other LEDs use Resistor_SMD footprint \u2014 analyzer correctly identifies the footprint doesn't match LED filter patterns on all 9 LED components.",
+      "created_from": "FND-00001303",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001303-AST-02",
+      "description": "+3V3 rail has power_in pins but no PWR_FLAG or power_out driver; only one warning is raised (correctly, since +3.3V is a separate alias rail with its own PWR_FLAG power symbol present).",
+      "created_from": "FND-00001303",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001303-AST-03",
+      "description": "C0 is correctly flagged as a zero-indexed reference in annotation_issues.",
+      "created_from": "FND-00001303",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001303-AST-04",
+      "description": "Subcircuit correctly identifies U2 as center IC with CF1-CF4 crystal caps and bypass capacitors as neighbors.",
+      "created_from": "FND-00001303",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

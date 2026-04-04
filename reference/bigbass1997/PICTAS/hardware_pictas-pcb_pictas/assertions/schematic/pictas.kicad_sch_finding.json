@@ -1,0 +1,29 @@
+{
+  "file_pattern": "pictas.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001049",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001049-AST-01",
+      "description": "SPI1 bus (U3 PIC18LF47K42 \u2194 U4 W25Q128JVSIQ with CS), UART between U1/U3, I2C on U2 MCP2221A, D+/D- differential pair, and W25Q128 memory interface are all correctly identified. Transistor circuits Q1 (BC546) and Q2 (BC556) correctly found.",
+      "created_from": "FND-00001049",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001049-AST-02",
+      "description": "The design uses a TPS2115APWR power-path switch/mux in a sub-sheet (power-select.kicad_sch), but since the analyzer processes each sheet independently and the main sheet has no power regulator components directly, the power_regulators list is empty. This is expected behavior but means the power architecture is invisible in the top-level analysis.",
+      "created_from": "FND-00001049",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

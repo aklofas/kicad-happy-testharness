@@ -1,0 +1,39 @@
+{
+  "file_pattern": "SparkFun_GNSS_DAN-F10N.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001422",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001422-AST-01",
+      "description": "Board bounding box 40.64\u00d740.64 mm matches SparkFun's standard 1.6\"\u00d71.6\" form factor exactly. 4 copper layers (F.Cu, In1.Cu, In2.Cu, B.Cu) is correct for this GNSS design. routing_complete=True and unrouted_count=0 confirm the design is fully routed. DFM tier='standard' with min_track_width=0.1524mm (6mil) is consistent with SparkFun's typical fab rules.",
+      "created_from": "FND-00001422",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "value": 40.64,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001422-AST-02",
+      "description": "PCB reports 95 footprints vs schematic's 52 components. The discrepancy is accounted for by ~41 kibuzzard-* graphical decoration footprints (SparkFun's PCB art tool), plus fiducials and mounting holes which have PCB footprints but no schematic function. The 50 real component refs in the gerber panel match the 52 schematic components minus G3 (no footprint) and one graphic element. smd_count=40 and tht_count=3 are plausible for a compact GNSS breakout.",
+      "created_from": "FND-00001422",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 90,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001422-AST-03",
+      "description": "INCORRECT: The board_outline section has edge_count, edges, and bounding_box populated (correctly showing width=40.64, height=40.64 mm), but area_mm2 and perimeter_mm are None. For a rectangular board this is trivially computable (area = 40.64\u00d740.64 = 1651.6 mm\u00b2, perimeter = 4\u00d740.64 = 162.56 mm). This omission is consistent across all three designs and means consumers of the JSON cannot directly access area/perimeter without recomputing from the bounding box. The board outline is a proper closed rectangle per the Edge.Cuts layer.",
+      "created_from": "FND-00001422",
+      "check": {
+        "path": "board_outline.bounding_box.width",
+        "value": 40.64,
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

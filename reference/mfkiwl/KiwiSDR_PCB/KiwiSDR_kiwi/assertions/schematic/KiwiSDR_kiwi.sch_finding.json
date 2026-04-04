@@ -1,0 +1,72 @@
+{
+  "file_pattern": "kiwi.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000274",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000274-AST-01",
+      "description": "LTC2248 ADC and RF lowpass filter chain with 6 LC pairs at correct frequencies",
+      "created_from": "FND-00000274",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000274-AST-02",
+      "description": "16.368MHz TCXO correctly classified as active_oscillator",
+      "created_from": "FND-00000274",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000274-AST-03",
+      "description": "4 power regulators correct: LMR10530Y buck 1.0V, LP5907 LDOs 1.8V and 3.3V",
+      "created_from": "FND-00000274",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000274-AST-04",
+      "description": "SAW filter, SE4150L GPS LNA, Artix-7 FPGA correctly classified",
+      "created_from": "FND-00000274",
+      "check": {
+        "path": "statistics.component_types",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000274-AST-05",
+      "description": "INCORRECT: LMR10530Y (U701) fb_net='SW1' instead of 'FB' \u2014 KiCad 5 legacy pin-position-matching swaps SW (pin 7/8) and FB (pin 5) due to close y-coordinates",
+      "created_from": "FND-00000274",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U701$"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000274-AST-06",
+      "description": "INCORRECT: LTC6401-20 (U405) +IN/-IN and +OUT/-OUT pins systematically swapped \u2014 same KiCad 5 pin-position bug, paired pins swap",
+      "created_from": "FND-00000274",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^U405$"
+      },
+      "aspirational": true
+    }
+  ]
+}

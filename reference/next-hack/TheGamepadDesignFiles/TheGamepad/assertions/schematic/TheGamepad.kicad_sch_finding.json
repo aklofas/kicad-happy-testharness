@@ -1,0 +1,58 @@
+{
+  "file_pattern": "TheGamepad.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001634",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001634-AST-01",
+      "description": "INCORRECT: DISP1 uses lib_id=DoomWSTK:Adafruit4311 which is a custom symbol for an Adafruit ST7789 display module. The analyzer classifies it as type='diode', inflating the diode count to 4 (D1, D2, D4, DISP1). The actual diode count is 3 (D1=BAT43, D2=1N5817, D4=BAT43). DISP1 should be classified as 'ic' or 'other' not 'diode'.",
+      "created_from": "FND-00001634",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "equals",
+        "value": 3
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001634-AST-02",
+      "description": "INCORRECT: The detector reports a 2-row \u00d7 17-column key matrix with row_nets=['BL', '__unnamed_28'] and diodes_on_matrix=17. In reality this is a gamepad using two 74HC165 parallel-in shift registers to read 17 buttons; there is no matrix. BL is the display backlight control signal; __unnamed_28 is the 5 V supply rail via BAT43 protection diodes D1 and D4. Only 3 physical diodes exist in the design (D1, D2, D4), none of which form a matrix. The estimated_keys=17 and diodes_on_matrix=17 are both wrong.",
+      "created_from": "FND-00001634",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001634-AST-03",
+      "description": "INCORRECT: The 'width' field in detected_bus_signals equals the total number of pad connections across all nets with that prefix, not the number of distinct signal lines. K_C (K_C0..K_C3) reports width=12 (4 nets \u00d7 3 pins each) but the bus is only 4 bits wide. MISO_, MOSI_, SCK_ each report width=4 (2 nets \u00d7 2 pins) but are each 2-bit groups. The 'range' field (e.g. 'K_C0..K_C3') is correct; 'width' is not.",
+      "created_from": "FND-00001634",
+      "check": {
+        "path": "bus_topology.detected_bus_signals",
+        "op": "contains_match",
+        "value": {
+          "prefix": "K_C",
+          "width": 4,
+          "range": "K_C0..K_C3"
+        }
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001634-AST-04",
+      "description": "INCORRECT: Every entry in the 'components' list has ref=None, even though the BOM and subcircuits correctly populate refs (A1, C1, D1, etc.). The analyzer extracts refs from the (instances ...) block for BOM construction and subcircuit detection but fails to populate the ref field in the flat components list. This is a KiCad 8 format parsing issue. Affected: TheGamepad.kicad_sch (140 components, all ref=None).",
+      "created_from": "FND-00001634",
+      "check": {
+        "path": "components",
+        "op": "not_contains_match",
+        "value": {
+          "ref": null
+        }
+      },
+      "aspirational": true
+    }
+  ]
+}

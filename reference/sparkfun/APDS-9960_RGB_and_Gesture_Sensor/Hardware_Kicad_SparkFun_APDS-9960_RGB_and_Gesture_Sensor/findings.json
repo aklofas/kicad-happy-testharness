@@ -1,0 +1,78 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Hardware_Kicad_SparkFun_APDS-9960_RGB_and_Gesture_Sensor.sch.json",
+      "status": "promoted",
+      "summary": "I2C pull-ups R2 and R3 not detected \u2014 both SDA and SCL report has_pullup: false; U1 SDA (pin 1) and SCL (pin 7) both land in the same unnamed net __unnamed_4 \u2014 net tracing error merges two distinct...",
+      "correct": [
+        {
+          "description": "The nets output shows __unnamed_4 containing both U1 pin 1 (SDA) and U1 pin 7 (SCL). These are two separate I2C signals that cannot share a net. Additionally, the named 'SDA' net incorrectly shows U1 pin 4 (LEDK) and the named 'SCL' net shows U1 pin 3 (LDR) \u2014 these are IR LED pins, not I2C pins. The label-to-pin resolution for U1 is wrong in legacy KiCad 5 format.",
+          "analyzer_section": "nets",
+          "check": {
+            "path": "nets.__unnamed_4.pins",
+            "op": "eq",
+            "value": "should not contain both U1 SDA (pin 1) and U1 SCL (pin 7) in same net"
+          }
+        },
+        {
+          "description": "Both STANDOFF1 and STANDOFF2 have lib_id 'sparkfun_apds_9960:STAND-OFF' and value 'STAND-OFF'. They are mechanical PCB standoffs, not switches. The BOM also classifies them as 'switch'. This is a type classification heuristic error in the legacy KiCad 5 parser.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.switch",
+            "op": "eq",
+            "value": 0
+          }
+        },
+        {
+          "description": "JP1 has lib_id 'sparkfun_apds_9960:Conn_01x06' and value 'M06SIP' (6-pin male SIP header). It is a board-edge I/O connector carrying VCC, GND, SCL, SDA, INT, and VL signals. It should be classified as a connector, not a jumper. The jumper classification is likely triggered by the 'JP' prefix heuristic.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.jumper",
+            "op": "eq",
+            "value": 2
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "bus_analysis.i2c contains three entries: one for SDA, one for SCL, and a third for __unnamed_4 which incorrectly shows both U1 and U1 as 'devices' (duplicating U1 twice). This phantom net entry is a direct consequence of the net tracing error that merges U1 SDA/SCL pins into one unnamed net.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "eq",
+            "value": 2
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "R2 (4.7k) pulls SDA to VCC via solder jumper SJ1 (pin 1\u2192pin 2), and R3 (4.7k) pulls SCL to VCC via SJ1 (pin 3\u2192pin 2). The analyzer fails to trace pull-up topology through the jumper, leaving both I2C lines reporting no pull-up. The pull-ups are architecturally present and switchable via SJ1.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c[0].has_pull_up",
+            "op": "eq",
+            "value": true
+          }
+        },
+        {
+          "description": "C1 (100uF polarized, c_2917 footprint) and C2 (1uF 0603) are both connected to the VL net which is U1's VDD supply pin. These are the primary bulk and bypass decoupling caps for the APDS-9960 sensor. The decoupling_analysis section only reports C3 (1uF) on VCC; the VL rail is completely absent. C3 is on the VCC rail (LED supply side), not VDD.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_value",
+            "value": 2
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/APDS-9960_RGB_and_Gesture_Sensor",
+      "project": "Hardware_Kicad_SparkFun_APDS-9960_RGB_and_Gesture_Sensor",
+      "created": "2026-03-23T18:41:57.200637+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000339"
+    }
+  ]
+}

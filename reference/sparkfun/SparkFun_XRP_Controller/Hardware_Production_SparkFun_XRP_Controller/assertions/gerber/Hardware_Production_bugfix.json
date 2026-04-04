@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Hardware_Production",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-185-02",
+      "description": "KH-185: SparkFun XRP front_side >= 100 (was 0 before fix)",
+      "issue": "KH-185",
+      "fix_type": "count_change_fix",
+      "check": {
+        "path": "component_analysis.front_side",
+        "op": "min_count",
+        "value": 100
+      }
+    },
+    {
+      "id": "BUGFIX-KH-186-01",
+      "description": "KH-186: NPTH 3.1mm holes classified as mounting (was 0)",
+      "issue": "KH-186",
+      "fix_type": "classification_fix",
+      "check": {
+        "path": "drill_classification.mounting_holes.count",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

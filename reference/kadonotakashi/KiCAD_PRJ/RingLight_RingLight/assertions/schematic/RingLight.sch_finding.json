@@ -1,0 +1,49 @@
+{
+  "file_pattern": "RingLight.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001689",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001689-AST-01",
+      "description": "RingLight.sch has 74 components: transistor(2), ic(2), resistor(29), capacitor(7), connector(3), jumper(1), led(17), mounting_hole(4), test_point(9). All component types are correctly classified.",
+      "created_from": "FND-00001689",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 74,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001689-AST-02",
+      "description": "The RingLight uses R+R voltage divider networks to set bias for the uPA2753 transistor gate (G pin). The analyzer correctly identifies 4 voltage dividers (one per transistor channel), each with R_top=1k and R_bottom=20 ohm.",
+      "created_from": "FND-00001689",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "value": 4,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001689-AST-03",
+      "description": "The RingLight design uses RC low-pass filters (R=1k, C=100nF) for smoothing PWM control signals. The analyzer correctly identifies 4 RC filters at approximately 1.59 kHz cutoff.",
+      "created_from": "FND-00001689",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "value": 4,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001689-AST-04",
+      "description": "RingLight has Q1 and Q2, both uPA2753 NPN transistor arrays (SOIC-8), correctly typed as 'transistor' and with pin data available (pins 1/2/3S/5/6/7/8/G/D). However, the analyzer reports transistor_circuits=[] (0 entries). The uPA2753 uses non-standard pin names (3S, G, D) that do not match the BJT/MOSFET/JFET patterns expected by the transistor circuit detector. This is a false negative - the design does have transistor switching circuits.",
+      "created_from": "FND-00001689",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

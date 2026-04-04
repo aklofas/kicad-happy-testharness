@@ -1,0 +1,42 @@
+{
+  "file_pattern": "Monitoreo y balanceo de las celdas.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000405",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000405-AST-01",
+      "description": "The analyzer correctly identifies 60 non-power components matching the source: R12-R47 (36 resistors), C13-C24 (12 capacitors), Q2-Q13 (12 BSS308PE transistors). All component types and references match exactly.",
+      "created_from": "FND-00000405",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 60
+      },
+      "aspirational": false,
+      "aspirational_reason": "cross-project file reference"
+    },
+    {
+      "id": "FND-00000405-AST-02",
+      "description": "The schematic has 12 repeated RC low-pass filter cells on the cell voltage sensing inputs: one 100R resistor in series with one 10nF capacitor to the lower cell reference, giving a cutoff of approximately 159 kHz. Examples: R16+C17, R17+C18, R18+C19, etc. None are detected (rc_filters=[]). The root cause is that all components use the 'Nodo_BMS_1_1-rescue:...' library prefix, causing all pin lists to be empty in the JSON output. With no pin-to-net connectivity data, the topology detectors find nothing.",
+      "created_from": "FND-00000405",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 12
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000405-AST-03",
+      "description": "The schematic contains 12 BSS308PE PMOS transistors (Q2-Q13), each forming a cell-balancing bypass switch: gate driven via a 1k resistor, drain through a 10R/2W ballast resistor to the cell bottom rail. The transistor_circuits detector returns an empty list. Same root cause as the RC filter miss: rescue library components have empty pin lists, so no transistor topology can be inferred.",
+      "created_from": "FND-00000405",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 12
+      },
+      "aspirational": true
+    }
+  ]
+}

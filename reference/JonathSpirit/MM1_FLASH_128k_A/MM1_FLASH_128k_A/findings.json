@@ -1,0 +1,53 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "MM1_FLASH_128k_A.sch.json",
+      "status": "new",
+      "summary": "Legacy .sch parser misses U1 (SST39LF010 flash) data pin net connections",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Same as EEPROM: all MEMDATA_0-7 nets only show J1, missing U1 I/O pin connections. This is a consistent bug across all MM1 boards with the legacy KiCad 5 schematic format.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "JonathSpirit/MM1_FLASH_128k_A",
+      "project": "MM1_FLASH_128k_A",
+      "created": "2026-03-23T22:54:03.266354+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000874"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "documents_MM1_FLASH_128k_A_gerbert.json",
+      "status": "new",
+      "summary": "Drill classification correctly identifies via holes vs component holes for FLASH board",
+      "correct": [
+        {
+          "description": "FLASH: 16 vias at 0.2mm correctly classified; 32 component holes at 0.8mm (PLCC socket pins) and 2 holes at 1.0mm (pin header) correctly classified as component_holes. Total 50 holes matches PTH drill file count.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "JonathSpirit/MM1_FLASH_128k_A",
+      "project": "MM1_FLASH_128k_A",
+      "created": "2026-03-23T22:54:03.266371+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000875"
+    }
+  ]
+}

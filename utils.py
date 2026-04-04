@@ -71,25 +71,27 @@ def _path_relative_to_repos(path):
 
 
 def repo_name_from_path(path):
-    """Extract repo name (first component under repos/).
+    """Extract repo name (owner/repo under repos/).
 
-    Given an absolute or relative path like repos/OpenMower/Hardware/...,
-    returns 'OpenMower'.
+    Given an absolute or relative path like repos/owner/OpenMower/Hardware/...,
+    returns 'owner/OpenMower'.
     """
     rel = _path_relative_to_repos(path)
     parts = rel.replace("\\", "/").split("/")
+    if len(parts) >= 2 and parts[0] and parts[1]:
+        return f"{parts[0]}/{parts[1]}"
     return parts[0] if parts and parts[0] else None
 
 
 def within_repo_path(path):
-    """Get the path within a repo (everything after the repo name).
+    """Get the path within a repo (everything after the owner/repo).
 
-    Given repos/OpenMower/Hardware/board.kicad_sch,
+    Given repos/owner/OpenMower/Hardware/board.kicad_sch,
     returns 'Hardware/board.kicad_sch'.
     """
     rel = _path_relative_to_repos(path)
-    parts = rel.replace("\\", "/").split("/", 1)
-    return parts[1] if len(parts) > 1 else ""
+    parts = rel.replace("\\", "/").split("/", 2)
+    return parts[2] if len(parts) > 2 else ""
 
 
 def safe_name(path):
@@ -101,10 +103,17 @@ def safe_name(path):
 
 
 def list_repos():
-    """List repo directory names under repos/."""
+    """List repo names (owner/repo) under repos/."""
     if not REPOS_DIR.exists():
         return []
-    return sorted(d.name for d in REPOS_DIR.iterdir() if d.is_dir() and not d.name.startswith("."))
+    repos = []
+    for owner_dir in sorted(REPOS_DIR.iterdir()):
+        if not owner_dir.is_dir() or owner_dir.name.startswith("."):
+            continue
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if repo_dir.is_dir() and not repo_dir.name.startswith("."):
+                repos.append(f"{owner_dir.name}/{repo_dir.name}")
+    return repos
 
 
 def resolve_kicad_happy_dir():
@@ -142,10 +151,13 @@ def load_project_metadata(repo_name, project_name):
 
 
 def filter_manifest_by_repo(lines, repo_name):
-    """Filter manifest lines to only those belonging to a given repo."""
-    repos_str = str(REPOS_DIR)
-    prefix = repos_str + os.sep + repo_name + os.sep
-    return [l for l in lines if l.startswith(prefix)]
+    """Filter manifest lines to only those belonging to a given repo.
+
+    repo_name is 'owner/repo' format. Matches against the repos/ directory path.
+    """
+    marker = f"repos/{repo_name}/"
+    marker_os = f"repos{os.sep}{repo_name.replace('/', os.sep)}{os.sep}"
+    return [l for l in lines if marker in l or marker_os in l]
 
 
 # ---------------------------------------------------------------------------

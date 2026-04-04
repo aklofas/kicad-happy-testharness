@@ -1,0 +1,49 @@
+{
+  "file_pattern": "core.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001984",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001984-AST-01",
+      "description": "The source core.sch has 21 physical component instances but all references end in '?' (unannotated). The analyzer correctly reports 8 total_components corresponding to 8 unique reference prefixes: IC?, Y?, C?, R?, SW?, D?, P?, CON?. This is the expected behavior for an unannotated legacy KiCad 5 schematic.",
+      "created_from": "FND-00001984",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 8
+      }
+    },
+    {
+      "id": "FND-00001984-AST-02",
+      "description": "The 16MHz crystal is detected and its frequency correctly parsed at 16000000.0 Hz. The crystal is a standard HC-49S type for the ATmega2560.",
+      "created_from": "FND-00001984",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001984-AST-03",
+      "description": "The design_observations correctly identifies SCL and SDA nets on IC? (ATmega2560) and correctly reports has_pullup=false. The schematic has no I2C pull-up resistors, which is a real design gap for a minimal ATmega2560 core schematic.",
+      "created_from": "FND-00001984",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001984-AST-04",
+      "description": "INCORRECT: The source schematic has two 22pF capacitors (C?) connected as crystal load caps for the Y? crystal. However load_caps=[] is reported. Because the schematic is unannotated (all refs are '?'), the analyzer cannot reliably trace net connectivity from the crystal pins to the load capacitors, since all C? instances share a collapsed reference. This is an inherent limitation with unannotated schematics, but the result is a missed detection.",
+      "created_from": "FND-00001984",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

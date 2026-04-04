@@ -1,0 +1,40 @@
+{
+  "file_pattern": "ATSAMA5D27-1G.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002096",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002096-AST-01",
+      "description": "The analyzer detected 5 I2C bus entries from the I2C_TWD0/TWCK0 and I2C_TWD1/TWCK1 nets. All are correctly flagged has_pull_up=false. The pull-up resistors are not present on this board (the schematic has no resistors connected to these I2C nets) \u2014 the design relies on external pull-ups from connected modules. The SPI bus (SPI0_MISO/MOSI/SCK) and UART (UART1_TX/RX) are also correctly detected.",
+      "created_from": "FND-00002096",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00002096-AST-02",
+      "description": "The design has U2=ACT8945AQJ305-T (a multi-rail PMIC with 3 DC-DC converters and 4 LDOs) and U3=MIC5247-2.0 (an LDO). Both appear in subcircuits, but power_regulators is empty in signal_analysis. The same miss occurs in the V1 file. The ACT8945A uses a custom lib_id (ACT8945AQJ305-T:ACT8945AQJ305-T) and the MIC5247 uses symbols:MIC5247-2.0 \u2014 neither matches whatever pattern the power regulator detector uses for LDO/DCDC recognition. The design also has 3 inductors (L1-L3, NR3015T2R2M) forming the switching converter output filters for the PMIC, which would confirm its DC-DC topology.",
+      "created_from": "FND-00002096",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002096-AST-03",
+      "description": "The design (ATSAMA5D27 SoC) has two full-speed USB ports with signals USBA_P, USBA_M, USBB_P, USBB_M all present as nets. No differential pair detection occurs: design_analysis.differential_pairs is empty, and bus_analysis has no USB entry. There is also no usb_compliance section (unlike KiCad 6+ schematics). This is a KiCad 5 legacy schematic, so usb_compliance is not expected, but the differential pair grouping from naming conventions should still be possible. The PCB shows the USB nets are properly matched in length (USBA: 27.0/27.0mm, USBB: 32.283/32.226mm).",
+      "created_from": "FND-00002096",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

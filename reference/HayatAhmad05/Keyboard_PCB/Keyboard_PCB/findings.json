@@ -1,0 +1,76 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Keyboard_PCB.kicad_sch.json",
+      "status": "new",
+      "summary": "Key matrix correctly detected: 5\u00d714, 70 switches, 70 diodes; Component counts correct: 70 diodes, 70 switches, 1 IC (ESP32-WROOM-32E); No power rails or PWR_FLAG warnings correctly reported for pow...",
+      "correct": [
+        {
+          "description": "signal_analysis.key_matrices reports rows=5, cols=14, estimated_keys=70, detection_method=net_name. Matches the 70 S-refs and 70 D-refs in the schematic exactly.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "statistics.component_types matches the schematic: all 141 total components parsed correctly, with proper typing of D-refs as diode, S-refs as switch, U1 as ic.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "The schematic has no power symbols (only ESP32 module and passive keyboard matrix), so empty power_rails and empty pwr_flag_warnings is correct behavior.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "HayatAhmad05/Keyboard_PCB",
+      "project": "Keyboard_PCB",
+      "created": "2026-03-23T21:08:50.180911+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000660"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Keyboard_PCB.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB correctly identified as empty/unpopulated (footprint_count=0)",
+      "correct": [
+        {
+          "description": "The .kicad_pcb source file contains only layer definitions and a single empty net \u2014 no footprints, no tracks, no vias. The analyzer correctly reports all zeros and routing_complete=true (nothing to route).",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "HayatAhmad05/Keyboard_PCB",
+      "project": "Keyboard_PCB",
+      "created": "2026-03-23T21:08:50.180927+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000661"
+    }
+  ]
+}

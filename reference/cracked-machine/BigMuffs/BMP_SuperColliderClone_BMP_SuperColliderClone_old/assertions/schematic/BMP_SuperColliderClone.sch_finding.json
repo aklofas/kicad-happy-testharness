@@ -1,0 +1,52 @@
+{
+  "file_pattern": "BMP_SuperColliderClone.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000409",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000409-AST-01",
+      "description": "INCORRECT: DEPTH1 is a 150K potentiometer with lib_id='NPOT'. It is classified as type='diode' in the BOM output. This is completely incorrect \u2014 it is a potentiometer controlling the 'depth' of the effect. This misclassification causes component_types.diode to read 6 (there are only 5 real diodes: D1=Schottky, D2\u2013D5=1N914), with the 6th being DEPTH1 falsely counted.",
+      "created_from": "FND-00000409",
+      "check": {
+        "path": "statistics.component_types.diode",
+        "op": "equals",
+        "value": 5
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000409-AST-02",
+      "description": "INCORRECT: The SuperCollider schematic has 26 resistors (R1\u2013R26). The analyzer reports component_types.resistor=27. As with the BasicClone, one of the 5 NPOT potentiometer components is being misclassified as a resistor. Additionally, one NPOT is classified as 'transformer' (component_types.transformer=1), which is wrong.",
+      "created_from": "FND-00000409",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "equals",
+        "value": 26
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000409-AST-03",
+      "description": "INCORRECT: The signal_analysis.key_matrices section reports a 2x2 keyboard matrix (estimated_keys=4, switches_on_matrix=4, diodes_on_matrix=4). This is a guitar effects pedal (Big Muff clone) with no keyboard matrix. The false positive is likely triggered by the four 2-pin transistor-mod connectors (J_Q1MOD1\u2013J_Q4MOD1), which are bypass jumper pads for transistor socket modification, combined with nearby diodes. The topology-based detection misidentified these as a matrix. BasicClone and RussianClone (which lack these connectors) do not have this false positive.",
+      "created_from": "FND-00000409",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "equals",
+        "value": []
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000409-AST-04",
+      "description": "The statistics.power_rails array contains only ['+9V'] for the SuperCollider schematic, omitting GND. The source schematic contains 17 'Text Label ... ~ 12\\nGND' entries \u2014 the same format used in BMP_BasicClone.sch and BMP_RussianClone.sch, where GND is correctly detected and reported in power_rails. The SuperCollider also has one additional GND text label with '~ 0' style (at position 2000 6100), but the standard '~ 12' labels are identical in format to the other two designs which do report GND. This is an inconsistency in the power rail detection for this file.",
+      "created_from": "FND-00000409",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "contains_match",
+        "value": "GND"
+      },
+      "aspirational": true
+    }
+  ]
+}

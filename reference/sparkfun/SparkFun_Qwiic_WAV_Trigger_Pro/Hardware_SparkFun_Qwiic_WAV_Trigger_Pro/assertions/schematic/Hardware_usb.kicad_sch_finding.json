@@ -1,0 +1,20 @@
+{
+  "file_pattern": "usb.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000228",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000228-AST-05",
+      "description": "INCORRECT: L2 value '30ohm' (ferrite bead impedance) misparsed as 30.0 henries. Invalidates LC filter detection (L2/C27 reported as LC filter with 29Hz resonance, but L2 is impedance not inductance).",
+      "created_from": "FND-00000228",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
+      },
+      "aspirational": true
+    }
+  ]
+}

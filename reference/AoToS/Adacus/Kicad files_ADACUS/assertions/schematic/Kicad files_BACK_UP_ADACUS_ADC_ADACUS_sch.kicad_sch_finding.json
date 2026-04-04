@@ -1,0 +1,30 @@
+{
+  "file_pattern": "BACK_UP_ADACUS_ADC_ADACUS_sch.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000363",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000363-AST-01",
+      "description": "INCORRECT: The ADC schematic contains 4 RC filters classified as 'RC-network' with non-GND ground_net values: (1) R302/C309 with ground_net='IN_BUF' \u2014 C309 pin2 connects to the opamp non-inverting input, not ground; (2) R304/C309 with ground_net='RF_IN' \u2014 an input signal net; (3) R309/C315 with ground_net='ADC_IN+' \u2014 a differential signal node (C315 is a differential capacitor across ADC_IN+ and ADC_IN-); (4) R307/C313 with ground_net='IN_AA_BUF_OUT' \u2014 the opamp output feedback node. These are active filter and differential-input topologies where the capacitor's second terminal is a signal node, not ground.",
+      "created_from": "FND-00000363",
+      "check": {
+        "path": "signal_analysis.rc_filters[0].ground_net",
+        "op": "eq",
+        "value": "GND"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000363-AST-02",
+      "description": "U301 is a TI REF3033 precision voltage reference that provides ADC_VREF for the ADC141S626. The ic_pin_analysis correctly identifies it with function='voltage reference', but it does not appear in signal_analysis.power_regulators or any voltage_reference detector output. The power_regulators list is empty for the ADC schematic despite U301 being a dedicated reference IC. Users of the analyzer output would need to inspect ic_pin_analysis to find this component rather than having it surface in the signal path analysis.",
+      "created_from": "FND-00000363",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_value",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

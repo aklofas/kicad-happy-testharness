@@ -1,0 +1,19 @@
+{
+  "file_pattern": "marzipan.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002158",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002158-AST-01",
+      "description": "INCORRECT: Three KiCad 5 legacy PCBs in the hackrf repo use non-standard copper layer names: C1F (front copper), C2, C3, C4B (back copper) instead of the standard F.Cu, In1.Cu, In2.Cu, B.Cu. The PCB analyzer only recognizes the canonical KiCad names. As a result, marzipan reports front_side=0/back_side=0 for 432 modules (all actually on C1F), neapolitan reports front_side=0/back_side=0 for 290 modules, and operacake reports front_side=0/back_side=0 for 152 modules (122 on C1F and 30 on C4B). copper_layers_used=0 and copper_layer_names=[] are also wrong for all three. operacake's 30 back-side components are completely invisible to the analyzer.",
+      "created_from": "FND-00002158",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "greater_than",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

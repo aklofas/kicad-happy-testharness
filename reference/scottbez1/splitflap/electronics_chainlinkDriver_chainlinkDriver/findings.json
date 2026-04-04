@@ -1,0 +1,69 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/splitflap/electronics/chainlinkDriver/chainlinkDriver.sch",
+      "status": "confirmed",
+      "summary": "Legacy KiCad 5 schematic for split-flap motor driver board. 65 components, 184 nets correctly extracted. 0 signals detected due to KH-016. Design centers on 4x 74HC595 shift registers driving 4x TPL7407L open-drain arrays for motor control, plus 74HC165 parallel-in shift register for sensor input and 74HC125 buffer. This is a well-structured SPI-like daisy-chain topology.",
+      "correct": [
+        {
+          "description": "All 65 components extracted with correct references and values"
+        },
+        {
+          "description": "Component types correct: 10 ICs (4x 74HC595, 4x TPL7407L, 74HC165, 74HC125), 12 caps, 17 connectors, 13 resistors, 6 LEDs"
+        },
+        {
+          "description": "Power rails +12V, +3.3V, GND correctly identified"
+        },
+        {
+          "description": "184 nets with proper associations"
+        },
+        {
+          "description": "BOM correctly consolidated: 4x 74HC595, 4x TPL7407L as grouped entries"
+        },
+        {
+          "description": "10 subcircuits identified around each IC"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TPL7407L components use lib_id Transistor_Array:ULN2003A - the value says TPL7407L but lib symbol is ULN2003A. Analyzer correctly reports what is in the schematic, but could note the value/lib mismatch as a design observation",
+          "analyzer_section": "components"
+        }
+      ],
+      "missed": [
+        {
+          "description": "No signal analysis detected (0 signals) - SPI-like shift register chain (CLOCK, LATCH, DATA signals), motor drive outputs, and sensor input path should all be detectable",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No SPI bus detection for the 74HC595/74HC165 daisy chain despite CLOCK, LATCH, DATA net names being present",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Resolving KH-016 would enable SPI/shift-register chain detection",
+        "Consider detecting shift register daisy-chain topologies as a signal pattern"
+      ],
+      "related_issues": [
+        "KH-016"
+      ],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000078",
+      "repo": "scottbez1/splitflap",
+      "project": "electronics_chainlinkDriver_chainlinkDriver",
+      "created": "2026-03-14T07:23:19.415330+00:00"
+    }
+  ]
+}

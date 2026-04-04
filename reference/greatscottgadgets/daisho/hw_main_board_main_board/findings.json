@@ -1,0 +1,81 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hw_main_board_main_board.sch.json",
+      "status": "confirmed",
+      "summary": "Legacy KiCad 5 .sch files (daisho: 60 files, OpenVent: 19 files) have 0 signal detections. Component extraction and net connectivity work, subcircuit detection works (231 subcircuits in daisho, 98 in OpenVent), but signal pattern analysis not wired up for legacy format.",
+      "correct": [
+        {
+          "type": "component_extraction",
+          "description": "All legacy components correctly extracted with reference, value, lib_id"
+        },
+        {
+          "type": "subcircuits",
+          "description": "231 subcircuits detected in daisho, demonstrating IC+neighbor grouping works"
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [
+        "Wire up run_signal_analysis() in parse_legacy_schematic() return path \u2014 the net data and component data exist, just need to pass them through the signal detectors"
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "id": "FND-00000007",
+      "repo": "greatscottgadgets/daisho",
+      "project": "hw_main_board",
+      "created": "2026-03-13T07:39:53.506048+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hw_main_board_power.sch.json",
+      "status": "new",
+      "summary": "Legacy power.sch has 160 nets but only 4 with multiple pins. Most components appear isolated (single-pin nets). Wire-to-pin matching may have gaps in complex legacy sheets.",
+      "correct": [
+        {
+          "type": "net_extraction",
+          "description": "GND net correctly has 10 pins, VUSB has 3 \u2014 named nets work"
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [
+        "Investigate legacy wire-to-pin matching tolerance. KiCad 5 uses mils coordinates; ensure endpoint matching handles coordinate precision correctly."
+      ],
+      "should_become_assertion": false,
+      "related_issues": [],
+      "id": "FND-00000008",
+      "repo": "greatscottgadgets/daisho",
+      "project": "hw_main_board",
+      "created": "2026-03-13T07:39:53.506519+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hw_main_board_main_board.sch.json",
+      "status": "confirmed",
+      "summary": "X1/X2/X3 (40/12/25 MHz crystals, QUARTZCMS4_GROUND lib) classified as \"connector\" instead of \"crystal\"",
+      "correct": [],
+      "incorrect": [
+        {
+          "type": "component_classification",
+          "description": "3 crystals with ref prefix X misclassified as connectors. Library symbol is QUARTZCMS4_GROUND.",
+          "analyzer_section": "components"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Add X prefix to crystal classification, or check library name for crystal/quartz keywords"
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "id": "FND-00000028",
+      "repo": "greatscottgadgets/daisho",
+      "project": "hw_main_board",
+      "created": "2026-03-13T07:52:46.214710+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

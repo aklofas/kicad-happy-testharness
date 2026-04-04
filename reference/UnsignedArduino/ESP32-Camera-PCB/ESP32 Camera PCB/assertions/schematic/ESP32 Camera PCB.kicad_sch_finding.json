@@ -1,0 +1,82 @@
+{
+  "file_pattern": "ESP32 Camera PCB.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000494",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000494-AST-01",
+      "description": "The signal_analysis.voltage_dividers correctly identifies R1 (top, 100K) connected to B7/BAT net and R2 (bottom, 100K) to GND, with the midpoint (__unnamed_43) connecting to B2 pin 3 (GPIO36). The ratio 0.5 is correct. This is used for battery voltage monitoring via the ADC input.",
+      "created_from": "FND-00000494",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000494-AST-02",
+      "description": "The +3V3 net has only power_in pins (B4/LV, B2/VIN_3.3V, B8/VDD). There is no power_out pin supplying this rail within the schematic \u2014 the ESP32 dev board internally generates 3.3V but the schematic symbol only presents a power_in. The analyzer correctly warns that ERC will flag this.",
+      "created_from": "FND-00000494",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000494-AST-03",
+      "description": "All 17 BOM components (B1-B9, C1, R1, R2, SW1-SW5) are correctly identified with accurate lib_ids, footprints, values, and coordinates. The pin_uuids match the source. Net connections for named pins (SDA, SCL, MOSI, MISO, CS, CLK, etc.) are correctly traced. Power rails +3V3, +5V, GND are correctly enumerated. The total_nets=67 and total_wires=170 are plausible.",
+      "created_from": "FND-00000494",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000494-AST-04",
+      "description": "B5 (ArduCam_OV2640_Breakout) has named pins CS/MOSI/MISO/SCK connected to B2 GPIO15/27/14/13. B3 (Adafruit_MicroSD_Card_Breakout) has named pins CS/DI/DO/CLK connected to B2 GPIO5/23/19/18. Both are canonical SPI connections. The bus_analysis.spi array is empty. These connections are textbook SPI and should be detected.",
+      "created_from": "FND-00000494",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000494-AST-05",
+      "description": "B6 (RTC_Breakout) SDA/SCL pins connect to B4 (I2C_Level_Shifter_Breakout) HV2/HV1 (high-voltage side). B5 (ArduCam) SDA/SCL also connects to B4 HV2/HV1 on the same nets (__unnamed_15, __unnamed_16). B4 LV3/LV4 (low-voltage side) connect to B2 (ESP32) GPIO22/21. This is a complete I2C bus with level shifting. The bus_analysis.i2c array is empty.",
+      "created_from": "FND-00000494",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000494-AST-06",
+      "description": "B4 explicitly separates +3.3V logic (LV side, connected to +3V3 and ESP32 GPIO) from +5V logic (HV side, connected to +5V rail, RTC, and ArduCam). The isolation_barriers list is empty. This is a clear 3.3V/5V level-shifting topology that should be detected, especially since the component name contains 'Level_Shifter'.",
+      "created_from": "FND-00000494",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000494-AST-07",
+      "description": "power_domains.ic_power_rails and domain_groups are both empty. The schematic has B4 (I2C_Level_Shifter) separating a 3.3V domain (ESP32 + B8 connector) from a 5V domain (ArduCam B5, RTC B6). Cross-domain signals (the I2C lines through B4) are also not in cross_domain_signals. This is a missed analysis opportunity.",
+      "created_from": "FND-00000494",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

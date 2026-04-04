@@ -1,0 +1,80 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "lemon-pcb-swizzle_lemon-wired-swizzle.kicad_sch.json",
+      "status": "promoted",
+      "summary": "RP2040 keyboard PCB with dual USB-C and FSUSB42 muxes (58 components). Correct: all components classified correctly, XC6206 LDO detected, crystal 12MHz, WS2812B LED chain, USB compliance, power budget, footprint warnings. No incorrect classifications found. Missed: dual USB-C split keyboard architecture, VIK connector bus.",
+      "correct": [
+        {
+          "description": "All 58 components correctly classified across 9 types",
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "XC6206P332MR-G correctly detected as LDO feeding +3V3",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "WS2812B-2020 addressable LED detected",
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "USB-C compliance: CC pulldowns pass, VBUS ESD/decoupling fail",
+          "analyzer_section": "usb_compliance",
+          "check": {
+            "path": "usb_compliance",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "Dual USB-C split keyboard USB mux pattern not recognized",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "VIK keyboard expansion bus not recognized",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Consider detecting split keyboard USB mux patterns",
+        "Consider recognizing VIK as standardized keyboard bus"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000193",
+      "repo": "rianadon/Cosmos-Keyboard-PCBs",
+      "project": "lemon-pcb-swizzle_lemon-wired-swizzle",
+      "created": "2026-03-15T19:56:01.955254+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

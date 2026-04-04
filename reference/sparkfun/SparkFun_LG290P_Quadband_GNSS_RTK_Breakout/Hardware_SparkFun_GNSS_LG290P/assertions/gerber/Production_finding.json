@@ -1,0 +1,70 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001448",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001448-AST-01",
+      "description": "The drill classification correctly identifies three categories: 1288 via holes at 0.3mm diameter, 216 component holes (200 at 1.016mm PTH for connector pins, 16 at 0.65mm NPTH for footprint mechanical pins), and 32 NPTH mounting holes at 3.1mm (for the 4 standoffs \u00d7 8-up panel). The x2_attributes-based classification method is reported and applied correctly.",
+      "created_from": "FND-00001448",
+      "check": {
+        "path": "drill_classification.vias.count",
+        "op": "equals",
+        "value": 1288
+      }
+    },
+    {
+      "id": "FND-00001448-AST-02",
+      "description": "The four unique trace widths (0.1524mm, 0.1778mm, 0.349mm, 0.4064mm) are correctly identified from the front copper Gerber. The minimum feature size of 0.125mm is within standard manufacturing capabilities. DFM tier is correctly classified as 'standard' with no violations.",
+      "created_from": "FND-00001448",
+      "check": {
+        "path": "trace_widths.unique_widths_mm",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001448-AST-03",
+      "description": "The B.Paste layer (GBP file) has aperture_count=0, flash_count=0, draw_count=0 and region_count=0, correctly indicating no SMD components on the back side require solder paste. This is consistent with the PCB analysis showing all 47 SMD components are on the front side (smd_count=47, back_side has only THT and jumpers).",
+      "created_from": "FND-00001448",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "FND-00001448-AST-04",
+      "description": "INCORRECT: The GKO file (SparkFun_GNSS_LG290P_panelized.GKO) is classified as layer_type='B.Mask' in the output, but it is the board outline file. Its X2 metadata erroneously says FileFunction=Soldermask,Bot (a bug in the SparkFun panelizer labeling), but the aperture_analysis correctly identifies a 'Profile' aperture function. The GKO extension conventionally means 'Board Outline' and its content draws the panelized board perimeter. As a result, missing_required=['Edge.Cuts'] and complete=false are reported, when the board outline IS present in GKO form.",
+      "created_from": "FND-00001448",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "not_contains_match",
+        "value": "Edge.Cuts"
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001448-AST-05",
+      "description": "INCORRECT: The gerber output reports board_dimensions={}, providing no board size information. The layer extents in the alignment section show B.Cu and F.Cu both have width=103.354mm and height=174.22mm, which are the actual copper extents of the panel. The board_dimensions field should be populated from the Edge.Cuts/GKO outline data or from these layer extents, but is left empty.",
+      "created_from": "FND-00001448",
+      "check": {
+        "path": "board_dimensions",
+        "op": "exists"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001448-AST-06",
+      "description": "The gerber analyzer reports 9 gerber files analyzed and layer_count=4, but GL2 and GL3 (the .GL2 and .GL3 extension files) are present in both the loose directory and the zip archive but are not included in the analysis. The analyzer does not recognize the .GL2/.GL3 file extensions as Gerber inner copper layers. Both files have proper X2 attributes: GL2=Copper,L2,Inr and GL3=Copper,L3,Inr. This means In1.Cu and In2.Cu completeness cannot be verified, and the layer_count=4 is inferred but not validated from actual Gerber content.",
+      "created_from": "FND-00001448",
+      "check": {
+        "path": "completeness.found_layers",
+        "op": "contains_match",
+        "value": "In1.Cu"
+      },
+      "aspirational": true
+    }
+  ]
+}

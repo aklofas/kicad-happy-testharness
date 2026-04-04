@@ -1,0 +1,40 @@
+{
+  "file_pattern": "Manufacturing Files_gerbers",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-185-01",
+      "description": "KH-185: bitaxe front_side >= 100 (was 0 before fix)",
+      "issue": "KH-185",
+      "fix_type": "count_change_fix",
+      "check": {
+        "path": "component_analysis.front_side",
+        "op": "min_count",
+        "value": 100
+      }
+    },
+    {
+      "id": "BUGFIX-KH-173-01",
+      "description": "KH-173: bitaxe SMD pad count reflects flash instances (>100), not unique aperture defs (~45)",
+      "issue": "KH-173",
+      "fix_type": "accuracy_fix",
+      "check": {
+        "path": "pad_summary.smd_apertures",
+        "op": "min_count",
+        "value": 100
+      }
+    },
+    {
+      "id": "BUGFIX-KH-173-02",
+      "description": "KH-173: bitaxe SMD pad count well above old ~45 (now 364 flash instances)",
+      "issue": "KH-173",
+      "fix_type": "accuracy_fix",
+      "check": {
+        "path": "pad_summary.smd_apertures",
+        "op": "min_count",
+        "value": 200
+      }
+    }
+  ]
+}

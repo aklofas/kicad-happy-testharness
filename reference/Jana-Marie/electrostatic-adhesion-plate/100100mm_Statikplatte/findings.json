@@ -1,0 +1,68 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_electrostatic-adhesion-plate_100100mm_Statikplatte.kicad_sch.json",
+      "status": "promoted",
+      "summary": "N1..N10 detected as a parallel bus \u2014 false positive; these are sequential internal nodes; HV net not classified as high-voltage power \u2014 classified as plain 'signal'",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "bus_topology reports prefix='N', width=10, range='N1..N10' as a detected bus signal. In this electrostatic adhesion plate design, N1..N10 are internal node names in a diode-capacitor ladder network (10 stages of series Schottky diodes and capacitors forming a voltage multiplier/charge pump for the HV electrode). They are sequential analog nodes, not a parallel digital bus. The same pattern appears in all three variants: 5050mm detects N1..N6 (6-stage version), DINA5 detects N1..N10. The bus detector should exclude single-letter prefixes like 'N' or require a minimum prefix length to avoid this class of false positive.",
+          "analyzer_section": "bus_topology",
+          "check": {
+            "path": "bus_topology.detected_bus_signals",
+            "op": "max_count",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The HV net is the high-voltage electrode bus of an electrostatic adhesion plate (typically hundreds to thousands of volts). It is classified as 'signal' in design_analysis.net_classification. A net named 'HV' in a design with a 33M discharge resistor and no IC power supplies (only GND as power rail) should ideally trigger a high-voltage or special-power classification. The misclassification could affect any downstream analysis that uses net class to estimate signal integrity or safety margins. The RC filter with R1=33M and C=1nF is correctly detected but the circuit context (HV discharge path) is not recognized.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.net_classification.HV",
+            "op": "equals",
+            "value": "power"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Jana-Marie/electrostatic-adhesion-plate",
+      "project": "100100mm_Statikplatte",
+      "created": "2026-03-24T07:52:21.723331+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002035"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_electrostatic-adhesion-plate_100100mm_Statikplatte.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "GND and HV copper zones classified as zone_stitching \u2014 they are functional electrodes",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "thermal_analysis.zone_stitching lists the GND and HV copper zones (each 2382 mm2, F.Cu only, 2 vias each at 0.1 via/cm2). In an electrostatic adhesion plate, these interdigitated copper zones ARE the functional elements \u2014 the electrodes that generate the adhesion force. They are not thermal or electrical stitching planes. The 2 vias per zone are for connectivity, not thermal management. The zone_stitching classification implies thermal intent that does not apply to this design type. The via density of 0.1/cm2 is far below any thermal stitching standard, which should have disqualified these as stitching zones.",
+          "analyzer_section": "thermal_analysis",
+          "check": {
+            "path": "thermal_analysis.zone_stitching",
+            "op": "max_count",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Jana-Marie/electrostatic-adhesion-plate",
+      "project": "100100mm_Statikplatte",
+      "created": "2026-03-24T07:52:21.723351+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002036"
+    }
+  ]
+}

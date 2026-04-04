@@ -1,0 +1,55 @@
+{
+  "file_pattern": "EEZ DIB AUX-PS.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-163-01",
+      "description": "KH-163: IC2 (BD00FC0W) now has thermal_pad_vias entry (was missing)",
+      "issue": "KH-163",
+      "fix_type": "count_change_fix",
+      "check": {
+        "path": "thermal_pad_vias",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^IC2$"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-164-01",
+      "description": "KH-164: IC1 (MAX31760AEE+) has decoupling_placement entry",
+      "issue": "KH-164",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC1$"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-164-02",
+      "description": "KH-164: IC2 (BD00FC0W) has decoupling_placement entry",
+      "issue": "KH-164",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC2$"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-166-01",
+      "description": "KH-166: No false missing_revision warning when title block has rev=r3B7",
+      "issue": "KH-166",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "silkscreen.documentation_warnings",
+        "op": "not_contains_match",
+        "field": "type",
+        "pattern": "^missing_revision$"
+      }
+    }
+  ]
+}

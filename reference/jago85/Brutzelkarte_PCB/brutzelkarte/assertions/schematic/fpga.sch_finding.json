@@ -1,0 +1,30 @@
+{
+  "file_pattern": "fpga.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000433",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000433-AST-01",
+      "description": "INCORRECT: The four LED components LD1, LD2, LD3, LD4 use lib_id 'Device:LED_Small' and value 'LED_Small'. The analyzer classifies them as type 'inductor', causing component_types to show 'inductor': 4 with no 'led' type at all. The same misclassification propagates to brutzelkarte.sch.json (the hierarchical root which aggregates all sheets). The ferrite bead L1 in usb_uart.sch is correctly classified as 'ferrite_bead', so the issue is specific to the 'LED_Small' symbol not being matched by the LED classification rules.",
+      "created_from": "FND-00000433",
+      "check": {
+        "path": "statistics.component_types.inductor",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000433-AST-02",
+      "description": "INCORRECT: fpga.sch contains LD1-LD4 (4 LEDs with LED_SMD:LED_0603_1608Metric footprints). These are not present under a 'led' key in component_types \u2014 instead they inflate the 'inductor' count to 4. The same affects the aggregated brutzelkarte.sch output. The correct counts are: led=4, inductor=0.",
+      "created_from": "FND-00000433",
+      "check": {
+        "path": "statistics.component_types",
+        "op": "exists",
+        "value": "led"
+      },
+      "aspirational": false
+    }
+  ]
+}

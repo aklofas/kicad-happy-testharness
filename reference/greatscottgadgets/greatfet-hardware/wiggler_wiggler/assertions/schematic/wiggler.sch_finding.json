@@ -1,0 +1,18 @@
+{
+  "file_pattern": "wiggler.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002156",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002156-AST-01",
+      "description": "wiggler.sch contains only a single line ('EESchema Schematic File Version 2') with no components, nets, or wires. The analyzer returns a valid JSON structure with all counts at zero and empty arrays for all analysis sections, with no crash or error. This confirms correct edge-case handling of effectively empty legacy schematics.",
+      "created_from": "FND-00002156",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 0
+      }
+    }
+  ]
+}

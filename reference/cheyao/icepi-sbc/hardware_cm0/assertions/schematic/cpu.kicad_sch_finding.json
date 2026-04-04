@@ -1,0 +1,39 @@
+{
+  "file_pattern": "cpu.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002217",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002217-AST-01",
+      "description": "The SDIO detector correctly identifies the eMMC bus connected to the Allwinner H3 SoC (U1) with bus_width=8, bus_id='EMMC', and all 10 signals (eMMC_CLK, eMMC_CMD, eMMC_D0 through eMMC_D7). This is a non-trivial detection on a complex multi-sheet SoC schematic.",
+      "created_from": "FND-00002217",
+      "check": {
+        "path": "design_analysis.bus_analysis.sdio",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00002217-AST-02",
+      "description": "Both EPHY_RX+/EPHY_RX- and EPHY_TX+/EPHY_TX- are correctly classified as differential pairs under design_analysis.differential_pairs, each showing has_esd=true. The DDR3 strobe pairs DQS0+/- and DQS1+/- and four HDMI/GPDI differential pairs are also correctly detected.",
+      "created_from": "FND-00002217",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "FND-00002217-AST-03",
+      "description": "INCORRECT: The UART detector fires on EPHY_RX+ and EPHY_RX- (and EPHY_TX+ / EPHY_TX-) because their net names contain substrings matching TX/RX patterns. However, these are Ethernet PHY differential pair signals on the Allwinner H3 SoC (U1), correctly identified as differential pairs elsewhere in the same output under differential_pairs. The four EPHY nets appear in the uart list with pin_count=1 each, which is a false positive.",
+      "created_from": "FND-00002217",
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "max_count",
+        "value": 6
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "file_pattern": "example-placement.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002198",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002198-AST-01",
+      "description": "INCORRECT: J1 (a 2x10 SMD pin header, Conn_01x20) has 20 pin_uuids correctly captured, yet the 'pins' field is None and the component appears in all 14 nets. The pin-level data is absent from the components list while the net connectivity is fully resolved through the nets dict. The test_point classification for TP1\u2013TP16 using Conn_01x01_Male footprints is reasonable (value field encodes signal name), though these are really single-pin connectors rather than true test pads.",
+      "created_from": "FND-00002198",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 21
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00002198-AST-02",
+      "description": "Test points TP6 (RX+), TP7 (RX-), TP8 (TX+), TP9 (TX-) carry values matching the standard differential pair naming pattern. The design_analysis.differential_pairs list is empty. Even though these are single-pin connectors rather than IC signal pins, the net name pattern recognition should flag these as candidate differential pairs for the LVDS/differential bus on J1.",
+      "created_from": "FND-00002198",
+      "check": {
+        "path": "design_analysis.differential_pairs",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,244 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ti92revive_ti92revive.kicad_sch",
+      "status": "promoted",
+      "summary": "Keyboard switches classified as RF transceivers in all keyboard schematics; TCA8418 keyboard controller matrix not detected in any keyboard schematic; Component count undercounts by 8: 80 reported ...",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies that SDA and SCL are single-pin global labels (connecting to IC1 TCA8418 only, with no pull-up resistors in this schematic sheet). The I2C pull-up resistors (R1 4.7k and R2 10k) are connected to INT and RESET nets respectively, not to SDA/SCL. The observation that SDA/SCL have no pull-ups is accurate for this leaf schematic.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "contains_match",
+            "value": {
+              "line": "SDA",
+              "has_pull_up": false
+            }
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The lib_id 'kb5-rescue:SW_Push_45deg-sw_push_45deg-ESP32-S2-WROOM-rescue' contains the substring 'WROOM' (or similar ESP32 module name) in a rescue library name, causing the rf_chains detector to classify all 78-85 keyboard switches as RF transceivers. Affects all four keyboard schematics: ti92revive.kicad_sch (78 transceivers), keyboard.kicad_sch (74), ti92-reviceStable.sch (85), kb5.sch (63). These are all SW_Push_45deg push-button components connected in a keyboard matrix, not wireless transceivers. The rf_chains list should be empty for all of these files.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "equals",
+            "value": []
+          }
+        },
+        {
+          "description": "The source schematic contains 88 non-power components (85 SW_Push_45deg switches + IC1 TCA8418 + R1 + R2) but the analyzer reports total_components=80 (77 'other' + 1 'ic' + 2 'resistor'). Eight keyboard switch components are silently dropped: kbALT1, kbD1, kbMode1, kbN2, kbRBrack1, kbX1, kf2, kwE1. Seven of these share x-coordinate 82.042mm in the schematic layout. The same pattern occurs in keyboard.kicad_sch (76 reported vs 85 actual, 9 missing). These missing references appear in no output lists (not in components, bom, missing_mpn, or annotation_issues).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 88
+          }
+        },
+        {
+          "description": "Component kbLBrack1 has value='(' in the source schematic (the open-parenthesis key on the TI-92 keyboard). The schematic analyzer misparses this as the start of an s-expression, yielding value=\"[['id', '1'], ['at', '62.738', '116.205', '0']]\" in the output instead of the string '('. This affects both the components list and BOM entry. The same bug occurs in keyboard.kicad_sch where kbLBrack1 appears.",
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom",
+            "op": "not_contains_match",
+            "value": {
+              "references": [
+                "kbLBrack1"
+              ],
+              "value": [
+                [
+                  "id",
+                  "1"
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "description": "Both ti92revive.kicad_sch and keyboard.kicad_sch have file_version=20200828, which is an early KiCad 6 development/nightly build format from mid-2020. The analyzer reports kicad_version='unknown' instead of identifying this as a KiCad 6 pre-release format. KiCad 6.0 was released in December 2021; version dates prior to that are development builds. The schema is identical to KiCad 6 and should be reported as '6 (pre-release)' or similar rather than 'unknown'.",
+          "analyzer_section": "kicad_version",
+          "check": {
+            "path": "kicad_version",
+            "op": "equals",
+            "value": "6 (pre-release)"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "All four keyboard schematics contain a TCA8418 8x10 keyboard controller IC (IC1) wired to row0-row7 and col0-col9 nets with 74-85 keyboard switches forming a full key matrix. The key_matrices detector returns empty ([]) for all files. The TCA8418 with its named row/col nets and associated switches is a textbook key matrix and should be detected. The design uses I2C (SDA/SCL) for host communication.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.key_matrices",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ccadic/TI92-revive",
+      "project": "ti92-reviceStable_ti92-reviceStable",
+      "created": "2026-03-24T01:12:35.927605+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001604"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "ti92revive_ti92revive.kicad_pcb",
+      "status": "promoted",
+      "summary": "kbLBrack1 footprint value field parsed as raw s-expression list instead of string '('; IC1 TCA8418 (WQFN-24 SMD) misclassified as through_hole; Work-in-progress PCB correctly identified as incomple...",
+      "correct": [
+        {
+          "description": "The ti92revive PCB is an early layout with only 10 footprints placed (IC1 TCA8418 + R2 + 8 key positions) and 0 tracks routed. The analyzer correctly reports routing_complete=false, copper_layers_used=0, and 14 unrouted nets. The partial key matrix layout matches the source PCB file.",
+          "analyzer_section": "connectivity",
+          "check": {
+            "path": "connectivity.routing_complete",
+            "op": "equals",
+            "value": false
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "In the PCB analyzer output, footprint kbLBrack1 has its value field set to a raw parsed list (the fp_text value node contents) instead of the string '('. The source PCB has '(fp_text value \"(\" ...)' which is being misread when the value token is the open-parenthesis character. Expected value: '(' (string), actual value: [[\"at\", \"0.508\", \"-4.064\"], [\"layer\", \"F.SilkS\"], \"hide\", ...].",
+          "analyzer_section": "footprints",
+          "check": {
+            "path": "footprints",
+            "op": "not_contains_match",
+            "value": {
+              "reference": "kbLBrack1",
+              "value": [
+                [
+                  "at",
+                  "0.508",
+                  "-4.064"
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "description": "The footprint '18650:TCA8418-WQFN-24-1EP_4x4mm' placed on B.Cu has all SMD pads (pad type 'smd rect' on layers F.Cu/F.Paste/F.Mask) but carries an '(attr through_hole)' annotation in the KiCad 5 PCB format. The analyzer reports type='through_hole' following the attr field rather than the actual pad type. The PCB statistics therefore count it as tht_count=9 instead of smd_count=10 in the ti92revive PCB. The WQFN-24 package is a surface-mount device.",
+          "analyzer_section": "footprints",
+          "check": {
+            "path": "footprints",
+            "op": "contains_match",
+            "value": {
+              "reference": "IC1",
+              "type": "smd"
+            }
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ccadic/TI92-revive",
+      "project": "ti92-reviceStable_ti92-reviceStable",
+      "created": "2026-03-24T01:12:35.927624+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001605"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "charger_stepup.sch",
+      "status": "promoted",
+      "summary": "IN+/IN- battery terminal labels detected as differential pair; DW01 and FS8205A battery protection ICs not detected as protection devices",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The charger_stepup schematic uses global labels 'IN+' and 'IN-' as power input terminals for a LiPo battery charger (connected to TP4056 VCC and power capacitors). The differential_pairs detector classifies them as a differential signal pair with ESD protection and series resistors. These are single-ended DC power rails (battery positive/negative terminals), not a differential signal pair. R14/R15 are charge current programming resistors, not differential termination. The has_esd=true claim (attributing U3 TP4056 as ESD device) is also incorrect.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The charger_stepup schematic contains DW01 (LiPo battery protection IC with overcharge/overdischarge/overcurrent protection) and FS8205A (dual N-channel MOSFET for battery protection cutoff). Both are canonical battery protection devices. The protection_devices detector returns []. The DW01 has its CS (current sense) pin connected to a sense resistor R16, which is a typical protection topology. These should be detected as BMS/protection components.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "ccadic/TI92-revive",
+      "project": "ti92-reviceStable_ti92-reviceStable",
+      "created": "2026-03-24T01:12:35.927628+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001606"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ti92-reviceStable.sch",
+      "status": "new",
+      "summary": "AP1117-33 LDO regulator correctly detected with output voltage 3.3V",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies U2 (Regulator_Linear_AP1117-33) as an LDO voltage regulator with output_rail=3.3v, topology=LDO, and estimated_vout=3.3V derived from the fixed-suffix naming. The design observation about missing input/output decoupling capacitors is a valid observation, though the stable PCB design does have decoupling caps C4 and C5 present.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "value": {
+              "ref": "U2",
+              "topology": "LDO",
+              "estimated_vout": 3.3
+            }
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "ccadic/TI92-revive",
+      "project": "ti92-reviceStable_ti92-reviceStable",
+      "created": "2026-03-24T01:12:35.927631+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001607"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "ti92-reviceStable.kicad_pcb",
+      "status": "new",
+      "summary": "Fully routed stable PCB correctly identified as routing_complete with 73 footprints",
+      "correct": [
+        {
+          "description": "The ti92-reviceStable PCB is the production-ready design with 73 footprints, 1310 track segments, 73 vias, and 56 nets all fully routed. The analyzer correctly reports routing_complete=true, unrouted_count=0, 2 copper layers used. The DFM violation for board size exceeding 100x100mm is accurate at 205x113.6mm.",
+          "analyzer_section": "connectivity",
+          "check": {
+            "path": "connectivity.routing_complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "ccadic/TI92-revive",
+      "project": "ti92-reviceStable_ti92-reviceStable",
+      "created": "2026-03-24T01:12:35.927633+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001608"
+    }
+  ]
+}

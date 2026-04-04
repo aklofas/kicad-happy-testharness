@@ -1,0 +1,31 @@
+{
+  "file_pattern": "OSO-WILD-A3.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000771",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000771-AST-01",
+      "description": "The A3 board is a larger test/breakout board (76.2mm = 3 inches tall vs A1's 22.86mm). No copper pours, no vias, 132 tracks at 1163mm total length. No SMD components \u2014 all footprints are THT connectors and mounting holes. This matches the design intent (A3 is the larger carrier/demo board).",
+      "created_from": "FND-00000771",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true,
+      "aspirational_reason": "auto-generated check path incorrect for PCB/gerber output"
+    },
+    {
+      "id": "FND-00000771-AST-02",
+      "description": "The A3 PCB has 6 footprints with real component references, but J1, J2, and LCD1 each appear exactly twice. The analyzer's design_observations, dfm_analysis, and connectivity sections are all empty \u2014 no duplicate reference warning is emitted. A DFM or ERC check for duplicate refs would catch this and help identify a likely PCB design issue.",
+      "created_from": "FND-00000771",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

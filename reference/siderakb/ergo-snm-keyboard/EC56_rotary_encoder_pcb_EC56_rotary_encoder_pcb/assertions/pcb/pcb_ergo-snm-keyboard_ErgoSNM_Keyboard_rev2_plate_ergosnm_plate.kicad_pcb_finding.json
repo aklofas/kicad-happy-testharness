@@ -1,0 +1,19 @@
+{
+  "file_pattern": "pcb_ergo-snm-keyboard_ErgoSNM_Keyboard_rev2_plate_ergosnm_plate.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002193",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002193-AST-01",
+      "description": "The rev2 plate PCB is a pure mechanical switch plate with 11 footprints (switch cutout shapes and mounting holes), zero copper layers used, zero tracks, zero vias, and zero nets. The analyzer correctly reports all these as zero and routing_complete=true (vacuously, no nets to route). Board dimensions 116.25x111.5mm are correctly computed from the edge cuts. The DFM board_size violation is correctly triggered. This demonstrates the analyzer handles purely mechanical PCBs without false errors.",
+      "created_from": "FND-00002193",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": true
+    }
+  ]
+}

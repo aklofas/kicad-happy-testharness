@@ -1,0 +1,58 @@
+{
+  "file_pattern": "iMX8MPLUS-SOM-EVB_Rev_B.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000173",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000173-AST-01",
+      "description": "329 components correctly counted",
+      "created_from": "FND-00000173",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000173-AST-02",
+      "description": "Dual KSZ9031 Ethernet PHYs detected",
+      "created_from": "FND-00000173",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000173-AST-03",
+      "description": "25MHz crystals with 33pF load caps detected",
+      "created_from": "FND-00000173",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000173-AST-04",
+      "description": "ESDS314DBVR ESD ICs correctly detected",
+      "created_from": "FND-00000173",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000173-AST-06",
+      "description": "MICRO_SD1, MICROPHONE1 classified as other instead of connector",
+      "created_from": "FND-00000173",
+      "check": {
+        "path": "statistics.component_types",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

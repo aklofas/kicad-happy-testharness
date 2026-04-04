@@ -1,0 +1,100 @@
+{
+  "file_pattern": "EEZ DIB AFE3.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000201",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000201-AST-01",
+      "description": "5 opamp circuits correctly identified: IC5 units 1-4 (MCP6004) as comparators for HI_CLAMP/LO_CLAMP window detection, IC7 (OPA376) as unity-gain buffer",
+      "created_from": "FND-00000201",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000201-AST-02",
+      "description": "IC7 (OPA376) correctly identified as buffer configuration with gain=1.0 (inverting tied to output)",
+      "created_from": "FND-00000201",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000201-AST-03",
+      "description": "IC5 unit 4 correctly identified as comparator with LO_CLAMP on non-inverting and IN4P on inverting",
+      "created_from": "FND-00000201",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000201-AST-04",
+      "description": "IC5 unit 3 correctly identified as comparator with HI_CLAMP on non-inverting and IN4P on inverting",
+      "created_from": "FND-00000201",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000201-AST-09",
+      "description": "9 isolated power rails correctly identified: +15V_ISO, -15V_ISO, +5V_ISO, -5V_ISO, +3V3_ISO, +2V5_ISO, -2V5_ISO, GND, PWR_FLAG",
+      "created_from": "FND-00000201",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000201-AST-10",
+      "description": "3 relays, 4 fuses, 11 diodes, 2 optocouplers correctly classified - consistent with multi-range protected AFE",
+      "created_from": "FND-00000201",
+      "check": {
+        "path": "statistics.component_types",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000201-AST-12",
+      "description": "Decoupling on +2V5_ISO (1.2uF across 3 caps) and +3V3_ISO (1.2uF across 3 caps) correctly tallied",
+      "created_from": "FND-00000201",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000201-AST-13",
+      "description": "No isolation_barriers detected despite OK2 optocouplers and isolated power domains (_ISO suffix rails). The optocouplers provide galvanic isolation between measurement and digital domains.",
+      "created_from": "FND-00000201",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000201-AST-14",
+      "description": "No power_regulators detected. While power may come from backplane, the isolated DC-DC converters (if present on other sheets) or the power rail structure suggests power regulation should be noted.",
+      "created_from": "FND-00000201",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

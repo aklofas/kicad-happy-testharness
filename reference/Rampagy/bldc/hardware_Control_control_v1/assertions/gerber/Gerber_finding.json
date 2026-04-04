@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Gerber",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00002282",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002282-AST-01",
+      "description": "INCORRECT: The layer extents show Edge.Cuts height = 88.9mm while F.SilkS height = 125.03mm \u2014 the silkscreen layer is 36.1mm taller than the board outline. This is a real alignment anomaly (silkscreen text or graphics placed well outside the board boundary), but alignment.aligned is reported as True with an empty issues list. The alignment checker appears to only flag mismatches between copper and edge-cut layers, and silkscreen layers fall outside its comparison scope.",
+      "created_from": "FND-00002282",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": true
+    }
+  ]
+}

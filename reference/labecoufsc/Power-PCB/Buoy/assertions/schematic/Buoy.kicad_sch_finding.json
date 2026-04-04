@@ -1,0 +1,49 @@
+{
+  "file_pattern": "Buoy.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001093",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001093-AST-01",
+      "description": "All major power management ICs detected with correct topologies. Battery charger identified as ic_with_internal_regulator, buck as switching, LDO correctly identified.",
+      "created_from": "FND-00001093",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001093-AST-02",
+      "description": "power_sequencing correctly identifies that U6 EN is driven from the 3.4V rail (R22/C36 divider), and U5 EN is controlled via R16/R17. Power good signal on U5 PG pin also detected.",
+      "created_from": "FND-00001093",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001093-AST-03",
+      "description": "All component types correctly classified: 44 resistors, 42 capacitors, 13 connectors, 16 test points, 3 transistors, 4 switches, 6 ICs, 8 diodes, 1 thermistor, 2 LEDs, 2 inductors.",
+      "created_from": "FND-00001093",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001093-AST-04",
+      "description": "statistics.power_rails only lists ['PGND', 'PWR_FLAG']. The design has named nets like /3.4V, /Power_out, /Batman (battery rail), /V_solar_in, /V_solar_out used as power distribution rails. These appear only in net_analysis as signal_nets rather than being recognized as power distribution rails.",
+      "created_from": "FND-00001093",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "file_pattern": "RP2040-PICO30_Rev_A.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001177",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001177-AST-01",
+      "description": "Crystal oscillator circuit for RP2040 correctly parsed: 12MHz, two 27pF caps, CL_eff = 16.5pF (series combination plus ~3pF stray). This is consistent with RP2040 datasheet recommendations.",
+      "created_from": "FND-00001177",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001177-AST-02",
+      "description": "The +3.3V rail has 22uF (x2) bulk and multiple 100nF bypass caps for the RP2040 IOVDD pins, correctly enumerated. The 1V1 ADC supply also correctly shows separate decoupling.",
+      "created_from": "FND-00001177",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001177-AST-03",
+      "description": "The power_regulators section detects U3 (SY8089) as 'switching' but the fb_net (__unnamed_4) only has U3 pin 5 (FB) and L1 pin 1, missing the R12/R13 feedback divider. The output voltage set by R12/R13 (ratio 0.185 implies Vout \u2248 0.6V/0.185 \u2248 3.24V, consistent with 3.3V rail) is not reported as part of the regulator output configuration.",
+      "created_from": "FND-00001177",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

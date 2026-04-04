@@ -1,0 +1,19 @@
+{
+  "file_pattern": "minuet.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002465",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002465-AST-01",
+      "description": "The schematic reports 85 total_components (including 4 net_tie and 3 test_point items), while the PCB reports 88 footprints. After accounting for net_ties (4) and test_points (3) appearing in both counts, there are still 3 footprints in the PCB that have no matching schematic component. These are likely mechanical or fiducial footprints placed directly in the PCB file without schematic symbols. The analyzer does not flag or explain this discrepancy, which could indicate phantom or orphaned footprints.",
+      "created_from": "FND-00002465",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "equals",
+        "value": 85
+      },
+      "aspirational": true
+    }
+  ]
+}

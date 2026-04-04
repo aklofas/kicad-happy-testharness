@@ -1,0 +1,70 @@
+{
+  "file_pattern": "Neo6502PC-CPU_Rev_B.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00000296",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000296-AST-01",
+      "description": "Footprint count and SMD/THT mix consistent with retro computer board with DIP ICs",
+      "created_from": "FND-00000296",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000296-AST-02",
+      "description": "Board dimensions match Neo6502pc form factor",
+      "created_from": "FND-00000296",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000296-AST-03",
+      "description": "Routing completeness correctly detected",
+      "created_from": "FND-00000296",
+      "check": {
+        "path": "statistics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000296-AST-04",
+      "description": "DFM analysis present and reasonable",
+      "created_from": "FND-00000296",
+      "check": {
+        "path": "dfm",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000296-AST-05",
+      "description": "INCORRECT: copper_layers_used includes F.SilkS which is a silkscreen layer, not copper. Board should be 2 copper layers (F.Cu, B.Cu).",
+      "created_from": "FND-00000296",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 2
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000296-AST-06",
+      "description": "INCORRECT: 15 of 19 thermal_pad_vias are false positives from paste-only stencil aperture pads with no copper. Same issue as ESP32-P4-PC.",
+      "created_from": "FND-00000296",
+      "check": {
+        "path": "thermal_pad_vias",
+        "op": "max_count",
+        "value": 5
+      },
+      "aspirational": true
+    }
+  ]
+}

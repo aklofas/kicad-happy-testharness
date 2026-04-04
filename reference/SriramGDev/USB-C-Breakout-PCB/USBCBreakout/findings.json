@@ -1,0 +1,124 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "USB-C-Breakout-PCB_USBCBreakout.sch.json",
+      "status": "promoted",
+      "summary": "USB interface not detected for Wurth-632723300011 USB-C connector; U1 (PRTR5V0U2X) pin-to-net mapping is wrong due to KiCad 5 legacy net tracing error; PRTR5V0U2X correctly identified as ESD protec...",
+      "correct": [
+        {
+          "description": "Despite the pin-to-net mapping error, the analyzer correctly identifies U1 as an esd_ic protecting D+ and D- differential nets. The fuse F1 is also correctly detected as a protection device on the VCC rail.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "The analyzer correctly identifies one differential pair (D+/D-) with has_esd=true and esd_protection=[U1]. The shared ICs include J1, U1, and USB1 which are all legitimately on the D+/D- nets.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer places U1 pin 1 (named 'GND') on net D+ and U1 pin 4 (named 'VCC') on net D-. Cross-checking with the PCB output confirms the correct mapping: pad1=GND, pad2=D+, pad3=D-, pad4=VCC. This is a net tracing bug in the KiCad 5 .sch parser. As a consequence, U1's GND pin appears on D+ and VCC pin appears on D-, creating incorrect ERC warnings and corrupted net membership for those signals.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.erc_warnings",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "USB1 (Wurth-632723300011) is a USB-C connector with named USB signals (VBUS, GND, CC1, CC2, D+, D-, SBU1, SBU2). The analyzer returns an empty usb_interfaces list. The part name 'Wurth-632723300011' and presence of typical USB-C signals should trigger detection.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.usb_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SriramGDev/USB-C-Breakout-PCB",
+      "project": "USBCBreakout",
+      "created": "2026-03-24T01:03:18.129462+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001559"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "USB-C-Breakout-PCB_USBCBreakout.kicad_pcb.json",
+      "status": "new",
+      "summary": "Via count (7) and routing completeness correctly extracted from KiCad 5 PCB",
+      "correct": [
+        {
+          "description": "Confirmed via PCB source: exactly 7 via elements present, all 0.8mm/0.4mm through-vias. The analyzer reports via_count=7 and routing_complete=true, matching the source. The 21 x 0.4mm drills in the gerbers include 14 USB connector THT anchor pads.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.via_count",
+            "op": "equals",
+            "value": 7
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "SriramGDev/USB-C-Breakout-PCB",
+      "project": "USBCBreakout",
+      "created": "2026-03-24T01:03:18.129483+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001560"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "USB-C-Breakout-PCB_Gerbers.json",
+      "status": "promoted",
+      "summary": "21 holes at 0.4mm misclassified as vias; 14 are USB connector THT anchor pads; Gerber set complete and alignment correct for USB-C-Breakout-PCB",
+      "correct": [
+        {
+          "description": "All 9 expected Gerber layers present (source=defaults, no gbrjob). Alignment is reported as aligned=true. The board has 2 copper layers with 122 segments and 7 vias confirmed from PCB analysis.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "op": "equals",
+            "value": true
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The gerber drill classification reports vias.count=21 using diameter_heuristic. However, PCB analysis confirms only 7 actual vias exist. The remaining 14 holes at 0.3988mm (~0.4mm) are through-hole anchor/shield pads belonging to the Wurth-632723300011 USB-C connector footprint, which is declared as attr=smd in the PCB file but includes THT mechanical legs. Without X2 aperture attributes in these KiCad 5 gerbers, the heuristic cannot distinguish connector THT holes from vias.",
+          "analyzer_section": "drill_classification",
+          "check": {
+            "path": "drill_classification.vias.count",
+            "op": "equals",
+            "value": 21
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "SriramGDev/USB-C-Breakout-PCB",
+      "project": "USBCBreakout",
+      "created": "2026-03-24T01:03:18.129487+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001561"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "file_pattern": "MIDAS-MK2.1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000155",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000155-AST-01",
+      "description": "Voltage dividers correctly identified for pyro sense (100k/30k) and feedback dividers",
+      "created_from": "FND-00000155",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000155-AST-02",
+      "description": "TPS566242 feedback (135k/30k -> 3.3V) and TPS564247 feedback (155k/30k -> 3.7V) correct with accurate Vout",
+      "created_from": "FND-00000155",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000155-AST-03",
+      "description": "Switching regulator topology correctly identifies TPS566242 and TPS564247 with inductor references",
+      "created_from": "FND-00000155",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000155-AST-04",
+      "description": "INCORRECT: Switching regulators TPS566242 (U303) and TPS564247 (U105) report input_rail and fb_net but no output_rail -- LDOs do have output_rail",
+      "created_from": "FND-00000155",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U303$"
+      },
+      "aspirational": true
+    }
+  ]
+}

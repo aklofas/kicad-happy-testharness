@@ -1,0 +1,50 @@
+{
+  "file_pattern": "SparkFun_GNSS_Flex_pHAT.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001424",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001424-AST-01",
+      "description": "116 total components matches the sum of component_types (15 caps + 31 TPs + 8 mounting + 9 connectors + 14 resistors + 23 jumpers + 2 diodes + 3 ICs + 4 LEDs + 4 fiducials + 1 inductor + 2 other = 116). Two LDO regulators detected: RT9080-3.3 for VBACKUP and AP7361C-3.3V for 3.3V. USB-C compliance analysis correctly identifies CC1/CC2 5.1k\u03a9 pull-downs as passing, and VBUS decoupling as failing. The dnp_parts=1 is correctly reflected.",
+      "created_from": "FND-00001424",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 116,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001424-AST-02",
+      "description": "31 test points are correctly enumerated with their net assignments. The design_observations note that RT9080-3.3 (U3) output rail VBACKUP is missing output capacitors \u2014 this is accurate since VBACKUP is the battery backup supply and the schematic only connects it to the GNSS module backup pin. The SD card ESD protection (D2, DF5A5.6LFU) protecting SD_CLK, SD_CMD, SD_DAT0, SD_DAT3 is correctly identified.",
+      "created_from": "FND-00001424",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001424-AST-03",
+      "description": "INCORRECT: design_observations contains two usb_data entries claiming has_esd_protection=False for D+ and D-. However, D1 (DT1042-04SO 4-line USB ESD IC) is correctly listed in protection_devices with protected_nets ['__unnamed_26', '__unnamed_27', '__unnamed_5', '__unnamed_6']. The USB data lines connect to the transformer TR1 first, then to those unnamed nets. The USB ESD protection IS present but the analyzer fails to correlate the unnamed nets protected by D1 with the named D+ and D- nets that pass through TR1. This is a false negative for ESD protection on USB lines.",
+      "created_from": "FND-00001424",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001424-AST-04",
+      "description": "The design has signal nets RXD1, RXD2, RXD3, RXD4, TXD1, TXD2, TXD3, TXD4 (4 UART pairs) connecting to a multi-GNSS receiver HAT. The bus_topology correctly detects RXD/TXD as bus signal groups, but uart_channels in signal_analysis is None (not a list). The test_coverage section identifies 8 uncovered UART nets. No structured UART bus enumeration is produced, which would be useful for this multi-receiver design.",
+      "created_from": "FND-00001424",
+      "check": {
+        "path": "statistics.total_nets",
+        "value": 90,
+        "op": "min_count"
+      },
+      "aspirational": false
+    }
+  ]
+}

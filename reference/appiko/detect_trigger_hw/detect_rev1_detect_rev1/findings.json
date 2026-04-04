@@ -1,0 +1,130 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "",
+      "status": "promoted",
+      "summary": "",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "",
+          "analyzer_section": "results/outputs/schematic/detect_trigger_hw/snap_rev2_snap_rev2",
+          "check": {
+            "path": "results/outputs/schematic/detect_trigger_hw/snap_rev2_snap_rev2.sch.json",
+            "op": "equals",
+            "value": {
+              "path": "statistics.component_types.inductor",
+              "expected": 3
+            }
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "results/outputs/gerber/detect_trigger_hw/sense_rev2_output_gerber",
+          "check": {
+            "path": "results/outputs/gerber/detect_trigger_hw/sense_rev2_output_gerber.json",
+            "op": "equals",
+            "value": {
+              "path": "statistics.drill_files",
+              "expected": 0
+            }
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "results/outputs/schematic/detect_trigger_hw/sense_rev2_sense_rev2",
+          "check": {
+            "path": "results/outputs/schematic/detect_trigger_hw/sense_rev2_sense_rev2.sch.json",
+            "op": "min_count",
+            "value": {
+              "path": "signal_analysis.power_regulators",
+              "count": 2
+            }
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "results/outputs/schematic/detect_trigger_hw/sense_rev2_sense_rev2",
+          "check": {
+            "path": "results/outputs/schematic/detect_trigger_hw/sense_rev2_sense_rev2.sch.json",
+            "op": "min_count",
+            "value": {
+              "path": "signal_analysis.opamp_circuits",
+              "count": 1
+            }
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "results/outputs/schematic/detect_trigger_hw/detect_rev1_detect_rev1",
+          "check": {
+            "path": "results/outputs/schematic/detect_trigger_hw/detect_rev1_detect_rev1.sch.json",
+            "op": "contains_match",
+            "value": {
+              "path": "bom[*].references[*]",
+              "pattern": "/AE1/"
+            }
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "results/outputs/schematic/detect_trigger_hw/detect_rev1_detect_rev1",
+          "check": {
+            "path": "results/outputs/schematic/detect_trigger_hw/detect_rev1_detect_rev1.sch.json",
+            "op": "contains_match",
+            "value": {
+              "path": "signal_analysis.lc_filters[*].shared_net",
+              "pattern": "/DEC4/"
+            }
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "results/outputs/pcb/detect_trigger_hw/snap_rev2_snap_rev2",
+          "check": {
+            "path": "results/outputs/pcb/detect_trigger_hw/snap_rev2_snap_rev2.kicad_pcb.json",
+            "op": "min_count",
+            "value": {
+              "path": "placement_analysis.courtyard_overlaps",
+              "count": 3
+            }
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "results/outputs/schematic/detect_trigger_hw/sense_rev2_sense_rev2",
+          "check": {
+            "path": "results/outputs/schematic/detect_trigger_hw/sense_rev2_sense_rev2.sch.json",
+            "op": "min_count",
+            "value": {
+              "path": "signal_analysis.rc_filters",
+              "count": 8
+            }
+          }
+        },
+        {
+          "description": "",
+          "analyzer_section": "results/outputs/pcb/detect_trigger_hw/detect_rev1_detect_rev1",
+          "check": {
+            "path": "results/outputs/pcb/detect_trigger_hw/detect_rev1_detect_rev1.kicad_pcb.json",
+            "op": "equals",
+            "value": {
+              "path": "statistics.routing_complete",
+              "expected": true
+            }
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "appiko/detect_trigger_hw",
+      "project": "detect_rev1_detect_rev1",
+      "created": "2026-03-24T07:31:20.544882+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002030"
+    }
+  ]
+}

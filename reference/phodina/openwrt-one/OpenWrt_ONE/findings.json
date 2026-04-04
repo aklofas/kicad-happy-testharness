@@ -1,0 +1,185 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "OpenWrt_ONE.kicad_sch.json",
+      "status": "promoted",
+      "summary": "OpenWrt One router with MT7981B SoC, MT7976C WiFi, EN8811 2.5G Ethernet. Altium-imported design with unannotated components. 60% false-positive rate on regulators; ref prefix classifier fails on Altium naming.",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "TPD? (34 instances) classified as transformer -- should be test_point (footprint TP0_3mm, lib_id contains TP-SMD)",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "TVD? (8 instances) classified as transformer -- should be TVS diode (PAM02SD2303C for Ethernet ESD, lib_id contains TVSD)",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "SO? (2 instances) classified as switch -- SMTSO-M2 standoffs are mechanical hardware, not switches",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "CLIP? (32 instances) classified as capacitor -- SHIELD_CLIP components are RF shield clips, not capacitors",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "24 of 40 regulators are false positives: 8x BLOCK_BPI_2 title blocks, 6x repeated MT7981B SoC, plus flash/RTC/EEPROM/logic ICs",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "AP7366-W5-7 inconsistently classified as switching in some sheets but correctly as LDO in others",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "POE-RT5400-12V has estimated_vout=1.2 -- parsed '12V' suffix as denominator giving 1.2V instead of 12V",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "All switching regulators share identical rail names input_rail=DVDD33, output_rail=EN_1V8 -- rail assignment collapses across sheets",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Zero voltage dividers detected across the entire design despite multiple feedback networks for buck converters",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Zero Ethernet interfaces detected -- EN8811 PHY + SQ24015-1PG/SG24002G magnetics + RJ45 connectors present",
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Zero memory interfaces detected -- MT7981B to NT5AD512M16C4-JR DDR4 interface present",
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Zero RF chains/matching detected -- MT7976C WiFi has SAW filters, BPFs, diplexers, matching inductors, MMCX connectors",
+          "analyzer_section": "signal_analysis.rf_chains",
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Footprint-based override: TP* footprint should force test_point classification regardless of ref prefix",
+        "Lib_id keywords TVSD/TVS should override T->transformer fallback",
+        "Filter out title blocks (no pins, no electrical function) from regulator detection",
+        "Part number Vout parsing should handle 12V suffix as 12V, not as divisor"
+      ],
+      "related_issues": [
+        "KH-079",
+        "KH-080"
+      ],
+      "should_become_assertion": true,
+      "id": "FND-00000156",
+      "repo": "phodina/openwrt-one",
+      "project": "OpenWrt_ONE",
+      "created": "2026-03-15T18:55:17.234259+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "OpenWrt_ONE.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "OpenWrt ONE is a MediaTek MT7981B Wi-Fi 6 router with MT7976C radio, Airoha EN8811 2.5GbE PHY, DDR4, dual SPI flash, PCIe M.2, and USB 2.0. Analyzer traverses all 8 sub-sheets (994 components, 1005 nets) but has significant gaps: DDR4/Ethernet PHY/RF chain all undetected, 26 UART false positives from WiFi/Ethernet net name matching, and total_components reflects only 38 BOM lines instead of 994 instances.",
+      "correct": [
+        {
+          "description": "SPI buses correctly detected: SPI0 with 2 chip selects (NOR + NAND flash), plus SPI1 and SPI2",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        },
+        {
+          "description": "PCIe differential pairs correctly identified for M.2 Key-M slot",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "HSGMII Ethernet differential pairs correctly identified between MT7981B and EN8811",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "I2C buses correctly identified for RTC (AT8563S) and EEPROM (P24C02A)",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "HT42B534 USB-to-UART bridge correctly identified",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        },
+        {
+          "description": "All 8 sub-sheets correctly resolved",
+          "analyzer_section": "sheets"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "statistics.total_components = 38 but actual instance count is 994. Reflects unique unannotated reference prefixes (BOM lines) not instances.",
+          "analyzer_section": "statistics.total_components"
+        },
+        {
+          "description": "CN? prefix (8 connector instances) misclassified as 'capacitor' because 'C' prefix fires before 'CN'.",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "USB ESD inconsistency: design_observations says has_esd_protection: false while differential_pairs says has_esd: true for same USB nets.",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "JTAG_JTCK and JTAG_JTMS falsely detected as I2C SDA/SCL lines.",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        }
+      ],
+      "missed": [
+        {
+          "description": "DDR4 memory interface not detected despite 58 EMI0_* nets connecting MT7981B to NT5AD512M16C4-JR.",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "EN8811 2.5GbE Ethernet PHY not detected despite HSGMII and SMI_MDC/MDIO connections.",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        },
+        {
+          "description": "MT7976C Wi-Fi 6 radio entirely absent from rf_chains despite AFE0_WF* analog front-end nets.",
+          "analyzer_section": "signal_analysis.rf_chains"
+        },
+        {
+          "description": "26 of 30 UART detections are false positives: WiFi TX gain rails (AVDD18_WF3_TX_GA), Ethernet PHY nets (TXVP_A), SGMII nets.",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        },
+        {
+          "description": "Most power regulators missed: only one AP7366 detected, missing SY8089AAAC, MP8756GD, LA1314HD, LA3484A.",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "suggestions": [
+        "Fix total_components to use component instance count, not BOM line count for unannotated designs.",
+        "Add 'CN' as connector prefix before 'C' capacitor catch-all.",
+        "Narrow UART detection: exclude nets with TX/RX substrings from WiFi/Ethernet power and data domains.",
+        "Detect DDR4 via EMI_*/DQ/DQS/CK net patterns even with unannotated refs.",
+        "Detect EN8811 Ethernet PHY by part number matching."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002509",
+      "repo": "phodina/openwrt-one",
+      "project": "OpenWrt_ONE",
+      "created": "2026-03-30T23:14:38.000141+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

@@ -83,8 +83,9 @@ def parse_repos_md(path: Path) -> list[dict]:
 
 
 def _repo_name_from_url(url: str) -> str:
-    """Extract repo name from URL."""
-    return url.rstrip("/").split("/")[-1].removesuffix(".git")
+    """Extract owner/repo name from URL."""
+    parts = url.rstrip("/").removesuffix(".git").split("/")
+    return f"{parts[-2]}/{parts[-1]}"
 
 
 def pin_hash_in_repos_md(url: str, full_hash: str):

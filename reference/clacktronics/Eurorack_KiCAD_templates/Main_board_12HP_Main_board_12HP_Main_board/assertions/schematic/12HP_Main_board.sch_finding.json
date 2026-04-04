@@ -1,0 +1,49 @@
+{
+  "file_pattern": "12HP_Main_board.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000549",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000549-AST-01",
+      "description": "Correct counts (3 components, 2 unique parts), correct lib_ids, footprints, and BOM grouping. Power rails +12V, -12V, GND all identified. Net connectivity matches schematic wiring.",
+      "created_from": "FND-00000549",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000549-AST-02",
+      "description": "net_classification correctly assigns 'power' to +12V and -12V, 'ground' to GND, and 'signal' to the two unnamed connector-to-diode intermediate nets.",
+      "created_from": "FND-00000549",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000549-AST-03",
+      "description": "None of the components carry MPN/manufacturer fields. The analyzer correctly lists all three in missing_mpn while not including the power symbols (#PWR*), which is the expected behavior.",
+      "created_from": "FND-00000549",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000549-AST-04",
+      "description": "D1 protects the +12V rail and D2 protects the -12V rail using series Schottky diodes \u2014 a textbook Eurorack reverse-polarity protection topology. The analyzer's protection_devices list is empty and design_observations is empty. This pattern (diode in series between IDC connector pin and named power rail) should be recognizable as protection.",
+      "created_from": "FND-00000549",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

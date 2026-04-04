@@ -1,0 +1,19 @@
+{
+  "file_pattern": "ESP32-HELP-Button.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00002090",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002090-AST-01",
+      "description": "INCORRECT: Net-(U1-Pad39) is reported as unrouted with 26 pads all listed as 'U1.39'. The ESP-WROOM-32 module pad 39 is the exposed copper thermal slug on the bottom of the module, which KiCad represents with multiple sub-pads (thermal relief vias). The connectivity algorithm counts each sub-pad as a separate instance, sees they share the same footprint.pad reference, and incorrectly treats the set as an unrouted ratsnest. The same false positive appears in ESP32-adapter (U2-Pad39, 26 pads). This is a false routing-completeness failure for boards using ESP32 module footprints.",
+      "created_from": "FND-00002090",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": false
+      },
+      "aspirational": false
+    }
+  ]
+}

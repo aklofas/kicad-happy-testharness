@@ -73,8 +73,7 @@ def _load_categories():
         repo_field = parts[1].strip()
         cat = parts[2].strip()
         if "/" in repo_field and cat and cat != "Category":
-            repo_name = repo_field.split("/")[-1].strip()
-            cats[repo_name] = cat
+            cats[repo_field.strip()] = cat
     return cats
 
 
@@ -85,9 +84,8 @@ def _load_repo_urls():
     mapping = {}
     for r in repos:
         url = r["url"]
-        name = url.rstrip("/").split("/")[-1]
-        if name.endswith(".git"):
-            name = name[:-4]
+        parts = url.rstrip("/").removesuffix(".git").split("/")
+        name = f"{parts[-2]}/{parts[-1]}"
         mapping[name] = {"url": url, "hash": r.get("hash", "")}
     return mapping
 

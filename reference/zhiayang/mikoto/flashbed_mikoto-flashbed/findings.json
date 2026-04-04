@@ -1,0 +1,28 @@
+{
+  "findings": [
+    {
+      "id": "FND-00002385",
+      "source_file": "mikoto/mikoto.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "correct",
+      "summary": "I2C bus detected with missing pull-up resistors, consistent with schematic note",
+      "details": "Analyzer correctly identifies BAT_I2C_SCL and BAT_I2C_SDA nets connecting U1 (nRF52840) and U6 with no external pull-up resistors (has_pull_up: false). The source schematic contains a text note 'use internal pullups for these', confirming the design intent. The design_observations entry flags this accurately."
+    },
+    {
+      "id": "FND-00002386",
+      "source_file": "mikoto/mikoto.kicad_sch",
+      "analyzer_type": "schematic",
+      "category": "incorrect",
+      "summary": "False positive regulator_caps warning for LDO U3 (XC6220B331MR)",
+      "details": "The design_observations reports 'missing_caps' for both input rail VDDH and output rail PPH_VCC of LDO U3. However, the VDDH rail has C21 (10uF), C24 (1uF), and C25 connected to it, and PPH_VCC has C20. The false positive occurs because VDDH and PPH_VCC are not declared KiCad power symbols (they are signal nets), so the decoupling_analysis rail scan does not include them, leading the regulator_caps checker to incorrectly conclude no caps are present."
+    },
+    {
+      "id": "FND-00002387",
+      "source_file": "mikoto/mikoto.kicad_pcb",
+      "analyzer_type": "pcb",
+      "category": "correct",
+      "summary": "Unrouted /ANT net (3 pads: C22, AE1, R11) correctly flagged",
+      "details": "The PCB output correctly identifies one unrouted net '/ANT' with pads C22.2, AE1.1, and R11.2. AE1 is a 2.4GHz meander antenna footprint (library: footprints:2.4GHz-meander-antenna-v2). The routing_complete: false and unrouted_net_count: 1 flags are accurate reflections of the source PCB."
+    }
+  ]
+}

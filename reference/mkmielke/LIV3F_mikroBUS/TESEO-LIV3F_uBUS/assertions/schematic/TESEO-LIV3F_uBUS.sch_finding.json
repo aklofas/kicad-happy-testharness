@@ -1,0 +1,28 @@
+{
+  "file_pattern": "TESEO-LIV3F_uBUS.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000811",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000811-AST-01",
+      "description": "The analyzer found L1 (56nH) and L2 (6.8nH) with C4 (120pF) and C1 (56pF) forming LC matching networks resonating near GPS L1 band (1575.42 MHz). While exact frequencies don't match L1 band (this is an impedance matching network, not a resonant filter), the components are correctly identified as forming LC networks.",
+      "created_from": "FND-00000811",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000811-AST-02",
+      "description": "D1 with value D_TVS_ALT and MPN ESDARF02-1BU2CK correctly identified as a TVS clamp protecting the RF input net from ESD. Protected net and clamp net correctly reported.",
+      "created_from": "FND-00000811",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

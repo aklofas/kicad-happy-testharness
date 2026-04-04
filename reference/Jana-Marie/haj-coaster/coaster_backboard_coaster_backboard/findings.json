@@ -1,0 +1,85 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_haj-coaster_coaster_backboard_coaster_backboard.kicad_sch.json",
+      "status": "promoted",
+      "summary": "IS31FL3733 LED matrix driver topology not detected; 20 RGBA multi-LED components misclassified as diodes",
+      "correct": [],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "U2 is an IS31FL3733-QF (12x16 LED matrix driver, up to 192 LEDs), controlling 58 single-color LEDs (Device:LED) and 20 RGBA_P1 components via I2C from U1 (STM32F072). The analyzer identifies U2 as 'LED driver' in ic_pin_analysis but does not produce any LED matrix detection (addressable_led_chains is empty, no matrix driver output). Additionally, the 20 RGBA_P1 components (custom multi-LED device with 4 LEDs each) are classified as type='diode' rather than type='led' or a custom multi-LED type, understating the total LED count.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Jana-Marie/haj-coaster",
+      "project": "coaster_backboard_coaster_backboard",
+      "created": "2026-03-24T08:04:02.843408+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002111"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_haj-coaster_coaster_backboard_coaster_backboard.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "Advanced DFM tier correctly identified with 0.12mm track spacing on a dense LED matrix board",
+      "correct": [
+        {
+          "description": "The 93x93mm backboard has 128 footprints, 1900 track segments, 499 vias, and a 0.12mm minimum track spacing (below the 0.127mm standard process limit). The analyzer correctly assigns dfm_tier='advanced' and flags the one violation. The courtyard overlap between U3 and U1 (2.4mm^2) is also correctly detected, likely from the STM32 and LDO sharing tight placement.",
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm.dfm_tier",
+            "op": "equals",
+            "value": "advanced"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Jana-Marie/haj-coaster",
+      "project": "coaster_backboard_coaster_backboard",
+      "created": "2026-03-24T08:04:02.843424+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002112"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "pcb_haj-coaster_coaster_midboard_coaster_midboard.kicad_pcb.json",
+      "status": "promoted",
+      "summary": "Mechanical connector board with no copper traces correctly identified",
+      "correct": [
+        {
+          "description": "The midboard is a 93x93mm mechanical inter-board connector plate containing only 6 THT connectors (J1-J6) with no copper traces, no vias, and no copper zones. The analyzer correctly reports copper_layers_used=0, track_segments=0, via_count=0. Net count of 6 with routing_complete=True is consistent with the footprint pad assignments carrying through even though there are no routed tracks.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.copper_layers_used",
+            "op": "equals",
+            "value": 0
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "Jana-Marie/haj-coaster",
+      "project": "coaster_backboard_coaster_backboard",
+      "created": "2026-03-24T08:04:02.843427+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002113"
+    }
+  ]
+}

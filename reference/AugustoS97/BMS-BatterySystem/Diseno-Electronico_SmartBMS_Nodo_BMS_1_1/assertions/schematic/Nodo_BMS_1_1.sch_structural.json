@@ -1,0 +1,44 @@
+{
+  "file_pattern": "Nodo_BMS_1_1.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 bms_systems",
+      "check": {
+        "path": "signal_analysis.bms_systems",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "U5 in bms_systems",
+      "check": {
+        "path": "signal_analysis.bms_systems",
+        "op": "contains_match",
+        "field": "bms_reference",
+        "pattern": "^U5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 1
+      }
+    }
+  ]
+}

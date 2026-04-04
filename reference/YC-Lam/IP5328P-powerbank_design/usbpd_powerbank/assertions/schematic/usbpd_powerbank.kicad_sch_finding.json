@@ -1,0 +1,39 @@
+{
+  "file_pattern": "usbpd_powerbank.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000662",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000662-AST-01",
+      "description": "signal_analysis.power_regulators detects U1 (IP5328) with topology=ic_with_internal_regulator, inductor=L1, input_rail=VIN, output_rail=VOUT1. Correct.",
+      "created_from": "FND-00000662",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000662-AST-02",
+      "description": "usb_compliance check correctly fails cc1_pulldown_5k1 and cc2_pulldown_5k1 for P1 (USB_C_Plug_USB2.0). The design uses 10k resistors on CC1/CC2 instead of the USB-C spec-required 5.1k for a 5V power source.",
+      "created_from": "FND-00000662",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000662-AST-03",
+      "description": "The IP5328 is a USB power bank management IC (battery charging + boost output), but signal_analysis.bms_systems=[] and bms detection is absent. No current-sense detection either (R4=0.01R is the current sense resistor). This is a known limitation for non-library-known ICs.",
+      "created_from": "FND-00000662",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

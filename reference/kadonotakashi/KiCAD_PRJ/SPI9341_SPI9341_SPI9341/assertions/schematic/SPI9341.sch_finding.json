@@ -1,0 +1,30 @@
+{
+  "file_pattern": "SPI9341.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001693",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001693-AST-01",
+      "description": "INCORRECT: SPI9341.sch has 4 non-power components: LCD_ILI9341_SPI (U?), Conn_01x07 (J?), Conn_01x04 (J?), Conn_01x05 (J?). The output reports total_components=2 and the BOM only shows 2 entries (1 IC + 1 connector value), missing the Conn_01x04 and Conn_01x05 variants because all three connectors share the same ref J?. The component_types shows only connector=1 instead of 3.",
+      "created_from": "FND-00001693",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 2,
+        "op": "equals"
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001693-AST-02",
+      "description": "INCORRECT: The analyzer detects a half-duplex SPI bus with SCK on net '+3.3V' and MOSI on '__unnamed_14'. The ILI9341's SCK pin (pin 7) is connected directly to the +3.3V power rail in the schematic \u2014 this appears to be a design-in-progress error. The analyzer should not classify a power net as an SPI SCK signal. This is a false positive SPI detection because the SCK pin is erroneously tied to a power rail.",
+      "created_from": "FND-00001693",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "value": 1,
+        "op": "min_count"
+      },
+      "aspirational": false
+    }
+  ]
+}

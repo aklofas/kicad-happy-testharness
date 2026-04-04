@@ -1,0 +1,49 @@
+{
+  "file_pattern": "TouchDRO.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001640",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001640-AST-01",
+      "description": "J1\u2013J4 use lib_id=Connector:USB_B_Micro (footprint='User Footprint Library:USB Breakout Board') and are correctly flagged in usb_compliance. J5\u2013J8 use lib_id=Connector_Generic:Conn_01x03 (3-pin TTL-scale headers) and are correctly excluded. The vbus_esd_protection=fail finding for J1\u2013J4 is also accurate (no TVS or ESD protection in the design).",
+      "created_from": "FND-00001640",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001640-AST-02",
+      "description": "The design uses a wired-OR-style input stage where each scale channel (X, Y, Z, W) has one DATA resistor and one CLK resistor both driving the same SCALE_VIN node through a shared capacitor. The analyzer correctly identifies all 8 R+C pairs (R1+C1 for X_D, R5+C1 for X_CLK, etc.) and their 33.86 Hz cutoff frequency.",
+      "created_from": "FND-00001640",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001640-AST-03",
+      "description": "The schematic uses power:GND symbols but no PWR_FLAG symbol. The analyzer correctly issues a warning that GND has power_in pins but no power_out or PWR_FLAG, which would cause KiCad ERC to flag this net.",
+      "created_from": "FND-00001640",
+      "check": {
+        "path": "pwr_flag_warnings",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001640-AST-04",
+      "description": "INCORRECT: The statistics field counts ic=3 (U1, U2, U4 \u2014 unique physical chip packages), while the flat components list contains 15 ic-type entries (U1 \u00d7 7 gate-unit instances, U2 \u00d7 7 gate-unit instances, U4 \u00d7 1). The counting inconsistency exists because statistics deduplicates by ref but the components list includes every gate-unit symbol separately. While statistics.ic=3 is the more useful number (physical part count), the mismatch between total_components=54 and the 66-entry components list may confuse consumers. A clearer distinction between 'physical ICs' and 'gate instances' would help.",
+      "created_from": "FND-00001640",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "equals",
+        "value": 3
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "PCRD04B.kicad_sch",
+      "status": "promoted",
+      "summary": "Op-amp circuit detection correct: U1/U2 (OPA2314) as TIA/buffer/inverting, U4 (TS7211) as comparator; U6 'neosazovat' DNP marker not detected \u2014 dnp_parts=0, U6 dnp=false; Decoupling analysis misses...",
+      "correct": [
+        {
+          "description": "All five op-amp configurations correctly identified including transimpedance amplifier (U1 unit1), inverting amplifiers with correct gains (-4.7x), and buffer (U2 unit2). RC filter network on REF rail (R7+C10, 159Hz) also correctly identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Power comes in from J1 (a 3.6V connector). Since KH-160 only suppresses PWR_FLAG warnings for known power-source footprints, this connector-powered design correctly still reports the warnings \u2014 reflecting the missing ERC annotation.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U6 value is 'LM4041CIM3-1.2(neosazovat)' where 'neosazovat' is Czech for 'do not populate'. The analyzer does not detect DNP information embedded in the value field using localized terms. U6 should be flagged as DNP.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "VCC rail correctly shows 47uF+10uF (has_bulk=True, has_bypass=False). However, each derived rail VCC1-4 has a 100nF bypass capacitor (C11-C14) and 10uF (C6-C9) via 100-ohm resistors \u2014 these are power supply bypass caps that aren't counted for VCC. The design_observation 'has_bypass=False' is misleading since the circuit is well-bypassed at the point of use.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mlab-modules/PCRD04",
+      "project": "hw_sch_pcb_PCRD04B",
+      "created": "2026-03-23T23:31:35.436921+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001053"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "PCRD04B.kicad_pcb",
+      "status": "new",
+      "summary": "PCB statistics accurate: 62 footprints, 2 layers, 115 vias, 385 segments, routing complete",
+      "correct": [
+        {
+          "description": "Footprint count, front/back split (17F/45B), layer count, via count, and board dimensions all match gerber data. 28 nets in PCB matches 28 in schematic.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mlab-modules/PCRD04",
+      "project": "hw_sch_pcb_PCRD04B",
+      "created": "2026-03-23T23:31:35.436941+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001054"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "hw_cam_profi",
+      "status": "new",
+      "summary": "Gerber completeness, alignment, and drill classification all correct for 2-layer board",
+      "correct": [
+        {
+          "description": "All 8 expected layers present. X2-attribute-based drill classification correctly identifies 115 vias (0.4mm) and 27 component holes (0.762mm, 0.889mm, 3.0mm). 4 mounting holes (3.0mm) classified as component holes due to X2 ComponentDrill attribute \u2014 technically correct since they are connected to GND.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mlab-modules/PCRD04",
+      "project": "hw_sch_pcb_PCRD04B",
+      "created": "2026-03-23T23:31:35.436944+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001055"
+    }
+  ]
+}

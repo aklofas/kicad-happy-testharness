@@ -1,0 +1,125 @@
+{
+  "file_pattern": "Deurnode nieuw.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000469",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000469-AST-01",
+      "description": "The analyzer correctly identifies 38 total components: 2 ICs (A1 Pololu A4988, U2 OKI-78SR), 16 connectors, 11 resistors (R1-R11), 1 capacitor (C1), 2 optocouplers (OK1, OK2), 1 LED (D3), 2 diodes (D1, D2 both 1N4004), 2 transistors (Q1 IRLZ34N MOSFET, Q2 BC547 BJT), 1 relay (K1 SANYOU_SRD). The BOM values and footprints are all correct.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000469-AST-02",
+      "description": "All five power rails are correctly detected. The schematic uses a +12V input, a +5V rail, a +3.3V rail, and GND. The OKI-78SR DC/DC converter (U2) correctly has its input on +12V.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000469-AST-03",
+      "description": "The analyzer correctly identifies the RC low-pass filter formed by R3 (330 ohms) and C1 (2.2 nF) on the GPI36_U1RXD input signal path, computing a cutoff of approximately 219 kHz. This matches the schematic where R3 connects J6 (buzzer/switch input) to the GPI36_U1RXD net, and C1 connects GPI36_U1RXD to GND. The input net __unnamed_9 (J6 pin 1 and R3 pin 1) and output net GPI36_U1RXD are correct.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000469-AST-04",
+      "description": "K1 is correctly identified as a relay component with value 'SANYOU_SRD_Form_C', correct footprint, and typed as 'relay' in both the BOM and components sections.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000469-AST-05",
+      "description": "The signal_analysis.isolation_barriers list is empty. OK1 (PC814) and OK2 (PC814) are optocouplers used as isolation barriers for external 230V AC inputs (J14 and J15 labeled 'Default 230V AC'). These should be detected as isolation barriers since they galvanically isolate the high-voltage AC input signals from the 3.3V ESP32 side. The optocouplers are correctly typed as 'optocoupler' in the BOM, but no isolation barrier analysis was produced.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000469-AST-06",
+      "description": "The design has nets named 'GPIO16_I2C-SCL' and 'GPIO13_I2C-SDA' (as global labels), and a global label 'SDA' connecting J3 (RFID connector). R4 (4k7) is a pull-up on the stepper control net, but the MISO net at J3 pin 4 (which shares with GPIO15_HS2_CMD / SDA) and the SCL-named net should have triggered I2C detection. The bus_analysis.i2c array is empty. The GPIO16_I2C-SCL and GPIO13_I2C-SDA label names strongly indicate I2C bus usage.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000469-AST-07",
+      "description": "J3 (Conn_01x08, the RFID connector) has pins labeled SDA, SCK, MOSI, MISO, IRQ, GND, RESET, and 3V3. The combination of SCK, MOSI, and MISO is a clear SPI bus signature. However bus_analysis.spi is empty. The global labels SCK and MOSI are present in the labels array, and MISO is also labeled (appears at J3 pin 4 connecting to MISO net). The schematic note 'Rfid' near J3 confirms this is an SPI RFID interface.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000469-AST-08",
+      "description": "D1 (1N4004) is placed across the relay coil of K1 (SANYOU_SRD_Form_C) as a flyback/freewheeling diode. D1 anode (pin 2, A) is on the +5V net, and D1 cathode (pin 1, K) is on __unnamed_35 which connects to K1 pin 5 (coil pin) and Q2 collector. This is a classic relay coil protection diode. The transistor_circuits entry for Q2 has has_flyback_diode=false, which is incorrect \u2014 D1 serves as the flyback diode for the relay coil.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000469-AST-09",
+      "description": "D2 (1N4004) has its anode (pin A) on +12V and its cathode (pin K) on the net shared with R10, Q1 source/drain area, and J9. This is a flyback protection diode for the inductive load driven by Q1. However, in the Q1 transistor_circuits entry, has_flyback_diode=false. D2 should be recognized as a flyback diode for the Q1 output circuit.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000469-AST-10",
+      "description": "A1 pin 8 (VMOT, power_in) appears in __unnamed_8 with point_count=1, meaning no power net is connected to the motor supply voltage input. The schematic uses +12V for the motor supply (#PWR09 connects in the stepper area), but the tracing fails to connect A1 VMOT to +12V. This leaves VMOT on an unnamed single-point net, which should trigger a floating power pin warning. No such warning appears in the erc_warnings or design_observations.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000469-AST-11",
+      "description": "The schematic has a global label '3V3' on J3 pin 8 (RFID connector power pin) and another instance connecting to the +3.3V power rail area. The '3V3' label is listed in the labels array but does not appear as a net in the nets dictionary, and J3 pin 8 is not included in the +3.3V net. The 3V3 label should create a net connection to +3.3V (both labels have the same name '3V3'), but the analyzer either treats '3V3' as a different net than '+3.3V' or failed to trace the global label connection entirely. As a result J3 pin 8 connectivity to the 3.3V supply is lost.",
+      "created_from": "FND-00000469",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

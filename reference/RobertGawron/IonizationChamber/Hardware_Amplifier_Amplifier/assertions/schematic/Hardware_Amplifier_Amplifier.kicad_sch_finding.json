@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Amplifier.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000630",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000630-AST-01",
+      "description": "C46 has value 'not mounted', and C47/C48 use resistor values in capacitor symbols ('0R resistor') \u2014 these are clearly optional/configuration parts. The KiCad DNP attribute is not set on these parts, so the analyzer correctly reports dnp=False. However, the design_observations or assembly_complexity sections could flag these as unusual values warranting attention. Not filing as high-impact.",
+      "created_from": "FND-00000630",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

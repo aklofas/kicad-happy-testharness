@@ -1,0 +1,30 @@
+{
+  "file_pattern": "vga.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002177",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002177-AST-01",
+      "description": "The VGAtest design generates VGA video using a Xilinx XC9536 CPLD and ATmega16. It has explicit global labels HSYNC, VSYNC, VSYNC_D, HSYNC_D, PIXEL, and PCLK, plus a 25.175 MHz oscillator (the standard VGA 640x480@60Hz pixel clock) and a DE-15 HD (J2 = DE15_Receptacle_HighDensity_MountingHoles, the VGA connector). The signal_analysis.hdmi_dvi_interfaces list is empty. There is no VGA-specific detector, so these signals are completely unrecognized as a VGA interface.",
+      "created_from": "FND-00002177",
+      "check": {
+        "path": "signal_analysis.hdmi_dvi_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002177-AST-02",
+      "description": "The design has U4=2764 (8KB parallel EPROM) and U2=6264 (8KB parallel SRAM), classic 8-bit parallel memory ICs. They share address/data bus signals routed through 74HC245/74AHC244 bus transceivers. signal_analysis.memory_interfaces is empty. The memory interface detector likely targets serial memory protocols (SPI flash, I2C EEPROM); parallel bus memory with unlabeled address/data lines is not detected.",
+      "created_from": "FND-00002177",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

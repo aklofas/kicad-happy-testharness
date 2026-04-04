@@ -1,0 +1,40 @@
+{
+  "file_pattern": "1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000191",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000191-AST-01",
+      "description": "All 77 components with accurate pin-to-net assignment",
+      "created_from": "FND-00000191",
+      "check": {
+        "path": "components",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000191-AST-02",
+      "description": "AZ1117-3.3 correctly detected as LDO",
+      "created_from": "FND-00000191",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000191-AST-04",
+      "description": "INCORRECT: has_flyback_diode=false for Q3-Q10 despite D3-D10 Schottky diodes from drain to VCC",
+      "created_from": "FND-00000191",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^Q3$"
+      },
+      "aspirational": true
+    }
+  ]
+}

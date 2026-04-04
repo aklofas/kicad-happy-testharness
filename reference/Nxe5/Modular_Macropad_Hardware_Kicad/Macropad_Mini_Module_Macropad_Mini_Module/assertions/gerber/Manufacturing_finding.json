@@ -1,0 +1,29 @@
+{
+  "file_pattern": "Manufacturing",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001783",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001783-AST-01",
+      "description": "The analyzer correctly identifies all required layers (F.Cu, B.Cu, In1.Cu, In2.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, Edge.Cuts) as present, with PTH and NPTH drill files, and reports complete=True.",
+      "created_from": "FND-00001783",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "FND-00001783-AST-02",
+      "description": "INCORRECT: The analyzer reports aligned=False with 'Width varies by 6.0mm across copper/edge layers'. This is because paste layers (F.Paste width=45.2mm) only cover SMD pad areas, and inner copper layers have slightly smaller extents than Edge.Cuts. These differences are normal and expected in professional PCB designs \u2014 the Edge.Cuts layer always defines the true board boundary, and other layers need not extend to all edges. F.SilkS (98.7mm) exceeding Edge.Cuts (102mm) by the analyzer's measurement suggests a measurement artifact. The board is correctly fabricated.",
+      "created_from": "FND-00001783",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      },
+      "aspirational": false
+    }
+  ]
+}

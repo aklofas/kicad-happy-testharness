@@ -1,0 +1,980 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Arduino_As_Uno.sch.json",
+      "status": "new",
+      "summary": "8 connector-only schematic parsed correctly with power rails and UART net classification; Power rails correctly identified: +3.3V, +5V, GND, Vin",
+      "correct": [
+        {
+          "description": "The schematic has 8 connector components (all type 'connector'), 37 nets, and 4 power rails (+3.3V, +5V, GND, Vin). Nets such as '0(Rx)' and '1(Tx)' are correctly classified as UART by the bus analyzer. No signal analysis detections are expected for a pure connector passthrough board.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 8,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The four Arduino standard power rails are present as named power symbols in the schematic and correctly enumerated in the statistics.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "value": 4,
+            "op": "min_count"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.903983+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001728"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "PropShield_Uno_PropShield_Uno.sch.json",
+      "status": "promoted",
+      "summary": "16 components correctly parsed: 14 connectors + 2 Schottky diodes; Two Schottky diodes forming a power-OR mux not detected as protection or special circuit",
+      "correct": [
+        {
+          "description": "All components are accounted for: P1-P4 (Arduino-standard connectors), J1-J10 (PropShield-specific headers), D3 and D4 (D_Schottky). Component types are correctly classified.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 16,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "D3 and D4 are D_Schottky diodes. D3 has its cathode on +5V and anode on an intermediate net; D4 has its cathode on that same net and anode feeding a board output. This is a Schottky diode OR / power-mux topology. The analyzer reports protection_devices=[] and no other classification. While this is not a classic reverse-polarity protector, it is a meaningful discrete power circuit worth noting. The false_negative category applies because the circuit has recognizable structure that goes undetected.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "value": 0,
+            "op": "max_count"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904003+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001729"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Teensy 35 Breakout v1_Teensy 35 Breakout v1.sch.json",
+      "status": "new",
+      "summary": "37 components correctly parsed: 34 connectors, 1 battery, 2 switches; No power rails reported for a schematic with only unnamed nets \u2014 correct",
+      "correct": [
+        {
+          "description": "The Teensy 3.5 v1 breakout schematic has 37 components spread across connector headers (P1-P28, with alternate variants), one CR2032 battery holder (BT1), and two switches (SW1, SW2). All are correctly classified.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 37,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The schematic uses no named power symbols (no +5V, GND global power symbols), only local net labels. The analyzer correctly returns an empty power_rails list rather than fabricating rail names.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "value": 0,
+            "op": "max_count"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904007+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001730"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Teensy 35 Breakout v2_Teensy 35 Breakout v2.sch.json",
+      "status": "new",
+      "summary": "38 components correctly parsed: v2 adds one connector (P29) over v1",
+      "correct": [
+        {
+          "description": "The v2 schematic increments the connector count by one (P29 added) while preserving battery and switch counts. The analyzer correctly captures 35 connectors, 1 battery, 2 switches = 38 total.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 38,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904009+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001731"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Teensy35Mega_Teensy35Mega.sch.json",
+      "status": "promoted",
+      "summary": "NCP1117 5V LDO correctly detected as LDO power regulator; design_observations incorrectly reports missing input and output caps for the NCP1117 LDO; 28 components correctly parsed: connectors, swit...",
+      "correct": [
+        {
+          "description": "U1 (NCP1117ST50T3G_MountingTab) is identified as topology='LDO' with input_rail and output_rail populated. The SOT-223 LDO with VI/VO/GND pins is correctly recognized despite all rails being unnamed.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "value": 1,
+            "op": "min_count"
+          }
+        },
+        {
+          "description": "The complex Teensy35Mega schematic has 19 connectors, 3 switches, 3 capacitors, 1 diode (D_Small), 1 IC (NCP1117), and 1 battery \u2014 28 total. All types are correctly classified.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 28,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer emits a 'regulator_caps' observation claiming missing_caps for both the input rail (__unnamed_74) and output rail (__unnamed_78). However, C1 and C2 both connect to __unnamed_74 (U1 VI input), and C3 connects to __unnamed_75 (U1 VO pin 2). The analyzer tracks only pin 4 (the tab VO) as the output rail but ignores pin 2 (also VO), so it misses C3 on the output side. Both input and output capacitors are present; the observation is incorrect.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "value": 0,
+            "op": "max_count"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904013+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001732"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "TeensyMegaIoShield_TeensyMegaIoShield.sch.json",
+      "status": "new",
+      "summary": "47 components parsed: 45 connectors + 2 LEDs (RLED and YLED); Multiple UART nets correctly identified from Teensy pin names",
+      "correct": [
+        {
+          "description": "The IO shield schematic correctly tallies 45 connector instances (J and P prefixes) and 2 LEDs (D1=RLED, D2=YLED, both lib_id=LED). Component classification is correct.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 47,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The schematic labels include '0(Rx0)', '1(Tx0)', '15(Rx3)', '16(Tx2)', '17(Rx2)', '18(Tx1)', '19(Rx1)', 'A12(RX4)', 'A13(TX4)', 'A14(TX5)', 'A15(RX5)', '47(RX6)', '48(TX6)'. The bus analyzer correctly identifies multiple UART channels from these net names, reflecting the Teensy 3.5/3.6 multi-UART capability exposed on the breakout.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.uart",
+            "value": 5,
+            "op": "min_count"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904016+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001733"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "XV11SurrealInterface_XV11Interface.sch.json",
+      "status": "new",
+      "summary": "Empty schematic (45-line stub) correctly parsed as 0 components",
+      "correct": [
+        {
+          "description": "The XV11Interface.sch file is a bare KiCad 5 template with no components, nets, or wires \u2014 only the header, EELAYER block, and $EndDescr/$EndSCHEMATC markers. The analyzer correctly returns all-zero statistics rather than crashing or hallucinating components.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 0,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904019+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001734"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "t36 v2_Test.sch.json",
+      "status": "new",
+      "summary": "9 connectors with PWR_FLAG symbols parsed; power rails GND, PWR_FLAG, VCC detected",
+      "correct": [
+        {
+          "description": "The t36 v2 test schematic has 8 large (24-pin) connectors and one 2-pin connector, plus PWR_FLAG power symbols. All 9 components are correctly parsed and the three power rail names are enumerated.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 9,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904021+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001735"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Teensy 35 Breakout v1_Teensy 35 Breakout v1.kicad_pcb.json",
+      "status": "new",
+      "summary": "41 THT footprints, 2-layer board, fully routed with 384 track segments; 4 reference-only footprints (REF**, REF1-REF3) in PCB not in schematic \u2014 expected",
+      "correct": [
+        {
+          "description": "The board has 41 footprints (all front-side THT), 2 copper layers (F.Cu, B.Cu), 384 track segments, 1 via, 0 zones, and is fully routed (unrouted_net_count=0). Statistics match the source .kicad_pcb file.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 41,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The PCB has 4 extra footprints (RE4, REF1, REF2, REF3) compared to the schematic's 37 components. These are fabrication-reference or fiducial markers placed in the layout without schematic symbols. The analyzer counts them as footprints, which is correct behavior.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 37,
+            "op": "greater_than"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904023+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001736"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Teensy 35 Breakout v2_Teensy 35 Breakout v2.kicad_pcb.json",
+      "status": "new",
+      "summary": "42 footprints, fully routed with 477 track segments, board 92.96x99.57mm",
+      "correct": [
+        {
+          "description": "The v2 board adds one connector footprint (P29) over v1. All other statistics are consistent: 2-layer, THT only, routing complete. Board dimensions correctly match source.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 42,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904025+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001737"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Teensy35Mega_Teensy35Mega.kicad_pcb.json",
+      "status": "new",
+      "summary": "34 footprints (28 schematic + 6 REF** markers), 7 SMD components correctly counted",
+      "correct": [
+        {
+          "description": "The PCB has 34 footprints vs 28 schematic components; the 6 extra are REF** and REF1-REF5 fabrication markers. Of the 34, 7 are SMD (correct for the LDO, capacitors, and small passives in SMD packages) and 27 are THT.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.smd_count",
+            "value": 7,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904027+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001738"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Teensy_Mega_Teensy_Mega.kicad_pcb.json",
+      "status": "new",
+      "summary": "Unrouted board correctly flagged: 0 tracks, routing_complete=False, 2 unrouted nets",
+      "correct": [
+        {
+          "description": "The Teensy_Mega PCB is a schematic-only design with no layout routing. The analyzer correctly reports 0 track_segments, 0 vias, 0 copper layers used, routing_complete=False, and identifies the 2 unrouted nets (GND and +5V) with their pad connections.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.routing_complete",
+            "value": false,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904029+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001739"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Arduino_As_Uno.kicad_pcb.json",
+      "status": "new",
+      "summary": "Unrouted board: 8 footprints, 0 tracks, routing_complete=False",
+      "correct": [
+        {
+          "description": "The Arduino_As_Uno PCB has 8 connector footprints placed but no routing. The analyzer correctly reports 0 track segments, 0 copper layers used in routing, and routing_complete=False, consistent with a placement-only design.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.track_segments",
+            "value": 0,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904031+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001740"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "PropShield_Uno_PropShield_Uno.kicad_pcb.json",
+      "status": "new",
+      "summary": "19 footprints correctly counted: 16 schematic components + 3 PCB-only connectors (P5, P6, P7)",
+      "correct": [
+        {
+          "description": "The PCB contains P5, P6, P7 which are not in the schematic \u2014 these are physical connectors added at the layout stage (e.g., mounting or extra headers). The analyzer counts all 19 footprints correctly.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 19,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904033+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001741"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "XV11SurrealInterface_XV11Interface.kicad_pcb.json",
+      "status": "new",
+      "summary": "Standalone PCB with 6 footprints and 0 nets (no netlist) parsed correctly",
+      "correct": [
+        {
+          "description": "The XV11 surreal interface is a physical PCB layout with 6 footprints (JST connectors, a diode, resistor, transistor, and a connector) but no net definitions \u2014 nets=0. The analyzer correctly reports routing_complete=True (vacuously) for a no-net board, and all 46 track segments are reported.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 6,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904035+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001742"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "Teensy 35 Breakout v1_Gerbers.json",
+      "status": "promoted",
+      "summary": "2-layer gerber set complete: all required layers present, PTH drill included; Gerber alignment flagged as misaligned due to copper bounding box being smaller than board outline \u2014 expected for THT b...",
+      "correct": [
+        {
+          "description": "The Gerbers directory contains 20 gerber files covering F.Cu, B.Cu, F.Mask, B.Mask, F.Paste, B.Paste, F.SilkS, B.SilkS, and Edge.Cuts \u2014 all required layers are present. PTH drill file exists with 319 holes total. Layer completeness is correctly reported as True.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "value": true,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer reports aligned=False with 'Width varies by 12.7mm across copper/edge layers' and 'Height varies by 12.7mm'. The 12.7mm (0.5 inch) difference is consistent with the THT pin-header connectors not extending to the very edge of the board outline \u2014 the copper pads sit 6.35mm inside each board edge as typical for PCB pin-header breakout designs with mounting clearance. All copper layers share the same bounding box (86.36x93.98mm) and the board outline is 99.06x106.68mm. This is a bounding-box extent mismatch, not a coordinate misalignment, and does not indicate a fabrication issue.",
+          "analyzer_section": "alignment",
+          "check": {
+            "path": "alignment.aligned",
+            "value": false,
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904038+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001743"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "Teensy 35 Breakout v2_Gerbers.json",
+      "status": "new",
+      "summary": "2-layer gerber set complete with 327 drill holes",
+      "correct": [
+        {
+          "description": "The v2 gerber set is complete with all required layers present. The drill count of 327 is consistent with 42 footprints, primarily 1.016mm and 0.813mm component holes plus 4 mounting holes (3.2mm PTH). Completeness is correctly reported as True.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "value": true,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904040+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001744"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "TeensyMegaIoShield.json",
+      "status": "new",
+      "summary": "Incomplete gerber set in root directory correctly flagged: missing B.Mask, Edge.Cuts, F.Mask",
+      "correct": [
+        {
+          "description": "The TeensyMegaIoShield root directory contains only 4 gerber files (B.Cu, F.Cu, B.SilkS, F.SilkS) without mask or edge cuts layers. The analyzer correctly identifies this as incomplete and lists the 3 missing required layers. The full gerber set is in the Gerbers/ subdirectory.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "value": false,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904042+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001745"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "TeensyMegaIoShield_Gerbers.json",
+      "status": "promoted",
+      "summary": "layer_count reported as 4 copper layers for a 2-layer board because the Gerbers/ folder contains gerbers from two separate board designs",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The Gerbers/ subdirectory contains gerber files for both 'Arduino_Mega' and 'TeensyMegaIoShield' board designs, each with their own F.Cu and B.Cu. The analyzer sees 40 gerber files with two sets of copper layers and reports layer_count=4. The actual TeensyMegaIoShield PCB is 2-layer. This is a false positive caused by the Gerbers/ folder being a combined export of two different PCBs, not a 4-layer board.",
+          "analyzer_section": "layer_count",
+          "check": {
+            "path": "layer_count",
+            "value": 2,
+            "op": "greater_than"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904044+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001746"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "XV11SurrealInterface_Gerber.json",
+      "status": "new",
+      "summary": "Small 2-layer gerber set complete: 44.96x25.15mm board, 17 holes",
+      "correct": [
+        {
+          "description": "The XV11 interface gerber set is complete with all required layers, correctly dimensioned at 44.96x25.15mm matching the PCB layout board outline. The 17-hole drill count is consistent with the 6 THT footprints.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.complete",
+            "value": true,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T01:30:43.904046+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001747"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_XV11SurrealInterface_XV11Interface.sch",
+      "status": "new",
+      "summary": "Empty schematic correctly produces zero components",
+      "correct": [
+        {
+          "description": "The XV11Interface.sch is a valid KiCad 5 schematic file (45 lines) that contains no $Comp blocks \u2014 it is a blank canvas. The analyzer correctly reports total_components=0, bom=[], nets={}, and all signal_analysis lists empty. This is the expected behavior for an in-progress design where the schematic was never populated.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 0,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339326+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001862"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_Teensy35Mega_Teensy35Mega.sch",
+      "status": "promoted",
+      "summary": "NCP1117ST50T3G_MountingTab LDO regulator correctly identified with topology=LDO; False positive: LDO regulator_caps observation reports missing caps when caps are present; Power rails not detected:...",
+      "correct": [
+        {
+          "description": "U1 is an NCP1117ST50T3G in SOT-223 package (the '50' suffix = 5.0V fixed output LDO). The analyzer correctly identifies it as topology=LDO. The input rail (__unnamed_74, pin 3 VI) connects C1 and C2. The output rail is __unnamed_75 (pin 2 VO) connecting C3, SW3 (RST button), and P16. There is also a tab pin (pin 4 VO, __unnamed_78) as a separate net.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[0].topology",
+            "value": "LDO",
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The design_observations entry for U1 (NCP1117) reports missing_caps on both input and output. However, C1 and C2 are on net __unnamed_74 (pin 3 VI = input), and C3 is on net __unnamed_75 (pin 2 VO = output). Caps are present on both sides. The false positive occurs because the analyzer selected the tab pin (pin 4, also named VO) as the output_rail (__unnamed_78), which contains only the solo U1 tab connection and no caps. The real output rail __unnamed_75 (pin 2) does have C3. The analyzer picks the wrong VO pin as the representative output net.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "value": [],
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The Teensy35Mega schematic distributes power entirely through connectors and the LDO regulator without using KiCad power symbols (+5V, GND, etc.). The analyzer correctly reports power_rails=[] since it looks for power symbol components. However, a named net representing the 5V LDO output exists (__unnamed_75) and a GND rail (__unnamed_77). The absence of any power symbol annotation also means the LDO input/output rails remain unnamed, which degrades the power regulator report quality. This is a design practice issue but the analyzer could flag 'no power symbols found' as a design observation.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "value": [],
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The schematic has three capacitors (C1: CP radial, C2: C ceramic disc, C3: CP radial) all electrically connected to U1 (NCP1117 LDO). C1 and C2 share the input net with U1 pin VI, and C3 shares the output net with U1 pin VO. The decoupling_analysis list is empty even though these are textbook LDO decoupling capacitors. The lack of named power rails (no power symbols) likely prevents the decoupling detector from associating the caps with a known power domain.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "value": [],
+            "op": "equals"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339349+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001863"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_PropShield_Uno_PropShield_Uno.sch",
+      "status": "promoted",
+      "summary": "Power rails +3.3V, +5V, GND, Vin correctly extracted from power symbols; Schottky diodes D3 and D4 (power protection chain) not detected as protection_devices; SPI bus (SCK/MOSI/MISO/SS) not detect...",
+      "correct": [
+        {
+          "description": "The schematic uses explicit KiCad power symbols: #PWR01 (+3.3V), #PWR02 (+5V), and GND labels. The Vin label is used as a net name connecting to the Arduino shield connector. All four appear correctly in statistics.power_rails. The 16 total components (14 connectors + 2 diodes) is also accurate.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "value": [
+              "+3.3V",
+              "+5V",
+              "GND",
+              "Vin"
+            ],
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The schematic contains two D_Schottky components forming a power-ORing / reverse-feed protection chain. D3 anode connects to +5V (Arduino rail) and cathode to an intermediate net shared with D4 anode. D4 cathode connects onward. This is a classic dual-diode power isolation topology (protecting against back-feed between two power sources). The protection_devices list is empty. The detector likely misses Schottky diodes when they are not on nets named with voltage patterns or when they don't connect to a dedicated IC power pin.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "value": [],
+            "op": "equals"
+          }
+        },
+        {
+          "description": "The schematic has nets explicitly named '13(SCK)', '12(MISO)', '11(**/MOSI)', and '10(**/SS)' \u2014 the standard Arduino SPI pin assignments. These nets connect between the Arduino header connectors (P3, P4) and the expansion headers (J3, J5). The bus_analysis.spi list is empty. The SPI detector requires at least one non-connector IC component on the bus; this board is a pure passthrough shield with only connectors and diodes, so no IC anchor exists. This is an inherent limitation of IC-anchored bus detection on passthrough boards.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.spi",
+            "value": [],
+            "op": "equals"
+          }
+        },
+        {
+          "description": "Nets named 'A4(SDA)' and 'A5(SCL)' are present in the schematic and connect P2 (analog header), P3 (digital header), and J1 (expansion header). The bus_analysis.i2c list is empty for the same reason as SPI: no IC with I2C peripheral pins is present. Only connectors carry these signals. The UART detector did find '0(Rx)' and '1(Tx)' nets (albeit with empty devices lists), showing the analyzer does parse label names for UART signals \u2014 the I2C equivalent pattern matching by net name is absent or not triggered.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "value": [],
+            "op": "equals"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339354+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001864"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_Teensy 35 Breakout v2_Teensy 35 Breakout v2.sch",
+      "status": "new",
+      "summary": "USB_A connector P29 correctly parsed with VCC, D-, D+, GND, shield pins; Value/lib_id mismatch for P19 and P10a1 faithfully preserved without false normalization",
+      "correct": [
+        {
+          "description": "P29 (USB_A, footprint Connect:USB_A) is correctly extracted with all 5 pins: pin 1 VCC (power_in), pin 2 D- (passive), pin 3 D+ (passive), pin 4 GND (power_in), pin 5 shield (passive). The component is classified as 'connector' type, which is appropriate for this use (a USB-A receptacle acting as a power/data connector in the breakout board context).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "value": 38,
+            "op": "equals"
+          }
+        },
+        {
+          "description": "In the source schematic, P19 uses lib_id=CONN_01X07 with a value field of 'CONN_01X08', and P10a1 uses lib_id=CONN_01X09 with value 'CONN_01X10'. These are designer errors (wrong label applied to the symbol). The analyzer correctly preserves both fields: lib_id reflects the actual symbol used (and hence actual pin count), while value reflects the designer's text label. The BOM correctly groups P19 alone under CONN_01X08/footprint 1x07, making the mismatch visible rather than silently normalizing it.",
+          "analyzer_section": "components",
+          "check": {
+            "path": "components[?reference=='P19'].lib_id",
+            "value": "CONN_01X07",
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339358+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001865"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_PropShield_Uno_PropShield_Uno.kicad_pcb",
+      "status": "promoted",
+      "summary": "PCB footprint count (19) matches source including P5, P6, P7 not in current schematic; Schematic-PCB footprint mismatch (3 orphan footprints) not flagged as a design issue",
+      "correct": [
+        {
+          "description": "The PropShield PCB has 19 footprints vs 16 components in the schematic. The 3 extra (P5=CONN_01X01, P6=CONN_01X01, P7=CONN_02X03) have sch_paths (/56D71177, /56D71274, /588F92D4) that do not match any UUID in the .sch file. This indicates a schematic-PCB sync gap: these footprints were added to the PCB directly or the schematic was trimmed after PCB layout. The analyzer correctly reports all 19 footprints and does not falsely suppress them. The PCB analyzer does not currently flag this schematic-PCB ref mismatch.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "value": 19,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "P5, P6, P7 in the PCB have sch_path attributes that don't correspond to any component in PropShield_Uno.sch. The design_analysis is an empty dict (no design_issues list at all). A cross-reference check between PCB sch_path values and schematic component UUIDs would catch these orphan footprints, which can cause BOM errors and assembly confusion.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis",
+            "value": {},
+            "op": "equals"
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339362+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001866"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_Teensy35Mega_Teensy35Mega.kicad_pcb",
+      "status": "promoted",
+      "summary": "Mounting holes classified as SMD (smd_count=7) inflating the SMD footprint count; DFM board size violation correctly flagged: 68.58x114.3mm exceeds 100mm height",
+      "correct": [
+        {
+          "description": "The analyzer reports a DFM violation: board height 114.3mm exceeds the 100mm threshold used for standard JLCPCB pricing tier. The board width (68.58mm) is within 100mm. The message accurately states 'Board size 68.58x114.3mm exceeds 100x100mm \u2014 higher fabrication pricing tier at JLCPCB'. This is a genuine and actionable finding.",
+          "analyzer_section": "dfm",
+          "check": {
+            "path": "dfm.violation_count",
+            "value": 1,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The PCB stats report smd_count=7 and tht_count=27. The 7 SMD footprints are: REF1, REF2, REF3, REF4, REF5, REF**, and U1 (NCP1117 SOT-223). The REF* references are mounting hole footprints (Mounting_Holes:MountingHole_3.2mm_M3_ISO14580_Pad) with a single SMD pad. These are mechanically-only features, not electrical SMD components. Counting mounting holes as SMD components overstates the SMD assembly complexity. Only U1 is a genuine SMD electrical component.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.smd_count",
+            "value": 1,
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339365+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001867"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_XV11SurrealInterface_XV11Interface.kicad_pcb",
+      "status": "new",
+      "summary": "PCB-only design (no schematic) correctly handled: 6 footprints, 0 nets, routing_complete=True",
+      "correct": [
+        {
+          "description": "The XV11 PCB was laid out without a populated netlist (the schematic is blank). The analyzer correctly reports 6 footprints placed (Signal JST 4-pin, Motor JST 2-pin, CONN1 4-pin header, D1 diode, R1 resistor, REF** TO-251 transistor), net_count=0, unrouted_net_count=0, and routing_complete=True. Reporting routing_complete=True when there are no nets to route is technically accurate: there is nothing to route, so nothing is unrouted.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "value": 0,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339367+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001868"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_PropShield_Uno_Gerbers_",
+      "status": "new",
+      "summary": "Silkscreen outside board boundary correctly detected as alignment issue",
+      "correct": [
+        {
+          "description": "The alignment check reports aligned=false with 'Width varies by 6.7mm across copper/edge layers'. The root cause is F.SilkS extending to 74.167mm wide while Edge.Cuts is 68.58mm. This means silkscreen text/graphics extend 5.6mm beyond the board edge. The copper and drill layers (61.9mm wide) are inset from the edge, which is normal \u2014 the real issue is the F.SilkS overrun beyond Edge.Cuts. This is a genuine fab concern (silkscreen will be clipped). B.Paste and F.Paste correctly show 0x0 (no SMD paste on this all-THT board).",
+          "analyzer_section": "alignment",
+          "check": {
+            "path": "alignment.aligned",
+            "value": false,
+            "op": "equals"
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339369+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001869"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_Teensy 35 Breakout v2_Gerbers_",
+      "status": "promoted",
+      "summary": "False positive alignment warning: copper inset from board edge reported as misalignment",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The alignment check reports aligned=false with 'Width varies by 8.6mm / Height varies by 9.9mm'. However, the copper layers (84.3x89.7mm) are correctly inset from the Edge.Cuts (92.96x99.57mm) \u2014 the board has a ~4.3mm margin on each side with no copper at the very edge. This is good PCB practice, not a misalignment. The F.SilkS (88.6x95.0mm) is also smaller than Edge.Cuts. The only valid alignment signal is the large margin between copper and edge, not a real misalignment. The detector should distinguish between copper-inset-from-edge (benign) and copper-or-silkscreen-extends-beyond-edge (real issue).",
+          "analyzer_section": "alignment",
+          "check": {
+            "path": "alignment.aligned",
+            "value": true,
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339372+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001870"
+    },
+    {
+      "analyzer_type": "gerber",
+      "source_file": "repos_Teensy-3.5-Breakout-Boaard_XV11SurrealInterface_Gerber_",
+      "status": "promoted",
+      "summary": "Drill file classified as 'drill_unknown' with has_pth_drill=false despite 17 through-holes present",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The XV11Interface.drl is a KiCad 4.0.4 Excellon file without an explicit PTHONLY attribute in the header. The analyzer reports has_pth_drill=false and has_npth_drill=false, even though drill_classification shows 17 component_holes (diameter 0.7mm, 0.701mm, 1.001mm, 1.016mm). The holes are stored as 'drill_unknown' type. The completeness check still marks the set as 'complete:true' (via the 'defaults' source heuristic), which is contradictory: a complete set is claimed while the only drill file is unclassified. KiCad 4 Excellon files without X2 attributes should default to PTH classification.",
+          "analyzer_section": "completeness",
+          "check": {
+            "path": "completeness.has_pth_drill",
+            "value": true,
+            "op": "equals"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mjs513/Teensy-3.5-Breakout-Boaard",
+      "project": "Arduino_As_Uno_R3_Arduino_As_Uno",
+      "created": "2026-03-24T06:14:03.339374+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001871"
+    }
+  ]
+}

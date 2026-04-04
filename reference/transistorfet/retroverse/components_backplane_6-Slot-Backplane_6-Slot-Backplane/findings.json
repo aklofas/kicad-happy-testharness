@@ -1,0 +1,280 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "components_backplane_6-Slot-Backplane_6-Slot-Backplane.kicad_sch.json",
+      "status": "new",
+      "summary": "6-slot VME64 backplane with ATX power, active bus termination (TCA0372 + 4610X divider networks), and 74ACT32 daisy-chain logic. Analyzer correctly identifies hierarchical design, VME connectors, voltage dividers, and bus topology but misclassifies graphic logo as switch, labels opamp buffers as comparators, and misses VME bus protocol detection.",
+      "correct": [
+        {
+          "description": "163 unique components correctly counted across 9 sheets (root + 6 slots + 2 termination sheets)",
+          "analyzer_section": "statistics.total_components",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "eq",
+            "value": 163
+          }
+        },
+        {
+          "description": "6 VME-J1-4R-NS DIN41612 slot connectors (J1-J6) correctly identified as 4-unit multi-unit connectors",
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom[?value='VME-J1-4R-NS'].quantity",
+            "op": "eq",
+            "value": 6
+          }
+        },
+        {
+          "description": "ATX-24 power connector (J101) correctly identified with Intel datasheet link",
+          "analyzer_section": "bom",
+          "check": {
+            "path": "bom[?value='ATX-24'].quantity",
+            "op": "eq",
+            "value": 1
+          }
+        },
+        {
+          "description": "5 power rails correctly detected: +12V, +5V, +5VStdby, -12V, GND",
+          "analyzer_section": "statistics.power_rails",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "min_count",
+            "value": 5
+          }
+        },
+        {
+          "description": "4 voltage dividers (330/470 ohm, ratio 0.5875 giving ~2.94V) correctly detected feeding TCA0372 inverting inputs for active termination reference",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "Bus topology correctly detects A[0..31] (32-bit address), D[0..31] (32-bit data), and AM[0..5] (6-bit address modifier) buses",
+          "analyzer_section": "bus_topology.detected_bus_signals",
+          "check": {
+            "path": "bus_topology.detected_bus_signals",
+            "op": "min_count",
+            "value": 3
+          }
+        },
+        {
+          "description": "24 resistor networks (4610X-104-331/471L dual terminator divider SIP) correctly identified as resistor_network type",
+          "analyzer_section": "statistics.component_types.resistor_network",
+          "check": {
+            "path": "statistics.component_types.resistor_network",
+            "op": "eq",
+            "value": 24
+          }
+        },
+        {
+          "description": "7 74ACT32 quad OR gates (U3-U9) correctly identified for bus grant and IACK daisy chain routing",
+          "analyzer_section": "statistics.component_types.ic",
+          "check": {
+            "path": "statistics.component_types.ic",
+            "op": "eq",
+            "value": 9
+          }
+        },
+        {
+          "description": "25 DNP jumpers correctly identified (JP14-JP38 are per-slot bus grant bypass jumpers marked DNP)",
+          "analyzer_section": "statistics.dnp_parts",
+          "check": {
+            "path": "statistics.dnp_parts",
+            "op": "eq",
+            "value": 25
+          }
+        },
+        {
+          "description": "3 decoupling groups correctly analyzed: +12V (10.1uF), -12V (10.1uF), +5V (11.2uF with 13 caps)",
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 3
+          }
+        },
+        {
+          "description": "IRQ1-IRQ7 nets correctly classified as 'interrupt' type",
+          "analyzer_section": "design_analysis.net_classification",
+          "check": {
+            "path": "design_analysis.net_classification.~{IRQ1}",
+            "op": "eq",
+            "value": "interrupt"
+          }
+        },
+        {
+          "description": "SYSCLK and ~{SERCLK} correctly classified as 'clock' nets",
+          "analyzer_section": "design_analysis.net_classification",
+          "check": {
+            "path": "design_analysis.net_classification.SYSCLK",
+            "op": "eq",
+            "value": "clock"
+          }
+        },
+        {
+          "description": "~{SYSRESET} correctly classified as 'control' net",
+          "analyzer_section": "design_analysis.net_classification",
+          "check": {
+            "path": "design_analysis.net_classification.~{SYSRESET}",
+            "op": "eq",
+            "value": "control"
+          }
+        },
+        {
+          "description": "82k pull-down resistors on OR gate inputs correctly detected in ic_pin_analysis for bus grant chain weak pull-downs",
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "ic_pin_analysis[?reference='U4'].pins[?resistors].resistors",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Hierarchical design correctly flattened: 9 sheets listed (root + Slot1-6 + TerminationLeft + TerminationRight)",
+          "analyzer_section": "sheets",
+          "check": {
+            "path": "sheets",
+            "op": "min_count",
+            "value": 9
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "S1 (Logo_Open_Hardware_Small from Graphic:Logo_Open_Hardware_Small) misclassified as 'switch'. It is a PCB silkscreen logo graphic, not an electrical component. The 'S' reference prefix triggers incorrect switch classification.",
+          "analyzer_section": "statistics.component_types.switch"
+        },
+        {
+          "description": "TCA0372 opamp circuits classified as 'comparator_or_open_loop' but they are actually configured as voltage followers/buffers with positive feedback (output tied to non-inverting input) providing a regulated termination voltage. The TCA0372 is a high-current dual power opamp specifically designed for active bus termination. While the positive feedback connection could be interpreted as comparator-like, the intent is a unity-gain buffer driving the termination reference rail through a decoupling capacitor.",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "VME bus control signals (~{AS}, ~{DS0}, ~{DS1}, ~{DTACK}, ~{BERR}, ~{WRITE}, ~{BBSY}, ~{BCLR}, ~{RETRY}) are classified as generic 'signal' rather than 'control'. These are well-known VME bus control strobes that should be classified as control signals.",
+          "analyzer_section": "design_analysis.net_classification"
+        },
+        {
+          "description": "~{SYSFAIL} and ~{ACFAIL} classified as 'signal' rather than 'control' or 'interrupt'. These are VME system failure indicators that function as control/status signals.",
+          "analyzer_section": "design_analysis.net_classification"
+        }
+      ],
+      "missed": [
+        {
+          "description": "VME bus protocol not detected. This is a VME64 backplane with all standard VME bus signals (A[0..31], D[0..31], AM[0..5], IRQ1-7, BR0-3, BG0-3, IACK, DTACK, AS, DS0, DS1, BERR, SYSRESET, SYSCLK, BBSY, BCLR, etc.). The bus topology section detects address/data bus widths but does not identify this as a VME bus system.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "bus_topology.detected_bus_signals[?prefix='A'].range",
+            "op": "contains",
+            "value": "A1..A31"
+          }
+        },
+        {
+          "description": "Active bus termination circuit not identified as a distinct pattern. The TCA0372 opamps (U1, U2) with voltage dividers (330/470 ohm) providing ~2.94V reference, feeding through PASSIVE/ACTIVE jumpers (JP1-JP8) to 4610X resistor divider networks (RN1-RN24), is a classic VME active termination circuit. This is a well-known bus termination topology that should be recognized.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.voltage_dividers[?r_top.ref='R19'].mid_point_connections[0].component",
+            "op": "eq",
+            "value": "U1"
+          }
+        },
+        {
+          "description": "Bus grant daisy chain topology not identified. The 74ACT32 OR gates (U3-U9) implement the VME bus grant and IACK daisy chain, where each slot's BG0OUT/BG1OUT/BG2OUT/BG3OUT/IACKOUT connects through an OR gate (with bypass jumpers) to the next slot's BGIN/IACKIN. This is a key VME backplane topology pattern.",
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits[?center_ic='U7'].neighbor_components",
+            "op": "min_count",
+            "value": 5
+          }
+        },
+        {
+          "description": "SYSTEM MONITOR connector (J107, 5-pin) not characterized. It provides monitoring access to the backplane - likely for power good, reset, and status signals.",
+          "analyzer_section": "ic_pin_analysis",
+          "check": {
+            "path": "bom[?value='SYSTEM MONITOR'].quantity",
+            "op": "eq",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Add VME bus protocol detection based on characteristic signal names (AS, DS, DTACK, BERR, BR0-3, BG0-3, IACK, IRQ1-7, AM0-5, SYSCLK, SYSRESET) and DIN41612 connectors",
+        "Add active bus termination pattern detection: opamp voltage reference + resistor divider networks + passive/active selection jumpers",
+        "Recognize graphic/logo symbols (Graphic:Logo_Open_Hardware_Small, etc.) as non-electrical components rather than classifying by reference designator prefix",
+        "Detect daisy-chain bus grant topology: OR gate chains connecting slot-to-slot with bypass jumpers",
+        "Classify known bus control signals (~{AS}, ~{DS*}, ~{DTACK}, ~{BERR}, ~{WRITE}, ~{BBSY}, ~{BCLR}) as 'control' rather than generic 'signal'"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "transistorfet/retroverse",
+      "project": "components_backplane_6-Slot-Backplane_6-Slot-Backplane",
+      "created": "2026-03-23T18:12:21.961039+00:00",
+      "datasheets_used": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "components_backplane_6-Slot-Backplane_6-Slot-Backplane.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "VME 6-slot backplane with ATX power input, 6 DIN41612 slot connectors, 7 74ACT32 OR gates for BG/IACK daisy-chains, 2 TCA0372 comparators for power monitoring, and 24 Bourns 4610X terminator SIPs. Component identification correct but S1 (OSHW logo) misclassified as switch, duplicate pin entries for multi-unit ICs inflate ERC warnings, and 98 unnamed single-pin nets for terminator taps not flagged.",
+      "correct": [
+        {
+          "description": "All 163 components correctly typed: 7 74ACT32 as ic, 2 TCA0372 as ic, 6 DIN41612 connectors, 24 4610X as resistor_network",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "All 4 comparator voltage-divider references correctly detected: R19/R20, R3/R4, R21/R22, R7/R8 producing 2.94V",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "All 4 TCA0372 units correctly classified as comparator_or_open_loop with hysteresis feedback",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "VME bus topology correctly detects A[1..31], D[0..31], AM[0..5] from 536 bus wires across 9 sheets",
+          "analyzer_section": "bus_topology"
+        },
+        {
+          "description": "All 12 dual-terminator connections correctly merged to named bus signals",
+          "analyzer_section": "nets"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "S1 (Graphic:Logo_Open_Hardware_Small, OSHW silkscreen logo) classified as type='switch'. Should be 'graphic' or excluded from BOM.",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "15 nets have duplicated pin entries for multi-unit 74ACT32 ICs, inflating ERC output_conflict counts from 5 to 10 per net.",
+          "analyzer_section": "connectivity_issues.multi_driver_nets"
+        },
+        {
+          "description": "5 output_conflict ERC warnings inflated by duplicate-pin issue. Each net legitimately has 5 OR-gate outputs (VME daisy-chain), but reports 10.",
+          "analyzer_section": "design_analysis.erc_warnings"
+        }
+      ],
+      "missed": [
+        {
+          "description": "98 unnamed single-component nets for RN1-RN12 terminator tap pins (pins 3-9) not reported as connectivity issues. 7 of 8 bus terminations per SIP appear unconnected.",
+          "analyzer_section": "connectivity_issues.single_pin_nets"
+        },
+        {
+          "description": "TERM_L1_LOW net shows only JP2 pin 2 connected \u2014 asymmetric label resolution failure vs TERM_L1_HIGH which correctly merges with 14 components.",
+          "analyzer_section": "connectivity_issues.single_pin_nets"
+        }
+      ],
+      "suggestions": [
+        "Add 'Graphic:' library prefix to classify as 'graphic' instead of 'switch'.",
+        "Deduplicate pin-to-net entries by (reference, pin_number) for multi-unit ICs.",
+        "Extend single_pin_net detection to include unnamed nets with exactly one non-#PWR pin."
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002510",
+      "repo": "transistorfet/retroverse",
+      "project": "components_backplane_6-Slot-Backplane_6-Slot-Backplane",
+      "created": "2026-03-30T23:15:38.164902+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

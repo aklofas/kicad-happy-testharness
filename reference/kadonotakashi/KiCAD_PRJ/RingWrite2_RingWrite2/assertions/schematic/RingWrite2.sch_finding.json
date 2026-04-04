@@ -1,0 +1,29 @@
+{
+  "file_pattern": "RingWrite2.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001691",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001691-AST-01",
+      "description": "RingWrite2.sch has 81 components correctly parsed: resistor(25), capacitor(9), ic(3), connector(4), jumper(2), led(25), mounting_hole(2), test_point(9), transistor(2). All types are correctly identified.",
+      "created_from": "FND-00001691",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 81,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001691-AST-02",
+      "description": "Same issue as RingLight: Q1 and Q2 are uPA2753 transistor arrays with non-standard pin names (G/D/S variants), correctly typed as 'transistor' in component_types, but the transistor_circuits detector reports 0 entries. The analyzer cannot classify this custom-library transistor's switching topology.",
+      "created_from": "FND-00001691",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

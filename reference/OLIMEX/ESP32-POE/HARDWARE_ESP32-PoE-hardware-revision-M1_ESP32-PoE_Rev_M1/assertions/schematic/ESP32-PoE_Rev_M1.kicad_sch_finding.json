@@ -1,0 +1,48 @@
+{
+  "file_pattern": "ESP32-PoE_Rev_M1.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000513",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000513-AST-01",
+      "description": "M1.kicad_sch correctly identifies U7 as a switching regulator with topology='switching', inductor='L2', output_rail='+3.3V', input_rail='__unnamed_1', estimated_vout=3.245V (using 0.6V Vref heuristic and R29/R30 ratio 0.185), feedback_divider={'r_top':'R29','r_bottom':'R30'}. U5 (TX4138 PoE boost converter) is also detected with feedback divider R38/R34, estimated_vout=4.053V. The inrush analysis, feedback_networks, and is_feedback flag on voltage dividers are all correctly populated. The regulator subcircuit neighborhood (C36 output cap, D3 diode, FET2 gate driver) is captured in subcircuits.",
+      "created_from": "FND-00000513",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000513-AST-02",
+      "description": "M1.kicad_sch correctly detects I2C SCL on GPIO16\\I2C-SCL with pull-up R31 (2.2k/R0402 to +3.3V) and SDA on GPIO13\\I2C-SDA with pull-up R35 (2.2k/R0402 to +3.3V), both driven by U6 (ESP32). L1.sch also correctly detects this (legacy parser does resolve these nets). M1.sch fails to detect I2C due to its net connectivity bug.",
+      "created_from": "FND-00000513",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000513-AST-03",
+      "description": "All three schematics correctly identify the ethernet interface: phy_reference='U4', phy_value='LAN8710A-EZC(QFN32)', connector LAN_CON1 (RJP-003TC1). RMII signals (GPIO17-GPIO27 group) are present in net_classification. The +3.3V/+3.3VLAN domain split for the PHY is detected in M1.kicad_sch with 10 cross-domain signals identified for the EMAC lines. The LAN magnetics are listed as empty (magnetics=[]) which is correct \u2014 this design uses an integrated magnetics RJ45 connector.",
+      "created_from": "FND-00000513",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000513-AST-04",
+      "description": "M1.kicad_sch correctly identifies 7 components present in M1 but absent from L1: U9 (TPS2378DDAR PoE Class 4 interface controller), R52 (24.9k), R53 (1.27k), R54 (NA/66.5R), R55 (4.7k), Class4_EN1 (Closed jumper), and C36 (NA/120pF DNP). U2 (TPS2375D PoE controller from L1) is absent in M1.kicad_sch, replaced by U9 (TPS2378DDAR). The dnp_parts count of 1 correctly captures C36 as the only DNP component. These differences correctly reflect the PoE controller upgrade from TPS2375D to TPS2378DDAR between L1 and M1.",
+      "created_from": "FND-00000513",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

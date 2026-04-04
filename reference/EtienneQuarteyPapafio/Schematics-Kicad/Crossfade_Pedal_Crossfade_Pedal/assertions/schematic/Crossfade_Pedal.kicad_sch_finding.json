@@ -1,0 +1,62 @@
+{
+  "file_pattern": "Crossfade_Pedal.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001347",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001347-AST-01",
+      "description": "The BOM lists 19 components: 1 IC (Arduino UNO A2), 2 relays (K2/K3 G5V-2), 2 transistors (Q1/Q2 BC107), 2 diodes (D1/D4 1N4148), 2 LEDs (D2/D3), 2 connectors (J1/J2 TRS), 3 switches (SW1/SW2/SW3), and 5 resistors (R1/R2/R3/R4/R6). All counts match the component list in the file.",
+      "created_from": "FND-00001347",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 19,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001347-AST-02",
+      "description": "The signal_analysis.transistor_circuits section correctly identifies Q1 (BC107, collector_net to relay K3 coil, emitter to GND) and Q2 (BC107, collector_net to relay K2 coil, emitter to GND) with base resistors R3 and R4 respectively. The emitter_is_ground flag is correctly true for both.",
+      "created_from": "FND-00001347",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "value": 2,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001347-AST-03",
+      "description": "The ic_pin_analysis for A2 correctly identifies R1, R2, and R6 (all 10K) as pull-down resistors on Arduino pins A0, A1, and A2 respectively, each going to GND. The switches SW1, SW2, SW3 connect from 3V3 (Arduino pin 4) through the switch to these pins, making these pull-downs correct for switch-to-power circuits (the other side is at 3V3, so they would actually be pull-downs when switches are open).",
+      "created_from": "FND-00001347",
+      "check": {
+        "path": "signal_analysis.transistor_circuits[0].base_resistors[0].reference",
+        "value": "R4",
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected R4, got None"
+    },
+    {
+      "id": "FND-00001347-AST-04",
+      "description": "INCORRECT: The bus_analysis.i2c section reports four I2C lines on nets __unnamed_19, __unnamed_20, __unnamed_38, __unnamed_39 \u2014 all attached only to the Arduino UNO itself with no secondary devices and no pull-up resistors. These are unconnected Arduino pins (each has point_count 1 in the nets section, meaning no external connections). The SDA/A4 and SCL/A5 pins appear twice because the Arduino UNO R3 symbol exposes them on two connectors, but no I2C bus is present in this design.",
+      "created_from": "FND-00001347",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001347-AST-05",
+      "description": "D1 and D4 are 1N4148 diodes placed across relay coils (D4 cathode on K2 pin 16 / anode on collector Q2; D1 cathode on K3 pin 1 / anode on collector Q1). These are classic flyback/freewheeling protection diodes. The signal_analysis.protection_devices list is empty, so these are missed. The relay coil topology is clear from the net data.",
+      "created_from": "FND-00001347",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "value": [],
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

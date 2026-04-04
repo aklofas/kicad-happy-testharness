@@ -1,0 +1,52 @@
+{
+  "file_pattern": "Production",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00001469",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001469-AST-01",
+      "description": "The analyzer correctly identifies 9 gerber files covering B.Cu, B.SilkS, B.Paste, B.Mask, F.Cu, F.SilkS, F.Paste, F.Mask, and the GKO outline. X2 net and pin counts are consistent (F.Cu: 95 nets, 284 pins; B.Cu: 39 nets, 65 pins matching back-side components). The F.Paste layer with 236 flashes and 268 SMD apertures matches the SMD pad count. Alignment checks pass with consistent layer extents.",
+      "created_from": "FND-00001469",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "equals",
+        "value": 9
+      }
+    },
+    {
+      "id": "FND-00001469-AST-02",
+      "description": "The zip_archives section correctly identifies SparkFun_OpenScale-BT_v11.zip with vs_loose_files: 'loose_files_newer' and age_delta_hours: 1249.1 hours (~52 days). This accurately reflects that the loose gerber files were regenerated more recently than the ZIP archive, which is a useful production workflow observation.",
+      "created_from": "FND-00001469",
+      "check": {
+        "path": "zip_archives",
+        "op": "contains_match",
+        "value": {
+          "vs_loose_files": "loose_files_newer"
+        }
+      }
+    },
+    {
+      "id": "FND-00001469-AST-03",
+      "description": "INCORRECT: The file SparkFun_OpenScale-BT.GKO is assigned layer_type 'B.Mask' but it is the board outline (Edge.Cuts). The file's X2 attribute FileFunction says 'Soldermask,Bot' and FilePolarity 'Negative' \u2014 this appears to be a bug in the KiCad Gerber output for this specific version where the GKO file received wrong X2 attributes. However, the aperture_analysis correctly identifies a 'Profile' aperture function within the file, which is the Edge.Cuts indicator. The analyzer should use the Profile aperture function to override the FileFunction and correctly classify this as Edge.Cuts. As a result, 'Edge.Cuts' appears in missing_required even though the board outline file is present.",
+      "created_from": "FND-00001469",
+      "check": {
+        "path": "completeness.missing_required",
+        "op": "contains_match",
+        "value": "Edge.Cuts"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001469-AST-04",
+      "description": "The top-level statistics show drill_files: 0 and total_holes: 0 with empty drills: [] and drill_tools: {}. However, the zip_archives section reveals SparkFun_OpenScale-BT_v11.zip contains 1 drill file and 9 gerber files. The loose gerber files are parsed (9 gerbers) but the drill file within the ZIP is not extracted and analyzed. The PCB has 146 vias and 14 THT components, so substantial drill data exists but goes undetected. The drill_classification shows all zeros as a consequence.",
+      "created_from": "FND-00001469",
+      "check": {
+        "path": "statistics.drill_files",
+        "op": "equals",
+        "value": 0
+      },
+      "aspirational": false
+    }
+  ]
+}

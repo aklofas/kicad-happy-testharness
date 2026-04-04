@@ -1,0 +1,90 @@
+{
+  "file_pattern": "SparkPNT_GPSDO.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001812",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001812-AST-01",
+      "description": "The flat hierarchical analysis of the KiCad 8.0 root schematic correctly aggregates all sub-sheets (GNSS, Ethernet, Power, USB, Level_Shifting, Level_Shifting_10MHz) plus root-level components to 296 total components. Sub-sheets sum to 247, and the remaining 49 are root-level standoffs, test points, fiducials, and direct components.",
+      "created_from": "FND-00001812",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 296,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001812-AST-02",
+      "description": "The ethernet_interfaces section correctly identifies U4 (KSZ8041NL/I Ethernet PHY) with connector J5 (MagJack_PoE_RJ45). The PHY lib_id and value are correctly captured. This is also correctly detected in the Ethernet sub-schematic.",
+      "created_from": "FND-00001812",
+      "check": {
+        "path": "signal_analysis.ethernet_interfaces",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001812-AST-03",
+      "description": "U13 (SiT5358AI-FS033IT-10.000000) is correctly identified as an active_oscillator in crystal_circuits with output_net captured. The 10 MHz TCXO/oscillator module is properly classified.",
+      "created_from": "FND-00001812",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001812-AST-04",
+      "description": "The isolation_barriers correctly identifies two ground domains (GND and GND-ISO) from the PoE isolation circuit. The isolated_power_rails lists GND-ISO. The isolation_components list being empty is acceptable since the galvanic isolation is embedded within the MagJack (transformer inside connector body).",
+      "created_from": "FND-00001812",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "value": 1,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001812-AST-05",
+      "description": "U11 (AP7361C-3.3V) detected as LDO outputting 3.3V from 5V input, and U5 (AP7361C-3.3V) detected as LDO outputting 3.3V_P from 5V input. Both correctly identified via fixed-suffix vref_source. The third regulator U7 (Ag9905M) has unknown topology as expected for a PoE PD controller.",
+      "created_from": "FND-00001812",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "value": 3,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001812-AST-06",
+      "description": "11 protection devices correctly identified: DT1042-04SO multi-channel ESD ICs protecting USB and Ethernet differential pairs, DF5A5.6LFU arrays on SD card and I2C lines, PESD0402 TVS diodes on RF and external signal lines, a varistor (V.1) on the DC input, and F1 fuse. Classification as esd_ic, diode, varistor, and fuse types is accurate.",
+      "created_from": "FND-00001812",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "value": 11,
+        "op": "min_count"
+      }
+    },
+    {
+      "id": "FND-00001812-AST-07",
+      "description": "INCORRECT: The signal_analysis.key_matrices detects 1 key matrix (2 rows, 3 columns, 4 switches) with row_nets=['SD_CMD', '__unnamed_43']. SD_CMD is an SD card SPI signal, not a matrix row. SW1\u2013SW3 are SPST push buttons (panel controls from USB sub-sheet) and SW4 is a DPDT slide switch (from Level_Shifting sub-sheet). These are independent control switches, not a scanning keyboard matrix. The coincidence of SD card net names and switch passive nets triggers a false topological match.",
+      "created_from": "FND-00001812",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "value": 0,
+        "op": "max_count"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001812-AST-08",
+      "description": "INCORRECT: SparkFun uses single-letter + dot-number reference designators (A.1, B.1, \u2026, K.1, L.1, T.1, V.1) for solder jumper test pads. The analyzer classifies components by reference prefix: K.1 (a SolderJumper_2_Open) is counted as relay, T.1 (a SolderJumper_2_Open in Level_Shifting_10MHz) is counted as transformer, and L.1 (a SolderJumper_2_Open) is counted as inductor in component_types statistics. All three are actually solder jumpers. The BOM partially compensates by grouping some under varistor (V.1, K.1, L.1 grouped together), creating an inconsistency between statistics and BOM type fields. The correct counts should have relay:0, transformer:0, and jumper increased accordingly.",
+      "created_from": "FND-00001812",
+      "check": {
+        "path": "statistics.component_types.relay",
+        "value": 0,
+        "op": "equals"
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/picon-one-hw/kicad/picon-one v1.0a.sch",
+      "status": "confirmed",
+      "summary": "Multi-function Pico-based board with DS3231M RTC, SC16IS752 I2C-to-UART, TM1640 LED driver, and 14.7456MHz crystal. Excessive I2C false positives (10 buses detected for what should be 2-3). Crystal load cap mismatch (22pF vs 33pF) flagged correctly. Many unnamed nets suggest legacy format connectivity issues.",
+      "correct": [
+        {
+          "description": "DS3231M RTC correctly identified in power domains"
+        },
+        {
+          "description": "SC16IS752 I2C-to-dual-UART correctly detected with I2C and UART connections"
+        },
+        {
+          "description": "Crystal Y1 14.7456MHz with asymmetric load caps (22pF/33pF) correctly detected, CL_eff=16.2pF calculated"
+        },
+        {
+          "description": "SPI bus detected with MISO/MOSI/SCK signals"
+        },
+        {
+          "description": "Multiple UART channels (TXW/RXW, TXG/RXG, RXP, RXR, TXR) correctly detected"
+        },
+        {
+          "description": "Decoupling coverage warning: +5V has only 0.1uF bypass, no bulk - legitimate concern"
+        },
+        {
+          "description": "Battery connection (BT1) detected"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "10 I2C buses detected but most are false positives from unnamed nets with SCL/SDA pin names - should be 2-3 actual I2C buses",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "Many power rails use unnamed nets (__unnamed_56, __unnamed_90, __unnamed_114) - these should be resolved to actual rail names",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "MCU1 (likely Raspberry Pi Pico module) not detected in power domains or as an IC",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "Crystal frequency field is null despite 14.7456MHz in value string",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "SPI bus pin mapping has MISO mapped to CS net - incorrect signal identification",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Raspberry Pi Pico module (MCU1) not detected as a component or processor",
+          "analyzer_section": "statistics.component_types",
+          "check": {
+            "path": "statistics.component_types",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "TM1640 LED driver function not identified - drives 7-segment display grid/segment lines",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "DIP switch (DIP1) configuration not analyzed",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No power regulator detected - board likely powered from Pico USB/VSYS",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "12V input connectors (12V1, 12V2) not traced through power path",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Filter I2C false positives - require named nets or multi-device buses, not single-device unnamed nets",
+        "Parse crystal frequency from value string",
+        "Detect Raspberry Pi Pico module footprint as processor module",
+        "Fix SPI pin mapping - distinguish MISO/MOSI/SCK/CS properly"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000134",
+      "repo": "fm4dd/picon-one-hw",
+      "project": "kicad_picon-one v1.0a",
+      "created": "2026-03-14T07:51:44.898478+00:00"
+    }
+  ]
+}

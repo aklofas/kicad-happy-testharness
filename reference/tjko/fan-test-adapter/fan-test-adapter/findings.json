@@ -1,0 +1,41 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_fan-test-adapter_fan-test-adapter.sch.json.json",
+      "status": "promoted",
+      "summary": "Logo_Open_Hardware_Small graphic incorrectly listed as a power rail; Capacitors with value 'DNF' not detected as Do-Not-Fit/DNP parts",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "In the KiCad 5 .sch source, the open-hardware logo is placed as symbol '#LOGO1' with value 'Logo_Open_Hardware_Small'. Because KiCad 5 power components start with '#', the KiCad 5 parser misidentifies this as a power component and adds 'Logo_Open_Hardware_Small' to the power_rails list. The net is also incorrectly classified as 'control' in design_analysis.net_classification. This is a false positive \u2014 the logo is purely graphical with no electrical connections. It should be filtered out the same way KiCad 6 'Graphic:' library symbols are handled.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.power_rails",
+            "op": "contains_match",
+            "value": "/Logo_Open_Hardware_Small/"
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "Four capacitors (C1, C3, C5, C7) use the component value 'DNF' (Do Not Fit) as the conventional KiCad 5 way to mark non-populated parts, since KiCad 5 has no formal DNP property. The analyzer reports dnp_parts=0, missing the 4 DNF capacitors. These are radial electrolytic caps in a THT footprint (CP_Radial_D10.0mm) that the designer chose to leave unpopulated. Detecting value=='DNF' (case-insensitive) as a DNP indicator would improve BOM accuracy for KiCad 5 designs.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.dnp_parts",
+            "op": "greater_than",
+            "value": 0
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "tjko/fan-test-adapter",
+      "project": "fan-test-adapter",
+      "created": "2026-03-24T07:52:23.492808+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002063"
+    }
+  ]
+}

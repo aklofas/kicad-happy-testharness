@@ -1,0 +1,199 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_Centronics_50Pin_Centronics_50Pin.kicad_sch.json",
+      "status": "promoted",
+      "summary": "RP1 (Raspberry Pi Pico module) classified as 'resistor' due to R-prefix heuristic; SD2 (MicroSD card socket) classified as 'switch' instead of a memory/connector component; AP1117-ADJ regulator Vre...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "RP1 is a custom symbol for a Raspberry Pi Pico/BlackSCSI MCU module (lib_id: custom_symbols:BlackSCSI, footprint: CustomFootprints:BluePillModule, 40 pins). The analyzer classifies it as 'resistor' because its reference designator starts with 'R'. This inflates the resistor count by 1 (38 reported instead of 37 actual discrete resistors) and the component type distribution is incorrect. The same misclassification occurs in all four BlueSCSI-v2 schematics.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.resistor",
+            "op": "equals",
+            "value": 38
+          }
+        },
+        {
+          "description": "SD2 (value: MicroSD-TF-06, lib_id: New_Library:MicroSD-TF-06, footprint: Library:TF-06_MicroSD) is a complete MicroSD card socket with SPI interface pins (CLK, MOSI, MISO, CS, DAT1, DAT2) plus card-detect. It is classified as 'switch' \u2014 likely because MicroSD sockets contain a card-detect mechanical switch and the symbol lib may include that in the device. The correct classification should be 'connector' or a dedicated 'sd_card' category. The same occurs in all four BlueSCSI-v2 schematics (SD1/SD2). This also contributes to the SPI/SD interface being missed (see false_negative below).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.switch",
+            "op": "equals",
+            "value": 1
+          }
+        },
+        {
+          "description": "The AP1117-ADJ has a documented internal reference voltage of 1.25 V. The analyzer falls back to a 0.6 V heuristic (vref_source: 'heuristic') and reports estimated_vout = 1.068 V. With the correct Vref of 1.25 V and the divider R21=120 \u03a9 (top, Vout\u2192ADJ) / R20=154 \u03a9 (bottom, ADJ\u2192GND), the formula gives Vout = 1.25 \u00d7 (1 + 120/154) \u2248 2.22 V. The output rail is named '+2V8', and the design_observation already flags a large vout_net_mismatch (61.9% diff), but the root cause is the wrong Vref assumption rather than a design error. The AMS1117-2.85 in the other three schematics is handled correctly as a fixed-output part.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[0].assumed_vref",
+            "op": "equals",
+            "value": 0.6
+          }
+        },
+        {
+          "description": "U10 (value: Centronics50PinMale, lib_id: custom_symbols:Centronics50PinMale, footprint: Library:Centronics50Male) is the main 50-pin Centronics SCSI connector on this board. It is classified as 'ic' because its reference designator uses the 'U' prefix. While U-prefix for large connectors is an unusual but valid design convention, the component is purely a passive connector and should be classified as 'connector'. This inflates the IC count by 1 (8 reported instead of 7) and under-reports connectors (1 reported instead of 2).",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.ic",
+            "op": "equals",
+            "value": 8
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The schematic has a MicroSD card (SD2) connected via nets named SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS, SD_D1, SD_D2, forming a clear SPI mode SD card interface. The memory_interfaces list in signal_analysis is empty for all four BlueSCSI-v2 schematics. The net names explicitly contain MOSI/MISO/CLK keywords, which should be sufficient for the analyzer to detect and report a SPI or SD-card memory interface. This is a consistent false negative across all four files.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix: RP1 (Raspberry Pi Pico module) classified as 'resistor' due to R-prefix heuristic",
+        "Fix: SD2 (MicroSD card socket) classified as 'switch' instead of a memory/connector component",
+        "Fix: U10 (Centronics 50-pin SCSI connector) classified as 'ic' instead of 'connector'"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "jbnd/BlueSCSI-v2",
+      "project": "hardware_Centronics_50Pin_Centronics_50Pin",
+      "created": "2026-03-23T19:33:16.361285+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000411"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_DB25_External_DB25_External.kicad_sch.json",
+      "status": "promoted",
+      "summary": "RP1 (Raspberry Pi Pico MCU module) classified as 'resistor' due to R-prefix heuristic; SD2 (MicroSD card socket) classified as 'switch' instead of a connector/memory component; SPI/SD card interfac...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Same issue as in Centronics_50Pin: RP1 (custom_symbols:BlackSCSI, 40-pin MCU module) is classified as 'resistor' because its reference designator starts with 'R'. The resistor count is reported as 34 instead of 33 actual discrete resistors. The statistics include RP1 in the resistor bucket alongside R1\u2013R56.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.resistor",
+            "op": "equals",
+            "value": 34
+          }
+        },
+        {
+          "description": "Same issue as in Centronics_50Pin: SD2 (MicroSD-TF-06) is classified as 'switch' instead of 'connector' or a storage interface. The SD_CLK/SD_CMD_MOSI/SD_D0_MISO/SD_D3_CS nets are present but the SPI interface is not detected.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.switch",
+            "op": "equals",
+            "value": 1
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "Same as Centronics_50Pin: nets SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS are present but memory_interfaces is empty. The SPI SD card interface connected to the Raspberry Pi Pico (RP1) is not identified.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix: RP1 (Raspberry Pi Pico MCU module) classified as 'resistor' due to R-prefix heuristic",
+        "Fix: SD2 (MicroSD card socket) classified as 'switch' instead of a connector/memory component"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "jbnd/BlueSCSI-v2",
+      "project": "hardware_Centronics_50Pin_Centronics_50Pin",
+      "created": "2026-03-23T19:33:16.361305+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000412"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_Desktop_50_Pin_Desktop_50_Pin_TopConn.kicad_sch.json",
+      "status": "promoted",
+      "summary": "RP1 (Raspberry Pi Pico W module) classified as 'resistor' due to R-prefix heuristic; SD1 (MicroSD card socket) classified as 'switch'",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "RP1 (value: PicoWModule, lib_id: New_Library:PicoWModule) is a Raspberry Pi Pico W MCU module. It is classified as 'resistor' because its reference starts with 'R'. The resistor count is reported as 47 instead of 46 actual discrete resistors. The USB_DM/USB_DP design observations correctly reference RP1 as a USB-capable device, which highlights the inconsistency \u2014 it is treated as MCU-like for USB detection but as a resistor for component type statistics.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.resistor",
+            "op": "equals",
+            "value": 47
+          }
+        },
+        {
+          "description": "SD1 (value: SOFNG_SD-001, lib_id: custom_symbols:SOFNG_SD-001) is a MicroSD card socket classified as 'switch'. The SPI interface nets (SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS) are present but memory_interfaces is empty, same as the other three schematics.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Fix: RP1 (Raspberry Pi Pico W module) classified as 'resistor' due to R-prefix heuristic",
+        "Fix: SD1 (MicroSD card socket) classified as 'switch'"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "jbnd/BlueSCSI-v2",
+      "project": "hardware_Centronics_50Pin_Centronics_50Pin",
+      "created": "2026-03-23T19:33:16.361308+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000413"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hardware_PowerBook_PowerBook.kicad_sch.json",
+      "status": "promoted",
+      "summary": "RP1 (Raspberry Pi Pico MCU module) classified as 'resistor' due to R-prefix heuristic; SD2 (MicroSD card socket) classified as 'switch' instead of connector/memory component",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "RP1 (value: Pico_Footprint, lib_id: custom_symbols:BlackSCSI, 40-pin MCU module) is classified as 'resistor' because its reference starts with 'R'. The resistor count is 40 instead of 39 actual discrete resistors. Same issue as the other three schematics.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.component_types.resistor",
+            "op": "equals",
+            "value": 40
+          }
+        },
+        {
+          "description": "SD2 (value: MicroSD-TF-06, lib_id: New_Library:MicroSD-TF-06) is classified as 'switch'. The SPI interface nets are present (SD_CLK, SD_CMD_MOSI, SD_D0_MISO, SD_D3_CS) but memory_interfaces remains empty. Same issue as the other three schematics.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "equals",
+            "value": []
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Fix: RP1 (Raspberry Pi Pico MCU module) classified as 'resistor' due to R-prefix heuristic",
+        "Fix: SD2 (MicroSD card socket) classified as 'switch' instead of connector/memory component"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "jbnd/BlueSCSI-v2",
+      "project": "hardware_Centronics_50Pin_Centronics_50Pin",
+      "created": "2026-03-23T19:33:16.361311+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000414"
+    }
+  ]
+}

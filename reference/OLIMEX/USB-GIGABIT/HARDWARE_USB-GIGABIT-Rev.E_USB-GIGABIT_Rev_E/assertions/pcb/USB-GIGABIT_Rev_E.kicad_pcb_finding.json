@@ -1,0 +1,29 @@
+{
+  "file_pattern": "USB-GIGABIT_Rev_E.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001568",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001568-AST-01",
+      "description": "The PCB analyzer correctly identifies the 4-layer stackup (F.Cu, In1.Cu/GND, In2.Cu, B.Cu), 59 footprints (52 schematic components + 4 logos/signs + 3 blank-reference logo footprints), 75 vias, 680 track segments, and confirms complete routing with 0 unrouted nets. Board dimensions 51.5x19.0mm match the gerber Edge.Cuts. Net count 51 matches the schematic.",
+      "created_from": "FND-00001568",
+      "check": {
+        "path": "statistics.copper_layers_used",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "FND-00001568-AST-02",
+      "description": "INCORRECT: The DFM checker reports tier_required='advanced' for 0.127mm minimum track spacing, with standard_limit_mm also set to 0.127mm (actual == standard_limit). The message 'requires advanced process (standard: 0.127mm)' is contradictory: if the actual value equals the standard limit, it should pass as standard. Furthermore, 0.127mm (5mil) is well within the capability of standard PCB processes (most standard fabricators handle 6/6 or 5/5 mil). The threshold logic appears to trigger 'advanced' when actual >= standard_limit rather than when actual < standard_limit.",
+      "created_from": "FND-00001568",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "op": "equals",
+        "value": "standard"
+      },
+      "aspirational": true
+    }
+  ]
+}

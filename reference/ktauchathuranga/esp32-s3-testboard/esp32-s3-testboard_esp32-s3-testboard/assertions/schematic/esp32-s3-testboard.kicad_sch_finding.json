@@ -1,0 +1,40 @@
+{
+  "file_pattern": "esp32-s3-testboard.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002049",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002049-AST-01",
+      "description": "The analyzer correctly identifies the I2C bus on SCL/SDA nets with two devices (U2=ESP32-S3-WROOM-1, U4=Si7020-A20 humidity sensor) and pull-up resistors R7 and R8 (both 2.2K to +3V3). The USB-C compliance check correctly identifies the USBLC6-2SC6 ESD IC (U1) protecting D+/D- and passes the CC1/CC2 5.1K pull-down check.",
+      "created_from": "FND-00002049",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00002049-AST-02",
+      "description": "INCORRECT: CLV1L-FKB is a Kingbright bi-color chip LED, but because it is stored in a custom library ('oddibits:CLV1L-FKB') with no standard LED keyword in the lib path or component name, the analyzer classifies it as type='diode'. This inflates the diode count to 5 (should be 4: D1, D2, D4, D6) and undercounts the LED count to 1 (should be 2: D3 PURPLE + D5 bi-color). The component type statistics in statistics.component_types are consequently wrong.",
+      "created_from": "FND-00002049",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "equals",
+        "value": 2
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00002049-AST-03",
+      "description": "The RC filter R1+C4 (10K+1uF, fc=15.92 Hz) is correctly detected, but its functional role is a power-on reset timing circuit for the ESP32-S3 EN (enable) pin. The same circuit in esp32bb (R3+C1, same component values, same topology) is labeled 'RC-network' instead of 'low-pass'. Inconsistent type labeling ('low-pass' vs 'RC-network') for identical topologies suggests the classification criterion is unstable.",
+      "created_from": "FND-00002049",
+      "check": {
+        "path": "signal_analysis.rc_filters[0].type",
+        "op": "equals",
+        "value": "low-pass"
+      },
+      "aspirational": true
+    }
+  ]
+}

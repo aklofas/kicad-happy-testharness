@@ -1,0 +1,50 @@
+{
+  "file_pattern": "beyblock20.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001952",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001952-AST-01",
+      "description": "The beyblock20 is a 20-key macropad (4 rows x 5 columns). The key_matrices detector correctly identifies 4 rows (row1-row4), 5 columns (col1-col5), 20 switches, and 20 diodes using net_name detection. The 20 SW_SPST switches and 20 LL4148 diodes match the source schematic.",
+      "created_from": "FND-00001952",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001952-AST-02",
+      "description": "Two I2C bus observations are reported: SDA net with pullup R1 to +3.3V, and SCL net with pullup R2 to +3.3V. Devices on the bus include U1 (SeeeduinoXIAO), U2, and U3 (TRRS connectors carrying I2C for split keyboard). This matches the actual schematic where OLED modules communicate over I2C.",
+      "created_from": "FND-00001952",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001952-AST-03",
+      "description": "INCORRECT: U2 and U3 have value 'TRRS' and are TRRS audio jacks used for split keyboard interconnect. The analyzer assigns them type 'ic' because their lib_id is from 'keebio:TRRS'. They should be typed as 'connector' since TRRS jacks are connectors not integrated circuits. This inflates the ic count (reported as 3: U1, U2, U3) when U1 (SeeeduinoXIAO) is the only actual IC.",
+      "created_from": "FND-00001952",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "equals",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001952-AST-04",
+      "description": "INCORRECT: The analyzer reports C1 and C2 in missing_footprint. However in the source schematic, C1 and C2 have value 'C_Polarized_US' with no footprint set (empty footprint field). This is a legitimate design issue (the designer left footprints blank for the bypass capacitors) so the missing_footprint report is accurate. However, the BOM entry shows value 'C_Polarized_US' which is the symbol name used as the value, suggesting the designer intended these as generic placeholders. The finding is technically correct but the value field being a symbol name (not a component value) is a secondary issue the analyzer does not flag.",
+      "created_from": "FND-00001952",
+      "check": {
+        "path": "statistics.missing_footprint",
+        "op": "min_count",
+        "value": 2
+      },
+      "aspirational": false
+    }
+  ]
+}

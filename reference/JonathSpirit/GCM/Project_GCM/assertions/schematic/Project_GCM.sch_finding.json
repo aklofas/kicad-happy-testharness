@@ -1,0 +1,50 @@
+{
+  "file_pattern": "Project_GCM.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000566",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000566-AST-01",
+      "description": "The top-level schematic has 9 sub-sheet references; the analyzer found and parsed all 10 files correctly, with accurate component counts (126 total), BOM grouping, and sheet_files list.",
+      "created_from": "FND-00000566",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000566-AST-02",
+      "description": "R1 (523k) top, R2 (1M) bottom, ratio 0.6566 = 1M/(523k+1M), midpoint connected to U2 SET pin. Values and connections are accurate.",
+      "created_from": "FND-00000566",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000566-AST-03",
+      "description": "SPI_MOSI, SPI_MISO, SPI_SCLK, SPI_CS nets are all present and individually classified correctly (data/clock/chip_select), but bus_analysis.spi returns []. The SPI detector failed to group them into a bus instance \u2014 likely because the signals connect through a hierarchical sheet boundary (connector sub-sheet) rather than to a single master IC.",
+      "created_from": "FND-00000566",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00000566-AST-04",
+      "description": "The power_rails list contains both '+3V3' and '+3.3V' as separate entries. These likely refer to the same physical rail but differ by naming convention used in different sub-sheets. The analyzer tracks both separately but does not issue a design_observation warning about possible unintentional rail isolation due to name mismatch.",
+      "created_from": "FND-00000566",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

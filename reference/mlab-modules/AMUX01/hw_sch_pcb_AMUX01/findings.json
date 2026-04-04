@@ -1,0 +1,41 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "hw_sch_pcb_AMUX01.kicad_sch.json",
+      "status": "promoted",
+      "summary": "pwr_flag_warnings fires for GND and +3V3 despite both having PWR_FLAG symbols connected; D1 (BZV55C-5.6V Zener) not detected as a protection device",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "The schematic has two power:PWR_FLAG symbols: one connected to the GND net (at 246.38,38.1 via wire to junction at 246.38,36.83) and one to the +3V3 net (at 246.38,25.4 via wire to junction at 246.38,26.67). The analyzer lists both PWR_FLAG symbols under a separate 'PWR_FLAG' power net entry in power_symbols rather than resolving them to their connected rails, then incorrectly warns that GND and +3V3 each lack a power_out driver or PWR_FLAG. Both warnings are false positives.",
+          "analyzer_section": "pwr_flag_warnings",
+          "check": {
+            "path": "pwr_flag_warnings",
+            "op": "eq",
+            "value": []
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "D1 is a Zener diode (BZV55C-5.6V, SMA package) with its cathode on the +3V3 rail and anode on GND. This is a standard overvoltage/reverse-polarity protection clamp for the power supply \u2014 especially relevant because the MAX4734 is rated for 1.6V\u20133.6V supply and D1 clamps overvoltage at 5.6V. The signal_analysis.protection_devices list is empty; D1 should be identified as a power supply protection device.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_value",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "mlab-modules/AMUX01",
+      "project": "hw_sch_pcb_AMUX01",
+      "created": "2026-03-23T18:43:50.230494+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000343"
+    }
+  ]
+}

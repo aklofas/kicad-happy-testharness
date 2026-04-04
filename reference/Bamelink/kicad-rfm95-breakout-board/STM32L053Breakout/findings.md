@@ -1,0 +1,46 @@
+# Findings: kicad-rfm95-breakout-board / STM32L053Breakout
+
+## FND-00002262: RFM95W-868S2 LoRa RF module not detected in rf_chains or rf_matching; SPI bus chip_select_count reported as 0 for both SPI bus entries, but RFM95 has NSS pin connected; AMS1117-3.3 LDO regulator co...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: schematic_kicad-rfm95-breakout-board_STM32L053Breakout.kicad_sch.json.json
+- **Created**: 2026-03-24
+
+### Correct
+- The AMS1117-3.3 (U100) is correctly classified as an LDO with input_rail 'VCC', output_rail '+3.3V', and estimated_vout 3.3V. The crystal Y500 (Crystal_GND24) is correctly detected in crystal_circuits with two 10pF load capacitors (C501, C502) and calculated effective load of 8.0pF. The STM32L053 is also detected as an ic_with_internal_regulator.
+
+### Incorrect
+- The SPI1 bus is correctly detected with U600 (RFM95W) and U500 (STM32L053) sharing MISO/MOSI/SCK nets. However, chip_select_count is 0 for both detected SPI bus records. The RFM95W has an NSS (chip select) pin that should be counted. The duplicate SPI bus entry ('bus_id': 'pin_U600') also suggests confusion in the bus grouping logic when the same module appears as both a master and peripheral candidate.
+  (design_analysis)
+
+### Missed
+- U600 is an RFM95W-868S2 LoRa RF transceiver module (868 MHz). Despite being the main distinguishing feature of this 'rfm95-breakout-board' design, rf_chains and rf_matching are both empty arrays. The module is connected via SPI1 to the STM32L053 MCU. The analyzer should at minimum flag the presence of an RF module component even if full chain analysis is not possible for integrated modules.
+  (signal_analysis)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00002263: Unrouted net 'unconnected-(J100-Pad6)' reports 8 identical pads (J100.6 x8) instead of distinct pad identifiers
+
+- **Status**: promoted
+- **Analyzer**: pcb
+- **Source**: pcb_kicad-rfm95-breakout-board_STM32L053Breakout.kicad_pcb.json.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- The connectivity section reports 1 unrouted net named 'unconnected-(J100-Pad6)' with 8 pads, all listed as 'J100.6'. This is a data integrity issue: a single pad cannot appear 8 times in the same net. J100 is a USB Micro-B connector with a 17-pad footprint. The repeated pad reference likely indicates a bug in how the PCB analyzer resolves pad net assignments for multi-pin pads or shield/GND pads on the USB connector footprint.
+  (connectivity)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---

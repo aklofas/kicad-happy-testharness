@@ -1,0 +1,94 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/Voron-Hardware/Klipper_Expander/KiCad/STM32_Klipper_Expander.sch",
+      "status": "confirmed",
+      "summary": "Klipper Expander - STM32F042 GPIO/PWM expander with 4 MOSFET outputs, good transistor detection but missing regulator",
+      "correct": [
+        {
+          "description": "4x IRLML6344TRPBF N-channel MOSFETs correctly identified with drain/source/gate nets and ground-referenced source"
+        },
+        {
+          "description": "Thermistor filter circuits detected: 2x RC low-pass (4.7K + 4.7uF, fc=7.2Hz) on T0/T1 channels - correct for NTC thermistor filtering"
+        },
+        {
+          "description": "Fuse detected on Vin input as protection device"
+        },
+        {
+          "description": "USB D+ ESD protection correctly flagged as absent"
+        },
+        {
+          "description": "Decoupling analysis shows +3V3 has 3 caps (4.9uF total) with bulk and bypass coverage"
+        },
+        {
+          "description": "STM32F042F6Px correctly identified as main IC"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Voltage divider detection false positive: R7 (100 ohm) / R11 (10K) with ratio 0.99 is actually a series resistor + pulldown on a PWM output, not a signal-conditioning divider",
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R7$"
+          }
+        },
+        {
+          "description": "NRST pin flagged as connected to Neopixel net - this is likely a net naming/mapping error in the legacy parser, NRST would not be intentionally connected to a Neopixel data line",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "MOSFET load_type reported as led for all 4 channels - these are general-purpose PWM outputs for fans/heaters/LEDs, not specifically LED loads",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        }
+      ],
+      "missed": [
+        {
+          "description": "AP2127K-3.3 LDO (U2) not detected as power regulator despite being present in BOM with correct value",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          }
+        },
+        {
+          "description": "No SWD debug interface detection despite SWDIO net being classified as debug",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Neopixel/WS2812 level-shifted output circuit not characterized",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Filter out voltage dividers where ratio > 0.95 (effectively just a pulldown) or flag them differently",
+        "Verify NRST net assignment in legacy parser - may be a pin mapping error",
+        "Improve power regulator detection for SOT-23-5 LDO packages like AP2127K"
+      ],
+      "related_issues": [
+        "KH-012"
+      ],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000075",
+      "repo": "VoronDesign/Voron-Hardware",
+      "project": "Klipper_Expander_KiCad_STM32_Klipper_Expander",
+      "created": "2026-03-14T07:23:03.727482+00:00"
+    }
+  ]
+}

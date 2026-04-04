@@ -1,0 +1,49 @@
+# Findings: CH32V_macropad / CH32V003_Macropad
+
+## FND-00000440: design_observations single_pin_nets count is 1 but two single-pin nets exist; R1 (1.5K) misclassified as series resistor on MCU_D+/MCU_D- differential pair; U1 (CH32V003 MCU) incorrectly credited a...
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: CH32V003_Macropad.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+- connectivity_issues.single_pin_nets lists two single-pin nets: SWCLK (J2 pin 1) and RST (U1 NRST). The SWCLK global label 'output' on J2 pin 1 connects to no other component in any schematic. However design_observations reports count=1 with only the RST net listed, missing SWCLK entirely. This internal inconsistency means the design_observations section undercounts the single-pin net problem.
+
+### Incorrect
+- R1 is a 1.5K resistor with pin 1 on VDD and pin 2 on the MCU_D- net. This is a USB Full Speed D- pull-up resistor (shunt from VDD to D-), used to signal device presence to the host. It is NOT an inline series impedance-matching resistor. The differential_pairs entry for MCU_D+/MCU_D- incorrectly lists R1 in series_resistors. A true series resistor would be in-line between the MCU and the bus (typically 22-33 ohm), not a 1.5K shunt from a power rail.
+  (design_analysis)
+- The MCU_D+/MCU_D- differential pair entry has esd_protection: [U1, U2]. U1 is the CH32V003 microcontroller — a general-purpose MCU, not a dedicated ESD protection device. Only U2 (CH334R USB hub, which has integrated TVS/ESD) qualifies as providing ESD protection on these lines. The analyzer appears to credit all ICs sharing the differential pair nets as ESD protection sources regardless of component type.
+  (design_analysis)
+
+### Missed
+(none)
+
+### Suggestions
+(none)
+
+---
+
+## FND-00000441: Decoupling analysis misses C7 and C8 bypass caps on CH334R internal LDO output (unnamed net); MCU_D- and MCU_D+ flagged as single-pin nets but are hierarchical labels connecting to the parent design
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: usb_hub.kicad_sch.json
+- **Created**: 2026-03-23
+
+### Correct
+(none)
+
+### Incorrect
+(none)
+
+### Missed
+- In usb_hub.kicad_sch, U2 (CH334R) pin 13 (VDD33_LDO, power_out) connects to an unnamed net (__unnamed_0) along with C7 (1uF) and C8 (10uF). These capacitors are bypass/decoupling caps for the CH334R's internal 3.3V LDO output. Because the net has no name, the decoupling_analysis only reports +5V and VBUS rails, completely omitting the VDD33_LDO bypass capacitors. The internal LDO output is a real power rail that should appear in decoupling analysis.
+  (signal_analysis)
+- The usb_hub.kicad_sch uses hierarchical_labels MCU_D+ and MCU_D- (shape: input) as sheet ports. When the hub schematic is analyzed in isolation these appear as single-pin nets with only U2 connections, producing spurious single_pin_nets entries in connectivity_issues and design_observations. These are valid inter-sheet signals, not floating nets. Similarly P0_IN_D+ and P0_IN_D- are hierarchical_labels that are also flagged as single-pin but represent upstream port connections through the hierarchy.
+  (connectivity_issues)
+
+### Suggestions
+(none)
+
+---

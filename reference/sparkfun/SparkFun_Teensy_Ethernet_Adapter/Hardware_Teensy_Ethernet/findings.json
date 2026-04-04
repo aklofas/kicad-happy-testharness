@@ -1,0 +1,123 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Teensy_Ethernet.kicad_sch",
+      "status": "promoted",
+      "summary": "Component counts and types are accurate for SparkFun Teensy Ethernet Adapter; TX+/TX-/RX+/RX- Ethernet magnetics signals misclassified as UART; Ethernet interface not detected despite B10601S 10BAS...",
+      "correct": [
+        {
+          "description": "The schematic correctly reports 21 total components: 3 capacitors, 4 resistors (75 ohm), 2 connectors (J1 SWD, J2 RJ45), 1 IC (U1 B10601S magnetics), 4 standoffs, 4 fiducials, 3 logos/graphics, 1 no-connect. BOM groupings match source schematic. Power rail GND-only is correct for an adapter board powered externally by the Teensy.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.total_components",
+            "op": "equals",
+            "value": 21
+          }
+        },
+        {
+          "description": "The signal_analysis correctly identifies four differential pairs: RD+/RD-, TD+/TD-, TX+/TX-, RX+/RX-. These correspond to the 10BASE-T magnetics module interface. The pairs share J1 and J2 with U1 as expected. The esd_protection attribution to U1 is reasonable since the magnetics provide galvanic isolation.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "Four RC low-pass filters are detected (R5, R6, R7, R8 each 75 ohm with C1 1nF, fc=2.12 MHz). Topologically correct: R7/R8 connect TXCT/RXCT pins to a node with C1, and R5/R6 connect unused RJ45 pairs (4,5 and 7,8) to the same center-tap node. While these are better described as Ethernet center-tap terminators than generic RC filters, the topology detection is valid.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 4
+          }
+        },
+        {
+          "description": "The subcircuits list correctly groups U1 (B10601S) with neighbors C2 (0.1uF TCT decoupling), C4 (0.1uF RCT decoupling), J1 (SWD/device-side connector), J2 (RJ45), R7 (75 ohm RXCT terminator), and R8 (75 ohm TXCT terminator). R5 and R6 (unused pair termination resistors) are not in the subcircuit which is acceptable.",
+          "analyzer_section": "subcircuits",
+          "check": {
+            "path": "subcircuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The bus_analysis.uart section detects TX+, TX-, RX+, RX- as UART signals. These are Ethernet magnetics signals from the B10601S 10BASE-T transformer module (TX and RX differential pairs at the line side). The pin names on U1 are explicitly 'TX+', 'TX-', 'RX+', 'RX-' and connect to an RJ45 connector (J2), not to any UART-capable device. This is a false positive triggered by the TX/RX net name pattern matching.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.bus_analysis.uart",
+            "op": "max_count",
+            "value": 0
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "ethernet_interfaces is empty ([]) even though U1 (B10601S) is a 10BASE-T Ethernet magnetics module with TX+, TX-, RX+, RX- (line-side differential pairs) and TD+, TD-, RD+, RD- (device-side connections to Teensy SWD header), plus TXCT/RXCT center-tap pins. The RJ45 connector J2 with TX+/TX-/RX+/RX- should trigger Ethernet interface detection.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "sparkfun/SparkFun_Teensy_Ethernet_Adapter",
+      "project": "Hardware_Teensy_Ethernet",
+      "created": "2026-03-24T01:09:28.412698+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001583"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Teensy_Ethernet.kicad_pcb",
+      "status": "new",
+      "summary": "PCB footprint count and layer configuration are accurate; PCB net count matches schematic net count (18 nets); Zone analysis correctly identifies GND copper fill and keepout zone",
+      "correct": [
+        {
+          "description": "36 footprints correctly enumerated: 21 schematic in_bom components + 1 on-board non-BOM item (G3 OSHW logo) + 14 kibuzzard decorative silkscreen items. 2-layer board (F.Cu, B.Cu) with 88 track segments, 10 vias, 2 zones (1 keepout, 1 GND fill on B.Cu). Board dimensions 39.37 x 29.21 mm. Routing complete with 0 unrouted nets.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.footprint_count",
+            "op": "equals",
+            "value": 36
+          }
+        },
+        {
+          "description": "The PCB reports 18 nets which precisely matches the schematic's 18 total_nets. Named nets include GND, RD+, RD-, TD+, TD-, TX+, TX-, RX+, RX-, LED, plus unnamed internal nets. Net count consistency between schematic and PCB is confirmed.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.net_count",
+            "op": "equals",
+            "value": 18
+          }
+        },
+        {
+          "description": "Two zones correctly identified: one keepout zone spanning both copper layers (net=0, unfilled, with no-via and no-pad restrictions), and one GND fill on B.Cu (filled, 1148 mm2 area). This matches what is visible in the source kicad_pcb file.",
+          "analyzer_section": "statistics",
+          "check": {
+            "path": "statistics.zone_count",
+            "op": "equals",
+            "value": 2
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "sparkfun/SparkFun_Teensy_Ethernet_Adapter",
+      "project": "Hardware_Teensy_Ethernet",
+      "created": "2026-03-24T01:09:28.412717+00:00",
+      "datasheets_used": [],
+      "id": "FND-00001584"
+    }
+  ]
+}

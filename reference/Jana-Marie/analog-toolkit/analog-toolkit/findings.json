@@ -1,0 +1,98 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "analog-toolkit.kicad_sch.json",
+      "status": "promoted",
+      "summary": "13 false positive RF matching networks on ADC input conditioning circuits (0-ohm series resistors + 10nF anti-aliasing caps)",
+      "correct": [
+        {
+          "type": "power_regulator",
+          "description": "U1 AP2204R-3.3 correctly identified as LDO with VBUS input and +3V3 output",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U1$"
+          }
+        },
+        {
+          "type": "protection_devices",
+          "description": "F1 fuse and U2 USBLC6-4 ESD protection correctly identified",
+          "analyzer_section": "signal_analysis.protection_devices",
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^F1$"
+          }
+        },
+        {
+          "type": "decoupling",
+          "description": "Decoupling analysis correct: +3V3 (4x caps, 5.0uF), VBUS (1x 4.7uF), +3.3VA (1x 100nF)",
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "type": "bus_protocols",
+          "description": "I2C bus detected with correct no-pull-up observation; UART TX/RX detected",
+          "analyzer_section": "design_analysis.bus_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "type": "statistics",
+          "description": "dnp_parts=1 but there are 13 DNP components (R5-R10, R17-R23). Counts BOM line items instead of component instances.",
+          "analyzer_section": "statistics.dnp_parts"
+        }
+      ],
+      "missed": [
+        {
+          "type": "rc_filters",
+          "description": "6 RC anti-aliasing filters on ADC inputs (R11-R16 series + C8-C13 shunt to GND). rc_filters array is empty.",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R11$"
+          }
+        },
+        {
+          "type": "lc_filters",
+          "description": "Ferrite bead FB1 between +3V3 and +3.3VA with C7 100nF forms analog supply filter. Not detected.",
+          "analyzer_section": "signal_analysis.lc_filters",
+          "check": {
+            "path": "signal_analysis.lc_filters",
+            "op": "contains_match",
+            "field": "inductor.ref",
+            "pattern": "^FB1$"
+          }
+        }
+      ],
+      "suggestions": [
+        "RF matching detector too aggressive: triggering on any resistor near a cap connected to an IC. Should require antenna-like components or RF-frequency indicators.",
+        "Fix dnp_parts to count component instances, not BOM line items.",
+        "RC filter detection should handle 0-ohm series resistors (still a valid RC topology).",
+        "Detect ferrite_bead + cap as analog supply filtering pattern."
+      ],
+      "should_become_assertion": true,
+      "related_issues": [],
+      "id": "FND-00000070",
+      "repo": "Jana-Marie/analog-toolkit",
+      "project": "analog-toolkit",
+      "created": "2026-03-13T20:28:15.034552+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

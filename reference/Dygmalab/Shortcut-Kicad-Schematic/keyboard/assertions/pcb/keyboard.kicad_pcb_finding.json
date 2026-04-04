@@ -1,0 +1,50 @@
+{
+  "file_pattern": "keyboard.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001354",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001354-AST-01",
+      "description": "2-layer board (F.Cu / B.Cu) with 1888 track segments, 141 vias, and 0 unrouted nets is consistent with a fully-routed 46-switch + 16-LED keyboard PCB. Two track widths (0.25mm for 1614 segments, 0.4mm for 274 segments) are appropriate for a keyboard. DFM correctly flags annular ring at 0.1mm (advanced process) and the oversized board dimension (triggered by the erroneous 2312mm width). Net count of 103 is reasonable for this design.",
+      "created_from": "FND-00001354",
+      "check": {
+        "path": "statistics.routing_complete",
+        "value": true,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001354-AST-02",
+      "description": "The PCB has 164 footprints: 46 diodes (D1\u2013D46), 30 SW-type + 4 S-type switches = 34 key positions, 16 WS2812B LEDs, 1 ATmega32U4, 1 USB connector, 2 16-pin inter-board connectors, 7 capacitors, 4 resistors, 1 resonator, 22 connectors/mounting holes, and misc. The 162 front-side vs 2 back-side split is consistent with this component placement. SMD count (88) vs THT count (75) is reasonable given the mixed through-hole key switches and SMD passives.",
+      "created_from": "FND-00001354",
+      "check": {
+        "path": "statistics.footprint_count",
+        "value": 164,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001354-AST-03",
+      "description": "INCORRECT: The analyzer reports board_width_mm=2312.294, but the true board outline (from Edge.Cuts lines only) spans approximately 140.6mm wide \u00d7 174.8mm tall. The height is correct. The width error arises because the bounding-box calculation includes footprint and track coordinates that extend far outside the Edge.Cuts boundary (the extreme X coordinates in the file reach \u22121060 to +1362mm, likely from off-board or misplaced elements), rather than restricting the measurement to Edge.Cuts geometry. This causes a ~16\u00d7 overestimate of board width and inflates the computed board area from ~245cm\u00b2 to ~4042cm\u00b2.",
+      "created_from": "FND-00001354",
+      "check": {
+        "path": "statistics.board_width_mm",
+        "value": 200.0,
+        "op": "max_count"
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00001354-AST-04",
+      "description": "INCORRECT: The dfm.violations list includes a board_size entry stating '2312.294x174.818mm exceeds 100\u00d7100mm'. This is a cascading error from the incorrect board_width_mm computation. The actual board is ~140.6\u00d7174.8mm, which does legitimately exceed 100\u00d7100mm for JLCPCB standard pricing but the extreme dimension (2312mm) is fictitious. The violation message is therefore misleading \u2014 it implies a board nearly 2.3 meters wide rather than a normal keyboard PCB. The annular ring violation (0.1mm requiring advanced process) is genuine.",
+      "created_from": "FND-00001354",
+      "check": {
+        "path": "dfm.violation_count",
+        "value": 2,
+        "op": "equals"
+      },
+      "aspirational": false
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "file_pattern": "bitaxeUltra.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-027-01",
+      "description": "KH-027: Q1/Q2 transistors present (not filtered by symbol name filter)",
+      "issue": "KH-027",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "components",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q[12]$"
+      }
+    },
+    {
+      "id": "BUGFIX-KH-029-01",
+      "description": "KH-029: CSD17311Q5 MPN populated via PARTNO field alias",
+      "issue": "KH-029",
+      "fix_type": "detection_fix",
+      "check": {
+        "path": "components",
+        "op": "contains_match",
+        "field": "mpn",
+        "pattern": "CSD17311"
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "file_pattern": "led-controller.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001082",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001082-AST-01",
+      "description": "U1 LM1117-3.3 receives 12V input and outputs 3.3V. With ESP32-WROOM-32 (240mA) + PCA9685BS (10mA) = 250mA, the dropout is 8.7V giving 2175mW dissipation. LM1117 in SOT-223 is typically rated 800-1500mW. The analyzer correctly identifies this as a thermal concern. Real design risk.",
+      "created_from": "FND-00001082",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "file_pattern": "lemon-pcb-swizzle_lemon-wired-swizzle.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000193",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000193-AST-01",
+      "description": "All 58 components correctly classified across 9 types",
+      "created_from": "FND-00000193",
+      "check": {
+        "path": "statistics.component_types",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000193-AST-02",
+      "description": "XC6206P332MR-G correctly detected as LDO feeding +3V3",
+      "created_from": "FND-00000193",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000193-AST-03",
+      "description": "WS2812B-2020 addressable LED detected",
+      "created_from": "FND-00000193",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000193-AST-04",
+      "description": "USB-C compliance: CC pulldowns pass, VBUS ESD/decoupling fail",
+      "created_from": "FND-00000193",
+      "check": {
+        "path": "usb_compliance",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000193-AST-05",
+      "description": "Dual USB-C split keyboard USB mux pattern not recognized",
+      "created_from": "FND-00000193",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    },
+    {
+      "id": "FND-00000193-AST-06",
+      "description": "VIK keyboard expansion bus not recognized",
+      "created_from": "FND-00000193",
+      "check": {
+        "path": "design_analysis.bus_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

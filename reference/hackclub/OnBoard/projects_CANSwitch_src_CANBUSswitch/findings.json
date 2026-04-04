@@ -1,0 +1,46 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/OnBoard/projects/CANSwitch/src/CANBUSswitch.kicad_sch",
+      "status": "confirmed",
+      "summary": "Passive CAN bus switch using 4PDT mechanical switch with termination resistors. No active electronics. Analyzer output is reasonable for this passive-only design.",
+      "correct": [
+        {
+          "description": "4PDT switch correctly identified as switch type"
+        },
+        {
+          "description": "2 resistors and 2 connectors correctly classified"
+        },
+        {
+          "description": "No power rails detected, correct for a passive switching circuit"
+        },
+        {
+          "description": "No bus protocols detected, which is technically correct since this is just a mechanical switch, not an active CAN transceiver"
+        }
+      ],
+      "incorrect": [],
+      "missed": [
+        {
+          "description": "The two resistors are likely 120 ohm CAN bus termination resistors. No observation about CAN termination is generated despite the project being named CANBUSswitch.",
+          "analyzer_section": "signal_analysis.design_observations",
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [
+        "Could infer from component placement and typical 120 ohm values that this is a CAN bus termination/switching board, though without labeled nets or a CAN transceiver the analyzer has limited information"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000097",
+      "repo": "hackclub/OnBoard",
+      "project": "projects_CANSwitch_src_CANBUSswitch",
+      "created": "2026-03-14T07:25:43.640871+00:00"
+    }
+  ]
+}

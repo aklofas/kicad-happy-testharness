@@ -1,0 +1,19 @@
+{
+  "file_pattern": "motoHUD.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002417",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002417-AST-01",
+      "description": "The design has two SPI buses: one to the M95320 EEPROM (detected) and one to an external LCD module via connector J9. The LCD SPI signals only appear on connector J9 pins with no SPI-capable IC, so the bus detector does not match them.",
+      "created_from": "FND-00002417",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "min_count",
+        "value": 2
+      },
+      "aspirational": true
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "repos/ESP32-DevKit-LiPo/HARDWARE/ESP32-DevKit-LiPo-Rev.D/ESP32-DevKit-Lipo_Rev_D.sch",
+      "status": "confirmed",
+      "summary": "OLIMEX ESP32 dev board with LiPo, CH340X USB-UART, and HX6211A LDO. Same empty power domains issue as C3 variant. Auto-program transistor circuit detected but missing relay to USB-UART bridge function.",
+      "correct": [
+        {
+          "description": "Component classification accurate - 50 components with ICs, transistors, diodes properly typed"
+        },
+        {
+          "description": "Power rails correctly identified: +3.3V, +5V, +5V_USB, VBAT, GND"
+        },
+        {
+          "description": "Two BJT auto-program circuits (Q2, Q3 BC817-40) correctly detected as transistor_circuits"
+        },
+        {
+          "description": "UART TX/RX on GPIO1/GPIO3 correctly detected"
+        },
+        {
+          "description": "BOM accurately lists CH340X USB-UART, HX6211A LDO, BL4054B charger, ESP32-WROOM-32D"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Power domains ic_power_rails and domain_groups completely empty despite 4 ICs present",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "All 4 subcircuits have empty neighbor lists",
+          "analyzer_section": "subcircuits"
+        },
+        {
+          "description": "TESTPAD components (D_Com1, GND1) misclassified as diodes in BOM",
+          "analyzer_section": "bom"
+        }
+      ],
+      "missed": [
+        {
+          "description": "HX6211A LDO regulator not detected in power_regulators",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "BL4054B LiPo charger circuit not analyzed",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "CH340X USB-UART bridge function not identified",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "BAT54C dual Schottky diode (D3) power OR-ing function not detected",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "No decoupling analysis despite capacitors present",
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "Auto-program circuit (Q2/Q3 DTR/RTS to GPIO0/EN) not linked to its USB-UART function",
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q2$"
+          }
+        }
+      ],
+      "suggestions": [
+        "Fix test pad / fiducial classification - TESTPAD should not be typed as diode",
+        "Same power domain detection issue as C3 variant - likely KiCad 5 legacy format parsing",
+        "Detect USB-UART bridge chips (CH340, CP210x, FT232) and their auto-program circuits"
+      ],
+      "related_issues": [],
+      "datasheets_used": [],
+      "should_become_assertion": false,
+      "id": "FND-00000121",
+      "repo": "OLIMEX/ESP32-DevKit-LiPo",
+      "project": "HARDWARE_ESP32-DevKit-LiPo-Rev.D_ESP32-DevKit-Lipo_Rev_D",
+      "created": "2026-03-14T07:50:42.095942+00:00"
+    }
+  ]
+}

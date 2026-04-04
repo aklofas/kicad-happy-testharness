@@ -1,0 +1,29 @@
+{
+  "file_pattern": "fileClockGenerator.sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00000567",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000567-AST-01",
+      "description": "fileClockGenerator.sch: 2 sheets parsed (itself + filePClockGenerator.sch child), 28 components, 1 oscillator (X1), 4 SN74LV393A binary counters, 6 CD74AC151 8:1 muxes, 1 74AHC273 register, 1 74AHC1G32 OR gate. Net classification for CLK_50MHZ, CLK_50dXXXMHZ divided clocks all labeled 'clock' correctly. Decoupling analysis finds 13 caps on +5V rail.",
+      "created_from": "FND-00000567",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00000567-AST-02",
+      "description": "U2 (LTC6994xS6-1) with R1/R2 voltage divider on SET pin and C4 on DIV pin forms a programmable delay for power-on reset sequencing (200ms noted in schematic). The signal_analysis has no 'timer_circuits' or 'delay_circuits' detector, so this notable functional block is invisible in the analysis output.",
+      "created_from": "FND-00000567",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    }
+  ]
+}

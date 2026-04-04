@@ -1,0 +1,90 @@
+{
+  "file_pattern": "ATAT1800.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001982",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001982-AST-01",
+      "description": "342 total components correctly identified: 101 matrix LEDs + 4 THT indicator LEDs = 105 LED total, 52 dual-diode SOT-23 packages for anti-ghosting, 11 ICs (STM32, MCP1725 LDO, 7x MPQ3326 LED drivers, PRTR5V0U2X ESD, 74LVC1G86 XOR). Power rails (+3V3, +5F, +5V, GND) correctly captured. All four power rails including the non-standard +5F (5V filtered for LED drivers via ferrite beads) are present.",
+      "created_from": "FND-00001982",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "equals",
+        "value": 342
+      }
+    },
+    {
+      "id": "FND-00001982-AST-02",
+      "description": "The key matrix detector correctly identified 6 row nets (ROW0-ROW5) and 19 column nets (COL0-COL18), with 101 switches and 101 anti-ghosting diodes on the matrix. SW102 (SW_SPDT slide switch for USB/BT mode select) is correctly excluded from the matrix count. The 1800 layout leaves some of the 6x19=114 positions unfilled, giving 101 actual keys.",
+      "created_from": "FND-00001982",
+      "check": {
+        "path": "signal_analysis.key_matrices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001982-AST-03",
+      "description": "U2 (MCP1725-3302E_SN) correctly identified with topology=LDO, input_rail=+5V, output_rail=+3V3. This is a fixed 3.3V LDO from Microchip that is correctly classified.",
+      "created_from": "FND-00001982",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001982-AST-04",
+      "description": "U3 (PRTR5V0U2X) correctly identified as an ESD IC protecting D+ and D- nets. USB compliance checks correctly flag CC1/CC2 5.1k pull-downs as passing, and VBUS decoupling as passing. The vbus_esd_protection=fail is correct \u2014 PRTR5V0U2X does not provide VBUS protection.",
+      "created_from": "FND-00001982",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "FND-00001982-AST-05",
+      "description": "Both SCL and SDA I2C buses correctly identified, with R13 (4.7k) and R14 (4.7k) pull-ups to +3V3 detected. The I2C bus connects U1 (STM32F072) to all 7 MPQ3326 LED driver ICs, which is correct for this keyboard design.",
+      "created_from": "FND-00001982",
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "FND-00001982-AST-06",
+      "description": "All 8 RC filters are valid: one PWRGD/NRST reset filter (R4+C1, 159Hz cutoff) and seven identical soft-start/enable RC networks (10k + 10uF, 1.59Hz) for the 7 MPQ3326 LED driver ICs. The very low cutoff frequencies are appropriate for slow power sequencing.",
+      "created_from": "FND-00001982",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "FND-00001982-AST-07",
+      "description": "INCORRECT: The PRTR5V0U2X (U3) protects both D+ and D-, as correctly captured in signal_analysis.protection_devices where protected_nets=[D+, D-]. However, the design_observation for USB net D- shows has_esd_protection=false while D+ correctly shows true. The lookup in usb_data observations fails to check the multi-net protected_nets field and only matches D+ by primary protected_net.",
+      "created_from": "FND-00001982",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001982-AST-08",
+      "description": "INCORRECT: S1-S7 have value 'MX_stab' and footprints like STAB_MX_6.25u, STAB_MX_2.75u, etc. These are PCB-mounted mechanical keyboard stabilizers (wire guides for long keycaps), not electrical switches. They have no electrical function beyond physical mounting. Classifying them as 'switch' inflates the switch count from 102 real keys to 109.",
+      "created_from": "FND-00001982",
+      "check": {
+        "path": "statistics.component_types.switch",
+        "op": "equals",
+        "value": 109
+      },
+      "aspirational": false
+    }
+  ]
+}

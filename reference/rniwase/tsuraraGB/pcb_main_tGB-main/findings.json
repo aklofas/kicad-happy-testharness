@@ -1,0 +1,64 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "tGB-main.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Game Boy clone (70 components). U4 regulator Vout estimated 1.659V but net labeled 3.3V (Vref assumption wrong). RC filter R11/C19 has output==ground anomaly. 2 regulators and 1 crystal correctly detected.",
+      "correct": [
+        {
+          "description": "2 regulators correctly detected",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
+        },
+        {
+          "description": "1 crystal correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U4 regulator Vout estimated 1.659V but net labeled 3.3V - Vref assumption wrong in feedback divider calculation",
+          "analyzer_section": "signal_analysis.power_regulators",
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U4$"
+          }
+        },
+        {
+          "description": "RC filter R11/C19 has output==ground anomaly",
+          "analyzer_section": "signal_analysis.rc_filters",
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R11$"
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Verify Vref assumptions against actual regulator datasheet",
+        "Flag RC filters where output net equals ground"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00000237",
+      "repo": "rniwase/tsuraraGB",
+      "project": "pcb_main_tGB-main",
+      "created": "2026-03-16T12:00:00.000000+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

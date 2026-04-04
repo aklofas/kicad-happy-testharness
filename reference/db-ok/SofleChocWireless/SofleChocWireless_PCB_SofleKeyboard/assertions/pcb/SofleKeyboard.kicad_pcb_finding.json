@@ -1,0 +1,39 @@
+{
+  "file_pattern": "SofleKeyboard.kicad_pcb",
+  "analyzer_type": "pcb",
+  "created_from": "FND-00001368",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001368-AST-01",
+      "description": "footprint_count=85 matches the schematic's total_components=85. copper_layers_used=2 is correct (2-layer board). via_count=418 matches the gerber's PTH via drill count of 418 (T1, 0.2997mm tool). routing_complete=true with unrouted_count=0. Board dimensions 143.37x111.75mm consistent across all outputs.",
+      "created_from": "FND-00001368",
+      "check": {
+        "path": "statistics.via_count",
+        "value": 418,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001368-AST-02",
+      "description": "The analyzer correctly identifies the annular ring violation: drill=0.3mm, computed annular_ring=0.05mm (below the 0.1mm advanced process minimum). Keyboard PCBs often use the smallest possible via drill to maximize routing space in the dense switch matrix, making this a genuinely tight design. The board_size violation (143x111mm > 100x100mm) is also correctly flagged.",
+      "created_from": "FND-00001368",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "value": "challenging",
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001368-AST-03",
+      "description": "INCORRECT: The thermal_pad_vias section lists all SW1-SW31 hotswap socket pads (e.g., SW1 pad 6 'col5', SW10 pad 5) and flags them as having 'adequacy=none' (no thermal vias). These are electrical hotswap retention/signal pads on Kailh Choc hotswap sockets, not thermal pads requiring via stitching for heat dissipation. The SK6812 Mini-E LED pads may have larger area, but the pads flagged (2.19x3.08mm to 2.21x2.88mm) are standard hotswap electrical pads. True thermal pads (e.g., on power ICs) would require different context \u2014 a keyboard hotswap socket carries no significant heat load.",
+      "created_from": "FND-00001368",
+      "check": {
+        "path": "thermal_pad_vias",
+        "value": true,
+        "op": "exists"
+      },
+      "aspirational": false
+    }
+  ]
+}

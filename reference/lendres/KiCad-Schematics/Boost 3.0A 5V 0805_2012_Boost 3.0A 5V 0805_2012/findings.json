@@ -1,0 +1,93 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Boost 3.0A 5V 0805_2012_Boost 3.0A 5V 0805_2012.sch.json",
+      "status": "promoted",
+      "summary": "All MPNs reported missing despite F6 'Manufacturer Part No.' fields being populated in the .sch file; GND net incorrectly contains U? VIN (pin 2) and SW (pin 8) pins; BATT+ net incorrectly contains...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Every component has MPNs stored in custom field F6 (e.g., VSSAF510-M3/H, MGV06056R8M-10, RK73H2ATTD1002F) but the analyzer shows mpn='' and all refs in missing_mpn. The KiCad 5 legacy parser is not extracting MPNs from non-standard field names.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Net tracing assigns U? pin 2 (VIN, power_in) to the GND net and pin 8 (SW) to GND; pin 1 (PGND) and pin 4 (COMP) appear in BATT+. These are definitively wrong \u2014 VIN is the supply input, not ground. The SS net label maps to FB pin (pin 6) and FB maps to AGND (pin 5), further indicating systematic pin-offset errors in KiCad 5 legacy net tracing.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "R? 30k and R? 10k form the standard adjustable boost regulator output voltage divider between BOOSTVOUT and GND with the midpoint at U? FB pin. voltage_dividers is empty. The power_regulators entry also has input_rail=null, missing the BATT+ input rail.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "lendres/KiCad-Schematics",
+      "project": "Boost 3.0A 5V 0805_2012_Boost 3.0A 5V 0805_2012",
+      "created": "2026-03-23T22:24:27.888547+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000701"
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Mono Amplifier PAM8302A_Mono Amplifier PAM8302A.sch.json",
+      "status": "new",
+      "summary": "Pin-to-net mapping is systematically wrong: ~SD label connects to IN+ pin, IN+ label connects to ~SD pin; R60/C25 falsely detected as 1.59 Hz low-pass RC filter; these are actually a pull-up and by...",
+      "correct": [],
+      "incorrect": [
+        {
+          "description": "Net '~SD' maps to U10 pin 3 (IN+) instead of pin 1 (~SD); net 'IN+' maps to U10 pin 1 (~SD) instead of pin 3 (IN+). Similarly POWIN net maps U10 pin 7 (GND/power_in) and GND net maps U10 pin 6 (VDD/power_in). This is the same systematic pin association error as the Boost schematic \u2014 nets are connected to the wrong IC pins in KiCad 5 legacy parsing.",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "The rc_filter detector identifies R60 (10k) and C25 (10uF) as a low-pass filter with 1.59 Hz cutoff. However, R60 is the ~SD shutdown pull-up resistor and C25 is the VDD bypass capacitor \u2014 they are not in a series-RC filter topology. The spurious topology match is caused by the pin-to-net mapping errors above, which place these components in a false RC path.",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "lendres/KiCad-Schematics",
+      "project": "Boost 3.0A 5V 0805_2012_Boost 3.0A 5V 0805_2012",
+      "created": "2026-03-23T22:24:27.888563+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000702"
+    },
+    {
+      "analyzer_type": "pcb",
+      "source_file": "Boost 3.0A 5V 0805_2012_Boost 3.0A 5V 0805_2012.kicad_pcb.json",
+      "status": "new",
+      "summary": "PCB files are empty placeholder stubs (version 4, single line); analyzer correctly returns all-zero outputs",
+      "correct": [
+        {
+          "description": "All eight .kicad_pcb files in this repo are one-line dummy files: '(kicad_pcb (version 4) (host kicad \"dummy file\") )'. The analyzer outputs footprint_count=0, track_segments=0, etc. \u2014 accurate for empty files. No false positives.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": false,
+      "repo": "lendres/KiCad-Schematics",
+      "project": "Boost 3.0A 5V 0805_2012_Boost 3.0A 5V 0805_2012",
+      "created": "2026-03-23T22:24:27.888566+00:00",
+      "datasheets_used": [],
+      "id": "FND-00000703"
+    }
+  ]
+}
