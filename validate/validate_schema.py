@@ -116,6 +116,112 @@ def scan_pcb_outputs(repos):
     return dict({k: dict(v) for k, v in inventory.items()}), file_count
 
 
+def scan_spice_outputs(repos):
+    """Scan SPICE outputs and build field inventory for simulation_results items.
+
+    Returns {section: {field_name: count}}.
+    """
+    inventory = defaultdict(lambda: defaultdict(int))
+    file_count = 0
+
+    for repo in repos:
+        repo_dir = OUTPUTS_DIR / "spice" / repo
+        if not repo_dir.exists():
+            continue
+        for f in repo_dir.glob("*.json"):
+            try:
+                data = json.loads(f.read_text())
+            except (json.JSONDecodeError, OSError):
+                continue
+
+            file_count += 1
+            for item in data.get("simulation_results", []):
+                if isinstance(item, dict):
+                    for key in item:
+                        inventory["simulation_results"][key] += 1
+
+    return dict({k: dict(v) for k, v in inventory.items()}), file_count
+
+
+def scan_emc_outputs(repos):
+    """Scan EMC outputs and build field inventory for findings and other sections.
+
+    Returns {section: {field_name: count}}.
+    """
+    inventory = defaultdict(lambda: defaultdict(int))
+    file_count = 0
+
+    for repo in repos:
+        repo_dir = OUTPUTS_DIR / "emc" / repo
+        if not repo_dir.exists():
+            continue
+        for f in repo_dir.glob("*.json"):
+            try:
+                data = json.loads(f.read_text())
+            except (json.JSONDecodeError, OSError):
+                continue
+
+            file_count += 1
+            for item in data.get("findings", []):
+                if isinstance(item, dict):
+                    for key in item:
+                        inventory["findings"][key] += 1
+            for item in data.get("per_net_scores", []):
+                if isinstance(item, dict):
+                    for key in item:
+                        inventory["per_net_scores"][key] += 1
+            for item in data.get("component_suggestions", []):
+                if isinstance(item, dict):
+                    for key in item:
+                        inventory["component_suggestions"][key] += 1
+
+    return dict({k: dict(v) for k, v in inventory.items()}), file_count
+
+
+# Gerber top-level dict sections to inventory field-by-field
+GERBER_DICT_SECTIONS = [
+    "statistics", "completeness", "alignment", "drill_classification",
+    "pad_summary", "component_analysis",
+]
+
+def scan_gerber_outputs(repos):
+    """Scan gerber outputs and build field inventory.
+
+    Returns {section: {field_name: count}}.
+    """
+    inventory = defaultdict(lambda: defaultdict(int))
+    file_count = 0
+
+    for repo in repos:
+        repo_dir = OUTPUTS_DIR / "gerber" / repo
+        if not repo_dir.exists():
+            continue
+        for f in repo_dir.glob("*.json"):
+            try:
+                data = json.loads(f.read_text())
+            except (json.JSONDecodeError, OSError):
+                continue
+
+            file_count += 1
+            # Dict sections: count which fields are present
+            for section in GERBER_DICT_SECTIONS:
+                sec_data = data.get(section, {})
+                if isinstance(sec_data, dict):
+                    for key in sec_data:
+                        inventory[section][key] += 1
+            # List sections: count fields in items
+            for item in data.get("gerbers", []):
+                if isinstance(item, dict):
+                    for key in item:
+                        inventory["gerbers"][key] += 1
+            for item in data.get("drills", []):
+                if isinstance(item, dict):
+                    for key in item:
+                        inventory["drills"][key] += 1
+
+    return dict({k: dict(v) for k, v in inventory.items()}), file_count
+
+
 def build_inventory(repos):
     """Build complete schema inventory from outputs.
 
@@ -123,16 +229,28 @@ def build_inventory(repos):
     """
     sch_inv, sch_count = scan_schematic_outputs(repos)
     pcb_inv, pcb_count = scan_pcb_outputs(repos)
+    spice_inv, spice_count = scan_spice_outputs(repos)
+    emc_inv, emc_count = scan_emc_outputs(repos)
+    gerber_inv, gerber_count = scan_gerber_outputs(repos)
 
     return {
         "metadata": {
             "schematic_files_scanned": sch_count,
             "pcb_files_scanned": pcb_count,
+            "spice_files_scanned": spice_count,
+            "emc_files_scanned": emc_count,
+            "gerber_files_scanned": gerber_count,
             "schematic_detectors": len(sch_inv),
             "pcb_sections": len(pcb_inv),
+            "spice_sections": len(spice_inv),
+            "emc_sections": len(emc_inv),
+            "gerber_sections": len(gerber_inv),
         },
         "schematic": sch_inv,
         "pcb": pcb_inv,
+        "spice": spice_inv,
+        "emc": emc_inv,
+        "gerber": gerber_inv,
     }
 
 
@@ -144,7 +262,7 @@ def diff_inventories(saved, current):
     """
     changes = []
 
-    for category in ("schematic", "pcb"):
+    for category in ("schematic", "pcb", "spice", "emc", "gerber"):
         saved_cat = saved.get(category, {})
         current_cat = current.get(category, {})
 
@@ -224,14 +342,20 @@ def cmd_scan(args):
         print(json.dumps(inventory, indent=2))
     else:
         meta = inventory["metadata"]
-        print(f"Scanned {meta['schematic_files_scanned']} schematic files, "
-              f"{meta['pcb_files_scanned']} PCB files")
-        print(f"Found {meta['schematic_detectors']} schematic detectors, "
-              f"{meta['pcb_sections']} PCB sections")
+        print(f"Scanned: {meta['schematic_files_scanned']} schematic, "
+              f"{meta['pcb_files_scanned']} PCB, "
+              f"{meta.get('spice_files_scanned', 0)} SPICE, "
+              f"{meta.get('emc_files_scanned', 0)} EMC, "
+              f"{meta.get('gerber_files_scanned', 0)} gerber files")
+        print(f"Found: {meta['schematic_detectors']} schematic detectors, "
+              f"{meta['pcb_sections']} PCB, "
+              f"{meta.get('spice_sections', 0)} SPICE, "
+              f"{meta.get('emc_sections', 0)} EMC, "
+              f"{meta.get('gerber_sections', 0)} gerber sections")
         print()
 
-        for category in ("schematic", "pcb"):
-            cat_data = inventory[category]
+        for category in ("schematic", "pcb", "spice", "emc", "gerber"):
+            cat_data = inventory.get(category, {})
             if not cat_data:
                 continue
             print(f"=== {category.upper()} ===")
@@ -272,10 +396,17 @@ def cmd_diff(args):
     else:
         saved_meta = saved.get("metadata", {})
         current_meta = current.get("metadata", {})
-        print(f"Saved:   {saved_meta.get('schematic_files_scanned', '?')} schematic, "
-              f"{saved_meta.get('pcb_files_scanned', '?')} PCB files")
-        print(f"Current: {current_meta.get('schematic_files_scanned', '?')} schematic, "
-              f"{current_meta.get('pcb_files_scanned', '?')} PCB files")
+        for label, meta in [("Saved", saved_meta), ("Current", current_meta)]:
+            parts = []
+            for key, name in [("schematic_files_scanned", "sch"),
+                              ("pcb_files_scanned", "pcb"),
+                              ("spice_files_scanned", "spice"),
+                              ("emc_files_scanned", "emc"),
+                              ("gerber_files_scanned", "gerber")]:
+                val = meta.get(key, 0)
+                if val:
+                    parts.append(f"{val} {name}")
+            print(f"{label:8s} {', '.join(parts)} files")
         print()
 
         if not changes:
@@ -341,14 +472,14 @@ def generate_seed_for_new_fields(changes):
         det = c["detector"]
         field = c["field"]
         cat = c["category"]
+        if cat == "schematic":
+            path = f"signal_analysis.{det}"
+        else:
+            path = det
         assertions.append({
             "id": f"DRIFT-{len(assertions)+1:04d}",
-            "description": f"New field {field} in {det} (detected by schema drift)",
-            "check": {
-                "path": f"signal_analysis.{det}" if cat == "schematic"
-                        else f"{det}",
-                "op": "exists",
-            },
+            "description": f"New field {field} in {cat}/{det} (detected by schema drift)",
+            "check": {"path": path, "op": "exists"},
             "aspirational": True,
         })
     return assertions
