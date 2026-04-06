@@ -142,9 +142,11 @@ def main():
     parser = argparse.ArgumentParser(
         description="Run SPICE simulations on schematic analysis outputs"
     )
-    parser.add_argument("--repo", help="Only simulate for this repo")
-    parser.add_argument("--jobs", "-j", type=int, default=4,
-                        help="Parallel jobs (default: 4)")
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from utils import add_repo_filter_args, resolve_repos, DEFAULT_JOBS
+    add_repo_filter_args(parser)
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Parallel jobs (default: {DEFAULT_JOBS})")
     parser.add_argument("--timeout", "-t", type=int, default=5,
                         help="Timeout per subcircuit simulation in seconds (default: 5)")
     parser.add_argument("--with-parasitics", action="store_true",
@@ -154,6 +156,8 @@ def main():
     parser.add_argument("--extra-args", type=str, default="",
                         help="Extra arguments to pass through to simulate_subcircuits.py "
                         "(e.g. '--monte-carlo 100 --mc-seed 42')")
+    parser.add_argument("--resume", action="store_true",
+                        help="Skip files that already have valid output JSON")
     args = parser.parse_args()
 
     # Resolve paths
@@ -190,10 +194,16 @@ def main():
         sys.exit(1)
 
     # Find schematic outputs
-    inputs = find_schematic_outputs(args.repo)
+    repo_list = resolve_repos(args)
+    if repo_list:
+        inputs = []
+        for rn in repo_list:
+            inputs.extend(find_schematic_outputs(rn))
+    else:
+        inputs = find_schematic_outputs(None)
     if not inputs:
-        if args.repo:
-            print(f"No schematic outputs found for repo '{args.repo}'", file=sys.stderr)
+        if repo_list:
+            print(f"No schematic outputs found for specified repos", file=sys.stderr)
         else:
             print("No schematic outputs found. Run run/run_schematic.py first.", file=sys.stderr)
         sys.exit(1)
@@ -225,11 +235,24 @@ def main():
     total_files = 0
     files_with_sims = 0
     errors = 0
+    skipped = 0
     type_counts = {}
     timings = []
     t_start = time.time()
 
     parasitics_extracted = 0
+
+    def _should_skip(outfile):
+        """Check if output file exists and is valid JSON (for --resume)."""
+        if not args.resume:
+            return False
+        if not outfile.exists() or outfile.stat().st_size < 3:
+            return False
+        try:
+            json.loads(outfile.read_text())
+            return True
+        except (json.JSONDecodeError, OSError):
+            return False
 
     def process_one(input_json):
         nonlocal parasitics_extracted
@@ -238,6 +261,10 @@ def main():
         out_dir = spice_out_dir / repo_name
         out_dir.mkdir(parents=True, exist_ok=True)
         output_json = out_dir / input_json.name
+
+        # --resume: skip if valid output already exists
+        if _should_skip(output_json):
+            return input_json, "SKIPPED", None, output_json, 0.0
 
         # Extract parasitics from matching PCB output if --with-parasitics
         parasitics_json = None
@@ -275,9 +302,14 @@ def main():
     results_list.sort(key=lambda x: x[0])
 
     for i, (input_json, returncode, summary, output_json, elapsed) in results_list:
+        rel = f"{input_json.parent.name}/{input_json.name}"
+
+        if returncode == "SKIPPED":
+            skipped += 1
+            continue
+
         timings.append((f"{input_json.parent.name}/{input_json.name}", elapsed))
         total_files += 1
-        rel = f"{input_json.parent.name}/{input_json.name}"
 
         if returncode != 0 or summary is None:
             errors += 1
@@ -327,6 +359,8 @@ def main():
     print(title)
     print(f"{'='*60}")
     print(f"Schematic files processed:  {total_files}")
+    if skipped:
+        print(f"Skipped (--resume):         {skipped}")
     if args.with_parasitics:
         print(f"Parasitics extracted:       {parasitics_extracted}")
     print(f"Files with simulations:     {files_with_sims}")

@@ -45,7 +45,9 @@ python3 run/run_emc.py --jobs 8                 # if emc affected
 ```
 
 Add `--repo {repo}` to test a single repo first before full corpus.
+Add `--cross-section quick_200` to test a balanced 100-repo subset.
 Add `--validate` to check output JSON structure.
+All tools auto-parallelize (default `--jobs` = cpu count).
 
 ### 1c. Run assertions
 

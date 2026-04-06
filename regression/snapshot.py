@@ -17,6 +17,7 @@ import os
 import shutil
 import subprocess
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -25,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _differ import extract_manifest_entry
 from utils import (
     HARNESS_DIR, OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
+    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
     list_repos, discover_projects, data_dir, list_projects_in_data,
     project_prefix, filter_project_outputs,
 )
@@ -158,10 +160,17 @@ def delete_snapshot(repo_name):
     print(f"Deleted baselines for {deleted} project(s) in {repo_name}")
 
 
+def _snapshot_worker(repo_name):
+    """Worker function for parallel snapshot creation. Returns (repo, count)."""
+    return repo_name, create_snapshot(repo_name)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Manage per-project baseline snapshots")
-    parser.add_argument("--repo", help="Snapshot a single repo")
+    add_repo_filter_args(parser)
     parser.add_argument("--all", action="store_true", help="Snapshot all repos with outputs")
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Number of parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--list", action="store_true", help="List all baselines")
     parser.add_argument("--delete", metavar="REPO", help="Delete a repo's baselines")
     args = parser.parse_args()
@@ -174,8 +183,9 @@ def main():
         delete_snapshot(args.delete)
         return
 
-    if args.repo:
-        repos = [args.repo]
+    resolved = resolve_repos(args)
+    if resolved is not None:
+        repos = resolved
     elif args.all:
         repos = list_repos()
     else:
@@ -186,10 +196,21 @@ def main():
         print("Error: No analyzer outputs found. Run the analyzers first.")
         sys.exit(1)
 
+    jobs = args.jobs
     print("=== Creating baseline snapshots ===")
+    if jobs > 1 and len(repos) > 1:
+        print(f"Jobs: {jobs}")
+
     total = 0
-    for repo in repos:
-        total += create_snapshot(repo)
+    if jobs <= 1 or len(repos) <= 1:
+        for repo in repos:
+            total += create_snapshot(repo)
+    else:
+        with ProcessPoolExecutor(max_workers=jobs) as pool:
+            futures = {pool.submit(_snapshot_worker, repo): repo for repo in repos}
+            for future in as_completed(futures):
+                _repo, count = future.result()
+                total += count
 
     print(f"\n{total} project baseline(s) created")
 

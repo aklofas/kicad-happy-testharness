@@ -11,7 +11,8 @@ Checks:
 
 Usage:
     python3 validate/cross_analyzer.py
-    python3 validate/cross_analyzer.py --repo OpenMower
+    python3 validate/cross_analyzer.py --repo owner/repo
+    python3 validate/cross_analyzer.py --cross-section smoke --jobs 16
     python3 validate/cross_analyzer.py --summary
     python3 validate/cross_analyzer.py --json
 """
@@ -19,10 +20,11 @@ Usage:
 import argparse
 import json
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import OUTPUTS_DIR
+from utils import OUTPUTS_DIR, DEFAULT_JOBS, add_repo_filter_args, resolve_repos
 
 
 # ---------------------------------------------------------------------------
@@ -239,62 +241,107 @@ def cross_validate_schematic_spice(sch_data, spice_data):
 # Main
 # ---------------------------------------------------------------------------
 
+def _cross_validate_repo(repo):
+    """Cross-validate all paired outputs for a single repo.
+
+    Returns (results_list, match_count, mismatch_count, info_count).
+    Picklable top-level function for ProcessPoolExecutor.
+    """
+    pairs = find_paired_outputs(repo)
+    results = []
+    match = mismatch = info = 0
+
+    for pair in pairs:
+        sch = _load(pair["schematic"])
+        pcb = _load(pair["pcb"])
+        emc = _load(pair["emc"])
+        spice = _load(pair["spice"])
+
+        checks = []
+
+        if sch and pcb:
+            checks.extend(cross_validate_schematic_pcb(sch, pcb))
+        if pcb and emc:
+            checks.extend(cross_validate_pcb_emc(pcb, emc))
+        if sch and spice:
+            checks.extend(cross_validate_schematic_spice(sch, spice))
+
+        for c in checks:
+            c["repo"] = repo
+            c["file"] = pair["stem"]
+            if c["status"] == "match":
+                match += 1
+            elif c["status"] == "mismatch":
+                mismatch += 1
+            else:
+                info += 1
+
+        results.extend(checks)
+
+    return results, match, mismatch, info
+
+
+def _discover_output_repos():
+    """List repos that have schematic outputs (owner/repo format)."""
+    sch_dir = OUTPUTS_DIR / "schematic"
+    if not sch_dir.exists():
+        return []
+    repos = []
+    for owner_dir in sorted(sch_dir.iterdir()):
+        if not owner_dir.is_dir() or owner_dir.name.startswith("_"):
+            continue
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if repo_dir.is_dir():
+                repos.append(f"{owner_dir.name}/{repo_dir.name}")
+    return repos
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Cross-analyzer consistency checks")
-    parser.add_argument("--repo", help="Only validate this repo")
+    add_repo_filter_args(parser)
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--summary", action="store_true",
                         help="Only print summary counts")
     args = parser.parse_args()
 
     # Find repos
-    sch_dir = OUTPUTS_DIR / "schematic"
-    if not sch_dir.exists():
+    repos = resolve_repos(args)
+    if repos is None:
+        repos = _discover_output_repos()
+
+    if not repos:
         print("No schematic outputs found", file=sys.stderr)
         sys.exit(1)
-
-    repos = []
-    if args.repo:
-        repos = [args.repo]
-    else:
-        repos = sorted(d.name for d in sch_dir.iterdir() if d.is_dir())
 
     all_results = []
     total_checks = 0
     total_match = 0
     total_mismatch = 0
     total_info = 0
+    jobs = args.jobs
 
-    for repo in repos:
-        pairs = find_paired_outputs(repo)
-        for pair in pairs:
-            sch = _load(pair["schematic"])
-            pcb = _load(pair["pcb"])
-            emc = _load(pair["emc"])
-            spice = _load(pair["spice"])
-
-            checks = []
-
-            if sch and pcb:
-                checks.extend(cross_validate_schematic_pcb(sch, pcb))
-            if pcb and emc:
-                checks.extend(cross_validate_pcb_emc(pcb, emc))
-            if sch and spice:
-                checks.extend(cross_validate_schematic_spice(sch, spice))
-
-            for c in checks:
-                c["repo"] = repo
-                c["file"] = pair["stem"]
-                total_checks += 1
-                if c["status"] == "match":
-                    total_match += 1
-                elif c["status"] == "mismatch":
-                    total_mismatch += 1
-                else:
-                    total_info += 1
-
-            all_results.extend(checks)
+    if jobs > 1 and len(repos) > 1:
+        with ProcessPoolExecutor(max_workers=min(jobs, len(repos))) as pool:
+            futures = {pool.submit(_cross_validate_repo, repo): repo
+                       for repo in repos}
+            for future in as_completed(futures):
+                results, match, mismatch, info = future.result()
+                all_results.extend(results)
+                total_match += match
+                total_mismatch += mismatch
+                total_info += info
+                total_checks += match + mismatch + info
+    else:
+        for repo in repos:
+            results, match, mismatch, info = _cross_validate_repo(repo)
+            all_results.extend(results)
+            total_match += match
+            total_mismatch += mismatch
+            total_info += info
+            total_checks += match + mismatch + info
 
     if args.json:
         json.dump({

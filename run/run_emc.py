@@ -130,9 +130,11 @@ def main():
     parser = argparse.ArgumentParser(
         description="Run EMC pre-compliance analysis on schematic+PCB outputs"
     )
-    parser.add_argument("--repo", help="Only analyze for this repo")
-    parser.add_argument("--jobs", "-j", type=int, default=8,
-                        help="Parallel jobs (default: 8)")
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from utils import add_repo_filter_args, resolve_repos, DEFAULT_JOBS
+    add_repo_filter_args(parser)
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Parallel jobs (default: {DEFAULT_JOBS})")
     parser.add_argument("--standard", default="fcc-class-b",
                         choices=["fcc-class-b", "fcc-class-a",
                                  "cispr-class-b", "cispr-class-a",
@@ -143,6 +145,8 @@ def main():
     parser.add_argument("--spice-enhanced", action="store_true",
                         help="Enable SPICE-verified PDN impedance and EMI "
                         "filter checks (requires ngspice)")
+    parser.add_argument("--resume", action="store_true",
+                        help="Skip files that already have valid output JSON")
     args = parser.parse_args()
 
     # Resolve paths
@@ -154,10 +158,16 @@ def main():
         sys.exit(1)
 
     # Find schematic outputs
-    inputs = find_schematic_outputs(args.repo)
+    repo_list = resolve_repos(args)
+    if repo_list:
+        inputs = []
+        for rn in repo_list:
+            inputs.extend(find_schematic_outputs(rn))
+    else:
+        inputs = find_schematic_outputs(None)
     if not inputs:
-        if args.repo:
-            print(f"No schematic outputs found for repo '{args.repo}'",
+        if repo_list:
+            print(f"No schematic outputs found for specified repos",
                   file=sys.stderr)
         else:
             print("No schematic outputs found. Run run/run_schematic.py first.",
@@ -180,6 +190,7 @@ def main():
     # Aggregate stats
     total_files = 0
     errors = 0
+    skipped = 0
     total_findings = 0
     severity_counts = {"CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 0, "INFO": 0}
     category_counts = {}
@@ -188,11 +199,27 @@ def main():
     timings = []
     t_start = time.time()
 
+    def _should_skip(outfile):
+        """Check if output file exists and is valid JSON (for --resume)."""
+        if not args.resume:
+            return False
+        if not outfile.exists() or outfile.stat().st_size < 3:
+            return False
+        try:
+            json.loads(outfile.read_text())
+            return True
+        except (json.JSONDecodeError, OSError):
+            return False
+
     def process_one(input_json):
         repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
         out_dir = emc_out_dir / repo_name
         out_dir.mkdir(parents=True, exist_ok=True)
         output_json = out_dir / input_json.name
+
+        # --resume: skip if valid output already exists
+        if _should_skip(output_json):
+            return input_json, "SKIPPED", None, output_json, None, 0.0
 
         pcb_json = find_pcb_output(input_json)
         returncode, summary, elapsed = run_one_emc(
@@ -218,9 +245,14 @@ def main():
     results_list.sort(key=lambda x: x[0])
 
     for i, (input_json, returncode, summary, output_json, had_pcb, elapsed) in results_list:
+        rel = f"{input_json.parent.name}/{input_json.name}"
+
+        if returncode == "SKIPPED":
+            skipped += 1
+            continue
+
         timings.append((f"{input_json.parent.name}/{input_json.name}", elapsed))
         total_files += 1
-        rel = f"{input_json.parent.name}/{input_json.name}"
 
         if returncode != 0 and returncode is not None:
             errors += 1
@@ -273,6 +305,8 @@ def main():
     print(f"EMC Analysis Summary")
     print(f"{'='*60}")
     print(f"Files processed:            {total_files}")
+    if skipped:
+        print(f"Skipped (--resume):         {skipped}")
     print(f"Files with PCB paired:      {paired_count}")
     print(f"Files with findings:        {files_with_findings}")
     print(f"Script errors:              {errors}")

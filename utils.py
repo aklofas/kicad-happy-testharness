@@ -26,6 +26,11 @@ GIT_TIMEOUT = 60
 TEST_TIMEOUT = 120
 INTEGRATION_TEST_TIMEOUT = 600
 
+# Default parallelism — use all available CPUs for max throughput
+DEFAULT_JOBS = os.cpu_count() or 4
+
+CROSS_SECTIONS_FILE = HARNESS_DIR / "reference" / "cross_sections.json"
+
 
 def project_prefix(project_path: str) -> str:
     """Convert a project path to a filename prefix (e.g., 'sub/dir' → 'sub_dir_')."""
@@ -129,6 +134,72 @@ def list_repos():
             if repo_dir.is_dir() and not repo_dir.name.startswith("."):
                 repos.append(f"{owner_dir.name}/{repo_dir.name}")
     return repos
+
+
+def load_cross_section(name):
+    """Load a named cross-section from reference/cross_sections.json.
+
+    Returns a list of repo name strings (owner/repo).
+    For the "full" section (repos=null), returns list_repos().
+    """
+    if not CROSS_SECTIONS_FILE.exists():
+        print(f"Error: {CROSS_SECTIONS_FILE} not found. "
+              "Run: python3 generate_cross_sections.py", file=sys.stderr)
+        sys.exit(1)
+    data = json.loads(CROSS_SECTIONS_FILE.read_text())
+    sections = data.get("sections", {})
+    if name not in sections:
+        available = ", ".join(sorted(sections.keys()))
+        print(f"Error: cross-section '{name}' not found. "
+              f"Available: {available}", file=sys.stderr)
+        sys.exit(1)
+    repos = sections[name].get("repos")
+    if repos is None:
+        return list_repos()
+    return repos
+
+
+def add_repo_filter_args(parser):
+    """Add --repo, --cross-section, and --repo-list to an argparse parser.
+
+    These are mutually exclusive options for selecting which repos to process.
+    """
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--repo", help="Process only this repo (owner/repo)")
+    group.add_argument("--cross-section",
+                       help="Process repos in a named cross-section "
+                            "(from reference/cross_sections.json)")
+    group.add_argument("--repo-list",
+                       help="Process repos listed in a file (one per line)")
+    return group
+
+
+def resolve_repos(args):
+    """Resolve the repo list from parsed args.
+
+    Returns a list of repo names, or None (meaning all repos).
+    Uses --repo, --cross-section, or --repo-list from add_repo_filter_args().
+    """
+    repo = getattr(args, "repo", None)
+    cross_section = getattr(args, "cross_section", None)
+    repo_list = getattr(args, "repo_list", None)
+
+    if repo:
+        return [repo]
+    if cross_section:
+        return load_cross_section(cross_section)
+    if repo_list:
+        path = Path(repo_list)
+        if not path.exists():
+            print(f"Error: {path} not found", file=sys.stderr)
+            sys.exit(1)
+        repos = []
+        for line in path.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#"):
+                repos.append(line)
+        return repos
+    return None
 
 
 def resolve_kicad_happy_dir():
@@ -370,13 +441,15 @@ def run_analyzer(config, args=None):
         parser = _argparse.ArgumentParser(
             description=f"Run {config['type_name']} analysis"
         )
-        parser.add_argument("--repo", help=f"Only analyze {config['type_name']}s for this repo")
-        parser.add_argument("--jobs", "-j", type=int, default=1,
-                            help="Number of parallel analyzer processes (default: 1)")
+        add_repo_filter_args(parser)
+        parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                            help=f"Number of parallel analyzer processes (default: {DEFAULT_JOBS})")
         parser.add_argument("--validate", action="store_true",
                             help="Validate output JSON structure after each run")
         parser.add_argument("--json", action="store_true",
                             help="Print JSON summary line at end of output")
+        parser.add_argument("--resume", action="store_true",
+                            help="Skip files that already have valid output JSON")
         args = parser.parse_args()
 
     kicad_happy = resolve_kicad_happy_dir()
@@ -394,10 +467,15 @@ def run_analyzer(config, args=None):
 
     files = [line.strip() for line in manifest.read_text().splitlines() if line.strip()]
 
-    if args.repo:
-        files = filter_manifest_by_repo(files, args.repo)
+    repo_list = resolve_repos(args)
+    if repo_list:
+        filtered = []
+        for rn in repo_list:
+            filtered.extend(filter_manifest_by_repo(files, rn))
+        files = filtered
         if not files:
-            print(f"No {config['type_name']}s found for repo '{args.repo}'", file=sys.stderr)
+            label = repo_list[0] if len(repo_list) == 1 else f"{len(repo_list)} repos"
+            print(f"No {config['type_name']}s found for {label}", file=sys.stderr)
             sys.exit(1)
 
     type_name = config["type_name"]
@@ -429,6 +507,20 @@ def run_analyzer(config, args=None):
         return relpath, outfile, errfile
 
     do_validate = getattr(args, "validate", False)
+    do_resume = getattr(args, "resume", False)
+    skipped = 0
+
+    def _should_skip(outfile):
+        """Check if output file exists and is valid JSON (for --resume)."""
+        if not do_resume:
+            return False
+        if not outfile.exists() or outfile.stat().st_size < 3:
+            return False
+        try:
+            json.loads(outfile.read_text())
+            return True
+        except (json.JSONDecodeError, OSError):
+            return False
 
     def _format_result(i, relpath, returncode, outfile):
         if returncode == 0:
@@ -454,6 +546,9 @@ def run_analyzer(config, args=None):
     if jobs <= 1:
         for i, file_path in enumerate(files, 1):
             relpath, outfile, errfile = _prepare(file_path)
+            if _should_skip(outfile):
+                skipped += 1
+                continue
             returncode, _, elapsed = _run_one(analyzer, file_path, outfile, errfile, extra_args)
             timings.append((relpath, elapsed))
             ok, msg = _format_result(i, relpath, returncode, outfile)
@@ -468,6 +563,9 @@ def run_analyzer(config, args=None):
         with ThreadPoolExecutor(max_workers=jobs) as pool:
             for i, file_path in enumerate(files, 1):
                 relpath, outfile, errfile = _prepare(file_path)
+                if _should_skip(outfile):
+                    skipped += 1
+                    continue
                 future = pool.submit(_run_one, analyzer, file_path, outfile, errfile, extra_args)
                 tasks[future] = (i, relpath, outfile)
             for future in as_completed(tasks):
@@ -490,6 +588,8 @@ def run_analyzer(config, args=None):
     print(f"Total: {total}")
     print(f"Pass:  {passed}")
     print(f"Fail:  {failed}")
+    if skipped:
+        print(f"Skip:  {skipped} (existing output, --resume)")
     if total > 0:
         print(f"Rate:  {passed * 100 / total:.1f}%")
     print(f"Time:  {total_elapsed:.1f}s total, {avg_elapsed:.2f}s avg per file")

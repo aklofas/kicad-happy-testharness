@@ -18,11 +18,13 @@ import argparse
 import json
 import re
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
+    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
     discover_projects, data_dir, list_repos,
     project_prefix, filter_project_outputs,
 )
@@ -453,12 +455,19 @@ def generate_for_repo(repo_name, atype, strict, min_components,
     return total_files, total_assertions, skipped
 
 
+def _structural_one_repo(repo, atype, strict, min_components, dry_run):
+    """Worker function for parallel structural seeding. Must be top-level for pickling."""
+    return generate_for_repo(repo, atype, strict, min_components, dry_run)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Generate structural assertions from signal analysis")
-    parser.add_argument("--repo", help="Generate for one repo")
+    group = add_repo_filter_args(parser)
     parser.add_argument("--all", action="store_true",
                         help="Generate for all repos")
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Number of parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--type", choices=ANALYZER_TYPES,
                         default="schematic",
                         help="Analyzer type (default: schematic)")
@@ -474,21 +483,35 @@ def main():
 
     strict = not args.tolerant
 
-    if args.repo:
-        repos = [args.repo]
-    elif args.all:
-        repos = list_repos()
-    else:
-        parser.print_help()
-        sys.exit(1)
+    repos = resolve_repos(args)
+    if repos is None:
+        if args.all:
+            repos = list_repos()
+        else:
+            parser.print_help()
+            sys.exit(1)
 
+    jobs = args.jobs
     grand_files = grand_assertions = grand_skipped = 0
-    for repo in repos:
-        files, assertions, skipped = generate_for_repo(
-            repo, args.type, strict, args.min_components, args.dry_run)
-        grand_files += files
-        grand_assertions += assertions
-        grand_skipped += skipped
+
+    if jobs > 1 and len(repos) > 1:
+        with ProcessPoolExecutor(max_workers=min(jobs, len(repos))) as pool:
+            futures = {pool.submit(_structural_one_repo, repo, args.type,
+                                   strict, args.min_components,
+                                   args.dry_run): repo
+                       for repo in repos}
+            for future in as_completed(futures):
+                files, assertions, skipped = future.result()
+                grand_files += files
+                grand_assertions += assertions
+                grand_skipped += skipped
+    else:
+        for repo in repos:
+            files, assertions, skipped = generate_for_repo(
+                repo, args.type, strict, args.min_components, args.dry_run)
+            grand_files += files
+            grand_assertions += assertions
+            grand_skipped += skipped
 
     print(f"\n{'[DRY RUN] ' if args.dry_run else ''}"
           f"Generated {grand_assertions} structural assertions "

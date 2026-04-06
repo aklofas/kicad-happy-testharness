@@ -6,9 +6,9 @@ assertion catches each mutation. Measures assertion catch rate — if a mutation
 goes undetected, the assertions covering that area are too weak.
 
 Usage:
-    python3 validate/mutation_test.py --repo ESP32-EVB --type schematic
-    python3 validate/mutation_test.py --repo ESP32-EVB --type schematic --mutations 100
-    python3 validate/mutation_test.py --repo ESP32-EVB --type schematic --seed 42
+    python3 validate/mutation_test.py --repo owner/repo --type schematic
+    python3 validate/mutation_test.py --repo owner/repo --type schematic --mutations 100
+    python3 validate/mutation_test.py --cross-section smoke --type schematic --jobs 16
 """
 
 import argparse
@@ -17,13 +17,15 @@ import json
 import math
 import random
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "regression"))
 from checks import evaluate_assertion, load_assertions
 from run_checks import find_output_file
-from utils import OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES, resolve_path
+from utils import (OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES, resolve_path,
+                   DEFAULT_JOBS, load_cross_section)
 
 
 # ---------------------------------------------------------------------------
@@ -264,27 +266,17 @@ def run_mutation_test(original_data, assertions, mutations):
 # Main
 # ---------------------------------------------------------------------------
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Mutation testing for assertion effectiveness")
-    parser.add_argument("--repo", required=True, help="Repo to test")
-    parser.add_argument("--type", required=True, choices=ANALYZER_TYPES,
-                        help="Analyzer type")
-    parser.add_argument("--mutations", "-n", type=int, default=50,
-                        help="Number of mutations to generate (default: 50)")
-    parser.add_argument("--seed", type=int, default=42,
-                        help="Random seed for reproducibility")
-    parser.add_argument("--json", action="store_true", help="JSON output")
-    args = parser.parse_args()
+def _mutation_test_one_repo(repo, analyzer_type, num_mutations, seed):
+    """Run mutation testing for a single repo. Picklable top-level worker.
 
-    # Load assertions for the repo/type
+    Returns (repo, results_dict) where results_dict has total/caught/missed/by_type/missed_details,
+    or (repo, None) if no mutations could be generated.
+    """
     assertion_sets = load_assertions(
-        DATA_DIR, repo_name=args.repo, analyzer_type=args.type)
+        DATA_DIR, repo_name=repo, analyzer_type=analyzer_type)
     if not assertion_sets:
-        print(f"No assertions found for {args.repo}/{args.type}", file=sys.stderr)
-        sys.exit(1)
+        return repo, None
 
-    # Find matching output files and run mutations
     total_results = {
         "total": 0, "caught": 0, "missed": 0,
         "by_type": {}, "missed_details": [],
@@ -298,7 +290,7 @@ def main():
             continue
 
         output_file = find_output_file(
-            file_pattern, args.repo, project_path, args.type)
+            file_pattern, repo, project_path, analyzer_type)
         if not output_file:
             continue
 
@@ -313,7 +305,7 @@ def main():
             if other_aset.get("file_pattern") == file_pattern:
                 all_assertions.extend(other_aset.get("assertions", []))
 
-        mutations = generate_mutations(data, args.mutations, seed=args.seed)
+        mutations = generate_mutations(data, num_mutations, seed=seed)
         if not mutations:
             continue
 
@@ -331,22 +323,110 @@ def main():
         break  # Only test the first matching output to avoid double-counting
 
     if total_results["total"] == 0:
-        print(f"No mutations generated for {args.repo}/{args.type}", file=sys.stderr)
-        sys.exit(1)
+        return repo, None
 
     total_results["catch_rate"] = round(
         total_results["caught"] / total_results["total"] * 100, 1)
     for k, v in total_results["by_type"].items():
         v["rate"] = round(v["caught"] / v["total"] * 100, 1) if v["total"] else 0
 
+    return repo, total_results
+
+
+def _merge_mutation_results(grand, result):
+    """Merge a per-repo mutation result into grand totals."""
+    grand["total"] += result["total"]
+    grand["caught"] += result["caught"]
+    grand["missed"] += result["missed"]
+    grand["missed_details"].extend(result["missed_details"])
+    for k, v in result["by_type"].items():
+        if k not in grand["by_type"]:
+            grand["by_type"][k] = {"total": 0, "caught": 0}
+        grand["by_type"][k]["total"] += v["total"]
+        grand["by_type"][k]["caught"] += v["caught"]
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Mutation testing for assertion effectiveness")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--repo", help="Repo to test")
+    group.add_argument("--cross-section",
+                       help="Test repos in a named cross-section "
+                            "(from reference/cross_sections.json)")
+    parser.add_argument("--type", required=True, choices=ANALYZER_TYPES,
+                        help="Analyzer type")
+    parser.add_argument("--mutations", "-n", type=int, default=50,
+                        help="Number of mutations to generate (default: 50)")
+    parser.add_argument("--seed", type=int, default=42,
+                        help="Random seed for reproducibility")
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Parallel workers (default: {DEFAULT_JOBS})")
+    parser.add_argument("--json", action="store_true", help="JSON output")
+    args = parser.parse_args()
+
+    if args.repo:
+        repos = [args.repo]
+    else:
+        repos = load_cross_section(args.cross_section)
+
+    grand_results = {
+        "total": 0, "caught": 0, "missed": 0,
+        "by_type": {}, "missed_details": [],
+    }
+    per_repo = {}
+    skipped = []
+    jobs = args.jobs
+
+    if len(repos) > 1 and jobs > 1:
+        with ProcessPoolExecutor(max_workers=min(jobs, len(repos))) as pool:
+            futures = {pool.submit(_mutation_test_one_repo, repo, args.type,
+                                   args.mutations, args.seed): repo
+                       for repo in repos}
+            for future in as_completed(futures):
+                repo, result = future.result()
+                if result is None:
+                    skipped.append(repo)
+                    continue
+                per_repo[repo] = result
+                _merge_mutation_results(grand_results, result)
+    else:
+        for repo in repos:
+            repo, result = _mutation_test_one_repo(
+                repo, args.type, args.mutations, args.seed)
+            if result is None:
+                skipped.append(repo)
+                continue
+            per_repo[repo] = result
+            _merge_mutation_results(grand_results, result)
+
+    if grand_results["total"] == 0:
+        label = args.repo or f"cross-section '{args.cross_section}'"
+        print(f"No mutations generated for {label}/{args.type}", file=sys.stderr)
+        sys.exit(1)
+
+    grand_results["catch_rate"] = round(
+        grand_results["caught"] / grand_results["total"] * 100, 1)
+    for k, v in grand_results["by_type"].items():
+        v["rate"] = round(v["caught"] / v["total"] * 100, 1) if v["total"] else 0
+
     if args.json:
-        json.dump(total_results, sys.stdout, indent=2)
+        output = grand_results
+        if len(repos) > 1:
+            output["per_repo"] = per_repo
+            output["skipped"] = skipped
+        json.dump(output, sys.stdout, indent=2)
         print()
         return
 
     # Text output
-    t = total_results
-    print(f"Mutation Test: {args.repo}/{args.type}")
+    if len(repos) > 1:
+        print(f"Mutation Test: {len(per_repo)} repos ({args.type})")
+        if skipped:
+            print(f"Skipped (no assertions/outputs): {len(skipped)}")
+    else:
+        print(f"Mutation Test: {repos[0]}/{args.type}")
+    t = grand_results
     print(f"{'='*50}")
     print(f"Total mutations: {t['total']}")
     print(f"Caught:          {t['caught']}")
@@ -356,6 +436,15 @@ def main():
     print("By mutation type:")
     for mtype, v in sorted(t["by_type"].items()):
         print(f"  {mtype:<25s} {v['caught']}/{v['total']} ({v['rate']}%)")
+
+    # Per-repo breakdown for cross-section
+    if len(per_repo) > 1:
+        print(f"\nPer-repo catch rates:")
+        for repo in sorted(per_repo, key=lambda r: per_repo[r]["catch_rate"]):
+            r = per_repo[repo]
+            print(f"  {repo:<45s} {r['catch_rate']:5.1f}% "
+                  f"({r['caught']}/{r['total']})")
+
     if t["missed_details"]:
         print(f"\nMissed mutations:")
         for desc in t["missed_details"][:10]:

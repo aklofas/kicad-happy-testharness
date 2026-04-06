@@ -5,7 +5,8 @@ Checks structural invariants, cross-references, and flags anomalies.
 
 Usage:
     python3 validate/validate_outputs.py
-    python3 validate/validate_outputs.py --repo OpenMower
+    python3 validate/validate_outputs.py --repo owner/repo
+    python3 validate/validate_outputs.py --cross-section smoke --jobs 16
 """
 
 import argparse
@@ -13,10 +14,12 @@ import json
 import os
 import sys
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import OUTPUTS_DIR, REPOS_DIR, MANIFESTS_DIR, list_repos
+from utils import (OUTPUTS_DIR, REPOS_DIR, MANIFESTS_DIR, list_repos,
+                   DEFAULT_JOBS, add_repo_filter_args, resolve_repos)
 
 
 class ValidationContext:
@@ -188,34 +191,11 @@ def validate_new_sections(ctx, name, data):
             ctx.anomalies["many_ground_domains"].append((name, f"{len(domains)} ground domains"))
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Validate analyzer JSON outputs")
-    parser.add_argument("--repo", help="Only validate outputs for this repo")
-    parser.add_argument("--json", action="store_true", help="JSON output")
-    args = parser.parse_args()
+def _validate_schematics(schematics):
+    """Validate a list of schematic paths. Worker function for parallel execution.
 
-    if args.repo:
-        repos = [args.repo]
-    else:
-        repos = list_repos()
-
-    schematics_list = MANIFESTS_DIR / "all_schematics.txt"
-
-    if not schematics_list.exists():
-        print(f"Error: {schematics_list} not found. Run discover.py first.")
-        sys.exit(1)
-
-    with open(schematics_list) as f:
-        schematics = [line.strip() for line in f if line.strip()]
-
-    if args.repo:
-        repos_str = str(REPOS_DIR)
-        prefix = repos_str + os.sep + args.repo + os.sep
-        schematics = [s for s in schematics if s.startswith(prefix)]
-
-    print(f"Validating {len(schematics)} schematics...")
-    print()
-
+    Returns (stats_dict, anomalies_dict) where anomalies is {category: [(file, detail)]}.
+    """
     ctx = ValidationContext()
     repos_dir = str(REPOS_DIR)
 
@@ -257,14 +237,89 @@ def main():
         if is_modern and total_comps > 0:
             validate_new_sections(ctx, name, data)
 
+    return dict(ctx.stats), dict(ctx.anomalies)
+
+
+def _validate_repo_schematics(repo_schematics_pair):
+    """Validate schematics for a single repo. Picklable top-level worker."""
+    _repo, schematics = repo_schematics_pair
+    return _validate_schematics(schematics)
+
+
+def _merge_results(all_stats, all_anomalies, stats, anomalies):
+    """Merge per-repo stats and anomalies into accumulators."""
+    for k, v in stats.items():
+        all_stats[k] = all_stats.get(k, 0) + v
+    for cat, items in anomalies.items():
+        all_anomalies.setdefault(cat, []).extend(items)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Validate analyzer JSON outputs")
+    add_repo_filter_args(parser)
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Parallel workers (default: {DEFAULT_JOBS})")
+    parser.add_argument("--json", action="store_true", help="JSON output")
+    args = parser.parse_args()
+
+    repos = resolve_repos(args)
+    if repos is None:
+        repos = list_repos()
+
+    schematics_list = MANIFESTS_DIR / "all_schematics.txt"
+
+    if not schematics_list.exists():
+        print(f"Error: {schematics_list} not found. Run discover.py first.")
+        sys.exit(1)
+
+    with open(schematics_list) as f:
+        all_schematics = [line.strip() for line in f if line.strip()]
+
+    # Group schematics by repo
+    repos_dir = str(REPOS_DIR)
+    repo_set = set(repos)
+    by_repo = defaultdict(list)
+    for s in all_schematics:
+        relpath = s
+        if s.startswith(repos_dir):
+            relpath = s[len(repos_dir):].lstrip("/").lstrip(os.sep)
+        parts = relpath.replace("\\", "/").split("/")
+        if len(parts) >= 2:
+            repo_name = f"{parts[0]}/{parts[1]}"
+        else:
+            repo_name = parts[0]
+        if repo_name in repo_set:
+            by_repo[repo_name].append(s)
+
+    total_schematics = sum(len(v) for v in by_repo.values())
+    print(f"Validating {total_schematics} schematics across {len(by_repo)} repos...")
+    print()
+
+    all_stats = {}
+    all_anomalies = {}
+    jobs = args.jobs
+    work_items = list(by_repo.items())
+
+    if jobs > 1 and len(work_items) > 1:
+        with ProcessPoolExecutor(max_workers=min(jobs, len(work_items))) as pool:
+            futures = {pool.submit(_validate_repo_schematics, item): item[0]
+                       for item in work_items}
+            for future in as_completed(futures):
+                stats, anomalies = future.result()
+                _merge_results(all_stats, all_anomalies, stats, anomalies)
+    else:
+        for item in work_items:
+            stats, anomalies = _validate_repo_schematics(item)
+            _merge_results(all_stats, all_anomalies, stats, anomalies)
+
     # Report
     if args.json:
         output = {
-            "stats": dict(ctx.stats),
-            "anomaly_count": sum(len(v) for v in ctx.anomalies.values()),
-            "anomaly_categories": len(ctx.anomalies),
+            "stats": all_stats,
+            "anomaly_count": sum(len(v) for v in all_anomalies.values()),
+            "anomaly_categories": len(all_anomalies),
             "anomalies": {cat: [{"file": n, "detail": d} for n, d in items]
-                          for cat, items in ctx.anomalies.items()},
+                          for cat, items in all_anomalies.items()},
         }
         print(json.dumps(output, indent=2))
         return
@@ -272,24 +327,24 @@ def main():
     print("=" * 70)
     print("VALIDATION SUMMARY")
     print("=" * 70)
-    print(f"Total schematics: {ctx.stats['total']}")
-    print(f"Modern: {ctx.stats['modern']}  Legacy: {ctx.stats['legacy']}")
-    print(f"Modern with components: {ctx.stats['modern_with_comps']}")
-    print(f"Total components: {ctx.stats['total_components']:,}")
-    print(f"Total nets: {ctx.stats['total_nets']:,}")
-    print(f"Zero-component files: {ctx.stats['zero_comp']}")
-    print(f"Zero-net files: {ctx.stats['zero_net']}")
+    print(f"Total schematics: {all_stats.get('total', 0)}")
+    print(f"Modern: {all_stats.get('modern', 0)}  Legacy: {all_stats.get('legacy', 0)}")
+    print(f"Modern with components: {all_stats.get('modern_with_comps', 0)}")
+    print(f"Total components: {all_stats.get('total_components', 0):,}")
+    print(f"Total nets: {all_stats.get('total_nets', 0):,}")
+    print(f"Zero-component files: {all_stats.get('zero_comp', 0)}")
+    print(f"Zero-net files: {all_stats.get('zero_net', 0)}")
     print()
 
-    if not ctx.anomalies:
+    if not all_anomalies:
         print("NO ANOMALIES FOUND")
         return
 
-    print(f"ANOMALIES ({sum(len(v) for v in ctx.anomalies.values())} total across {len(ctx.anomalies)} categories):")
+    print(f"ANOMALIES ({sum(len(v) for v in all_anomalies.values())} total across {len(all_anomalies)} categories):")
     print()
 
-    for cat in sorted(ctx.anomalies.keys()):
-        items = ctx.anomalies[cat]
+    for cat in sorted(all_anomalies.keys()):
+        items = all_anomalies[cat]
         print(f"--- {cat} ({len(items)}) ---")
         for name, detail in items[:10]:
             print(f"  {name}: {detail}")

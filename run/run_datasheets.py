@@ -10,10 +10,12 @@ interactively when a user runs the kicad skill in a Claude Code session.
 
 Usage:
     python3 run/run_datasheets.py                          # Full: download + validate
-    python3 run/run_datasheets.py --repo OpenMower          # Single repo
+    python3 run/run_datasheets.py --repo owner/OpenMower    # Single repo
+    python3 run/run_datasheets.py --cross-section smoke     # Named cross-section
     python3 run/run_datasheets.py --download-only           # Just download PDFs
     python3 run/run_datasheets.py --validate-only           # Just score existing extractions
     python3 run/run_datasheets.py --dry-run                 # Preview without downloading
+    python3 run/run_datasheets.py --jobs 16                 # Parallel processing
 
 Prerequisites:
     1. Schematic outputs in results/outputs/schematic/ (run run_schematic.py first)
@@ -30,10 +32,14 @@ import os
 import subprocess
 import sys
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import OUTPUTS_DIR, REPOS_DIR, resolve_kicad_happy_dir
+from utils import (
+    DEFAULT_JOBS, OUTPUTS_DIR, REPOS_DIR, add_repo_filter_args,
+    resolve_kicad_happy_dir, resolve_repos,
+)
 
 # Resolve kicad-happy once at module level
 _kicad_happy = resolve_kicad_happy_dir()
@@ -176,12 +182,49 @@ def validate_extractions(repo_dir):
     return report
 
 
+def process_repo(repo_name, sync_script, ds_out_dir, download_only=False,
+                 validate_only=False, dry_run=False):
+    """Process a single repo: download + validate.
+
+    Returns a dict with per-repo results, or None if repo dir missing.
+    """
+    repo_dir = REPOS_DIR / repo_name
+    if not repo_dir.exists():
+        return None
+
+    result = {
+        "repo": repo_name,
+        "downloaded": 0,
+        "download_failed": 0,
+        "report": None,
+    }
+
+    if not validate_only:
+        dl = download_datasheets(repo_name, sync_script, dry_run)
+        if dl:
+            result["downloaded"] = dl[0]
+            result["download_failed"] = dl[1]
+
+    if not download_only:
+        report = validate_extractions(repo_dir)
+        if report:
+            result["report"] = report
+            repo_out = ds_out_dir / repo_name
+            repo_out.mkdir(parents=True, exist_ok=True)
+            with open(repo_out / "_report.json", "w") as f:
+                json.dump(report, f, indent=2)
+                f.write("\n")
+
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Download datasheets and validate extractions"
     )
-    parser.add_argument("--repo", action="append", dest="repos",
-                        help="Only process this repo (can repeat)")
+    add_repo_filter_args(parser)
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Parallel jobs (default: {DEFAULT_JOBS})")
     parser.add_argument("--download-only", action="store_true",
                         help="Only download PDFs, skip validation")
     parser.add_argument("--validate-only", action="store_true",
@@ -201,7 +244,8 @@ def main():
             print("Warning: DIGIKEY_CLIENT_ID not set — downloads may fail",
                   file=sys.stderr)
 
-    repos = args.repos if args.repos else find_repos_with_schematics()
+    repo_list = resolve_repos(args)
+    repos = repo_list if repo_list else find_repos_with_schematics()
 
     if not repos:
         print("No repos with schematic outputs found. Run run_schematic.py first.",
@@ -210,6 +254,8 @@ def main():
 
     print(f"=== Datasheet Pipeline ===")
     print(f"Repos: {len(repos)}")
+    if args.jobs > 1:
+        print(f"Jobs: {args.jobs}")
     if not args.validate_only:
         print(f"Mode: {'dry-run' if args.dry_run else 'download'} + validate")
     else:
@@ -227,39 +273,55 @@ def main():
     repos_processed = 0
     all_categories = Counter()
 
-    for repo_name in repos:
-        repo_dir = REPOS_DIR / repo_name
-        if not repo_dir.exists():
-            continue
+    def _collect(result):
+        """Accumulate a single repo result into totals. Returns log line or None."""
+        if result is None:
+            return None
+
+        nonlocal total_downloaded, total_failed, total_extracted
+        nonlocal total_stale, total_sufficient, total_parts, repos_processed
 
         repos_processed += 1
+        total_downloaded += result["downloaded"]
+        total_failed += result["download_failed"]
 
-        if not args.validate_only:
-            result = download_datasheets(repo_name, sync_script, args.dry_run)
-            if result:
-                total_downloaded += result[0]
-                total_failed += result[1]
+        report = result["report"]
+        if report:
+            total_parts += report["total_parts"]
+            total_extracted += report["extracted"]
+            total_stale += report["stale"]
+            total_sufficient += report["sufficient"]
+            all_categories.update(report["by_category"])
 
-        if not args.download_only:
-            report = validate_extractions(repo_dir)
-            if report:
-                total_parts += report["total_parts"]
-                total_extracted += report["extracted"]
-                total_stale += report["stale"]
-                total_sufficient += report["sufficient"]
-                all_categories.update(report["by_category"])
+            if report["extracted"] > 0:
+                return (f"  {result['repo']}: {report['extracted']} extracted "
+                        f"(avg {report['avg_score']:.1f}), "
+                        f"{report['stale']} stale, "
+                        f"{len(report['missing_extractions'])} unextracted")
+        return None
 
-                repo_out = ds_out_dir / repo_name
-                repo_out.mkdir(parents=True, exist_ok=True)
-                with open(repo_out / "_report.json", "w") as f:
-                    json.dump(report, f, indent=2)
-                    f.write("\n")
-
-                if report["extracted"] > 0:
-                    print(f"  {repo_name}: {report['extracted']} extracted "
-                          f"(avg {report['avg_score']:.1f}), "
-                          f"{report['stale']} stale, "
-                          f"{len(report['missing_extractions'])} unextracted")
+    if args.jobs <= 1:
+        for repo_name in repos:
+            result = process_repo(repo_name, sync_script, ds_out_dir,
+                                  args.download_only, args.validate_only,
+                                  args.dry_run)
+            line = _collect(result)
+            if line:
+                print(line)
+    else:
+        # I/O-bound: HTTP downloads + subprocess calls — threads are ideal
+        with ThreadPoolExecutor(max_workers=args.jobs) as pool:
+            futures = {
+                pool.submit(process_repo, repo_name, sync_script, ds_out_dir,
+                            args.download_only, args.validate_only,
+                            args.dry_run): repo_name
+                for repo_name in repos
+            }
+            for future in as_completed(futures):
+                result = future.result()
+                line = _collect(result)
+                if line:
+                    print(line)
 
     aggregate = {
         "repos_processed": repos_processed,

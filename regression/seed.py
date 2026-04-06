@@ -22,11 +22,13 @@ import fnmatch
 import json
 import math
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
+    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
     discover_projects, data_dir, list_repos,
     project_prefix, filter_project_outputs,
 )
@@ -1063,7 +1065,8 @@ def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
 
 
 def generate_for_repo(repo_name, atype, tolerance, min_components,
-                      file_filter, dry_run, include_empty=False):
+                      file_filter, dry_run, include_empty=False,
+                      resume=False):
     """Generate seed assertions for one repo."""
     type_dir = OUTPUTS_DIR / atype / repo_name
     if not type_dir.exists():
@@ -1072,6 +1075,17 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
     projects = discover_projects(repo_name)
     if not projects:
         return 0, 0, 0
+
+    # --resume: skip if all projects already have assertion files for this type
+    if resume and not dry_run:
+        all_have_assertions = True
+        for proj in projects:
+            assertion_dir = data_dir(repo_name, proj["name"], "assertions") / atype
+            if not assertion_dir.exists() or not any(assertion_dir.glob("*.json")):
+                all_have_assertions = False
+                break
+        if all_have_assertions:
+            return 0, 0, 0
 
     total_files = 0
     total_assertions = 0
@@ -1160,10 +1174,25 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
     return total_files, total_assertions, skipped
 
 
+def _seed_one_repo(repo, atype, tolerance, min_components, file_filter,
+                   dry_run, include_empty, resume=False):
+    """Worker function for parallel seed generation. Must be top-level for pickling."""
+    return generate_for_repo(repo, atype, tolerance, min_components,
+                             file_filter, dry_run, include_empty=include_empty,
+                             resume=resume)
+
+
+def _prune_one_repo(repo, atype, min_components, dry_run):
+    """Worker function for parallel prune. Must be top-level for pickling."""
+    return prune_stale_assertions(repo, atype, min_components, dry_run=dry_run)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate seed assertions from outputs")
-    parser.add_argument("--repo", help="Generate for one repo")
+    group = add_repo_filter_args(parser)
     parser.add_argument("--all", action="store_true", help="Generate for all repos")
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Number of parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--type", choices=ANALYZER_TYPES,
                         default="schematic", help="Analyzer type (default: schematic)")
     parser.add_argument("--filter", default="",
@@ -1179,38 +1208,68 @@ def main():
                         help="Print assertions without writing files")
     parser.add_argument("--prune-stale", action="store_true",
                         help="Remove seed assertions whose outputs no longer meet thresholds")
+    parser.add_argument("--resume", action="store_true",
+                        help="Skip repos that already have assertion files")
     args = parser.parse_args()
 
-    if args.repo:
-        repos = [args.repo]
-    elif args.all:
-        repos = list_repos()
-    else:
-        parser.print_help()
-        sys.exit(1)
+    repos = resolve_repos(args)
+    if repos is None:
+        if args.all:
+            repos = list_repos()
+        else:
+            parser.print_help()
+            sys.exit(1)
+
+    jobs = args.jobs
 
     if args.prune_stale:
         grand_pruned = grand_checked = 0
-        for repo in repos:
-            pruned, checked = prune_stale_assertions(
-                repo, args.type, args.min_components,
-                dry_run=args.dry_run)
-            grand_pruned += pruned
-            grand_checked += checked
+        if jobs > 1 and len(repos) > 1:
+            with ProcessPoolExecutor(max_workers=min(jobs, len(repos))) as pool:
+                futures = {pool.submit(_prune_one_repo, repo, args.type,
+                                       args.min_components, args.dry_run): repo
+                           for repo in repos}
+                for future in as_completed(futures):
+                    pruned, checked = future.result()
+                    grand_pruned += pruned
+                    grand_checked += checked
+        else:
+            for repo in repos:
+                pruned, checked = prune_stale_assertions(
+                    repo, args.type, args.min_components,
+                    dry_run=args.dry_run)
+                grand_pruned += pruned
+                grand_checked += checked
         print(f"\n{'[DRY RUN] ' if args.dry_run else ''}"
               f"Pruned {grand_pruned} stale seed assertions "
               f"(checked {grand_checked})")
         sys.exit(0)
 
     grand_files = grand_assertions = grand_skipped = 0
-    for repo in repos:
-        files, assertions, skipped = generate_for_repo(
-            repo, args.type, args.tolerance, args.min_components,
-            args.filter, args.dry_run,
-            include_empty=getattr(args, "include_empty", False))
-        grand_files += files
-        grand_assertions += assertions
-        grand_skipped += skipped
+    include_empty = getattr(args, "include_empty", False)
+
+    resume = getattr(args, "resume", False)
+    if jobs > 1 and len(repos) > 1:
+        with ProcessPoolExecutor(max_workers=min(jobs, len(repos))) as pool:
+            futures = {pool.submit(_seed_one_repo, repo, args.type,
+                                   args.tolerance, args.min_components,
+                                   args.filter, args.dry_run,
+                                   include_empty, resume): repo
+                       for repo in repos}
+            for future in as_completed(futures):
+                files, assertions, skipped = future.result()
+                grand_files += files
+                grand_assertions += assertions
+                grand_skipped += skipped
+    else:
+        for repo in repos:
+            files, assertions, skipped = generate_for_repo(
+                repo, args.type, args.tolerance, args.min_components,
+                args.filter, args.dry_run,
+                include_empty=include_empty, resume=resume)
+            grand_files += files
+            grand_assertions += assertions
+            grand_skipped += skipped
 
     print(f"\n{'[DRY RUN] ' if args.dry_run else ''}Generated {grand_assertions} assertions "
           f"across {grand_files} files (skipped {grand_skipped} small files)")

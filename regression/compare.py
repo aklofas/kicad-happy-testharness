@@ -14,6 +14,7 @@ Usage:
 import argparse
 import json
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -21,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _differ import extract_manifest_entry
 from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
+    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
     list_repos, list_projects_in_data,
     project_prefix, load_project_metadata,
     filter_project_outputs,
@@ -180,17 +182,40 @@ def print_type_report(atype, results):
     return results["files_compared"], results["files_with_changes"]
 
 
+def _compare_repo_worker(repo, types, only_changes):
+    """Worker function for parallel repo comparison. Returns (repo, repo_output)."""
+    projects = list_projects_in_data(repo)
+    if not projects:
+        return repo, {}
+
+    repo_output = {}
+    for proj_name in projects:
+        project_path = load_project_metadata(repo, proj_name).get("project_path", ".")
+
+        proj_results = {}
+        for atype in types:
+            proj_results[atype] = compare_project(
+                repo, proj_name, project_path, atype,
+                only_changes=only_changes)
+        repo_output[proj_name] = proj_results
+
+    return repo, repo_output
+
+
 def main():
     parser = argparse.ArgumentParser(description="Compare outputs against baselines")
-    parser.add_argument("--repo", help="Compare one repo")
+    add_repo_filter_args(parser)
     parser.add_argument("--all", action="store_true", help="Compare all repos with baselines")
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Number of parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--type", choices=ANALYZER_TYPES, help="Only compare one analyzer type")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--only-changes", action="store_true", help="Only show changed files")
     args = parser.parse_args()
 
-    if args.repo:
-        repos = [args.repo]
+    resolved = resolve_repos(args)
+    if resolved is not None:
+        repos = resolved
     elif args.all:
         if not DATA_DIR.exists():
             print("No data found.")
@@ -201,26 +226,24 @@ def main():
         sys.exit(1)
 
     types = [args.type] if args.type else ANALYZER_TYPES
+    jobs = args.jobs
     all_output = {}
 
-    for repo in repos:
-        projects = list_projects_in_data(repo)
-        if not projects:
-            continue
-
-        repo_output = {}
-        for proj_name in projects:
-            # Read project_path from metadata if available
-            project_path = load_project_metadata(repo, proj_name).get("project_path", ".")
-
-            proj_results = {}
-            for atype in types:
-                proj_results[atype] = compare_project(
-                    repo, proj_name, project_path, atype,
-                    only_changes=args.only_changes)
-            repo_output[proj_name] = proj_results
-
-        all_output[repo] = repo_output
+    if jobs <= 1 or len(repos) <= 1:
+        for repo in repos:
+            repo, repo_output = _compare_repo_worker(repo, types, args.only_changes)
+            if repo_output:
+                all_output[repo] = repo_output
+    else:
+        with ProcessPoolExecutor(max_workers=jobs) as pool:
+            futures = {
+                pool.submit(_compare_repo_worker, repo, types, args.only_changes): repo
+                for repo in repos
+            }
+            for future in as_completed(futures):
+                repo, repo_output = future.result()
+                if repo_output:
+                    all_output[repo] = repo_output
 
     if args.json:
         print(json.dumps(all_output, indent=2))

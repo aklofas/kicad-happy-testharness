@@ -6,21 +6,24 @@ reference snapshot, and on subsequent runs diffs against the saved inventory to
 detect field additions, removals, or renames.
 
 Usage:
-    python3 validate/validate_schema.py scan              # Build/update inventory
-    python3 validate/validate_schema.py scan --repo X     # Scan one repo only
-    python3 validate/validate_schema.py diff              # Diff current vs saved
-    python3 validate/validate_schema.py diff --repo X     # Diff one repo only
-    python3 validate/validate_schema.py diff --json       # Machine-readable output
+    python3 validate/validate_schema.py scan                              # Build/update inventory
+    python3 validate/validate_schema.py scan --repo owner/repo            # Scan one repo only
+    python3 validate/validate_schema.py scan --cross-section smoke -j 16  # Parallel scan
+    python3 validate/validate_schema.py diff                              # Diff current vs saved
+    python3 validate/validate_schema.py diff --repo owner/repo            # Diff one repo only
+    python3 validate/validate_schema.py diff --json                       # Machine-readable output
 """
 
 import argparse
 import json
 import sys
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import OUTPUTS_DIR, DATA_DIR, list_repos
+from utils import (OUTPUTS_DIR, DATA_DIR, list_repos,
+                   DEFAULT_JOBS, add_repo_filter_args, resolve_repos)
 
 
 INVENTORY_FILE = DATA_DIR / "schema_inventory.json"
@@ -222,16 +225,66 @@ def scan_gerber_outputs(repos):
     return dict({k: dict(v) for k, v in inventory.items()}), file_count
 
 
-def build_inventory(repos):
+def _scan_one_repo(repo):
+    """Scan all output types for a single repo. Picklable top-level worker.
+
+    Returns dict with per-type inventories and file counts.
+    """
+    sch_inv, sch_count = scan_schematic_outputs([repo])
+    pcb_inv, pcb_count = scan_pcb_outputs([repo])
+    spice_inv, spice_count = scan_spice_outputs([repo])
+    emc_inv, emc_count = scan_emc_outputs([repo])
+    gerber_inv, gerber_count = scan_gerber_outputs([repo])
+    return {
+        "schematic": (sch_inv, sch_count),
+        "pcb": (pcb_inv, pcb_count),
+        "spice": (spice_inv, spice_count),
+        "emc": (emc_inv, emc_count),
+        "gerber": (gerber_inv, gerber_count),
+    }
+
+
+def _merge_inventories(target, source):
+    """Merge source inventory dict into target (both are {detector: {field: count}})."""
+    for det, fields in source.items():
+        if det not in target:
+            target[det] = {}
+        for field, count in fields.items():
+            target[det][field] = target[det].get(field, 0) + count
+
+
+def build_inventory(repos, jobs=1):
     """Build complete schema inventory from outputs.
 
     Returns dict with metadata and per-type field inventories.
     """
-    sch_inv, sch_count = scan_schematic_outputs(repos)
-    pcb_inv, pcb_count = scan_pcb_outputs(repos)
-    spice_inv, spice_count = scan_spice_outputs(repos)
-    emc_inv, emc_count = scan_emc_outputs(repos)
-    gerber_inv, gerber_count = scan_gerber_outputs(repos)
+    type_names = ["schematic", "pcb", "spice", "emc", "gerber"]
+    merged = {t: ({}, 0) for t in type_names}
+
+    if jobs > 1 and len(repos) > 1:
+        with ProcessPoolExecutor(max_workers=min(jobs, len(repos))) as pool:
+            futures = {pool.submit(_scan_one_repo, repo): repo for repo in repos}
+            for future in as_completed(futures):
+                result = future.result()
+                for t in type_names:
+                    inv, count = result[t]
+                    cur_inv, cur_count = merged[t]
+                    _merge_inventories(cur_inv, inv)
+                    merged[t] = (cur_inv, cur_count + count)
+    else:
+        for repo in repos:
+            result = _scan_one_repo(repo)
+            for t in type_names:
+                inv, count = result[t]
+                cur_inv, cur_count = merged[t]
+                _merge_inventories(cur_inv, inv)
+                merged[t] = (cur_inv, cur_count + count)
+
+    sch_inv, sch_count = merged["schematic"]
+    pcb_inv, pcb_count = merged["pcb"]
+    spice_inv, spice_count = merged["spice"]
+    emc_inv, emc_count = merged["emc"]
+    gerber_inv, gerber_count = merged["gerber"]
 
     return {
         "metadata": {
@@ -331,12 +384,15 @@ def diff_inventories(saved, current):
 
 def cmd_scan(args):
     """Build/update schema inventory from current outputs."""
-    repos = [args.repo] if args.repo else list_repos()
+    repos = resolve_repos(args)
+    if repos is None:
+        repos = list_repos()
     if not repos:
         print("No repos found. Run checkout.py first.", file=sys.stderr)
         sys.exit(1)
 
-    inventory = build_inventory(repos)
+    jobs = getattr(args, "jobs", 1)
+    inventory = build_inventory(repos, jobs=jobs)
 
     if args.json:
         print(json.dumps(inventory, indent=2))
@@ -364,8 +420,9 @@ def cmd_scan(args):
                 print(f"  {det}: {sorted(fields.keys())}")
             print()
 
-    if not args.repo:
-        # Save full inventory (not per-repo scans)
+    if not (getattr(args, "repo", None) or getattr(args, "cross_section", None)
+            or getattr(args, "repo_list", None)):
+        # Save full inventory (not per-repo or cross-section scans)
         INVENTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
         INVENTORY_FILE.write_text(json.dumps(inventory, indent=2, sort_keys=True) + "\n")
         if not args.json:
@@ -380,8 +437,11 @@ def cmd_diff(args):
         sys.exit(1)
 
     saved = json.loads(INVENTORY_FILE.read_text())
-    repos = [args.repo] if args.repo else list_repos()
-    current = build_inventory(repos)
+    repos = resolve_repos(args)
+    if repos is None:
+        repos = list_repos()
+    jobs = getattr(args, "jobs", 1)
+    current = build_inventory(repos, jobs=jobs)
 
     changes = diff_inventories(saved, current)
 
@@ -492,8 +552,11 @@ def cmd_auto_seed(args):
         sys.exit(1)
 
     saved = json.loads(INVENTORY_FILE.read_text())
-    repos = [args.repo] if args.repo else list_repos()
-    current = build_inventory(repos)
+    repos = resolve_repos(args)
+    if repos is None:
+        repos = list_repos()
+    jobs = getattr(args, "jobs", 1)
+    current = build_inventory(repos, jobs=jobs)
     changes = diff_inventories(saved, current)
 
     if not changes:
@@ -535,16 +598,22 @@ def main():
     sub = parser.add_subparsers(dest="command")
 
     scan_p = sub.add_parser("scan", help="Build/update field inventory from outputs")
-    scan_p.add_argument("--repo", help="Scan one repo only")
+    add_repo_filter_args(scan_p)
+    scan_p.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Parallel workers (default: {DEFAULT_JOBS})")
     scan_p.add_argument("--json", action="store_true", help="JSON output")
 
     diff_p = sub.add_parser("diff", help="Diff current outputs vs saved inventory")
-    diff_p.add_argument("--repo", help="Diff one repo only")
+    add_repo_filter_args(diff_p)
+    diff_p.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Parallel workers (default: {DEFAULT_JOBS})")
     diff_p.add_argument("--json", action="store_true", help="JSON output")
 
     auto_p = sub.add_parser("auto-seed",
                             help="Generate assertions for new fields, flag stale refs")
-    auto_p.add_argument("--repo", help="Limit to one repo")
+    add_repo_filter_args(auto_p)
+    auto_p.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Parallel workers (default: {DEFAULT_JOBS})")
 
     args = parser.parse_args()
     if args.command == "scan":

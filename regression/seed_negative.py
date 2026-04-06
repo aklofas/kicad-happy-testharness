@@ -15,12 +15,16 @@ import argparse
 import json
 import re
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from findings import _iter_findings_files
-from utils import DATA_DIR
+from utils import (
+    DATA_DIR,
+    DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
+)
 
 # Keywords that indicate a false positive in finding descriptions
 FP_KEYWORDS = re.compile(
@@ -110,22 +114,82 @@ def generate_negative_assertions(candidates):
     return assertions_by_key
 
 
+def _scan_repo_worker(repo_name):
+    """Worker function for parallel scanning. Returns (repo, candidates)."""
+    return repo_name, scan_findings_for_negatives(repo_name)
+
+
+def _write_repo_worker(repo, project, assertions):
+    """Worker function for parallel writing. Returns (repo/project, written)."""
+    atype = "schematic"  # default
+    out_dir = DATA_DIR / repo / project / "assertions" / atype
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # Find the file_pattern from existing assertion files
+    file_pattern = None
+    for existing in out_dir.glob("*.json"):
+        try:
+            ed = json.loads(existing.read_text())
+            file_pattern = ed.get("file_pattern")
+            atype = ed.get("analyzer_type", atype)
+            if file_pattern:
+                break
+        except Exception:
+            continue
+
+    if not file_pattern:
+        return f"{repo}/{project}", 0
+
+    outfile = out_dir / f"{file_pattern}_negative.json"
+    data = {
+        "file_pattern": file_pattern,
+        "analyzer_type": atype,
+        "generated_by": "seed_negative.py",
+        "assertions": assertions,
+    }
+    outfile.write_text(json.dumps(data, indent=2) + "\n")
+    return f"{repo}/{project}", 1
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Generate negative assertions from false-positive findings")
-    parser.add_argument("--repo", help="Only process this repo")
+    add_repo_filter_args(parser)
     parser.add_argument("--all", action="store_true", help="Process all repos")
+    parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                        help=f"Number of parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--dry-run", action="store_true",
                         help="Show what would be generated (default)")
     parser.add_argument("--apply", action="store_true",
                         help="Write assertion files")
     args = parser.parse_args()
 
-    if not args.repo and not args.all:
-        print("Specify --repo or --all", file=sys.stderr)
+    resolved = resolve_repos(args)
+    if resolved is None and not args.all:
+        print("Specify --repo, --cross-section, --repo-list, or --all", file=sys.stderr)
         sys.exit(1)
 
-    candidates = scan_findings_for_negatives(args.repo)
+    jobs = args.jobs
+
+    # Scan phase: collect candidates
+    if resolved is not None:
+        # Process specific repos
+        if jobs <= 1 or len(resolved) <= 1:
+            candidates = []
+            for repo in resolved:
+                candidates.extend(scan_findings_for_negatives(repo))
+        else:
+            candidates = []
+            with ProcessPoolExecutor(max_workers=jobs) as pool:
+                futures = {pool.submit(_scan_repo_worker, repo): repo
+                           for repo in resolved}
+                for future in as_completed(futures):
+                    _repo, repo_candidates = future.result()
+                    candidates.extend(repo_candidates)
+    else:
+        # --all: scan everything at once (no per-repo breakdown needed)
+        candidates = scan_findings_for_negatives(None)
+
     print(f"Found {len(candidates)} negative assertion candidates")
 
     with_check = sum(1 for c in candidates if c["has_check"])
@@ -144,36 +208,19 @@ def main():
 
     if args.apply and not args.dry_run:
         written = 0
-        for (repo, project), assertions in assertions_by_key.items():
-            # Determine analyzer type from first assertion's check path
-            atype = "schematic"  # default
-            out_dir = DATA_DIR / repo / project / "assertions" / atype
-            out_dir.mkdir(parents=True, exist_ok=True)
-
-            # Find the file_pattern from existing assertion files
-            file_pattern = None
-            for existing in out_dir.glob("*.json"):
-                try:
-                    ed = json.loads(existing.read_text())
-                    file_pattern = ed.get("file_pattern")
-                    atype = ed.get("analyzer_type", atype)
-                    if file_pattern:
-                        break
-                except Exception:
-                    continue
-
-            if not file_pattern:
-                continue
-
-            outfile = out_dir / f"{file_pattern}_negative.json"
-            data = {
-                "file_pattern": file_pattern,
-                "analyzer_type": atype,
-                "generated_by": "seed_negative.py",
-                "assertions": assertions,
-            }
-            outfile.write_text(json.dumps(data, indent=2) + "\n")
-            written += 1
+        if jobs <= 1 or len(assertions_by_key) <= 1:
+            for (repo, project), assertions in assertions_by_key.items():
+                _, count = _write_repo_worker(repo, project, assertions)
+                written += count
+        else:
+            with ProcessPoolExecutor(max_workers=jobs) as pool:
+                futures = {
+                    pool.submit(_write_repo_worker, repo, project, assertions): (repo, project)
+                    for (repo, project), assertions in assertions_by_key.items()
+                }
+                for future in as_completed(futures):
+                    _, count = future.result()
+                    written += count
 
         print(f"Wrote {written} assertion files")
     else:
