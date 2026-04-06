@@ -11,6 +11,26 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-06 — Batch 30: kidoc test plan bugs (KH-199, KH-200)
+
+### KH-199 (P0): power_tree figure generator crashes on None rail names
+
+- **File**: `skills/kidoc/scripts/figures/generators/power_tree/__init__.py`
+- **Phase**: 8 (corpus smoke test)
+- **Root cause**: Regulators with `None` as `input_rail` or `output_rail` caused two crashes: (1) `sorted()` on a set containing `None` and `str` raises `TypeError: '<' not supported`, (2) `_infer_voltage(None)` calls `.strip()` on `None`.
+- **Fix**: Added `input_rail_set.discard(None)` / `output_rail_set.discard(None)` before sorting. Added early return `""` in `_infer_voltage()` when `rail_name` is falsy.
+- **Verified**: 100/100 corpus smoke files pass with zero crashes (was 5 failures).
+
+### KH-200 (P0): narrative executive_summary extractor crashes on None output_rail
+
+- **File**: `skills/kidoc/scripts/kidoc_narrative_extractors.py` line 474
+- **Phase**: 8 (corpus smoke test)
+- **Root cause**: `r.get('output_rail', '?')` returns `None` (not `'?'`) when the key exists but has a `None` value. The `None` then causes `', '.join(rails)` to fail with `TypeError: sequence item 0: expected str instance, NoneType found`.
+- **Fix**: Changed to `r.get('output_rail') or '?'` which correctly falls back to `'?'` for both missing and `None` values.
+- **Verified**: 100/100 corpus smoke files pass with zero crashes (was 4 failures).
+
+---
+
 ## 2026-04-04 — Batch 29: Pre-existing bugs found during v1.2 Batch 4 (KH-196, KH-197, KH-198)
 
 ### KH-196 (HIGH): Bare capacitor values parsed as Farads in inrush/PDN analysis
