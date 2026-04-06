@@ -1,0 +1,26 @@
+{
+  "file_pattern": "mem.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 memory_interfaces",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "U501 in memory_interfaces",
+      "check": {
+        "path": "signal_analysis.memory_interfaces",
+        "op": "contains_match",
+        "field": "memory_reference",
+        "pattern": "^U501$"
+      }
+    }
+  ]
+}

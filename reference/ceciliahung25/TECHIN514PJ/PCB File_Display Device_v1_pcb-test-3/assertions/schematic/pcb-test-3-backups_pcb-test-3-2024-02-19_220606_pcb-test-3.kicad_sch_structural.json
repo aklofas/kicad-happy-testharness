@@ -1,0 +1,72 @@
+{
+  "file_pattern": "pcb-test-3-backups_pcb-test-3-2024-02-19_220606_pcb-test-3.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 audio_circuits",
+      "check": {
+        "path": "signal_analysis.audio_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 buzzer_speaker_circuits",
+      "check": {
+        "path": "signal_analysis.buzzer_speaker_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "LS1 in buzzer_speaker_circuits",
+      "check": {
+        "path": "signal_analysis.buzzer_speaker_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^LS1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 2 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 1 led_audit",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 1 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R4 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R4$"
+      }
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "file_pattern": "clocks-2018-04-18-05-02-05.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 clock_distribution",
+      "check": {
+        "path": "signal_analysis.clock_distribution",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U31 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U31$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "U30 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U30$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 4 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R215 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R215$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R216 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R216$"
+      }
+    }
+  ]
+}

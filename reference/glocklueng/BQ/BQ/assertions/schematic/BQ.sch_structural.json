@@ -1,0 +1,65 @@
+{
+  "file_pattern": "BQ.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 bms_systems",
+      "check": {
+        "path": "signal_analysis.bms_systems",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "U1 in bms_systems",
+      "check": {
+        "path": "signal_analysis.bms_systems",
+        "op": "contains_match",
+        "field": "bms_reference",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 3 transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q1 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Q4 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Q5 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q5$"
+      }
+    }
+  ]
+}

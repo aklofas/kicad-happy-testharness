@@ -1,0 +1,84 @@
+{
+  "file_pattern": "bifrost.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 10 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 10
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 5 led_audit",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 5 power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "U6_VADJ_OUT1 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U6_VADJ_OUT1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U4_1V8_OUT1 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U4_1V8_OUT1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U5_1V2_OUT1 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U5_1V2_OUT1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "U8_2V5_OUT1 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U8_2V5_OUT1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "U7_3V3_OUT1 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U7_3V3_OUT1$"
+      }
+    }
+  ]
+}

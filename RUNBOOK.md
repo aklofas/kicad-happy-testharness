@@ -1,6 +1,6 @@
 # Test Harness Runbook
 
-19 operational checklists for the kicad-happy test harness. Designed for Claude Code
+20 operational checklists for the kicad-happy test harness. Designed for Claude Code
 agents working autonomously or with minimal supervision.
 
 **This is the primary operational reference.** Agents MUST follow the relevant
@@ -1551,6 +1551,136 @@ python3 validate/validate_schema.py scan
 python3 run/run_emc.py --jobs 16
 python3 regression/run_checks.py --type emc
 ```
+
+---
+
+## Checklist 20: Corpus expansion
+
+Use when expanding the corpus by searching for new KiCad repos on GitHub and adding
+them in bulk. This automates the Checklist 14 pipeline at scale.
+
+### 20a. Search for candidates
+
+Run the discovery script. For GitHub only (default):
+
+```bash
+python3 search_repos.py --all
+```
+
+For all platforms (GitHub + GitLab + Codeberg):
+
+```bash
+python3 search_repos.py --source all
+```
+
+Or individual platforms:
+
+```bash
+python3 search_repos.py --source gitlab
+python3 search_repos.py --source codeberg
+```
+
+GitHub uses code search (size-sharded `extension:kicad_sch`), topic search
+(`topic:kicad fork:false`), and keyword search. GitLab and Codeberg use their
+public REST APIs. All strategies deduplicate against repos.md automatically.
+Writes `results/candidates.json`.
+
+**Estimated time:** GitHub ~10 minutes (rate-limited at 30 req/min), GitLab ~2 min,
+Codeberg ~30 seconds. Bitbucket requires auth (not supported).
+
+Review `candidates.json`: check total count, category distribution, and spot-check
+a few entries for quality.
+
+### 20b. Validate candidates
+
+Clone each candidate into a temp directory, check for KiCad files, count
+components, score quality, then delete the clone. This filters out tools,
+libraries, trivial repos, and repos without actual KiCad files.
+
+```bash
+python3 validate_candidates.py --jobs 8
+python3 validate_candidates.py --jobs 8 --min-components 10   # stricter
+python3 validate_candidates.py --jobs 8 --min-score 30        # quality filter
+```
+
+This writes `results/validated.json` with only repos that pass. Expect
+~20-40% pass rate depending on the source (code-confirmed repos pass at
+higher rates than topic/keyword repos).
+
+**Estimated time:** ~3 seconds per repo. 11,000 candidates at --jobs 8 ~ 1 hour.
+
+Use `--resume` to continue after interruption. Use `--limit 100` to test
+a sample first and check the pass rate before committing to the full run.
+
+### 20c. Add repos in batches
+
+```bash
+python3 add_repos.py --input results/validated.json --batch-size 50
+python3 add_repos.py --input results/validated.json --batch-size 50 --skip-spice --skip-emc
+```
+
+This runs the full Checklist 14 pipeline for each candidate:
+1. Get HEAD hash via `git ls-remote`
+2. Append to repos.md under the auto-assigned category
+3. Clone via checkout.py
+4. Discover files via discover.py
+5. Run schematic + PCB + gerber analyzers
+6. Snapshot baselines to reference/
+7. Seed SEED-* and STRUCT-* assertions
+8. Run checks (confirm 100%)
+
+Repos with 0 KiCad files are automatically purged (removed from repos.md, clone
+deleted). Progress is saved every `--batch-size` repos.
+
+**Estimated time:** ~30 seconds per repo for clone + analyze + seed.
+50-repo batch ~ 25 minutes. Full 1,500 repos ~ 12 hours.
+
+### 20d. Resume after interruption
+
+If the script is interrupted, resume with:
+
+```bash
+python3 add_repos.py --resume
+```
+
+Progress is tracked in `results/add_repos_progress.json`. Already-completed and
+purged repos are skipped on resume.
+
+### 20e. Run deferred analyzers
+
+If SPICE and EMC were skipped during bulk import (`--skip-spice --skip-emc`):
+
+```bash
+python3 run/run_spice.py --jobs 16
+python3 run/run_emc.py --jobs 8
+python3 regression/seed.py --all
+python3 regression/seed_structural.py --all
+python3 regression/run_checks.py
+```
+
+### 20f. Verify corpus integrity
+
+```bash
+python3 regression/run_checks.py          # All assertions
+python3 validate/cross_analyzer.py --summary
+python3 validate/validate_outputs.py
+```
+
+Confirm 100% pass rate on assertions. Investigate any failures per Checklist 12.
+
+### 20g. Update tracking
+
+```bash
+python3 generate_catalog.py               # Regenerate catalog
+python3 generate_health_report.py --log   # Health report + trend
+```
+
+Update corpus count in `status.md`. Record the expansion as a new batch entry.
+
+### 20h. Commit
+
+The `reference/` directory will have large diffs (new baselines and assertions
+for every new repo). This is expected.
 
 ---
 

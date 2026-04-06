@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-02 (v1.1 feature testing + harness improvements)
+Last updated: 2026-04-06 (corpus expansion: 1,478 → 5,829 repos)
 
 ---
 
@@ -13,18 +13,12 @@ Last updated: 2026-04-02 (v1.1 feature testing + harness improvements)
 
 | Metric | Count |
 |--------|------:|
-| Total repos in repos.md | 1,043 |
-| Checked out in repos/ | 1,035 |
-| Repos with baselines | 1,035 |
-| Repos with assertions | 1,035 |
-| Total assertion files | ~35,500 |
-| SEED assertions | 195,375 |
-| STRUCT assertions | 221,352 |
-| FND assertions (required) | 2,731 |
-| FND assertions (aspirational) | 1,987 |
-| BUGFIX assertions | 77 |
-| **Total assertions** | **~421,500** |
-| Assertion pass rate | 99.5% (schematic 100%, PCB 99.96%, SPICE 99.5%, EMC 98.7%) |
+| Total repos in repos.md | 5,829 |
+| Checked out in repos/ | 5,829 |
+| Repos with baselines | 5,829 |
+| Repos with assertions | 5,829 |
+| **Total assertions** | **~808,800** |
+| Assertion pass rate | 99.9% (653 failures, mostly stale led_audit assertions) |
 | Bugfix registry entries | 67 |
 | Unit tests | 270 |
 | Layer 3 reviewed repos | 992 |
@@ -81,6 +75,22 @@ Last updated: 2026-04-02 (v1.1 feature testing + harness improvements)
 ---
 
 ## Completed batches
+
+### Corpus Expansion (2026-04-04 to 2026-04-06)
+
+Expanded corpus from 1,478 to 5,829 repos (+4,351 new repos).
+
+Pipeline: search_repos.py → validate_candidates.py → add_repos.py
+- **Search:** 11,345 GitHub candidates via code search, topic search, keyword search
+- **Validation:** 11,860 repos passed (clone + scan + quality score). ~52% pass rate.
+- **Adding:** 4,757 completed, 7 failed (assertion ref mismatches), 0 purged
+- Each repo: clone → discover → schematic/PCB/gerber analysis → snapshot → seed assertions → verify 100%
+- SPICE and EMC deferred (--skip-spice --skip-emc) for later batch runs
+- 808,795 total assertions at 99.9% pass rate
+- 653 failures: stale led_audit (539) and opamp_circuits ref (114) assertions — to be re-seeded
+
+New tools created: search_repos.py, validate_candidates.py, add_repos.py.
+RUNBOOK Checklist 20 (Corpus expansion) added.
 
 ### v1.1 Feature Validation + Harness Improvements (2026-04-01 to 2026-04-02)
 

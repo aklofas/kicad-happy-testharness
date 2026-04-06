@@ -11,6 +11,53 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-04 — Batch 29: Pre-existing bugs found during v1.2 Batch 4 (KH-196, KH-197, KH-198)
+
+### KH-196 (HIGH): Bare capacitor values parsed as Farads in inrush/PDN analysis
+
+- **File**: `analyze_schematic.py` — `analyze_inrush_current()` line 6658, `analyze_pdn_impedance()` line 4788
+- **Root cause**: Both functions called `parse_value(comp.get("value", ""))` without `component_type="capacitor"`. Bare numeric values like "2.2" were interpreted as 2.2 Farads instead of applying the KH-153 picofarad heuristic. On the BandSelector board, this produced `total_output_capacitance_uF: 2,200,000` and `estimated_inrush_A: 22,000` — physically impossible for a small THT electrolytic.
+- **Fix**: Replaced both call sites with `ctx.parsed_values.get(comp["reference"])` which uses pre-computed values from `AnalysisContext.__post_init__()` (already passes `component_type`).
+- **Verified**: 6,850/6,850 batch pass. BandSelector assertion now passes. 122,038/122,038 regression assertions at 100%.
+
+### KH-197 (MEDIUM): Key matrix topology detector false positives and overcounting
+
+- **File**: `domain_detectors.py` — `detect_key_matrices()`
+- **Root cause**: Three sub-bugs in the topology-based key matrix detector:
+  (a) Net-name detection counted switches/diodes across all row+col nets without deduplicating by component reference, inflating counts when a component touches both a row and column net.
+  (b) Topology detection didn't track paired switches, allowing the same switch to pair with different diodes from both pin orderings, double-counting it.
+  (c) Topology detection assigned row_net/col_net based on arbitrary diode orientation without checking for nets appearing in both sets, causing row/column confusion.
+- **Fix**: (a) Added `counted_refs` set to deduplicate switch/diode counts by reference. (b) Added `paired_switches` tracking with `found_pair` flag to limit one pair per switch. (c) Added ambiguous net resolution: nets appearing in both row_nets and col_nets are assigned to whichever set they appear in more often (ties removed from both).
+- **Side effect**: 19 non-keyboard boards (GEODE robot, cm4_robot, vortex_core, BMP_SuperColliderClone, etc.) previously had false positive key_matrices detections from the overcounting bug. These are now correctly empty. Updated 38 stale assertions.
+- **Verified**: 6,850/6,850 batch pass. Original 3 keyboard failures resolved. 122,038/122,038 regression at 100%.
+
+### KH-198 (MEDIUM): LC filter reference collision in multi-project schematics
+
+- **File**: `signal_detectors.py` — `detect_lc_filters()`
+- **Root cause**: The Caffeinated-AFTONSPARV schematic has components from another project embedded, causing multiple physically distinct capacitors to share reference "C5". The LC filter detector iterated pins on the LX net and found 9 pins all belonging to "C5", counting them as 9 parallel caps instead of 1.
+- **Fix**: Added reference deduplication in the parallel-cap merge loop — if the same capacitor reference appears multiple times in an LC group, only the first occurrence is kept.
+- **Verified**: 6,850/6,850 batch pass. Caffeinated-AFTONSPARV assertion now passes.
+
+---
+
+## 2026-04-03 — Batch 28: v1.2 Batch 3 interface validation detectors (KH-194, KH-195)
+
+### KH-194 (MEDIUM): ESD audit "can" keyword matches inside "scan" footprint names
+
+- **File**: `signal_detectors.py` — `_classify_connector_interface()`
+- **Root cause**: Plain substring check `"can" in combined` matched "can" inside footprint strings like `sockets_scanhead:motor_13pin`, causing generic connectors to be classified as CAN bus / high_risk. Affected the `firestarter` project (8 connectors) and potentially other boards with "scan", "cancel", etc. in footprint or lib_id.
+- **Fix**: Added `_kw_match()` helper that uses `re.search(r'\b...\b', combined)` word-boundary matching for short keywords (≤3 chars). Applied to all three keyword lists (high/medium/low risk). Longer keywords like "ethernet", "displayport" still use plain substring matching.
+- **Verified**: 6,850/6,850 schematic batch pass. 0 generic pin headers classified as high_risk (was 10 before fix). 117,167/117,167 regression assertions pass.
+
+### KH-195 (LOW): USBPDSINK01 assertion expects 3 USB compliance failures, now 1
+
+- **File**: Assertion `FND-00001757-AST-04` in `reference/mlab-modules/USBPDSINK01/.../USBPDSINK01.kicad_sch_finding.json`
+- **Root cause**: New PD controller detection in `analyze_usb_compliance()` correctly identifies STUSB4500QTR on CC1/CC2 nets and marks legacy `cc1_pulldown_5k1`/`cc2_pulldown_5k1` checks as "pass" instead of "fail". The STUSB4500 integrates internal CC termination, so external 5.1kΩ pull-downs are absent by design. This reduced `usb_compliance.summary.fail` from 3 to 1 (only `vbus_esd_protection` remains as a failure).
+- **Fix**: Updated assertion expected value from 3 → 1 and rewrote description to reflect PD-controlled CC termination.
+- **Verified**: 117,167/117,167 regression assertions pass (100%).
+
+---
+
 ## 2026-04-02 — Batch 27: parse_tolerance() coverage + run_spice.py passthrough (KH-193, TH-008)
 
 ### KH-193 (LOW): parse_tolerance() misses value strings with non-standard delimiters

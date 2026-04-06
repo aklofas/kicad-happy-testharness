@@ -1,0 +1,53 @@
+{
+  "file_pattern": "DCMGv2DISTRIBUTION.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 137 esd_coverage_audit",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "equals",
+        "value": 137
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "L1 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 17 led_audit",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "equals",
+        "value": 17
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 10 motor_drivers",
+      "check": {
+        "path": "signal_analysis.motor_drivers",
+        "op": "equals",
+        "value": 10
+      }
+    }
+  ]
+}

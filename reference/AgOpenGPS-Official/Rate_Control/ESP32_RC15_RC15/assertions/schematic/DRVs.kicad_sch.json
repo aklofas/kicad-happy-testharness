@@ -1,0 +1,140 @@
+{
+  "file_pattern": "DRVs.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~24 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 21,
+        "max": 27
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~36 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 32,
+        "max": 40
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "2 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "5 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 led_driver_ics detected",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All led_driver_ics have ref",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All led_driver_ics type values are valid",
+      "check": {
+        "path": "signal_analysis.led_driver_ics",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(pwm_led_driver|matrix_led_driver|constant_current_led_driver|rgb_led_driver|led_driver)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "7 motor_drivers detected",
+      "check": {
+        "path": "signal_analysis.motor_drivers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All motor_drivers have driver_reference",
+      "check": {
+        "path": "signal_analysis.motor_drivers",
+        "op": "not_contains_match",
+        "field": "driver_reference",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All motor_drivers driver_type values are valid",
+      "check": {
+        "path": "signal_analysis.motor_drivers",
+        "op": "count_matches",
+        "field": "driver_type",
+        "pattern": "^(stepper|dc_brushed_h_bridge)$",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "Has 15 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 11
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "Has 8 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 6
+      }
+    }
+  ]
+}

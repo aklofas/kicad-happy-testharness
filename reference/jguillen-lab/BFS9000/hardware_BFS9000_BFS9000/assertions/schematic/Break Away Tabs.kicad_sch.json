@@ -1,0 +1,52 @@
+{
+  "file_pattern": "Break Away Tabs.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~61 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 57,
+        "max": 65
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Has 42 battery(s)",
+      "check": {
+        "path": "statistics.component_types.battery",
+        "op": "min_count",
+        "value": 31
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "Has 19 thermistor(s)",
+      "check": {
+        "path": "statistics.component_types.thermistor",
+        "op": "min_count",
+        "value": 14
+      }
+    }
+  ]
+}
