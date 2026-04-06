@@ -16,7 +16,7 @@ positive, and the new result is correct.
 
 **Correctness testing** asks: "Is the output right?" This requires ground truth — a
 human-verified answer for what the analyzer should find. Ground truth is expensive to
-create and doesn't exist for 1,035 arbitrary open-source KiCad projects.
+create and doesn't exist for 5,829 open-source KiCad projects.
 
 The layers map to this distinction:
 
@@ -191,7 +191,7 @@ round numbers that look plausible but have no source.
 
 **The audit pipeline:**
 1. `audit_constants.py scan` — AST-scan all analyzer scripts for constants
-2. `audit_constants.py corpus` — cross-reference against 1,035 repos
+2. `audit_constants.py corpus` — cross-reference against 5,829 repos
 3. `verify_constants_online.py` — spot-check against DigiKey parametric data
 4. `audit_equations.py scan` — verify EQ-NNN tags and function body hashes
 
@@ -202,7 +202,7 @@ and use a conservative default. Better to not estimate than to estimate wrong.
 
 ## The corpus as statistical authority
 
-1,035 repos provide empirical validation that no manual test suite can match:
+5,829 repos provide empirical validation that no manual test suite can match:
 
 - A constant exercised by 500 repos is highly trustworthy (if verified)
 - A constant exercised by 3 repos may be overfitted

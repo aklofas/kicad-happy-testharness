@@ -1,10 +1,10 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 1,043 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 402K+ machine-checkable assertions, 276 unit tests, 28 auto-discovered signal detectors, 30,000+ SPICE simulations across 17 subcircuit types, and 141,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 5,829 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 808K+ machine-checkable assertions, 276 unit tests, 40 auto-discovered signal detectors, 30,000+ SPICE simulations across 17 subcircuit types, and 141,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
 
 For a deep dive into the architecture, reasoning, and design decisions, see [methodology.md](methodology.md).
 
-**For operational procedures, see [RUNBOOK.md](RUNBOOK.md)** — 19 checklists covering
+**For operational procedures, see [RUNBOOK.md](RUNBOOK.md)** — 20 checklists covering
 code change validation, feature testing, corpus health, issue management, constants
 verification, Layer 3 reviews, release preparation, domain detector testing, and more. Agents should follow
 the relevant checklist rather than improvising workflows.
@@ -394,7 +394,7 @@ Prefixes: `KH-*` for analyzer bugs, `TH-*` for harness issues. Numbers are globa
 ```
 spice.md                    # SPICE simulation documentation
 emc.md                      # EMC pre-compliance testing documentation
-repos.md                    # Master repo list (1,043 repos, categories via ## headers)
+repos.md                    # Master repo list (5,829 repos, categories via ## headers)
 status.md                   # Batch testing progress log
 ISSUES.md                   # Open issues (KH-* analyzer, TH-* harness)
 FIXED.md                    # Closed issues with fix details
@@ -409,7 +409,7 @@ coverage_detector_map.py    # Per-detector coverage matrix (auto-discovered from
 detect_changes.py           # Upstream change impact (--since, --json, generate-map)
 generate_health_report.py   # Health metrics + drop detection (--json, --log, --reset-baseline)
 generate_catalog.py         # Repo metadata catalog (--query, --json)
-RUNBOOK.md                  # 19 operational checklists for agents
+RUNBOOK.md                  # 20 operational checklists for agents
 
 run/                        # Batch-run analyzers (all support --repo, --jobs)
   run_schematic.py
@@ -503,4 +503,4 @@ results/                    # Git-ignored -- outputs, manifests, review packets
 
 ## Usage warning
 
-The test corpus has 1,043 repos and cannot be processed in a single session. Work through repos in batches using `--repo` flags. Use `--jobs` for parallelism where supported.
+The test corpus has 5,829 repos. Use `--cross-section smoke` (20 repos) or `--cross-section quick_200` (~200 repos) for targeted testing instead of full corpus runs. All tools auto-parallelize with `--jobs` (default: cpu_count) and support `--resume` to skip completed files after interruption.

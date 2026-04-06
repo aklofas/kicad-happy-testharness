@@ -647,7 +647,7 @@ python3 validate/audit_constants.py corpus
 
 This scans all analyzer outputs to determine which constant entries are actually
 exercised by the test corpus. Flags:
-- **Unused entries** — entries that never fire across 1,035 repos. May be dead weight
+- **Unused entries** — entries that never fire across 5,829 repos. May be dead weight
   or may indicate the constant was added for a specific project not in the corpus.
 - **Low-hit entries** — entries exercised by <3 repos. Harder to validate empirically.
 - **High-hit entries** — entries exercised by 100+ repos. High confidence if verified.

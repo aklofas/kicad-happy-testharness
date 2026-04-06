@@ -1,12 +1,12 @@
 # Methodology
 
-How we validate a suite of KiCad analyzers against 1,043 real-world open-source hardware designs, and why the system is built the way it is.
+How we validate a suite of KiCad analyzers against 5,829 real-world open-source hardware designs, and why the system is built the way it is.
 
 ---
 
 ## The problem
 
-kicad-happy includes three deterministic Python analyzers that parse KiCad schematics, PCB layouts, and Gerber files. They extract components, nets, and signal paths, then run 21+ signal detectors (voltage dividers, regulators, filters, bus protocols, opamp circuits, etc.) to produce structured JSON output. A fourth tool, `simulate_subcircuits.py`, generates ngspice testbenches from detector output to validate circuit behavior via SPICE simulation (see [spice.md](spice.md)).
+kicad-happy includes three deterministic Python analyzers that parse KiCad schematics, PCB layouts, and Gerber files. They extract components, nets, and signal paths, then run 40 signal detectors (voltage dividers, regulators, filters, bus protocols, opamp circuits, etc.) to produce structured JSON output. A fourth tool, `simulate_subcircuits.py`, generates ngspice testbenches from detector output to validate circuit behavior via SPICE simulation (see [spice.md](spice.md)).
 
 These analyzers contain 180+ hardcoded constants: voltage reference tables sourced from datasheets, component classification keyword lists, regex patterns for net name matching, and numeric thresholds for detection heuristics. A single wrong entry — a hallucinated Vref value, an overly broad regex, a misclassified component prefix — can silently produce incorrect results across hundreds of projects.
 
@@ -22,7 +22,7 @@ Several constraints shaped the architecture:
 
 1. **No ground truth exists.** There is no authoritative database of "correct" signal analysis results for arbitrary KiCad projects. The analyzers are producing novel observations — voltage divider ratios, regulator configurations, filter topologies — that no prior tool has computed.
 
-2. **The corpus is too large for a single session.** 1,043 repos with 6,800+ schematics. Any workflow must support incremental, per-repo processing across many sessions.
+2. **The corpus is too large for a single session.** 5,829 repos with 36,000+ schematics. Cross-sections (`--cross-section quick_200`) enable targeted testing of representative subsets. All tools auto-parallelize with `--jobs` and support `--resume` for interrupted runs.
 
 3. **Analyzer changes are frequent.** Bug fixes, new detectors, and constant table updates happen regularly. Each change can affect outputs across the entire corpus. Regression detection must be fast and precise enough to distinguish intentional improvements from unintended breakage.
 
@@ -263,11 +263,7 @@ LLM review discovers bug → KH-NNN filed in ISSUES.md
 
 ### Selection criteria
 
-The corpus of 1,052 repos was curated from publicly available GitHub repositories containing KiCad project files. 87 repos were purged after audit:
-- 18 Eagle-only repos misidentified as KiCad
-- 14 tool/library repos with example PCBs but no real designs
-- 22 PCB-only repos with no schematics
-- 33 repos with fewer than 3 components (templates, art pieces, rulers)
+The corpus started at 1,052 repos curated from publicly available GitHub repositories containing KiCad project files. 87 repos were purged after audit (18 Eagle-only, 14 tool/library repos, 22 PCB-only, 33 with fewer than 3 components). In April 2026, the corpus was expanded to 5,829 repos via automated discovery across GitHub, GitLab, and Codeberg using `search_repos.py`, `validate_candidates.py`, and `add_repos.py`.
 
 ### Reproducibility
 
@@ -301,31 +297,28 @@ results/
     outputs/{type}/{repo}/  # Current analyzer JSON outputs
 ```
 
-This separation means the git repository tracks only curated regression data (~7MB for the full corpus), not raw analyzer outputs (~680MB+).
+This separation means the git repository tracks only curated regression data (~50MB for the full corpus), not raw analyzer outputs (~680MB+).
 
 ---
 
 ## Current state
 
-As of 2026-03-17:
+As of 2026-04-06:
 
 | Metric | Value |
 |--------|-------|
-| Repos in corpus | 1,052 |
-| Repos with baselines + assertions | 1,035 |
-| Total schematic files | 6,827 |
-| Total PCB files | ~3,500 |
-| Total assertion files | 18,060 |
-| Total assertions | 203,300 |
-| Assertion pass rate | 100.0% |
-| Aspirational assertions | 211 |
-| Bugfix registry entries | 58 (67 assertions) |
-| KH-* issues filed/closed | 176/171 |
-| Open KH-* issues | 5 (all LOW) |
-| Layer 3 reviewed repos | 155 of 1,035 |
-| Total findings | 287 |
+| Repos in corpus | 5,829 |
+| Repos with baselines + assertions | 5,829 |
+| Total assertions | ~808,800 |
+| Assertion pass rate | 99.9% |
+| Bugfix registry entries | 67 |
+| KH-* issues filed/closed | 200/200 |
+| Open KH-* issues | 0 |
+| Layer 3 reviewed repos | 992 |
+| Total findings | 2,575 |
+| Cross-sections | 9 named subsets (smoke=20, quick_200=243, etc.) |
 
-The priority queue is empty — all repos have been tested at Layer 1-2. Layer 3 coverage continues to expand. All MEDIUM and higher issues have been resolved.
+All repos have been tested at Layer 1-2 with baselines and assertions. Layer 3 coverage spans 992 repos. Cross-sections enable targeted validation (smoke, quick_200, etc.) and batch runs use high parallelism (--jobs 16+) for corpus-wide operations.
 
 ---
 

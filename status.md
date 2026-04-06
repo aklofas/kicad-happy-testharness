@@ -163,7 +163,7 @@ All 603 remaining repos from priority.md's "To test" queue verified at once.
 assertions from earlier batches). 4 purged repos removed (Kicad-Design-Library,
 kicad-blocks, designGuardDesktopApp, kicad_schemes). Total: 16,934 assertions
 checked across 695 repos (96+48+599+52 from earlier batches), all at 100% pass.
-Priority queue is now empty — all 1,035 repos with baselines have been tested.
+Priority queue is now empty — all repos with baselines have been tested.
 
 ### Batch 15 — Layer 3 signal-rich batch (20 repos, 2026-03-16)
 

@@ -1,6 +1,6 @@
 # SPICE Simulation Testing
 
-The test harness validates the kicad-happy SPICE simulation skill (`simulate_subcircuits.py`) against the full 1,035-repo corpus. The SPICE skill reads schematic analyzer JSON outputs, generates ngspice testbenches for detected subcircuits, runs simulations, and produces structured pass/warn/fail/skip results.
+The test harness validates the kicad-happy SPICE simulation skill (`simulate_subcircuits.py`) against the full 5,829-repo corpus. **Note:** SPICE/EMC statistics below reflect the original 1,035-repo subset and will update when SPICE is re-run on the expanded corpus. The SPICE skill reads schematic analyzer JSON outputs, generates ngspice testbenches for detected subcircuits, runs simulations, and produces structured pass/warn/fail/skip results.
 
 ## Requirements
 
