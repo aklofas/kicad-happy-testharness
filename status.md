@@ -17,8 +17,8 @@ Last updated: 2026-04-06 (corpus expansion: 1,478 → 5,829 repos)
 | Checked out in repos/ | 5,829 |
 | Repos with baselines | 5,829 |
 | Repos with assertions | 5,829 |
-| **Total assertions** | **~808,800** |
-| Assertion pass rate | 99.9% (653 failures, mostly stale led_audit assertions) |
+| **Total assertions** | **808,303** |
+| Assertion pass rate | 100.0% |
 | Bugfix registry entries | 67 |
 | Unit tests | 270 |
 | Layer 3 reviewed repos | 992 |

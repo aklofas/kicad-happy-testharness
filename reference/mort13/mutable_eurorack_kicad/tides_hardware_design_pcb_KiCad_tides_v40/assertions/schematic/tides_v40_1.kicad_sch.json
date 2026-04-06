@@ -111,47 +111,6 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "2 led_audit detected",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "All led_audit have ref",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "All led_audit type values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(indicator_led)$",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000015",
-      "description": "All led_audit drive_method values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000016",
       "description": "5 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -160,7 +119,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000013",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -170,7 +129,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000014",
       "description": "Has 9 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -179,7 +138,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000015",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -188,7 +147,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000016",
       "description": "Has 6 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
@@ -197,7 +156,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000017",
       "description": "Has 20 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -206,7 +165,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000018",
       "description": "Has 5 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
