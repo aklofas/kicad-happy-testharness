@@ -1,0 +1,79 @@
+{
+  "file_pattern": "bootloader.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 3 protection_device simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^protection_device$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "DUSBl3 simulated as protection_device",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bDUSBl3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "DUSBl2 simulated as protection_device",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bDUSBl2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "DUSBl1 simulated as protection_device",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bDUSBl1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Cbl1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCbl1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Cbl2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCbl2\\b"
+      }
+    }
+  ]
+}

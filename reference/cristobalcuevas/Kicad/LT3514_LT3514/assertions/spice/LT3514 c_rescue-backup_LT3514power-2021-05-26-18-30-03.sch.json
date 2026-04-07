@@ -1,0 +1,81 @@
+{
+  "file_pattern": "LT3514 c_rescue-backup_LT3514power-2021-05-26-18-30-03.sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~15 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 13,
+        "max": 17
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 9 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "3 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "3 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "3 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 rf_matching simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rf_matching$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "5 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 5
+      }
+    }
+  ]
+}

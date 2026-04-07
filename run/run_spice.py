@@ -26,7 +26,8 @@ import os
 import subprocess
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -95,6 +96,19 @@ def run_extract_parasitics(extractor_script, pcb_json, parasitics_json):
         return False
 
 
+def _should_skip(outfile, resume):
+    """Check if output file exists and is valid JSON (for --resume)."""
+    if not resume:
+        return False
+    if not outfile.exists() or outfile.stat().st_size < 3:
+        return False
+    try:
+        json.loads(outfile.read_text())
+        return True
+    except (json.JSONDecodeError, OSError):
+        return False
+
+
 def run_one_spice(simulator_script, input_json, output_json, timeout=5,
                   parasitics_json=None, extra_args=None):
     """Run simulate_subcircuits.py on one schematic analysis JSON.
@@ -136,6 +150,44 @@ def run_one_spice(simulator_script, input_json, output_json, timeout=5,
         err_file = output_json.with_suffix(".err")
         err_file.write_text(str(e))
         return -1, None, elapsed
+
+
+def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
+                       extra_args, with_parasitics, extractor, resume):
+    """Process one schematic JSON through SPICE simulation.
+
+    Top-level function so it can be pickled by ProcessPoolExecutor.
+
+    Returns:
+        (input_json, returncode_or_"SKIPPED", summary_or_None, output_json,
+         elapsed, parasitics_extracted_bool)
+    """
+    repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
+    out_dir = spice_out_dir / repo_name
+    out_dir.mkdir(parents=True, exist_ok=True)
+    output_json = out_dir / input_json.name
+
+    if _should_skip(output_json, resume):
+        return input_json, "SKIPPED", None, output_json, 0.0, False
+
+    parasitics_json = None
+    did_extract_parasitics = False
+    if with_parasitics:
+        pcb_json = find_pcb_output(input_json)
+        if pcb_json:
+            parasitics_json = out_dir / (input_json.stem + ".parasitics.json")
+            ok = run_extract_parasitics(extractor, pcb_json, parasitics_json)
+            if ok:
+                did_extract_parasitics = True
+            else:
+                parasitics_json = None
+
+    returncode, summary, elapsed = run_one_spice(
+        simulator, input_json, output_json, timeout=timeout,
+        parasitics_json=parasitics_json,
+        extra_args=extra_args,
+    )
+    return input_json, returncode, summary, output_json, elapsed, did_extract_parasitics
 
 
 def main():
@@ -242,57 +294,26 @@ def main():
 
     parasitics_extracted = 0
 
-    def _should_skip(outfile):
-        """Check if output file exists and is valid JSON (for --resume)."""
-        if not args.resume:
-            return False
-        if not outfile.exists() or outfile.stat().st_size < 3:
-            return False
-        try:
-            json.loads(outfile.read_text())
-            return True
-        except (json.JSONDecodeError, OSError):
-            return False
-
-    def process_one(input_json):
-        nonlocal parasitics_extracted
-        # Mirror the repo directory structure
-        repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
-        out_dir = spice_out_dir / repo_name
-        out_dir.mkdir(parents=True, exist_ok=True)
-        output_json = out_dir / input_json.name
-
-        # --resume: skip if valid output already exists
-        if _should_skip(output_json):
-            return input_json, "SKIPPED", None, output_json, 0.0
-
-        # Extract parasitics from matching PCB output if --with-parasitics
-        parasitics_json = None
-        if args.with_parasitics:
-            pcb_json = find_pcb_output(input_json)
-            if pcb_json:
-                parasitics_json = out_dir / (input_json.stem + ".parasitics.json")
-                ok = run_extract_parasitics(extractor, pcb_json, parasitics_json)
-                if ok:
-                    parasitics_extracted += 1
-                else:
-                    parasitics_json = None  # Extraction failed, run without
-
-        returncode, summary, elapsed = run_one_spice(
-            simulator, input_json, output_json, timeout=args.timeout,
-            parasitics_json=parasitics_json,
-            extra_args=args.extra_args,
-        )
-        return input_json, returncode, summary, output_json, elapsed
+    # Build a partial with all the fixed parameters for the worker function
+    worker = partial(
+        _process_one_spice,
+        simulator=simulator,
+        spice_out_dir=spice_out_dir,
+        timeout=args.timeout,
+        extra_args=args.extra_args,
+        with_parasitics=args.with_parasitics,
+        extractor=extractor,
+        resume=args.resume,
+    )
 
     results_list = []
     if args.jobs <= 1:
         for i, inp in enumerate(inputs, 1):
-            result = process_one(inp)
+            result = worker(inp)
             results_list.append((i, result))
     else:
-        with ThreadPoolExecutor(max_workers=args.jobs) as pool:
-            futures = {pool.submit(process_one, inp): i
+        with ProcessPoolExecutor(max_workers=args.jobs) as pool:
+            futures = {pool.submit(worker, inp): i
                        for i, inp in enumerate(inputs, 1)}
             for future in as_completed(futures):
                 i = futures[future]
@@ -301,7 +322,9 @@ def main():
     # Sort by index for ordered output
     results_list.sort(key=lambda x: x[0])
 
-    for i, (input_json, returncode, summary, output_json, elapsed) in results_list:
+    for i, (input_json, returncode, summary, output_json, elapsed, did_extract) in results_list:
+        if did_extract:
+            parasitics_extracted += 1
         rel = f"{input_json.parent.name}/{input_json.name}"
 
         if returncode == "SKIPPED":

@@ -1,0 +1,100 @@
+{
+  "file_pattern": "sheets_power.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 4 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C26 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC26\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C23 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC23\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C25 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC25\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C24 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC24\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C24 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC24\\b"
+      }
+    }
+  ]
+}

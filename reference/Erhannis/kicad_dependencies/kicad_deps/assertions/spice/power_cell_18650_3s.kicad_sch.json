@@ -1,0 +1,48 @@
+{
+  "file_pattern": "power_cell_18650_3s.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~6 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 5,
+        "max": 7
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 4 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "1 current_sense simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^current_sense$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "5 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 5
+      }
+    }
+  ]
+}

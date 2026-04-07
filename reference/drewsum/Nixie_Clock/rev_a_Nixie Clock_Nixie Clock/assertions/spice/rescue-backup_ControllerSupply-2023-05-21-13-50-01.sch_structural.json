@@ -1,0 +1,59 @@
+{
+  "file_pattern": "rescue-backup_ControllerSupply-2023-05-21-13-50-01.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "R303 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR303\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "R305 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR305\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C303 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC303\\b"
+      }
+    }
+  ]
+}

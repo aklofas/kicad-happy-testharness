@@ -1,0 +1,79 @@
+{
+  "file_pattern": "usb_c.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 3 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Q404 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ404\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q401 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ401\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Q402 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ402\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C401 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC401\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C402 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC402\\b"
+      }
+    }
+  ]
+}

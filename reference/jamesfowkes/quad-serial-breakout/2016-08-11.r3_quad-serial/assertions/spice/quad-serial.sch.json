@@ -1,0 +1,37 @@
+{
+  "file_pattern": "quad-serial.sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~3 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 2,
+        "max": 4
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 2 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "3 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 3
+      }
+    }
+  ]
+}

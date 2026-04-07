@@ -1,0 +1,48 @@
+{
+  "file_pattern": "out_high_side.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Q2 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Q1902 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ1902\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q1903 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ1903\\b"
+      }
+    }
+  ]
+}

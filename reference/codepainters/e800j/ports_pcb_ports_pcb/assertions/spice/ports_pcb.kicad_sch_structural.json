@@ -1,0 +1,68 @@
+{
+  "file_pattern": "ports_pcb.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 5 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "T2 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bT2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "T3 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bT3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "T1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bT1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "T4 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bT4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "T5 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bT5\\b"
+      }
+    }
+  ]
+}

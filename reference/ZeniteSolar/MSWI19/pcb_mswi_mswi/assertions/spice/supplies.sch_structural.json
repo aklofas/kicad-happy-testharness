@@ -1,0 +1,89 @@
+{
+  "file_pattern": "supplies.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Q601 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ601\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C601 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC601\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C602 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC602\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C603 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC603\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C605 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC605\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C604 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC604\\b"
+      }
+    }
+  ]
+}

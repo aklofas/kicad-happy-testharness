@@ -1,0 +1,119 @@
+{
+  "file_pattern": "PS_Power.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 3 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "R195 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR195\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "R196 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR196\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R199 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR199\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R200 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR200\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R197 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR197\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R198 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR198\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C229 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC229\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C228 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC228\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C230 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC230\\b"
+      }
+    }
+  ]
+}

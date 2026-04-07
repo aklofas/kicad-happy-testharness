@@ -1,0 +1,81 @@
+{
+  "file_pattern": "stm32.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~12 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 10,
+        "max": 14
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 8 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "2 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "2 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "2 protection_device simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^protection_device$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "4 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "2 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "file_pattern": "schematics_2.5.2-rf-rx-path.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "L1403 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL1403\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C1404 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1404\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "L1402 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL1402\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C1405 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1405\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C1402 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1402\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C1401 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1401\\b"
+      }
+    }
+  ]
+}

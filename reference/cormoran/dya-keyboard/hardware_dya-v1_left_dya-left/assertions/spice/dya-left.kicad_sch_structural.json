@@ -1,0 +1,69 @@
+{
+  "file_pattern": "dya-left.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "RL1 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRL1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "RL2 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRL2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "QL1 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQL1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "QL2 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQL2\\b"
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "file_pattern": "DEM.sch",
+  "analyzer_type": "emc",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "1 via_stitching finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^via_stitching$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Rule VS-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^VS\\-001$"
+      }
+    }
+  ]
+}

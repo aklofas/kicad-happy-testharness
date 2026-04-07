@@ -1,0 +1,68 @@
+{
+  "file_pattern": "Source_Connector_Inputs.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "C263 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC263\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "C260 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC260\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C265 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC265\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C261 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC261\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C257 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC257\\b"
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "file_pattern": "Hbridge.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 4 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Q505 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ505\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q503 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ503\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Q506 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ506\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Q501 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ501\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C501 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC501\\b"
+      }
+    }
+  ]
+}

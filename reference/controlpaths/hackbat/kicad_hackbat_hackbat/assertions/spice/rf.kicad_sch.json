@@ -1,0 +1,59 @@
+{
+  "file_pattern": "rf.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~20 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 18,
+        "max": 22
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 8 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "1 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "8 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "11 rf_matching simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rf_matching$",
+        "value": 11
+      }
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "file_pattern": "Duet2.sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~32 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 28,
+        "max": 36
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 21 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 21
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "3 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "3 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "17 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 17
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "9 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 9
+      }
+    }
+  ]
+}

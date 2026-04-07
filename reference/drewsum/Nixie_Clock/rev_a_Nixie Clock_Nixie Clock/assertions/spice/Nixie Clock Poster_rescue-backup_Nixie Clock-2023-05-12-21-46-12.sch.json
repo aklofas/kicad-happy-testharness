@@ -1,0 +1,70 @@
+{
+  "file_pattern": "Nixie Clock Poster_rescue-backup_Nixie Clock-2023-05-12-21-46-12.sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~40 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 36,
+        "max": 44
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 25 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 25
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "3 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "2 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "30 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 30
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "5 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 5
+      }
+    }
+  ]
+}

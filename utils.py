@@ -10,7 +10,7 @@ import os
 import subprocess
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent
@@ -560,7 +560,7 @@ def run_analyzer(config, args=None):
     else:
         # Parallel execution
         tasks = {}
-        with ThreadPoolExecutor(max_workers=jobs) as pool:
+        with ProcessPoolExecutor(max_workers=jobs) as pool:
             for i, file_path in enumerate(files, 1):
                 relpath, outfile, errfile = _prepare(file_path)
                 if _should_skip(outfile):

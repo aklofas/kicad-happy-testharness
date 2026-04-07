@@ -1,0 +1,48 @@
+{
+  "file_pattern": "Amiga 2000R6.sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~34 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 30,
+        "max": 38
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 26 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 26
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "28 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 28
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "6 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 6
+      }
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "file_pattern": "LED_Driver.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 4 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Q601 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ601\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Q600 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ600\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q602 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ602\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Q603 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ603\\b"
+      }
+    }
+  ]
+}

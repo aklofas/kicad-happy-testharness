@@ -1,0 +1,69 @@
+{
+  "file_pattern": "SPI_to_MW_Adapter.sch",
+  "analyzer_type": "emc",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "2 decoupling finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^decoupling$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "1 ground_plane finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^ground_plane$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Rule DC-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DC\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Rule GP-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^GP\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U2 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU2\\b"
+      }
+    }
+  ]
+}

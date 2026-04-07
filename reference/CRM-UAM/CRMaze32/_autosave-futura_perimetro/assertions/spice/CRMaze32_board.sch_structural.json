@@ -1,0 +1,99 @@
+{
+  "file_pattern": "CRMaze32_board.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 5 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Q102 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ102\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q103 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Q105 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ105\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Q104 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Q101 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C103 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C104 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC104\\b"
+      }
+    }
+  ]
+}

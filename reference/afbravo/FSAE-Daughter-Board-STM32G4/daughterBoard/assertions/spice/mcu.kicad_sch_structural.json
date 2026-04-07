@@ -1,0 +1,69 @@
+{
+  "file_pattern": "mcu.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 protection_device simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^protection_device$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Y2 simulated as crystal_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bY2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Y1 simulated as crystal_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bY1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "D5 simulated as protection_device",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bD5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "D6 simulated as protection_device",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bD6\\b"
+      }
+    }
+  ]
+}

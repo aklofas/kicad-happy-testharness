@@ -1,0 +1,221 @@
+{
+  "file_pattern": "PSU.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 3 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 3 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R2 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "RV2 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRV2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R3 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "RV3 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRV3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R1 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "RV1 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRV1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C13 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC13\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C12 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC12\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C11 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC11\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R2 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "RV2 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRV2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R1 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "RV1 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRV1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R3 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "RV3 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRV3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "C12 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC12\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "C11 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC11\\b"
+      }
+    }
+  ]
+}

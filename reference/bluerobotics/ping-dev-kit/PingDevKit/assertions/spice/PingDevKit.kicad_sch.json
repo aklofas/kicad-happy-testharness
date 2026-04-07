@@ -1,0 +1,136 @@
+{
+  "file_pattern": "PingDevKit.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~59 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 56,
+        "max": 62
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 40 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 40
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "1 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "9 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "4 feedback_network simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^feedback_network$",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "4 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "2 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "6 opamp_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^opamp_circuit$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "13 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 13
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "3 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "1 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "16 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 16
+      }
+    }
+  ]
+}

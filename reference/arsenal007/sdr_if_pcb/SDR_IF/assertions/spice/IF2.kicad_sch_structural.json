@@ -1,0 +1,120 @@
+{
+  "file_pattern": "IF2.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 3 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 2 opamp_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^opamp_circuit$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "L22 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL22\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C61 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC61\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "L20 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL20\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C58 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC58\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "L21 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL21\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C60 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC60\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "U10 simulated as opamp_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU10\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C64 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC64\\b"
+      }
+    }
+  ]
+}

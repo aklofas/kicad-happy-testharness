@@ -24,7 +24,8 @@ import json
 import sys
 import subprocess
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -126,6 +127,40 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
         return -1, None, elapsed
 
 
+def _should_skip_emc(output_json, resume):
+    """Check if output file exists and is valid JSON (for --resume)."""
+    if not resume:
+        return False
+    if not output_json.exists() or output_json.stat().st_size < 3:
+        return False
+    try:
+        json.loads(output_json.read_text())
+        return True
+    except (json.JSONDecodeError, OSError):
+        return False
+
+
+def _process_one_emc(input_json, emc_out_dir, standard, timeout, spice_enhanced,
+                     resume, analyzer):
+    """Top-level function for ProcessPoolExecutor (must be picklable)."""
+    repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
+    out_dir = emc_out_dir / repo_name
+    out_dir.mkdir(parents=True, exist_ok=True)
+    output_json = out_dir / input_json.name
+
+    # --resume: skip if valid output already exists
+    if _should_skip_emc(output_json, resume):
+        return input_json, "SKIPPED", None, output_json, None, 0.0
+
+    pcb_json = find_pcb_output(input_json)
+    returncode, summary, elapsed = run_one_emc(
+        analyzer, input_json, pcb_json, output_json,
+        standard=standard, timeout=timeout,
+        spice_enhanced=spice_enhanced,
+    )
+    return input_json, returncode, summary, output_json, pcb_json is not None, elapsed
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Run EMC pre-compliance analysis on schematic+PCB outputs"
@@ -199,44 +234,22 @@ def main():
     timings = []
     t_start = time.time()
 
-    def _should_skip(outfile):
-        """Check if output file exists and is valid JSON (for --resume)."""
-        if not args.resume:
-            return False
-        if not outfile.exists() or outfile.stat().st_size < 3:
-            return False
-        try:
-            json.loads(outfile.read_text())
-            return True
-        except (json.JSONDecodeError, OSError):
-            return False
-
-    def process_one(input_json):
-        repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
-        out_dir = emc_out_dir / repo_name
-        out_dir.mkdir(parents=True, exist_ok=True)
-        output_json = out_dir / input_json.name
-
-        # --resume: skip if valid output already exists
-        if _should_skip(output_json):
-            return input_json, "SKIPPED", None, output_json, None, 0.0
-
-        pcb_json = find_pcb_output(input_json)
-        returncode, summary, elapsed = run_one_emc(
-            analyzer, input_json, pcb_json, output_json,
-            standard=args.standard, timeout=args.timeout,
-            spice_enhanced=args.spice_enhanced,
-        )
-        return input_json, returncode, summary, output_json, pcb_json is not None, elapsed
+    process_fn = partial(_process_one_emc,
+                         emc_out_dir=emc_out_dir,
+                         standard=args.standard,
+                         timeout=args.timeout,
+                         spice_enhanced=args.spice_enhanced,
+                         resume=args.resume,
+                         analyzer=analyzer)
 
     results_list = []
     if args.jobs <= 1:
         for i, inp in enumerate(inputs, 1):
-            result = process_one(inp)
+            result = process_fn(inp)
             results_list.append((i, result))
     else:
-        with ThreadPoolExecutor(max_workers=args.jobs) as pool:
-            futures = {pool.submit(process_one, inp): i
+        with ProcessPoolExecutor(max_workers=args.jobs) as pool:
+            futures = {pool.submit(process_fn, inp): i
                        for i, inp in enumerate(inputs, 1)}
             for future in as_completed(futures):
                 i = futures[future]

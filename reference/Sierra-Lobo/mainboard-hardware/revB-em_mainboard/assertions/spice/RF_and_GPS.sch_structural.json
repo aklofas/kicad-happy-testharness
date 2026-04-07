@@ -1,0 +1,58 @@
+{
+  "file_pattern": "RF_and_GPS.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 rf_chain simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rf_chain$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "U23 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU23\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U24 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU24\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "U20 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU20\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U15 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU15\\b"
+      }
+    }
+  ]
+}

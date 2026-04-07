@@ -1,0 +1,161 @@
+{
+  "file_pattern": "sch_audio.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 4 lc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^lc_filter$",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R500 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR500\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C501 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC501\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "L502 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL502\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C502 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC502\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C507 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC507\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "L503 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL503\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C500 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC500\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C508 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC508\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R520 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR520\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R508 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR508\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "C520 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC520\\b"
+      }
+    }
+  ]
+}

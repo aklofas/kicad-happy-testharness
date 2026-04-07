@@ -1,0 +1,48 @@
+{
+  "file_pattern": "wiegand_interface.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 protection_device simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^protection_device$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "D8 simulated as protection_device",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bD8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "D9 simulated as protection_device",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bD9\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "D14 simulated as protection_device",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bD14\\b"
+      }
+    }
+  ]
+}

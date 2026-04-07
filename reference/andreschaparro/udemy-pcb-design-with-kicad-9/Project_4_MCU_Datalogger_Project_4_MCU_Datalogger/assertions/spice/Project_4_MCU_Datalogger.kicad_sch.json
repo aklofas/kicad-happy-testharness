@@ -1,0 +1,48 @@
+{
+  "file_pattern": "Project_4_MCU_Datalogger.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Simulation count ~2 (tolerance 10%)",
+      "check": {
+        "path": "summary.total",
+        "op": "range",
+        "min": 1,
+        "max": 3
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "At least 1 passing simulation(s)",
+      "check": {
+        "path": "summary.pass",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "1 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    }
+  ]
+}

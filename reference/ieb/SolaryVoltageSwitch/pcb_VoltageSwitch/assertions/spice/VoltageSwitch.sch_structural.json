@@ -1,0 +1,139 @@
+{
+  "file_pattern": "VoltageSwitch.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 4 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 4 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "R101 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "R102 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR102\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R103 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R104 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R112 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR112\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R113 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR113\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R114 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR114\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Q104 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Q102 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ102\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Q101 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ101\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Q103 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ103\\b"
+      }
+    }
+  ]
+}
