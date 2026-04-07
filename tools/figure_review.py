@@ -688,6 +688,38 @@ def find_running_server() -> Optional[int]:
         return None
 
 
+def _stop_existing_server() -> None:
+    """Kill any existing figure_review server and clean up its PID file.
+
+    Prevents orphan servers when a new server is about to start.
+    """
+    if not PID_FILE.exists():
+        return
+    try:
+        info = json.loads(PID_FILE.read_text())
+        pid = info["pid"]
+        if pid == os.getpid():
+            return  # don't kill ourselves
+        os.kill(pid, 0)  # check alive
+        os.kill(pid, 15)  # SIGTERM
+        # Wait briefly for clean shutdown
+        for _ in range(10):
+            time.sleep(0.1)
+            try:
+                os.kill(pid, 0)
+            except OSError:
+                break  # process exited
+        else:
+            # Still alive after 1s — force kill
+            try:
+                os.kill(pid, 9)
+            except OSError:
+                pass
+    except (OSError, KeyError, json.JSONDecodeError):
+        pass
+    PID_FILE.unlink(missing_ok=True)
+
+
 def start_server(port: int = 0) -> Tuple[HTTPServer, int]:
     """Start the gallery HTTP server in a daemon thread.
 
@@ -798,9 +830,10 @@ def main() -> None:
     # Build gallery
     gallery_path = build_gallery(entry.name, results)
 
-    # Start or detect server
+    # Start or reuse server
     existing_port = find_running_server()
-    if existing_port:
+    if existing_port and args.reuse_repos:
+        # Reuse existing server — just regenerated the gallery, exit
         url = f"http://localhost:{existing_port}"
         print(f"\n{'='*60}")
         print(f"  Gallery updated: {url}")
@@ -809,6 +842,8 @@ def main() -> None:
         print(f"{'='*60}")
         print(f"\nGallery regenerated. Browser will auto-refresh.")
     else:
+        # Kill any old server before starting fresh
+        _stop_existing_server()
         server, actual_port = start_server(args.port)
         url = f"http://localhost:{actual_port}"
         print(f"\n{'='*60}")
