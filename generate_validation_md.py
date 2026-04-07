@@ -160,12 +160,22 @@ The [test harness](https://github.com/aklofas/kicad-happy-testharness) contains 
 | Dimension | Coverage |
 |-----------|----------|
 | Project types | Hobby boards, production hardware, motor controllers, RF frontends, battery management systems, IoT devices, audio amplifiers, power supplies, sensor boards, dev kits |
-| KiCad versions | {', '.join(sorted(cat_stats.get('versions', {}).keys()))} |
+| KiCad versions | {', '.join(sorted(cat_stats.get('versions', {}).keys(), key=lambda k: int(k.split()[-1])))} |
 | File formats | `.kicad_sch` (S-expression), legacy `.sch` (EESchema), `.kicad_pcb` |
 | Design complexity | Single-sheet through multi-sheet hierarchical, 2-layer through 6-layer |
 | Component counts | 3 to 500+ components per project |
 | Net complexity | Simple power supplies to multi-bus digital designs (I2C, SPI, UART, CAN, USB, Ethernet, HDMI) |
 
+**KiCad version distribution:**
+
+| Version | Repos |
+|---------|------:|
+"""
+    for ver, count in sorted(cat_stats.get("versions", {}).items(),
+                              key=lambda x: int(x[0].split()[-1])):
+        md += f"| {ver} | {count:,} |\n"
+
+    md += f"""
 **Category distribution:**
 
 | Category | Repos |
