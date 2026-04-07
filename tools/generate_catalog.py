@@ -339,6 +339,15 @@ def build_repo_entry(repo_name, categories, repo_urls):
     smd_counts = sum(d.get("statistics", {}).get("smd_count", 0) for d in pcb_outputs)
     tht_counts = sum(d.get("statistics", {}).get("tht_count", 0) for d in pcb_outputs)
 
+    # Max hierarchical sheets in any single project (from hierarchy_context)
+    max_hierarchy_sheets = 0
+    for data in sch_outputs:
+        hc = data.get("hierarchy_context")
+        if isinstance(hc, dict):
+            sip = hc.get("sheets_in_project", [])
+            if isinstance(sip, list) and len(sip) > max_hierarchy_sheets:
+                max_hierarchy_sheets = len(sip)
+
     entry["complexity"] = {
         "total_components": total_comps,
         "unique_parts": unique_parts,
@@ -346,6 +355,7 @@ def build_repo_entry(repo_name, categories, repo_urls):
         "pcb_layers_max": max(pcb_layers) if pcb_layers else 0,
         "board_area_mm2_max": round(max(board_areas), 1) if board_areas else 0,
         "sheets": sheets,
+        "max_hierarchy_sheets": max_hierarchy_sheets,
         "smd_ratio": round(smd_counts / (smd_counts + tht_counts), 2)
             if (smd_counts + tht_counts) > 0 else 0,
     }

@@ -184,12 +184,13 @@ def section_spice_rich(catalog, top_n=100):
     return [e["repo"] for e in with_spice[:top_n]]
 
 
-def section_hierarchical(catalog, target=100):
-    """Top 100 repos with multi-sheet hierarchical schematics, ranked by sheet count."""
+def section_hierarchical(catalog):
+    """Repos with multi-sheet hierarchical schematics, ranked by max sheets per project."""
     multi = [e for e in catalog
-             if (e.get("complexity", {}).get("sheets") or 0) > 1]
-    multi.sort(key=lambda e: e.get("complexity", {}).get("sheets", 0), reverse=True)
-    return [e["repo"] for e in multi[:target]]
+             if (e.get("complexity", {}).get("max_hierarchy_sheets") or 0) > 1]
+    multi.sort(key=lambda e: e.get("complexity", {}).get("max_hierarchy_sheets", 0),
+               reverse=True)
+    return [e["repo"] for e in multi]
 
 
 def section_quick_200(catalog, other_sections, target=200):
@@ -239,7 +240,7 @@ def generate_all(catalog):
          lambda: section_emc_rich(catalog)),
         ("spice_rich", "Top 100 repos by SPICE simulation count",
          lambda: section_spice_rich(catalog)),
-        ("hierarchical", "Top 100 repos with multi-sheet hierarchical schematics",
+        ("hierarchical", "Repos with multi-sheet hierarchical schematics (by max sheets per project)",
          lambda: section_hierarchical(catalog)),
     ]
 
