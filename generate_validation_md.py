@@ -62,16 +62,13 @@ def _load_catalog_stats():
     versions = Counter()
     for r in catalog:
         for v in r.get("kicad_versions", []):
-            if "5" in v:
-                versions["KiCad 5"] += 1
-            elif "6" in v:
-                versions["KiCad 6"] += 1
-            elif "7" in v:
-                versions["KiCad 7"] += 1
-            elif "8" in v:
-                versions["KiCad 8"] += 1
-            elif "9" in v:
-                versions["KiCad 9"] += 1
+            # Parse major version from strings like "9.0", "5 (legacy)", "10.99"
+            import re as _re
+            m = _re.match(r"(\d+)", v)
+            if m:
+                major = int(m.group(1))
+                if major >= 5:
+                    versions[f"KiCad {major}"] += 1
 
     total_components = sum(r.get("complexity", {}).get("total_components", 0)
                            for r in catalog)

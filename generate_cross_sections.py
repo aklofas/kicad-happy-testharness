@@ -128,16 +128,12 @@ def section_kicad_versions(catalog, per_gen=20):
     for entry in catalog:
         versions = entry.get("kicad_versions", [])
         for v in versions:
-            if "5" in v:
-                generations.setdefault("kicad5", []).append(entry)
-            if "6" in v:
-                generations.setdefault("kicad6", []).append(entry)
-            if "7" in v:
-                generations.setdefault("kicad7", []).append(entry)
-            if "8" in v:
-                generations.setdefault("kicad8", []).append(entry)
-            if "9" in v:
-                generations.setdefault("kicad9", []).append(entry)
+            import re as _re
+            m = _re.match(r"(\d+)", v)
+            if m:
+                major = int(m.group(1))
+                if major >= 5:
+                    generations.setdefault(f"kicad{major}", []).append(entry)
 
     selected = []
     seen = set()
