@@ -23,6 +23,7 @@ from utils import (
     OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES,
     discover_projects, list_repos,
     load_project_metadata,
+    add_repo_filter_args, resolve_repos,
 )
 from run_checks import check_assertions
 from snapshot import create_snapshot
@@ -145,22 +146,69 @@ def promote_repo(repo_name, dry_run=True):
     return True
 
 
+def preview_summary(repos):
+    """Show a compact preview of all changes across repos."""
+    total_new = 0
+    total_changed = 0
+    total_new_files = 0
+    total_assertions = 0
+    repos_with_changes = 0
+    type_changes = {}
+
+    for repo in repos:
+        changes = check_baseline_changes(repo)
+        if not changes:
+            continue
+        repos_with_changes += 1
+        for c in changes:
+            if c["status"] == "new":
+                total_new += 1
+            elif c["status"] == "changed":
+                total_changed += c.get("changed", 0)
+                total_new_files += c.get("new_files", 0)
+                atype = c.get("type", "?")
+                type_changes[atype] = type_changes.get(atype, 0) + c["changed"]
+
+        result = check_assertions(DATA_DIR, repo_name=repo)
+        total_assertions += result["total"]
+
+    print(f"\n{'=' * 60}")
+    print(f"PROMOTION PREVIEW")
+    print(f"{'=' * 60}")
+    print(f"Repos with changes:     {repos_with_changes} / {len(repos)}")
+    print(f"New projects:           {total_new}")
+    print(f"Changed baseline files: {total_changed}")
+    print(f"New output files:       {total_new_files}")
+    print(f"Current assertions:     {total_assertions}")
+    if type_changes:
+        print(f"\nChanges by type:")
+        for atype, count in sorted(type_changes.items(), key=lambda x: -x[1]):
+            print(f"  {atype:<20s} {count} files")
+    print(f"{'=' * 60}")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Promote improved results to reference")
-    parser.add_argument("--repo", help="Check/promote one repo")
+    add_repo_filter_args(parser)
     parser.add_argument("--all", action="store_true", help="Check/promote all repos")
     parser.add_argument("--apply", action="store_true",
                         help="Apply promotions (default: dry run)")
+    parser.add_argument("--preview", action="store_true",
+                        help="Show compact summary of all changes")
     args = parser.parse_args()
 
-    if args.repo:
-        repos = [args.repo]
-    elif args.all:
-        repos = list_repos()
-    else:
-        parser.print_help()
-        sys.exit(1)
+    repos = resolve_repos(args)
+    if repos is None:
+        if args.all:
+            repos = list_repos()
+        else:
+            parser.print_help()
+            sys.exit(1)
+
+    if args.preview:
+        preview_summary(repos)
+        return
 
     if not args.apply:
         print("DRY RUN — showing what would change. Use --apply to promote.\n")
