@@ -601,11 +601,19 @@ def build_gallery(generator_name: str, results: List[dict]) -> str:
     return str(GALLERY_FILE)
 
 
+_svg_counter = 0
+
+
 def _read_svg(svg_path: str) -> str:
     """Read an SVG file and return its content for inline embedding.
 
     Strips the XML declaration if present so it embeds cleanly in HTML.
+    Prefixes gradient/filter IDs to prevent collisions when multiple
+    SVGs are inlined on the same page.
     """
+    global _svg_counter
+    _svg_counter += 1
+    prefix = f"s{_svg_counter}_"
     try:
         with open(svg_path) as f:
             content = f.read()
@@ -613,6 +621,13 @@ def _read_svg(svg_path: str) -> str:
         if content.startswith("<?xml"):
             idx = content.index("?>")
             content = content[idx + 2:].lstrip()
+        # Scope gradient/filter IDs to prevent cross-SVG collisions
+        import re
+        ids = set(re.findall(r'id="(grad_\d+|filter_\d+)"', content))
+        for old_id in ids:
+            new_id = prefix + old_id
+            content = content.replace(f'id="{old_id}"', f'id="{new_id}"')
+            content = content.replace(f'url(#{old_id})', f'url(#{new_id})')
         return content
     except Exception as e:
         return (f'<p style="color:#f87171;">Failed to read SVG: '
