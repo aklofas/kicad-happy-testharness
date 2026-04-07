@@ -34,4 +34,8 @@ if __name__ == "__main__":
         "manifest_file": "all_schematics.txt",
         "output_subdir": "schematic",
         "summarize": _summarize,
+        # Disable hierarchy auto-discovery in batch mode — the harness processes
+        # every file independently, and parse_all_sheets() on sub-sheets causes
+        # OOM when many workers analyze sub-sheets from large projects in parallel.
+        "extra_args": ["--no-hierarchy"],
     })
