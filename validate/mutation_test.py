@@ -194,22 +194,151 @@ def mutate_change_ref(data, rng):
     return mutated, desc
 
 
-MUTATION_OPS = [
+# ---------------------------------------------------------------------------
+# Domain-aware mutation operators
+# ---------------------------------------------------------------------------
+
+def mutate_remove_divider_resistor(data, rng):
+    """Remove one resistor from a random voltage divider."""
+    dividers = data.get("signal_analysis", {}).get("voltage_dividers", [])
+    if not dividers:
+        return None, None
+    div = rng.choice(dividers)
+    # Pick r_top or r_bottom
+    target = rng.choice(["r_top", "r_bottom"])
+    if target not in div or not isinstance(div[target], dict):
+        return None, None
+    ref = div[target].get("ref", "?")
+    mutated = copy.deepcopy(data)
+    m_dividers = mutated["signal_analysis"]["voltage_dividers"]
+    m_div = next((d for d in m_dividers if d.get("r_top", {}).get("ref") == div.get("r_top", {}).get("ref")), None)
+    if m_div:
+        m_div.pop(target, None)
+        if "ratio" in m_div:
+            m_div["ratio"] = 0.0
+    return mutated, f"remove_divider_resistor: removed {target} ({ref})"
+
+
+def mutate_swap_divider_polarity(data, rng):
+    """Swap r_top and r_bottom in a voltage divider (inverts ratio)."""
+    dividers = data.get("signal_analysis", {}).get("voltage_dividers", [])
+    dividers_with_both = [d for d in dividers
+                          if "r_top" in d and "r_bottom" in d]
+    if not dividers_with_both:
+        return None, None
+    div = rng.choice(dividers_with_both)
+    mutated = copy.deepcopy(data)
+    m_dividers = mutated["signal_analysis"]["voltage_dividers"]
+    m_div = next((d for d in m_dividers
+                  if d.get("r_top", {}).get("ref") == div["r_top"].get("ref")), None)
+    if m_div:
+        m_div["r_top"], m_div["r_bottom"] = m_div["r_bottom"], m_div["r_top"]
+        if "ratio" in m_div and m_div["ratio"]:
+            m_div["ratio"] = 1.0 - m_div["ratio"]
+    return mutated, f"swap_divider_polarity: swapped r_top/r_bottom"
+
+
+def mutate_break_bus_detection(data, rng):
+    """Rename a bus net to break bus/protocol detection."""
+    sa = data.get("signal_analysis", {})
+    # Look for detectors with net-like fields
+    bus_dets = []
+    for det_name in ("isolation_barriers", "ethernet_interfaces",
+                     "memory_interfaces", "hdmi_dvi_interfaces"):
+        items = sa.get(det_name, [])
+        if isinstance(items, list) and items:
+            for i, item in enumerate(items):
+                if isinstance(item, dict):
+                    for k, v in item.items():
+                        if isinstance(v, str) and ("net" in k.lower() or "bus" in k.lower()):
+                            bus_dets.append((det_name, i, k, v))
+    # Also check rc_filters and voltage_dividers for net fields
+    for det_name in ("rc_filters", "lc_filters"):
+        items = sa.get(det_name, [])
+        if isinstance(items, list):
+            for i, item in enumerate(items):
+                if isinstance(item, dict):
+                    for k, v in item.items():
+                        if "net" in k.lower() and isinstance(v, str) and v:
+                            bus_dets.append((det_name, i, k, v))
+    if not bus_dets:
+        return None, None
+    det_name, idx, key, old_net = rng.choice(bus_dets)
+    mutated = copy.deepcopy(data)
+    mutated["signal_analysis"][det_name][idx][key] = "XMUT_BROKEN"
+    return mutated, f"break_bus: {det_name}[{idx}].{key} '{old_net}' -> 'XMUT_BROKEN'"
+
+
+def mutate_remove_protection(data, rng):
+    """Remove a protection device from esd_coverage_audit or protection_devices."""
+    sa = data.get("signal_analysis", {})
+    targets = []
+    for det_name in ("esd_coverage_audit", "protection_devices"):
+        items = sa.get(det_name, [])
+        if isinstance(items, list) and len(items) > 0:
+            targets.append(det_name)
+    if not targets:
+        return None, None
+    det_name = rng.choice(targets)
+    mutated = copy.deepcopy(data)
+    m_items = mutated["signal_analysis"][det_name]
+    idx = rng.randrange(len(m_items))
+    removed = m_items.pop(idx)
+    ref = removed.get("ref", removed.get("connector_ref", "?"))
+    return mutated, f"remove_protection: removed {ref} from {det_name}"
+
+
+def mutate_scale_filter(data, rng):
+    """Scale a filter cutoff frequency by 10× (should break frequency assertions)."""
+    sa = data.get("signal_analysis", {})
+    filters = []
+    for det_name in ("rc_filters", "lc_filters"):
+        items = sa.get(det_name, [])
+        if isinstance(items, list):
+            for i, item in enumerate(items):
+                if isinstance(item, dict) and item.get("cutoff_hz"):
+                    filters.append((det_name, i))
+    if not filters:
+        return None, None
+    det_name, idx = rng.choice(filters)
+    mutated = copy.deepcopy(data)
+    item = mutated["signal_analysis"][det_name][idx]
+    old_freq = item["cutoff_hz"]
+    factor = 10.0 if rng.random() < 0.5 else 0.1
+    item["cutoff_hz"] = old_freq * factor
+    if "cutoff_formatted" in item:
+        item["cutoff_formatted"] = f"{item['cutoff_hz']:.1f} Hz"
+    return mutated, f"scale_filter: {det_name}[{idx}] cutoff {old_freq:.1f} -> {old_freq * factor:.1f} Hz (×{factor})"
+
+
+# All mutation operators
+GENERIC_OPS = [
     mutate_delete_list_item,
     mutate_change_numeric,
     mutate_remove_key,
     mutate_change_ref,
 ]
 
+DOMAIN_OPS = [
+    mutate_remove_divider_resistor,
+    mutate_swap_divider_polarity,
+    mutate_break_bus_detection,
+    mutate_remove_protection,
+    mutate_scale_filter,
+]
 
-def generate_mutations(data, count, seed=42):
+MUTATION_OPS = GENERIC_OPS + DOMAIN_OPS
+
+
+def generate_mutations(data, count, seed=42, domain_only=False):
     """Generate N mutations of the data."""
     rng = random.Random(seed)
+    ops = DOMAIN_OPS if domain_only else MUTATION_OPS
     mutations = []
     attempts = 0
     while len(mutations) < count and attempts < count * 5:
         attempts += 1
-        op = rng.choice(MUTATION_OPS)
+        op = rng.choice(ops)
         mutated, desc = op(data, rng)
         if mutated is not None:
             mutations.append((mutated, desc))
@@ -266,7 +395,7 @@ def run_mutation_test(original_data, assertions, mutations):
 # Main
 # ---------------------------------------------------------------------------
 
-def _mutation_test_one_repo(repo, analyzer_type, num_mutations, seed):
+def _mutation_test_one_repo(repo, analyzer_type, num_mutations, seed, domain_only=False):
     """Run mutation testing for a single repo. Picklable top-level worker.
 
     Returns (repo, results_dict) where results_dict has total/caught/missed/by_type/missed_details,
@@ -305,7 +434,8 @@ def _mutation_test_one_repo(repo, analyzer_type, num_mutations, seed):
             if other_aset.get("file_pattern") == file_pattern:
                 all_assertions.extend(other_aset.get("assertions", []))
 
-        mutations = generate_mutations(data, num_mutations, seed=seed)
+        mutations = generate_mutations(data, num_mutations, seed=seed,
+                                      domain_only=domain_only)
         if not mutations:
             continue
 
@@ -363,6 +493,8 @@ def main():
     parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
                         help=f"Parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--json", action="store_true", help="JSON output")
+    parser.add_argument("--domain-only", action="store_true",
+                        help="Only run domain-aware mutations (skip generic)")
     args = parser.parse_args()
 
     if args.repo:
@@ -378,10 +510,11 @@ def main():
     skipped = []
     jobs = args.jobs
 
+    domain_only = getattr(args, "domain_only", False)
     if len(repos) > 1 and jobs > 1:
         with ProcessPoolExecutor(max_workers=min(jobs, len(repos))) as pool:
             futures = {pool.submit(_mutation_test_one_repo, repo, args.type,
-                                   args.mutations, args.seed): repo
+                                   args.mutations, args.seed, domain_only): repo
                        for repo in repos}
             for future in as_completed(futures):
                 repo, result = future.result()
@@ -393,7 +526,7 @@ def main():
     else:
         for repo in repos:
             repo, result = _mutation_test_one_repo(
-                repo, args.type, args.mutations, args.seed)
+                repo, args.type, args.mutations, args.seed, domain_only)
             if result is None:
                 skipped.append(repo)
                 continue
