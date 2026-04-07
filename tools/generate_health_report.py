@@ -18,8 +18,9 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from utils import DATA_DIR, OUTPUTS_DIR, HARNESS_DIR, safe_load_json
+HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
+from utils import DATA_DIR, OUTPUTS_DIR, safe_load_json
 
 HEALTH_LOG = DATA_DIR / "health_log.jsonl"
 HEALTH_BASELINE = DATA_DIR / "health_baseline.json"

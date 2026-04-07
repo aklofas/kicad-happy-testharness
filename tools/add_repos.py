@@ -30,39 +30,14 @@ import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
+HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
 from checkout import parse_repos_md, _repo_name_from_url, get_remote_head
-from utils import HARNESS_DIR, REPOS_DIR, DEFAULT_JOBS
+from utils import REPOS_DIR, DEFAULT_JOBS, MISC_CATEGORY, run_pipeline_step
 
 REPOS_MD = HARNESS_DIR / "repos.md"
 CANDIDATES_FILE = HARNESS_DIR / "results" / "candidates.json"
 PROGRESS_FILE = HARNESS_DIR / "results" / "add_repos_progress.json"
-
-
-def _run_step(name, cmd, timeout=600):
-    """Run a pipeline step. Returns (success, detail).
-
-    Follows run_corpus.py:_run_step() pattern.
-    """
-    t0 = time.time()
-    try:
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=timeout,
-            cwd=str(HARNESS_DIR),
-        )
-        elapsed = time.time() - t0
-        ok = result.returncode == 0
-        # Get last non-empty line of output as detail
-        lines = result.stdout.strip().splitlines()
-        detail = lines[-1] if lines else ""
-        if not ok and result.stderr:
-            detail = result.stderr.strip().splitlines()[-1]
-        return ok, f"[{'OK' if ok else 'FAIL'}] {name} ({elapsed:.1f}s) {detail}"
-    except subprocess.TimeoutExpired:
-        elapsed = time.time() - t0
-        return False, f"[TIMEOUT] {name} ({elapsed:.1f}s)"
-    except Exception as e:
-        elapsed = time.time() - t0
-        return False, f"[ERROR] {name} ({elapsed:.1f}s) {e}"
 
 
 def load_candidates(path, limit=0):
@@ -103,7 +78,7 @@ def _find_category_insert_point(lines, category):
     or the line before the next ``## `` header if the section is empty.
     Falls back to the end of "Miscellaneous KiCad projects" section.
     """
-    fallback_category = "Miscellaneous KiCad projects"
+    fallback_category = MISC_CATEGORY
     target = category
     found_target = False
     insert_at = None
@@ -172,7 +147,7 @@ def _pre_add_repo(candidate):
     repo = candidate["repo"]
     repo_name = f"{owner}/{repo}"
     url = candidate["url"]
-    category = candidate.get("suggested_category", "Miscellaneous KiCad projects")
+    category = candidate.get("suggested_category", MISC_CATEGORY)
 
     print(f"  {repo_name} ...", end="", flush=True)
     commit_hash = get_remote_head(url)
@@ -201,8 +176,7 @@ def _pipeline_one_repo(repo_name, skip_spice, skip_emc):
     def log_step(detail):
         result["log"].append(detail)
 
-    # Step 1: Clone
-    ok, detail = _run_step("Clone", [py, "checkout.py", "--filter", repo_name])
+    ok, detail = run_pipeline_step("Clone", [py, "checkout.py", "--filter", repo_name])
     log_step(detail)
     if not ok:
         result["status"] = "failed"
@@ -211,8 +185,7 @@ def _pipeline_one_repo(repo_name, skip_spice, skip_emc):
         return result
     result["steps"].append("clone")
 
-    # Step 2: Discover
-    ok, detail = _run_step("Discover", [py, "discover.py", "--repo", repo_name])
+    ok, detail = run_pipeline_step("Discover", [py, "discover.py", "--repo", repo_name])
     log_step(detail)
     result["steps"].append("discover")
 
@@ -240,56 +213,52 @@ def _pipeline_one_repo(repo_name, skip_spice, skip_emc):
         result["purge"] = True
         return result
 
-    # Step 3: Run analyzers
-    ok, detail = _run_step("Schematic analysis",
+    ok, detail = run_pipeline_step("Schematic analysis",
                            [py, "run/run_schematic.py", "--repo", repo_name, "--jobs", "4"],
                            timeout=300)
     log_step(detail)
     result["steps"].append("schematic")
 
-    ok, detail = _run_step("PCB analysis",
+    ok, detail = run_pipeline_step("PCB analysis",
                            [py, "run/run_pcb.py", "--repo", repo_name, "--jobs", "4"],
                            timeout=300)
     log_step(detail)
     result["steps"].append("pcb")
 
-    ok, detail = _run_step("Gerber analysis",
+    ok, detail = run_pipeline_step("Gerber analysis",
                            [py, "run/run_gerbers.py", "--repo", repo_name, "--jobs", "4"],
                            timeout=300)
     log_step(detail)
     result["steps"].append("gerber")
 
     if not skip_spice:
-        ok, detail = _run_step("SPICE simulations",
+        ok, detail = run_pipeline_step("SPICE simulations",
                                [py, "run/run_spice.py", "--repo", repo_name, "--jobs", "16"],
                                timeout=300)
         log_step(detail)
         result["steps"].append("spice")
 
     if not skip_emc:
-        ok, detail = _run_step("EMC analysis",
+        ok, detail = run_pipeline_step("EMC analysis",
                                [py, "run/run_emc.py", "--repo", repo_name, "--jobs", "8"],
                                timeout=300)
         log_step(detail)
         result["steps"].append("emc")
 
-    # Step 4: Snapshot baselines
-    ok, detail = _run_step("Snapshot", [py, "regression/snapshot.py", "--repo", repo_name])
+    ok, detail = run_pipeline_step("Snapshot", [py, "regression/snapshot.py", "--repo", repo_name])
     log_step(detail)
     result["steps"].append("snapshot")
 
-    # Step 5: Seed assertions
-    ok, detail = _run_step("Seed SEED-*", [py, "regression/seed.py", "--repo", repo_name])
+    ok, detail = run_pipeline_step("Seed SEED-*", [py, "regression/seed.py", "--repo", repo_name])
     log_step(detail)
     result["steps"].append("seed")
 
-    ok, detail = _run_step("Seed STRUCT-*",
+    ok, detail = run_pipeline_step("Seed STRUCT-*",
                            [py, "regression/seed_structural.py", "--repo", repo_name])
     log_step(detail)
     result["steps"].append("seed_structural")
 
-    # Step 6: Run checks
-    ok, detail = _run_step("Run checks",
+    ok, detail = run_pipeline_step("Run checks",
                            [py, "regression/run_checks.py", "--repo", repo_name])
     log_step(detail)
     result["steps"].append("run_checks")
@@ -309,7 +278,7 @@ def process_one_repo(candidate, skip_spice, skip_emc, dry_run):
     repo = candidate["repo"]
     repo_name = f"{owner}/{repo}"
     url = candidate["url"]
-    category = candidate.get("suggested_category", "Miscellaneous KiCad projects")
+    category = candidate.get("suggested_category", MISC_CATEGORY)
 
     result = {"repo": repo_name, "url": url, "status": "ok", "steps": [], "category": category}
 

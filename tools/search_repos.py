@@ -32,8 +32,10 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
 from checkout import parse_repos_md, _repo_name_from_url
-from utils import HARNESS_DIR
+from utils import MISC_CATEGORY
 
 REPOS_MD = HARNESS_DIR / "repos.md"
 CANDIDATES_FILE = HARNESS_DIR / "results" / "candidates.json"
@@ -224,7 +226,7 @@ def suggest_category(topics, description, name):
         if keyword in text:
             return cat
 
-    return "Miscellaneous KiCad projects"
+    return MISC_CATEGORY
 
 
 def _is_red_flag(description, name):

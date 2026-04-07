@@ -26,7 +26,7 @@ it doesn't break anything.
 ### 1a. Determine what changed
 
 ```bash
-python3 detect_changes.py --since HEAD~1
+python3 tools/detect_changes.py --since HEAD~1
 ```
 
 This tells you which analyzer types are affected and what actions to take. If nothing
@@ -34,7 +34,7 @@ changed, stop here.
 
 ### 1b. Run affected analyzers
 
-Only re-run the types flagged by detect_changes.py. Use `--jobs 16` for speed.
+Only re-run the types flagged by `tools/detect_changes.py`. Use `--jobs 16` for speed.
 
 ```bash
 python3 run/run_schematic.py --jobs 16          # if schematic affected
@@ -148,7 +148,7 @@ Use periodically (e.g., weekly) or before a release to verify overall harness he
 ### 3a. Run the health report
 
 ```bash
-python3 generate_health_report.py --log
+python3 tools/generate_health_report.py --log
 ```
 
 Check for assertion count drops vs last logged entry. Any WARNING lines indicate
@@ -180,7 +180,7 @@ re-seed with structural assertions.
 ### 3d. Check detector coverage
 
 ```bash
-python3 coverage_detector_map.py
+python3 tools/coverage_detector_map.py
 ```
 
 Any detector with corpus hits but zero assertions needs attention. Any detector
@@ -287,7 +287,7 @@ python3 regression/promote.py --repo {repo} --apply
 ### 4i. Update status.md and reset health baseline
 
 ```bash
-python3 generate_health_report.py --reset-baseline "re-seed after {reason}"
+python3 tools/generate_health_report.py --reset-baseline "re-seed after {reason}"
 ```
 
 This sets the new assertion count as the comparison baseline so the next health
@@ -419,7 +419,7 @@ Use to stay aware of changes in the kicad-happy repo that affect the test harnes
 ### 7a. Check what changed
 
 ```bash
-python3 detect_changes.py --since HEAD~5     # or a specific commit range
+python3 tools/detect_changes.py --since HEAD~5     # or a specific commit range
 ```
 
 ### 7b. Interpret the output
@@ -443,12 +443,12 @@ python3 validate/verify_constants_online.py --limit 10    # spot-check via DigiK
 ### 7d. Verify the change-impact map is current
 
 ```bash
-python3 detect_changes.py generate-map
+python3 tools/detect_changes.py generate-map
 ```
 
-Checks whether the hand-maintained file-to-types map in `detect_changes.py` matches
+Checks whether the hand-maintained file-to-types map in `tools/detect_changes.py` matches
 what the import graph says. If divergences are reported, the hand-maintained map may
-need updating so that `detect_changes.py` correctly identifies which analyzer types
+need updating so that `tools/detect_changes.py` correctly identifies which analyzer types
 are affected by future changes.
 
 ---
@@ -556,7 +556,7 @@ Update the relevant memory files under
 ### 10e. Log health metrics
 
 ```bash
-python3 generate_health_report.py --log
+python3 tools/generate_health_report.py --log
 ```
 
 ### 10f. Review uncommitted changes
@@ -1040,7 +1040,7 @@ so schema drift detection covers the new output format.
 
 ### 15h. Add to coverage detector map
 
-Update the `DETECTORS` list in `coverage_detector_map.py` to include any new
+Update the `DETECTORS` list in `tools/coverage_detector_map.py` to include any new
 detectors introduced by this analyzer type, so they appear in coverage reports.
 
 ### 15i. Run full corpus and seed
@@ -1102,7 +1102,7 @@ python3 run_tests.py --unit
 cat ISSUES.md   # should show "No open issues"
 
 # Check upstream changes since last release
-python3 detect_changes.py --since {last_release_tag}
+python3 tools/detect_changes.py --since {last_release_tag}
 ```
 
 ### 16b. Full corpus analyzer run
@@ -1149,12 +1149,12 @@ Agreement rates should match or exceed status.md baselines.
 ### 16e. Full validation pipeline
 
 ```bash
-python3 validate_all.py
+python3 harness.py validate
 ```
 
 This runs the orchestrated validation suite including output validation, schema
 checks, cross-validation, and structural checks. For a faster pre-check during
-development, use `python3 validate_all.py --quick`.
+development, use `python3 harness.py validate --cross-section smoke`.
 
 ### 16f. Constants and equations audit
 
@@ -1191,7 +1191,7 @@ regression suite. Any gaps mean a fixed bug could silently return.
 ```bash
 python3 validate/mutation_test.py --repo {high-complexity-repo} --type schematic --mutations 100
 python3 validate/cross_analyzer.py --summary
-python3 coverage_detector_map.py --uncovered-only
+python3 tools/coverage_detector_map.py --uncovered-only
 python3 regression/check_staleness.py --type schematic
 ```
 
@@ -1235,7 +1235,7 @@ print(f'Diff smoke: {errors} errors')
 ### 16j. Health report
 
 ```bash
-python3 generate_health_report.py --log
+python3 tools/generate_health_report.py --log
 ```
 
 No assertion count drops. Record the metrics for release notes.
@@ -1566,20 +1566,20 @@ them in bulk. This automates the Checklist 14 pipeline at scale.
 Run the discovery script. For GitHub only (default):
 
 ```bash
-python3 search_repos.py --all
+python3 tools/search_repos.py --all
 ```
 
 For all platforms (GitHub + GitLab + Codeberg):
 
 ```bash
-python3 search_repos.py --source all
+python3 tools/search_repos.py --source all
 ```
 
 Or individual platforms:
 
 ```bash
-python3 search_repos.py --source gitlab
-python3 search_repos.py --source codeberg
+python3 tools/search_repos.py --source gitlab
+python3 tools/search_repos.py --source codeberg
 ```
 
 GitHub uses code search (size-sharded `extension:kicad_sch`), topic search
@@ -1600,9 +1600,9 @@ components, score quality, then delete the clone. This filters out tools,
 libraries, trivial repos, and repos without actual KiCad files.
 
 ```bash
-python3 validate_candidates.py --jobs 8
-python3 validate_candidates.py --jobs 8 --min-components 10   # stricter
-python3 validate_candidates.py --jobs 8 --min-score 30        # quality filter
+python3 tools/validate_candidates.py --jobs 8
+python3 tools/validate_candidates.py --jobs 8 --min-components 10   # stricter
+python3 tools/validate_candidates.py --jobs 8 --min-score 30        # quality filter
 ```
 
 This writes `results/validated.json` with only repos that pass. Expect
@@ -1617,8 +1617,8 @@ a sample first and check the pass rate before committing to the full run.
 ### 20c. Add repos in batches
 
 ```bash
-python3 add_repos.py --input results/validated.json --batch-size 50
-python3 add_repos.py --input results/validated.json --batch-size 50 --skip-spice --skip-emc
+python3 tools/add_repos.py --input results/validated.json --batch-size 50
+python3 tools/add_repos.py --input results/validated.json --batch-size 50 --skip-spice --skip-emc
 ```
 
 This runs the full Checklist 14 pipeline for each candidate:
@@ -1642,7 +1642,7 @@ deleted). Progress is saved every `--batch-size` repos.
 If the script is interrupted, resume with:
 
 ```bash
-python3 add_repos.py --resume
+python3 tools/add_repos.py --resume
 ```
 
 Progress is tracked in `results/add_repos_progress.json`. Already-completed and
@@ -1673,8 +1673,8 @@ Confirm 100% pass rate on assertions. Investigate any failures per Checklist 12.
 ### 20g. Update tracking
 
 ```bash
-python3 generate_catalog.py               # Regenerate catalog
-python3 generate_health_report.py --log   # Health report + trend
+python3 tools/generate_catalog.py               # Regenerate catalog
+python3 tools/generate_health_report.py --log   # Health report + trend
 ```
 
 Update corpus count in `status.md`. Record the expansion as a new batch entry.
@@ -1697,31 +1697,31 @@ for every new repo). This is expected.
 | Check assertion staleness | `python3 regression/check_staleness.py` |
 | Cross-analyzer consistency | `python3 validate/cross_analyzer.py --summary` |
 | Mutation test effectiveness | `python3 validate/mutation_test.py --repo X --type schematic` |
-| Detector coverage matrix | `python3 coverage_detector_map.py` |
+| Detector coverage matrix | `python3 tools/coverage_detector_map.py` |
 | Detector field dashboard | `python3 validate/detector_dashboard.py` |
-| Upstream change impact | `python3 detect_changes.py` |
-| Generate change-impact map | `python3 detect_changes.py generate-map` |
+| Upstream change impact | `python3 tools/detect_changes.py` |
+| Generate change-impact map | `python3 tools/detect_changes.py generate-map` |
 | Schema drift detection | `python3 validate/validate_schema.py auto-seed` |
 | Schema inventory scan | `python3 validate/validate_schema.py scan` |
 | Negative assertion preview | `python3 regression/seed_negative.py --all --dry-run` |
 | DigiKey constant check | `python3 validate/verify_constants_online.py --dry-run` |
-| Health report + log | `python3 generate_health_report.py --log` |
-| Reset health baseline | `python3 generate_health_report.py --reset-baseline "reason"` |
+| Health report + log | `python3 tools/generate_health_report.py --log` |
+| Reset health baseline | `python3 tools/generate_health_report.py --reset-baseline "reason"` |
 | Prune stale seed assertions | `python3 regression/seed.py --all --type {type} --prune-stale` |
 | Audit bugfix paths | `python3 regression/audit_bugfix_paths.py` |
 | Unit tests | `python3 run_tests.py --unit` |
 | Unit tests (tier filter) | `python3 run_tests.py --tier unit\|online\|all` |
 | Re-seed assertions | `python3 regression/seed.py --all --type {type}` |
 | Promote to reference | `python3 regression/promote.py --repo {repo} --apply` |
-| Full validation pipeline | `python3 validate_all.py` |
-| Quick validation | `python3 validate_all.py --quick` |
+| Full validation pipeline | `python3 harness.py validate` |
+| Quick validation | `python3 harness.py validate --cross-section smoke` |
 | Bugfix assertion gen | `python3 regression/generate_bugfix_assertions.py --apply` |
 | Bugfix coverage audit | `python3 regression/audit_bugfix_coverage.py` |
 | Findings drift | `python3 regression/drift.py --repo {repo}` |
 | Finding refresh | `python3 regression/refresh_findings.py` |
 | Assertion metrics | `python3 regression/assertion_metrics.py summary` |
-| Full corpus run | `python3 run_corpus.py --full` |
-| Smoke corpus run | `python3 run_corpus.py --smoke` |
+| Full corpus run | `python3 harness.py run --full` |
+| Smoke corpus run | `python3 harness.py run --smoke` |
 | What-if sweep | `python3 $KICAD_HAPPY_DIR/skills/kicad/scripts/what_if.py analysis.json R5=4.7k` |
 | Diff two outputs | `python3 $KICAD_HAPPY_DIR/skills/kicad/scripts/diff_analysis.py base.json head.json` |
 | Thermal analysis | `python3 $KICAD_HAPPY_DIR/skills/kicad/scripts/analyze_thermal.py -s sch.json -p pcb.json` |

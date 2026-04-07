@@ -226,7 +226,7 @@ def main():
 
     jobs = args.jobs
 
-    if jobs > 1 and len(assertion_sets) > 1:
+    if jobs > 1 and len(assertion_sets) > 500:
         # Parallel execution
         with ProcessPoolExecutor(max_workers=min(jobs, len(assertion_sets))) as pool:
             futures = {pool.submit(_check_one_set, aset): i

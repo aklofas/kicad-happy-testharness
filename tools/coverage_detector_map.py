@@ -11,11 +11,13 @@ Usage:
 """
 
 import argparse
+import functools
 import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
 from utils import OUTPUTS_DIR, DATA_DIR, safe_load_json
 
 EQUATION_REGISTRY = DATA_DIR / "equation_registry.json"
@@ -23,6 +25,7 @@ CONSTANTS_REGISTRY = DATA_DIR / "constants_registry.json"
 SCHEMA_INVENTORY = DATA_DIR / "schema_inventory.json"
 
 
+@functools.lru_cache()
 def _load_detectors():
     """Load detector list from schema inventory (auto-discovered)."""
     if SCHEMA_INVENTORY.exists():

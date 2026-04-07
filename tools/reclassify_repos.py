@@ -17,7 +17,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent
+HARNESS_DIR = Path(__file__).resolve().parent.parent
 REPOS_MD = HARNESS_DIR / "repos.md"
 CATALOG_FILE = HARNESS_DIR / "reference" / "repo_catalog.json"
 VALIDATED_FILE = HARNESS_DIR / "results" / "validated.json"

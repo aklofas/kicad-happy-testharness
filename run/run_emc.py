@@ -29,59 +29,9 @@ from functools import partial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import OUTPUTS_DIR, resolve_kicad_happy_dir
-
-
-def find_schematic_outputs(repo_filter=None):
-    """Find all schematic JSON outputs in results/outputs/schematic/."""
-    schematic_dir = OUTPUTS_DIR / "schematic"
-    if not schematic_dir.exists():
-        return []
-
-    outputs = []
-    for owner_dir in sorted(schematic_dir.iterdir()):
-        if not owner_dir.is_dir():
-            continue
-        for repo_dir in sorted(owner_dir.iterdir()):
-            if not repo_dir.is_dir():
-                continue
-            repo_key = f"{owner_dir.name}/{repo_dir.name}"
-            if repo_filter and repo_key != repo_filter:
-                continue
-            for json_file in sorted(repo_dir.glob("*.json")):
-                if json_file.stat().st_size == 0:
-                    continue
-                outputs.append(json_file)
-    return outputs
-
-
-def find_pcb_output(schematic_json):
-    """Find matching PCB output for a schematic output.
-
-    Given results/outputs/schematic/{repo}/{name}.kicad_sch.json,
-    looks for results/outputs/pcb/{repo}/{name}.kicad_pcb.json.
-    """
-    repo_name = f"{schematic_json.parent.parent.name}/{schematic_json.parent.name}"
-    pcb_dir = OUTPUTS_DIR / "pcb" / repo_name
-    if not pcb_dir.exists():
-        return None
-
-    stem = schematic_json.name
-    # Try replacing .kicad_sch.json -> .kicad_pcb.json
-    if stem.endswith(".kicad_sch.json"):
-        pcb_name = stem.replace(".kicad_sch.json", ".kicad_pcb.json")
-        pcb_path = pcb_dir / pcb_name
-        if pcb_path.exists() and pcb_path.stat().st_size > 0:
-            return pcb_path
-
-    # Try replacing .sch.json -> .kicad_pcb.json (legacy KiCad 5)
-    if stem.endswith(".sch.json"):
-        pcb_name = stem.replace(".sch.json", ".kicad_pcb.json")
-        pcb_path = pcb_dir / pcb_name
-        if pcb_path.exists() and pcb_path.stat().st_size > 0:
-            return pcb_path
-
-    return None
+from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
+                   find_schematic_outputs, find_pcb_output, should_skip_resume,
+                   add_repo_filter_args, resolve_repos, DEFAULT_JOBS)
 
 
 def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
@@ -127,19 +77,6 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
         return -1, None, elapsed
 
 
-def _should_skip_emc(output_json, resume):
-    """Check if output file exists and is valid JSON (for --resume)."""
-    if not resume:
-        return False
-    if not output_json.exists() or output_json.stat().st_size < 3:
-        return False
-    try:
-        json.loads(output_json.read_text())
-        return True
-    except (json.JSONDecodeError, OSError):
-        return False
-
-
 def _process_one_emc(input_json, emc_out_dir, standard, timeout, spice_enhanced,
                      resume, analyzer):
     """Top-level function for ProcessPoolExecutor (must be picklable)."""
@@ -149,7 +86,7 @@ def _process_one_emc(input_json, emc_out_dir, standard, timeout, spice_enhanced,
     output_json = out_dir / input_json.name
 
     # --resume: skip if valid output already exists
-    if _should_skip_emc(output_json, resume):
+    if should_skip_resume(output_json, resume):
         return input_json, "SKIPPED", None, output_json, None, 0.0
 
     pcb_json = find_pcb_output(input_json)
@@ -165,8 +102,6 @@ def main():
     parser = argparse.ArgumentParser(
         description="Run EMC pre-compliance analysis on schematic+PCB outputs"
     )
-    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from utils import add_repo_filter_args, resolve_repos, DEFAULT_JOBS
     add_repo_filter_args(parser)
     parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
                         help=f"Parallel jobs (default: {DEFAULT_JOBS})")

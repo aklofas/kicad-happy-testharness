@@ -12,10 +12,10 @@ Usage:
 """
 
 import argparse
-import copy
 import json
 import math
 import random
+import re
 import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
@@ -64,7 +64,6 @@ def _find_numeric_paths(data, prefix=""):
 
 def _set_path(data, path, value):
     """Set a value at a dotted path (supports [N] array indexing)."""
-    import re
     parts = re.split(r'\.(?![^\[]*\])', path)
     current = data
     for part in parts[:-1]:
@@ -110,12 +109,10 @@ def mutate_delete_list_item(data, rng):
     if not lst or not isinstance(lst, list) or len(lst) == 0:
         return None, None
 
-    mutated = copy.deepcopy(data)
-    m_lst = resolve_path(mutated, path)
-    idx = rng.randrange(len(m_lst))
-    removed = m_lst.pop(idx)
+    idx = rng.randrange(len(lst))
+    removed = lst.pop(idx)
     desc = f"delete_list_item: removed item [{idx}] from {path}"
-    return mutated, desc
+    return data, desc
 
 
 def mutate_change_numeric(data, rng, factor_range=(0.3, 0.7)):
@@ -136,13 +133,12 @@ def mutate_change_numeric(data, rng, factor_range=(0.3, 0.7)):
         factor = 1.0 - factor  # decrease
     new_val = old_val * factor
 
-    mutated = copy.deepcopy(data)
     try:
-        _set_path(mutated, path, new_val)
+        _set_path(data, path, new_val)
     except (KeyError, IndexError, TypeError):
         return None, None
     desc = f"change_numeric: {path} {old_val} -> {new_val:.4g} (×{factor:.2f})"
-    return mutated, desc
+    return data, desc
 
 
 def mutate_remove_key(data, rng):
@@ -160,10 +156,9 @@ def mutate_remove_key(data, rng):
         return None, None
 
     path = rng.choice(candidates)
-    mutated = copy.deepcopy(data)
-    _delete_path(mutated, path)
+    _delete_path(data, path)
     desc = f"remove_key: deleted {path}"
-    return mutated, desc
+    return data, desc
 
 
 def mutate_change_ref(data, rng):
@@ -185,13 +180,12 @@ def mutate_change_ref(data, rng):
 
     path, old_ref = rng.choice(ref_locations)
     new_ref = "XMUT999"
-    mutated = copy.deepcopy(data)
     try:
-        _set_path(mutated, path, new_ref)
+        _set_path(data, path, new_ref)
     except (KeyError, IndexError, TypeError):
         return None, None
     desc = f"change_ref: {path} {old_ref} -> {new_ref}"
-    return mutated, desc
+    return data, desc
 
 
 # ---------------------------------------------------------------------------
@@ -209,14 +203,10 @@ def mutate_remove_divider_resistor(data, rng):
     if target not in div or not isinstance(div[target], dict):
         return None, None
     ref = div[target].get("ref", "?")
-    mutated = copy.deepcopy(data)
-    m_dividers = mutated["signal_analysis"]["voltage_dividers"]
-    m_div = next((d for d in m_dividers if d.get("r_top", {}).get("ref") == div.get("r_top", {}).get("ref")), None)
-    if m_div:
-        m_div.pop(target, None)
-        if "ratio" in m_div:
-            m_div["ratio"] = 0.0
-    return mutated, f"remove_divider_resistor: removed {target} ({ref})"
+    div.pop(target, None)
+    if "ratio" in div:
+        div["ratio"] = 0.0
+    return data, f"remove_divider_resistor: removed {target} ({ref})"
 
 
 def mutate_swap_divider_polarity(data, rng):
@@ -227,15 +217,10 @@ def mutate_swap_divider_polarity(data, rng):
     if not dividers_with_both:
         return None, None
     div = rng.choice(dividers_with_both)
-    mutated = copy.deepcopy(data)
-    m_dividers = mutated["signal_analysis"]["voltage_dividers"]
-    m_div = next((d for d in m_dividers
-                  if d.get("r_top", {}).get("ref") == div["r_top"].get("ref")), None)
-    if m_div:
-        m_div["r_top"], m_div["r_bottom"] = m_div["r_bottom"], m_div["r_top"]
-        if "ratio" in m_div and m_div["ratio"]:
-            m_div["ratio"] = 1.0 - m_div["ratio"]
-    return mutated, f"swap_divider_polarity: swapped r_top/r_bottom"
+    div["r_top"], div["r_bottom"] = div["r_bottom"], div["r_top"]
+    if "ratio" in div and div["ratio"]:
+        div["ratio"] = 1.0 - div["ratio"]
+    return data, f"swap_divider_polarity: swapped r_top/r_bottom"
 
 
 def mutate_break_bus_detection(data, rng):
@@ -264,9 +249,8 @@ def mutate_break_bus_detection(data, rng):
     if not bus_dets:
         return None, None
     det_name, idx, key, old_net = rng.choice(bus_dets)
-    mutated = copy.deepcopy(data)
-    mutated["signal_analysis"][det_name][idx][key] = "XMUT_BROKEN"
-    return mutated, f"break_bus: {det_name}[{idx}].{key} '{old_net}' -> 'XMUT_BROKEN'"
+    data["signal_analysis"][det_name][idx][key] = "XMUT_BROKEN"
+    return data, f"break_bus: {det_name}[{idx}].{key} '{old_net}' -> 'XMUT_BROKEN'"
 
 
 def mutate_remove_protection(data, rng):
@@ -280,12 +264,11 @@ def mutate_remove_protection(data, rng):
     if not targets:
         return None, None
     det_name = rng.choice(targets)
-    mutated = copy.deepcopy(data)
-    m_items = mutated["signal_analysis"][det_name]
-    idx = rng.randrange(len(m_items))
-    removed = m_items.pop(idx)
+    items = data["signal_analysis"][det_name]
+    idx = rng.randrange(len(items))
+    removed = items.pop(idx)
     ref = removed.get("ref", removed.get("connector_ref", "?"))
-    return mutated, f"remove_protection: removed {ref} from {det_name}"
+    return data, f"remove_protection: removed {ref} from {det_name}"
 
 
 def mutate_scale_filter(data, rng):
@@ -301,14 +284,13 @@ def mutate_scale_filter(data, rng):
     if not filters:
         return None, None
     det_name, idx = rng.choice(filters)
-    mutated = copy.deepcopy(data)
-    item = mutated["signal_analysis"][det_name][idx]
+    item = data["signal_analysis"][det_name][idx]
     old_freq = item["cutoff_hz"]
     factor = 10.0 if rng.random() < 0.5 else 0.1
     item["cutoff_hz"] = old_freq * factor
     if "cutoff_formatted" in item:
         item["cutoff_formatted"] = f"{item['cutoff_hz']:.1f} Hz"
-    return mutated, f"scale_filter: {det_name}[{idx}] cutoff {old_freq:.1f} -> {old_freq * factor:.1f} Hz (×{factor})"
+    return data, f"scale_filter: {det_name}[{idx}] cutoff {old_freq:.1f} -> {old_freq * factor:.1f} Hz (×{factor})"
 
 
 # All mutation operators
@@ -334,12 +316,14 @@ def generate_mutations(data, count, seed=42, domain_only=False):
     """Generate N mutations of the data."""
     rng = random.Random(seed)
     ops = DOMAIN_OPS if domain_only else MUTATION_OPS
+    data_str = json.dumps(data)  # serialize once, faster than deepcopy per op
     mutations = []
     attempts = 0
     while len(mutations) < count and attempts < count * 5:
         attempts += 1
         op = rng.choice(ops)
-        mutated, desc = op(data, rng)
+        fresh_copy = json.loads(data_str)
+        mutated, desc = op(fresh_copy, rng)
         if mutated is not None:
             mutations.append((mutated, desc))
     return mutations

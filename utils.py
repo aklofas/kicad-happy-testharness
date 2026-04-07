@@ -7,6 +7,7 @@ used across discover.py, analyzer runners, baselines, and validators.
 import functools
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -19,6 +20,7 @@ DATA_DIR = HARNESS_DIR / "reference"
 MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
 OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
 ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice", "emc", "datasheets"]
+MISC_CATEGORY = "Miscellaneous KiCad projects"
 
 # Timeout constants (seconds) — used across runners and validators
 ANALYZER_TIMEOUT = 120
@@ -53,13 +55,12 @@ def resolve_path(data: dict, path: str):
     Supports bracket notation for array indexing: "items[0].name".
     Returns None if any key is missing or index is out of range.
     """
-    import re as _re
     parts = path.split(".")
     current = data
     for part in parts:
         if current is None:
             return None
-        m = _re.match(r'^(\w+)\[(\d+)\]$', part)
+        m = re.match(r'^(\w+)\[(\d+)\]$', part)
         if m:
             key, idx = m.group(1), int(m.group(2))
             current = current.get(key) if isinstance(current, dict) else None
@@ -343,6 +344,121 @@ def list_projects_in_data(repo_name):
 
 
 # ---------------------------------------------------------------------------
+# Resume / skip helpers
+# ---------------------------------------------------------------------------
+
+def should_skip_resume(outfile, resume):
+    """Check if output file exists and is valid JSON (for --resume)."""
+    if not resume:
+        return False
+    outfile = Path(outfile)
+    if not outfile.exists() or outfile.stat().st_size < 3:
+        return False
+    try:
+        json.loads(outfile.read_text())
+        return True
+    except (json.JSONDecodeError, OSError):
+        return False
+
+
+# ---------------------------------------------------------------------------
+# Schematic/PCB output finders (used by SPICE, EMC, cross-validation)
+# ---------------------------------------------------------------------------
+
+def find_schematic_outputs(repo_filter=None):
+    """Find all schematic JSON outputs in results/outputs/schematic/."""
+    schematic_dir = OUTPUTS_DIR / "schematic"
+    if not schematic_dir.exists():
+        return []
+
+    outputs = []
+    for owner_dir in sorted(schematic_dir.iterdir()):
+        if not owner_dir.is_dir():
+            continue
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir():
+                continue
+            repo_key = f"{owner_dir.name}/{repo_dir.name}"
+            if repo_filter and repo_key != repo_filter:
+                continue
+            for json_file in sorted(repo_dir.glob("*.json")):
+                if json_file.stat().st_size == 0:
+                    continue
+                outputs.append(json_file)
+    return outputs
+
+
+def find_pcb_output(schematic_json):
+    """Find matching PCB output for a schematic output.
+
+    Given results/outputs/schematic/{repo}/{name}.kicad_sch.json,
+    looks for results/outputs/pcb/{repo}/{name}.kicad_pcb.json.
+    """
+    repo_name = f"{schematic_json.parent.parent.name}/{schematic_json.parent.name}"
+    pcb_dir = OUTPUTS_DIR / "pcb" / repo_name
+    if not pcb_dir.exists():
+        return None
+
+    stem = schematic_json.name
+    for old, new in [(".kicad_sch.json", ".kicad_pcb.json"),
+                     (".sch.json", ".kicad_pcb.json")]:
+        if stem.endswith(old):
+            pcb_path = pcb_dir / stem.replace(old, new)
+            if pcb_path.exists() and pcb_path.stat().st_size > 0:
+                return pcb_path
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Pipeline step runner (used by add_repos.py)
+# ---------------------------------------------------------------------------
+
+def run_pipeline_step(name, cmd, timeout=600):
+    """Run a subprocess pipeline step. Returns (success, detail_string)."""
+    t0 = time.time()
+    try:
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, timeout=timeout,
+            cwd=str(HARNESS_DIR),
+        )
+        elapsed = time.time() - t0
+        ok = result.returncode == 0
+        # Get last non-empty line of output as detail
+        lines = result.stdout.strip().splitlines()
+        detail = lines[-1] if lines else ""
+        if not ok and result.stderr:
+            detail = result.stderr.strip().splitlines()[-1]
+        return ok, f"[{'OK' if ok else 'FAIL'}] {name} ({elapsed:.1f}s) {detail}"
+    except subprocess.TimeoutExpired:
+        elapsed = time.time() - t0
+        return False, f"[TIMEOUT] {name} ({elapsed:.1f}s)"
+    except Exception as e:
+        elapsed = time.time() - t0
+        return False, f"[ERROR] {name} ({elapsed:.1f}s) {e}"
+
+
+# ---------------------------------------------------------------------------
+# Output repo iteration
+# ---------------------------------------------------------------------------
+
+def iter_output_repos(base_dir, repo_filter=None):
+    """Yield (repo_name, repo_dir_path) for owner/repo dirs under base_dir."""
+    base = Path(base_dir)
+    if not base.exists():
+        return
+    for owner_dir in sorted(base.iterdir()):
+        if not owner_dir.is_dir() or owner_dir.name.startswith("."):
+            continue
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir() or repo_dir.name.startswith("."):
+                continue
+            repo_name = f"{owner_dir.name}/{repo_dir.name}"
+            if repo_filter and repo_name != repo_filter:
+                continue
+            yield repo_name, repo_dir
+
+
+# ---------------------------------------------------------------------------
 # Output validation
 # ---------------------------------------------------------------------------
 
@@ -510,18 +626,6 @@ def run_analyzer(config, args=None):
     do_resume = getattr(args, "resume", False)
     skipped = 0
 
-    def _should_skip(outfile):
-        """Check if output file exists and is valid JSON (for --resume)."""
-        if not do_resume:
-            return False
-        if not outfile.exists() or outfile.stat().st_size < 3:
-            return False
-        try:
-            json.loads(outfile.read_text())
-            return True
-        except (json.JSONDecodeError, OSError):
-            return False
-
     def _format_result(i, relpath, returncode, outfile):
         if returncode == 0:
             if do_validate:
@@ -546,7 +650,7 @@ def run_analyzer(config, args=None):
     if jobs <= 1:
         for i, file_path in enumerate(files, 1):
             relpath, outfile, errfile = _prepare(file_path)
-            if _should_skip(outfile):
+            if should_skip_resume(outfile, do_resume):
                 skipped += 1
                 continue
             returncode, _, elapsed = _run_one(analyzer, file_path, outfile, errfile, extra_args)
@@ -563,7 +667,7 @@ def run_analyzer(config, args=None):
         with ProcessPoolExecutor(max_workers=jobs) as pool:
             for i, file_path in enumerate(files, 1):
                 relpath, outfile, errfile = _prepare(file_path)
-                if _should_skip(outfile):
+                if should_skip_resume(outfile, do_resume):
                     skipped += 1
                     continue
                 future = pool.submit(_run_one, analyzer, file_path, outfile, errfile, extra_args)

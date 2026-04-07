@@ -17,7 +17,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
 from utils import resolve_kicad_happy_dir, ANALYZER_TYPES
 
 # Map kicad-happy file paths to affected analyzer types

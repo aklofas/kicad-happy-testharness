@@ -24,6 +24,8 @@ import time
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(HARNESS_DIR))
+from utils import ANALYZER_TYPES
 
 
 def _run(cmd, description, timeout=600):
@@ -76,10 +78,8 @@ def cmd_run(args):
 
     resume_flag = ["--resume"] if args.resume else []
 
-    # Unit tests first
     steps.append(([py, "run_tests.py", "--tier", "unit"], "Unit tests"))
 
-    # Analyzers
     for analyzer in ("run_schematic", "run_pcb", "run_gerbers"):
         cmd = [py, f"run/{analyzer}.py"] + filter_args + resume_flag
         steps.append((cmd, f"Analyzer: {analyzer}"))
@@ -92,7 +92,6 @@ def cmd_run(args):
         cmd = [py, "run/run_emc.py"] + filter_args + resume_flag
         steps.append((cmd, "EMC analysis"))
 
-    # Assertions
     check_cmd = [py, "regression/run_checks.py"] + filter_args
     steps.append((check_cmd, "Assertion checks"))
 
@@ -119,7 +118,7 @@ def cmd_run(args):
 
 def cmd_health(args):
     """Generate health report."""
-    cmd = [sys.executable, "generate_health_report.py", "--log"]
+    cmd = [sys.executable, "tools/generate_health_report.py", "--log"]
     if args.json:
         cmd.append("--json")
     return _run(cmd, "Health report")
@@ -177,7 +176,7 @@ subcommands:
     p_val = sub.add_parser("validate", help="Check assertions")
     p_val.add_argument("--repo", help="Single repo")
     p_val.add_argument("--cross-section", help="Named cross-section")
-    p_val.add_argument("--type", choices=["schematic", "pcb", "gerber", "spice", "emc"],
+    p_val.add_argument("--type", choices=ANALYZER_TYPES,
                        help="Analyzer type")
 
     # run

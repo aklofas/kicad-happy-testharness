@@ -12,11 +12,14 @@ Usage:
 
 import argparse
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent
+HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
+from utils import MISC_CATEGORY
 CATALOG_FILE = HARNESS_DIR / "reference" / "repo_catalog.json"
 SMOKE_PACK_FILE = HARNESS_DIR / "reference" / "smoke_pack.md"
 OUTPUT_FILE = HARNESS_DIR / "reference" / "cross_sections.json"
@@ -128,8 +131,7 @@ def section_kicad_versions(catalog, per_gen=20):
     for entry in catalog:
         versions = entry.get("kicad_versions", [])
         for v in versions:
-            import re as _re
-            m = _re.match(r"(\d+)", v)
+            m = re.match(r"(\d+)", v)
             if m:
                 major = int(m.group(1))
                 if major >= 5:
@@ -153,7 +155,7 @@ def section_category_sample(catalog, per_cat=5):
     """5 best repos per category, ranked by assertion count."""
     categories = {}
     for entry in catalog:
-        cat = entry.get("category", "Miscellaneous KiCad projects")
+        cat = entry.get("category", MISC_CATEGORY)
         categories.setdefault(cat, []).append(entry)
 
     selected = []

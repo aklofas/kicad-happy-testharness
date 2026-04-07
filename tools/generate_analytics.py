@@ -15,11 +15,12 @@ import json
 import glob
 import math
 import os
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent
+HARNESS_DIR = Path(__file__).resolve().parent.parent
 REFERENCE_DIR = HARNESS_DIR / "reference"
 RESULTS_DIR = HARNESS_DIR / "results"
 ANALYTICS_DIR = HARNESS_DIR / "analytics"
@@ -102,7 +103,6 @@ def collect_findings_per_repo():
 
 def _count_issues_in_line(line, prefix):
     """Count issue IDs in a header line, handling 'X through Y' and comma lists."""
-    import re
     count = 0
     # Match "PREFIX-NNN through PREFIX-MMM" ranges
     for m in re.finditer(rf'{prefix}-(\d+)\s+through\s+{prefix}-(\d+)', line):

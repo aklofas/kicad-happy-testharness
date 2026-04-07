@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from utils import (
     HARNESS_DIR, OUTPUTS_DIR, MANIFESTS_DIR, REPOS_DIR, DATA_DIR,
     repo_name_from_path, safe_name as _safe_name,
@@ -334,7 +335,6 @@ def select_random(manifest_file, count, analyzer_type, repo=None):
 
 def select_changed(repo_name, count, analyzer_type):
     """Select files with highest change scores from a baseline comparison."""
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
     from compare import compare_project
 
     projects = list_projects_in_data(repo_name)

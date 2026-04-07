@@ -12,12 +12,13 @@ Usage:
 
 import argparse
 import json
+import re
 import sys
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent
+HARNESS_DIR = Path(__file__).resolve().parent.parent
 CATALOG_FILE = HARNESS_DIR / "reference" / "repo_catalog.json"
 SCHEMA_FILE = HARNESS_DIR / "reference" / "schema_inventory.json"
 BUGFIX_FILE = HARNESS_DIR / "regression" / "bugfix_registry.json"
@@ -53,7 +54,7 @@ def _count_kh_issues():
 
 
 def _load_catalog_stats():
-    """Load and summarize repo catalog."""
+    """Load and summarize repo catalog, including assertion totals."""
     if not CATALOG_FILE.exists():
         return {}
     catalog = json.loads(CATALOG_FILE.read_text())
@@ -63,8 +64,7 @@ def _load_catalog_stats():
     for r in catalog:
         for v in r.get("kicad_versions", []):
             # Parse major version from strings like "9.0", "5 (legacy)", "10.99"
-            import re as _re
-            m = _re.match(r"(\d+)", v)
+            m = re.match(r"(\d+)", v)
             if m:
                 major = int(m.group(1))
                 if major >= 5:
@@ -81,6 +81,15 @@ def _load_catalog_stats():
         for det in r.get("detectors_fired", {}):
             det_coverage[det] += 1
 
+    # Assertion totals from catalog (avoids scanning 111K files)
+    assertion_total = 0
+    assertion_by_type = Counter()
+    for r in catalog:
+        a = r.get("assertions", {})
+        assertion_total += a.get("total", 0)
+        for prefix in ("SEED", "STRUCT", "FND", "BUGFIX"):
+            assertion_by_type[prefix] += a.get(prefix, 0)
+
     return {
         "total_repos": len(catalog),
         "categories": categories,
@@ -88,42 +97,18 @@ def _load_catalog_stats():
         "total_components": total_components,
         "total_nets": total_nets,
         "detector_coverage": det_coverage,
+        "assertion_total": assertion_total,
+        "assertion_by_type": assertion_by_type,
     }
-
-
-def _load_assertion_stats():
-    """Count assertions from reference/ assertion files."""
-    total = 0
-    files = 0
-    by_type = Counter()
-    for f in (HARNESS_DIR / "reference").rglob("assertions/**/*.json"):
-        try:
-            data = json.loads(f.read_text())
-            n = len(data.get("assertions", []))
-            total += n
-            files += 1
-            # Classify by prefix
-            for a in data.get("assertions", []):
-                aid = a.get("id", "")
-                if aid.startswith("SEED"):
-                    by_type["SEED"] += 1
-                elif aid.startswith("STRUCT"):
-                    by_type["STRUCT"] += 1
-                elif aid.startswith("FND"):
-                    by_type["FND"] += 1
-                elif aid.startswith("BUGFIX"):
-                    by_type["BUGFIX"] += 1
-                else:
-                    by_type["other"] += 1
-        except Exception:
-            pass
-    return {"total": total, "files": files, "by_type": dict(by_type)}
 
 
 def generate_markdown():
     """Generate VALIDATION.md content."""
     cat_stats = _load_catalog_stats()
-    assertion_stats = _load_assertion_stats()
+    assertion_stats = {
+        "total": cat_stats.get("assertion_total", 0),
+        "by_type": dict(cat_stats.get("assertion_by_type", {})),
+    }
     open_kh, closed_kh = _count_kh_issues()
     bugfix_count = 0
     if BUGFIX_FILE.exists():
@@ -216,7 +201,8 @@ Hard assertions on known-good output values. If a previously correct result chan
 """
     for atype, count in sorted(assertion_stats.get("by_type", {}).items(),
                                 key=lambda x: -x[1]):
-        md += f"| {atype} | {count:,} | 100% |\n"
+        if count > 0:
+            md += f"| {atype} | {count:,} | 100% |\n"
     md += f"| **Total** | **{assertion_stats.get('total', 0):,}** | **100%** |\n"
 
     md += f"""

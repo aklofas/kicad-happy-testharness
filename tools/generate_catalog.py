@@ -21,10 +21,9 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
 from utils import OUTPUTS_DIR, DATA_DIR, list_repos, safe_load_json
-
-HARNESS_DIR = Path(__file__).resolve().parent
 CATALOG_JSON = DATA_DIR / "repo_catalog.json"
 CATALOG_MD = DATA_DIR / "repo_catalog.md"
 REPOS_MD = HARNESS_DIR / "repos.md"

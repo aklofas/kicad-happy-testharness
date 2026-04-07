@@ -17,7 +17,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-HARNESS_DIR = Path(__file__).resolve().parent
+HARNESS_DIR = Path(__file__).resolve().parent.parent
 CATALOG_FILE = HARNESS_DIR / "reference" / "repo_catalog.json"
 OUTPUT_FILE = HARNESS_DIR / "results" / "duplicates.json"
 

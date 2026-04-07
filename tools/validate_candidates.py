@@ -28,8 +28,9 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
+HARNESS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(HARNESS_DIR))
 from checkout import parse_repos_md, _repo_name_from_url
-from utils import HARNESS_DIR
 
 REPOS_MD = HARNESS_DIR / "repos.md"
 CANDIDATES_FILE = HARNESS_DIR / "results" / "candidates.json"
