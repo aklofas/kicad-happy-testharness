@@ -60,8 +60,32 @@ def _reviewed_repos():
     return reviewed
 
 
+def _output_project_prefix(path):
+    """Extract a project prefix from an output filename for cross-type matching.
+
+    Output filenames keep original dots: 'ZeBra-X.kicad_sch.json'
+    Strip the analyzer-specific extension to get the shared project name.
+    """
+    stem = Path(path).stem  # 'ZeBra-X.kicad_sch'
+    # Strip known source file extensions (longest first)
+    for suffix in (".kicad_sch", ".kicad_pcb", ".sch"):
+        if stem.endswith(suffix):
+            return stem[:len(stem) - len(suffix)]
+    # For gerber outputs, strip common gerber directory names
+    # These use underscores since the directory name is path-encoded
+    lower = stem.lower()
+    for suffix in ("_gerber", "_gerbers", "_plot", "_fab",
+                   "_output_gerber", "_output", "_production"):
+        if lower.endswith(suffix):
+            return stem[:len(stem) - len(suffix)]
+    return stem
+
+
 def _collect_outputs(repo):
     """Collect all analyzer outputs for a repo, grouped by type.
+
+    Tries to select outputs from the same project across types by matching
+    filename prefixes. Falls back to highest-scoring file per type.
 
     Returns dict: {analyzer_type: [{path, source, components, signals}, ...]}
     """
@@ -84,12 +108,30 @@ def _collect_outputs(repo):
                     "components": tc,
                     "signals": sc,
                     "score": tc + sc,
+                    "prefix": _output_project_prefix(str(j)),
                 })
             except Exception:
                 continue
         if files:
             files.sort(key=lambda x: x["score"], reverse=True)
             result[atype] = files
+
+    # Try to align PCB and gerber outputs to match the best schematic's project
+    if "schematic" in result and len(result["schematic"]) > 0:
+        sch_prefix = result["schematic"][0]["prefix"]
+        for atype in ("pcb", "gerber"):
+            if atype not in result:
+                continue
+            # Find a file whose prefix matches the schematic's prefix
+            matched = [f for f in result[atype]
+                       if f["prefix"] == sch_prefix
+                       or sch_prefix.startswith(f["prefix"])
+                       or f["prefix"].startswith(sch_prefix)]
+            if matched:
+                # Move the matched file to front
+                rest = [f for f in result[atype] if f not in matched]
+                result[atype] = matched + rest
+
     return result
 
 

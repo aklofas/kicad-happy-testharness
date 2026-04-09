@@ -842,39 +842,29 @@ file with the analyzer output summary for side-by-side review.
 
 ### 13b. Conduct the review
 
-Use `batch_review.py` with Claude Code subagents:
+Use `batch_review.py` with Claude Code subagents. Prompts now include all available
+output types (schematic + PCB + gerber) per repo, with cross-reference instructions:
 
 ```bash
-# List unreviewed repos by complexity
+# List unreviewed repos by complexity (shows PCB/GBR availability)
 python3 tools/batch_review.py list --count 20
 
-# Get source/output paths for selected repos
+# Generate combined prompts (schematic + PCB + gerber where available)
 python3 tools/batch_review.py prompts --count 5
+
+# Check review coverage by analyzer type
+python3 tools/batch_review.py status
 ```
 
 In a Claude Code session, spawn subagents in parallel (5 at a time works well).
-Each subagent gets a prompt like:
+Each subagent gets a combined prompt covering all available output types for the repo.
+When multiple types are present, the subagent produces a JSON array with one finding
+per analyzer type and cross-references between them (component counts, layer counts,
+routing completeness).
 
-> Review this KiCad schematic analyzer output for correctness. Read BOTH files,
-> compare them, and produce a structured JSON finding.
-> SOURCE: {source_path}
-> OUTPUT: {output_path}
-> Output ONLY a JSON block with: analyzer_type, source_file, status, summary,
-> correct[], incorrect[], missed[], suggestions[], related_issues[], should_become_assertion.
->
-> For each item in incorrect[] or missed[], you MUST include:
-> - `component_ref`: the specific component (e.g., "U1", "Q2", "C16")
-> - `field_values`: the actual field values from the source file (lib_id, value, keywords, etc.)
-> - `analyzer_output`: what the analyzer produced (quote the relevant JSON path and value)
-> - `expected_output`: what the correct result should be
-> - `code_trace` (if you can identify it): the function name and approximate code path
->   that produces the wrong result — trace the actual input through the code, don't infer
->   from the symptom what the code must be doing
-
-Each review takes 3-6 minutes. Subagents read both the raw schematic and analyzer
-JSON, compare component classifications, signal detections, and net building, then
-produce structured findings naming specific components (U1, R3) with analyzer_section
-paths.
+Each review takes 3-6 minutes. Subagents read source files and analyzer JSON for
+each output type, compare detections against reality, and produce structured findings
+naming specific components (U1, R3) with analyzer_section paths.
 
 **Tips from batch experience:**
 - Skip repos >8K components (subagent may time out)
@@ -882,6 +872,10 @@ paths.
 - Skip repos with only connectors/pads (low signal value)
 - The sweet spot is 200-2000 component designs with mixed analog/digital
 - Subagent findings are ~4x more thorough than old manual reviews
+- Prioritize repos with all 3 output types for cross-referencing value
+- Use `--count 5` for prompts — 5 parallel subagents is a good batch size
+- Category coverage gaps: check `batch_review.py status` and repo catalog
+  to target underrepresented categories (aerospace, wearables, measurement)
 
 **Root cause accuracy (lessons from KH-207..217 verification):**
 
@@ -905,11 +899,20 @@ callers that bypass the check. Before writing a root cause:
 
 ### 13c. Save findings
 
-Extract the JSON from each subagent result and save:
+Extract the JSON from each subagent result and save. For combined reviews, the
+subagent produces a JSON array (one finding per analyzer type) — `save` handles both
+single findings and arrays:
 
 ```bash
-# --project is auto-detected if repo has one project, otherwise specify
+# Single finding (schematic-only review)
 python3 tools/batch_review.py save --repo {owner/repo} --file /tmp/finding.json
+
+# Multi-finding array (combined schematic+PCB+gerber review)
+# save processes each element, assigning unique FND IDs per type
+python3 tools/batch_review.py save --repo {owner/repo} --file /tmp/findings.json
+
+# From stdin (useful for piping subagent output)
+echo '...' | python3 tools/batch_review.py save --repo {owner/repo} --file -
 
 # Check coverage
 python3 tools/batch_review.py status
