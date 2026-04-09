@@ -39,6 +39,45 @@
         "field": "reference",
         "pattern": "^A4$"
       }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 3 protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "F5 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F5$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "F18 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F18$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "F4 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F4$"
+      }
     }
   ]
 }

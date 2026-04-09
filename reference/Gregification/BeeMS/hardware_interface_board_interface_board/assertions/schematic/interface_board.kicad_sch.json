@@ -1,0 +1,121 @@
+{
+  "file_pattern": "interface_board.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~20 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 18,
+        "max": 22
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~210 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 203,
+        "max": 217
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "10 esd_coverage_audit detected",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 10
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 10 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Has 5 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 5 mounting_hole(s)",
+      "check": {
+        "path": "statistics.component_types.mounting_hole",
+        "op": "min_count",
+        "value": 3
+      }
+    }
+  ]
+}

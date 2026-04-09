@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~281 (tolerance 10%)",
+      "description": "Net count ~261 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 272,
-        "max": 290
+        "min": 253,
+        "max": 269
       }
     },
     {
@@ -83,6 +83,15 @@
     },
     {
       "id": "SEED-00000009",
+      "description": "1 protection_devices detected",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "Has 6 other(s)",
       "check": {
         "path": "statistics.component_types.other",

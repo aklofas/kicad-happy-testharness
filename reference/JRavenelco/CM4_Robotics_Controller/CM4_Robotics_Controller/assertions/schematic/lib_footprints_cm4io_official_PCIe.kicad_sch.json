@@ -1,0 +1,218 @@
+{
+  "file_pattern": "lib_footprints_cm4io_official_PCIe.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~24 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 21,
+        "max": 27
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~24 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 21,
+        "max": 27
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 debug_interfaces detected",
+      "check": {
+        "path": "signal_analysis.debug_interfaces",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All debug_interfaces have connector_ref",
+      "check": {
+        "path": "signal_analysis.debug_interfaces",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All debug_interfaces interface_type values are valid",
+      "check": {
+        "path": "signal_analysis.debug_interfaces",
+        "op": "count_matches",
+        "field": "interface_type",
+        "pattern": "^(swd|jtag|debug)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "2 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "4 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "1 esd_coverage_audit detected",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "1 feedback_networks detected",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "All feedback_networks have r_top ref present",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "not_contains_match",
+        "field": "r_top.ref",
+        "pattern": "^(None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "2 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000020",
+      "description": "1 voltage_dividers detected",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000021",
+      "description": "All voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000022",
+      "description": "Has 16 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 12
+      }
+    }
+  ]
+}

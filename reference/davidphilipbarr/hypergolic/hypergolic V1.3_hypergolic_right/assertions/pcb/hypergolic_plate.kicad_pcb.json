@@ -1,0 +1,69 @@
+{
+  "file_pattern": "hypergolic_plate.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Footprint count ~17 (tolerance 10%)",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "range",
+        "min": 15,
+        "max": 19
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "SMD count ~17 (tolerance 10%)",
+      "check": {
+        "path": "statistics.smd_count",
+        "op": "range",
+        "min": 15,
+        "max": 19
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Routing completeness status",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Connectivity analysis present",
+      "check": {
+        "path": "connectivity",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "DFM analysis present",
+      "check": {
+        "path": "dfm",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "DFM tier is 'standard'",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "op": "equals",
+        "value": "standard"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Placement analysis present",
+      "check": {
+        "path": "placement_analysis",
+        "op": "exists"
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "file_pattern": "Test_Sim_Project.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "U1 in opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 3 protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 3 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R1 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R4 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R4$"
+      }
+    }
+  ]
+}

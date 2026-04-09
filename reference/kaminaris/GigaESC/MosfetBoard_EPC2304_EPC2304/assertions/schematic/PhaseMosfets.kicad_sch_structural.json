@@ -1,0 +1,54 @@
+{
+  "file_pattern": "PhaseMosfets.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 bridge_circuits",
+      "check": {
+        "path": "signal_analysis.bridge_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 current_sense",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "R28 in current_sense",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R28$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R7 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R7$"
+      }
+    }
+  ]
+}

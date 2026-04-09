@@ -41,6 +41,15 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "Exactly 4 led_audit",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Exactly 26 opamp_circuits",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -49,16 +58,46 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 8 rc_filters",
+      "id": "STRUCT-00000007",
+      "description": "Exactly 18 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 8
+        "value": 18
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
+      "description": "R64 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R64$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R74 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R74$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R39 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R39$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "R21 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -68,7 +107,17 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000012",
+      "description": "R23 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R23$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "R24 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -78,7 +127,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000014",
       "description": "R58 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -88,7 +137,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000015",
       "description": "R53 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -98,7 +147,37 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000016",
+      "description": "R57 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R57$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R56 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R56$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R16 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R16$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
       "description": "R13 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -108,7 +187,17 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000020",
+      "description": "R17 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R17$"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
       "description": "R18 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -118,7 +207,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000022",
       "description": "R65 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -128,7 +217,17 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000023",
+      "description": "R63 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R63$"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
       "description": "R61 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -138,7 +237,17 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000025",
+      "description": "R72 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R72$"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -147,7 +256,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000027",
       "description": "R67 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

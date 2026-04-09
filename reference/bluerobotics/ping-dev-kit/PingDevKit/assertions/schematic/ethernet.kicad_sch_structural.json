@@ -33,15 +33,35 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 3 rc_filters",
+      "description": "Exactly 6 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000005",
+      "description": "R709 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R709$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R712 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R712$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "R706 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -51,7 +71,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "R704 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -61,7 +81,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "R703 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -71,7 +91,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "Exactly 1 reset_supervisors",
       "check": {
         "path": "signal_analysis.reset_supervisors",

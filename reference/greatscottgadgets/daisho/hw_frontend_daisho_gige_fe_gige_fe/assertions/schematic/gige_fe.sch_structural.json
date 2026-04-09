@@ -34,11 +34,11 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 4 decoupling_analysis",
+      "description": "Exactly 3 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -138,11 +138,11 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "Exactly 1 rc_filters",
+      "description": "Exactly 3 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -153,6 +153,26 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R9991$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R401 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R401$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R601 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R601$"
       }
     }
   ]

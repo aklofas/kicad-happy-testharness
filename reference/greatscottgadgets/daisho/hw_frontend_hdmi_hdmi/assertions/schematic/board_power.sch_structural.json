@@ -14,11 +14,11 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 11 design_observations",
+      "description": "Exactly 17 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 11
+        "value": 17
       }
     },
     {
@@ -82,11 +82,11 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 6 rc_filters",
+      "description": "Exactly 11 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 6
+        "value": 11
       }
     },
     {
@@ -111,6 +111,16 @@
     },
     {
       "id": "STRUCT-00000012",
+      "description": "R902 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R902$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "R916 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -120,7 +130,47 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
+      "description": "R912 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R912$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R915 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R915$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R907 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R907$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R908 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R908$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "Exactly 3 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -129,7 +179,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000019",
       "description": "R906 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -139,7 +189,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000020",
       "description": "R914 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -149,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000021",
       "description": "R919 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

@@ -1,0 +1,63 @@
+{
+  "file_pattern": "ZIP_Microcontrollers.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 4 led_audit",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 4 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "R22 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R22$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R13 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R13$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Exactly 1 rf_chains",
+      "check": {
+        "path": "signal_analysis.rf_chains",
+        "op": "equals",
+        "value": 1
+      }
+    }
+  ]
+}

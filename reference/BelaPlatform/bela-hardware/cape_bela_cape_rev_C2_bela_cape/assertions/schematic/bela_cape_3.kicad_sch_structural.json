@@ -32,11 +32,11 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 4 rc_filters",
+      "description": "Exactly 5 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -61,6 +61,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "R12 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R12$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -69,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "R11 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

@@ -42,7 +42,16 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 design_observations detected",
+      "description": "2 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "4 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -50,26 +59,26 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "1 lc_filters detected",
+      "id": "SEED-00000007",
+      "description": "1 feedback_networks detected",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "signal_analysis.feedback_networks",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "All lc_filters have non-zero resonant_hz",
+      "id": "SEED-00000008",
+      "description": "All feedback_networks have r_top ref present",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "signal_analysis.feedback_networks",
         "op": "not_contains_match",
-        "field": "resonant_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "field": "r_top.ref",
+        "pattern": "^(None|)$"
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -78,7 +87,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -88,21 +97,21 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "2 rc_filters detected",
+      "id": "SEED-00000011",
+      "description": "1 voltage_dividers detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "id": "SEED-00000012",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "not_contains_match",
-        "field": "cutoff_hz",
+        "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     }

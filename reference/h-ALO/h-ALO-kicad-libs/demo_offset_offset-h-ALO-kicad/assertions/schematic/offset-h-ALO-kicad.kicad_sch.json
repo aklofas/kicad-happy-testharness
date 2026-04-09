@@ -1,0 +1,208 @@
+{
+  "file_pattern": "offset-h-ALO-kicad.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~35 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 31,
+        "max": 39
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~147 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 139,
+        "max": 155
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "2 adc_circuits detected",
+      "check": {
+        "path": "signal_analysis.adc_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All adc_circuits have ref",
+      "check": {
+        "path": "signal_analysis.adc_circuits",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All adc_circuits type values are valid",
+      "check": {
+        "path": "signal_analysis.adc_circuits",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(external_adc|voltage_reference)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "1 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "8 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "2 esd_coverage_audit detected",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "1 opamp_circuits detected",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "All opamp_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "3 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "1 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000019",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000020",
+      "description": "Has 20 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 15
+      }
+    },
+    {
+      "id": "SEED-00000021",
+      "description": "Has 10 ic(s)",
+      "check": {
+        "path": "statistics.component_types.ic",
+        "op": "min_count",
+        "value": 7
+      }
+    }
+  ]
+}

@@ -42,11 +42,11 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 current_sense",
+      "description": "Exactly 1 current_sense",
       "check": {
         "path": "signal_analysis.current_sense",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -61,16 +61,6 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "R17 in current_sense",
-      "check": {
-        "path": "signal_analysis.current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^R17$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "Exactly 1 debug_interfaces",
       "check": {
         "path": "signal_analysis.debug_interfaces",
@@ -79,25 +69,25 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 2 decoupling_analysis",
+      "id": "STRUCT-00000008",
+      "description": "Exactly 4 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 2
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Exactly 22 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 22
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 21 design_observations",
-      "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 21
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "Exactly 8 esd_coverage_audit",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -106,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "Exactly 2 feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -115,7 +105,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000012",
       "description": "R224 in feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -125,7 +115,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000013",
       "description": "R251 in feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -135,7 +125,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000014",
       "description": "Exactly 5 lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -144,7 +134,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "L1 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -154,7 +144,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000016",
       "description": "L2 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -164,7 +154,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000017",
       "description": "L203 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -174,7 +164,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "L4 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -184,7 +174,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "Exactly 2 level_shifters",
       "check": {
         "path": "signal_analysis.level_shifters",
@@ -193,7 +183,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "Exactly 1 opamp_circuits",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -202,7 +192,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "U7 in opamp_circuits",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -212,7 +202,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "Exactly 5 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -221,7 +211,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "U17 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -231,7 +221,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "U5 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -241,7 +231,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "U211 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -251,7 +241,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000026",
       "description": "U203 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -261,7 +251,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000027",
       "description": "U210 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -271,7 +261,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000028",
       "description": "Exactly 2 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -280,7 +270,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000029",
       "description": "Exactly 8 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -289,7 +279,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000030",
       "description": "R15 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -299,7 +289,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000031",
       "description": "R49 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -309,7 +299,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000032",
       "description": "R47 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -319,7 +309,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000033",
       "description": "R75 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -329,7 +319,7 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000034",
       "description": "R76 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -339,7 +329,7 @@
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000035",
       "description": "R95 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -349,7 +339,7 @@
       }
     },
     {
-      "id": "STRUCT-00000037",
+      "id": "STRUCT-00000036",
       "description": "R96 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -359,7 +349,7 @@
       }
     },
     {
-      "id": "STRUCT-00000038",
+      "id": "STRUCT-00000037",
       "description": "R209 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -369,7 +359,7 @@
       }
     },
     {
-      "id": "STRUCT-00000039",
+      "id": "STRUCT-00000038",
       "description": "Exactly 1 reset_supervisors",
       "check": {
         "path": "signal_analysis.reset_supervisors",
@@ -378,7 +368,7 @@
       }
     },
     {
-      "id": "STRUCT-00000040",
+      "id": "STRUCT-00000039",
       "description": "Exactly 1 rf_chains",
       "check": {
         "path": "signal_analysis.rf_chains",
@@ -387,7 +377,7 @@
       }
     },
     {
-      "id": "STRUCT-00000041",
+      "id": "STRUCT-00000040",
       "description": "Exactly 26 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -396,7 +386,7 @@
       }
     },
     {
-      "id": "STRUCT-00000042",
+      "id": "STRUCT-00000041",
       "description": "Q22 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -406,7 +396,7 @@
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000042",
       "description": "Q20 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -416,7 +406,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000043",
       "description": "Q21 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -426,7 +416,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000044",
       "description": "Q5 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -436,7 +426,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000045",
       "description": "Q4 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -446,7 +436,7 @@
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000046",
       "description": "Q12 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -456,7 +446,7 @@
       }
     },
     {
-      "id": "STRUCT-00000048",
+      "id": "STRUCT-00000047",
       "description": "Q13 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -466,7 +456,7 @@
       }
     },
     {
-      "id": "STRUCT-00000049",
+      "id": "STRUCT-00000048",
       "description": "Q18 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -476,7 +466,7 @@
       }
     },
     {
-      "id": "STRUCT-00000050",
+      "id": "STRUCT-00000049",
       "description": "Q19 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -486,7 +476,7 @@
       }
     },
     {
-      "id": "STRUCT-00000051",
+      "id": "STRUCT-00000050",
       "description": "Q211 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -496,7 +486,7 @@
       }
     },
     {
-      "id": "STRUCT-00000052",
+      "id": "STRUCT-00000051",
       "description": "Q213 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -506,7 +496,7 @@
       }
     },
     {
-      "id": "STRUCT-00000053",
+      "id": "STRUCT-00000052",
       "description": "Q207 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -516,7 +506,7 @@
       }
     },
     {
-      "id": "STRUCT-00000054",
+      "id": "STRUCT-00000053",
       "description": "Q6 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -526,7 +516,7 @@
       }
     },
     {
-      "id": "STRUCT-00000055",
+      "id": "STRUCT-00000054",
       "description": "Q17 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -536,7 +526,7 @@
       }
     },
     {
-      "id": "STRUCT-00000056",
+      "id": "STRUCT-00000055",
       "description": "Q52 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -546,7 +536,7 @@
       }
     },
     {
-      "id": "STRUCT-00000057",
+      "id": "STRUCT-00000056",
       "description": "Q10 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -556,7 +546,7 @@
       }
     },
     {
-      "id": "STRUCT-00000058",
+      "id": "STRUCT-00000057",
       "description": "Q9 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -566,7 +556,7 @@
       }
     },
     {
-      "id": "STRUCT-00000059",
+      "id": "STRUCT-00000058",
       "description": "Q54 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -576,7 +566,7 @@
       }
     },
     {
-      "id": "STRUCT-00000060",
+      "id": "STRUCT-00000059",
       "description": "Q53 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -586,7 +576,7 @@
       }
     },
     {
-      "id": "STRUCT-00000061",
+      "id": "STRUCT-00000060",
       "description": "Q51 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -596,7 +586,7 @@
       }
     },
     {
-      "id": "STRUCT-00000062",
+      "id": "STRUCT-00000061",
       "description": "Q200 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -606,7 +596,7 @@
       }
     },
     {
-      "id": "STRUCT-00000063",
+      "id": "STRUCT-00000062",
       "description": "Q201 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -616,7 +606,7 @@
       }
     },
     {
-      "id": "STRUCT-00000064",
+      "id": "STRUCT-00000063",
       "description": "Q202 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -626,7 +616,7 @@
       }
     },
     {
-      "id": "STRUCT-00000065",
+      "id": "STRUCT-00000064",
       "description": "Q203 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -636,7 +626,7 @@
       }
     },
     {
-      "id": "STRUCT-00000066",
+      "id": "STRUCT-00000065",
       "description": "Q215 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -646,7 +636,7 @@
       }
     },
     {
-      "id": "STRUCT-00000067",
+      "id": "STRUCT-00000066",
       "description": "Q222 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -656,16 +646,16 @@
       }
     },
     {
-      "id": "STRUCT-00000068",
-      "description": "Exactly 12 voltage_dividers",
+      "id": "STRUCT-00000067",
+      "description": "Exactly 13 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 12
+        "value": 13
       }
     },
     {
-      "id": "STRUCT-00000069",
+      "id": "STRUCT-00000068",
       "description": "R1 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -675,7 +665,7 @@
       }
     },
     {
-      "id": "STRUCT-00000070",
+      "id": "STRUCT-00000069",
       "description": "R34 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -685,7 +675,7 @@
       }
     },
     {
-      "id": "STRUCT-00000071",
+      "id": "STRUCT-00000070",
       "description": "R22 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -695,7 +685,7 @@
       }
     },
     {
-      "id": "STRUCT-00000072",
+      "id": "STRUCT-00000071",
       "description": "R33 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -705,7 +695,7 @@
       }
     },
     {
-      "id": "STRUCT-00000073",
+      "id": "STRUCT-00000072",
       "description": "R257 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -715,7 +705,7 @@
       }
     },
     {
-      "id": "STRUCT-00000074",
+      "id": "STRUCT-00000073",
       "description": "R258 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -725,23 +715,33 @@
       }
     },
     {
-      "id": "STRUCT-00000075",
-      "description": "R117 in voltage_dividers",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R117$"
-      }
-    },
-    {
-      "id": "STRUCT-00000076",
+      "id": "STRUCT-00000074",
       "description": "R123 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R123$"
+      }
+    },
+    {
+      "id": "STRUCT-00000075",
+      "description": "R55 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R55$"
+      }
+    },
+    {
+      "id": "STRUCT-00000076",
+      "description": "R41 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R41$"
       }
     },
     {

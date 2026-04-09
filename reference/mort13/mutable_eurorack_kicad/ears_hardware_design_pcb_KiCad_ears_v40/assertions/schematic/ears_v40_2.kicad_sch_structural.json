@@ -14,6 +14,15 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 3 led_audit",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 8 opamp_circuits",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -22,16 +31,36 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 2 rc_filters",
+      "id": "STRUCT-00000004",
+      "description": "Exactly 8 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 8
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
+      "description": "R23 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R23$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R25 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R25$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "R31 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -41,7 +70,37 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000008",
+      "description": "R29 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R29$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R26 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R26$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R24 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R24$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "R11 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -51,7 +110,17 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000012",
+      "description": "R28 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R28$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -60,7 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000014",
       "description": "R16 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -70,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000015",
       "description": "R18 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

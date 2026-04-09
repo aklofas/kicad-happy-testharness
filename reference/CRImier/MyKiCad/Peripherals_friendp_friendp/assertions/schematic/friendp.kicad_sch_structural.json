@@ -33,11 +33,11 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 2 design_observations",
+      "description": "Exactly 3 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -51,6 +51,25 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Exactly 1 power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "U3 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 4 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -59,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "Q3 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -69,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "Q2 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -79,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "Q1 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -89,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "Q4 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",

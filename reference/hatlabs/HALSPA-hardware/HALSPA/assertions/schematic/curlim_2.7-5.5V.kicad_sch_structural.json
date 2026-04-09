@@ -1,0 +1,53 @@
+{
+  "file_pattern": "curlim_2.7-5.5V.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 current_sense",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "R31 in current_sense",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R31$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 2 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 4 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 esd_coverage_audit",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "equals",
+        "value": 2
+      }
+    }
+  ]
+}

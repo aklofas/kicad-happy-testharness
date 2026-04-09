@@ -1,0 +1,81 @@
+{
+  "file_pattern": "afd.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Footprint count ~50 (tolerance 10%)",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "range",
+        "min": 45,
+        "max": 56
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~65 (tolerance 10%)",
+      "check": {
+        "path": "statistics.net_count",
+        "op": "range",
+        "min": 61,
+        "max": 69
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "SMD count ~45 (tolerance 10%)",
+      "check": {
+        "path": "statistics.smd_count",
+        "op": "range",
+        "min": 40,
+        "max": 50
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "THT count ~5 (tolerance 10%)",
+      "check": {
+        "path": "statistics.tht_count",
+        "op": "range",
+        "min": 4,
+        "max": 6
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "Routing completeness status",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": false
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Connectivity analysis present",
+      "check": {
+        "path": "connectivity",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "DFM analysis present",
+      "check": {
+        "path": "dfm",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "DFM tier is 'standard'",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "op": "equals",
+        "value": "standard"
+      }
+    }
+  ]
+}

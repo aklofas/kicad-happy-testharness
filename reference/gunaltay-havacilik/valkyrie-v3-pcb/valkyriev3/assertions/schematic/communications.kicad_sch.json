@@ -1,0 +1,122 @@
+{
+  "file_pattern": "communications.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~12 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 10,
+        "max": 14
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~19 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 17,
+        "max": 21
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "1 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "3 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "1 esd_coverage_audit detected",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All esd_coverage_audit have connector_ref",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "not_contains_match",
+        "field": "connector_ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All esd_coverage_audit coverage values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "coverage",
+        "pattern": "^(full|partial|none)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "All esd_coverage_audit risk_level values are valid",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "count_matches",
+        "field": "risk_level",
+        "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "2 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All transistor_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    }
+  ]
+}

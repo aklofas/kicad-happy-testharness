@@ -70,11 +70,11 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 1 protection_devices",
+      "description": "Exactly 2 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -89,6 +89,16 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "F18 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F18$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "Exactly 6 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -97,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "R23 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "R5 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -117,7 +127,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "R4 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "R6 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -137,7 +147,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "R21 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -147,7 +157,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "R2 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",

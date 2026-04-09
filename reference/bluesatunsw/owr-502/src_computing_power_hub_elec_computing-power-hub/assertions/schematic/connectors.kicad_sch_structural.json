@@ -32,11 +32,11 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 4 rc_filters",
+      "description": "Exactly 8 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 8
       }
     },
     {
@@ -81,6 +81,46 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "R353 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R353$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R352 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R352$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R355 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R355$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R354 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R354$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "Exactly 2 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -89,7 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000014",
       "description": "Q301 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -99,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000015",
       "description": "Q303 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -109,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000016",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -118,7 +158,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000017",
       "description": "R310 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

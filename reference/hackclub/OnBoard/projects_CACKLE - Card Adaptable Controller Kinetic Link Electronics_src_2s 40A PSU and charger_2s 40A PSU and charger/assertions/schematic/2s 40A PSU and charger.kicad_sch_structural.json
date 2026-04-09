@@ -33,11 +33,11 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 3 design_observations",
+      "description": "Exactly 5 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 3
+        "value": 5
       }
     },
     {
@@ -60,11 +60,11 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 1 power_regulators",
+      "description": "Exactly 2 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -79,6 +79,16 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "U2 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Exactly 4 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -87,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "Q3 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -97,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "Q2 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "Q1 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -117,7 +127,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "Q6 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -127,7 +137,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -136,7 +146,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "R30 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -146,7 +156,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "R27 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

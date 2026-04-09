@@ -51,6 +51,25 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "2 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "4 sensor_interfaces detected",
       "check": {
         "path": "signal_analysis.sensor_interfaces",
@@ -59,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
       "description": "All sensor_interfaces have ref",
       "check": {
         "path": "signal_analysis.sensor_interfaces",
@@ -69,7 +88,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "All sensor_interfaces type values are valid",
       "check": {
         "path": "signal_analysis.sensor_interfaces",

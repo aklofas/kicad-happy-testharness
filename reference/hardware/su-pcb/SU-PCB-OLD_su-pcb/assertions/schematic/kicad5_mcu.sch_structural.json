@@ -71,11 +71,11 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 4 rc_filters",
+      "description": "Exactly 5 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -116,6 +116,16 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R88$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R146 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R146$"
       }
     }
   ]

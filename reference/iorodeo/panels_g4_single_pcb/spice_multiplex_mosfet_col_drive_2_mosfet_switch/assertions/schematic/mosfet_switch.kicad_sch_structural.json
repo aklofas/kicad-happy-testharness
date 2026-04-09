@@ -1,0 +1,35 @@
+{
+  "file_pattern": "mosfet_switch.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 2 protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 1 transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Q2 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q2$"
+      }
+    }
+  ]
+}

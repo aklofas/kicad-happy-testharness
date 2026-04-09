@@ -26,14 +26,13 @@
     },
     {
       "id": "FND-00001471-AST-03",
-      "description": "INCORRECT: The statistics show board_width_mm: null and board_height_mm: null, and the board_outline section has edge_count: 0 and bounding_box: null. However, the PCB file does have an Edge.Cuts layer. This indicates the board outline is likely defined as a footprint reference rather than direct Edge.Cuts graphics, or uses a non-standard format, causing the analyzer to fail to extract the board boundary. The PCB is a known rectangular board for Raspberry Pi Pico passthrough.",
+      "description": "FIXED: The analyzer now correctly detects the board outline with edge_count=1, and reports board dimensions of 25.4mm x 50.8mm, consistent with a Raspberry Pi Pico passthrough board.",
       "created_from": "FND-00001471",
       "check": {
         "path": "board_outline.edge_count",
         "op": "equals",
-        "value": 0
-      },
-      "aspirational": false
+        "value": 1
+      }
     }
   ]
 }

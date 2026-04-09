@@ -1,0 +1,141 @@
+{
+  "file_pattern": "sheet1.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 5 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 18 esd_coverage_audit",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "equals",
+        "value": 18
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 5 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 5
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R92 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R92$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R89 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R89$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R1 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R88 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R88$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R91 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R91$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "Exactly 1 transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Q2 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "Exactly 2 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R6 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R2 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R2$"
+      }
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "file_pattern": "UltrasonicsBoard.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 esd_coverage_audit",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 1 opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "U1 in opamp_circuits",
+      "check": {
+        "path": "signal_analysis.opamp_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 2 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R2 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R1 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Exactly 1 transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "Q1 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q1$"
+      }
+    }
+  ]
+}

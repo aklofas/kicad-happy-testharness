@@ -36,14 +36,13 @@
     },
     {
       "id": "FND-00001392-AST-04",
-      "description": "INCORRECT: statistics.board_width_mm=null and board_height_mm=null, yet the dimensions array contains four aligned dimension annotations all reading '50.8 mm' (and 2.5mm corner chamfers). The board_outline section shows edge_count=0 and bounding_box=null, indicating the Edge.Cuts layer has no graphical outline drawn \u2014 only dimension annotations exist. The analyzer correctly handles this (no edge = null dimensions), but a more helpful output would note the dimension annotations suggest a 50.8mm \u00d7 50.8mm board target.",
+      "description": "FIXED: The analyzer now correctly detects the board outline and reports board_width_mm=50.8 and board_height_mm=50.8, matching the dimension annotations in the PCB file. The board_outline section now shows edge_count=1.",
       "created_from": "FND-00001392",
       "check": {
         "path": "statistics.board_width_mm",
-        "value": null,
+        "value": 50.8,
         "op": "equals"
-      },
-      "aspirational": false
+      }
     }
   ]
 }

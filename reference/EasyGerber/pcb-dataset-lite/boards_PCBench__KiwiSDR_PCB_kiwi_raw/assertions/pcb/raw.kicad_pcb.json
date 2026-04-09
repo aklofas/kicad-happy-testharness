@@ -1,0 +1,119 @@
+{
+  "file_pattern": "raw.kicad_pcb",
+  "analyzer_type": "pcb",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Footprint count ~173 (tolerance 10%)",
+      "check": {
+        "path": "statistics.footprint_count",
+        "op": "range",
+        "min": 164,
+        "max": 182
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~119 (tolerance 10%)",
+      "check": {
+        "path": "statistics.net_count",
+        "op": "range",
+        "min": 113,
+        "max": 125
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Track segments ~1951 (tolerance 10%)",
+      "check": {
+        "path": "statistics.track_segments",
+        "op": "range",
+        "min": 1892,
+        "max": 2010
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Via count ~74 (tolerance 10%)",
+      "check": {
+        "path": "statistics.via_count",
+        "op": "range",
+        "min": 70,
+        "max": 78
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "SMD count ~164 (tolerance 10%)",
+      "check": {
+        "path": "statistics.smd_count",
+        "op": "range",
+        "min": 155,
+        "max": 173
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "THT count ~9 (tolerance 10%)",
+      "check": {
+        "path": "statistics.tht_count",
+        "op": "range",
+        "min": 8,
+        "max": 10
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Routing completeness status",
+      "check": {
+        "path": "statistics.routing_complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Connectivity analysis present",
+      "check": {
+        "path": "connectivity",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "DFM analysis present",
+      "check": {
+        "path": "dfm",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "DFM tier is 'standard'",
+      "check": {
+        "path": "dfm.dfm_tier",
+        "op": "equals",
+        "value": "standard"
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "12 decoupling placement(s) analyzed",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "3 power net(s) analyzed",
+      "check": {
+        "path": "power_net_routing",
+        "op": "min_count",
+        "value": 1
+      }
+    }
+  ]
+}

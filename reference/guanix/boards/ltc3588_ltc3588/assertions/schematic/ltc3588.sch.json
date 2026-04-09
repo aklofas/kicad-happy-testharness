@@ -51,7 +51,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "3 design_observations detected",
+      "description": "5 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -97,6 +97,25 @@
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
         "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     }
   ]

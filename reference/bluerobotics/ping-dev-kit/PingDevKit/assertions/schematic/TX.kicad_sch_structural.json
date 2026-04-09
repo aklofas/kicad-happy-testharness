@@ -90,11 +90,11 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 2 rc_filters",
+      "description": "Exactly 4 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
@@ -119,15 +119,35 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 5 voltage_dividers",
+      "description": "R1010 in rc_filters",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "equals",
-        "value": 5
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1010$"
       }
     },
     {
       "id": "STRUCT-00000014",
+      "description": "R1009 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1009$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Exactly 4 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "R107 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -137,7 +157,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000017",
       "description": "R1004 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -147,7 +167,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000018",
       "description": "R1007 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -157,17 +177,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
-      "description": "R1009 in voltage_dividers",
-      "check": {
-        "path": "signal_analysis.voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R1009$"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "R1001 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
