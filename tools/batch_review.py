@@ -84,12 +84,13 @@ def _output_project_prefix(path):
 def _collect_outputs(repo):
     """Collect all analyzer outputs for a repo, grouped by type.
 
-    Tries to select outputs from the same project across types by matching
-    filename prefixes. Falls back to highest-scoring file per type.
+    Groups outputs by project prefix so schematic/PCB/gerber from the same
+    project are matched together. Returns the best project's outputs.
 
     Returns dict: {analyzer_type: [{path, source, components, signals}, ...]}
     """
-    result = {}
+    # Collect all files across all types
+    all_files = {}  # {atype: [file_info, ...]}
     for atype in ("schematic", "pcb", "gerber"):
         out_dir = OUTPUTS_DIR / atype / repo
         if not out_dir.exists():
@@ -113,26 +114,54 @@ def _collect_outputs(repo):
             except Exception:
                 continue
         if files:
-            files.sort(key=lambda x: x["score"], reverse=True)
-            result[atype] = files
+            all_files[atype] = files
 
-    # Try to align PCB and gerber outputs to match the best schematic's project
-    if "schematic" in result and len(result["schematic"]) > 0:
-        sch_prefix = result["schematic"][0]["prefix"]
+    if not all_files:
+        return {}
+
+    # Group by project prefix across types — find best-matching project set
+    # Start from the best schematic and find matching PCB/gerber
+    if "schematic" not in all_files:
+        # No schematic — just return best of each type
+        return {t: sorted(f, key=lambda x: x["score"], reverse=True)
+                for t, f in all_files.items()}
+
+    # Sort schematics by score
+    schematics = sorted(all_files["schematic"],
+                        key=lambda x: x["score"], reverse=True)
+
+    best_result = None
+    best_total_score = -1
+
+    for sch in schematics:
+        result = {"schematic": [sch]}
+        total_score = sch["score"]
+
         for atype in ("pcb", "gerber"):
-            if atype not in result:
+            if atype not in all_files:
                 continue
-            # Find a file whose prefix matches the schematic's prefix
-            matched = [f for f in result[atype]
-                       if f["prefix"] == sch_prefix
-                       or sch_prefix.startswith(f["prefix"])
-                       or f["prefix"].startswith(sch_prefix)]
+            # Find output matching this schematic's prefix
+            prefix = sch["prefix"]
+            matched = [f for f in all_files[atype]
+                       if f["prefix"] == prefix
+                       or prefix.startswith(f["prefix"])
+                       or f["prefix"].startswith(prefix)]
             if matched:
-                # Move the matched file to front
-                rest = [f for f in result[atype] if f not in matched]
-                result[atype] = matched + rest
+                best_match = max(matched, key=lambda x: x["score"])
+                result[atype] = [best_match]
+                total_score += best_match["score"]
+            else:
+                # No prefix match — include best available with lower weight
+                best_avail = max(all_files[atype], key=lambda x: x["score"])
+                result[atype] = [best_avail]
 
-    return result
+        # Prefer project sets with more type matches and higher total score
+        type_bonus = len(result) * 1000
+        if total_score + type_bonus > best_total_score:
+            best_total_score = total_score + type_bonus
+            best_result = result
+
+    return best_result or {}
 
 
 def _unreviewed_repos(max_count=None):

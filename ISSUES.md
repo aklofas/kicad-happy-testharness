@@ -32,9 +32,9 @@ Last updated: 2026-04-09
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-228**. Next TH number: **TH-010**.
+number: **KH-228**. Next TH number: **TH-011**.
 
-> 11 open issues (10 KH-*, 1 TH-*) from Layer 3 batch reviews (2026-04-09).
+> 13 open issues (10 KH-*, 3 TH-*) from Layer 3 batch reviews (2026-04-09).
 
 ---
 
@@ -296,6 +296,8 @@ repo (all converted to `.kicad_sch`). Reopen if repro file is located.
 9. KH-226 — NUCLEO dev board module classified as switching regulator (LOW)
 10. KH-227 — Logic gates misclassified as level_shifter_ic (LOW)
 11. TH-009 — Constants audit doesn't flag Vref heuristic fallback coverage gap (MEDIUM)
+12. TH-010 — Legacy findings cleanup: missing IDs, non-standard analyzer_type values (LOW)
+13. TH-011 — batch_review.py: multi-project repos select best per-project set (LOW — done)
 
 ---
 
@@ -323,3 +325,38 @@ This would have surfaced TPS62912 (13 hits), TLV62569 (69 hits), AP64501 (26 hit
 etc. as missing table entries.
 
 **Discovered:** 2026-04-09 — KH-218 found via Layer 3 review, not constants audit.
+
+---
+
+### TH-010 — Legacy findings cleanup: missing IDs, non-standard analyzer_type values (LOW)
+
+**Symptom:** `batch_review.py status` shows 27 findings with `unknown` type, 3 with
+`analyze_schematic`/`analyze_pcb`/`analyze_gerbers` (wrong prefix), and many old findings
+with no ID (pre-FND era). These are from early manual reviews before the subagent workflow
+was standardized.
+
+**Scope:** ~30 findings with non-standard types, ~900+ findings with no `id` field.
+Repos affected include Fescron/2ch-4-20mA-converter, Netlist-Studio/dut_hub_hw (22
+findings with no id), torvalds/1590A, OLIMEX/USB-GIGABIT (analyze_* prefix), and
+~1,000+ early findings across 1bitsquared, dbuchwald, etc.
+
+**Fix:** Write a one-time migration script that:
+1. Assigns FND-* IDs to all findings missing an `id` field
+2. Normalizes `analyze_schematic` → `schematic`, `analyze_pcb` → `pcb`,
+   `analyze_gerbers` → `gerber`
+3. Sets `analyzer_type: "schematic"` for findings with no type (they're all schematic)
+4. Re-renders findings.md for all affected repos
+
+**Discovered:** 2026-04-09 via `batch_review.py status` type breakdown.
+
+---
+
+### TH-011 — batch_review.py: multi-project repos select best per-project set (LOW)
+
+**Status:** Fixed. The `_collect_outputs()` function now groups outputs by project prefix
+and selects the best matching set (schematic + PCB + gerber from the same project). For
+multi-project repos (37% of corpus, 2,186 repos), this ensures cross-referencing between
+analyzer types is meaningful. Previously, the best schematic and best PCB could come from
+different projects in the same repo.
+
+**Discovered:** 2026-04-09 during batch_review.py enhancement.
