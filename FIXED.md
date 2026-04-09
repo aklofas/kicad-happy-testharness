@@ -11,6 +11,22 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-08 — KH-205 resolved (already fixed)
+
+### KH-205 (MEDIUM): D+ net lost in KiCad 5 legacy net resolution
+
+- **File**: `skills/kicad/scripts/analyze_schematic.py`
+- **Root cause**: D+ net was not being resolved in legacy .sch parsing, possibly due to
+  the `+` character in the net name.
+- **Fix**: Already fixed by a prior commit (likely hierarchical context or net resolution
+  improvements). D+ now appears correctly in nets dict with pins R17, C13, C9, R8.
+  The differential pair detector now correctly identifies {D+, D-} as a USB pair.
+- **Verified**: Re-ran analyzer on `RandomDelta6/USB-Mouse/Mouse.sch`. D+ in nets: True.
+  `design_analysis.differential_pairs` contains `{type: differential, positive: D+, negative: D-}`.
+  Finding assertion updated from `equals []` to `min_count 1`.
+
+---
+
 ## 2026-04-08 — Batch 31: power_tree figure quality (KH-201, KH-202, KH-203)
 
 ### KH-201 (LOW): power_tree legend always shows green for output rails

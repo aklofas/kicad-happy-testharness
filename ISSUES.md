@@ -48,27 +48,11 @@ when building the power_rails list.
 
 ---
 
-### KH-205 — D+ net lost in KiCad 5 legacy net resolution (MEDIUM)
-
-**Symptom:** In a KiCad 5 schematic with global labels `D+` and `D-` for USB data lines,
-`D-` appears correctly in the nets dict but `D+` does not appear at all. This prevents the
-differential pair detector from matching USB data pairs.
-
-**Root cause:** The `+` character in `D+` may be causing issues in the legacy .sch net
-resolution parser (regex or string matching).
-
-**File:** `skills/kicad/scripts/analyze_schematic.py`, legacy .sch net resolution.
-
-**Repro:** `prashantbhandary/Meshmerize-MicroMouse-` — `Mouse/Mouse.sch`
-
-**Discovered:** 2026-04-08 via v1.2 pre-release assertion suite.
-
----
-
 ### KH-206 — nearby global labels with different names merged into one net (MEDIUM)
 
 **Symptom:** Two separate global labels `SDA` and `SCL` at two locations each get merged
-into a single `SCL` net. All four I2C pins and both pull-up resistors end up on one net.
+into a single `SDA` net. SCL net is never created. All four I2C pins (J3.SDA, J3.SCL,
+U2.SDA, U2.SCL) and both pull-up resistors (R1, R2) end up on the `SDA` net.
 The PCB analyzer correctly maintains separate SDA and SCL nets.
 
 **Root cause:** KiCad 6+ parser merges nearby global labels with different names. Likely
@@ -85,6 +69,5 @@ than explicit label name.
 
 ## Priority Queue (open issues, ordered by impact)
 
-1. KH-205 — D+ net lost in KiCad 5 legacy net resolution (MEDIUM)
-2. KH-206 — nearby global labels merged into one net (MEDIUM)
-3. KH-204 — power_rails uses UUID sheet paths (MEDIUM)
+1. KH-206 — nearby global labels merged into one net (MEDIUM)
+2. KH-204 — power_rails uses UUID sheet paths (MEDIUM)
