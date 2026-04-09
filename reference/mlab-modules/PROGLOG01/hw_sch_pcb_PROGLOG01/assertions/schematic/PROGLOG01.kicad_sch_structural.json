@@ -97,11 +97,11 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 2 power_regulators",
+      "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -116,16 +116,6 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "U1 in power_regulators",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
       "description": "Exactly 1 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -134,7 +124,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000014",
       "description": "R4 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",

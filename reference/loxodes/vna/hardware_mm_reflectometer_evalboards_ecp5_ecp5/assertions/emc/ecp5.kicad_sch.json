@@ -5,22 +5,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~28 (tolerance 10%)",
+      "description": "Finding count ~27 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 25,
-        "max": 31
+        "min": 24,
+        "max": 30
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~7",
+      "description": "high count ~6",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -45,12 +45,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~17 (+-10)",
+      "description": "EMC risk score ~25 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 7,
-        "max": 27
+        "min": 15,
+        "max": 35
       }
     },
     {
@@ -99,13 +99,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "2 pdn finding(s)",
+      "description": "1 pdn finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^pdn$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -188,11 +188,11 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "~8 net(s) with EMC scores",
+      "description": "~7 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 7
+        "value": 6
       }
     }
   ]

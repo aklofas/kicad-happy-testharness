@@ -5,11 +5,30 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 design_observations",
+      "description": "Exactly 1 crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "U9 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U9$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Exactly 2 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 3
+        "value": 2
       }
     }
   ]

@@ -5,6 +5,25 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "X800 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^X800$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 5 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -13,7 +32,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000004",
       "description": "Exactly 6 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -22,12 +41,12 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 2 esd_coverage_audit",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 1 esd_coverage_audit",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     }
   ]

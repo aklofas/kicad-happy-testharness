@@ -5,15 +5,35 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 adc_circuits",
+      "description": "Exactly 2 crystal_circuits",
       "check": {
-        "path": "signal_analysis.adc_circuits",
+        "path": "signal_analysis.crystal_circuits",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U204 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U204$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U206 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U206$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 3 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -22,7 +42,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000005",
       "description": "Exactly 5 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -31,7 +51,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "Exactly 14 esd_coverage_audit",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -40,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "Exactly 2 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -49,7 +69,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "U301 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -59,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "U302 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -69,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "Exactly 10 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -78,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "D101 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -88,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "D901 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -98,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "D907 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -108,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000014",
       "description": "D905 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -118,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000015",
       "description": "D908 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -128,7 +148,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000016",
       "description": "D906 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -138,7 +158,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000017",
       "description": "D904 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -148,7 +168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000018",
       "description": "D902 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -158,7 +178,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000019",
       "description": "D903 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -168,7 +188,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000020",
       "description": "F101 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -178,7 +198,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000021",
       "description": "Exactly 1 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -187,7 +207,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000022",
       "description": "R112 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -197,7 +217,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000023",
       "description": "Exactly 2 reset_supervisors",
       "check": {
         "path": "signal_analysis.reset_supervisors",
@@ -206,7 +226,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000024",
       "description": "Exactly 1 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -215,7 +235,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000025",
       "description": "Q101 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -225,7 +245,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000026",
       "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -234,7 +254,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000027",
       "description": "R306 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -244,7 +264,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000028",
       "description": "R217 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

@@ -60,36 +60,6 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 level_shifters detected",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000008",
-      "description": "All level_shifters have ref",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "All level_shifters type values are valid",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
       "description": "3 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -98,7 +68,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000008",
       "description": "All opamp_circuits have reference present",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -108,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000009",
       "description": "Has 24 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -117,7 +87,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000010",
       "description": "Has 9 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -126,7 +96,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000011",
       "description": "Has 27 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -135,7 +105,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000012",
       "description": "Has 13 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

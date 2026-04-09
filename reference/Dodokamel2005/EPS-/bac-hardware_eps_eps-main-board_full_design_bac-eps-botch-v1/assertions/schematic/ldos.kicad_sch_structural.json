@@ -5,15 +5,25 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 adc_circuits",
+      "description": "Exactly 1 crystal_circuits",
       "check": {
-        "path": "signal_analysis.adc_circuits",
+        "path": "signal_analysis.crystal_circuits",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U310 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U310$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 6 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -22,7 +32,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Exactly 11 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -31,7 +41,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Exactly 4 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -40,7 +50,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "U304 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -50,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "U303 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -60,7 +70,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "U308 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -70,7 +80,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U311 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -80,7 +90,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Exactly 5 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -89,7 +99,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "R307 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -99,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "R304 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -109,7 +119,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "R303 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -119,7 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "R305 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -129,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "R306 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

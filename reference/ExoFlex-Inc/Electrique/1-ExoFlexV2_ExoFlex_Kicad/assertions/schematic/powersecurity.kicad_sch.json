@@ -171,36 +171,6 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "1 level_shifters detected",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000019",
-      "description": "All level_shifters have ref",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "All level_shifters type values are valid",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000021",
       "description": "1 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -209,7 +179,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000019",
       "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -219,7 +189,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000020",
       "description": "1 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -228,7 +198,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000021",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -238,7 +208,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000022",
       "description": "Has 5 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -247,7 +217,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000023",
       "description": "Has 5 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

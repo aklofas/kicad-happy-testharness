@@ -16,6 +16,17 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "2 switching_emc finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^switching_emc$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -25,7 +36,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Rule IO-002 present",
       "check": {
         "path": "findings",
@@ -35,7 +46,37 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
+      "description": "Rule SW-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^SW\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U5 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "U1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "J4 in EMC findings",
       "check": {
         "path": "findings",
@@ -45,7 +86,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000009",
       "description": "J1 in EMC findings",
       "check": {
         "path": "findings",
@@ -55,7 +96,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000010",
       "description": "J2 in EMC findings",
       "check": {
         "path": "findings",
@@ -65,7 +106,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000011",
       "description": "J3 in EMC findings",
       "check": {
         "path": "findings",

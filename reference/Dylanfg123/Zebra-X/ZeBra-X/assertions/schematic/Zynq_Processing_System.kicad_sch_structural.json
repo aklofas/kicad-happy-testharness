@@ -5,6 +5,25 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "X400 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^X400$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -13,7 +32,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000004",
       "description": "Exactly 11 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -22,16 +41,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 1 esd_coverage_audit",
-      "check": {
-        "path": "signal_analysis.esd_coverage_audit",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 led_audit",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -40,7 +50,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 2 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -49,7 +59,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "R402 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -59,7 +69,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "R403 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -69,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "Exactly 1 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -78,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Q400 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -88,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -97,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "R400 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "R413 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

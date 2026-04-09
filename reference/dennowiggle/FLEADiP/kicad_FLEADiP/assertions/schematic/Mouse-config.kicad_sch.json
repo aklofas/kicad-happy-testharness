@@ -172,36 +172,6 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "1 level_shifters detected",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000019",
-      "description": "All level_shifters have ref",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "All level_shifters type values are valid",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000021",
       "description": "3 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -210,7 +180,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000019",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -220,7 +190,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000020",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

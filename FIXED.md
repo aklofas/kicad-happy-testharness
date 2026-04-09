@@ -11,6 +11,71 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-09 — KH-205 closed (unreproducible)
+
+### KH-205 (MEDIUM): D+ net lost in KiCad 5 legacy net resolution
+
+- **Status**: Closed as unreproducible.
+- **Investigation**: Original repro file (`Mouse/Mouse.sch` in `prashantbhandary/Meshmerize-MicroMouse-`) no longer exists (repo converted to `.kicad_sch`). Searched corpus for other KiCad 5 `.sch` files with `D+` nets. Found `martinribelotta/pic32mz-board/mz.sch` and `asmr-systems/development-boards/samd21g17d/samd21g17d.sch` — both show `D+` net with 0 pins, but investigation revealed: (1) pic32mz labels are genuinely floating (no wire endpoints at label coordinates), (2) samd21 has broader GLabel connectivity issues (PAxx nets also 0 pins) due to legacy coordinate-based matching limitations, not D+-specific. The `+` character is not the cause. No fix needed — behavior is correct for these inputs.
+
+---
+
+## 2026-04-09 — Batch 37: Fix 10 analyzer bugs (KH-218..KH-227)
+
+### KH-218 (HIGH): Vref heuristic wrong for TPS62912, TPS73601, LM22676
+
+- **File**: `kicad_utils.py` — `_REGULATOR_VREF` lookup table
+- **Root cause**: Table missing 3 common regulator families. Fell back to 0.6V heuristic.
+- **Fix**: Added TPS62912=0.8V, TPS736xx=1.204V, LM22676=1.285V.
+- **Verified**: Vout estimates now correct. 1,347 schematic + 530 EMC assertions reseeded. 0 regressions.
+
+### KH-219 (MEDIUM): Load switches classified as LDO topology
+
+- **File**: `signal_detectors.py` — regulator topology detection
+- **Fix**: TPS229/TPS205 added to load switch exclusion + description keywords.
+
+### KH-220 (MEDIUM): Active oscillators with custom libs misclassified as connector
+
+- **File**: `kicad_utils.py` — `classify_component()` now takes description param
+- **Fix**: Checks description for oscillator keywords. Both call sites in analyze_schematic.py updated.
+
+### KH-221 (MEDIUM): Opamp TIA feedback classified as "compensator"
+
+- **File**: `signal_detectors.py` — opamp topology classification
+- **Fix**: feedback_R >> input_R (ratio > 10:1) → "transimpedance" instead of "compensator".
+
+### KH-222 (MEDIUM): Multi-unit symbol duplication in led_audit, sleep_current, usb_compliance
+
+- **File**: `analyze_schematic.py`, `domain_detectors.py`
+- **Fix**: Deduplication by reference designator in led_audit, sleep_current_audit, usb_compliance.
+
+### KH-223 (MEDIUM): Power sequencing cascade not resolved into power_tree ordering
+
+- **File**: `domain_detectors.py` — power sequencing
+- **Fix**: Pin name matching fixed for `~{EN}`/`~{PG}` overbar markup.
+
+### KH-224 (LOW): Multi-unit IC power_domains only shows one unit's rails
+
+- **File**: `domain_detectors.py` — power domain extraction
+- **Fix**: Aggregated across all units of multi-unit ICs.
+
+### KH-225 (LOW): LM2664 charge pump classified as LDO topology
+
+- **File**: `signal_detectors.py`
+- **Fix**: `charge_pump` topology for LM2664/MAX660/ICL7660 families.
+
+### KH-226 (LOW): NUCLEO dev board module classified as switching regulator
+
+- **File**: `signal_detectors.py`
+- **Fix**: Dev board modules (NUCLEO/Arduino/Raspberry) excluded from regulator detection.
+
+### KH-227 (LOW): Logic gates misclassified as level_shifter_ic
+
+- **File**: `domain_detectors.py`
+- **Fix**: 74-series logic gates excluded from level shifter detection.
+
+---
+
 ## 2026-04-09 — Batch 36: KH-228 detect_sub_sheet fix
 
 ### KH-228 (LOW): detect_sub_sheet only identifies 34% of sub-sheets

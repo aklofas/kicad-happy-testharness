@@ -14,11 +14,11 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 2 crystal_circuits",
+      "description": "Exactly 3 crystal_circuits",
       "check": {
         "path": "signal_analysis.crystal_circuits",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -43,34 +43,25 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 current_sense",
+      "description": "U3 in crystal_circuits",
       "check": {
-        "path": "signal_analysis.current_sense",
-        "op": "equals",
-        "value": 1
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U3$"
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "R6 in current_sense",
+      "description": "Exactly 27 design_observations",
       "check": {
-        "path": "signal_analysis.current_sense",
-        "op": "contains_match",
-        "field": "shunt.ref",
-        "pattern": "^R6$"
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 27
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 28 design_observations",
-      "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 28
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "Exactly 2 esd_coverage_audit",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -79,7 +70,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 key_matrices",
       "check": {
         "path": "signal_analysis.key_matrices",
@@ -88,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "Exactly 7 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -97,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "R23 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -107,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "R38 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -117,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000012",
       "description": "R20 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -127,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000013",
       "description": "R35 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -137,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000014",
       "description": "R21 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -147,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "R34 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -157,7 +148,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000016",
       "description": "R2 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -167,7 +158,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -176,7 +167,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "Q1 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",

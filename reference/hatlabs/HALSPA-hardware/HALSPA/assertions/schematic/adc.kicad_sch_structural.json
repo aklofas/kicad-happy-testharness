@@ -5,15 +5,35 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 adc_circuits",
+      "description": "Exactly 2 crystal_circuits",
       "check": {
-        "path": "signal_analysis.adc_circuits",
+        "path": "signal_analysis.crystal_circuits",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U21 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U21$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U20 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U20$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 1 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -22,16 +42,16 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 4 design_observations",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 1 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 4
+        "value": 1
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "Exactly 10 esd_coverage_audit",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",

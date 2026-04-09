@@ -98,25 +98,6 @@
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
         "value": 2
       }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "2 power_regulators detected",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "All power_regulators have ref present",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^(None|\\?|)$"
-      }
     }
   ]
 }

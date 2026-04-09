@@ -42,7 +42,26 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 design_observations detected",
+      "description": "1 crystal_circuits detected",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All crystal_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "2 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -50,7 +69,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000008",
       "description": "Has 28 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -59,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

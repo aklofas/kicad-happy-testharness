@@ -14,11 +14,11 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 crystal_circuits",
+      "description": "Exactly 2 crystal_circuits",
       "check": {
         "path": "signal_analysis.crystal_circuits",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -33,6 +33,16 @@
     },
     {
       "id": "STRUCT-00000004",
+      "description": "U3 in crystal_circuits",
+      "check": {
+        "path": "signal_analysis.crystal_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -41,21 +51,12 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 5 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
         "value": 5
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 1 level_shifters",
-      "check": {
-        "path": "signal_analysis.level_shifters",
-        "op": "equals",
-        "value": 1
       }
     },
     {
