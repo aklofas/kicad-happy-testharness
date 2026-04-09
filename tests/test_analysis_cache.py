@@ -178,3 +178,206 @@ def test_sources_changed_false_when_unchanged():
         assert analysis_cache.sources_changed(old_hashes, tmpdir) is False
     finally:
         shutil.rmtree(tmpdir)
+
+
+# === TestRunCreation ===
+
+def test_generate_run_id_format():
+    run_id = analysis_cache.generate_run_id()
+    parts = run_id.split("_")
+    assert len(parts) == 2, f"expected 2 parts separated by _, got {parts}"
+    date_part, time_part = parts
+    assert len(date_part) == 10, f"date part should be 10 chars, got {len(date_part)}"
+    assert len(time_part) == 4, f"time part should be 4 chars, got {len(time_part)}"
+
+
+def test_generate_run_id_deduplicates():
+    tmpdir = tempfile.mkdtemp(prefix="test_ac_")
+    try:
+        first_id = analysis_cache.generate_run_id(tmpdir)
+        # Create a folder with that ID so the next call must deduplicate
+        os.makedirs(os.path.join(tmpdir, first_id))
+        second_id = analysis_cache.generate_run_id(tmpdir)
+        assert second_id != first_id, \
+            f"second ID should differ from first, both are {first_id}"
+        assert second_id.startswith(first_id.split("-")[0]), \
+            "deduped ID should share the base timestamp"
+    finally:
+        shutil.rmtree(tmpdir)
+
+
+def test_create_run_creates_folder_and_updates_manifest():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_proj_")
+    outputs_dir = tempfile.mkdtemp(prefix="test_ac_out_")
+    try:
+        analysis_dir = analysis_cache.ensure_analysis_dir(
+            project_dir, "test.kicad_pro")
+        # Create a fake schematic output
+        with open(os.path.join(outputs_dir, "schematic.json"), "w") as f:
+            json.dump({"analyzer_type": "schematic", "components": []}, f)
+        hashes = {"main.kicad_sch": "sha256:abc123"}
+        rid = analysis_cache.create_run(
+            analysis_dir, outputs_dir, hashes,
+            scripts={"schematic": "analyze_schematic.py"},
+            run_id="2026-04-09_test")
+        assert rid == "2026-04-09_test"
+        # Verify folder exists
+        run_dir = os.path.join(analysis_dir, rid)
+        assert os.path.isdir(run_dir), "run folder not created"
+        # Verify schematic.json was copied
+        assert os.path.isfile(os.path.join(run_dir, "schematic.json"))
+        # Verify manifest updated
+        manifest = analysis_cache.load_manifest(analysis_dir)
+        assert manifest["current"] == rid
+        assert manifest["runs"][rid]["source_hashes"] == hashes
+        assert "schematic" in manifest["runs"][rid]["outputs"]
+    finally:
+        shutil.rmtree(project_dir)
+        shutil.rmtree(outputs_dir)
+
+
+def test_create_run_copies_forward_previous_outputs():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_proj_")
+    outputs_dir_1 = tempfile.mkdtemp(prefix="test_ac_out1_")
+    outputs_dir_2 = tempfile.mkdtemp(prefix="test_ac_out2_")
+    try:
+        analysis_dir = analysis_cache.ensure_analysis_dir(
+            project_dir, "test.kicad_pro")
+        # Run 1: pcb.json only
+        with open(os.path.join(outputs_dir_1, "pcb.json"), "w") as f:
+            json.dump({"analyzer_type": "pcb", "footprints": []}, f)
+        analysis_cache.create_run(
+            analysis_dir, outputs_dir_1,
+            source_hashes={"board.kicad_pcb": "sha256:aaa"},
+            scripts={"pcb": "analyze_pcb.py"},
+            run_id="run1")
+        # Run 2: schematic.json only
+        with open(os.path.join(outputs_dir_2, "schematic.json"), "w") as f:
+            json.dump({"analyzer_type": "schematic", "components": []}, f)
+        analysis_cache.create_run(
+            analysis_dir, outputs_dir_2,
+            source_hashes={"main.kicad_sch": "sha256:bbb"},
+            scripts={"schematic": "analyze_schematic.py"},
+            run_id="run2")
+        # Run 2 should have both files: pcb.json copied forward + schematic.json
+        run2_dir = os.path.join(analysis_dir, "run2")
+        assert os.path.isfile(os.path.join(run2_dir, "pcb.json")), \
+            "pcb.json should be copied forward from run1"
+        assert os.path.isfile(os.path.join(run2_dir, "schematic.json")), \
+            "schematic.json should exist in run2"
+    finally:
+        shutil.rmtree(project_dir)
+        shutil.rmtree(outputs_dir_1)
+        shutil.rmtree(outputs_dir_2)
+
+
+def test_overwrite_current_updates_in_place():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_proj_")
+    outputs_dir = tempfile.mkdtemp(prefix="test_ac_out_")
+    overwrite_dir = tempfile.mkdtemp(prefix="test_ac_ow_")
+    try:
+        analysis_dir = analysis_cache.ensure_analysis_dir(
+            project_dir, "test.kicad_pro")
+        # Create initial run
+        with open(os.path.join(outputs_dir, "schematic.json"), "w") as f:
+            json.dump({"version": 1}, f)
+        analysis_cache.create_run(
+            analysis_dir, outputs_dir,
+            source_hashes={"main.kicad_sch": "sha256:v1"},
+            scripts={"schematic": "analyze_schematic.py"},
+            run_id="2026-04-09_0001")
+        # Overwrite with new content
+        with open(os.path.join(overwrite_dir, "schematic.json"), "w") as f:
+            json.dump({"version": 2}, f)
+        analysis_cache.overwrite_current(
+            analysis_dir, overwrite_dir,
+            source_hashes={"main.kicad_sch": "sha256:v2"})
+        # Verify same run ID
+        manifest = analysis_cache.load_manifest(analysis_dir)
+        assert manifest["current"] == "2026-04-09_0001"
+        assert len(manifest["runs"]) == 1
+        # Verify file content updated
+        run_file = os.path.join(analysis_dir, "2026-04-09_0001", "schematic.json")
+        with open(run_file) as f:
+            data = json.load(f)
+        assert data["version"] == 2, "file content should be updated"
+    finally:
+        shutil.rmtree(project_dir)
+        shutil.rmtree(outputs_dir)
+        shutil.rmtree(overwrite_dir)
+
+
+def test_overwrite_current_updates_source_hashes():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_proj_")
+    outputs_dir = tempfile.mkdtemp(prefix="test_ac_out_")
+    overwrite_dir = tempfile.mkdtemp(prefix="test_ac_ow_")
+    try:
+        analysis_dir = analysis_cache.ensure_analysis_dir(
+            project_dir, "test.kicad_pro")
+        # Create initial run with hash v1
+        with open(os.path.join(outputs_dir, "schematic.json"), "w") as f:
+            json.dump({"ok": True}, f)
+        analysis_cache.create_run(
+            analysis_dir, outputs_dir,
+            source_hashes={"main.kicad_sch": "sha256:hash_v1"},
+            scripts={"schematic": "analyze_schematic.py"},
+            run_id="2026-04-09_0002")
+        # Overwrite with hash v2
+        with open(os.path.join(overwrite_dir, "schematic.json"), "w") as f:
+            json.dump({"ok": True}, f)
+        analysis_cache.overwrite_current(
+            analysis_dir, overwrite_dir,
+            source_hashes={"main.kicad_sch": "sha256:hash_v2"})
+        # Verify manifest has v2
+        manifest = analysis_cache.load_manifest(analysis_dir)
+        run_entry = manifest["runs"]["2026-04-09_0002"]
+        assert run_entry["source_hashes"]["main.kicad_sch"] == "sha256:hash_v2"
+    finally:
+        shutil.rmtree(project_dir)
+        shutil.rmtree(outputs_dir)
+        shutil.rmtree(overwrite_dir)
+
+
+def test_get_current_run_returns_path_and_metadata():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_proj_")
+    outputs_dir = tempfile.mkdtemp(prefix="test_ac_out_")
+    try:
+        analysis_dir = analysis_cache.ensure_analysis_dir(
+            project_dir, "test.kicad_pro")
+        with open(os.path.join(outputs_dir, "schematic.json"), "w") as f:
+            json.dump({"analyzer_type": "schematic"}, f)
+        analysis_cache.create_run(
+            analysis_dir, outputs_dir,
+            source_hashes={"main.kicad_sch": "sha256:abc"},
+            scripts={"schematic": "analyze_schematic.py"},
+            run_id="2026-04-09_0003")
+        result = analysis_cache.get_current_run(analysis_dir)
+        assert result is not None, "get_current_run should return a result"
+        path, metadata = result
+        assert os.path.isdir(path), "returned path should be a directory"
+        assert path.endswith("2026-04-09_0003")
+        assert "source_hashes" in metadata
+        assert "outputs" in metadata
+        assert metadata["source_hashes"]["main.kicad_sch"] == "sha256:abc"
+    finally:
+        shutil.rmtree(project_dir)
+        shutil.rmtree(outputs_dir)
+
+
+# === Runner ===
+
+if __name__ == "__main__":
+    import inspect
+    tests = [(name, obj) for name, obj in globals().items()
+             if name.startswith("test_") and callable(obj)]
+    passed = failed = 0
+    for name, fn in sorted(tests):
+        try:
+            fn()
+            passed += 1
+            print(f"  PASS: {name}")
+        except AssertionError as e:
+            failed += 1
+            print(f"  FAIL: {name}: {e}")
+    print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
+    sys.exit(1 if failed else 0)
