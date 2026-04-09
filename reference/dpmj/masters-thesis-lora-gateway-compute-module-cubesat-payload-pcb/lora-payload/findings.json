@@ -1,0 +1,210 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "lora-payload.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Highly complex CubeSat LoRa gateway payload PCB (395 components, 488 nets) built around a Raspberry Pi Compute Module 5 with Semtech SX1302 gateway baseband, dual SX1250 RF frontends, SX1261 Listen-Before-Talk radio, CMX90A004 2W PA, QPL9095 LNA, SAW filters, 3-way power splitter, dual CAN FD buses, 4 TMP117 temperature sensors, TLA2024 ADC for power monitoring, and elaborate power tree with eFuses, buck converters, and LDOs. The analyzer correctly identified the hierarchical power architecture, voltage dividers, feedback networks, LC/RC filters, I2C bus, reset circuits, LED indicators, protection devices, load switches, and power sequencing. However, it has significant Vref heuristic errors on TPS62912 (used 0.6V instead of 0.8V) and TPS73601 (used 0.6V instead of ~1.204V), the rf_chains and rf_matching sections are empty despite this being an RF-centric design, and CAN FD/SPI/UART buses are undetected.",
+      "correct": [
+        {
+          "description": "8 voltage dividers correctly identified including eFuse OVLO/PGTH dividers and 4 feedback dividers for TPS62912 and TPS73601 regulators",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "4 feedback networks correctly identified: U1901/U1902/U1801/U1802 with correct resistor values and ratio calculations",
+          "analyzer_section": "signal_analysis.feedback_networks"
+        },
+        {
+          "description": "11 RC filters correctly found including TCXO clock buffer networks (72.34 MHz), SX1302 reset filter, and RFI matching networks",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "25+ LC filters correctly found in RF path including SX1250 matching, SX1261 matching, LNA matching, PA output matching, and power supply LC filters",
+          "analyzer_section": "signal_analysis.lc_filters"
+        },
+        {
+          "description": "3 crystal/oscillator circuits correctly identified: X601 (32 MHz TCXO), Y401/Y402 (40 MHz for CAN FD)",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "I2C bus correctly detected with SDA/SCL pullups and 7 devices (4x TMP117, CM5, TLA2024)",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "7 power regulators correctly identified with correct topology classifications",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "3 load switches correctly identified: U501 (SD card), U1703 (RF PSU), U1203 (PA control)",
+          "analyzer_section": "signal_analysis.power_path"
+        },
+        {
+          "description": "4 protection devices correctly found: D501, D401 (SP0402B), D1101 (LXES1UTAA1), U502 (USBLC6-2SC6)",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "ESD coverage audit correctly identifies antenna as protected, USB partial, CubeSat Kit Bus headers unprotected",
+          "analyzer_section": "signal_analysis.esd_coverage_audit"
+        },
+        {
+          "description": "Reset circuits correctly found for SX1302, SX1250 pair, and SX1261",
+          "analyzer_section": "signal_analysis.reset_supervisors"
+        },
+        {
+          "description": "Power sequencing correctly traced: eFuses always-on, bucks always-on, LDOs enabled by PG daisy-chain",
+          "analyzer_section": "signal_analysis.power_sequencing_validation"
+        },
+        {
+          "description": "9 LED indicators correctly audited with 680 Ohm series resistors on each major rail",
+          "analyzer_section": "signal_analysis.led_audit"
+        },
+        {
+          "description": "17 power rails comprehensively enumerated",
+          "analyzer_section": "statistics.power_rails"
+        },
+        {
+          "description": "Component counts accurate: 395 total, 157 caps, 85 resistors, 38 ICs, 23 inductors, 44 test points",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "2 NMOS transistors (Q1601, Q1602 PMV15ENEA) correctly identified in reverse polarity protection with LM74700",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "Sleep current audit covers 6 rails with correct per-path current calculations",
+          "analyzer_section": "sleep_current_audit"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TPS62912 Vref assumed 0.6V but actual is 0.8V. U1901 estimated 2.682V (actual 3.575V), U1801 estimated 2.497V (actual 3.330V), U1802 estimated 0.907V (actual 1.209V). All show false vout_net_mismatch warnings",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "TPS73601 (U1902) Vref assumed 0.6V but actual ~1.204V. Estimated 2.091V instead of 4.196V. 50.2% vout_net_mismatch is false positive",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "U501 (TPS22917DBV) classified as topology 'LDO' but is a load switch (ON/OFF, no regulation)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "U1104 (SN74LVC1G14DBV Schmitt inverter) and U1103 (SN74LVC1G00DBV NAND gate) incorrectly classified as level_shifter_ic. These are logic gates in RF TX/RX control path",
+          "analyzer_section": "signal_analysis.level_shifters"
+        },
+        {
+          "description": "RC filters with R1401/R1402/R1403 and 1pF caps are actually RF impedance matching/balun termination networks for SX1250/SX1261 RFI differential inputs, not traditional RC filters",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "Decoupling for U301 (CM5) flags missing caps on connector input pins that receive power from elsewhere -- CM5 has internal decoupling",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "DC3V6RF.VO etc. flagged as missing output caps but these are intermediate nets between TPS62912 ferrite bead filter output and bulk caps on final output rail -- by design",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "D1602 LED driver_source listed as U201 (TMP117) but LED is a power indicator on +3V3_D rail driven through R1602",
+          "analyzer_section": "signal_analysis.led_audit"
+        }
+      ],
+      "missed": [
+        {
+          "description": "rf_chains empty despite complete LoRa gateway RF chain: SX1302 -> SX1250 frontends -> SAW filters -> antenna switch -> TVS -> MMCX connector, plus TX chain with CMX90A004 PA",
+          "analyzer_section": "signal_analysis.rf_chains"
+        },
+        {
+          "description": "rf_matching empty despite extensive impedance matching networks throughout RF path for SX1250, SX1261, LNA, PA",
+          "analyzer_section": "signal_analysis.rf_matching"
+        },
+        {
+          "description": "CAN FD bus interfaces not detected: dual channels with MCP2518FD controllers, MCP2558FD transceivers, 120 Ohm termination, CMC, ESD",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        },
+        {
+          "description": "SPI bus interfaces not detected: SX1302 SPI, SX1261 SPI, MCP2518FD SPI -- at least 3 SPI buses",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        },
+        {
+          "description": "UART interface on PicoBlade connector J401 for OBC communication not detected",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        },
+        {
+          "description": "CMX90A004 (U1202) 2W GaAs HBT PA for LoRa not detected as power amplifier",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "QPL9095 (U1404) ultra-low-noise bypass LNA (0.6 dB NF, 22 dB gain) not detected",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "BGS12P2L6 (U1102) antenna switch DC-6GHz SPDT not detected as RF switch",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "B4377 SAW filters (U1201/U1402/U1403) at 866.5 MHz not detected as RF bandpass filters",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "SCN-3-13+ (U1401) Mini-Circuits 3-way power splitter/combiner not detected",
+          "analyzer_section": "signal_analysis.rf_chains"
+        },
+        {
+          "description": "TLA2024 (U1702) ADC with voltage dividers for power monitoring not detected as ADC frontend",
+          "analyzer_section": "signal_analysis.adc_circuits"
+        },
+        {
+          "description": "4x TMP117 temperature sensors not detected as sensor interface",
+          "analyzer_section": "signal_analysis.sensor_interfaces"
+        },
+        {
+          "description": "LM74700 ideal diode reverse polarity protection with external NMOS FETs not identified as protection topology",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "RTC battery backup (BT301 Seiko MS621F) not detected",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Micro SD card interface (J502) not detected",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "USB-C interfaces (J501, J503) not detected",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "Clock distribution from TCXO through RC buffer networks to three radio ICs not detected",
+          "analyzer_section": "signal_analysis.clock_distribution"
+        },
+        {
+          "description": "CubeSat Kit Bus interface connectors (CSKB-H401/H402) not identified as spacecraft bus",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        }
+      ],
+      "suggestions": [
+        "Add TPS62912 to Vref database with Vref=0.8V",
+        "Add TPS73601/TPS736xx to Vref database with Vref=1.204V",
+        "Implement rf_chains detection for LoRa/sub-GHz radio architectures",
+        "Implement rf_matching detection for impedance matching networks",
+        "Add CAN FD bus detection: MCP2518FD + MCP2558FD + 120 Ohm termination",
+        "Add SPI bus detection for multi-device topologies with shared MOSI/MISO/SCK",
+        "Classify TPS22917 as load_switch, not LDO",
+        "Do not classify single logic gates as level shifters unless crossing voltage domains",
+        "Recognize LM74700 + external MOSFET as ideal diode protection",
+        "Detect CMX90A004 as PA and QPL9095 as LNA",
+        "Recognize SAW/BAW filters and RF switches as dedicated RF function blocks"
+      ],
+      "related_issues": [
+        "KH-201"
+      ],
+      "id": "FND-00002536",
+      "repo": "dpmj/masters-thesis-lora-gateway-compute-module-cubesat-payload-pcb",
+      "project": "lora-payload",
+      "created": "2026-04-09T16:10:56.804496+00:00",
+      "datasheets_used": [],
+      "should_become_assertion": false
+    }
+  ]
+}

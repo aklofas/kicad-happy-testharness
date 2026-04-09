@@ -1,0 +1,189 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ZeBra-X.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Xilinx Zynq-7010 FPGA/SoC demo board with 1 GB DDR3L (2x MT41K256M16TW), Gigabit Ethernet (RTL8211F RGMII), USB 2.0 HS (USB3320C ULPI PHY), FTDI JTAG/UART debug (FT2232HL), QSPI boot flash (W25Q128), eMMC, and mezzanine expansion. The analyzer correctly identifies 424 components, 4 SY8003ADFC switching regulators, feedback networks, JTAG debug, SDIO bus, DDR differential pairs, USB pairs, LEDs, and decoupling. However, it misses the RTL8211F Ethernet PHY RGMII interface (39 ETH nets), the DDR3L memory interface (84 DDR nets), clock distribution (4 oscillators), QSPI flash bus, and ULPI bus. 3 of 4 oscillators are misclassified as connectors, TPS2051C is classified as LDO instead of load switch, power tree shows all regulators at sequence_order=0 despite actual PG cascade, and Zynq power_domains lists only +3V3 instead of 7 rails.",
+      "correct": [
+        {
+          "description": "All 4 SY8003ADFC switching regulators (U101-U104) correctly identified with correct input (+5V) and output rails (+1V0, +1V8, +1V35, +3V3)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Feedback networks correctly identified for all 4 switchers with accurate Vref=0.6V (lookup), resistor values, and computed output voltages",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "JTAG debug interface at J300 correctly detected with all 4 signals and status=pass",
+          "analyzer_section": "signal_analysis.debug_interfaces"
+        },
+        {
+          "description": "Voltage divider R400/R401 (12K/12K) generating MIO_VREF_0V9 correctly detected",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "RC filter R903/C905 (12K/4u7) correctly detected as 2.82 Hz low-pass on USB_HS_VBUS_FILT",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "SDIO bus correctly identified connecting U200 and U403 (eMMC) with pullup detection",
+          "analyzer_section": "design_analysis.bus_analysis.sdio"
+        },
+        {
+          "description": "DDR differential pairs correctly detected for CK, DQS0-DQS3",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "USB differential pairs correctly identified for both FTDI and USB HS with ESD noted",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "All 6 LEDs correctly audited with 510 ohm series resistors",
+          "analyzer_section": "signal_analysis.led_audit"
+        },
+        {
+          "description": "4 NMOS transistor circuits correctly identified as LED drivers with gate resistors",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "D100 (PMEG1030EJ) correctly identified as reverse polarity protection",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "LS1205EVD33 (U100) correctly identified as LDO from VCC to +5V",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Decoupling analysis correctly covers all 16 power rails",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        },
+        {
+          "description": "Bus topology correctly identifies DDR bus widths and USB data signals",
+          "analyzer_section": "bus_topology"
+        },
+        {
+          "description": "Power sequencing dependencies correctly show EN/PG net connections",
+          "analyzer_section": "power_sequencing.dependencies"
+        },
+        {
+          "description": "FT2232HL (U300) correctly identified as producing +1V8_FTDI from internal LDO",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "RGMII MDI differential pairs correctly detected between J800 and U800",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "Isolation barrier correctly identifies separate GNDPWR domain and +5V_USB_B",
+          "analyzer_section": "signal_analysis.isolation_barriers"
+        },
+        {
+          "description": "RC filters on PS_NRST and PS_NPOR correctly detected as reset filters",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "Cross-domain signal analysis correctly flags USB data lines between voltage domains",
+          "analyzer_section": "design_analysis.cross_domain_signals"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TPS2051CDBV (U901) classified as LDO but is a USB power distribution switch with overcurrent protection, no voltage regulation",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "X400 (33.333 MHz), X800 (25 MHz), X900 (13 MHz) misclassified as type=connector instead of oscillator. Only X300 (12 MHz) correct",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "Power tree shows all regulators at sequence_order=0 with enable_type=always_on despite actual PG cascade chain: +5V->U101(+1V0)->PG->U102(+1V8)->PG->U103(+1V35)->PG->U104(+3V3)",
+          "analyzer_section": "signal_analysis.power_sequencing_validation.power_tree"
+        },
+        {
+          "description": "Zynq U200 power_domains only lists +3V3 but connects to 7 rails: +1V0, +1V35, +1V8, +1V8_PLL, +3V3, +0V675_REF, GND",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "Regulator input/output capacitor lists over-attribute caps from shared power bus to specific regulators",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "ESD coverage audit lists oscillators X400/X800/X900 as connectors needing ESD protection -- they are internal components",
+          "analyzer_section": "signal_analysis.esd_coverage_audit"
+        },
+        {
+          "description": "Cross-domain signals flags PG_3V3 as needs_level_shifter but it's already an open-drain output with pullup to correct domain",
+          "analyzer_section": "design_analysis.cross_domain_signals"
+        },
+        {
+          "description": "R127/C125 detected as RC filter but is actually the output filter of BD3539FVM DDR VTT termination regulator",
+          "analyzer_section": "signal_analysis.rc_filters"
+        }
+      ],
+      "missed": [
+        {
+          "description": "RTL8211F-CG Gigabit Ethernet PHY: 39 ETH nets, RGMII data lines with series resistors, MDC/MDIO management bus, dedicated power domains",
+          "analyzer_section": "signal_analysis.ethernet_interfaces"
+        },
+        {
+          "description": "DDR3L memory interface: 2x MT41K256M16TW, 32-bit data bus, 15-bit address, 3-bit bank, 4 DQS pairs, differential clock, all command signals",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "BD3539FVM (U105) DDR VTT termination regulator generating +0V675 from +1V35 not detected",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "3 of 4 oscillators missed: X400 (33.333 MHz Zynq PS_CLK), X800 (25 MHz Ethernet), X900 (13 MHz USB)",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "Clock distribution not detected: 4 distinct clock domains (PS_CLK, ETH_CLK, USB_CLK, FTDI_CLK)",
+          "analyzer_section": "signal_analysis.clock_distribution"
+        },
+        {
+          "description": "QSPI flash bus not detected: W25Q128 connected via QSPI_CLK/NCS/DQ0-DQ3 with series resistors, doubles as boot mode pins",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        },
+        {
+          "description": "USB ULPI bus not detected: USB3320C with 8-bit ULPI data bus, CLK, DIR, NXT, STP",
+          "analyzer_section": "design_analysis.bus_analysis"
+        },
+        {
+          "description": "Zynq boot mode configuration circuit with resistor dividers on QSPI lines and DIP switch override not detected",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "93LC65B EEPROM for FT2232HL configuration not detected as SPI bus",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        },
+        {
+          "description": "74LVC1G07 open-drain buffers for level translation/reset distribution not detected",
+          "analyzer_section": "signal_analysis.level_shifters"
+        },
+        {
+          "description": "RGMII series termination resistors on all data/control lines not characterized for signal integrity",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [
+        "Check description field for oscillator keywords ('oscillator', 'XTAL OSC XO') to fix type classification",
+        "Classify TPS2051/TPS2052/TPS2065 as power_switch/load_switch, not LDO",
+        "Resolve power_tree EN chains: when EN connects via resistor to PG of another regulator, set sequence_order accordingly",
+        "Aggregate power pins across all multi-unit symbol units for power_domains",
+        "Add ethernet_interfaces detector for RTL8211F and similar PHYs with RGMII/RMII patterns",
+        "Add memory_interfaces detector for DDR3/DDR3L/DDR4 with address/data/control bus patterns",
+        "Detect QSPI flash with DQ0-DQ3 as Quad SPI bus",
+        "Fix oscillator misclassification cascade into false esd_coverage_audit entries"
+      ],
+      "related_issues": [],
+      "id": "FND-00002539",
+      "repo": "Dylanfg123/Zebra-X",
+      "project": "ZeBra-X",
+      "created": "2026-04-09T16:11:00.710294+00:00",
+      "datasheets_used": [],
+      "should_become_assertion": false
+    }
+  ]
+}

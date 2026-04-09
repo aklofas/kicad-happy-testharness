@@ -1,0 +1,82 @@
+# Findings: jaromir-sukuba/nvm / hardware_PCB-design_files_BART_rnvm_bart
+
+## FND-00002535: Sophisticated nanovoltmeter (BART revision) with a massively parallel low-noise amplifier (LNA) comprising 110 MCP6V51 zero-drift opamps in 10 parallel channels of 10+1 stages each, feeding into a summing/output amplifier chain with TL431-based precision current sources, an LTC1664 quad DAC for offset/current trimming, DG408 input MUX, DG442 gain-switching analog switches, LM393 overvoltage comparators, relay-based input switching, and a 3-ground-domain architecture. The analyzer correctly identifies 883 components, 126 opamp circuits, 103 voltage dividers, the MCP1700-33 LDO, 6 RC filters, 4 transistor circuits, and the TL431 voltage references. However, it misclassifies the 100 MCP6V51 feedback R+C as 'compensator' when they are transimpedance converters, creates 100 false voltage dividers from feedback/input resistor pairs, misses the LTC1664 DAC, DG408 analog MUX, DG442 gain switches, relay-based input switching, the floating PSU, and the multi-ground-domain architecture.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: hardware_PCB-design_files_BART_rnvm_bart.kicad_sch.json
+- **Created**: 2026-04-09
+
+### Correct
+- MCP1700-33 (U8) correctly identified as LDO regulator, +5V input to +3V3 output, with proper input/output capacitor detection
+- U2 (OPA145) correctly identified as a buffer (unity gain) on the BOOT net -- input buffer stage for the nanovoltmeter
+- U6 (OPA202) correctly identified as inverting amplifier with gain=-1 (R26=5k/R21=5k feedback), outputting to VR28N net
+- U5 (OPA202) correctly identified as buffer driving VREF7 net from the R17/R22 divider
+- R17 (18k20) / R22 (12k1) voltage divider with ratio 0.3993 feeding VREF7 correctly detected -- generates ~2.8V reference from 7V ADR1399
+- TL431DBZ (U126, U128) correctly identified as voltage references driving Q3/Q4 current source transistors for the LNA floating PSU
+- Q1/Q2 (BC847) and Q3/Q4 (BC847/BC857) transistor circuits correctly identified with base resistors and TL431 base drivers for floating power supply
+- RC filter R6 (24k) / C2 (470p) at 14.1 kHz correctly detected as anti-aliasing/input filter
+- RC filter R19 (620R) / C7 (100n) at 2.57 kHz correctly detected as external VREF input filter
+- Three separate ground domains (GND, GND1, GNDS) correctly identified as power rails
+- 101 ferrite beads correctly counted -- per-opamp supply filtering ferrites for MCP6V51 array
+- U119 (OPA2202) unit 2 correctly identified as inverting amplifier with gain=-3.333 (R357=40k/R349=12k) for ITRIM
+- U119 (OPA2202) unit 1 correctly identified as inverting amplifier with gain=-0.006 (R354=40k/R351=6.2M) for VTRIM
+- Decoupling analysis correctly identifies per-rail capacitor counts: +15V 9 caps, -15V 9 caps, +5V 2 caps, +3V3 1 cap, +9V/-9V 1x10uF each
+- ESD coverage audit correctly identifies all 4 connectors as having no ESD protection -- deliberate for nanovolt measurement accuracy
+
+### Incorrect
+- 100 MCP6V51 opamps classified as 'compensator' topology due to R (10k) + C (1nF) feedback. These are transimpedance amplifiers (current-to-voltage converters) -- the 10k feedback R sets transimpedance gain, 1nF cap provides HF rolloff. The 100R input resistor is a current-sense resistor, not a divider bottom
+  (signal_analysis.opamp_circuits)
+- 100 voltage dividers with ratio 0.009901 (10k/100R) are false detections. These are MCP6V51 transimpedance feedback (10k) and input sense (100R) resistor pairs. The midpoint is the opamp inverting input, not a divider output
+  (signal_analysis.voltage_dividers)
+- U123 (AD8628) classified as 'comparator_or_open_loop' but is a zero-drift integrating amplifier with C235=33nF feedback cap in the switchable-gain chain
+  (signal_analysis.opamp_circuits)
+- U124 (TL061) classified as 'comparator_or_open_loop' but is a second integrator/filter stage after U123 with C236=1nF feedback
+  (signal_analysis.opamp_circuits)
+- U121 unit 1 (LM324A) classified as 'unknown' with feedback_resistor R364=0R. A zero-ohm feedback is a voltage follower/buffer, not unknown
+  (signal_analysis.opamp_circuits)
+- 100 spurious 'Capacitive load C177 (1nF) on output -- verify opamp stability' warnings. The 1nF cap is the intentional feedback capacitor of the transimpedance amplifier, not a load capacitance
+  (signal_analysis.opamp_circuits)
+- R1 (12k) / R27 (3k) detected as voltage divider but this is in the opamp feedback/gain network around U6, not a passive divider
+  (signal_analysis.voltage_dividers)
+
+### Missed
+- Parallel LNA architecture (110 opamps noise-averaging) is the defining feature. 10 parallel Level-2 channels each containing 10 Level-1 transimpedance stages plus a summing stage. Averages uncorrelated noise by sqrt(N) for ~3.2x noise reduction
+  (signal_analysis)
+- LTC1664IGN (U120) quad 10-bit DAC for offset/current compensation (VTRIM and ITRIM) connected via SPI (CS, DIN, SCK). Not detected as DAC or SPI bus
+  (signal_analysis.adc_circuits)
+- DG408 (U3) 8-channel analog multiplexer for input range selection, controlled by MS_A0/A1/A2 from J4 connector
+  (signal_analysis)
+- DG442 (U125) quad SPST analog switch for gain switching (x1/x10/x100) around U123/U124 switchable gain amplifier
+  (signal_analysis)
+- Relay-based input switching with K1/K2 (G6KU-2 DPDT) and K3/K4 (SIL reed) for low-thermal-EMF signal switching and ACAL source routing
+  (signal_analysis)
+- LM393 dual comparator (U1) as LNA overvoltage comparator with threshold at ~+/-0.31V. Not detected as comparator circuit
+  (signal_analysis)
+- 74LVC125 tri-state buffers (U4) used as relay drivers via Q1/Q2 BJT switches
+  (signal_analysis)
+- Floating PSU for input opamp using Q3/BC847 + U126/TL431 (positive) and Q4/BC857 + U128/TL431 (negative). Critical precision technique to prevent ground currents
+  (signal_analysis)
+- SPI bus protocol for LTC1664 DAC communication (CS, DIN, DOUT, SCK) through hierarchical sheet to J4 connector
+  (signal_analysis.bus_protocols)
+- Multi-ground-domain architecture (GND digital, GND1 analog, GNDS signal) with 0R bridging resistors (R12, R23) and ferrite bead (FB1). Critical for nanovolt measurement
+  (signal_analysis)
+- Per-opamp supply filtering: each MCP6V51 has dedicated ferrite bead (FB2-FB101) on supply pin. 100 ferrite beads for individual noise filtering
+  (signal_analysis)
+- SM6T6V8A TVS diodes (D1, D2) providing input overvoltage protection not detected in protection_devices (which is empty)
+  (signal_analysis.protection_devices)
+
+### Suggestions
+- Add transimpedance amplifier (TIA) detector for feedback R + C topology with low-value input resistor on inverting input
+- Add analog multiplexer detection for DG408/DG409/MUX series ICs
+- Add analog switch detection for DG4xx/ADG4xx/MAX4xx series for gain-switching topologies
+- Add DAC detection (LTC1664, DAC8xx, MCP47xx) parallel to existing ADC detector
+- Add comparator circuit detection with threshold voltage calculation from input dividers
+- Add parallel amplifier/noise averaging detector for multiple identical amplifier instances feeding summing junction
+- Add relay detection identifying types (DPDT, reed), drive circuits, and signal routing function
+- Add floating/isolated power supply detection for precision measurement BJT+reference topologies
+- Suppress 'capacitive load' warning when capacitor is in feedback path (output to inverting input), not output to ground
+- Exclude opamp inverting input midpoints from voltage divider detection when top resistor is feedback element
+- Ground domain analysis should detect multiple ground symbols and flag inter-domain connections as deliberate precision design
+
+---

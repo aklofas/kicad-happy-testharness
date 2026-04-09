@@ -1,0 +1,76 @@
+# Findings: esl-epfl/VersaSens / VersaSens_HW_VersaSens_HeEx
+
+## FND-00002538: Complex 7-sheet hierarchical wearable health sensor design (334 components, 542 nets) with nRF5340-based BLE module, MAX77658 PMIC with battery charger, MAX86178 PPG/ECG/BioZ AFE, MAX30001 clinical ECG AFE, ADS1298 8-channel EMG ADC, BNO086 IMU, MLX90632 temperature sensor, MEMS microphone, custom Heepocrates ASIC, and extensive analog front-end filtering. The analyzer correctly identifies power regulators, RC filters for ECG/EDA, ESD protection on electrode connectors, debug interfaces, I2C buses, LED indicators, and power domains. However, it misses the MAX77658 battery charger/PMIC, misclassifies IC14 (LM2664 charge pump) as LDO, omits IC3 (TPS7A0333 LDO), fails to detect biometric AFE sensors, the BLE module, microSD interface, USB interface, MEMS microphone, and flash memories.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: VersaSens_HW_VersaSens_HeEx.kicad_sch.json
+- **Created**: 2026-04-09
+
+### Correct
+- 8 power regulators correctly identified including TLV70025, TPS72325, TPS7A0318 LDOs, MAX20343 boost, TLV75801 with correct rails
+- 11 RC filter networks in ECG/EDA analog front-ends correctly detected, including matched 131.58 Hz ECG filters and 16.93 Hz EDA filters
+- All 6 TPD4E1B06DCKR ESD protection ICs correctly identified on EMG electrode signals
+- Both debug interfaces correctly detected: J27 (TC2070-IDC) JTAG through level shifters to Heepocrates ASIC, J4 (TC2030) SWD to BL5340
+- 2 I2C buses correctly identified with correct device lists and missing pull-up warnings
+- 3 indicator LEDs and SFH7016 PPG multi-wavelength LED correctly identified
+- Accurate power domain mapping with 15+ distinct rails and correct IC assignments
+- 14 decoupling rail groups with accurate capacitor counts
+- Cross-domain signal analysis correctly flags signals needing level shifters, matching 5x SN74AXC4T774RSVR present in design
+- Accurate BOM extraction with 334 components across 94 unique parts
+- Power sequencing validation correctly identifies regulator dependency chain
+- VR1 (TC42X-2-203E) varistor correctly identified as protection device
+
+### Incorrect
+- IC14 (LM2664M6/NOPB) classified as LDO but is a switched-capacitor charge pump voltage inverter generating -3V3 from +3.3VP
+  (signal_analysis.power_regulators)
+- IC8 (MAX20343) classified as 'ic_with_internal_regulator' but is specifically a USB switch with integrated buck-boost for USB OTG
+  (signal_analysis.power_regulators)
+- Sleep current audit classifies R8/R10/R11 (62 ohm LED series resistors) as pull-ups with 53.2mA each -- these are GPIO-driven LED current limiters, not pull-ups
+  (sleep_current_audit)
+- ADS1298IPAGR (IC17) detected as ADC but with empty input_channels. Should have 8 differential channels (INxP/INxN) connected to EMG electrodes, resolution 24 bits
+  (signal_analysis.adc_circuits)
+- IC24 (SIT1532AC 32.768 kHz MEMS oscillator) only in power_budget, not in clock_distribution which is empty. This is a clock source, not a generic IC
+  (signal_analysis.clock_distribution)
+
+### Missed
+- IC1 (MAX77658) PMIC with integrated battery charger, 3 SIMOs, and 2 LDOs. Battery_chargers section empty despite being primary power source connected to battery and USB
+  (signal_analysis.battery_chargers)
+- IC3 (TPS7A0333PDBVR) 3.3V fixed LDO not detected in power_regulators despite same family as correctly detected IC9/IC22/IC23
+  (signal_analysis.power_regulators)
+- IC7 (MAX86178ENJ+) biometric AFE combining PPG, ECG, and BioZ with multi-LED driver and photodiode not detected as sensor
+  (signal_analysis.sensor_interfaces)
+- IC21 (MAX30001GCWV+) clinical-grade ECG/BioZ AFE connected via SPI not detected as sensor
+  (signal_analysis.sensor_interfaces)
+- U3 (MLX90632) infrared contactless temperature sensor on I2C missing from sensor_interfaces
+  (signal_analysis.sensor_interfaces)
+- IC2 (BL5340) dual-core Bluetooth 5.2 + 802.15.4 + NFC module -- primary wireless SoC not detected as wireless interface
+  (signal_analysis)
+- J6 (DM3AT-SF-PEJM5) microSD card connector for data logging not detected as storage interface
+  (signal_analysis)
+- U4 (MMICT5838) MEMS microphone with PDM output (MIC_DATA/MIC_CLK) not detected as audio/sensor interface
+  (signal_analysis)
+- U6 (Heepocrates) custom ASIC with JTAG, QSPI flash, I2C, SPI, UART, GPIOs not analyzed
+  (signal_analysis)
+- USB data lines from J1 to IC2 not detected as USB interface
+  (signal_analysis)
+- SFH7016 multi-wavelength PPG LED + VEMD8080 photodiode not analyzed as optical sensor circuit
+  (signal_analysis.sensor_interfaces)
+- IC30 (W25Q128) 128Mbit SPI NOR flash and IC6 (AS5F38G04) 4Gbit SPI NAND flash not detected in memory_interfaces
+  (signal_analysis.memory_interfaces)
+- RT1 NTC thermistor on MAX77658 THM input for battery temperature monitoring not analyzed
+  (signal_analysis.battery_chargers)
+
+### Suggestions
+- Add MAX77658 to battery charger detector -- NTC on THM pin is strong signal
+- Add charge_pump topology type for LM2664 and similar switched-capacitor inverters
+- Detect MAX86178 and MAX30001 as biometric AFE ICs in sensor_interfaces
+- Identify BL5340 as BLE/wireless module from description and lib references
+- Fix sleep current audit to distinguish LED series resistors from pull-ups
+- Detect microSD card connectors and SPI/QSPI flash in memory_interfaces
+- IC3 (TPS7A0333) should be detected -- same family prefix as correctly detected TPS7A0318 instances
+- ADS1298 should have resolution_bits=24 and 8 differential input channels detected from pinout
+- Add MEMS oscillator detection in clock_distribution for SIT1532
+- Add PDM microphone detector for MIC_DATA/MIC_CLK patterns
+
+---
