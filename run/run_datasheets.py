@@ -65,8 +65,12 @@ def find_repos_with_schematics():
     return repos
 
 
-def download_datasheets(repo_name, sync_script, dry_run=False):
+def download_datasheets(repo_name, sync_script, dry_run=False, delay=0.3,
+                        parallel=4):
     """Download datasheets for a repo using sync_datasheets_digikey.py.
+
+    Processes all .kicad_sch files in the repo (not just the first one),
+    sharing a single datasheets/ output directory so parts are deduplicated.
 
     Returns (downloaded_count, failed_count, total_parts) or None on error.
     """
@@ -74,29 +78,47 @@ def download_datasheets(repo_name, sync_script, dry_run=False):
     if not repo_dir.exists():
         return None
 
-    schematics = sorted(repo_dir.rglob("*.kicad_sch"), key=lambda p: len(p.parts))
-    if not schematics:
-        return None
+    # Prefer pre-computed analyzer JSON outputs (fast, no re-analysis)
+    analyzer_dir = OUTPUTS_DIR / "schematic" / repo_name
+    json_files = sorted(analyzer_dir.glob("*.json")) if analyzer_dir.exists() else []
 
-    cmd = [sys.executable, str(sync_script), str(schematics[0])]
-    if dry_run:
-        cmd.append("--dry-run")
+    # Fall back to .kicad_sch files if no pre-computed outputs
+    if not json_files:
+        schematics = sorted(repo_dir.rglob("*.kicad_sch"),
+                            key=lambda p: len(p.parts))
+        if not schematics:
+            return None
+        json_files = schematics
 
-    try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
-        downloaded = 0
-        failed = 0
-        for line in result.stdout.split("\n"):
-            if "Downloaded" in line and "bytes" in line:
-                downloaded += 1
-            if "Failed:" in line:
-                try:
-                    failed = int(line.strip().split("Failed:")[1].strip().split()[0])
-                except (ValueError, IndexError):
-                    pass
-        return downloaded, failed, 0
-    except (subprocess.TimeoutExpired, Exception):
-        return None
+    total_downloaded = 0
+    total_failed = 0
+
+    # Use a shared output dir so the index.json deduplicates across schematics
+    out_dir = repo_dir / "datasheets"
+
+    for input_file in json_files:
+        cmd = [sys.executable, str(sync_script), str(input_file),
+               "--output", str(out_dir),
+               "--delay", str(delay),
+               "--parallel", str(parallel)]
+        if dry_run:
+            cmd.append("--dry-run")
+
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+            for line in result.stdout.split("\n"):
+                if "Downloaded" in line and "bytes" in line:
+                    total_downloaded += 1
+                if "Failed:" in line:
+                    try:
+                        total_failed += int(
+                            line.strip().split("Failed:")[1].strip().split()[0])
+                    except (ValueError, IndexError):
+                        pass
+        except (subprocess.TimeoutExpired, Exception):
+            continue
+
+    return total_downloaded, total_failed, 0
 
 
 def validate_extractions(repo_dir):
@@ -183,7 +205,7 @@ def validate_extractions(repo_dir):
 
 
 def process_repo(repo_name, sync_script, ds_out_dir, download_only=False,
-                 validate_only=False, dry_run=False):
+                 validate_only=False, dry_run=False, delay=0.3, parallel=4):
     """Process a single repo: download + validate.
 
     Returns a dict with per-repo results, or None if repo dir missing.
@@ -200,7 +222,8 @@ def process_repo(repo_name, sync_script, ds_out_dir, download_only=False,
     }
 
     if not validate_only:
-        dl = download_datasheets(repo_name, sync_script, dry_run)
+        dl = download_datasheets(repo_name, sync_script, dry_run,
+                                 delay=delay, parallel=parallel)
         if dl:
             result["downloaded"] = dl[0]
             result["download_failed"] = dl[1]
@@ -231,6 +254,10 @@ def main():
                         help="Only validate existing extractions")
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview what would be downloaded")
+    parser.add_argument("--delay", type=float, default=0.3,
+                        help="Seconds between DigiKey API calls per repo (default: 0.3)")
+    parser.add_argument("--parallel", type=int, default=4,
+                        help="Download workers within each repo (default: 4)")
     args = parser.parse_args()
 
     sync_script = _kicad_happy / "skills" / "digikey" / "scripts" / "sync_datasheets_digikey.py"
@@ -304,7 +331,7 @@ def main():
         for repo_name in repos:
             result = process_repo(repo_name, sync_script, ds_out_dir,
                                   args.download_only, args.validate_only,
-                                  args.dry_run)
+                                  args.dry_run, args.delay, args.parallel)
             line = _collect(result)
             if line:
                 print(line)
@@ -314,7 +341,7 @@ def main():
             futures = {
                 pool.submit(process_repo, repo_name, sync_script, ds_out_dir,
                             args.download_only, args.validate_only,
-                            args.dry_run): repo_name
+                            args.dry_run, args.delay, args.parallel): repo_name
                 for repo_name in repos
             }
             for future in as_completed(futures):

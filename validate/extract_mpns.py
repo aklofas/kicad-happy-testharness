@@ -95,21 +95,25 @@ def main():
         print(f"Error: {results_dir} not found. Run analyzers first.")
         return
 
-    repo_dirs = sorted(d for d in results_dir.iterdir() if d.is_dir())
-    if args.repo:
-        repo_dirs = [d for d in repo_dirs if d.name == args.repo]
-
-    for repo_dir in repo_dirs:
-        project = repo_dir.name
-        for json_file in sorted(repo_dir.glob("*.json")):
-            file_entries = extract_from_json(json_file)
-            for entry in file_entries:
-                key = (entry["mpn"], entry["manufacturer"], project)
-                if key not in seen:
-                    seen.add(key)
-                    entry["source_project"] = project
-                    entries.append(entry)
-                    projects.add(project)
+    # Structure: results/outputs/schematic/{owner}/{repo}/*.json
+    owner_dirs = sorted(d for d in results_dir.iterdir() if d.is_dir())
+    for owner_dir in owner_dirs:
+        repo_dirs = sorted(d for d in owner_dir.iterdir() if d.is_dir())
+        if args.repo:
+            repo_dirs = [d for d in repo_dirs
+                         if d.name == args.repo
+                         or f"{owner_dir.name}/{d.name}" == args.repo]
+        for repo_dir in repo_dirs:
+            project = f"{owner_dir.name}/{repo_dir.name}"
+            for json_file in sorted(repo_dir.glob("*.json")):
+                file_entries = extract_from_json(json_file)
+                for entry in file_entries:
+                    key = (entry["mpn"], entry["manufacturer"], project)
+                    if key not in seen:
+                        seen.add(key)
+                        entry["source_project"] = project
+                        entries.append(entry)
+                        projects.add(project)
 
     entries.sort(key=lambda e: (e.get("manufacturer", "").lower(), e["mpn"].lower()))
 
