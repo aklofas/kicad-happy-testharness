@@ -19,7 +19,7 @@ REPOS_DIR = HARNESS_DIR / "repos"
 DATA_DIR = HARNESS_DIR / "reference"
 MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
 OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
-ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice", "emc", "datasheets"]
+ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice", "emc", "thermal", "datasheets"]
 MISC_CATEGORY = "Miscellaneous KiCad projects"
 
 # Timeout constants (seconds) — used across runners and validators
@@ -469,6 +469,7 @@ EXPECTED_KEYS = {
     "gerber": {"layers", "summary"},
     "emc": {"findings", "summary"},
     "spice": {"simulation_results", "summary"},
+    "thermal": {"findings", "summary", "thermal_assessments"},
 }
 
 
