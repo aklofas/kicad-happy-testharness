@@ -11,6 +11,17 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-09 — Batch 36: KH-228 detect_sub_sheet fix
+
+### KH-228 (LOW): detect_sub_sheet only identifies 34% of sub-sheets
+
+- **File**: `analyze_schematic.py` — `detect_sub_sheet()`
+- **Root cause**: Detection relied solely on `hierarchical_label` presence. Many valid sub-sheets lack this marker.
+- **Fix**: Added `file_path` parameter. New tiered strategy: (1) symbol_instances → root, (2) sheet blocks → root, (3) .kicad_pro stem matching → root if match, sub-sheet if no match, (4) hierarchical_label fallback → sub-sheet, (5) conservative default → root.
+- **Verified**: Detection rate 34% → 99% (66/67 sub-sheets). 0 false positives on 28 root schematics. 10 unit tests covering all 5 tiers. 681,209 schematic assertions pass (16 reseeded from minor design_observations count changes).
+
+---
+
 ## 2026-04-09 — Batch 35: Test harness fixes (TH-009, TH-010)
 
 ### TH-009 (MEDIUM): Constants audit missing Vref heuristic coverage check
