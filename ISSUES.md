@@ -34,7 +34,7 @@ Issue numbers are **globally unique and never reused**. Before assigning a new n
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
 number: **KH-228**. Next TH number: **TH-011**.
 
-> 13 open issues (10 KH-*, 3 TH-*) from Layer 3 batch reviews (2026-04-09).
+> 12 open issues (10 KH-*, 2 TH-*) from Layer 3 batch reviews (2026-04-09).
 
 ---
 
@@ -297,7 +297,6 @@ repo (all converted to `.kicad_sch`). Reopen if repro file is located.
 10. KH-227 — Logic gates misclassified as level_shifter_ic (LOW)
 11. TH-009 — Constants audit doesn't flag Vref heuristic fallback coverage gap (MEDIUM)
 12. TH-010 — Legacy findings cleanup: missing IDs, non-standard analyzer_type values (LOW)
-13. TH-011 — batch_review.py: multi-project repos select best per-project set (LOW — done)
 
 ---
 
@@ -349,14 +348,3 @@ findings with no id), torvalds/1590A, OLIMEX/USB-GIGABIT (analyze_* prefix), and
 
 **Discovered:** 2026-04-09 via `batch_review.py status` type breakdown.
 
----
-
-### TH-011 — batch_review.py: multi-project repos select best per-project set (LOW)
-
-**Status:** Fixed. The `_collect_outputs()` function now groups outputs by project prefix
-and selects the best matching set (schematic + PCB + gerber from the same project). For
-multi-project repos (37% of corpus, 2,186 repos), this ensures cross-referencing between
-analyzer types is meaningful. Previously, the best schematic and best PCB could come from
-different projects in the same repo.
-
-**Discovered:** 2026-04-09 during batch_review.py enhancement.

@@ -11,6 +11,17 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-09 — Batch 34: Layer 3 workflow improvements (TH-011)
+
+### TH-011 (LOW): batch_review.py multi-project output alignment
+
+- **File**: `tools/batch_review.py` — `_collect_outputs()`, `_output_project_prefix()`
+- **Root cause**: For multi-project repos (37% of corpus, 2,186 repos), `_collect_outputs()` independently picked the highest-scoring file per output type. The best schematic and best PCB could come from different projects, making cross-referencing meaningless.
+- **Fix**: Added `_output_project_prefix()` to extract a shared project name from output filenames (stripping `.kicad_sch`, `.kicad_pcb`, `_gerber` suffixes). `_collect_outputs()` now iterates schematic candidates and finds matching PCB/gerber with the same prefix, scoring by type coverage + complexity to select the best project set.
+- **Verified**: Project_OAK now picks V0 PCB to match V0 schematic (previously picked V0.1 PCB). Zebra-X, lora-payload, meteo_mini all correctly align sch+pcb prefixes. Single-project repos unaffected.
+
+---
+
 ## 2026-04-09 — Batch 33: Layer 3 batch review bugs (KH-207..KH-217)
 
 ### KH-207 (HIGH): Legacy 2x2 matrix decomposition produces wrong pin positions
