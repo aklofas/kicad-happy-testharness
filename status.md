@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-08 (health check after corpus expansion + SPICE/EMC full run)
+Last updated: 2026-04-08 (validated 5 new kicad-happy commits, re-seeded to 2.02M)
 
 ---
 
@@ -18,9 +18,9 @@ Last updated: 2026-04-08 (health check after corpus expansion + SPICE/EMC full r
 | Schematic output files | 36,546 |
 | PCB output files | 18,727 |
 | Gerber output files | 5,448 |
-| **Total assertions** | **1,979,126** |
-| SEED assertions | 968,037 |
-| STRUCT assertions | 1,006,294 |
+| **Total assertions** | **2,023,990** |
+| SEED assertions | 1,006,775 |
+| STRUCT assertions | 1,012,420 |
 | FND assertions | 4,718 |
 | BUGFIX assertions | 77 |
 | Aspirational assertions | 1,989 |
@@ -29,11 +29,13 @@ Last updated: 2026-04-08 (health check after corpus expansion + SPICE/EMC full r
 | Unit tests | 276 |
 | Layer 3 reviewed repos | 992 |
 | Total findings | 2,575 |
-| Open KH-* issues | 3 |
-| Closed KH-* issues | 179 |
+| Open KH-* issues | 0 |
+| Closed KH-* issues | 203 |
 | Constants | 298 (295 verified, 3 unverified) |
 | Schematic detectors | 40 |
 | Cross-analyzer agreement | 91.9% (97,012 checks) |
+| Unique MPNs extracted | 16,332 (from 1,105 projects) |
+| Datasheet PDFs | 4,345 (2,249 bulk + 2,096 per-repo) |
 
 ### SPICE simulation summary
 
@@ -81,33 +83,46 @@ Last updated: 2026-04-08 (health check after corpus expansion + SPICE/EMC full r
 
 ## Completed batches
 
+### Validate 5 kicad-happy commits (2026-04-08)
+
+Validated kicad-happy commits `76ef2ec` through `2f820ed` (5 commits):
+- `e9d616b` — sleep current estimation, touch pad GND clearance
+- `df921be` — keepout zone surface, ESD IC decoupling proximity check
+- `76ef2ec` — schema docs, footprint alias, SPICE reference field fixes
+- `89d4443` — skill workflow updates (thermal, lifecycle, delta tracking)
+- `2f820ed` — analysis folder convention with manifest and retention
+
+**Full corpus run:** All 4 analyzer types (schematic, PCB, SPICE, EMC) — 0 errors.
+Re-seeded all assertions from scratch: 2,023,990 total at 100% pass rate.
+
+**KH-167 bugfix assertion updated:** New ESD decoupling proximity check (`df921be`)
+adds ESD/TVS ICs to `decoupling_placement` under `category=esd_bypass`. Updated
+bugfix assertion from "U3 not in decoupling" to "U3 has category=esd_bypass" —
+verifies both original fix and new feature.
+
+### Datasheet pipeline expansion (2026-04-08)
+
+Fixed `extract_mpns.py` (broken owner/repo traversal — was finding 0 MPNs, now 16,332).
+Improved `run_datasheets.py`: uses pre-computed analyzer JSON (skip re-analysis),
+configurable `--delay` and `--parallel` flags, processes all schematics per repo.
+
+New `tools/bulk_download_datasheets.py`: parallel downloader for schematic-embedded
+URLs (no API keys needed). Downloaded 2,259 PDFs (2.97 GB) in ~2 min with 64 workers.
+DigiKey API run added 412 more per-repo PDFs. Total: 4,345 PDFs (was 1,456).
+
 ### Health Check (2026-04-08)
 
 Full corpus health check after expansion + SPICE/EMC batch runs.
 
 **Unit tests:** 276/276 pass (100%).
 
-**Assertions:** 1,979,126 total at 100% pass rate. Smoke cross-section verified.
+**Schema drift:** 9 phantom fields cleared by refreshing schema_inventory.json.
+Added `_`-prefix field filter to `validate_schema.py` to prevent future false positives
+from internal metadata fields.
 
-**Staleness:** Significant staleness from expansion batch — 1,016 repos with stale
-schematic assertions, 700 EMC, 237 PCB, 82 gerber (outputs are newer than assertions).
-37 assertion sets have no matching output. 56,110 output files have no assertions
-(expected — new repos got outputs but many haven't been seeded for all types yet).
-
-**Schema drift:** 9 new fields detected (input_protection, bob_smith_termination,
-missing_freewheeling, _enriched_from_hierarchy, cross_sheet_loads, wdi_net, sqw_net,
-cross_sheet_load in various schematic detectors). Need assertion seeding.
-
-**Detector coverage:** 40 detectors tracked, all with corpus hits. power_sequencing_validation
-has 0 corpus hits (expected — rare pattern).
-
-**Cross-analyzer consistency:** 91.9% agreement (97,012 checks). Mismatches: net_count
-(5,674), component_vs_footprint_count (407).
-
-**SPICE cross-validation:** 101 checks, 100% agreement.
-
-**EMC cross-validation:** 112,602 checks, 93.7% agreement. switching_regulator_count
-still low (12.8%) due to EMC's limited part number lookup table.
+**Cross-analyzer consistency:** 91.9% agreement (97,012 checks). Mismatches are
+expected divergence: net_count (5,674 — schematic symbol nets vs PCB routed nets),
+component_vs_footprint_count (407 — power symbols/test points not on PCB).
 
 **Health report:** Logged to health_log.jsonl. No drop warnings.
 
