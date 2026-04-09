@@ -840,10 +840,30 @@ python3 regression/packet.py --file results/outputs/schematic/{repo}/{file}.json
 Review packets are written to `results/review_packets/`. Each pairs the source KiCad
 file with the analyzer output summary for side-by-side review.
 
+### 13a-bis. Ensure all output types are current
+
+Before generating review prompts, verify the repo has up-to-date outputs for all
+analyzers. The combined prompt is most valuable when all types are present:
+
+```bash
+python3 run/run_schematic.py --repo {repo}
+python3 run/run_pcb.py --repo {repo}
+python3 run/run_gerbers.py --repo {repo}
+python3 run/run_spice.py --repo {repo}
+python3 run/run_emc.py --repo {repo}
+python3 run/run_thermal.py --repo {repo}
+```
+
+Thermal analysis requires both schematic and PCB outputs. If thermal output is
+missing, the generated prompt includes a run-on-demand command that the subagent
+can execute during review.
+
 ### 13b. Conduct the review
 
 Use `batch_review.py` with Claude Code subagents. Prompts now include all available
-output types (schematic + PCB + gerber) per repo, with cross-reference instructions:
+output types per repo: schematic, PCB, gerber, SPICE (when simulations present),
+EMC (when findings present), and thermal (when hotspots flagged or via run-on-demand).
+Cross-reference instructions cover all pairwise combinations:
 
 ```bash
 # List unreviewed repos by complexity (shows PCB/GBR availability)
@@ -876,6 +896,7 @@ naming specific components (U1, R3) with analyzer_section paths.
 - Use `--count 5` for prompts — 5 parallel subagents is a good batch size
 - Category coverage gaps: check `batch_review.py status` and repo catalog
   to target underrepresented categories (aerospace, wearables, measurement)
+- Use `--repo X` to generate a prompt for a specific repo (bypasses unreviewed filter)
 
 **Root cause accuracy (lessons from KH-207..217 verification):**
 
