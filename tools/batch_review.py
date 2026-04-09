@@ -234,9 +234,11 @@ def _unreviewed_repos(max_count=None):
                 except Exception:
                     continue
             if total_components >= 5:
-                # Check for PCB/gerber outputs too
+                # Check for PCB/gerber/spice/emc outputs too
                 has_pcb = (OUTPUTS_DIR / "pcb" / key).exists()
                 has_gerber = (OUTPUTS_DIR / "gerber" / key).exists()
+                has_spice = (OUTPUTS_DIR / "spice" / key).exists()
+                has_emc = (OUTPUTS_DIR / "emc" / key).exists()
                 candidates.append({
                     "repo": key,
                     "total_components": total_components,
@@ -245,6 +247,8 @@ def _unreviewed_repos(max_count=None):
                     "best_file": str(best_file),
                     "has_pcb": has_pcb,
                     "has_gerber": has_gerber,
+                    "has_spice": has_spice,
+                    "has_emc": has_emc,
                 })
 
     candidates.sort(key=lambda x: x["total_components"], reverse=True)
@@ -370,12 +374,21 @@ def _generate_prompt(repo, outputs_by_type):
     # Cross-reference instructions
     cross_ref = ""
     if len(has_types) > 1:
-        cross_ref = """
-7. CROSS-REFERENCE between analyzer outputs:
-   - Schematic↔PCB: Do component counts match? Are all schematic nets routed?
-   - PCB↔Gerber: Do layer counts match? Are drill files consistent with vias?
-   - Schematic↔Gerber: Does board complexity match schematic complexity?
-   Flag any inconsistencies between analyzer outputs."""
+        cross_parts = []
+        if "schematic" in has_types and "pcb" in has_types:
+            cross_parts.append("   - Schematic↔PCB: Do component counts match? Are all schematic nets routed?")
+        if "pcb" in has_types and "gerber" in has_types:
+            cross_parts.append("   - PCB↔Gerber: Do layer counts match? Are drill files consistent with vias?")
+        if "schematic" in has_types and "gerber" in has_types:
+            cross_parts.append("   - Schematic↔Gerber: Does board complexity match schematic complexity?")
+        if "schematic" in has_types and "spice" in has_types:
+            cross_parts.append("   - Schematic↔SPICE: Do simulated values match component values? Are all expected subcircuits detected?")
+        if "schematic" in has_types and "emc" in has_types:
+            cross_parts.append("   - Schematic↔EMC: Do EMC findings align with signal types? Are high-speed nets flagged appropriately?")
+        if "pcb" in has_types and "emc" in has_types:
+            cross_parts.append("   - PCB↔EMC: Do layout-based EMC findings match the actual PCB layout?")
+        if cross_parts:
+            cross_ref = "\n7. CROSS-REFERENCE between analyzer outputs:\n" + "\n".join(cross_parts) + "\n   Flag any inconsistencies between analyzer outputs."
 
     # Build the finding template based on available types
     finding_types = []
@@ -449,13 +462,15 @@ def cmd_list(args):
     candidates = _unreviewed_repos(args.count)
     print(f"Unreviewed repos ({len(candidates)} shown):\n")
     print(f"{'Components':>10}  {'Signals':>8}  {'Files':>5}  "
-          f"{'PCB':>3}  {'GBR':>3}  Repo")
-    print(f"{'─'*10}  {'─'*8}  {'─'*5}  {'─'*3}  {'─'*3}  {'─'*40}")
+          f"{'PCB':>3}  {'GBR':>3}  {'SPI':>3}  {'EMC':>3}  Repo")
+    print(f"{'─'*10}  {'─'*8}  {'─'*5}  {'─'*3}  {'─'*3}  {'─'*3}  {'─'*3}  {'─'*40}")
     for c in candidates:
         pcb = " ✓" if c["has_pcb"] else "  "
         gbr = " ✓" if c["has_gerber"] else "  "
+        spi = " ✓" if c["has_spice"] else "  "
+        emc = " ✓" if c["has_emc"] else "  "
         print(f"{c['total_components']:>10}  {c['signal_count']:>8}  "
-              f"{c['file_count']:>5}  {pcb}  {gbr}  {c['repo']}")
+              f"{c['file_count']:>5}  {pcb}  {gbr}  {spi}  {emc}  {c['repo']}")
 
 
 def cmd_prompts(args):
