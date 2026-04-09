@@ -1,0 +1,86 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "SplitBoard8Voice_SplitBoard8Voice.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "8-voice polyphonic synthesizer (581 components, 10 sheets, STM32F411, TPS56528 + L7805/L7905, TL074 opamp arrays, 65 SK6812 LEDs, MIDI, ILI9341 LCD). Strong analysis. Issues: rotary encoders as resistors (RE prefix), TCA9548A I2C mux as level shifter, 24 voice signals as power rails, crystal '32.768kHZ' frequency not parsed (case-sensitive).",
+      "correct": [
+        {
+          "description": "U201 TL074 quad opamp correctly decomposed into 4 units with correct gain/config",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "TPS56528 switching + L7805/L7905 LDOs correctly identified",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Y401 16MHz crystal correctly parsed with 6pF load caps",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "Two SK6812 LED chains (50+15) correctly detected",
+          "analyzer_section": "signal_analysis.addressable_led_chains"
+        },
+        {
+          "description": "22 encoder debounce RC filters correctly detected at 338.63Hz",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "~70 buffer opamps for CV distribution correctly detected",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "RE601-RE609 (9 rotary encoders, lib_id Device:RotaryEncoder) classified as 'resistor' due to RE prefix",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "U701 TCA9548A I2C mux classified as level_shifter_ic \u2014 it's an 8-channel I2C switch",
+          "analyzer_section": "signal_analysis.level_shifters"
+        },
+        {
+          "description": "24 voice signals (V1_CLK1..V8_OUT) listed as power_rails \u2014 they're digital clock/audio outputs",
+          "analyzer_section": "statistics.power_rails"
+        },
+        {
+          "description": "Y402 '32.768kHZ' frequency=null \u2014 capital HZ not recognized",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "TPS56528 output_rail is '__unnamed_28' instead of +3.3V (Schottky OR-ing diode not traced)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [
+        {
+          "description": "MIDI interface (3 DIN connectors, 6N138 optocoupler, MIDI_RX/TX) not detected",
+          "analyzer_section": "signal_analysis"
+        },
+        {
+          "description": "U301 DAC7578 8-channel I2C DAC not identified as DAC",
+          "analyzer_section": "signal_analysis.adc_circuits"
+        },
+        {
+          "description": "Audio output circuit (TL074 mixing to stereo jack) not in audio_circuits",
+          "analyzer_section": "signal_analysis.audio_circuits"
+        }
+      ],
+      "suggestions": [
+        "Case-insensitive frequency unit parsing for crystals",
+        "Detect rotary encoders via lib_id Device:RotaryEncoder, not RE prefix",
+        "Distinguish I2C mux (TCA9548) from level shifter",
+        "Filter global_labels with 'output' shape from power_rails",
+        "Trace through Schottky diodes for regulator output rail mapping"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002523",
+      "repo": "hsetlik/PolySynth",
+      "project": "SplitBoard8Voice_SplitBoard8Voice",
+      "created": "2026-04-09T06:53:55.895191+00:00",
+      "datasheets_used": []
+    }
+  ]
+}
