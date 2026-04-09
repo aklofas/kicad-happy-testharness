@@ -1,0 +1,45 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "DCMGv2_SIGNALROUTING.sch.json",
+      "status": "confirmed",
+      "summary": "DC Microgrid signal routing schematic with 301 CONNECTOR symbols for relay contacts and bus segments. Analyzer correctly parsed all components, wiring, and connectivity with no significant errors.",
+      "correct": [
+        {
+          "description": "All 301 components correctly identified as CONNECTOR type (P1-P301)",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "146 nets correctly extracted with proper connectivity",
+          "analyzer_section": "nets"
+        },
+        {
+          "description": "No false-positive signal detections \u2014 all detector sections correctly empty for a connector-only schematic",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "kicad_version reported as '5 (legacy)' but file uses EELAYER 27 0 (KiCad 4 format, dated March 2016). Cosmetic since both parse identically.",
+          "analyzer_section": "kicad_version"
+        },
+        {
+          "description": "file_version reported as '4' but actual EESchema Schematic File Version in header is 2",
+          "analyzer_section": "file_version"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "Consider distinguishing KiCad 4 (EELAYER 27, file version 2) from KiCad 5 legacy (EELAYER 25+, file version 4) in version detection"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002512",
+      "repo": "Jordan87M/DCMG",
+      "project": "DCMGv2wBUFFERS",
+      "created": "2026-04-09T06:22:56.099175+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

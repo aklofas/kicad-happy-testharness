@@ -824,20 +824,28 @@ file with the analyzer output summary for side-by-side review.
 
 ### 13b. Conduct the review
 
-Open the review packet and evaluate:
-- **Correct detections** — analyzer found real circuits (document as `confirmed`)
-- **Incorrect detections** — false positives, wrong parameters (document as `incorrect`)
-- **Missing detections** — real circuits the analyzer missed (document as `missed`)
-- **Observations** — design quality notes, unusual patterns (document as `observation`)
-
-### 13c. Record findings
+Use `batch_review.py` with Claude Code subagents:
 
 ```bash
-# Interactive: edit findings.json directly, then render
-python3 regression/findings.py render --repo {repo}
+# List unreviewed repos by complexity
+python3 tools/batch_review.py list --count 20
+
+# Generate prompts for N repos
+python3 tools/batch_review.py prompts --count 10
+```
+
+In a Claude Code session, spawn subagents in parallel with each prompt. Each
+subagent reads the source schematic + analyzer JSON and produces a JSON finding.
+Launch 3-5 subagents in parallel to maximize throughput.
+
+### 13c. Save findings
+
+Save each subagent's JSON output:
+
+```bash
+python3 tools/batch_review.py save --repo {owner/repo} --project {project} --file /tmp/finding.json
 
 # View findings
-python3 regression/findings.py list
 python3 regression/findings.py list --repo {repo}
 python3 regression/findings.py stats
 ```

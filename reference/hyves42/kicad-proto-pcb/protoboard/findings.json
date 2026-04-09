@@ -1,0 +1,50 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "protoboard.sch.json",
+      "status": "confirmed",
+      "summary": "Protoboard PCB with 1726 copper pads, 12 SOIC6 areas, 12 SOT23 areas, 1 TQFP64 area, and 4 mounting holes. Component counts and net building are correct, but type classifications for custom prototyping symbols are inaccurate.",
+      "correct": [
+        {
+          "description": "Total component count of 1755 matches schematic exactly (1726 PAD + 12 PROTO_SOIC6 + 12 PROTO_SOT23 + 1 PROTO_TQFP64 + 4 HOLE)",
+          "analyzer_section": "statistics.total_components"
+        },
+        {
+          "description": "Wire count of 284 matches schematic",
+          "analyzer_section": "statistics.total_wires"
+        },
+        {
+          "description": "H1-H4 (HOLE) correctly classified as mounting_hole",
+          "analyzer_section": "statistics.component_types.mounting_hole"
+        },
+        {
+          "description": "Signal analysis correctly returns empty results for all detector categories (no active circuits on a bare protoboard)",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "TQFP1 (PROTO_TQFP64, 64-pin prototyping footprint area) classified as 'transformer' \u2014 it is a prototyping pad array for TQFP packages, not a transformer",
+          "analyzer_section": "statistics.component_types.transformer"
+        },
+        {
+          "description": "1617 PAD components with U-prefix classified as 'ic' \u2014 these are bare copper pads on a protoboard, not integrated circuits. The reference prefix 'U' is misleading the classifier",
+          "analyzer_section": "statistics.component_types.ic"
+        }
+      ],
+      "missed": [],
+      "suggestions": [
+        "PROTO_TQFP64 -> transformer misclassification likely from pin count heuristic; should not map 64-pin custom symbols to transformer without stronger evidence",
+        "Consider recognizing PAD as a generic/passive type rather than defaulting to ic based on U-prefix"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002511",
+      "repo": "hyves42/kicad-proto-pcb",
+      "project": "protoboard",
+      "created": "2026-04-09T06:22:34.884375+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

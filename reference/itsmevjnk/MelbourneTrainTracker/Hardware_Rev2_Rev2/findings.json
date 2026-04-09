@@ -1,0 +1,85 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "Hardware_Rev2_Rev2.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Melbourne train tracker: ESP32-S3 drives 11 AW20216S LED matrix controllers over SPI via 74LS125 bus buffers, with USB-C, SD card, and 3.3V LDO. Correct hierarchical parsing and power regulation, but RGB LEDs misclassified as diodes, SPI CS detection failure, LED driver ICs missed.",
+      "correct": [
+        {
+          "description": "U17 (XC6220B331MR) correctly identified as LDO regulator with accurate cap enumeration",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "U16 (USBLC6-2SC6) correctly identified as ESD protection",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "USB Type-C J1 with correct CC1/CC2 5.1k pull-downs for sink role",
+          "analyzer_section": "usb_compliance"
+        },
+        {
+          "description": "RC filters on RESET and BOOT lines correctly detected",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "All 5 hierarchical sub-sheets flattened to 1055 components",
+          "analyzer_section": "sheets"
+        },
+        {
+          "description": "MISO multi-driver conflicts correctly identified",
+          "analyzer_section": "design_analysis.erc_warnings"
+        },
+        {
+          "description": "ESD coverage gaps correctly flagged on JTAG, SD card, expansion headers",
+          "analyzer_section": "signal_analysis.esd_coverage_audit"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "735 XL-B1010RGBT-HF (D1-D735) classified as 'diode' but are RGB LEDs (description says 'RGBA LED', keywords include 'LED RGB'). Should be 'led' not 'diode'",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "SPI protocol compliance reports 0 CS lines per bus but each AW20216S has individual CS (L0_CS-L10_CS). CS detection fails on 'Lx_CS' naming pattern and 'CSN' pin name",
+          "analyzer_section": "protocol_compliance"
+        },
+        {
+          "description": "SPI bus analysis creates 13 duplicate bus entries for 3 physical buses (A, B, C)",
+          "analyzer_section": "design_analysis.bus_analysis"
+        },
+        {
+          "description": "Decoupling analysis has ic_ref=null for both entries, failing to attribute 78 capacitors to specific ICs",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "AW20216S (U1-U11) are LED matrix driver ICs but led_driver_ics is empty",
+          "analyzer_section": "signal_analysis.led_driver_ics"
+        },
+        {
+          "description": "74LS125 tri-state bus buffers (U12-U14) fan out SPI to three AW20216S groups \u2014 not captured",
+          "analyzer_section": "signal_analysis.level_shifters"
+        },
+        {
+          "description": "VCC rail voltage should be 3.3V (from XC6220B331MR) but shows voltage=null",
+          "analyzer_section": "statistics.power_rails"
+        }
+      ],
+      "suggestions": [
+        "Classify components with description/keywords containing 'LED' as 'led' regardless of D-prefix",
+        "Recognize CSN/CS pin names on ICs as chip select signals for SPI bus membership",
+        "Deduplicate SPI bus entries sharing same physical nets into single bus with multiple devices",
+        "Detect LED driver ICs by matching known families (AW20216S, IS31FL*, TLC59*, PCA9685)"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002513",
+      "repo": "itsmevjnk/MelbourneTrainTracker",
+      "project": "Hardware_Rev2_Rev2",
+      "created": "2026-04-09T06:26:14.173019+00:00",
+      "datasheets_used": []
+    }
+  ]
+}
