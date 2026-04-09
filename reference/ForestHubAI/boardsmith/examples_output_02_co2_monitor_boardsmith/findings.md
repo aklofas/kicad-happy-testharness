@@ -1,6 +1,6 @@
-# Findings: boardsmith / examples_output_02_co2_monitor_boardsmith
+# Findings: ForestHubAI/boardsmith / examples_output_02_co2_monitor_boardsmith
 
-## ?: RP2040 CO2 monitor with I2C sensors (SCD41, BME680, SSD1306), SPI flash (W25Q16), USB-C, and AMS1117 LDO. Analyzer correctly identifies major ICs, power regulator, memory interface, I2C bus observations, and crystal circuit, but misses I2C pullup detection issue, SPI bus protocol, USB interface, SWD debug, and has false decoupling warnings.
+## FND-00002552: RP2040 CO2 monitor with I2C sensors (SCD41, BME680, SSD1306), SPI flash (W25Q16), USB-C, and AMS1117 LDO. Analyzer correctly identifies major ICs, power regulator, memory interface, I2C bus observations, and crystal circuit, but misses I2C pullup detection issue, SPI bus protocol, USB interface, SWD debug, and has false decoupling warnings.
 
 - **Status**: new
 - **Analyzer**: schematic

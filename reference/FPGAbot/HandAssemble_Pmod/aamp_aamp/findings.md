@@ -1,6 +1,6 @@
-# Findings: HandAssemble_Pmod / aamp_aamp
+# Findings: FPGAbot/HandAssemble_Pmod / aamp_aamp
 
-## ?: Hand-assembled Class D audio amplifier Pmod board using 4x RS8754 quad comparator ICs driving LC output filters, with 16 op-amp channels configured as comparators. Analyzer correctly identifies the architecture and passive filtering.
+## FND-00002546: Hand-assembled Class D audio amplifier Pmod board using 4x RS8754 quad comparator ICs driving LC output filters, with 16 op-amp channels configured as comparators. Analyzer correctly identifies the architecture and passive filtering.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

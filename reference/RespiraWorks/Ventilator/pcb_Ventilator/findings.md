@@ -1,6 +1,6 @@
-# Findings: Ventilator / pcb_Ventilator
+# Findings: RespiraWorks/Ventilator / pcb_Ventilator
 
-## ?: Battery controller sub-sheet for a medical ventilator, covering battery charger (BQ25713), battery balancer, and 12V buck converter. Analyzer produces a thorough and largely accurate analysis of this power management sheet.
+## FND-00002585: Battery controller sub-sheet for a medical ventilator, covering battery charger (BQ25713), battery balancer, and 12V buck converter. Analyzer produces a thorough and largely accurate analysis of this power management sheet.
 
 - **Status**: confirmed
 - **Analyzer**: schematic
@@ -36,7 +36,7 @@
 
 ---
 
-## ?: Alarm and safety sub-sheet for a medical ventilator, with power-down alarm circuits using comparators (U6, U7), battery-backed alarm buzzer circuits, and button/switch interfaces. Analyzer does well on passive signal analysis.
+## FND-00002586: Alarm and safety sub-sheet for a medical ventilator, with power-down alarm circuits using comparators (U6, U7), battery-backed alarm buzzer circuits, and button/switch interfaces. Analyzer does well on passive signal analysis.
 
 - **Status**: confirmed
 - **Analyzer**: schematic
@@ -64,7 +64,7 @@
 
 ---
 
-## ?: Top-level medical ventilator PCB with 22 sub-sheets covering MCU, FPGA, sensors, power, battery management, and alarm systems. 627 components, 85 signal detections. The analyzer handles this complex hierarchical design competently.
+## FND-00002587: Top-level medical ventilator PCB with 22 sub-sheets covering MCU, FPGA, sensors, power, battery management, and alarm systems. 627 components, 85 signal detections. The analyzer handles this complex hierarchical design competently.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

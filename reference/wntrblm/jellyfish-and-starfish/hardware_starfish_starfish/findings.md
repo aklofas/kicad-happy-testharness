@@ -1,6 +1,6 @@
-# Findings: jellyfish-and-starfish / hardware_starfish_starfish
+# Findings: wntrblm/jellyfish-and-starfish / hardware_starfish_starfish
 
-## ?: Winterbloom Starfish pick-and-place controller: RP2040 MCU, 3x TMC2209 stepper drivers, PCA9545 I2C mux, 2x XGZP6857D vacuum sensors, RS-485 via MAX3078E, USB-B, 24V power chain. Analyzer correctly identifies power regulators, I2C buses, crystal, differential pairs, protection devices, and MOSFET circuits. VX7805-500 DC-DC converter misclassified as LDO. TMC2209 stepper motor drivers not identified as motor drivers. QSPI bus missed in SPI analysis.
+## FND-00002628: Winterbloom Starfish pick-and-place controller: RP2040 MCU, 3x TMC2209 stepper drivers, PCA9545 I2C mux, 2x XGZP6857D vacuum sensors, RS-485 via MAX3078E, USB-B, 24V power chain. Analyzer correctly identifies power regulators, I2C buses, crystal, differential pairs, protection devices, and MOSFET circuits. VX7805-500 DC-DC converter misclassified as LDO. TMC2209 stepper motor drivers not identified as motor drivers. QSPI bus missed in SPI analysis.
 
 - **Status**: new
 - **Analyzer**: schematic

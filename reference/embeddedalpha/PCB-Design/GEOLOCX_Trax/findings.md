@@ -1,6 +1,6 @@
-# Findings: PCB-Design / GEOLOCX_Trax
+# Findings: embeddedalpha/PCB-Design / GEOLOCX_Trax
 
-## ?: GPS/LoRa tracker with STM32G473, SX1278, TESEO-LIV3F GNSS, BGA725L6 LNA, PE4259 RF switch, SPI display, and LT1083-3.3 LDO. Analyzer correctly detected RF chain, matching networks, and regulators, but rf_matching has excessive combinatorial explosion.
+## FND-00002605: GPS/LoRa tracker with STM32G473, SX1278, TESEO-LIV3F GNSS, BGA725L6 LNA, PE4259 RF switch, SPI display, and LT1083-3.3 LDO. Analyzer correctly detected RF chain, matching networks, and regulators, but rf_matching has excessive combinatorial explosion.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

@@ -1,4 +1,4 @@
-# Findings: USB-GIGABIT / HARDWARE_USB-GIGABIT-Rev.C_USB-GIGABIT_Rev_C
+# Findings: OLIMEX/USB-GIGABIT / HARDWARE_USB-GIGABIT-Rev.C_USB-GIGABIT_Rev_C
 
 ## FND-00001566: kicad_version reported as 'unknown' for file_version 20230121 (KiCad 7); RTL8153 SPI EEPROM interface (Microwire) to 93LC46 misclassified as I2C bus; USB 3.0 SuperSpeed differential pairs classifie...
 
@@ -122,7 +122,7 @@
 ## FND-00001899: Crystal circuit X1 correctly identified with load capacitors and effective load calculation; Switching regulator U4 (SY8089AAAC) correctly identified with feedback divider and estimated output volt...
 
 - **Status**: promoted
-- **Analyzer**: analyze_schematic
+- **Analyzer**: schematic
 - **Source**: repos_USB-GIGABIT_HARDWARE_USB-GIGABIT-Rev.E_USB-GIGABIT_Rev_E.kicad_sch
 - **Created**: 2026-03-24
 
@@ -163,7 +163,7 @@
 ## FND-00001900: 4-layer stackup correctly identified: F.Cu (signal), In1.Cu (GND, aliased In1_GND.Cu), In2.Cu (power), B.Cu (signal); Board dimensions correct: 51.5mm × 19.0mm matches Edge.Cuts in source; Routing ...
 
 - **Status**: promoted
-- **Analyzer**: analyze_pcb
+- **Analyzer**: pcb
 - **Source**: repos_USB-GIGABIT_HARDWARE_USB-GIGABIT-Rev.E_USB-GIGABIT_Rev_E.kicad_pcb
 - **Created**: 2026-03-24
 
@@ -194,7 +194,7 @@
 ## FND-00001901: 11-file Gerber set correctly identified as complete 4-layer stackup; PTH drill count (94 holes) and NPTH count (4 holes) correctly reported; Layer alignment check passes — all copper and mask layer...
 
 - **Status**: promoted
-- **Analyzer**: analyze_gerbers
+- **Analyzer**: gerber
 - **Source**: repos_USB-GIGABIT_HARDWARE_USB-GIGABIT-Rev.E_gerbers_USB-GIGABIT_Rev_E.zip
 - **Created**: 2026-03-24
 

@@ -1,9 +1,9 @@
-# Findings: 1b2-adapter-collection / ti_20pin_50mil_jtag_smd_v1.0c_ti_20pin_50mil_jtag_smd
+# Findings: 1bitsquared/1b2-adapter-collection / ti_20pin_50mil_jtag_smd_v1.0c_ti_20pin_50mil_jtag_smd
 
-## ?: (no summary)
+## FND-00002540: (no summary)
 
 - **Status**: new
-- **Analyzer**: ?
+- **Analyzer**: schematic
 - **Source**: ?
 
 ### Correct
@@ -20,7 +20,7 @@
 
 ---
 
-## ?: X1 (DNP JTAG-10) missing from missing_mpn list despite having no standard MPN field
+## FND-00002541: X1 (DNP JTAG-10) missing from missing_mpn list despite having no standard MPN field
 
 - **Status**: new
 - **Analyzer**: schematic
@@ -40,7 +40,7 @@
 
 ---
 
-## ?: No design_observation for JTAG/SWD debug interface adapter detected
+## FND-00002542: No design_observation for JTAG/SWD debug interface adapter detected
 
 - **Status**: new
 - **Analyzer**: schematic
@@ -60,7 +60,7 @@
 
 ---
 
-## ?: ERC no_driver warning for VREF net is a false positive for a passive adapter
+## FND-00002543: ERC no_driver warning for VREF net is a false positive for a passive adapter
 
 - **Status**: new
 - **Analyzer**: schematic

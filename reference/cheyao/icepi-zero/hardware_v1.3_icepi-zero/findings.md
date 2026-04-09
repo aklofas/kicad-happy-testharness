@@ -1,6 +1,6 @@
-# Findings: icepi-zero / hardware_v1.3_icepi-zero
+# Findings: cheyao/icepi-zero / hardware_v1.3_icepi-zero
 
-## ?: ECP5 FPGA board with SDRAM, SPI flash, HDMI output, 3x USB-C, SD card; HDMI interface missed entirely, ECP5 power domains incomplete, cross-domain warnings are false positives
+## FND-00002594: ECP5 FPGA board with SDRAM, SPI flash, HDMI output, 3x USB-C, SD card; HDMI interface missed entirely, ECP5 power domains incomplete, cross-domain warnings are false positives
 
 - **Status**: new
 - **Analyzer**: schematic

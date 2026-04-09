@@ -1,0 +1,40 @@
+# Findings: ISSUIUC/ISS-PCB / archive_TARS-MK2_COTS
+
+## FND-00002558: TARS MK2 is an Illinois Space Society avionics platform for a hybrid-propulsion rocket, combining flight and advanced computation boards with GPS, IMU sensors, LoRa radio, servo power subsystems, and battery management. The analyzer handles the complex 9-sheet hierarchy well but has several notable misclassifications and missed detections.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: archive_TARS-MK2_TARS-MK2.sch.json
+
+### Correct
+- All 6 crystal circuits correctly parsed with load cap associations: Y501/Y502 (FCB 24MHz + 32.768kHz), Y301/Y302 (ACB duplicates), Y601 (ZOE-M8Q RTC)
+- LC power filters correctly identified: L201/C206 (MCU power, 107kHz), L501 with parallel caps (FCB MCU supply, 19kHz), L301 with parallel caps (ACB MCU supply, 19kHz)
+- ESD IC1 (TPD4S012DRYR) correctly identified as esd_ic protecting USB0_DP and USB0_ID nets
+- U201 (TLV70018), U703 (LM7809), U505/U305 (TLV75733PDRV) all present in power_regulators
+- GND/GND1 isolation correctly identified as separate ground domains (GND1 is the ESD ground ring)
+
+### Incorrect
+- RC filter C203/R204 is wrong on both values: C203 is 22uF (not 18pF/2.2e-5F as reported) and R204 is 0 ohms (not 1M ohms). The computed 0.01 Hz cutoff is entirely fabricated.
+  (signal_analysis.rc_filters)
+- rf_matching falsely identifies L201/C206 as an RF matching network with C206 labeled as the antenna. This is a power supply LC filter (already correctly captured in lc_filters).
+  (signal_analysis.rf_matching)
+- bridge_circuits falsely detects Q501/Q301 (DG2305UX PMOS) as a half-bridge. These are independent PMOS power switches; the detection has power_net=GND and output_net=GND showing net resolution failed.
+  (signal_analysis.bridge_circuits)
+- DISP1 (SPI TFT display) classified as type diode. The footprint contains TFT and the value contains DISP.
+  (bom)
+- USB ESD design_observation checks net USB_DC (empty net) instead of USB0_DP/USB0_DM, missing the real ESD protection from IC1.
+  (signal_analysis.design_observations)
+
+### Missed
+- Pololu DC-DC switching regulators U701 (D36V28F3), U702 (D24V50F5), U704-U707 (D36V50F6) absent from power_regulators. These are power module ICs with VIN/VOUT pins.
+  (signal_analysis.power_regulators)
+- SPI NOR Flash and PSRAM not detected in memory_interfaces: U503/U303 (W25Q64), U506/U306 (W25Q128), U504/U304 (ESP-PSRAM32).
+  (signal_analysis.memory_interfaces)
+
+### Suggestions
+- Fix RC filter value lookup to use the component actual parsed value rather than spurious BOM aggregation.
+- Add a check in rf_matching to reject components whose values are clearly not RF (e.g. 1uF, 4.7uH).
+- Improve bridge circuit detection to verify power_net, ground_net, and output_net resolve to distinct rails.
+- Add Pololu module detection: values matching D\d+V\d+F\d+ are Pololu step-down switching regulators.
+
+---

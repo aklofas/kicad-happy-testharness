@@ -1,6 +1,6 @@
-# Findings: Sichergo / sichergo-left_sichergo-left
+# Findings: steewbsd/Sichergo / sichergo-left_sichergo-left
 
-## ?: Left-hand half of a split ergonomic keyboard (Sichergo) built around STM32F103C8T (U4) with USB interface, 4x5 key matrix with anti-ghosting diodes, per-key LEDs, ESD protection (TPD4E05U06DQA), 3.3V LDO (AZ1117-3.3), and audio jack for split communication. Comprehensive and accurate analysis.
+## FND-00002617: Left-hand half of a split ergonomic keyboard (Sichergo) built around STM32F103C8T (U4) with USB interface, 4x5 key matrix with anti-ghosting diodes, per-key LEDs, ESD protection (TPD4E05U06DQA), 3.3V LDO (AZ1117-3.3), and audio jack for split communication. Comprehensive and accurate analysis.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

@@ -1,6 +1,6 @@
-# Findings: PCB-Design / LOGSX_panel
+# Findings: embeddedalpha/PCB-Design / LOGSX_panel
 
-## ?: LOGSX is an earlier revision of the same GPS/LoRa tracker design (LOGSX v2). Same schematic structure with STM32F103, SX1273, TESEO-LIV3. Analyzer output is essentially identical to LOGSX v2 with the same correct detections and same errors.
+## FND-00002607: LOGSX is an earlier revision of the same GPS/LoRa tracker design (LOGSX v2). Same schematic structure with STM32F103, SX1273, TESEO-LIV3. Analyzer output is essentially identical to LOGSX v2 with the same correct detections and same errors.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

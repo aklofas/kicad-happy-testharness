@@ -1,6 +1,6 @@
-# Findings: Mechanical-Keyboard-PCBs / 60% Pcb_60_Pcb
+# Findings: Vyom88/Mechanical-Keyboard-PCBs / 60% Pcb_60_Pcb
 
-## ?: 60% mechanical keyboard switch matrix with 68 keys across 5 rows and 15 columns, using Cherry MX-compatible switches with per-key diodes and LED resistors. Analyzer correctly detected the key matrix but misclassified MX switch components as relays.
+## FND-00002590: 60% mechanical keyboard switch matrix with 68 keys across 5 rows and 15 columns, using Cherry MX-compatible switches with per-key diodes and LED resistors. Analyzer correctly detected the key matrix but misclassified MX switch components as relays.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

@@ -1,6 +1,6 @@
-# Findings: hahardware / pcb_kicad_button_button_mkii_button
+# Findings: HaHaSDP-UCSC/hahardware / pcb_kicad_button_button_mkii_button
 
-## ?: BLE button design with STBlueNRG-1: good component/BOM extraction, but U2 LDO pins misassigned to GND net, crystal load caps half-detected, LDO regulator not detected, RF matching missed
+## FND-00002557: BLE button design with STBlueNRG-1: good component/BOM extraction, but U2 LDO pins misassigned to GND net, crystal load caps half-detected, LDO regulator not detected, RF matching missed
 
 - **Status**: new
 - **Analyzer**: schematic

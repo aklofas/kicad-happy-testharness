@@ -1,6 +1,6 @@
-# Findings: PCB-Design / LOGSX v2_panel
+# Findings: embeddedalpha/PCB-Design / LOGSX v2_panel
 
-## ?: GPS/LoRa asset tracker with STM32F103, SX1273 radio, TESEO-LIV3 GNSS, BGA725L6 LNA, and LT1129-3.3 LDO. Analyzer correctly identified multi-sheet hierarchy and component types but has significant regulator rail detection errors.
+## FND-00002606: GPS/LoRa asset tracker with STM32F103, SX1273 radio, TESEO-LIV3 GNSS, BGA725L6 LNA, and LT1129-3.3 LDO. Analyzer correctly identified multi-sheet hierarchy and component types but has significant regulator rail detection errors.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

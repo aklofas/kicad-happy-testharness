@@ -1,6 +1,6 @@
-# Findings: transpOtterNG / kicad_TranspOtterNG
+# Findings: Jana-Marie/transpOtterNG / kicad_TranspOtterNG
 
-## ?: ESP8266+RFM69HCW transponder board: good power/SPI/filter detection, but misses RF chain, DC-DC regulator, Zener protection, WS2812, and misclassifies antenna/LED driver
+## FND-00002559: ESP8266+RFM69HCW transponder board: good power/SPI/filter detection, but misses RF chain, DC-DC regulator, Zener protection, WS2812, and misclassifies antenna/LED driver
 
 - **Status**: new
 - **Analyzer**: schematic

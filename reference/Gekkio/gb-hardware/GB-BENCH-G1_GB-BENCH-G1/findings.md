@@ -1,6 +1,6 @@
-# Findings: gb-hardware / GB-BENCH-G1_GB-BENCH-G1
+# Findings: Gekkio/gb-hardware / GB-BENCH-G1_GB-BENCH-G1
 
-## ?: Game Boy test bench with DMG CPU, dual CPLDs, dual SRAM, 3 LDOs; good component/net/bus extraction, but missed JTAG chain, memory interfaces, fuse protection, and incorrectly flags regulator input caps as missing
+## FND-00002553: Game Boy test bench with DMG CPU, dual CPLDs, dual SRAM, 3 LDOs; good component/net/bus extraction, but missed JTAG chain, memory interfaces, fuse protection, and incorrectly flags regulator input caps as missing
 
 - **Status**: new
 - **Analyzer**: schematic
@@ -59,7 +59,7 @@
 
 ---
 
-## ?: Game Boy DMG test bench with CPU, dual CPLDs, dual SRAM, 3 LDOs; good component/net/bus extraction but missed JTAG chain, memory interfaces, fuse protection, and incorrectly flags shared regulator input caps as missing
+## FND-00002554: Game Boy DMG test bench with CPU, dual CPLDs, dual SRAM, 3 LDOs; good component/net/bus extraction but missed JTAG chain, memory interfaces, fuse protection, and incorrectly flags shared regulator input caps as missing
 
 - **Status**: new
 - **Analyzer**: schematic

@@ -1,6 +1,6 @@
 # Findings: OLIMEX/ESP32-PRO / HARDWARE_REV-B_ESP32-PRO_Rev_B
 
-## ?: Olimex ESP32-PRO development board with ESP32-D0WDQ6, PIC32MX270F256D co-processor, MCP73833 LiPo charger, SY8089 buck converter, SY6280 USB power switch, LY68S3200SLT PSRAM, MX25U3235F SPI flash, ATECC508A crypto, and micro SD. Analyzer produced strong results on crystal circuits, decoupling, I2C, and memory interfaces.
+## FND-00002584: Olimex ESP32-PRO development board with ESP32-D0WDQ6, PIC32MX270F256D co-processor, MCP73833 LiPo charger, SY8089 buck converter, SY6280 USB power switch, LY68S3200SLT PSRAM, MX25U3235F SPI flash, ATECC508A crypto, and micro SD. Analyzer produced strong results on crystal circuits, decoupling, I2C, and memory interfaces.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

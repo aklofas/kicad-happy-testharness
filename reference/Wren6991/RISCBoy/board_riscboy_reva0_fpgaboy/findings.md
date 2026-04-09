@@ -1,6 +1,6 @@
 # Findings: Wren6991/RISCBoy / board_riscboy_reva0_fpgaboy
 
-## ?: RISCBoy Rev A0 (fpgaboy) is the earlier revision with iCE40-HX4K FPGA, GS74116 SRAM, NCP1532 dual switching regulator, BQ21040 charger, CP2102N USB-UART, and W25Q16 SPI flash. Analyzer produced good results on regulators and protection but missed memory interfaces and had many single-pin net false positives.
+## FND-00002591: RISCBoy Rev A0 (fpgaboy) is the earlier revision with iCE40-HX4K FPGA, GS74116 SRAM, NCP1532 dual switching regulator, BQ21040 charger, CP2102N USB-UART, and W25Q16 SPI flash. Analyzer produced good results on regulators and protection but missed memory interfaces and had many single-pin net false positives.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

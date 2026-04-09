@@ -1,6 +1,6 @@
-# Findings: jtcores / cores_wwfss_sch_wwfsstar
+# Findings: jotego/jtcores / cores_wwfss_sch_wwfsstar
 
-## ?: WWF Super Stars arcade PCB (Technos/JOTEGO reverse-engineering) with 68000 CPU, Z80 sound, YM2151/OKI6295 audio, 4x HA17558 opamps; massive varistor misclassification of 128 VIC/VR/V-prefix components (actually 74LS logic ICs and resistors) and false power rail detection of video timing counter signals
+## FND-00002610: WWF Super Stars arcade PCB (Technos/JOTEGO reverse-engineering) with 68000 CPU, Z80 sound, YM2151/OKI6295 audio, 4x HA17558 opamps; massive varistor misclassification of 128 VIC/VR/V-prefix components (actually 74LS logic ICs and resistors) and false power rail detection of video timing counter signals
 
 - **Status**: new
 - **Analyzer**: schematic

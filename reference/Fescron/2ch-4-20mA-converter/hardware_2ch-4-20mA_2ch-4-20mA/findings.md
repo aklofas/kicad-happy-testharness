@@ -1,9 +1,9 @@
-# Findings: 2ch-4-20mA-converter / hardware_2ch-4-20mA_2ch-4-20mA
+# Findings: Fescron/2ch-4-20mA-converter / hardware_2ch-4-20mA_2ch-4-20mA
 
-## ?: (no summary)
+## FND-00002548: (no summary)
 
 - **Status**: new
-- **Analyzer**: ?
+- **Analyzer**: schematic
 - **Source**: ?
 
 ### Correct
@@ -20,7 +20,7 @@
 
 ---
 
-## ?: Current-sense amplifier circuit not detected for U1 (LMP8640) with shunt R2
+## FND-00002549: Current-sense amplifier circuit not detected for U1 (LMP8640) with shunt R2
 
 - **Status**: new
 - **Analyzer**: schematic
@@ -40,7 +40,7 @@
 
 ---
 
-## ?: Decoupling observation incorrectly reports VDDA has no bypass capacitor
+## FND-00002550: Decoupling observation incorrectly reports VDDA has no bypass capacitor
 
 - **Status**: new
 - **Analyzer**: schematic

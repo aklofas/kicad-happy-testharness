@@ -1,6 +1,6 @@
-# Findings: RISCBoy / board_riscboy_revb0_riscboy
+# Findings: Wren6991/RISCBoy / board_riscboy_revb0_riscboy
 
-## ?: RISCBoy Rev B0 is an FPGA handheld game console with RP2040, iCE40-HX8k FPGA, CY7C1041 SRAM, two W25Q16JV SPI flash chips, stereo audio, MIC23050 switching regulators, and NCP115 LDO. Analyzer produced excellent results across nearly all detection categories.
+## FND-00002592: RISCBoy Rev B0 is an FPGA handheld game console with RP2040, iCE40-HX8k FPGA, CY7C1041 SRAM, two W25Q16JV SPI flash chips, stereo audio, MIC23050 switching regulators, and NCP115 LDO. Analyzer produced excellent results across nearly all detection categories.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

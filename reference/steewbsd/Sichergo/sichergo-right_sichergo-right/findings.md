@@ -1,6 +1,6 @@
-# Findings: Sichergo / sichergo-right_sichergo-right
+# Findings: steewbsd/Sichergo / sichergo-right_sichergo-right
 
-## ?: Right-hand half of the Sichergo split ergonomic keyboard with STM32F103C8T (U2), 4x5 key matrix, per-key LEDs, and audio jack for inter-half communication. Simpler than the left half (no USB, no ESD protection). Analyzer produces accurate results.
+## FND-00002618: Right-hand half of the Sichergo split ergonomic keyboard with STM32F103C8T (U2), 4x5 key matrix, per-key LEDs, and audio jack for inter-half communication. Simpler than the left half (no USB, no ESD protection). Analyzer produces accurate results.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

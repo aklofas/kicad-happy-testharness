@@ -1,6 +1,6 @@
 # Findings: tpecar/nl2sch / ebaz4205_ebaz4205
 
-## ?: EBAZ4205 Zynq XC7Z010 Bitcoin miner board with DDR3, NAND flash, Ethernet PHY, 4x switching regulators; power regulators and isolation well-detected but DDR3 memory interface missed entirely and several component type misclassifications
+## FND-00002626: EBAZ4205 Zynq XC7Z010 Bitcoin miner board with DDR3, NAND flash, Ethernet PHY, 4x switching regulators; power regulators and isolation well-detected but DDR3 memory interface missed entirely and several component type misclassifications
 
 - **Status**: new
 - **Analyzer**: schematic

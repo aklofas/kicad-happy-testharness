@@ -1,6 +1,6 @@
 # Findings: skysedge/RUST_Hardware / Motherboard_RUST_Motherboard
 
-## ?: ATmega1280+ATmega16U2 motherboard: good component/crystal/regulator detection, but OLED SPI clock misclassified as I2C SCL, MCP1661 boost converter output rail wrong (+3V8 vs +12V), ceramic resonators correctly flagged as no load caps
+## FND-00002616: ATmega1280+ATmega16U2 motherboard: good component/crystal/regulator detection, but OLED SPI clock misclassified as I2C SCL, MCP1661 boost converter output rail wrong (+3V8 vs +12V), ceramic resonators correctly flagged as no load caps
 
 - **Status**: new
 - **Analyzer**: schematic

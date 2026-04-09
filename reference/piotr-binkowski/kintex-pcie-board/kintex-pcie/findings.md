@@ -1,6 +1,6 @@
-# Findings: kintex-pcie-board / kintex-pcie
+# Findings: piotr-binkowski/kintex-pcie-board / kintex-pcie
 
-## ?: Kintex-7 FPGA PCIe x8 board with DDR2, SPI flash, LVDS B2B links, quad PMIC, and 125MHz oscillators; good differential pair detection but missed DDR2 memory interface, quad regulator outputs, SPI bus, and oscillators
+## FND-00002614: Kintex-7 FPGA PCIe x8 board with DDR2, SPI flash, LVDS B2B links, quad PMIC, and 125MHz oscillators; good differential pair detection but missed DDR2 memory interface, quad regulator outputs, SPI bus, and oscillators
 
 - **Status**: new
 - **Analyzer**: schematic

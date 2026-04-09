@@ -1,4 +1,4 @@
-# Findings: FMU_schematic_design-from-STM32H743IIT6 / FMU_Base_board_Design_FMU_Base_board_Design
+# Findings: Fiat-Anw/FMU_schematic_design-from-STM32H743IIT6 / FMU_Base_board_Design_FMU_Base_board_Design
 
 ## FND-00000306: PX4-style FMU flight controller based on STM32H743IIT6 with 3-source power management (LTC4417+SIS903DN MOSFETs), 3x MIC5330 dual LDOs, 2x CAN (TJA1051T), 4x TXS0108 level shifters, IMU (ICM-20649), barometer (BMP388), magnetometer (BMM150), FRAM (FM25V05-G), microSD with EMIF06 filter, USB-C with ESD protection. Analyzer correctly identifies most subsystems but misses voltage dividers, only finds 1 of 2 CAN buses, and has incomplete regulator output mapping for dual-output LDOs.
 
@@ -65,7 +65,7 @@
 
 ---
 
-## ?: STM32H743 flight controller: good IC/SPI/I2C/UART detection, but misses 6 voltage dividers (UV/OV monitoring), misclassifies I2C1_BMP388_DRDY interrupt as I2C SCL, CAN termination not detected, USBLC6-2 called varistor instead of ESD protection
+## FND-00002551: STM32H743 flight controller: good IC/SPI/I2C/UART detection, but misses 6 voltage dividers (UV/OV monitoring), misclassifies I2C1_BMP388_DRDY interrupt as I2C SCL, CAN termination not detected, USBLC6-2 called varistor instead of ESD protection
 
 - **Status**: new
 - **Analyzer**: schematic

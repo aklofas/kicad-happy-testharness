@@ -1,6 +1,6 @@
 # Findings: GuitarML/FunBox / hardware_funbox_v2_midi_funbox_v2
 
-## ?: Guitar effects pedal platform (FunBox v2) with Electrosmith Daisy Seed DSP module (A1), stereo audio I/O through TL074 quad op-amp buffer, L7805 5V regulator, H11L1 optocoupler for MIDI input. Very similar to v3 but uses TL074 instead of MCP6024 and has no MCP6002 expression buffer. Accurate analysis.
+## FND-00002555: Guitar effects pedal platform (FunBox v2) with Electrosmith Daisy Seed DSP module (A1), stereo audio I/O through TL074 quad op-amp buffer, L7805 5V regulator, H11L1 optocoupler for MIDI input. Very similar to v3 but uses TL074 instead of MCP6024 and has no MCP6002 expression buffer. Accurate analysis.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

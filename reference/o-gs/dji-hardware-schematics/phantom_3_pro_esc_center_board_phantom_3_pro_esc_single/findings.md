@@ -1,6 +1,6 @@
-# Findings: dji-hardware-schematics / phantom_3_pro_esc_center_board_phantom_3_pro_esc_single
+# Findings: o-gs/dji-hardware-schematics / phantom_3_pro_esc_center_board_phantom_3_pro_esc_single
 
-## ?: DJI Phantom 3 Pro ESC center board with 4x DRV8301 3-phase motor drivers, 4x TMS320F28027F DSPs, LM25116 + 2x TPS54531 switching regulators, and 2x LED driver channels; major misclassifications of DRV8301 as diode and TMS320F28027F as transformer, missed current sensing and feedback networks
+## FND-00002613: DJI Phantom 3 Pro ESC center board with 4x DRV8301 3-phase motor drivers, 4x TMS320F28027F DSPs, LM25116 + 2x TPS54531 switching regulators, and 2x LED driver channels; major misclassifications of DRV8301 as diode and TMS320F28027F as transformer, missed current sensing and feedback networks
 
 - **Status**: new
 - **Analyzer**: schematic

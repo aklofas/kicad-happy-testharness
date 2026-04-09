@@ -1,6 +1,6 @@
-# Findings: HandAssemble_Pmod / line7_line7
+# Findings: FPGAbot/HandAssemble_Pmod / line7_line7
 
-## ?: Hand-assembled 7-channel phototransistor line sensor Pmod board with TEPT5600 photo-NPN transistors, LED indicators driven by 2N3904 BJT, and RC filtering on sensor outputs. Analyzer correctly identifies the core signal conditioning topology.
+## FND-00002547: Hand-assembled 7-channel phototransistor line sensor Pmod board with TEPT5600 photo-NPN transistors, LED indicators driven by 2N3904 BJT, and RC filtering on sensor outputs. Analyzer correctly identifies the core signal conditioning topology.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

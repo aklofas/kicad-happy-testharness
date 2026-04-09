@@ -1,6 +1,6 @@
-# Findings: KICAD / Flamingo cotnrol project_ff_Flamingo p-backups_f
+# Findings: AronAyub/KICAD / Flamingo cotnrol project_ff_Flamingo p-backups_f
 
-## ?: LED flamingo decoration controller with TP4056 LiPo charger, FP6291 boost converter, L7805 linear regulator, LM555 timer, two CD4017 decade counters, and 24 LEDs. Analyzer correctly identified the boost converter feedback network and BMS elements, but has issues with BMS scope and reset pin analysis.
+## FND-00002544: LED flamingo decoration controller with TP4056 LiPo charger, FP6291 boost converter, L7805 linear regulator, LM555 timer, two CD4017 decade counters, and 24 LEDs. Analyzer correctly identified the boost converter feedback network and BMS elements, but has issues with BMS scope and reset pin analysis.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

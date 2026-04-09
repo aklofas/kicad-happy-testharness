@@ -1,6 +1,6 @@
-# Findings: Avionics-Pyro-Charge-Controller-PCB / Hardware_LIBRARIES_SparkFun-KiCad-Libraries-master_Documentation_Example Project_boostboard1
+# Findings: MSTRocketDesignTeam/Avionics-Pyro-Charge-Controller-PCB / Hardware_LIBRARIES_SparkFun-KiCad-Libraries-master_Documentation_Example Project_boostboard1
 
-## ?: STM32L562VE MCU sub-sheet with crystal, reset, I2C pullups, decoupling, and status LEDs -- mostly correct analysis with false I2C bus entries and false USB ESD claim
+## FND-00002560: STM32L562VE MCU sub-sheet with crystal, reset, I2C pullups, decoupling, and status LEDs -- mostly correct analysis with false I2C bus entries and false USB ESD claim
 
 - **Status**: new
 - **Analyzer**: schematic

@@ -1,6 +1,6 @@
-# Findings: aesir / mist_mist_mist
+# Findings: modern-hobbyist/aesir / mist_mist_mist
 
-## ?: Custom mechanical keyboard (7x18 matrix, 103 keys) with STM32G474, 103 SK6812 addressable LEDs, ILI9341 LCD display, USB-C. Component counts and most signal detections are accurate; key issues are duplicated SPI bus, wrong IC function classification for regulator, and inconsistent ESD reporting for D-.
+## FND-00002611: Custom mechanical keyboard (7x18 matrix, 103 keys) with STM32G474, 103 SK6812 addressable LEDs, ILI9341 LCD display, USB-C. Component counts and most signal detections are accurate; key issues are duplicated SPI bus, wrong IC function classification for regulator, and inconsistent ESD reporting for D-.
 
 - **Status**: new
 - **Analyzer**: schematic
@@ -52,5 +52,35 @@
 - Reset pin detection should also check the MCU's own NRST/reset pin, not just peripheral IC reset pins
 - Level shifter detection could use the SN74AHCT1G125 part number or the cross_domain_signals analysis to identify buffer ICs used for level translation
 - Power budget should cross-reference addressable_led_chains estimated_current_mA and add it to the relevant rail's load estimate
+
+---
+
+## FND-00002612: Mist is a full-size mechanical keyboard with 103 Choc switches, per-key SK6812MINI-E RGB LEDs, STM32G474RETx MCU, USB-C with ESD protection, SPI TFT LCD, and a 5V to 3.3V LDO. The analyzer correctly identifies the key matrix, addressable LED chain, SPI bus, LDO regulator, and USB-C CC pull-down resistors, but misclassifies U3 as FPGA (Xilinx) and incorrectly reports D- as lacking ESD protection.
+
+- **Status**: confirmed
+- **Analyzer**: schematic
+- **Source**: mist_mist_mist.kicad_sch.json
+
+### Correct
+- Key matrix correctly detected: 103 switches (CH1-CH103), 103 diodes, 7 rows x 18 columns
+- Addressable LED chain correctly identified: 103 SK6812MINI-E LEDs in WS2812 protocol, estimated current 6180mA
+- LDO regulator U3 (XC6206PxxxMR) correctly detected as +5V to +3V3 LDO in power_regulators
+- ESD protection U2 (PRTR5V0U2X) correctly identified protecting both D+ and D-
+- USB-C CC pull-down resistors R1 and R2 (both 5.1k) correctly detected
+
+### Incorrect
+- U3 (XC6206PxxxMR) function classified as FPGA (Xilinx) in ic_pin_analysis; XC6206 is a Torex LDO regulator — the XC prefix incorrectly triggers Xilinx FPGA match.
+  (ic_pin_analysis)
+- design_observations reports D- as has_esd_protection=False, but U2 (PRTR5V0U2X) pin I/O1 connects directly to D-. Contradicts protection_devices which correctly lists protected_nets=[D+,D-].
+  (signal_analysis.design_observations)
+
+### Missed
+- S1-S7 (MX_stab) are mechanical key stabilizers, not electrically functional switches, but are classified as switch and inflate the count to 111 instead of 104.
+  (statistics.component_types)
+
+### Suggestions
+- Guard Xilinx XC* match against known LDO part numbers like XC6206.
+- When computing has_esd_protection, check the protection_devices list rather than independently re-deriving.
+- Add stabilizer category or filter for lib_ids matching *_stab patterns.
 
 ---
