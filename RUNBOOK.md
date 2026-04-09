@@ -1243,8 +1243,17 @@ No assertion count drops. Record the metrics for release notes.
 ### 16k. Update documentation
 
 - `status.md` — add release entry with all metrics
-- `ISSUES.md` — verify "No open issues"
+- `ISSUES.md` — verify all known bugs are filed (check aspirational FND failures)
 - `FIXED.md` — all issues fixed this cycle are documented
+
+```bash
+# Regenerate VALIDATION.md for the kicad-happy repo
+python3 tools/generate_catalog.py                    # refresh catalog first
+python3 tools/generate_validation_md.py --output $KICAD_HAPPY_DIR/VALIDATION.md
+```
+
+Review the generated file — check assertion counts, issue ranges, and detector
+coverage look correct. Commit in kicad-happy (do NOT push — user manages that).
 
 ### 16l. Tag the release
 
