@@ -161,6 +161,36 @@ def _collect_outputs(repo):
             best_total_score = total_score + type_bonus
             best_result = result
 
+    # Add SPICE/EMC as supplementary outputs matched to the best schematic
+    if best_result and "schematic" in best_result:
+        sch_file = best_result["schematic"][0]
+        sch_stem = Path(sch_file["path"]).name  # e.g. "lora-payload.kicad_sch.json"
+        for sup_type in ("spice", "emc"):
+            sup_dir = OUTPUTS_DIR / sup_type / repo
+            sup_path = sup_dir / sch_stem
+            if sup_path.exists():
+                try:
+                    d = json.loads(sup_path.read_text())
+                    has_content = False
+                    if sup_type == "spice":
+                        sims = d.get("simulation_results", [])
+                        has_content = any(
+                            s.get("simulations", []) for s in sims
+                        ) if sims else bool(d.get("simulations", []))
+                    elif sup_type == "emc":
+                        has_content = len(d.get("findings", [])) > 0
+                    if has_content:
+                        best_result[sup_type] = [{
+                            "path": str(sup_path),
+                            "source": sch_file["source"],
+                            "components": 0,
+                            "signals": 0,
+                            "score": 0,
+                            "prefix": sch_file["prefix"],
+                        }]
+                except Exception:
+                    pass
+
     return best_result or {}
 
 
@@ -270,7 +300,7 @@ def _generate_prompt(repo, outputs_by_type):
     primary_output = None
     primary_source = None
 
-    for atype in ("schematic", "pcb", "gerber"):
+    for atype in ("schematic", "pcb", "gerber", "spice", "emc"):
         files = outputs_by_type.get(atype, [])
         if not files:
             continue
@@ -279,10 +309,14 @@ def _generate_prompt(repo, outputs_by_type):
             primary_output = best["path"]
             primary_source = best["source"]
         label = atype.upper()
-        file_sections.append(
-            f"  {label} SOURCE: {best['source'] or 'NOT FOUND'}\n"
-            f"  {label} OUTPUT: {best['path']}"
-        )
+        if atype in ("spice", "emc"):
+            # Supplementary outputs — no separate source file
+            file_sections.append(f"  {label} OUTPUT: {best['path']}")
+        else:
+            file_sections.append(
+                f"  {label} SOURCE: {best['source'] or 'NOT FOUND'}\n"
+                f"  {label} OUTPUT: {best['path']}"
+            )
 
     if not file_sections:
         return None, None
@@ -315,6 +349,20 @@ def _generate_prompt(repo, outputs_by_type):
             "drill file alignment, silkscreen legibility, solder mask clearances, "
             "and board outline consistency. Cross-reference layer count against "
             "PCB stackup"
+        )
+    if "spice" in outputs_by_type:
+        type_instructions.append(
+            "- SPICE: Check simulation results (subcircuit detections, pass/warn/fail "
+            "verdicts). Compare simulated values (filter cutoffs, divider ratios, "
+            "regulator outputs) against schematic component values. Flag simulations "
+            "with incorrect component matching or unrealistic results"
+        )
+    if "emc" in outputs_by_type:
+        type_instructions.append(
+            "- EMC: Check finding validity (are the flagged issues real concerns?), "
+            "severity appropriateness, and whether the recommended mitigations make "
+            "sense for this design. Cross-reference EMC findings against PCB layout "
+            "decisions (trace routing, ground planes, decoupling placement)"
         )
 
     type_block = "\n".join(type_instructions)
@@ -412,6 +460,24 @@ def cmd_list(args):
 
 def cmd_prompts(args):
     """Generate review prompts."""
+    if args.repo:
+        outputs = _collect_outputs(args.repo)
+        if not outputs:
+            print(f"No outputs found for {args.repo}", file=sys.stderr)
+            sys.exit(1)
+        prompt, source = _generate_prompt(args.repo, outputs)
+        if not prompt:
+            print(f"Could not generate prompt for {args.repo}", file=sys.stderr)
+            sys.exit(1)
+        best_sch = outputs.get("schematic", [{}])[0].get("path", "")
+        project = _project_from_output(best_sch, args.repo) if best_sch else "unknown"
+        types_avail = ", ".join(sorted(outputs.keys()))
+        print(f"=== {args.repo} (project: {project}) ===")
+        print(f"Types: {types_avail}")
+        print()
+        print(prompt)
+        return
+
     candidates = _unreviewed_repos(args.count)
     for c in candidates:
         outputs = _collect_outputs(c["repo"])
@@ -532,6 +598,7 @@ def main():
 
     p_prompts = sub.add_parser("prompts", help="Generate review prompts")
     p_prompts.add_argument("--count", "-n", type=int, default=5)
+    p_prompts.add_argument("--repo", help="Generate prompt for a specific repo (bypasses unreviewed filter)")
 
     p_save = sub.add_parser("save", help="Import finding from JSON (file or stdin with -)")
     p_save.add_argument("--repo", required=True)
