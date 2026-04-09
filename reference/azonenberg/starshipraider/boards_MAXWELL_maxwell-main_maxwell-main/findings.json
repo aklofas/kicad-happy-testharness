@@ -1,0 +1,93 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "boards_MAXWELL_maxwell-main_maxwell-main.sch.json",
+      "status": "confirmed",
+      "summary": "18-sheet FPGA test instrument (MAXWELL) with dual Xilinx FPGAs, DDR3 SODIMM, QSFP+, LMK04806B clocking, 24 INA233 power monitors. Major issues: STM32F777 falsely classified as switching regulator, 14 power conversion ICs missed entirely, INA233 monitors misclassified as opamps, power rails classified as signals.",
+      "correct": [
+        {
+          "description": "All 18 sheets correctly parsed, 993 components",
+          "analyzer_section": "sheet_files"
+        },
+        {
+          "description": "Y1 crystal and U47 oscillator correctly identified",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "LMK04806B correctly detected as clock_generator",
+          "analyzer_section": "signal_analysis.clock_distribution"
+        },
+        {
+          "description": "160 differential pairs including Ethernet, DDR3, QSFP, GTX SERDES",
+          "analyzer_section": "design_analysis.differential_pairs"
+        },
+        {
+          "description": "3 I2C buses with INA233 device lists correct",
+          "analyzer_section": "design_analysis.bus_analysis.i2c"
+        },
+        {
+          "description": "Q1-Q4 power sequencing MOSFETs correctly identified",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U1 STM32F777 falsely classified as switching regulator \u2014 MCU, not a PSU",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "All 24 opamp_circuits are INA233 power monitors misclassified as comparator_or_open_loop",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "LEDs D26-D28 falsely flagged as no current limiter \u2014 R222-R224 (1K) exist",
+          "analyzer_section": "signal_analysis.led_audit"
+        },
+        {
+          "description": "PHY strap resistors (R38-R40 + R45-R47) falsely detected as voltage dividers",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "Power rails 12V0, 3V3, 5V0, 1V5, 1V8, 1V2 all classified as 'signal'",
+          "analyzer_section": "design_analysis.net_classification"
+        },
+        {
+          "description": "75 false UART bus detections including power nets and SERDES pairs",
+          "analyzer_section": "design_analysis.bus_analysis.uart"
+        }
+      ],
+      "missed": [
+        {
+          "description": "14 power conversion ICs missed: DC-DC brick, 3x POL, 6x POL modules, 2x sync buck, 1x LDO",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "DDR3 SODIMM not detected in memory_interfaces",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "3 SPI buses (FPGA config, PLL programming) not detected",
+          "analyzer_section": "design_analysis.bus_analysis.spi"
+        },
+        {
+          "description": "ADCMP582/LMH7322 high-speed comparators not detected",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        }
+      ],
+      "suggestions": [
+        "Use lib_id as strong signal for power IC identification",
+        "Classify INA233/INA226 as current_sense/power_monitor, not opamp",
+        "Recognize voltage-named nets (12V0, 3V3, 5V0) as power rails",
+        "Filter UART false positives: require actual UART IC connections"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002521",
+      "repo": "azonenberg/starshipraider",
+      "project": "boards_MAXWELL_maxwell-main_maxwell-main",
+      "created": "2026-04-09T06:53:07.059121+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

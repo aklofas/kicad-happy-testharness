@@ -1,0 +1,81 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "OpenEFI_rev4_OpenEFI_rev4.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Complex automotive ECU (339 components, 8 sheets, STM32F407, TPS5430 + AMS1117 + REF3033 power chain). Strong analysis overall. Issues: LT4363 surge stopper misclassified as regulator, LED resistor networks not traced, A4988 stepper driver missed, Graphic symbol as switch.",
+      "correct": [
+        {
+          "description": "TPS5430 switching regulator with L1, feedback divider R68/R70 correctly identified",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "AMS1117-3.3 LDO and REF3033 voltage reference correctly identified",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Y1 (25MHz) and Y3 (32.768kHz) crystals with load caps correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "8-channel RC filter bank for analog inputs correctly detected",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "CAN bus with differential pair and SPI bus correctly detected",
+          "analyzer_section": "signal_analysis.bus_analysis"
+        },
+        {
+          "description": "R21 (0.01R) current sense with U6 correctly detected",
+          "analyzer_section": "signal_analysis.current_sense"
+        },
+        {
+          "description": "U26 SP720ABTG ESD protection for 14 analog channels correctly identified",
+          "analyzer_section": "signal_analysis.protection_devices"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "SYM1 (Graphic:SYM_Hot_Small) classified as 'switch' \u2014 should be 'graphic', no electrical function",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "U6 LT4363 surge stopper classified as 'ic_with_internal_regulator' \u2014 it's an OV/OC protection controller driving external MOSFET Q10, not a regulator. FB sets OV trip threshold (1.5V ref), not regulated output.",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "16 LEDs (D16-D77) flagged as 'direct_drive' with no current limiter \u2014 actually limited through RN1-RN4 (1k resistor network arrays). Analyzer doesn't trace R_Pack04 as series elements.",
+          "analyzer_section": "signal_analysis.led_audit"
+        }
+      ],
+      "missed": [
+        {
+          "description": "U23 A4988 stepper motor driver module not detected in motor_drivers",
+          "analyzer_section": "signal_analysis.motor_drivers"
+        },
+        {
+          "description": "TC4424A (U21/U24/U29/U30) MOSFET gate drivers for ignition coils not detected",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "U36 MAX9926 VR sensor interface not detected in sensor_interfaces",
+          "analyzer_section": "signal_analysis.sensor_interfaces"
+        }
+      ],
+      "suggestions": [
+        "Classify Graphic:* lib_id as 'graphic' not 'switch'",
+        "Add LT4363/LT4356 to protection_devices, not regulators",
+        "Trace R_Pack/R_Array resistor networks as LED series limiters",
+        "Add A4988/DRV8825 stepper driver detection to motor_drivers"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002520",
+      "repo": "Churrosoft/OpenEFI-PCB",
+      "project": "OpenEFI_rev4_OpenEFI_rev4",
+      "created": "2026-04-09T06:52:18.334970+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

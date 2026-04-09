@@ -1,0 +1,55 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "KiCad_Real903_A-GA_A-GA.sch.json",
+      "status": "confirmed",
+      "summary": "Vintage 903 computer board with 6 custom LS_Gen ICs, DIN41612 connector, 560 mounting pads, 124 test points. Correct parsing overall. Issues: multi-unit IC pin_nets shows wrong-unit pins, 6v/Neg6v power rails classified as signal.",
+      "correct": [
+        {
+          "description": "693 components correct: 560 MH + 124 test points + 6 ICs + 2 caps + 1 connector",
+          "analyzer_section": "statistics.total_components"
+        },
+        {
+          "description": "J1 DIN41612 all 64 pins correctly mapped including letter-based pin numbers",
+          "analyzer_section": "components[J1].pin_nets"
+        },
+        {
+          "description": "Signal analysis correctly empty for this passive backplane design",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U1-U6 unit 1 pin_nets show unit 2 power pins (21/22/23) instead of unit 1 signal pins (1-6, 11-13). Multi-unit pin_nets merging bug.",
+          "analyzer_section": "components[U1-U6 unit 1].pin_nets"
+        },
+        {
+          "description": "6v and Neg6v classified as 'signal' but are +6V and -6V power rails supplying all ICs",
+          "analyzer_section": "design_analysis.net_classification"
+        },
+        {
+          "description": "power_rails missing 6v and Neg6v \u2014 only lists GND",
+          "analyzer_section": "statistics.power_rails"
+        }
+      ],
+      "missed": [
+        {
+          "description": "C1/C2 (6u8) decoupling caps between 6v/Neg6v and GND not detected",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        }
+      ],
+      "suggestions": [
+        "Fix multi-unit pin_nets: each unit entry should show only its own pins",
+        "Recognize voltage-pattern net names (6v, Neg6v, -6v, +5v) as power rails"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002519",
+      "repo": "jonathan-tooley/903",
+      "project": "KiCad_Real903_A-GA_A-GA",
+      "created": "2026-04-09T06:51:31.795779+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "F3:F303_Multistepper_kicad_multistepper.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Multistepper controller (STM32F303, isolated CAN via ISO1050, LM2576 buck, 2x LM1117 LDO, 8 stepper modules). Issues: B0505S DC-DC converter as transistor (Q prefix), LM2576 as LDO, IRF9310 P-MOSFET as N-channel, bare '0.1' cap values parsed as 0.1F instead of 0.1uF.",
+      "correct": [
+        {
+          "description": "243 components across 13 sheets correctly parsed",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "U3 USBLC6 and D24 PESD1CAN ESD protection correctly detected",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "Y1 8MHz crystal with 6pF load caps correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "U6/U8 LM1117-3.3 LDOs correctly identified",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "J1 SWD debug interface correctly detected",
+          "analyzer_section": "signal_analysis.debug_interfaces"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "Q1 B0505S isolated DC-DC converter classified as transistor \u2014 Q prefix misleads. Has Vin/GND/+Vo/0V pins.",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "U5 LM2576-5.0 classified as LDO \u2014 it's a switching buck with L1 and D27 freewheeling diode",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Q2 IRF9310 has is_pchannel=false but description says 'P-MOSFET', keywords include 'PMOS'",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "Caps with value '0.1' (12 caps) parsed as 0.1F instead of 0.1uF \u2014 inflates decoupling totals to 100047uF, RC filters show 0 Hz cutoff",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        }
+      ],
+      "missed": [
+        {
+          "description": "8 stepper motor driver modules (XX1-XX8) not in motor_drivers despite 'stepper_module' value",
+          "analyzer_section": "signal_analysis.motor_drivers"
+        },
+        {
+          "description": "ISO1050 CAN transceiver isolation barrier not detected",
+          "analyzer_section": "signal_analysis.isolation_barriers"
+        },
+        {
+          "description": "CAN bus protocol not detected despite ISO1050 + CANH/CANL + termination",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [
+        "Check lib_symbol description/keywords for MOSFET channel type",
+        "Bare numeric cap values <1 in 0603/0805 are microfarads not farads",
+        "Detect B0505S-type isolated DC-DC by pin names, not ref prefix",
+        "Classify LM2576/LM2596 as switching buck, not LDO"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002522",
+      "repo": "eddyem/stm32samples",
+      "project": "F3:F303_Multistepper_kicad_multistepper",
+      "created": "2026-04-09T06:53:07.414682+00:00",
+      "datasheets_used": []
+    }
+  ]
+}
