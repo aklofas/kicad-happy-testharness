@@ -42,6 +42,7 @@ python3 run/run_pcb.py --jobs 16                # if pcb affected
 python3 run/run_gerbers.py --jobs 16            # if gerber affected
 python3 run/run_spice.py --jobs 16              # if spice affected
 python3 run/run_emc.py --jobs 8                 # if emc affected
+python3 run/run_thermal.py --jobs 8             # if thermal affected (needs sch+pcb)
 ```
 
 Add `--repo {repo}` to test a single repo first before full corpus.
@@ -84,8 +85,13 @@ Run after ANY code change to catch new/changed constants that need verification:
 
 ```bash
 python3 validate/audit_constants.py scan --diff
+python3 validate/audit_constants.py corpus   # check Vref heuristic coverage gap
 python3 validate/audit_equations.py scan --diff
 ```
+
+The `corpus` command now reports regulators falling back to the 0.6V heuristic
+Vref. If a part appears 5+ times in the heuristic list, it's a candidate for the
+`_REGULATOR_VREF` lookup table (see TH-009).
 
 If new constants or equations appear, follow Checklist 11 to verify them before
 merging. New constants without authoritative sources are a hallucination risk.
@@ -543,7 +549,7 @@ Do these at the end of every testing session.
 python3 run_tests.py --unit
 ```
 
-Must be 270/270 passed. If not, fix before ending.
+Must be 304+ passed, 0 failed. If not, fix before ending.
 
 ### 10b. Update documentation
 
@@ -1076,8 +1082,10 @@ python3 regression/promote.py --repo {repo} --apply
 
 ## Checklist 15: Adding a new analyzer type
 
-Use when a new analyzer (e.g., `analyze_thermal.py`) is added to kicad-happy and needs
-test harness integration. This is a multi-step process that touches many files.
+Use when a new analyzer is added to kicad-happy and needs test harness integration.
+This is a multi-step process that touches many files. `analyze_thermal.py` was
+integrated using this checklist (2026-04-09) — see `run/run_thermal.py` as a
+reference implementation for a multi-input analyzer (requires both sch + pcb).
 
 ### 15a. Create the batch runner
 
