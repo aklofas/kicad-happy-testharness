@@ -830,30 +830,47 @@ Use `batch_review.py` with Claude Code subagents:
 # List unreviewed repos by complexity
 python3 tools/batch_review.py list --count 20
 
-# Generate prompts for N repos
-python3 tools/batch_review.py prompts --count 10
+# Get source/output paths for selected repos
+python3 tools/batch_review.py prompts --count 5
 ```
 
-In a Claude Code session, spawn subagents in parallel with each prompt. Each
-subagent reads the source schematic + analyzer JSON and produces a JSON finding.
-Launch 3-5 subagents in parallel to maximize throughput.
+In a Claude Code session, spawn subagents in parallel (5 at a time works well).
+Each subagent gets a prompt like:
+
+> Review this KiCad schematic analyzer output for correctness. Read BOTH files,
+> compare them, and produce a structured JSON finding.
+> SOURCE: {source_path}
+> OUTPUT: {output_path}
+> Output ONLY a JSON block with: analyzer_type, source_file, status, summary,
+> correct[], incorrect[], missed[], suggestions[], related_issues[], should_become_assertion.
+
+Each review takes 3-6 minutes. Subagents read both the raw schematic and analyzer
+JSON, compare component classifications, signal detections, and net building, then
+produce structured findings naming specific components (U1, R3) with analyzer_section
+paths.
+
+**Tips from batch experience:**
+- Skip repos >8K components (subagent may time out)
+- Skip hackrf/hackrf forks (many duplicates in corpus)
+- Skip repos with only connectors/pads (low signal value)
+- The sweet spot is 200-2000 component designs with mixed analog/digital
+- Subagent findings are ~4x more thorough than old manual reviews
 
 ### 13c. Save findings
 
-Save each subagent's JSON output:
+Extract the JSON from each subagent result and save:
 
 ```bash
-python3 tools/batch_review.py save --repo {owner/repo} --project {project} --file /tmp/finding.json
+# --project is auto-detected if repo has one project, otherwise specify
+python3 tools/batch_review.py save --repo {owner/repo} --file /tmp/finding.json
 
-# View findings
-python3 regression/findings.py list --repo {repo}
-python3 regression/findings.py stats
+# Check coverage
+python3 tools/batch_review.py status
 ```
 
-Each finding item should have:
-- `description` — what was found
-- `analyzer_section` — which part of the output is affected
-- `status` — `confirmed`, `incorrect`, `missed`, `observation`
+Track recurring patterns across reviews — when the same issue appears in 3+ repos,
+file a KH-* issue (e.g., KH-208 was filed after lib_id classification appeared in
+4 repos).
 
 ### 13d. Auto-generate check fields
 
