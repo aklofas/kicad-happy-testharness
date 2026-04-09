@@ -1397,6 +1397,7 @@ def cmd_corpus(args):
 
     # Accumulators
     vref_hits = {}       # prefix -> set of repos
+    vref_heuristic = {}  # part_value -> count
     type_hits = {}       # type_map key -> set of repos
     section_hits = {}    # section name -> set of repos
     total_repos = set()
@@ -1417,6 +1418,10 @@ def cmd_corpus(args):
                 prefix = _match_vref_prefix(value, vref_entries)
                 if prefix:
                     vref_hits.setdefault(prefix, set()).add(repo)
+            elif reg.get("vref_source") == "heuristic":
+                value = reg.get("value", "") or reg.get("part_value", "")
+                if value:
+                    vref_heuristic[value] = vref_heuristic.get(value, 0) + 1
 
         # --- Component type_map hits ---
         for comp in data.get("components", []):
@@ -1458,6 +1463,17 @@ def cmd_corpus(args):
         zero_count = sum(1 for p in vref_entries if not vref_hits.get(p))
         print(f"_REGULATOR_VREF: {hit_count} prefixes matched in {len(total_vref_repos)} repos, "
               f"{zero_count} prefixes with 0 hits")
+        if vref_heuristic:
+            total_heuristic = sum(vref_heuristic.values())
+            print(f"_REGULATOR_VREF: {total_heuristic} regulators across "
+                  f"{len(vref_heuristic)} parts used heuristic fallback (0.6V)")
+            candidates = sorted(
+                ((v, k) for k, v in vref_heuristic.items() if v >= 5),
+                reverse=True)
+            if candidates:
+                print(f"  Top candidates for Vref table ({len(candidates)} parts with 5+ hits):")
+                for count, part in candidates[:20]:
+                    print(f"    {count:>4d}x  {part}")
 
     # Update type_map corpus hits
     if type_map_entry:
