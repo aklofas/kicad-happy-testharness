@@ -32,9 +32,9 @@ Last updated: 2026-04-09
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-228**. Next TH number: **TH-011**.
+number: **KH-229**. Next TH number: **TH-011**.
 
-> 10 open issues (10 KH-*) from Layer 3 batch reviews (2026-04-09).
+> 11 open issues (11 KH-*) from Layer 3 batch reviews (2026-04-09).
 
 ---
 
@@ -271,6 +271,31 @@ between voltage domains.
 
 ---
 
+### KH-228 — detect_sub_sheet only identifies 34% of sub-sheets (LOW)
+
+**Symptom:** `detect_sub_sheet()` correctly identifies root schematics (0 false
+positives across 28 tested) but only detects 34% of actual sub-sheets (23/67). When
+detection fails, the hierarchy context feature silently doesn't activate — the
+sub-sheet is analyzed as a standalone file without cross-sheet net information.
+
+**Root cause:** The detection heuristic likely relies on specific S-expression markers
+(e.g., sheet_instances, hierarchical labels) that not all sub-sheets contain. Many
+valid sub-sheets with descriptive names (power.kicad_sch, mcu.kicad_sch, etc.) are
+missed.
+
+**Impact:** Low — this only affects sub-sheet analysis (not used by the harness, which
+runs root schematics). The hierarchy feature works correctly when detection triggers.
+No data corruption — missed sub-sheets are just analyzed without cross-sheet context.
+
+**File:** `analyze_schematic.py` — `detect_sub_sheet()`.
+
+**Repro:** `57maker/headphone_amplifier_v0` — power.kicad_sch not detected as
+sub-sheet despite being referenced from headphone_amplifier_v0.kicad_sch.
+
+**Discovered:** 2026-04-09 via hierarchy context test plan Phase 4.
+
+---
+
 ## Deferred
 
 ### KH-205 — D+ net lost in KiCad 5 legacy net resolution (MEDIUM)
@@ -295,4 +320,5 @@ repo (all converted to `.kicad_sch`). Reopen if repro file is located.
 8. KH-225 — LM2664 charge pump classified as LDO topology (LOW)
 9. KH-226 — NUCLEO dev board module classified as switching regulator (LOW)
 10. KH-227 — Logic gates misclassified as level_shifter_ic (LOW)
+11. KH-228 — detect_sub_sheet only identifies 34% of sub-sheets (LOW)
 
