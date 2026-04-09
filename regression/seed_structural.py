@@ -382,38 +382,40 @@ def generate_for_repo(repo_name, atype, strict, min_components,
             except Exception:
                 continue
 
+            # Determine if output meets minimum threshold for seeding
+            below_threshold = False
             if atype == "spice":
                 total_sims = data_content.get("summary", {}).get("total", 0)
-                if total_sims < 1:
-                    skipped += 1
-                    continue
-                assertions = generate_spice_structural_assertions(data_content, strict)
+                below_threshold = total_sims < 1
             elif atype == "emc":
                 total_checks = data_content.get("summary", {}).get("total_checks", 0)
-                if total_checks < 1:
-                    skipped += 1
-                    continue
-                assertions = generate_emc_structural_assertions(data_content, strict)
+                below_threshold = total_checks < 1
             elif atype == "datasheets":
                 extracted = data_content.get("extracted", 0)
-                if extracted < 1:
-                    skipped += 1
-                    continue
-                assertions = generate_datasheets_structural_assertions(data_content, strict)
+                below_threshold = extracted < 1
             else:
                 stats = data_content.get("statistics", {})
                 comps = (stats.get("total_components", 0)
                          or stats.get("footprint_count", 0))
-                if comps < min_components:
-                    skipped += 1
-                    continue
+                below_threshold = comps < min_components
 
-                if atype == "schematic":
+            # Generate assertions (empty list if below threshold)
+            assertions = []
+            if not below_threshold:
+                if atype == "spice":
+                    assertions = generate_spice_structural_assertions(data_content, strict)
+                elif atype == "emc":
+                    assertions = generate_emc_structural_assertions(data_content, strict)
+                elif atype == "datasheets":
+                    assertions = generate_datasheets_structural_assertions(data_content, strict)
+                elif atype == "schematic":
                     assertions = generate_structural_assertions(data_content, strict)
                 elif atype == "pcb":
                     assertions = generate_pcb_structural_assertions(data_content, strict)
-                else:
-                    continue
+
+            if below_threshold and not assertions:
+                skipped += 1
+                # Fall through to stale-file cleanup below (don't continue)
             # file_pattern is the filename within the project (prefix stripped)
             prefix = project_prefix(proj_path)
             if prefix:
