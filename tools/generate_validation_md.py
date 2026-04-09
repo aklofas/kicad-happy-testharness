@@ -39,18 +39,28 @@ def _count_output_files(atype):
 
 
 def _count_kh_issues():
-    """Count KH-* issues from ISSUES.md and FIXED.md."""
+    """Count KH-* issues from ISSUES.md and FIXED.md.
+
+    Returns (open_count, closed_count, max_number).
+    """
     open_count = 0
     closed_count = 0
-    if ISSUES_FILE.exists():
-        for line in ISSUES_FILE.read_text().splitlines():
+    max_num = 0
+    for path, is_open in [(ISSUES_FILE, True), (FIXED_FILE, False)]:
+        if not path.exists():
+            continue
+        for line in path.read_text().splitlines():
             if line.strip().startswith("### KH-"):
-                open_count += 1
-    if FIXED_FILE.exists():
-        for line in FIXED_FILE.read_text().splitlines():
-            if line.strip().startswith("### KH-"):
-                closed_count += 1
-    return open_count, closed_count
+                if is_open:
+                    open_count += 1
+                else:
+                    closed_count += 1
+                try:
+                    num = int(line.strip().split("KH-")[1].split()[0].rstrip(":—"))
+                    max_num = max(max_num, num)
+                except (ValueError, IndexError):
+                    pass
+    return open_count, closed_count, max_num
 
 
 def _load_catalog_stats():
@@ -109,7 +119,7 @@ def generate_markdown():
         "total": cat_stats.get("assertion_total", 0),
         "by_type": dict(cat_stats.get("assertion_by_type", {})),
     }
-    open_kh, closed_kh = _count_kh_issues()
+    open_kh, closed_kh, max_kh = _count_kh_issues()
     bugfix_count = 0
     if BUGFIX_FILE.exists():
         bugfix_count = len(json.loads(BUGFIX_FILE.read_text()))
@@ -246,7 +256,7 @@ The harness requires Python 3.8+ and a checkout of the corpus repos. ngspice is 
 
 All analyzer bugs found during validation are tracked with sequential IDs:
 
-- `KH-001` through `KH-{closed_kh + open_kh}`: analyzer issues ({closed_kh + open_kh} total, {open_kh} open)
+- `KH-001` through `KH-{max_kh}`: analyzer issues ({closed_kh + open_kh} filed, {closed_kh} closed, {open_kh} open)
 - `TH-001` through `TH-008`: harness infrastructure issues
 
 Each closed issue has a corresponding bugfix regression guard assertion that prevents the bug from returning.
