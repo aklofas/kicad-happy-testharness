@@ -1,4 +1,4 @@
-# Findings: retroverse / components_backplane_6-Slot-Backplane_6-Slot-Backplane
+# Findings: transistorfet/retroverse / components_backplane_6-Slot-Backplane_6-Slot-Backplane
 
 ## ?: 6-slot VME64 backplane with ATX power, active bus termination (TCA0372 + 4610X divider networks), and 74ACT32 daisy-chain logic. Analyzer correctly identifies hierarchical design, VME connectors, voltage dividers, and bus topology but misclassifies graphic logo as switch, labels opamp buffers as comparators, and misses VME bus protocol detection.
 
@@ -53,7 +53,7 @@
 
 ---
 
-## FND-00002510: VME 6-slot backplane with ATX power input, 6 DIN41612 slot connectors, 7 74ACT32 OR gates for BG/IACK daisy-chains, 2 TCA0372 comparators for power monitoring, and 24 Bourns 4610X terminator SIPs. Component identification correct but S1 (OSHW logo) misclassified as switch, duplicate pin entries for multi-unit ICs inflate ERC warnings, and 98 unnamed single-pin nets for terminator taps not flagged.
+## FND-00002530: VME 6-slot backplane with ATX power input, 6 DIN41612 slot connectors, 7 74ACT32 OR gates for BG/IACK daisy-chains, 2 TCA0372 comparators for power monitoring, and 24 Bourns 4610X terminator SIPs. Component identification correct but S1 (OSHW logo) misclassified as switch, duplicate pin entries for multi-unit ICs inflate ERC warnings, and 98 unnamed single-pin nets for terminator taps not flagged.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

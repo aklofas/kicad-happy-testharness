@@ -219,7 +219,14 @@ def save_findings(repo_name, project_name, data):
 
 
 def next_id():
-    """Generate next finding ID, unique across all repos/projects."""
+    """Generate next finding ID, unique across all repos/projects.
+
+    Uses a counter file (reference/.fnd_counter) for atomicity.
+    Falls back to scanning all findings if counter file is missing.
+    """
+    counter_file = DATA_DIR / "fnd_counter"
+
+    # Scan all findings to find the true max
     max_num = 0
     for _, _, ff in _iter_findings_files():
         try:
@@ -231,7 +238,17 @@ def next_id():
                     pass
         except Exception:
             pass
-    return f"FND-{max_num + 1:08d}"
+
+    # Also check the counter file (may be ahead of scan if rapid saves)
+    if counter_file.exists():
+        try:
+            max_num = max(max_num, int(counter_file.read_text().strip()))
+        except (ValueError, OSError):
+            pass
+
+    next_num = max_num + 1
+    counter_file.write_text(str(next_num))
+    return f"FND-{next_num:08d}"
 
 
 def add_finding(repo_name, project_name, finding):

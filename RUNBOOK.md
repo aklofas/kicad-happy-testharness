@@ -302,15 +302,33 @@ report doesn't flag the intentional count change as a regression.
 1. Check `ISSUES.md` "Numbering convention" for the next available number
    - KH-* for kicad-happy analyzer bugs
    - TH-* for test harness infrastructure bugs
-2. Add the issue to the appropriate section in ISSUES.md using this exact format:
+2. Add the issue to the appropriate section in ISSUES.md using the format described
+   there. Every issue **must** include:
+   - **Function name and line number** that produces the wrong result (not just the file)
+   - **Actual input values** from the repro file (component ref, field values, matrix, etc.)
+   - **Expected vs actual output** — what the code returns and what it should return
+   - **Root cause** that describes what the code *does wrong*, not what it's "missing".
+     Trace the code path for the repro input and identify the exact line that diverges.
+
+   Common root-cause pitfalls to avoid:
+   - "Code doesn't check X" — verify by tracing; it may check X but match the wrong strings
+   - "Code ignores field Y" — it may read Y but apply it in the wrong priority order
+   - "Code doesn't apply Z" — it may apply Z but compute the inputs to Z incorrectly
+   - "Fix exists but callers bypass it" — check all call sites, not just the function body
 
 ```markdown
-### KH-NNN (SEVERITY): One-line title
+### KH-NNN — One-line title (SEVERITY)
 
-- **File**: `path/to/file.py` — `function_name()`
-- **Symptom**: What goes wrong
-- **Impact**: How many files/repos affected (e.g., "44% of schematic outputs")
-- **Discovered**: YYYY-MM-DD during {context}
+**Symptom:** What goes wrong (cite specific component refs and values).
+
+**Root cause:** `function_name()` at `file.py:NNN` does X with input Y, producing Z
+instead of expected W. Trace: [step-by-step through the code path].
+
+**File:** `file.py:NNN-MMM` (function name), `:NNN` (secondary location if applicable).
+
+**Repro:** `owner/repo` — specific file, specific component ref, specific field values.
+
+**Discovered:** YYYY-MM-DD via {context}.
 ```
 
 3. Increment the "Next KH/TH number" in the numbering section — update the
@@ -843,6 +861,15 @@ Each subagent gets a prompt like:
 > OUTPUT: {output_path}
 > Output ONLY a JSON block with: analyzer_type, source_file, status, summary,
 > correct[], incorrect[], missed[], suggestions[], related_issues[], should_become_assertion.
+>
+> For each item in incorrect[] or missed[], you MUST include:
+> - `component_ref`: the specific component (e.g., "U1", "Q2", "C16")
+> - `field_values`: the actual field values from the source file (lib_id, value, keywords, etc.)
+> - `analyzer_output`: what the analyzer produced (quote the relevant JSON path and value)
+> - `expected_output`: what the correct result should be
+> - `code_trace` (if you can identify it): the function name and approximate code path
+>   that produces the wrong result — trace the actual input through the code, don't infer
+>   from the symptom what the code must be doing
 
 Each review takes 3-6 minutes. Subagents read both the raw schematic and analyzer
 JSON, compare component classifications, signal detections, and net building, then
@@ -855,6 +882,26 @@ paths.
 - Skip repos with only connectors/pads (low signal value)
 - The sweet spot is 200-2000 component designs with mixed analog/digital
 - Subagent findings are ~4x more thorough than old manual reviews
+
+**Root cause accuracy (lessons from KH-207..217 verification):**
+
+When filing issues from Layer 3 findings, the symptom is usually correct but the root
+cause is often wrong. The subagent sees "X is wrong" and infers "the code must not
+check X" — but the code may check X using the wrong strings, wrong format, or with
+callers that bypass the check. Before writing a root cause:
+
+1. **Trace, don't infer.** Read the actual function and follow the repro input through
+   each branch. Identify the exact line that returns the wrong result.
+2. **Check what the code matches, not just what it checks.** Code may check the right
+   field but match `p-channel` when the data contains `PMOS` (KH-213), or match `Vnn`
+   format when the data uses `nnVn` (KH-209).
+3. **Check all callers.** A fix may exist in the function but callers may not pass the
+   required parameter (KH-212: `component_type` not passed by 2 of 3 call sites).
+4. **Check the math, not just the flow.** Code may call the right function but compute
+   wrong inputs — e.g., matrix decomposition produces wrong angle (KH-207).
+5. **Include actual field values.** Quote the component's lib_id, keywords, value, and
+   description from the source file so the root cause can be verified without re-reading
+   the schematic.
 
 ### 13c. Save findings
 
@@ -870,7 +917,9 @@ python3 tools/batch_review.py status
 
 Track recurring patterns across reviews — when the same issue appears in 3+ repos,
 file a KH-* issue (e.g., KH-208 was filed after lib_id classification appeared in
-4 repos).
+4 repos). Before filing, verify the root cause by tracing the code path for at least
+one repro case (see Checklist 5 and the root cause accuracy guidance in 13b above).
+Subagent-reported root causes should be treated as hypotheses, not facts.
 
 ### 13d. Auto-generate check fields
 

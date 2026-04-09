@@ -1,4 +1,4 @@
-# Findings: RUST_Hardware / Motherboard_RUST_Motherboard
+# Findings: skysedge/RUST_Hardware / Motherboard_RUST_Motherboard
 
 ## ?: ATmega1280+ATmega16U2 motherboard: good component/crystal/regulator detection, but OLED SPI clock misclassified as I2C SCL, MCP1661 boost converter output rail wrong (+3V8 vs +12V), ceramic resonators correctly flagged as no load caps
 
@@ -30,7 +30,7 @@
 
 ---
 
-## FND-00002510: 4G rotary cellphone mainboard (RUST_Motherboard) with ATmega1280, ATmega16U2 USB bridge, LARA-R6 LTE module, MAX9860 audio CODEC, and MCP1661 12V boost converter. Analyzer handles 9-sheet hierarchy well but misclassifies MK1 (electret microphone) as fiducial, and mis-identifies the boost converter output rail as +3V8 (input) instead of +12V (output).
+## FND-00002529: 4G rotary cellphone mainboard (RUST_Motherboard) with ATmega1280, ATmega16U2 USB bridge, LARA-R6 LTE module, MAX9860 audio CODEC, and MCP1661 12V boost converter. Analyzer handles 9-sheet hierarchy well but misclassifies MK1 (electret microphone) as fiducial, and mis-identifies the boost converter output rail as +3V8 (input) instead of +12V (output).
 
 - **Status**: confirmed
 - **Analyzer**: schematic

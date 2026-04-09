@@ -1,4 +1,4 @@
-# Findings: nl2sch / ebaz4205_ebaz4205
+# Findings: tpecar/nl2sch / ebaz4205_ebaz4205
 
 ## ?: EBAZ4205 Zynq XC7Z010 Bitcoin miner board with DDR3, NAND flash, Ethernet PHY, 4x switching regulators; power regulators and isolation well-detected but DDR3 memory interface missed entirely and several component type misclassifications
 
@@ -61,7 +61,7 @@
 
 ---
 
-## FND-00002508: EBAZ4205 is a Zynq 7010-based board (originally Bitcoin miner controller) with DDR3 SDRAM, NAND flash, IP101GA Ethernet PHY, four J37I switching regulators, and optocoupler isolation. Analyzer performs well on power regulation and Zynq handling, but misses DDR3 and NAND flash memory interfaces, misclassifies several component types, and falsely detects RMII Ethernet signals as UART.
+## FND-00002528: EBAZ4205 is a Zynq 7010-based board (originally Bitcoin miner controller) with DDR3 SDRAM, NAND flash, IP101GA Ethernet PHY, four J37I switching regulators, and optocoupler isolation. Analyzer performs well on power regulation and Zynq handling, but misses DDR3 and NAND flash memory interfaces, misclassifies several component types, and falsely detects RMII Ethernet signals as UART.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

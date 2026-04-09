@@ -206,6 +206,162 @@
         "Add SY6280 and similar USB power switches to protection_devices or a new power_switch category"
       ],
       "related_issues": []
+    },
+    {
+      "analyzer_type": "schematic",
+      "source_file": "HARDWARE_REV-B_ESP32-PRO_Rev_B.sch.json",
+      "status": "confirmed",
+      "summary": "The analyzer correctly identified the major ICs (ESP32, PIC32, MCP73833, SY8089, SY6280, ATECC508A, MX25U3235F, LY68S3200SLT), three crystal circuits with accurate load cap calculations, the R18/R19 voltage divider for the buck converter feedback, I2C bus with pullups, decoupling analysis across four power rails, and protection devices D2 (TVS) and D1 (reverse polarity). However, it has significant issues with net tracing: U3 input_rail is null (should be +5V via battery/FET path), the output_rail is __unnamed_4 instead of +3.3V, the battery charger U2 was not detected in battery_chargers, and the U4 load switch power_path entry has incorrect input_rail/output_rail. The voltage divider R18/R19 midpoint incorrectly shows connection to U3 pin 3 (LX) instead of pin 5 (FB). Several pin_nets are missing or incorrect due to wire tracing issues in the legacy .sch format.",
+      "correct": [
+        {
+          "description": "Three crystal circuits correctly identified: Q1 (8MHz/PIC32, CL_eff=19.5pF vs 20pF spec), Q2 (32.768kHz/PIC32, CL_eff=19.5pF vs 12.5pF spec), Q3 (40MHz/ESP32, CL_eff=14pF vs 12pF spec) with correct load cap refs",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "R18 (4.99k) / R19 (1.1k) correctly identified as voltage divider with ratio 0.1806 and nets +3.3V top / GND bottom",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "D2 (SMBJ6.0A) correctly identified as TVS protection on +5V rail clamping to GND",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "D1 (SS34) correctly identified as reverse_polarity protection between +5V_EXT and +5V",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "I2C bus on SCL/SDA nets correctly detected with U6, U1, U5 as devices, R42/R43 (2.2k) pullups to +3.3V",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "Decoupling analysis correctly identifies 4 rails: +5V (141uF/3 caps), +3.3V (49.8uF/12 caps), +5V_USB-OTG (0.1uF/1 cap), +1.8V (1.2uF/3 caps)",
+          "analyzer_section": "signal_analysis.decoupling_analysis"
+        },
+        {
+          "description": "LED audit correctly identifies PWRLED1, COMPLETE1, CHARGING1, PWR_GOOD1 with correct series resistors (all 2.2k) and supply net +5V",
+          "analyzer_section": "signal_analysis.led_audit"
+        },
+        {
+          "description": "Memory interfaces U8 (PSRAM) and U7 (flash) correctly detected with ESP32 U5 as connected processor",
+          "analyzer_section": "signal_analysis.memory_interfaces"
+        },
+        {
+          "description": "LC filter L5 (2.4nH) / C30 (4.7pF) correctly identified at 1.50 GHz resonance - this is the ESP32 antenna matching network",
+          "analyzer_section": "signal_analysis.lc_filters"
+        },
+        {
+          "description": "R10 (1.1k) / R11 (10k) voltage divider correctly identified - this is the MCP73833 THERM thermistor voltage divider with THERM1 test pad at midpoint",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "Component counts accurate: 131 total, 8 ICs, 47 resistors, 41 capacitors, 3 crystals, 4 LEDs, 6 connectors, 4 ferrite beads",
+          "analyzer_section": "statistics.component_types"
+        },
+        {
+          "description": "U5 (ESP32) power domains correctly identified as +1.8V and +3.3V",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "RC filter R21 (10k) / C32 (100nF) at 159.15 Hz correctly identified as ESP32_EN reset RC delay circuit",
+          "analyzer_section": "signal_analysis.rc_filters"
+        },
+        {
+          "description": "ESD coverage audit correctly flags USB-OTG1 as high_risk with no ESD protection on D+/D-/ID lines",
+          "analyzer_section": "signal_analysis.esd_coverage_audit"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U3 (SY8089) power_regulator input_rail is null - should be the battery/5V input rail. The schematic shows U3 pin 4 (IN) connected to the battery charger output path via FET2 and D3",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "U3 (SY8089) output_rail shows __unnamed_4 instead of +3.3V. The inductor L2 output connects to the +3.3V power symbol",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Voltage divider R18/R19 midpoint shows connection to U3 pin 3 (LX) which is the switching node output, not the feedback pin. The midpoint should connect to U3 pin 5 (FB)",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "U4 (SY6280AAC) power_path entry has input_rail='RB14/USB-OTG_EN(VBUSON)' and output_rail='GND'. The SY6280 IN connects to +5V, OUT goes to +5V_USB-OTG, EN is controlled by RB14. The analyzer confused the enable pin with the input rail",
+          "analyzer_section": "signal_analysis.power_path"
+        },
+        {
+          "description": "U2 (MCP73833) pin_nets show pin 2 (VDD2) as GND and pin 5 (VSS) as +5V - these are swapped",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "U3 (SY8089) pin_nets show only pin 4 (IN) connected to GND, but this is wrong. Pin 2 is GND, Pin 4 (IN) should connect to the input voltage rail",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "U4 pin_nets show pin 1 (OUT) as GND and pin 2 (GND) as +5V - these are swapped",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "U1 (PIC32) power_domains includes RB3, RC0, RC1, RC2 as power_rails - these are GPIO signal pins, not power rails",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "U8 (PSRAM) power_domains includes 'ESP32_GPIO7/SD_DATA0' as a power rail - this is a data signal, not a power rail",
+          "analyzer_section": "design_analysis.power_domains"
+        },
+        {
+          "description": "R23/R22 voltage divider: this is really a pull-up/pull-down resistor network on a USB-OTG FAULT status signal, not a classical voltage divider",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        }
+      ],
+      "missed": [
+        {
+          "description": "U2 (MCP73833) LiPo battery charger IC not detected in battery_chargers. It manages battery charging with STAT1/STAT2 outputs and PG indicator, PROG pin R6=2.2k sets charge current to ~455mA",
+          "analyzer_section": "signal_analysis.battery_chargers"
+        },
+        {
+          "description": "Power path management circuit with FET1 and FET2 (WPM2015 P-MOSFETs) not detected. FET1 provides power OR-ing between +5V_EXT and +5V_USB-OTG. FET2 manages battery/charger output to buck converter U3",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "SD/MMC card interface not detected as a bus protocol. MICRO_SD1 connector connects via series resistors to ESP32 HS2_xxx SDIO pins with pullups R27-R30",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        },
+        {
+          "description": "USB-OTG interface not detected. USB-OTG1 micro-USB connector with D+/D- through ferrite L3 to PIC32 USB pins, ID pin to RB5, VBUS through load switch U4",
+          "analyzer_section": "signal_analysis.usb_interfaces"
+        },
+        {
+          "description": "ESP32 auto-programming circuit with D4 (BAT54C) and transistor logic using DTR/RTS to control ESP32_EN and GPIO0 for boot mode selection",
+          "analyzer_section": "signal_analysis.debug_interfaces"
+        },
+        {
+          "description": "1.8V power domain for flash and PSRAM: R30 (2.2k) pulls GPIO12 to +3.3V which configures ESP32 internal LDO to output 1.8V on VDD_SDIO",
+          "analyzer_section": "signal_analysis.design_observations"
+        },
+        {
+          "description": "UART bridge between PIC32 (U1) and ESP32 (U5) not detected. RC7/U1TXD and RC6/U1RXD connect to ESP32 GPIO3/U0RXD and GPIO1/U0TXD through R33, R34 (220R)",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        },
+        {
+          "description": "SPI bus between PIC32 and ESP32 not detected. Shared VSPI signals: GPIO18/VSPICLK, GPIO19/VSPIQ, GPIO23/VSPID, GPIO5/VSPICS0",
+          "analyzer_section": "signal_analysis.bus_protocols"
+        }
+      ],
+      "suggestions": [
+        "Fix legacy .sch wire tracing for U3 - pin_nets are mostly empty or wrong, causing cascading failures in regulator detection",
+        "Add battery charger detection for MCP73833 and similar LiPo charger ICs",
+        "Detect P-MOSFET power path circuits used for power OR-ing and reverse polarity protection",
+        "Detect SDIO/SD card interfaces by matching HS2_xxx pin name pattern and MICRO_SD connector",
+        "U4 power_path detection should identify IN pin as input_rail and OUT pin as output_rail, not confuse EN pin with input_rail",
+        "Power domain detection for U1 incorrectly includes GPIO signals as power rails - filter by pin type",
+        "ESP32 auto-programming circuit (DTR/RTS via BAT54C to EN/GPIO0) is a common pattern that should be detected"
+      ],
+      "related_issues": [],
+      "id": "FND-00002531",
+      "repo": "OLIMEX/ESP32-PRO",
+      "project": "HARDWARE_REV-B_ESP32-PRO_Rev_B",
+      "created": "2026-04-09T15:36:48.330135+00:00",
+      "datasheets_used": [],
+      "should_become_assertion": false
     }
   ]
 }

@@ -7,6 +7,23 @@ Contains enough detail to resume work with zero conversation history.
 > same session. See README.md "Issue tracking protocol" for full details. Closed issues
 > with root cause and verification details are in [FIXED.md](FIXED.md).
 
+> **Reporting guidelines for Level 3 subagents**: Root cause descriptions must cite
+> specific function names and line numbers, not just file names. When claiming code
+> "doesn't check X", trace the actual code path for the repro input and show which line
+> returns the wrong result — don't infer from the symptom what the code must be doing.
+> Common pitfalls:
+> - Code checks the right field but matches the wrong strings (KH-213: checked keywords
+>   for `p-channel` but actual keywords contain `PMOS`)
+> - Code has the right pattern but wrong format (KH-209: matched `Vnn` but not `nnVn`)
+> - Fix exists but callers bypass it (KH-212: KH-153 fix requires `component_type` param
+>   that callers don't pass)
+> - Transforms are applied but decomposed wrong (KH-207: `compute_pin_positions` runs but
+>   matrix→angle extraction is mathematically incorrect)
+>
+> Include in every report: (1) the function name and line number that produces the wrong
+> result, (2) the actual input values from the repro file, (3) what the code returns vs
+> what it should return.
+
 Last updated: 2026-04-09
 
 ---
@@ -32,27 +49,33 @@ number: **KH-218**. Next TH number: **TH-009**.
 
 ## kicad-happy Analyzer Issues
 
-### KH-207 — Mirrored component pin-to-net mapping wrong in KiCad 5 legacy (HIGH)
+### KH-207 — Legacy 2x2 matrix decomposition produces wrong pin positions (HIGH)
 
-**Symptom:** Components placed with mirrored transforms (e.g., -1 X scale) have their
-pin-to-net assignments scrambled. GND pins get mapped to signal nets and vice versa.
-Affects all mirrored ICs, connectors, and multi-pin components in KiCad 5 `.sch` files.
+**Symptom:** Components placed with certain rotation/mirror transforms in KiCad 5 `.sch`
+files have their pin-to-net assignments scrambled. GND pins get mapped to signal nets and
+vice versa. Affects components using non-trivial 2x2 orientation matrices.
 
-**Root cause:** The legacy `.sch` parser uses coordinate-based wire-to-pin matching but
-does not apply the component's transform matrix before resolving pin positions. When a
-component is mirrored, pin coordinates are flipped but the matcher uses unflipped positions.
+**Root cause:** The legacy matrix decomposition at `analyze_schematic.py:2468-2481` is
+mathematically incomplete. The code does apply transforms via `compute_pin_positions()`
+before wire matching, but the decomposition of the 2x2 matrix `(a, b, c, d)` into
+rotation angle + mirror flags is wrong for several matrix values. Specifically:
+- Matrix `(0, 1, -1, 0)` (90° CCW): code extracts angle=90 no-mirror, producing pin
+  offset `(-5, 10)` instead of correct `(5, -10)`.
+- `mirror_y` is **never set** for legacy components (only `mirror_x` via determinant check).
+- Angle extraction uses only `(a, b)` pair without fully accounting for mirror correction.
 
 **Impact:** Propagates into ERC warnings, net classification, power domain analysis,
 bus analysis, and signal detectors. Any downstream analysis referencing pin-net assignments
-on mirrored components will be wrong.
+on affected components will be wrong.
 
-**File:** `skills/kicad/scripts/analyze_schematic.py`, legacy `.sch` pin-to-net resolution.
+**File:** `analyze_schematic.py:2468-2481` (matrix decomposition), `:326-337`
+(`compute_pin_positions` transform application).
 
-**Repro:** `koron/yuiop` — `yuiop60pi/main2/main2.sch` — U1 (PGA2040) placed with
-mirror (-1, 0, 0, -1). Pins 11/12 (GND) mapped to COL4/COL5, GPIO pins mapped to GND.
-Also affects J1 (USB_B_Micro) and J2 (USB_MON) pin assignments in same file.
+**Repro:** `koron/yuiop` — `yuiop60pi/main2/main2.sch` — F1 (Fuse) at line 550 with
+matrix `(0, 1, -1, 0)`. Matrix appears in 40+ files across koron/yuiop (yuiop47, yuiop54,
+yuiop60hh). Also affects U1 (PGA2040) with matrix `(-1, 0, 0, -1)`.
 
-**Discovered:** 2026-04-08 via Layer 3 subagent review.
+**Discovered:** 2026-04-08 via Layer 3 subagent review. Root cause corrected 2026-04-09.
 
 ### KH-208 — Component type classification ignores lib_id, over-relies on ref prefix (HIGH)
 
@@ -80,22 +103,29 @@ prevents downstream detectors from finding components of the correct type.
 
 ---
 
-### KH-209 — Power rails with voltage-pattern names classified as signal (MEDIUM)
+### KH-209 — Power rails with `nnVn` naming pattern classified as signal (MEDIUM)
 
 **Symptom:** Nets named `12V0`, `3V3`, `5V0`, `1V5`, `1V8`, `6v`, `Neg6v`, `VDD5`,
 `VDD12`, `5V_INT` etc. are classified as `signal` or `interrupt` in net_classification
 instead of `power`. These are clearly power rails feeding multiple ICs.
 
-**Root cause:** Net classification uses label type (power symbol vs global label) rather
-than also checking if the net name matches common voltage patterns.
+**Root cause:** `is_power_net_name()` at `kicad_utils.py:800-840` does check voltage
+patterns, but only the `Vnn` format (V3V3, V5V0, V12P0 — V-first). The industry-standard
+`nnVn` format (3V3, 5V0, 12V0 — digit-first) is completely unmatched. The Vnn check at
+lines 826-828 requires `nu[0] == "V"` and `nu[1].isdigit()`, so digit-first names fail
+immediately. Also misses `VDD5`/`VDD12` (no underscore separator, so the underscore-prefix
+check at lines 832-839 doesn't trigger). `5V_INT` has underscore but first segment `5V`
+is not in the valid prefix list.
 
-**File:** `skills/kicad/scripts/analyze_schematic.py`, net classification.
+**File:** `kicad_utils.py:826-839` (pattern matching), `analyze_schematic.py:2977`
+(classification call site).
 
 **Repro:** `azonenberg/starshipraider` (12V0, 3V3, 5V0 etc.), `Duet3D/Duet-2-Hardware`
 (5V_INT as 'interrupt'), `GoodEarthWeather/myKicadProjects` (VDD12/VDD5/VDD3.3 missing),
 `jonathan-tooley/903` (6v/Neg6v as signal).
 
-**Discovered:** 2026-04-09 via Layer 3 batch review (4 repos affected).
+**Discovered:** 2026-04-09 via Layer 3 batch review (4 repos affected). Root cause
+corrected 2026-04-09.
 
 ---
 
@@ -134,36 +164,50 @@ DOUT to DIN between consecutive LEDs in different sheets.
 
 ---
 
-### KH-212 — Bare capacitor values parsed as Farads instead of microfarads (MEDIUM)
+### KH-212 — Bare capacitor values < 1.0 parsed as Farads (MEDIUM)
 
 **Symptom:** Capacitors with unitless value `0.1` in 0603/0805 packages are parsed as
 0.1 Farads (100,000 µF) instead of 0.1 µF (100 nF). This causes absurd RC filter
 calculations (0 Hz cutoff) and wildly inflated decoupling totals (100,047 µF).
 
-**Root cause:** Value parser treats bare numeric values without units as base SI units
-(Farads). In practice, unitless cap values in small SMD packages are always µF.
+**Root cause:** Two-part failure in `parse_value()` at `kicad_utils.py:276-281`:
+1. The KH-153 fix (bare integers → picofarads) only applies when `result >= 1.0`. Values
+   < 1.0 (like 0.1, 0.47, 0.22, 0.01) fall through and are returned as Farads.
+2. Key callers bypass even the KH-153 fix: `analyze_bom_optimization()` at line 6278 and
+   `analyze_schematic()` at line 7595 call `parse_value(val_str)` WITHOUT the
+   `component_type` parameter, so the capacitor-specific pF conversion never triggers.
+   Meanwhile `AnalysisContext.__post_init__()` at `kicad_types.py:81` correctly passes
+   `component_type=c.get("type")`, creating inconsistent parsed values in memory.
 
-**File:** `skills/kicad/scripts/analyze_schematic.py`, capacitor value parsing.
+**File:** `kicad_utils.py:276-281` (parse_value fallthrough), `analyze_schematic.py:6278`
+and `:7595` (callers missing component_type).
 
-**Repro:** `eddyem/stm32samples` — 12 caps with value `0.1` in 0603 packages.
+**Repro:** `eddyem/stm32samples` — C16/C15 value="0.1", C19/C17/C18 value="0.47" in
+`F1:F103/BISS_C_encoders/kicad/isolated_232.kicad_sch`.
 
-**Discovered:** 2026-04-09 via Layer 3 batch review.
+**Discovered:** 2026-04-09 via Layer 3 batch review. Root cause corrected 2026-04-09.
 
 ---
 
-### KH-213 — P-MOSFET channel detection ignores lib description/keywords (LOW)
+### KH-213 — P-MOSFET detection misses PMOS/P-MOS/P-MOSFET keyword variants (LOW)
 
 **Symptom:** IRF9310 classified as N-channel MOSFET despite lib_symbol description
 saying `P-MOSFET transistor` and keywords containing `PMOS P-MOS P-MOSFET`.
 
-**Root cause:** Channel type detection only checks lib_id pattern, not description or
-keywords fields from the component's library symbol definition.
+**Root cause:** Channel detection at `signal_detectors.py:2457-2467` does check keywords,
+but only matches `p-channel` and `pchannel` (lines 2463-2464). The actual KiCad library
+keywords for this part are `"transistor PMOS P-MOS P-MOSFET"` — none of which contain the
+substring `p-channel` or `pchannel`. The lib_id check (lines 2461-2462) looks for `pmos`
+but the lib_id is `elements:IRF9310` which doesn't contain it. The value check (lines
+2465-2467) also fails since `irf9310` doesn't contain `pmos`. The `description` field
+(`"P-MOSFET transistor..."`) is never checked at all.
 
-**File:** `skills/kicad/scripts/analyze_schematic.py`, MOSFET classification.
+**File:** `signal_detectors.py:2461-2467` (P-channel detection logic).
 
-**Repro:** `eddyem/stm32samples` — Q2 IRF9310.
+**Repro:** `eddyem/stm32samples` — Q2 IRF9310 (lib_id=`elements:IRF9310`,
+keywords=`transistor PMOS P-MOS P-MOSFET`).
 
-**Discovered:** 2026-04-09 via Layer 3 batch review.
+**Discovered:** 2026-04-09 via Layer 3 batch review. Root cause corrected 2026-04-09.
 
 ---
 
@@ -250,13 +294,13 @@ repo (all converted to `.kicad_sch`). Reopen if repro file is located.
 ## Priority Queue (open issues, ordered by impact)
 
 1. KH-208 — Component type classification ignores lib_id (HIGH)
-2. KH-207 — Mirrored component pin-to-net mapping wrong in KiCad 5 (HIGH)
-3. KH-209 — Power rails with voltage-pattern names classified as signal (MEDIUM)
+2. KH-207 — Legacy 2x2 matrix decomposition produces wrong pin positions (HIGH)
+3. KH-209 — Power rails with `nnVn` naming pattern classified as signal (MEDIUM)
 4. KH-210 — SPI chip select detection too narrow (MEDIUM)
 5. KH-211 — LED chain fragmentation across hierarchical sheets (MEDIUM)
-6. KH-212 — Bare capacitor values parsed as Farads (MEDIUM)
+6. KH-212 — Bare capacitor values < 1.0 parsed as Farads (MEDIUM)
 7. KH-214 — INA2xx power monitors as opamp circuits (LOW)
 8. KH-215 — LM2576/LM2596 switching bucks as LDO (LOW)
-9. KH-213 — P-MOSFET channel detection ignores description/keywords (LOW)
+9. KH-213 — P-MOSFET detection misses PMOS/P-MOS/P-MOSFET keyword variants (LOW)
 10. KH-216 — Multi-unit IC pin_nets shows wrong unit's pins (LOW)
 11. KH-217 — Crystal frequency parsing case-sensitive (LOW)

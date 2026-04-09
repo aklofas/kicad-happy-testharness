@@ -1,4 +1,4 @@
-# Findings: mackerel-68k / hardware_mackerel-30-proto_mackerel-30-proto
+# Findings: crmaykish/mackerel-68k / hardware_mackerel-30-proto_mackerel-30-proto
 
 ## ?: MC68030 retro computer with DRAM, Flash, SRAM, dual UART, FPU, CPLDs, and DIN41612 expansion bus; analyzer correctly identifies power topology and oscillators but misses memory interfaces and bus architecture
 
@@ -54,7 +54,7 @@
 
 ---
 
-## FND-00002508: Mackerel-30 is a prototype 68030-based SBC with DRAM SIMM, flash ROM, SRAM, MC68882 FPU, two EPM7128 CPLDs, XR68C681 DUART, LM2576T-5 buck regulator, and AMS1117-3.3 LDO. Bus topology detection is solid but memory_interfaces is empty despite clear DRAM signals, the buck regulator output rail is misidentified, and several IC functions are undetected.
+## FND-00002525: Mackerel-30 is a prototype 68030-based SBC with DRAM SIMM, flash ROM, SRAM, MC68882 FPU, two EPM7128 CPLDs, XR68C681 DUART, LM2576T-5 buck regulator, and AMS1117-3.3 LDO. Bus topology detection is solid but memory_interfaces is empty despite clear DRAM signals, the buck regulator output rail is misidentified, and several IC functions are undetected.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

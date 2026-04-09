@@ -1,4 +1,4 @@
-# Findings: Zynq-SoM / Zynq_SoM
+# Findings: pinguz97/Zynq-SoM / Zynq_SoM
 
 ## FND-00000290: Zynq XC7Z020 SoM (288 components). TPSM82864 voltage monitoring divider (R78/R79 to STM32 ADC) misidentified as regulator feedback divider. RTL8211F Ethernet interface not detected (custom lib_id). Duplicate reset_pin observations for eMMC (3x). has_high_freq=false on rails with 47nF 0201 caps (standard FPGA HF bypass).
 
@@ -35,7 +35,7 @@
 
 ---
 
-## FND-00002508: Zynq-7020 SoM with DDR3L, QSPI flash, eMMC, Gigabit Ethernet PHY (RTL8211F), ULPI USB PHY, STM32G431 system controller, and 5-rail switching power. Analyzer handles hierarchical design well but has significant false-positive level-shifter warnings for DDR3L and ULPI (from incomplete FPGA power domain tracking), misses Ethernet PHY and eMMC due to custom lib_ids.
+## FND-00002526: Zynq-7020 SoM with DDR3L, QSPI flash, eMMC, Gigabit Ethernet PHY (RTL8211F), ULPI USB PHY, STM32G431 system controller, and 5-rail switching power. Analyzer handles hierarchical design well but has significant false-positive level-shifter warnings for DDR3L and ULPI (from incomplete FPGA power domain tracking), misses Ethernet PHY and eMMC due to custom lib_ids.
 
 - **Status**: confirmed
 - **Analyzer**: schematic

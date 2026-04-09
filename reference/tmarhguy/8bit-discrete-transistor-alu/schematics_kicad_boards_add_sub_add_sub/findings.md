@@ -1,4 +1,4 @@
-# Findings: 8bit-discrete-transistor-alu / schematics_kicad_boards_add_sub_add_sub
+# Findings: tmarhguy/8bit-discrete-transistor-alu / schematics_kicad_boards_add_sub_add_sub
 
 ## ?: 8-bit adder/subtractor built from discrete CMOS transistors (178 NMOS/PMOS) plus 74HC86 XOR and 74HC157 mux ICs; bridge detector misclassifies transmission gates as motor bridges; no discrete logic gate detection
 
@@ -43,7 +43,7 @@
 
 ---
 
-## FND-00002508: 8-bit discrete CMOS MOSFET ALU adder/subtractor using 89 PMOS + 89 NMOS transistors for combinational logic alongside 6x 74HC86 XOR and 6x 74HC157 MUX ICs. Component classification is correct, but bridge_circuits generates a major false positive by misidentifying 19 NMOS pass-transistor pairs in CMOS logic stacks as H-bridge half-bridges.
+## FND-00002527: 8-bit discrete CMOS MOSFET ALU adder/subtractor using 89 PMOS + 89 NMOS transistors for combinational logic alongside 6x 74HC86 XOR and 6x 74HC157 MUX ICs. Component classification is correct, but bridge_circuits generates a major false positive by misidentifying 19 NMOS pass-transistor pairs in CMOS logic stacks as H-bridge half-bridges.
 
 - **Status**: confirmed
 - **Analyzer**: schematic
