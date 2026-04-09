@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~344 (tolerance 10%)",
+      "description": "Net count ~356 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 333,
-        "max": 355
+        "min": 345,
+        "max": 367
       }
     },
     {
@@ -111,7 +111,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "6 design_observations detected",
+      "description": "7 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -230,7 +230,26 @@
     },
     {
       "id": "SEED-00000024",
-      "description": "26 rc_filters detected",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000025",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000026",
+      "description": "25 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
@@ -238,7 +257,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000027",
       "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -248,7 +267,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000028",
       "description": "Has 51 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -257,7 +276,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000029",
       "description": "Has 12 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -266,7 +285,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000030",
       "description": "Has 11 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
@@ -275,7 +294,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000031",
       "description": "Has 5 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -284,7 +303,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000032",
       "description": "Has 46 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -293,7 +312,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000033",
       "description": "Has 8 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

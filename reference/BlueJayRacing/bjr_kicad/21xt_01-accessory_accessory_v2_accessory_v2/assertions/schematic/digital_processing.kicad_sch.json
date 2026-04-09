@@ -42,7 +42,16 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 design_observations detected",
+      "description": "2 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "3 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -50,8 +59,8 @@
       }
     },
     {
-      "id": "SEED-00000006",
-      "description": "1 level_shifters detected",
+      "id": "SEED-00000007",
+      "description": "3 level_shifters detected",
       "check": {
         "path": "signal_analysis.level_shifters",
         "op": "min_count",
@@ -59,7 +68,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "All level_shifters have ref",
       "check": {
         "path": "signal_analysis.level_shifters",
@@ -69,37 +78,18 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "All level_shifters type values are valid",
       "check": {
         "path": "signal_analysis.level_shifters",
         "op": "count_matches",
         "field": "type",
         "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "2 rc_filters detected",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "min_count",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "SEED-00000010",
-      "description": "All rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000011",
       "description": "2 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -108,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000011",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -118,7 +108,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -127,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "Has 10 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

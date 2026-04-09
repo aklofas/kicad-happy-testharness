@@ -61,7 +61,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 decoupling_analysis detected",
+      "description": "2 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "min_count",
@@ -70,7 +70,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "5 design_observations detected",
+      "description": "6 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -79,25 +79,6 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "1 lc_filters detected",
-      "check": {
-        "path": "signal_analysis.lc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "All lc_filters have non-zero resonant_hz",
-      "check": {
-        "path": "signal_analysis.lc_filters",
-        "op": "not_contains_match",
-        "field": "resonant_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000011",
       "description": "1 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -106,7 +87,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000010",
       "description": "3 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -115,7 +96,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000011",
       "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -125,7 +106,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000012",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

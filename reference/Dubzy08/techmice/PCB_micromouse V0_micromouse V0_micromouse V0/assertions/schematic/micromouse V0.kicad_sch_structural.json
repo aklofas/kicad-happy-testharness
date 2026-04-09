@@ -90,11 +90,11 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 8 protection_devices",
+      "description": "Exactly 11 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 8
+        "value": 11
       }
     },
     {
@@ -169,6 +169,26 @@
     },
     {
       "id": "STRUCT-00000018",
+      "description": "F_pad8 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F_pad8$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "F_pad7 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F_pad7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
       "description": "F_pad9 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -178,66 +198,17 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
-      "description": "Exactly 5 rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "equals",
-        "value": 5
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
-      "description": "R16 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R16$"
-      }
-    },
-    {
       "id": "STRUCT-00000021",
-      "description": "R17 in rc_filters",
+      "description": "F_pad10 in protection_devices",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.protection_devices",
         "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R17$"
+        "field": "ref",
+        "pattern": "^F_pad10$"
       }
     },
     {
       "id": "STRUCT-00000022",
-      "description": "R31 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R31$"
-      }
-    },
-    {
-      "id": "STRUCT-00000023",
-      "description": "R30 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R30$"
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
-      "description": "R39 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R39$"
-      }
-    },
-    {
-      "id": "STRUCT-00000025",
       "description": "Exactly 6 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -246,7 +217,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000023",
       "description": "Q1 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -256,7 +227,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000024",
       "description": "Q2 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -266,7 +237,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000025",
       "description": "Q5 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -276,7 +247,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000026",
       "description": "Q6 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -286,7 +257,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000027",
       "description": "Q9 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -296,7 +267,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000028",
       "description": "Q11 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",

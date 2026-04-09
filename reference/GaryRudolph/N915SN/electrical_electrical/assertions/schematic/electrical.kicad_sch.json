@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~484 (tolerance 10%)",
+      "description": "Net count ~485 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 469,
-        "max": 499
+        "min": 470,
+        "max": 500
       }
     },
     {
@@ -42,7 +42,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "8 esd_coverage_audit detected",
+      "description": "7 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -67,7 +67,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 8
+        "value": 7
       }
     },
     {
@@ -78,7 +78,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 8
+        "value": 7
       }
     },
     {
@@ -119,7 +119,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "Has 33 other(s)",
+      "description": "Has 32 other(s)",
       "check": {
         "path": "statistics.component_types.other",
         "op": "min_count",
@@ -128,11 +128,11 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "Has 30 switch(s)",
+      "description": "Has 32 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
         "op": "min_count",
-        "value": 22
+        "value": 24
       }
     }
   ]

@@ -72,6 +72,24 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "7 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "7 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "1 ethernet_interfaces detected",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
@@ -80,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "4 led_audit detected",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -89,7 +107,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000012",
       "description": "All led_audit have ref",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -99,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
       "description": "All led_audit type values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -110,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000014",
       "description": "All led_audit drive_method values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -121,7 +139,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000015",
       "description": "2 level_shifters detected",
       "check": {
         "path": "signal_analysis.level_shifters",
@@ -130,7 +148,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000016",
       "description": "All level_shifters have ref",
       "check": {
         "path": "signal_analysis.level_shifters",
@@ -140,7 +158,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000017",
       "description": "All level_shifters type values are valid",
       "check": {
         "path": "signal_analysis.level_shifters",
@@ -151,7 +169,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000018",
       "description": "5 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -160,7 +178,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000019",
       "description": "All opamp_circuits have reference present",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -170,8 +188,8 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "33 rc_filters detected",
+      "id": "SEED-00000020",
+      "description": "1 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
@@ -179,8 +197,18 @@
       }
     },
     {
-      "id": "SEED-00000019",
-      "description": "15 voltage_dividers detected",
+      "id": "SEED-00000021",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000022",
+      "description": "18 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "min_count",
@@ -188,7 +216,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000023",
       "description": "All voltage_dividers have non-zero ratio",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -198,7 +226,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000024",
       "description": "Has 186 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -207,7 +235,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000025",
       "description": "Has 27 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -216,7 +244,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000026",
       "description": "Has 13 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
@@ -225,7 +253,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000027",
       "description": "Has 110 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -234,7 +262,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000028",
       "description": "Has 19 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

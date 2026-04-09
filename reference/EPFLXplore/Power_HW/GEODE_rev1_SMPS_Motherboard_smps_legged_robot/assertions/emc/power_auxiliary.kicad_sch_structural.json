@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "3 switching_emc finding(s)",
+      "description": "5 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 3
+        "value": 5
       }
     },
     {
@@ -32,6 +32,26 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bIC801\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "IC1201 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bIC1201\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U802 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU802\\b"
       }
     }
   ]

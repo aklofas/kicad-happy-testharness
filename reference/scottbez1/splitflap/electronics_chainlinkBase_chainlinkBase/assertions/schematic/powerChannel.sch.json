@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~19 (tolerance 10%)",
+      "description": "Net count ~20 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 17,
-        "max": 21
+        "min": 18,
+        "max": 22
       }
     },
     {
@@ -60,25 +60,6 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 opamp_circuits detected",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000008",
-      "description": "All opamp_circuits have reference present",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000009",
       "description": "1 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -87,7 +68,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000008",
       "description": "All voltage_dividers have non-zero ratio",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -97,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000009",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

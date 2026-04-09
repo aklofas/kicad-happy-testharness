@@ -5,24 +5,24 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 emi_filter finding(s)",
+      "description": "3 emi_filter finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^emi_filter$",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "1 switching_emc finding(s)",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -53,6 +53,26 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU206\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U202 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU202\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "U201 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU201\\b"
       }
     }
   ]

@@ -42,20 +42,20 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 rc_filters detected",
+      "description": "1 voltage_dividers detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "not_contains_match",
-        "field": "cutoff_hz",
+        "field": "ratio",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },

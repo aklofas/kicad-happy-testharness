@@ -60,7 +60,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "2 esd_coverage_audit detected",
+      "description": "5 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -85,7 +85,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 2
+        "value": 5
       }
     },
     {
@@ -96,7 +96,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 2
+        "value": 5
       }
     },
     {
@@ -138,6 +138,15 @@
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
         "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "Has 5 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 3
       }
     }
   ]

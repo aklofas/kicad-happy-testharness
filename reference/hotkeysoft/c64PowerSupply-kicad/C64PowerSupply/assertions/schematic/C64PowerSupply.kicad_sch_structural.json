@@ -23,6 +23,15 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 isolation_barriers",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -31,7 +40,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "U1 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -41,36 +50,16 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 3 protection_devices",
+      "id": "STRUCT-00000006",
+      "description": "Exactly 4 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "RV3 in protection_devices",
-      "check": {
-        "path": "signal_analysis.protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^RV3$"
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "RV1 in protection_devices",
-      "check": {
-        "path": "signal_analysis.protection_devices",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^RV1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "RV2 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -80,7 +69,37 @@
       }
     },
     {
+      "id": "STRUCT-00000008",
+      "description": "RV3 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^RV3$"
+      }
+    },
+    {
       "id": "STRUCT-00000009",
+      "description": "RV1 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^RV1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "F1 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "Exactly 1 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -89,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "R1 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",

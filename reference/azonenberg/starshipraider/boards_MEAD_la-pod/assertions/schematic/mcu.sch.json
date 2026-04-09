@@ -42,21 +42,20 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 rc_filters detected",
+      "description": "1 decoupling_analysis detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.decoupling_analysis",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "description": "1 design_observations detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
@@ -66,6 +65,15 @@
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
         "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 5 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 3
       }
     }
   ]

@@ -120,7 +120,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "7 protection_devices detected",
+      "description": "5 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "min_count",
@@ -176,6 +176,15 @@
     },
     {
       "id": "SEED-00000019",
+      "description": "Has 6 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000020",
       "description": "Has 11 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -184,7 +193,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "Has 111 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -193,12 +202,12 @@
       }
     },
     {
-      "id": "SEED-00000021",
-      "description": "Has 7 varistor(s)",
+      "id": "SEED-00000022",
+      "description": "Has 5 varistor(s)",
       "check": {
         "path": "statistics.component_types.varistor",
         "op": "min_count",
-        "value": 5
+        "value": 3
       }
     }
   ]

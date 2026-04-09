@@ -42,7 +42,16 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 design_observations detected",
+      "description": "2 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "7 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -50,7 +59,16 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
+      "description": "1 isolation_barriers detected",
+      "check": {
+        "path": "signal_analysis.isolation_barriers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
       "description": "1 power_path detected",
       "check": {
         "path": "signal_analysis.power_path",
@@ -59,7 +77,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000009",
       "description": "All power_path have ref",
       "check": {
         "path": "signal_analysis.power_path",
@@ -69,7 +87,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000010",
       "description": "All power_path type values are valid",
       "check": {
         "path": "signal_analysis.power_path",
@@ -77,25 +95,6 @@
         "field": "type",
         "pattern": "^(load_switch|ideal_diode|power_mux|usb_pd_controller)$",
         "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "1 rc_filters detected",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
-      "description": "All rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {

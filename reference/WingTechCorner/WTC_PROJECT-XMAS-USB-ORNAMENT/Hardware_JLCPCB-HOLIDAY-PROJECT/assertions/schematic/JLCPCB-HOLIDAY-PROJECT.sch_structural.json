@@ -34,11 +34,11 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 5 design_observations",
+      "description": "Exactly 7 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 5
+        "value": 7
       }
     },
     {
@@ -57,6 +57,25 @@
         "path": "signal_analysis.led_audit",
         "op": "equals",
         "value": 36
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 1 power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "U3 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
       }
     }
   ]

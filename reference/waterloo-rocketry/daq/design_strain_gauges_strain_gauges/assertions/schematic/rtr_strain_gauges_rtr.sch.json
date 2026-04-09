@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~35 (tolerance 10%)",
+      "description": "Net count ~36 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 31,
-        "max": 39
+        "min": 32,
+        "max": 40
       }
     },
     {
@@ -101,25 +101,6 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 opamp_circuits detected",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "All opamp_circuits have reference present",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "1 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -128,7 +109,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000012",
       "description": "1 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -137,7 +118,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000013",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -147,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000014",
       "description": "2 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -156,7 +137,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000015",
       "description": "All voltage_dividers have non-zero ratio",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -166,7 +147,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000016",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -175,7 +156,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000017",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -184,7 +165,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000018",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

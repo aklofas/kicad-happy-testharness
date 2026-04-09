@@ -14,20 +14,20 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 rc_filters",
+      "description": "Exactly 1 voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "R84 in rc_filters",
+      "description": "R84 in voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
-        "field": "resistor.ref",
+        "field": "r_top.ref",
         "pattern": "^R84$"
       }
     }

@@ -14,11 +14,11 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 2 esd_coverage_audit",
+      "description": "Exactly 1 esd_coverage_audit",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -41,11 +41,11 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 protection_devices",
+      "description": "Exactly 3 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -66,6 +66,16 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "F1 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F1$"
       }
     }
   ]

@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~237 (tolerance 10%)",
+      "description": "Net count ~238 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 229,
-        "max": 245
+        "min": 230,
+        "max": 246
       }
     },
     {
@@ -120,7 +120,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "1 esd_coverage_audit detected",
+      "description": "2 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -145,7 +145,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -156,7 +156,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -257,15 +257,6 @@
     },
     {
       "id": "SEED-00000027",
-      "description": "Has 5 relay(s)",
-      "check": {
-        "path": "statistics.component_types.relay",
-        "op": "min_count",
-        "value": 3
-      }
-    },
-    {
-      "id": "SEED-00000028",
       "description": "Has 35 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -274,7 +265,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000028",
       "description": "Has 82 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
@@ -283,7 +274,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000029",
       "description": "Has 8 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

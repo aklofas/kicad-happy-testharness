@@ -42,7 +42,16 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 design_observations detected",
+      "description": "1 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "3 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -50,7 +59,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "1 led_driver_ics detected",
       "check": {
         "path": "signal_analysis.led_driver_ics",
@@ -59,7 +68,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "All led_driver_ics have ref",
       "check": {
         "path": "signal_analysis.led_driver_ics",
@@ -69,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "All led_driver_ics type values are valid",
       "check": {
         "path": "signal_analysis.led_driver_ics",
@@ -80,26 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "2 rc_filters detected",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000010",
-      "description": "All rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000011",
       "description": "Has 18 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

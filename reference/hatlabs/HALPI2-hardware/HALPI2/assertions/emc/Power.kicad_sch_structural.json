@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "2 switching_emc finding(s)",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -42,6 +42,16 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU7\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "U52 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU52\\b"
       }
     }
   ]

@@ -23,11 +23,11 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 protection_devices",
+      "description": "Exactly 2 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -42,25 +42,16 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 rc_filters",
+      "description": "F_pad10 in protection_devices",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "equals",
-        "value": 1
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F_pad10$"
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "R39 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R39$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "Exactly 1 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -69,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000007",
       "description": "Q9 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",

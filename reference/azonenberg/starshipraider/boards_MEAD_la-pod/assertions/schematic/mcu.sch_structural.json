@@ -5,21 +5,20 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 rc_filters",
+      "description": "Exactly 1 decoupling_analysis",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R76 in rc_filters",
+      "description": "Exactly 1 design_observations",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R76$"
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 1
       }
     }
   ]

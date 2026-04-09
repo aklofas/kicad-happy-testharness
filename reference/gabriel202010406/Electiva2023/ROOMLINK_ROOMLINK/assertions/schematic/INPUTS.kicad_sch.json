@@ -101,6 +101,16 @@
     },
     {
       "id": "SEED-00000011",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

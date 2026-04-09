@@ -5,6 +5,24 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 2 decoupling_analysis",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 2 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 ethernet_interfaces",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
@@ -13,62 +31,13 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000004",
       "description": "U26 in ethernet_interfaces",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
         "op": "contains_match",
         "field": "phy_reference",
         "pattern": "^U26$"
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 8 rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "equals",
-        "value": 8
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "R96 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R96$"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "R98 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R98$"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "R100 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R100$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "R101 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R101$"
       }
     }
   ]

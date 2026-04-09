@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~26 (tolerance 10%)",
+      "description": "Net count ~32 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 23,
-        "max": 29
+        "min": 28,
+        "max": 36
       }
     },
     {
@@ -42,7 +42,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "4 esd_coverage_audit detected",
+      "description": "6 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -67,7 +67,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 4
+        "value": 6
       }
     },
     {
@@ -78,7 +78,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 4
+        "value": 6
       }
     },
     {
@@ -132,11 +132,11 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "Has 6 connector(s)",
+      "description": "Has 8 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 4
+        "value": 6
       }
     },
     {

@@ -5,6 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "2 diff_pair finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^diff_pair$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "9 io_filtering finding(s)",
       "check": {
         "path": "findings",
@@ -15,7 +26,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "2 stackup finding(s)",
       "check": {
         "path": "findings",
@@ -26,18 +37,28 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "1 switching_emc finding(s)",
+      "id": "STRUCT-00000004",
+      "description": "2 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
+      "description": "Rule DP-004 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DP\\-004$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -47,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "Rule IO-002 present",
       "check": {
         "path": "findings",
@@ -57,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "Rule SU-002 present",
       "check": {
         "path": "findings",
@@ -67,7 +88,17 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
+      "description": "Rule SW-001 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^SW\\-001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Rule SW-003 present",
       "check": {
         "path": "findings",
@@ -77,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000011",
       "description": "U_POW1 in EMC findings",
       "check": {
         "path": "findings",
@@ -87,7 +118,17 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000012",
+      "description": "U_USB1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU_USB1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "L1 in EMC findings",
       "check": {
         "path": "findings",
@@ -97,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000014",
       "description": "C_NEMA1 in EMC findings",
       "check": {
         "path": "findings",
@@ -107,7 +148,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000015",
       "description": "J_SERVO1 in EMC findings",
       "check": {
         "path": "findings",
@@ -117,7 +158,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000016",
       "description": "J_OLED1 in EMC findings",
       "check": {
         "path": "findings",
@@ -127,7 +168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000017",
       "description": "J_NEMA1 in EMC findings",
       "check": {
         "path": "findings",
@@ -137,7 +178,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000018",
       "description": "J_HALL1 in EMC findings",
       "check": {
         "path": "findings",
@@ -147,7 +188,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000019",
       "description": "J_LEDP1 in EMC findings",
       "check": {
         "path": "findings",
@@ -157,7 +198,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000020",
       "description": "J_LEDE1 in EMC findings",
       "check": {
         "path": "findings",

@@ -5,15 +5,24 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 design_observations",
+      "description": "Exactly 5 decoupling_analysis",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 1
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 6 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -22,7 +31,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "U7 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -32,21 +41,21 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 1 rc_filters",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 1 voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000005",
-      "description": "R66 in rc_filters",
+      "id": "STRUCT-00000006",
+      "description": "R66 in voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
-        "field": "resistor.ref",
+        "field": "r_top.ref",
         "pattern": "^R66$"
       }
     }

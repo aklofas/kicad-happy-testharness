@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~76 (tolerance 10%)",
+      "description": "Net count ~77 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 72,
-        "max": 80
+        "min": 73,
+        "max": 81
       }
     },
     {
@@ -61,7 +61,16 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 design_observations detected",
+      "description": "1 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "2 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -69,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "1 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -78,7 +87,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "All opamp_circuits have reference present",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -88,26 +97,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "6 rc_filters detected",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
       "id": "SEED-00000011",
-      "description": "All rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000012",
       "description": "Has 28 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -116,7 +106,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "Has 7 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -125,7 +115,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "Has 8 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

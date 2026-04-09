@@ -140,6 +140,16 @@
     },
     {
       "id": "SEED-00000015",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000016",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

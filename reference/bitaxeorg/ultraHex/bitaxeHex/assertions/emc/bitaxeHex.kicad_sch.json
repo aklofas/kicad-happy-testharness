@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~52 (tolerance 10%)",
+      "description": "Finding count ~54 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 49,
-        "max": 55
+        "min": 51,
+        "max": 57
       }
     },
     {
@@ -25,12 +25,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "medium count ~34",
+      "description": "medium count ~36",
       "check": {
         "path": "summary.medium",
         "op": "range",
-        "min": 30,
-        "max": 38
+        "min": 32,
+        "max": 40
       }
     },
     {
@@ -45,12 +45,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~27 (+-10)",
+      "description": "EMC risk score ~21 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 17,
-        "max": 37
+        "min": 11,
+        "max": 31
       }
     },
     {
@@ -88,13 +88,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "1 emi_filter finding(s)",
+      "description": "2 emi_filter finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^emi_filter$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -132,13 +132,13 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "2 switching_emc finding(s)",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -188,11 +188,11 @@
     },
     {
       "id": "SEED-00000019",
-      "description": "~23 net(s) with EMC scores",
+      "description": "~24 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 20
+        "value": 21
       }
     }
   ]

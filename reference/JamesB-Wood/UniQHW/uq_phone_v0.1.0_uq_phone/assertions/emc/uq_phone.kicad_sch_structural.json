@@ -71,13 +71,13 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "3 switching_emc finding(s)",
+      "description": "4 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -292,6 +292,16 @@
     },
     {
       "id": "STRUCT-00000029",
+      "description": "U12 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU12\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
       "description": "J3 in EMC findings",
       "check": {
         "path": "findings",
@@ -301,7 +311,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000031",
       "description": "J5 in EMC findings",
       "check": {
         "path": "findings",
@@ -311,7 +321,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000032",
       "description": "J6 in EMC findings",
       "check": {
         "path": "findings",

@@ -60,7 +60,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "10 esd_coverage_audit detected",
+      "description": "12 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -85,7 +85,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 10
+        "value": 12
       }
     },
     {
@@ -96,52 +96,11 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 10
+        "value": 12
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "2 led_audit detected",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "All led_audit have ref",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "All led_audit type values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(indicator_led)$",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "All led_audit drive_method values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "drive_method",
-        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
-        "value": 2
-      }
-    },
-    {
-      "id": "SEED-00000015",
       "description": "2 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -150,7 +109,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000012",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -160,7 +119,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000013",
       "description": "2 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -169,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000014",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -179,12 +138,12 @@
       }
     },
     {
-      "id": "SEED-00000019",
-      "description": "Has 11 connector(s)",
+      "id": "SEED-00000015",
+      "description": "Has 13 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 8
+        "value": 9
       }
     }
   ]

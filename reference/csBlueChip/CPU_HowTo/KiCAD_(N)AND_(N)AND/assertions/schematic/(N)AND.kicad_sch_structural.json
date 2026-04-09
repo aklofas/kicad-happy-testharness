@@ -5,33 +5,24 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 bridge_circuits",
+      "description": "Exactly 6 esd_coverage_audit",
       "check": {
-        "path": "signal_analysis.bridge_circuits",
+        "path": "signal_analysis.esd_coverage_audit",
         "op": "equals",
-        "value": 1
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 3 esd_coverage_audit",
+      "description": "Exactly 6 transistor_circuits",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "signal_analysis.transistor_circuits",
         "op": "equals",
-        "value": 3
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 4 transistor_circuits",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "equals",
-        "value": 4
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
       "description": "Q15 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -41,7 +32,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000004",
       "description": "Q4 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -51,7 +42,27 @@
       }
     },
     {
+      "id": "STRUCT-00000005",
+      "description": "Q14 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q14$"
+      }
+    },
+    {
       "id": "STRUCT-00000006",
+      "description": "Q13 in transistor_circuits",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Q13$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Q5 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -61,7 +72,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Q3 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",

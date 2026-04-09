@@ -91,7 +91,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "2 decoupling_analysis detected",
+      "description": "5 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "min_count",
@@ -100,7 +100,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "3 design_observations detected",
+      "description": "6 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -139,21 +139,21 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "1 rc_filters detected",
+      "description": "2 power_regulators detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.power_regulators",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000016",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "description": "All power_regulators have ref present",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.power_regulators",
         "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
       }
     },
     {

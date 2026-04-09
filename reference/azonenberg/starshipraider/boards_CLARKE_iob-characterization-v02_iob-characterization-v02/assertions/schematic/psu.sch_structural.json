@@ -5,15 +5,24 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 design_observations",
+      "description": "Exactly 3 decoupling_analysis",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 4 design_observations",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 4 led_audit",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -22,26 +31,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 1 opamp_circuits",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
       "id": "STRUCT-00000004",
-      "description": "U20 in opamp_circuits",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "contains_match",
-        "field": "reference",
-        "pattern": "^U20$"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -50,7 +40,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "U18 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",

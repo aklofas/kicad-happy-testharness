@@ -42,30 +42,29 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 ethernet_interfaces detected",
+      "description": "2 decoupling_analysis detected",
       "check": {
-        "path": "signal_analysis.ethernet_interfaces",
+        "path": "signal_analysis.decoupling_analysis",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "10 rc_filters detected",
+      "description": "2 design_observations detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.design_observations",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "description": "1 ethernet_interfaces detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "path": "signal_analysis.ethernet_interfaces",
+        "op": "min_count",
+        "value": 1
       }
     },
     {

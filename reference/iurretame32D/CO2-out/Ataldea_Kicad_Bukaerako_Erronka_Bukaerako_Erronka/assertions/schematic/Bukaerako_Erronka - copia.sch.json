@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~47 (tolerance 10%)",
+      "description": "Net count ~52 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 42,
-        "max": 52
+        "min": 49,
+        "max": 55
       }
     },
     {
@@ -42,7 +42,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "3 design_observations detected",
+      "description": "1 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -51,7 +51,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "4 esd_coverage_audit detected",
+      "description": "6 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -76,7 +76,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 4
+        "value": 6
       }
     },
     {
@@ -87,6 +87,15 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 6 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
         "value": 4
       }
     }

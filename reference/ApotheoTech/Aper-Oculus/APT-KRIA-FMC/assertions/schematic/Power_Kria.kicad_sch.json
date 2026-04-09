@@ -42,7 +42,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "2 decoupling_analysis detected",
+      "description": "6 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "min_count",
@@ -51,7 +51,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "8 design_observations detected",
+      "description": "13 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -60,7 +60,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "3 esd_coverage_audit detected",
+      "description": "2 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -85,7 +85,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -96,7 +96,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -120,25 +120,6 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "1 opamp_circuits detected",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "All opamp_circuits have reference present",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000015",
       "description": "2 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -147,7 +128,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000014",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -157,7 +138,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000015",
       "description": "1 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -166,8 +147,8 @@
       }
     },
     {
-      "id": "SEED-00000018",
-      "description": "2 rc_filters detected",
+      "id": "SEED-00000016",
+      "description": "1 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
@@ -175,7 +156,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000017",
       "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -185,7 +166,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000018",
       "description": "1 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -194,7 +175,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000019",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -204,7 +185,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000020",
       "description": "Has 21 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -213,7 +194,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000021",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

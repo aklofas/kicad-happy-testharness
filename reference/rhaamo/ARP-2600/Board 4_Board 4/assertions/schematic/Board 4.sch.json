@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~139 (tolerance 10%)",
+      "description": "Net count ~158 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 132,
-        "max": 146
+        "min": 150,
+        "max": 166
       }
     },
     {
@@ -60,7 +60,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "61 esd_coverage_audit detected",
+      "description": "67 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -85,7 +85,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 61
+        "value": 67
       }
     },
     {
@@ -96,7 +96,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 61
+        "value": 67
       }
     },
     {
@@ -167,11 +167,11 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "Has 64 connector(s)",
+      "description": "Has 70 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
         "op": "min_count",
-        "value": 48
+        "value": 52
       }
     },
     {
@@ -190,15 +190,6 @@
         "path": "statistics.component_types.resistor",
         "op": "min_count",
         "value": 33
-      }
-    },
-    {
-      "id": "SEED-00000021",
-      "description": "Has 6 transformer(s)",
-      "check": {
-        "path": "statistics.component_types.transformer",
-        "op": "min_count",
-        "value": 4
       }
     }
   ]

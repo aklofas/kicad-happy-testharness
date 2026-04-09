@@ -5,20 +5,20 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 decoupling_analysis",
+      "description": "Exactly 5 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 7 design_observations",
+      "description": "Exactly 8 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 7
+        "value": 8
       }
     },
     {
@@ -32,15 +32,35 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 power_regulators",
+      "description": "Exactly 3 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000005",
+      "description": "U1703 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U1703$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U1704 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U1704$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "U1701 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -50,7 +70,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "Exactly 4 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -59,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "R1713 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -69,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "R1703 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -79,7 +99,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "R1708 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -89,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "R1712 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

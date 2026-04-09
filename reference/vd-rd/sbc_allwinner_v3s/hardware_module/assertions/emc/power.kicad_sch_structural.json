@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "1 switching_emc finding(s)",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -26,6 +26,26 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "U910 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU910\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "U900 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU900\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "U600 in EMC findings",
       "check": {
         "path": "findings",

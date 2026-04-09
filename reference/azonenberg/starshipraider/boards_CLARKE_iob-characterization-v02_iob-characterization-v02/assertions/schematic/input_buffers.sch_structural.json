@@ -5,81 +5,59 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 7 rc_filters",
+      "description": "Exactly 3 decoupling_analysis",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 7
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R5 in rc_filters",
+      "description": "Exactly 3 design_observations",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R5$"
+        "path": "signal_analysis.design_observations",
+        "op": "equals",
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "R6 in rc_filters",
+      "description": "Exactly 3 voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R6$"
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "R7 in rc_filters",
+      "description": "R12 in voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R7$"
+        "field": "r_top.ref",
+        "pattern": "^R12$"
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "R8 in rc_filters",
+      "description": "R24 in voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R8$"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "R26 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R26$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "R24 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
+        "field": "r_top.ref",
         "pattern": "^R24$"
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "R12 in rc_filters",
+      "id": "STRUCT-00000006",
+      "description": "R26 in voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R12$"
+        "field": "r_top.ref",
+        "pattern": "^R26$"
       }
     }
   ]

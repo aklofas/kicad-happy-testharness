@@ -72,6 +72,24 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "1 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "1 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "6 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -80,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000011",
       "description": "All esd_coverage_audit have connector_ref",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -90,7 +108,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000012",
       "description": "All esd_coverage_audit coverage values are valid",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -101,7 +119,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000013",
       "description": "All esd_coverage_audit risk_level values are valid",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -109,25 +127,6 @@
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
         "value": 6
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "1 rc_filters detected",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
-      "description": "All rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {

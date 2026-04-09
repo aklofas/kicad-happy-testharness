@@ -27,6 +27,17 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "1 switching_emc finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^switching_emc$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Rule GP-004 present",
       "check": {
         "path": "findings",
@@ -36,7 +47,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Rule IO-001 present",
       "check": {
         "path": "findings",
@@ -46,7 +57,27 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
+      "description": "Rule SW-002 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^SW\\-002$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "U2 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "P1 in EMC findings",
       "check": {
         "path": "findings",
@@ -56,7 +87,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000009",
       "description": "P2 in EMC findings",
       "check": {
         "path": "findings",
@@ -66,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000010",
       "description": "P6 in EMC findings",
       "check": {
         "path": "findings",
@@ -76,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000011",
       "description": "P7 in EMC findings",
       "check": {
         "path": "findings",

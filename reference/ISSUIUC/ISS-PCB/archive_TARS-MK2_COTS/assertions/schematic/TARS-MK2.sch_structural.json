@@ -92,20 +92,20 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 3 decoupling_analysis",
+      "description": "Exactly 7 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 3
+        "value": 7
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 13 design_observations",
+      "description": "Exactly 21 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 13
+        "value": 21
       }
     },
     {
@@ -225,15 +225,35 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "Exactly 1 protection_devices",
+      "description": "Exactly 3 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000025",
+      "description": "F501 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F501$"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "F301 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F301$"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
       "description": "Exactly 7 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -242,7 +262,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000028",
       "description": "R201 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -252,7 +272,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000029",
       "description": "R206 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -262,7 +282,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000030",
       "description": "R204 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -272,7 +292,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000031",
       "description": "R604 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -282,7 +302,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000032",
       "description": "R504 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -292,7 +312,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000033",
       "description": "R508 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -302,7 +322,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000034",
       "description": "Exactly 1 reset_supervisors",
       "check": {
         "path": "signal_analysis.reset_supervisors",
@@ -311,7 +331,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000035",
       "description": "Exactly 1 rf_matching",
       "check": {
         "path": "signal_analysis.rf_matching",
@@ -320,7 +340,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000036",
       "description": "Exactly 2 sensor_interfaces",
       "check": {
         "path": "signal_analysis.sensor_interfaces",
@@ -329,7 +349,7 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000037",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -338,7 +358,7 @@
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000038",
       "description": "R503 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

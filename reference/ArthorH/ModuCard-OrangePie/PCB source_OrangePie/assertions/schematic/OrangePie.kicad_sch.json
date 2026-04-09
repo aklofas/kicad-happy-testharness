@@ -91,7 +91,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "5 decoupling_analysis detected",
+      "description": "10 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "min_count",
@@ -100,7 +100,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "13 design_observations detected",
+      "description": "20 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -150,21 +150,21 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "1 lc_filters detected",
+      "description": "1 feedback_networks detected",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "signal_analysis.feedback_networks",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000017",
-      "description": "All lc_filters have non-zero resonant_hz",
+      "description": "All feedback_networks have r_top ref present",
       "check": {
-        "path": "signal_analysis.lc_filters",
+        "path": "signal_analysis.feedback_networks",
         "op": "not_contains_match",
-        "field": "resonant_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "field": "r_top.ref",
+        "pattern": "^(None|)$"
       }
     },
     {
@@ -238,7 +238,7 @@
     },
     {
       "id": "SEED-00000025",
-      "description": "13 rc_filters detected",
+      "description": "10 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
@@ -276,7 +276,7 @@
     },
     {
       "id": "SEED-00000029",
-      "description": "3 voltage_dividers detected",
+      "description": "4 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "min_count",

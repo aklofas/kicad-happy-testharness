@@ -61,7 +61,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "1 design_observations detected",
+      "description": "7 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -152,15 +152,6 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "3 memory_interfaces detected",
-      "check": {
-        "path": "signal_analysis.memory_interfaces",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000017",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -169,13 +160,22 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "not_contains_match",
         "field": "ref",
         "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "1 protection_devices detected",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "min_count",
+        "value": 1
       }
     },
     {

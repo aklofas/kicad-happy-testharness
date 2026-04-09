@@ -38,13 +38,13 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "2 switching_emc finding(s)",
+      "description": "3 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -170,22 +170,22 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "FB1 in EMC findings",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bFB1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000018",
       "description": "U3 in EMC findings",
       "check": {
         "path": "findings",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "FB1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bFB1\\b"
       }
     }
   ]

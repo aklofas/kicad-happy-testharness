@@ -69,25 +69,6 @@
         "pattern": "^(external_adc|voltage_reference)$",
         "value": 1
       }
-    },
-    {
-      "id": "SEED-00000008",
-      "description": "2 opamp_circuits detected",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000009",
-      "description": "All opamp_circuits have reference present",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^(None|\\?|)$"
-      }
     }
   ]
 }

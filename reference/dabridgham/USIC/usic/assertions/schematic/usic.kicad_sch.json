@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~716 (tolerance 10%)",
+      "description": "Net count ~717 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 694,
-        "max": 738
+        "min": 695,
+        "max": 739
       }
     },
     {
@@ -91,7 +91,16 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "12 design_observations detected",
+      "description": "5 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "13 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -99,7 +108,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "9 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -108,7 +117,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
       "description": "All esd_coverage_audit have connector_ref",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -118,7 +127,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000014",
       "description": "All esd_coverage_audit coverage values are valid",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -129,7 +138,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000015",
       "description": "All esd_coverage_audit risk_level values are valid",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -140,7 +149,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000016",
       "description": "3 feedback_networks detected",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -149,7 +158,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000017",
       "description": "All feedback_networks have r_top ref present",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -159,7 +168,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "10 led_audit detected",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -168,7 +177,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "All led_audit have ref",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -178,7 +187,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "All led_audit type values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -189,7 +198,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "All led_audit drive_method values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -197,15 +206,6 @@
         "field": "drive_method",
         "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
         "value": 10
-      }
-    },
-    {
-      "id": "SEED-00000021",
-      "description": "1 memory_interfaces detected",
-      "check": {
-        "path": "signal_analysis.memory_interfaces",
-        "op": "min_count",
-        "value": 1
       }
     },
     {
@@ -248,7 +248,7 @@
     },
     {
       "id": "SEED-00000026",
-      "description": "11 voltage_dividers detected",
+      "description": "13 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "min_count",

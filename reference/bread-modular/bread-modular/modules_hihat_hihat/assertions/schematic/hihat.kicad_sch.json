@@ -60,7 +60,7 @@
     },
     {
       "id": "SEED-00000007",
-      "description": "3 esd_coverage_audit detected",
+      "description": "4 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -85,7 +85,7 @@
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -96,7 +96,7 @@
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -120,7 +120,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "10 protection_devices detected",
+      "description": "8 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "min_count",
@@ -176,6 +176,15 @@
     },
     {
       "id": "SEED-00000019",
+      "description": "Has 5 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000020",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -184,7 +193,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "Has 29 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -193,12 +202,12 @@
       }
     },
     {
-      "id": "SEED-00000021",
-      "description": "Has 7 varistor(s)",
+      "id": "SEED-00000022",
+      "description": "Has 5 varistor(s)",
       "check": {
         "path": "statistics.component_types.varistor",
         "op": "min_count",
-        "value": 5
+        "value": 3
       }
     }
   ]

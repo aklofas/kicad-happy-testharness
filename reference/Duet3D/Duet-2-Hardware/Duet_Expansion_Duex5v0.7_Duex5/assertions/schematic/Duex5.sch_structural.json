@@ -32,15 +32,25 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 4 lc_filters",
+      "description": "Exactly 6 lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "equals",
-        "value": 4
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000005",
+      "description": "L2 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "L1 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -50,23 +60,13 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "L3 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "L2 in lc_filters",
-      "check": {
-        "path": "signal_analysis.lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L2$"
       }
     },
     {

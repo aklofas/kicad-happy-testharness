@@ -24,11 +24,11 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 19 design_observations",
+      "description": "Exactly 23 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 19
+        "value": 23
       }
     },
     {
@@ -60,15 +60,25 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Exactly 17 protection_devices",
+      "description": "Exactly 18 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 17
+        "value": 18
       }
     },
     {
       "id": "STRUCT-00000008",
+      "description": "F101 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F101$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
       "description": "Exactly 1 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -77,7 +87,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Q801 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
