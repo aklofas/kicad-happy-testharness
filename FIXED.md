@@ -11,6 +11,24 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-08 — Batch 32: v1.2 pre-release bugs (KH-204, KH-206)
+
+### KH-204 (MEDIUM): power_rails uses UUID sheet paths instead of human-readable names
+
+- **File**: `skills/kicad/scripts/analyze_schematic.py`
+- **Root cause**: `compute_statistics()` iterated `nets` keys which include hierarchical UUID path prefixes (e.g., `/201ab4ae-.../VIN`) and added them to `power_rails` without cleaning.
+- **Fix**: Added `_clean_hierarchical_name()` helper using UUID regex to strip path prefixes. Applied to both the net-name-based rail discovery and the final power_rails list builder.
+- **Verified**: VoltageSwitchboard repro now produces `['VIN', 'VOUT', 'V+', '+3V3', 'GND']` — no UUID paths.
+
+### KH-206 (MEDIUM): Global labels with different names merged into one net
+
+- **File**: `skills/kicad/scripts/analyze_schematic.py`
+- **Root cause**: `build_net_map()` had a post-processing pass (lines 1100-1108) that called `union_with_overlapping_wires()` for ALL component pins. This falsely connected pins that sat geometrically on a wire segment (same Y, X between endpoints) without a junction. In the haxophone001 design, R2 pin 2 at (104.14, 62.23) sat on the SDA horizontal wire (96.52→110.49, y=62.23) even though R2 only connects via a vertical wire to the SCL bus. KiCad requires a junction or wire endpoint for connection; geometric overlap alone is not sufficient.
+- **Fix**: Removed the mid-wire pin union pass entirely. Component pins already connect via wire endpoints through the `add_point` coordinate matching. The mid-wire union was only needed for labels, power symbols, junctions, and no-connects — all of which already have their own `union_with_overlapping_wires` calls.
+- **Verified**: haxophone001 repro now produces separate SDA (3 pins) and SCL (3 pins) nets.
+
+---
+
 ## 2026-04-08 — KH-205 resolved (already fixed)
 
 ### KH-205 (MEDIUM): D+ net lost in KiCad 5 legacy net resolution
