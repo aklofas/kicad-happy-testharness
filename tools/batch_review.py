@@ -191,6 +191,29 @@ def _collect_outputs(repo):
                 except Exception:
                     pass
 
+    # Thermal outputs use PCB-derived naming: {prefix}_thermal.json
+    if best_result and "pcb" in best_result:
+        pcb_prefix = best_result["pcb"][0]["prefix"]
+        thermal_dir = OUTPUTS_DIR / "thermal" / repo
+        thermal_path = thermal_dir / f"{pcb_prefix}_thermal.json"
+        if thermal_path.exists():
+            try:
+                d = json.loads(thermal_path.read_text())
+                # Include if there are any thermal assessments or findings
+                assessments = d.get("thermal_assessments", [])
+                findings = d.get("findings", [])
+                if assessments or findings:
+                    best_result["thermal"] = [{
+                        "path": str(thermal_path),
+                        "source": best_result["pcb"][0]["source"],
+                        "components": 0,
+                        "signals": 0,
+                        "score": 0,
+                        "prefix": pcb_prefix,
+                    }]
+            except Exception:
+                pass
+
     return best_result or {}
 
 
@@ -304,7 +327,7 @@ def _generate_prompt(repo, outputs_by_type):
     primary_output = None
     primary_source = None
 
-    for atype in ("schematic", "pcb", "gerber", "spice", "emc"):
+    for atype in ("schematic", "pcb", "gerber", "spice", "emc", "thermal"):
         files = outputs_by_type.get(atype, [])
         if not files:
             continue
@@ -313,7 +336,7 @@ def _generate_prompt(repo, outputs_by_type):
             primary_output = best["path"]
             primary_source = best["source"]
         label = atype.upper()
-        if atype in ("spice", "emc"):
+        if atype in ("spice", "emc", "thermal"):
             # Supplementary outputs — no separate source file
             file_sections.append(f"  {label} OUTPUT: {best['path']}")
         else:
@@ -369,7 +392,32 @@ def _generate_prompt(repo, outputs_by_type):
             "decisions (trace routing, ground planes, decoupling placement)"
         )
 
+    if "thermal" in outputs_by_type:
+        type_instructions.append(
+            "- THERMAL: Check hotspot identification (are the right components "
+            "flagged?), junction temperature estimates (reasonable for the power "
+            "dissipation?), thermal via and copper area assessments. Cross-reference "
+            "against PCB copper pours and component placement"
+        )
+
     type_block = "\n".join(type_instructions)
+
+    # Add run-on-demand instructions for thermal if not pre-computed
+    run_on_demand = ""
+    if "thermal" not in outputs_by_type and "schematic" in outputs_by_type and "pcb" in outputs_by_type:
+        sch_out = outputs_by_type["schematic"][0]["path"]
+        pcb_out = outputs_by_type["pcb"][0]["path"]
+        pcb_prefix = outputs_by_type["pcb"][0]["prefix"]
+        thermal_out = str(OUTPUTS_DIR / "thermal" / repo / f"{pcb_prefix}_thermal.json")
+        run_on_demand = f"""
+OPTIONAL — Run thermal analysis before reviewing (generates thermal output on-the-fly):
+```bash
+mkdir -p "$(dirname '{thermal_out}')"
+python3 "${{KICAD_HAPPY_DIR:-../kicad-happy}}/skills/kicad/scripts/analyze_thermal.py" \\
+    --schematic '{sch_out}' --pcb '{pcb_out}' --output '{thermal_out}'
+```
+If you run this, also read and review the thermal output.
+"""
 
     # Cross-reference instructions
     cross_ref = ""
@@ -387,6 +435,14 @@ def _generate_prompt(repo, outputs_by_type):
             cross_parts.append("   - Schematic↔EMC: Do EMC findings align with signal types? Are high-speed nets flagged appropriately?")
         if "pcb" in has_types and "emc" in has_types:
             cross_parts.append("   - PCB↔EMC: Do layout-based EMC findings match the actual PCB layout?")
+        if "pcb" in has_types and "thermal" in has_types:
+            cross_parts.append(
+                "   - PCB↔Thermal: Do thermal hotspot locations match PCB copper "
+                "areas? Are high-power components near adequate thermal relief?")
+        if "schematic" in has_types and "thermal" in has_types:
+            cross_parts.append(
+                "   - Schematic↔Thermal: Do power dissipation estimates match "
+                "regulator/driver power budgets from the schematic?")
         if cross_parts:
             cross_ref = "\n7. CROSS-REFERENCE between analyzer outputs:\n" + "\n".join(cross_parts) + "\n   Flag any inconsistencies between analyzer outputs."
 
@@ -415,7 +471,7 @@ def _generate_prompt(repo, outputs_by_type):
     prompt = f"""You are reviewing KiCad analyzer outputs for correctness. This repo has {types_str} outputs. Read ALL source files and ALL output JSONs, compare them, and produce structured findings.
 
 {files_block}
-
+{run_on_demand}
 Instructions:
 1. Read each source file to understand the actual design
 2. Read each analyzer JSON output to see what was detected
@@ -593,6 +649,18 @@ def cmd_status(args):
                     except Exception:
                         pass
 
+    # Count output availability per analyzer type
+    output_avail = {}
+    for atype in ("schematic", "pcb", "gerber", "spice", "emc", "thermal"):
+        d = OUTPUTS_DIR / atype
+        if d.exists():
+            count = sum(
+                1 for o in d.iterdir() if o.is_dir()
+                for r in o.iterdir() if r.is_dir()
+            )
+            if count:
+                output_avail[atype] = count
+
     print(f"Layer 3 Review Coverage")
     print(f"  Reviewed: {len(reviewed)} / {total} repos "
           f"({100*len(reviewed)//max(total,1)}%)")
@@ -601,6 +669,11 @@ def cmd_status(args):
         print(f"\n  Findings by analyzer type:")
         for atype in sorted(type_counts):
             print(f"    {atype}: {type_counts[atype]}")
+    if output_avail:
+        print(f"\n  Output availability (repos):")
+        for atype in ("schematic", "pcb", "gerber", "spice", "emc", "thermal"):
+            if atype in output_avail:
+                print(f"    {atype}: {output_avail[atype]}")
 
 
 def main():
