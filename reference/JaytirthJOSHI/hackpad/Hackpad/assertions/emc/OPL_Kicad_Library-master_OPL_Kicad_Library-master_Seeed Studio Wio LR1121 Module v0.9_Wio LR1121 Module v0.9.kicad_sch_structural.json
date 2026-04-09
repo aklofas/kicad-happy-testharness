@@ -1,0 +1,69 @@
+{
+  "file_pattern": "OPL_Kicad_Library-master_OPL_Kicad_Library-master_Seeed Studio Wio LR1121 Module v0.9_Wio LR1121 Module v0.9.kicad_sch",
+  "analyzer_type": "emc",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "2 diff_pair finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^diff_pair$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "3 ground_plane finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^ground_plane$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Rule DP-004 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^DP\\-004$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Rule GP-004 present",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rule_id",
+        "pattern": "^GP\\-004$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "L8 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "U2 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU2\\b"
+      }
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "file_pattern": "09.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "C377 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC377\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "C400 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC400\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "C327 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC327\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "C299 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC299\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C103 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C74 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC74\\b"
+      }
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "file_pattern": "ui.kicad_sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "Exactly 6 transistor_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^transistor_circuit$",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "Q825 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ825\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Q826 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ826\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Q827 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ827\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Q828 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ828\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Q829 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ829\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Q824 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ824\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C28 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC28\\b"
+      }
+    }
+  ]
+}

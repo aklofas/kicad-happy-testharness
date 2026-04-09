@@ -1,0 +1,135 @@
+{
+  "file_pattern": "StepDriver.kicad_sch",
+  "analyzer_type": "emc",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Finding count ~11 (tolerance 10%)",
+      "check": {
+        "path": "summary.total_checks",
+        "op": "range",
+        "min": 9,
+        "max": 13
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "critical count ~1",
+      "check": {
+        "path": "summary.critical",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "high count ~1",
+      "check": {
+        "path": "summary.high",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "low count ~9",
+      "check": {
+        "path": "summary.low",
+        "op": "range",
+        "min": 8,
+        "max": 10
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "EMC risk score ~72 (+-10)",
+      "check": {
+        "path": "summary.emc_risk_score",
+        "op": "range",
+        "min": 62,
+        "max": 82
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "1 ground_plane finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^ground_plane$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "9 io_filtering finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^io_filtering$",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "1 stackup finding(s)",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^stackup$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Target standard is fcc-class-b",
+      "check": {
+        "path": "target_standard",
+        "op": "equals",
+        "value": "fcc-class-b"
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "4 frequency band(s) in test plan",
+      "check": {
+        "path": "test_plan.frequency_bands",
+        "op": "min_count",
+        "value": 4
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "~7 probe point(s) in test plan",
+      "check": {
+        "path": "test_plan.probe_points",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Regulatory market is us",
+      "check": {
+        "path": "regulatory_coverage.market",
+        "op": "equals",
+        "value": "us"
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "2 applicable standard(s)",
+      "check": {
+        "path": "regulatory_coverage.applicable_standards",
+        "op": "min_count",
+        "value": 2
+      }
+    }
+  ]
+}
