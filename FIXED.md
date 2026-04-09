@@ -11,6 +11,87 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-09 — Batch 33: Layer 3 batch review bugs (KH-207..KH-217)
+
+### KH-207 (HIGH): Legacy 2x2 matrix decomposition produces wrong pin positions
+
+- **File**: `analyze_schematic.py` — `compute_pin_positions()`, legacy matrix parser
+- **Root cause**: Legacy parser decomposed 2x2 orientation matrix into angle+mirror flags incorrectly. Matrix `(0,1,-1,0)` produced pin offset `(-5,10)` instead of correct `(5,-10)`. `mirror_y` was never set for legacy components.
+- **Fix**: Store raw 2x2 matrix as `transform_matrix` on component. `compute_pin_positions()` uses it directly (`rpx = a*px + b*py`) when present, falling back to angle/mirror path for KiCad 6+.
+- **Verified**: All 6 matrix combinations (identity, 90/180/270, mirror X/Y) produce correct pin offsets.
+
+### KH-208 (HIGH): Component type classification ignores lib_id, over-relies on ref prefix
+
+- **File**: `kicad_utils.py` — `classify_component()`
+- **Root cause**: `type_map.get(prefix)` returns immediately for standard prefixes (T→transformer, C→capacitor), never reaching lib_id fallback. T1 with `Sensor_Temperature:DS18B20` got "transformer".
+- **Fix**: Added early lib_id override block inside type_map result path for unambiguous library categories: `Connector:*`→connector, `Sensor_Temperature:*`→ic, `Motor:*`→motor, `*CircuitBreaker*`→switch.
+- **Verified**: T1/DS18B20→ic, CB1/CircuitBreaker→switch, LED1_W/Connector→connector, R1/Device:R→resistor (unchanged).
+
+### KH-209 (MEDIUM): Power rails with nnVn naming pattern classified as signal
+
+- **File**: `kicad_utils.py` — `is_power_net_name()`
+- **Root cause**: Only matched V-first format (V3V3, V5V0). Industry-standard digit-first format (3V3, 5V0, 12V0) unmatched.
+- **Fix**: Added 4 patterns: `^\d+V\d` (nnVn), `^NEG\d+V` (negative rails), `^V[CD][CD]\d` (VDDn/VCCn), and `^\d+V` with underscore (nV_xxx).
+- **Verified**: All 10 reported nets (12V0, 3V3, 5V0, 1V5, 1V8, VDD5, VDD12, NEG6V, 5V_INT) now classify as power.
+
+### KH-210 (MEDIUM): SPI chip select detection too narrow
+
+- **File**: `analyze_schematic.py` — SPI CS detection
+- **Root cause**: Only matched 5 keywords: CS, SS, NSS, SPI_CS, SPI_SS.
+- **Fix**: Added CSN, NCS, SSEL, CSEL to keyword list.
+- **Verified**: Compile-check passes.
+
+### KH-211 (MEDIUM): Incomplete pin_nets for components on unnamed nets
+
+- **File**: `analyze_schematic.py` — pin_nets serialization (both legacy and KiCad 6+ paths)
+- **Root cause**: Original diagnosis (chain tracer can't cross hierarchy) was wrong. The chain tracer uses `ctx.ref_pins` which includes all nets and works correctly. The real issue: `pin_nets` serialization filtered `__unnamed_*` nets, hiding connections made through unlabelled wires (common in hierarchical sub-sheets). This made the JSON output appear disconnected.
+- **Fix**: Removed `__unnamed_*` skip filter from both pin_nets population loops. All nets now included.
+- **Verified**: yuiop60hh LED2 now shows all 4 pins (was missing 2). Chain detection unchanged. Tested on 4 multi-sheet LED projects — identical chain results.
+
+### KH-212 (MEDIUM): Bare capacitor values < 1.0 parsed as Farads
+
+- **File**: `kicad_utils.py` — `parse_value()`, `analyze_schematic.py` — callers
+- **Root cause**: Two-part: (1) KH-153 pF fix only applied for values ≥1.0, values <1.0 fell through as Farads. (2) Callers at lines 6278 and 7595 didn't pass `component_type`.
+- **Fix**: (1) Added `else: result *= 1e-6` branch for values <1.0 when component_type="capacitor". (2) Fixed both callers to pass component_type.
+- **Verified**: `parse_value("0.1", "capacitor")` → 1e-7, `parse_value("0.47", "capacitor")` → 4.7e-7, `parse_value("100", "capacitor")` → 1e-10, `parse_value("0.1", None)` → 0.1.
+
+### KH-213 (LOW): P-MOSFET detection misses PMOS/P-MOS/P-MOSFET keyword variants
+
+- **File**: `signal_detectors.py` — P-channel detection in FET analysis
+- **Root cause**: Keywords check matched `p-channel`/`pchannel` but real KiCad keywords use `PMOS`/`P-MOS`/`P-MOSFET`. Description field never checked.
+- **Fix**: Added `pmos`, `p-mos`, `p-mosfet` to keywords check. Added description field fallback.
+- **Verified**: IRF9310 keywords `"transistor PMOS P-MOS P-MOSFET"` now match.
+
+### KH-214 (LOW): INA2xx power monitors misclassified as opamp circuits
+
+- **File**: `signal_detectors.py` — `detect_opamp_circuits()`
+- **Root cause**: `ina2` in `opamp_value_keywords` matched INA233/INA226 power monitors.
+- **Fix**: Removed `ina2`/`ina8` from keywords (INA128/103/114 still caught by `ina10`-`ina13`). Added post-gate exclusion for INA2xx/INA8xx/INA90x.
+- **Verified**: INA instrumentation amps still detected; INA233/INA226 excluded.
+
+### KH-215 (LOW): LM2576/LM2596 switching bucks classified as LDO
+
+- **File**: `signal_detectors.py` — regulator topology detection
+- **Root cause**: LM2576 pin "OUT" matches `vout_pin` not `sw_pin`. Keyword fallback catches "switching" from standard lib_id but not custom libraries.
+- **Fix**: Extracted `known_freqs` to module-level `_KNOWN_FREQS`. Added `_match_known_switching()` check before LDO default.
+- **Verified**: LM2576/LM2596 → topology="switching". LM317 → still "LDO".
+
+### KH-216 (LOW): Multi-unit IC pin_nets shows wrong unit's pins
+
+- **File**: `analyze_schematic.py` — pin_nets assignment (both legacy and KiCad 6+ paths)
+- **Root cause**: pin_nets built by reference only; multi-unit components sharing a reference got all units' pins merged.
+- **Fix**: Store `_unit_pins` set from `compute_pin_positions()` on each component. Filter pin_nets to only include unit-valid pins. Clean up transient field after.
+- **Verified**: Compile-check passes. Each unit now gets only its own pins + shared (unit 0) power pins.
+
+### KH-217 (LOW): Crystal frequency parsing case-sensitive
+
+- **File**: `signal_detectors.py` — `_parse_crystal_frequency()`
+- **Root cause**: Regex used literal `z` not `[Zz]`, so `kHZ`/`MHZ` failed.
+- **Fix**: Changed `z` to `[Zz]` in both MHz and kHz regex patterns.
+- **Verified**: `32.768kHZ`, `25MHZ`, `8mhz` all parse correctly.
+
+---
+
 ## 2026-04-08 — Batch 32: v1.2 pre-release bugs (KH-204, KH-206)
 
 ### KH-204 (MEDIUM): power_rails uses UUID sheet paths instead of human-readable names
