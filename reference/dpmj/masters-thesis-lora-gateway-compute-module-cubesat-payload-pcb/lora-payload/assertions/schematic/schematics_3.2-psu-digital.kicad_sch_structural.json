@@ -52,6 +52,35 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Exactly 2 lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "L1801 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1801$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "L1802 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1802$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
       "description": "Exactly 2 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -60,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000010",
       "description": "U1802 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -70,7 +99,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000011",
       "description": "U1801 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -80,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000012",
       "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -89,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000013",
       "description": "R1801 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -99,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000014",
       "description": "R1805 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

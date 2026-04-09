@@ -51,7 +51,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "6 design_observations detected",
+      "description": "8 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -142,6 +142,25 @@
     },
     {
       "id": "SEED-00000015",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "2 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -150,7 +169,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000018",
       "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -160,7 +179,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000019",
       "description": "Has 24 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -169,7 +188,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000020",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -178,7 +197,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000021",
       "description": "Has 13 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

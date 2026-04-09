@@ -50,11 +50,11 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 7 rc_filters",
+      "description": "Exactly 8 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 7
+        "value": 8
       }
     },
     {
@@ -125,6 +125,16 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R52$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R51 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R51$"
       }
     }
   ]

@@ -109,11 +109,11 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 6 rc_filters",
+      "description": "Exactly 10 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 6
+        "value": 10
       }
     },
     {
@@ -158,6 +158,16 @@
     },
     {
       "id": "STRUCT-00000017",
+      "description": "R1320 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1320$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "R1322 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -167,7 +177,17 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
+      "description": "R1321 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1321$"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
       "description": "R1325 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -177,7 +197,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000021",
       "description": "Exactly 4 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -186,7 +206,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000022",
       "description": "R304 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -196,7 +216,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000023",
       "description": "R602 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -206,7 +226,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000024",
       "description": "R604 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -216,7 +236,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000025",
       "description": "R601 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

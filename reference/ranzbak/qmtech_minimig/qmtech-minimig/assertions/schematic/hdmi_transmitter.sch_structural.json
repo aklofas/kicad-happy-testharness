@@ -51,25 +51,15 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 7 lc_filters",
+      "description": "Exactly 8 lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "equals",
-        "value": 7
+        "value": 8
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "L2 in lc_filters",
-      "check": {
-        "path": "signal_analysis.lc_filters",
-        "op": "contains_match",
-        "field": "inductor.ref",
-        "pattern": "^L2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "L4 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -79,13 +69,23 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "L3 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
         "pattern": "^L3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "L2 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L2$"
       }
     },
     {
@@ -119,21 +119,61 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 1 rc_filters",
+      "description": "Exactly 5 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 1
+        "value": 5
       }
     },
     {
       "id": "STRUCT-00000014",
+      "description": "R18 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R18$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R41 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R41$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "R57 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R57$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R59 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R59$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R60 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R60$"
       }
     }
   ]

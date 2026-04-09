@@ -1,0 +1,88 @@
+{
+  "file_pattern": "attenuator.sch",
+  "analyzer_type": "spice",
+  "generated_by": "seed_structural.py",
+  "assertions": [
+    {
+      "id": "STRUCT-00000001",
+      "description": "Exactly 6 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "R401 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR401\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "C410 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC410\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "R402 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR402\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R403 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR403\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R410 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR410\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R411 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR411\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R412 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR412\\b"
+      }
+    }
+  ]
+}

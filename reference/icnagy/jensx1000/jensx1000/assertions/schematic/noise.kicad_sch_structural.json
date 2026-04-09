@@ -51,11 +51,11 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 3 rc_filters",
+      "description": "Exactly 7 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 7
       }
     },
     {
@@ -90,6 +90,16 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "R6 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -98,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "R85 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

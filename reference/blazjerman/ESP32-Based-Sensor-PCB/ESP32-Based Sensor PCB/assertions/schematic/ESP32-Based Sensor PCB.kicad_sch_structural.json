@@ -5,11 +5,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling_analysis",
+      "description": "Exactly 3 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -70,11 +70,11 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 protection_devices",
+      "description": "Exactly 3 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -89,6 +89,16 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "F1 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^F1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "U4 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -98,32 +108,22 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 2 rc_filters",
+      "id": "STRUCT-00000012",
+      "description": "Exactly 1 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "R4 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R4$"
-      }
-    },
-    {
-      "id": "STRUCT-00000013",
-      "description": "R16 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R16$"
       }
     },
     {

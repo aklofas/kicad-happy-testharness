@@ -5,28 +5,68 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 lc_filter simulation(s)",
+      "description": "Exactly 3 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^lc_filter$",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 7 rc_filter simulation(s)",
+      "description": "Exactly 15 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 7
+        "value": 15
       }
     },
     {
       "id": "STRUCT-00000003",
+      "description": "R1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Cout3 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCout3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Rpg1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRpg1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Cout1 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCout1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Rfbb1 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -36,7 +76,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000008",
       "description": "Cff1 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -46,7 +86,17 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000009",
+      "description": "R2 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Rfbb3 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -56,7 +106,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000011",
       "description": "Cff3 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -66,7 +116,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000012",
       "description": "Rff2 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -76,7 +126,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000013",
       "description": "Cff2 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -86,7 +136,17 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000014",
+      "description": "Rpg2 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRpg2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "Rfbt3 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -96,7 +156,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000016",
       "description": "Rfbt1 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -106,7 +166,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000017",
       "description": "Rff1 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -116,7 +176,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000018",
       "description": "Rff3 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -126,7 +186,47 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000019",
+      "description": "L2 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "Cout1 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCout1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
+      "description": "L1 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "Cout3 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bCout3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
       "description": "L3 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -136,7 +236,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000024",
       "description": "Cboot2 simulated as lc_filter",
       "check": {
         "path": "simulation_results",

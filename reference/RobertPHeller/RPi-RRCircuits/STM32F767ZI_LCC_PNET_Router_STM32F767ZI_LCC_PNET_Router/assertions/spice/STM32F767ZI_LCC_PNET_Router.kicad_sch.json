@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~6 (tolerance 10%)",
+      "description": "Simulation count ~7 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 6,
+        "max": 8
       }
     },
     {
@@ -35,6 +35,17 @@
     },
     {
       "id": "SEED-00000004",
+      "description": "1 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000005",
       "description": "1 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -45,7 +56,7 @@
       }
     },
     {
-      "id": "SEED-00000005",
+      "id": "SEED-00000006",
       "description": "4 opamp_circuit simulation(s)",
       "check": {
         "path": "simulation_results",

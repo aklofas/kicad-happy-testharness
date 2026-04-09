@@ -160,6 +160,25 @@
         "pattern": "^(stepper|dc_brushed_h_bridge)$",
         "value": 1
       }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "4 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000018",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
     }
   ]
 }

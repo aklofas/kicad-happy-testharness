@@ -14,6 +14,25 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 1 lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "L1 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Exactly 1 led_audit",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -22,7 +41,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -31,13 +50,32 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "U2 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 1 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R25 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R25$"
       }
     }
   ]

@@ -32,21 +32,21 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 2 lc_filters",
+      "description": "Exactly 4 lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "L6 in lc_filters",
+      "description": "L7 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "contains_match",
         "field": "inductor.ref",
-        "pattern": "^L6$"
+        "pattern": "^L7$"
       }
     },
     {
@@ -61,6 +61,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "L6 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 2 led_audit",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -69,16 +79,36 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 3 rc_filters",
+      "id": "STRUCT-00000009",
+      "description": "Exactly 5 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 5
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
+      "description": "R31 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R31$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R34 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R34$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "R39 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -88,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000013",
       "description": "R40 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",

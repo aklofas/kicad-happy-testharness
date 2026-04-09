@@ -29,6 +29,45 @@
         "op": "equals",
         "value": 2
       }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 3 protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "D201 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D201$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "D202 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D202$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "D203 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D203$"
+      }
     }
   ]
 }

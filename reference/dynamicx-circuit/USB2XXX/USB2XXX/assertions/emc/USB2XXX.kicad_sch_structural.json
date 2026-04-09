@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "2 decoupling finding(s)",
+      "description": "3 decoupling finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -93,6 +93,26 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC29\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "U11 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU11\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C1 in EMC findings",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
       }
     }
   ]

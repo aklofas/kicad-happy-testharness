@@ -32,11 +32,11 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 3 rc_filters",
+      "description": "Exactly 4 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -61,6 +61,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "R206 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R206$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "R201 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",

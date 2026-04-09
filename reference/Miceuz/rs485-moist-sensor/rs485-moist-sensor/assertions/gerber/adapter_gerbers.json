@@ -1,0 +1,103 @@
+{
+  "file_pattern": "adapter_gerbers",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "2 copper layer(s)",
+      "check": {
+        "path": "layer_count",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Gerber file count ~7 (tolerance 10%)",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "range",
+        "min": 6,
+        "max": 8
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Drill file count ~1 (tolerance 10%)",
+      "check": {
+        "path": "statistics.drill_files",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Total holes ~16 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_holes",
+        "op": "range",
+        "min": 14,
+        "max": 18
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "Total flashes ~107 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_flashes",
+        "op": "range",
+        "min": 101,
+        "max": 113
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Completeness is True",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "7 layer(s) found",
+      "check": {
+        "path": "completeness.found_layers",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Alignment is False",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": false
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "Component holes ~12 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.component_holes.count",
+        "op": "range",
+        "min": 10,
+        "max": 14
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Mounting holes ~4 (tolerance 10%)",
+      "check": {
+        "path": "drill_classification.mounting_holes.count",
+        "op": "range",
+        "min": 3,
+        "max": 5
+      }
+    }
+  ]
+}

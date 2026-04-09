@@ -5,21 +5,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~46 (tolerance 10%)",
+      "description": "Simulation count ~47 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 41,
-        "max": 51
+        "min": 42,
+        "max": 52
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 32 passing simulation(s)",
+      "description": "At least 33 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 32
+        "value": 33
       }
     },
     {
@@ -35,13 +35,13 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "9 decoupling simulation(s)",
+      "description": "10 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 9
+        "value": 10
       }
     },
     {

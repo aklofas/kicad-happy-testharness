@@ -14,11 +14,11 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 4 design_observations",
+      "description": "Exactly 5 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -42,11 +42,11 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 power_regulators",
+      "description": "Exactly 2 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -61,6 +61,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "U401 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U401$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 rf_matching",
       "check": {
         "path": "signal_analysis.rf_matching",

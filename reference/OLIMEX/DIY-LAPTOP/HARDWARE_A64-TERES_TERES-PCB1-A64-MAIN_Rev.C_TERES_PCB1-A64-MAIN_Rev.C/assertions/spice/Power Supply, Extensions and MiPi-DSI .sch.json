@@ -5,21 +5,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~14 (tolerance 10%)",
+      "description": "Simulation count ~15 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 13,
+        "max": 17
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 11 passing simulation(s)",
+      "description": "At least 12 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 11
+        "value": 12
       }
     },
     {
@@ -35,6 +35,17 @@
     },
     {
       "id": "SEED-00000004",
+      "description": "1 protection_device simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^protection_device$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000005",
       "description": "3 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -45,7 +56,7 @@
       }
     },
     {
-      "id": "SEED-00000005",
+      "id": "SEED-00000006",
       "description": "1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -56,7 +67,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",

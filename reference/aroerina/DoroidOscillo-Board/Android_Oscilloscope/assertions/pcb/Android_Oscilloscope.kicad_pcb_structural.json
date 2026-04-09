@@ -5,11 +5,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 13 decoupling_placement",
+      "description": "Exactly 14 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 13
+        "value": 14
       }
     },
     {
@@ -144,6 +144,16 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "U10 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U10$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "Exactly 2 thermal_analysis.thermal_pads",
       "check": {
         "path": "thermal_analysis.thermal_pads",
@@ -152,7 +162,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "P2 in thermal_analysis.thermal_pads",
       "check": {
         "path": "thermal_analysis.thermal_pads",
@@ -162,7 +172,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "Exactly 2 thermal_pad_vias",
       "check": {
         "path": "thermal_pad_vias",
@@ -171,7 +181,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "P2 in thermal_pad_vias",
       "check": {
         "path": "thermal_pad_vias",

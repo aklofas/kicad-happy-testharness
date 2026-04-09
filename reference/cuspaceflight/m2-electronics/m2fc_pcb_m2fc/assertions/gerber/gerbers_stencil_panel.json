@@ -1,0 +1,54 @@
+{
+  "file_pattern": "gerbers_stencil_panel",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Gerber file count ~2 (tolerance 10%)",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "range",
+        "min": 1,
+        "max": 3
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Total flashes ~1101 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_flashes",
+        "op": "range",
+        "min": 1067,
+        "max": 1135
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Completeness is False",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": false
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "1 layer(s) found",
+      "check": {
+        "path": "completeness.found_layers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "Alignment is True",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    }
+  ]
+}

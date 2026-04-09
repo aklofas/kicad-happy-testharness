@@ -32,11 +32,11 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 lc_filters",
+      "description": "Exactly 5 lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "equals",
-        "value": 1
+        "value": 5
       }
     },
     {
@@ -51,6 +51,26 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "L13 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L13$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "L15 in lc_filters",
+      "check": {
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L15$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 4 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -59,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "Exactly 1 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -68,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "R38 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -78,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -87,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "R45 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

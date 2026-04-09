@@ -5,11 +5,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 5 decoupling_placement",
+      "description": "Exactly 6 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -64,6 +64,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "U4 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 4 tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -72,7 +82,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "R1 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -82,7 +92,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "R2 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -92,7 +102,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "R3 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -102,7 +112,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "R9 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",

@@ -101,6 +101,47 @@
     },
     {
       "id": "SEED-00000011",
+      "description": "12 led_audit detected",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "All led_audit have ref",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "All led_audit type values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(indicator_led)$",
+        "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "All led_audit drive_method values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "drive_method",
+        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 12
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "4 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -109,7 +150,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000016",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -119,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000017",
       "description": "Has 13 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -128,7 +169,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000018",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -137,7 +178,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000019",
       "description": "Has 12 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -146,7 +187,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000020",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

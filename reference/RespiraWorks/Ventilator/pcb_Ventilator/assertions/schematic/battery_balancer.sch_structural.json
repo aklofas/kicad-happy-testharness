@@ -5,11 +5,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 8 rc_filters",
+      "description": "Exactly 10 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 8
+        "value": 10
       }
     },
     {
@@ -64,6 +64,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "R195 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R195$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "R189 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -73,13 +83,23 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "R193 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R193$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R191 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R191$"
       }
     }
   ]

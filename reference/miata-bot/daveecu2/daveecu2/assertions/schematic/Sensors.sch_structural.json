@@ -5,11 +5,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 12 rc_filters",
+      "description": "Exactly 17 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 12
+        "value": 17
       }
     },
     {
@@ -74,6 +74,36 @@
     },
     {
       "id": "STRUCT-00000008",
+      "description": "R40 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R40$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R39 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R39$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "R45 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R45$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "R11 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -83,7 +113,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000012",
       "description": "R89 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -93,7 +123,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000013",
       "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -102,7 +132,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000014",
       "description": "R32 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -112,7 +142,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000015",
       "description": "R35 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

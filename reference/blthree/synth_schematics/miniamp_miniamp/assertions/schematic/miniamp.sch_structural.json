@@ -69,11 +69,11 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 4 rc_filters",
+      "description": "Exactly 7 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 7
       }
     },
     {
@@ -114,6 +114,36 @@
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^RV3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R3 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R2 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R1 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1$"
       }
     }
   ]

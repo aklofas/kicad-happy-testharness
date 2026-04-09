@@ -108,15 +108,45 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 1 protection_devices",
+      "description": "Exactly 4 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "equals",
-        "value": 1
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000013",
+      "description": "D2 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "D1 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "D6 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D6$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "U1 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -126,7 +156,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000017",
       "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -135,7 +165,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000018",
       "description": "R23 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -145,7 +175,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000019",
       "description": "R26 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

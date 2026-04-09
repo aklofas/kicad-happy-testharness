@@ -99,11 +99,11 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 3 rc_filters",
+      "description": "Exactly 5 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 5
       }
     },
     {
@@ -138,6 +138,16 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "R10 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R10$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "Exactly 1 rf_matching",
       "check": {
         "path": "signal_analysis.rf_matching",

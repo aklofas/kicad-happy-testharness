@@ -42,20 +42,21 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 decoupling_analysis detected",
+      "description": "2 lc_filters detected",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "signal_analysis.lc_filters",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "1 design_observations detected",
+      "description": "All lc_filters have non-zero resonant_hz",
       "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "min_count",
-        "value": 1
+        "path": "signal_analysis.lc_filters",
+        "op": "not_contains_match",
+        "field": "resonant_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {

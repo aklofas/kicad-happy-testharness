@@ -42,6 +42,15 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "2 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "25 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -50,7 +59,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "All esd_coverage_audit have connector_ref",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -60,7 +69,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "All esd_coverage_audit coverage values are valid",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -71,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000009",
       "description": "All esd_coverage_audit risk_level values are valid",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -82,7 +91,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "1 ethernet_interfaces detected",
       "check": {
         "path": "signal_analysis.ethernet_interfaces",
@@ -91,7 +100,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000011",
       "description": "1 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -100,7 +109,7 @@
       }
     },
     {
-      "id": "SEED-00000011",
+      "id": "SEED-00000012",
       "description": "All lc_filters have non-zero resonant_hz",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -110,7 +119,26 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000013",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000014",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000015",
       "description": "1 thermocouple_rtd detected",
       "check": {
         "path": "signal_analysis.thermocouple_rtd",
@@ -119,7 +147,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000016",
       "description": "All thermocouple_rtd have ref",
       "check": {
         "path": "signal_analysis.thermocouple_rtd",
@@ -129,7 +157,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000017",
       "description": "All thermocouple_rtd type values are valid",
       "check": {
         "path": "signal_analysis.thermocouple_rtd",
@@ -140,7 +168,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000018",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -149,7 +177,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000019",
       "description": "Has 27 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -158,7 +186,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000020",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -167,7 +195,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000021",
       "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -176,7 +204,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000022",
       "description": "Has 57 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

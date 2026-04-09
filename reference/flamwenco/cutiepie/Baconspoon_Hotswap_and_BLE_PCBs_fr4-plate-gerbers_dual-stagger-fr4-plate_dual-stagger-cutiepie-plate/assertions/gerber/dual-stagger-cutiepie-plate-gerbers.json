@@ -1,0 +1,63 @@
+{
+  "file_pattern": "dual-stagger-cutiepie-plate-gerbers",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "2 copper layer(s)",
+      "check": {
+        "path": "layer_count",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Gerber file count ~11 (tolerance 10%)",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "range",
+        "min": 9,
+        "max": 13
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Drill file count ~2 (tolerance 10%)",
+      "check": {
+        "path": "statistics.drill_files",
+        "op": "range",
+        "min": 1,
+        "max": 3
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Completeness is True",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": true
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "9 layer(s) found",
+      "check": {
+        "path": "completeness.found_layers",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Alignment is True",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    }
+  ]
+}

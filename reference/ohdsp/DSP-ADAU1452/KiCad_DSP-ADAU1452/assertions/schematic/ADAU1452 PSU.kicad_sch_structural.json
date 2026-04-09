@@ -119,11 +119,11 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 3 rc_filters",
+      "description": "Exactly 4 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -148,6 +148,16 @@
     },
     {
       "id": "STRUCT-00000016",
+      "description": "R304 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R304$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -156,7 +166,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "R301 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

@@ -42,6 +42,15 @@
     },
     {
       "id": "SEED-00000005",
+      "description": "2 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
       "description": "1 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -50,7 +59,7 @@
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "All lc_filters have non-zero resonant_hz",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -60,7 +69,26 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
+      "description": "1 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000010",
       "description": "1 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -69,7 +97,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000011",
       "description": "Has 7 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

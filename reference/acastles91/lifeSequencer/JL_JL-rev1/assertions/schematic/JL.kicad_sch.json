@@ -101,7 +101,7 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "1 lc_filters detected",
+      "description": "2 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "min_count",
@@ -150,6 +150,17 @@
     },
     {
       "id": "SEED-00000016",
+      "description": "All led_audit drive_method values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "drive_method",
+        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000017",
       "description": "65 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -158,7 +169,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000018",
       "description": "All opamp_circuits have reference present",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -168,7 +179,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000019",
       "description": "2 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -177,7 +188,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000020",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -187,7 +198,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000021",
       "description": "2 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -196,7 +207,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000022",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -206,7 +217,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "Has 43 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -215,7 +226,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000024",
       "description": "Has 44 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -224,7 +235,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000025",
       "description": "Has 40 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -233,7 +244,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000026",
       "description": "Has 25 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -242,7 +253,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000027",
       "description": "Has 5 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -251,7 +262,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000028",
       "description": "Has 17 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -260,7 +271,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000029",
       "description": "Has 24 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -269,7 +280,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000030",
       "description": "Has 7 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

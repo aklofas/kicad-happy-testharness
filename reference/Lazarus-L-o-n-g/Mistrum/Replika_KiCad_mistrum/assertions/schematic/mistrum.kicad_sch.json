@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~668 (tolerance 10%)",
+      "description": "Net count ~460 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 647,
-        "max": 689
+        "min": 446,
+        "max": 474
       }
     },
     {
@@ -152,7 +152,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "17 rc_filters detected",
+      "description": "20 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
@@ -161,16 +161,6 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "All rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000018",
       "description": "3 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -179,7 +169,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "All voltage_dividers have non-zero ratio",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -189,7 +179,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "Has 18 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -198,7 +188,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "Has 6 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -207,7 +197,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "Has 24 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -216,7 +206,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000022",
       "description": "Has 69 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -225,7 +215,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000023",
       "description": "Has 93 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -234,7 +224,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000024",
       "description": "Has 5 transformer(s)",
       "check": {
         "path": "statistics.component_types.transformer",

@@ -42,15 +42,25 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 rc_filters",
+      "description": "Exactly 6 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 1
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000006",
+      "description": "R225 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R225$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "R220 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -60,7 +70,47 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
+      "description": "R214 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R214$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R221 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R221$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "RV203 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^RV203$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R1001 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1001$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "Exactly 1 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -69,7 +119,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000013",
       "description": "Q201 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",

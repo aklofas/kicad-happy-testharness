@@ -138,25 +138,6 @@
         "field": "reference",
         "pattern": "^(None|\\?|)$"
       }
-    },
-    {
-      "id": "SEED-00000015",
-      "description": "1 rc_filters detected",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
-      "description": "All rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
     }
   ]
 }

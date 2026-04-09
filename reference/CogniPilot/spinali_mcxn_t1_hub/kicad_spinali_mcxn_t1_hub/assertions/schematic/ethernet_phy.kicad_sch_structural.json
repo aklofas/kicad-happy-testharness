@@ -70,6 +70,25 @@
     },
     {
       "id": "STRUCT-00000008",
+      "description": "Exactly 1 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R34 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R34$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "Exactly 3 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -78,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "R44 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -88,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "R45 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -98,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "R37 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

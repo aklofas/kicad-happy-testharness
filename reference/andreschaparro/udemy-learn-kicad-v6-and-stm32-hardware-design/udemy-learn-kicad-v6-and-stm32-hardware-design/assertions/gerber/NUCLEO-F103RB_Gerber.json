@@ -1,0 +1,45 @@
+{
+  "file_pattern": "NUCLEO-F103RB_Gerber",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Gerber file count ~9 (tolerance 10%)",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "range",
+        "min": 8,
+        "max": 10
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Total flashes ~2791 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_flashes",
+        "op": "range",
+        "min": 2707,
+        "max": 2875
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Completeness is False",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": false
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Alignment is True",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    }
+  ]
+}

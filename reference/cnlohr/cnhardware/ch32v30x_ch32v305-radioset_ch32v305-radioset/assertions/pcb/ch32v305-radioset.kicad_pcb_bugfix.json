@@ -5,14 +5,16 @@
   "assertions": [
     {
       "id": "BUGFIX-KH-167-01",
-      "description": "KH-167: U3 (RCLAMP0502N) not in decoupling analysis",
+      "description": "KH-167: U3 (RCLAMP0502N) categorized as esd_bypass, not main decoupling",
       "issue": "KH-167",
       "fix_type": "false_positive_fix",
       "check": {
         "path": "decoupling_placement",
-        "op": "not_contains_match",
-        "field": "ic",
-        "pattern": "^U3$"
+        "op": "field_equals",
+        "match_field": "ic",
+        "match_value": "U3",
+        "assert_field": "category",
+        "assert_value": "esd_bypass"
       }
     }
   ]

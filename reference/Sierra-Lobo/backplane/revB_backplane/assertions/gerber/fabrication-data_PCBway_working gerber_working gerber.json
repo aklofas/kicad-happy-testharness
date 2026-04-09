@@ -1,0 +1,45 @@
+{
+  "file_pattern": "fabrication-data_PCBway_working gerber_working gerber",
+  "analyzer_type": "gerber",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Gerber file count ~13 (tolerance 10%)",
+      "check": {
+        "path": "statistics.gerber_files",
+        "op": "range",
+        "min": 11,
+        "max": 15
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Total flashes ~6110 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_flashes",
+        "op": "range",
+        "min": 5926,
+        "max": 6294
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Completeness is False",
+      "check": {
+        "path": "completeness.complete",
+        "op": "equals",
+        "value": false
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Alignment is True",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      }
+    }
+  ]
+}

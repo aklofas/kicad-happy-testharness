@@ -32,15 +32,35 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 4 rc_filters",
+      "description": "Exactly 9 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 9
       }
     },
     {
       "id": "STRUCT-00000005",
+      "description": "R213 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R213$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R220 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R220$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "R202 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -50,7 +70,37 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
+      "description": "R217 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R217$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R203 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R203$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "RV204 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^RV204$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "R212 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -60,7 +110,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000012",
       "description": "R201 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",

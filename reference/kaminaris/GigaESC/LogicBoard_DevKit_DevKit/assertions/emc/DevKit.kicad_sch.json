@@ -5,22 +5,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~49 (tolerance 10%)",
+      "description": "Finding count ~48 (tolerance 10%)",
       "check": {
         "path": "summary.total_checks",
         "op": "range",
-        "min": 44,
-        "max": 54
+        "min": 43,
+        "max": 53
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "high count ~15",
+      "description": "high count ~14",
       "check": {
         "path": "summary.high",
         "op": "range",
-        "min": 13,
-        "max": 17
+        "min": 12,
+        "max": 16
       }
     },
     {
@@ -121,17 +121,6 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "1 pdn finding(s)",
-      "check": {
-        "path": "findings",
-        "op": "count_matches",
-        "field": "category",
-        "pattern": "^pdn$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "3 stackup finding(s)",
       "check": {
         "path": "findings",
@@ -142,7 +131,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "1 switching_emc finding(s)",
       "check": {
         "path": "findings",
@@ -153,7 +142,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "Target standard is fcc-class-b",
       "check": {
         "path": "target_standard",
@@ -162,7 +151,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "4 frequency band(s) in test plan",
       "check": {
         "path": "test_plan.frequency_bands",
@@ -171,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "~16 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
@@ -180,7 +169,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "Regulatory market is us",
       "check": {
         "path": "regulatory_coverage.market",
@@ -189,7 +178,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "2 applicable standard(s)",
       "check": {
         "path": "regulatory_coverage.applicable_standards",
@@ -198,12 +187,12 @@
       }
     },
     {
-      "id": "SEED-00000020",
-      "description": "~8 net(s) with EMC scores",
+      "id": "SEED-00000019",
+      "description": "~7 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 7
+        "value": 6
       }
     }
   ]

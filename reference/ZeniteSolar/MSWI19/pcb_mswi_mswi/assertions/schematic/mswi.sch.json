@@ -198,6 +198,25 @@
     },
     {
       "id": "SEED-00000021",
+      "description": "3 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000022",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000023",
       "description": "22 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -206,7 +225,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000024",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -216,7 +235,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000025",
       "description": "Has 29 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -225,7 +244,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000026",
       "description": "Has 15 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -234,7 +253,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000027",
       "description": "Has 54 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -243,7 +262,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000028",
       "description": "Has 10 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
@@ -252,7 +271,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000029",
       "description": "Has 16 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
@@ -261,7 +280,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000030",
       "description": "Has 22 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

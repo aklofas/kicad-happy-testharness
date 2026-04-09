@@ -5,21 +5,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~6 (tolerance 10%)",
+      "description": "Simulation count ~11 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 9,
+        "max": 13
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 4 passing simulation(s)",
+      "description": "At least 8 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 4
+        "value": 8
       }
     },
     {
@@ -57,6 +57,17 @@
     },
     {
       "id": "SEED-00000006",
+      "description": "5 rc_filter simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^rc_filter$",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000007",
       "description": "1 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -67,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "2 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",

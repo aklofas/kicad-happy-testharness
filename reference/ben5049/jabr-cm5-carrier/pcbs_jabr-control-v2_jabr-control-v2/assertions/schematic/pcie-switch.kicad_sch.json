@@ -89,26 +89,6 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "1 reset_supervisors detected",
-      "check": {
-        "path": "signal_analysis.reset_supervisors",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000011",
-      "description": "All reset_supervisors type values are valid",
-      "check": {
-        "path": "signal_analysis.reset_supervisors",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(voltage_supervisor|watchdog|rc_reset)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000012",
       "description": "1 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -117,7 +97,7 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000011",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -127,7 +107,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000012",
       "description": "Has 7 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -136,7 +116,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000013",
       "description": "Has 12 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

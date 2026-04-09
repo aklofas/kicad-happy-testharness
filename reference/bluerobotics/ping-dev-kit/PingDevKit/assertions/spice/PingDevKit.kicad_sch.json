@@ -5,21 +5,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~59 (tolerance 10%)",
+      "description": "Simulation count ~64 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 56,
-        "max": 62
+        "min": 60,
+        "max": 68
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 40 passing simulation(s)",
+      "description": "At least 44 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 40
+        "value": 44
       }
     },
     {
@@ -35,24 +35,24 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "9 decoupling simulation(s)",
+      "description": "12 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 9
+        "value": 12
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "4 feedback_network simulation(s)",
+      "description": "5 feedback_network simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^feedback_network$",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -101,13 +101,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "3 regulator_feedback simulation(s)",
+      "description": "4 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^regulator_feedback$",
-        "value": 3
+        "value": 4
       }
     },
     {

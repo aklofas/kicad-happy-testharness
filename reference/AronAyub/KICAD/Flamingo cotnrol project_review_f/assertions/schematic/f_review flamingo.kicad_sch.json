@@ -72,7 +72,7 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "3 design_observations detected",
+      "description": "4 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -122,25 +122,6 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "1 feedback_networks detected",
-      "check": {
-        "path": "signal_analysis.feedback_networks",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000014",
-      "description": "All feedback_networks have r_top ref present",
-      "check": {
-        "path": "signal_analysis.feedback_networks",
-        "op": "not_contains_match",
-        "field": "r_top.ref",
-        "pattern": "^(None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000015",
       "description": "6 led_audit detected",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -149,7 +130,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000014",
       "description": "All led_audit have ref",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -159,7 +140,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000015",
       "description": "All led_audit type values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -170,7 +151,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000016",
       "description": "All led_audit drive_method values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -181,7 +162,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000017",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -190,7 +171,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000018",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -200,26 +181,26 @@
       }
     },
     {
-      "id": "SEED-00000021",
-      "description": "1 voltage_dividers detected",
+      "id": "SEED-00000019",
+      "description": "5 rc_filters detected",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "signal_analysis.rc_filters",
         "op": "min_count",
         "value": 1
       }
     },
     {
-      "id": "SEED-00000022",
-      "description": "All voltage_dividers have non-zero ratio",
+      "id": "SEED-00000020",
+      "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
-        "path": "signal_analysis.voltage_dividers",
+        "path": "signal_analysis.rc_filters",
         "op": "not_contains_match",
-        "field": "ratio",
+        "field": "cutoff_hz",
         "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000021",
       "description": "Has 6 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -228,7 +209,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000022",
       "description": "Has 6 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -237,7 +218,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000023",
       "description": "Has 10 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

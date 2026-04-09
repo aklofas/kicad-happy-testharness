@@ -98,11 +98,11 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 6 rc_filters",
+      "description": "Exactly 12 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 6
+        "value": 12
       }
     },
     {
@@ -137,6 +137,26 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "R43 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R43$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R45 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R45$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "R3 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -146,7 +166,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000018",
       "description": "R7 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -156,7 +176,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000019",
       "description": "R16 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -166,7 +186,17 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000020",
+      "description": "R41 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R41$"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
       "description": "Exactly 1 rf_chains",
       "check": {
         "path": "signal_analysis.rf_chains",
@@ -175,7 +205,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000022",
       "description": "Exactly 3 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -184,7 +214,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000023",
       "description": "Q2 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -194,7 +224,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000024",
       "description": "Q3 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -204,7 +234,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000025",
       "description": "T1 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",

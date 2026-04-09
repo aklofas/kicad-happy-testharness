@@ -5,20 +5,21 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling_analysis",
+      "description": "Exactly 2 lc_filters",
       "check": {
-        "path": "signal_analysis.decoupling_analysis",
+        "path": "signal_analysis.lc_filters",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 design_observations",
+      "description": "L6 in lc_filters",
       "check": {
-        "path": "signal_analysis.design_observations",
-        "op": "equals",
-        "value": 1
+        "path": "signal_analysis.lc_filters",
+        "op": "contains_match",
+        "field": "inductor.ref",
+        "pattern": "^L6$"
       }
     }
   ]

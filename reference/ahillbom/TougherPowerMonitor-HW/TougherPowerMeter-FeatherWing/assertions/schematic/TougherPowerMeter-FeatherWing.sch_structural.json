@@ -14,11 +14,11 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 5 design_observations",
+      "description": "Exactly 7 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 5
+        "value": 7
       }
     },
     {
@@ -51,6 +51,25 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Exactly 1 power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "U1 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 3 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -59,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "D1 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -69,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "D2 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -79,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "D3 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -89,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "Exactly 5 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -98,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "R16 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -108,7 +127,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000014",
       "description": "R18 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -118,7 +137,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000015",
       "description": "R5 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",

@@ -5,11 +5,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 rc_filters",
+      "description": "Exactly 7 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 7
       }
     },
     {
@@ -34,6 +34,16 @@
     },
     {
       "id": "STRUCT-00000004",
+      "description": "R302 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R302$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "R310 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -43,7 +53,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "R301 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -53,7 +63,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -62,7 +72,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "R309 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
