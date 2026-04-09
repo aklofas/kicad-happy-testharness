@@ -1,0 +1,79 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "\u0423\u0437\u0435\u043b \u041f\u0438\u0442\u0430\u043d\u0438\u044f \u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f_\u0423\u0437\u0435\u043b \u041f\u0438\u0442\u0430\u043d\u0438\u044f \u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "Industrial food processing machine power/control unit (363 components, 25 sub-sheets, 12 IRF4905 MOSFET circuits). Major classification issue: lib_id ignored in favor of reference prefix, causing 29 LED-strip connectors as LEDs, 6 circuit breakers as capacitors, 2 DS18B20 sensors as transformers, 1 AC motor as capacitor.",
+      "correct": [
+        {
+          "description": "12 IRF4905 P-channel MOSFETs correctly identified with is_pchannel=true",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "24 TVS diodes and 25 fuses correctly identified as protection_devices",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "363 components and 669 nets correctly extracted across 25+ sheets",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "K1 relay correctly classified",
+          "analyzer_section": "components"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "T1/T2 (DS18B20, lib_id Sensor_Temperature:DS18B20) misclassified as transformer due to T prefix",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "29 LED-strip connectors (lib_id Connector:Conn_01x01_Pin) misclassified as LED due to LED prefix in reference",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "6 circuit breakers CB1-CB6 (lib_id Device:CircuitBreaker) misclassified as capacitor due to CB prefix",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "COMPR (lib_id Motor:Motor_AC, compressor) misclassified as capacitor due to C prefix",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "QF1 (lib_id Device:Residual_current_device, RCD/GFCI) misclassified as transistor due to Q prefix",
+          "analyzer_section": "components"
+        },
+        {
+          "description": "V_SATA_SSD (lib_id Connector:Conn_01x01_Pin) misclassified as varistor due to V prefix",
+          "analyzer_section": "components"
+        }
+      ],
+      "missed": [
+        {
+          "description": "12 SB560 flyback diodes across lock solenoids not detected (has_flyback_diode=false on all MOSFETs)",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "R1-R12 gate resistors not detected for MOSFET circuits due to hierarchical net tracing gaps",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "RS-485 bus protocol not detected despite RS485 nets and dedicated sub-sheet",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [
+        "Prioritize lib_id over reference prefix for type classification \u2014 Connector:* should always be connector, Sensor_Temperature:* not transformer, Device:CircuitBreaker not capacitor, Motor:* not capacitor",
+        "Fix net tracing in hierarchical sheets to detect flyback diodes and gate resistors for MOSFET switches"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002517",
+      "repo": "borzeman/PzbElectronics",
+      "project": "\u0423\u0437\u0435\u043b \u041f\u0438\u0442\u0430\u043d\u0438\u044f \u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f_\u0423\u0437\u0435\u043b \u041f\u0438\u0442\u0430\u043d\u0438\u044f \u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f",
+      "created": "2026-04-09T06:39:18.783880+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

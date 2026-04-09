@@ -1,0 +1,85 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "fieldRadio_fieldRadio.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "12-sheet SDR field radio (491 components, QSD receiver, Si5351A clock, MSP430 controller). Good structural accuracy. Issues: VR1 potentiometer as varistor, INA821 instrumentation amps as comparator, Si5351A clock output_net pointing at VDD3.3, spurious I2C detections, power_rails missing major rails.",
+      "correct": [
+        {
+          "description": "All 12 hierarchical sheets correctly traversed, 491 components, 315 nets",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "U10 (LM1085-5.0), U7 (MIC5219-3.3), U1 (MIC5235-5.0) correctly identified as LDOs",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "Y1 (32.768kHz) and Y2 (25MHz) crystals correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "36 LC filters in preselector/LPF correctly identified",
+          "analyzer_section": "signal_analysis.lc_filters"
+        },
+        {
+          "description": "Q20 (J309 JFET) correctly classified in QSD front-end",
+          "analyzer_section": "signal_analysis.transistor_circuits"
+        },
+        {
+          "description": "U6 (LM386) correctly identified as audio_amplifier",
+          "analyzer_section": "signal_analysis.audio_circuits"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "VR1 (Bourns 3296W trimmer potentiometer) misclassified as varistor due to VR prefix",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "IC7/IC8 (INA821) instrumentation amps classified as comparator_or_open_loop \u2014 RG gain resistor topology not recognized",
+          "analyzer_section": "signal_analysis.opamp_circuits"
+        },
+        {
+          "description": "Si5351A clock output_net is VDD3.3 (power pin) instead of actual CLK0/1/2 outputs",
+          "analyzer_section": "signal_analysis.clock_distribution"
+        },
+        {
+          "description": "power_rails missing VDD12, VDD5, VDD3.3, VCC5.0, VCC3.3, HV",
+          "analyzer_section": "statistics.power_rails"
+        },
+        {
+          "description": "3 spurious I2C bus detections on non-I2C GPIO nets",
+          "analyzer_section": "protocol_compliance"
+        },
+        {
+          "description": "VDD flagged as bus prefix with VDD6-VDD11 as 'missing' members \u2014 these are independent power rails",
+          "analyzer_section": "bus_topology"
+        }
+      ],
+      "missed": [
+        {
+          "description": "Si5351A (U8) not in I2C device list despite sharing SDA/SCL nets",
+          "analyzer_section": "protocol_compliance"
+        },
+        {
+          "description": "QSD topology (Tayloe detector) not recognized as RF receiver front-end",
+          "analyzer_section": "signal_analysis"
+        }
+      ],
+      "suggestions": [
+        "Recognize VR-prefix with potentiometer footprint as potentiometer not varistor",
+        "Add instrumentation amplifier recognition for INA-type ICs with RG pins",
+        "Fix clock_distribution to use clock output pins not power pins for Si5351A",
+        "Don't flag power rail name prefixes (VDD, VCC) as bus signals"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002516",
+      "repo": "GoodEarthWeather/myKicadProjects",
+      "project": "fieldRadio_fieldRadio-frontBack-panel_fieldRadio-frontBack-panel",
+      "created": "2026-04-09T06:39:18.425444+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

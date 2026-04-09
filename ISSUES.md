@@ -7,7 +7,7 @@ Contains enough detail to resume work with zero conversation history.
 > same session. See README.md "Issue tracking protocol" for full details. Closed issues
 > with root cause and verification details are in [FIXED.md](FIXED.md).
 
-Last updated: 2026-04-08 (filed KH-204/205/206 from v1.2 pre-release)
+Last updated: 2026-04-08
 
 ---
 
@@ -15,9 +15,9 @@ Last updated: 2026-04-08 (filed KH-204/205/206 from v1.2 pre-release)
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-207**. Next TH number: **TH-009**.
+number: **KH-209**. Next TH number: **TH-009**.
 
-> All issues resolved as of 2026-04-06.
+> All issues resolved as of 2026-04-08. See [FIXED.md](FIXED.md) for history.
 
 ---
 
@@ -32,36 +32,61 @@ number: **KH-207**. Next TH number: **TH-009**.
 
 ## kicad-happy Analyzer Issues
 
-### KH-204 — power_rails uses UUID sheet paths instead of human-readable names (MEDIUM)
+### KH-207 — Mirrored component pin-to-net mapping wrong in KiCad 5 legacy (HIGH)
 
-**Symptom:** `statistics.power_rails` contains paths like `/201ab4ae-b835-4fcf-b591-c6b37cf9a2b1/VIN`
-instead of `/DC Boost 10v/VIN`. The PCB analyzer's `power_net_routing` correctly uses readable names.
+**Symptom:** Components placed with mirrored transforms (e.g., -1 X scale) have their
+pin-to-net assignments scrambled. GND pins get mapped to signal nets and vice versa.
+Affects all mirrored ICs, connectors, and multi-pin components in KiCad 5 `.sch` files.
 
-**Root cause:** Schematic analyzer does not resolve hierarchical sheet UUIDs to sheet names
-when building the power_rails list.
+**Root cause:** The legacy `.sch` parser uses coordinate-based wire-to-pin matching but
+does not apply the component's transform matrix before resolving pin positions. When a
+component is mirrored, pin coordinates are flipped but the matcher uses unflipped positions.
 
-**File:** `skills/kicad/scripts/analyze_schematic.py`, power rail extraction section.
+**Impact:** Propagates into ERC warnings, net classification, power domain analysis,
+bus analysis, and signal detectors. Any downstream analysis referencing pin-net assignments
+on mirrored components will be wrong.
 
-**Repro:** `Erhannis/VoltageSwitchboard` — `voltage_tests/voltage_tests.kicad_sch`
+**File:** `skills/kicad/scripts/analyze_schematic.py`, legacy `.sch` pin-to-net resolution.
 
-**Discovered:** 2026-04-08 via v1.2 pre-release assertion suite.
+**Repro:** `koron/yuiop` — `yuiop60pi/main2/main2.sch` — U1 (PGA2040) placed with
+mirror (-1, 0, 0, -1). Pins 11/12 (GND) mapped to COL4/COL5, GPIO pins mapped to GND.
+Also affects J1 (USB_B_Micro) and J2 (USB_MON) pin assignments in same file.
+
+**Discovered:** 2026-04-08 via Layer 3 subagent review.
+
+### KH-208 — Component type classification ignores lib_id, over-relies on ref prefix (HIGH)
+
+**Symptom:** Components with non-standard reference prefixes get systematically
+misclassified. Examples from corpus reviews:
+- `T1`/`T2` (DS18B20, lib_id `Sensor_Temperature:DS18B20`) → transformer (T prefix)
+- `CB1`-`CB6` (circuit breakers, lib_id `Device:CircuitBreaker`) → capacitor (C prefix)
+- `COMPR` (AC motor, lib_id `Motor:Motor_AC`) → capacitor (C prefix)
+- `VR1` (potentiometer, lib_id `Potentiometer_Bourns:3296W`) → varistor (VR prefix)
+- `TR7` (MOSFET, lib_id `DuetWifi:BSH105`) → transformer (custom lib)
+- `LED1_W+` (connector, lib_id `Connector:Conn_01x01_Pin`) → LED (LED prefix)
+
+**Root cause:** The type classifier prioritizes reference prefix over lib_id. When lib_id
+contains unambiguous type info (`Connector:*`, `Sensor_Temperature:*`, `Motor:*`,
+`Device:CircuitBreaker`), it should override the prefix heuristic.
+
+**Impact:** Corrupts component_types counts, triggers false ESD audit entries, and
+prevents downstream detectors from finding components of the correct type.
+
+**File:** `skills/kicad/scripts/analyze_schematic.py`, component type classification.
+
+**Repro:** `borzeman/PzbElectronics`, `Duet3D/Duet-2-Hardware`, `GoodEarthWeather/myKicadProjects`
+
+**Discovered:** 2026-04-09 via Layer 3 batch review (8 repos, 4 affected).
 
 ---
 
-### KH-206 — nearby global labels with different names merged into one net (MEDIUM)
+## Deferred
 
-**Symptom:** Two separate global labels `SDA` and `SCL` at two locations each get merged
-into a single `SDA` net. SCL net is never created. All four I2C pins (J3.SDA, J3.SCL,
-U2.SDA, U2.SCL) and both pull-up resistors (R1, R2) end up on the `SDA` net.
-The PCB analyzer correctly maintains separate SDA and SCL nets.
+### KH-205 — D+ net lost in KiCad 5 legacy net resolution (MEDIUM)
 
-**Root cause:** KiCad 6+ parser merges nearby global labels with different names. Likely
-a proximity-based net assignment bug where pin-to-label association uses position rather
-than explicit label name.
-
-**File:** `skills/kicad/scripts/analyze_schematic.py`, KiCad 6+ net resolution.
-
-**Repro:** `cardonabits/haxo-hw` — `haxophone001/haxophone001.kicad_sch`
+**Status:** Unreproducible — referenced file `Mouse/Mouse.sch` not found in repo
+`prashantbhandary/Meshmerize-MicroMouse-`. No `.sch` files exist in the checked-out
+repo (all converted to `.kicad_sch`). Reopen if repro file is located.
 
 **Discovered:** 2026-04-08 via v1.2 pre-release assertion suite.
 
@@ -69,5 +94,5 @@ than explicit label name.
 
 ## Priority Queue (open issues, ordered by impact)
 
-1. KH-206 — nearby global labels merged into one net (MEDIUM)
-2. KH-204 — power_rails uses UUID sheet paths (MEDIUM)
+1. KH-208 — Component type classification ignores lib_id (HIGH)
+2. KH-207 — Mirrored component pin-to-net mapping wrong in KiCad 5 (HIGH)

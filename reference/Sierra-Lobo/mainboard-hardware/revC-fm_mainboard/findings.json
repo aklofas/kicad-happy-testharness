@@ -1,0 +1,97 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "revC-fm_mainboard.kicad_sch.json",
+      "status": "confirmed",
+      "summary": "632-component PyCubed satellite mainboard (ATSAMD51, 4x LoRa, LT3652HV solar chargers, TPS63070 buck-boost, INA230 current monitors). Good structural parsing. Issues: TPS63070 classified as LDO, LT3652 chargers missed by battery_chargers, 5 INA230 current monitors undetected, addressable LEDs missed.",
+      "correct": [
+        {
+          "description": "632 components, 654 nets, 8 sub-sheets correctly parsed",
+          "analyzer_section": "statistics"
+        },
+        {
+          "description": "Y1 (32.768kHz) crystal with load caps correctly detected",
+          "analyzer_section": "signal_analysis.crystal_circuits"
+        },
+        {
+          "description": "R11/R12 battery voltage divider correctly found with ratio 0.258",
+          "analyzer_section": "signal_analysis.voltage_dividers"
+        },
+        {
+          "description": "LT3652HV feedback dividers correctly identified as feedback networks",
+          "analyzer_section": "signal_analysis.feedback_networks"
+        },
+        {
+          "description": "SWD debug interfaces on P2/P3 correctly detected",
+          "analyzer_section": "signal_analysis.debug_interfaces"
+        },
+        {
+          "description": "USB ESD protection (ESD321, TVS0500) correctly identified",
+          "analyzer_section": "signal_analysis.protection_devices"
+        },
+        {
+          "description": "4 LoRa transceivers correctly found in rf_chains",
+          "analyzer_section": "signal_analysis.rf_chains"
+        },
+        {
+          "description": "Level shifters U2/U3 (SN74LVCH245A) correctly identified",
+          "analyzer_section": "signal_analysis.level_shifters"
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "U20/U17 (TPS630701, buck-boost) classified as LDO \u2014 have external inductors L5/L6 not detected",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "U11/U13 (LT3652HV) estimated_vout=1.523V wrong \u2014 LT3652 is battery charger with Vref=3.3V not 0.6V",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "U20 compensation_capacitors contains 30+ unrelated caps (MCU decoupling, crystal loads)",
+          "analyzer_section": "signal_analysis.power_regulators"
+        }
+      ],
+      "missed": [
+        {
+          "description": "battery_chargers empty but U11/U13 (LT3652HV) and U15 (BQ25883) are charger ICs",
+          "analyzer_section": "signal_analysis.battery_chargers"
+        },
+        {
+          "description": "5 INA230 current monitors (U9/U10/U16/U19/U23) not detected",
+          "analyzer_section": "signal_analysis.current_sense"
+        },
+        {
+          "description": "U6 (MAX708) voltage supervisor IC missed \u2014 only RC reset detected",
+          "analyzer_section": "signal_analysis.reset_supervisors"
+        },
+        {
+          "description": "LED12-15 (SK68xx NeoPixel) addressable LEDs missed",
+          "analyzer_section": "signal_analysis.addressable_led_chains"
+        },
+        {
+          "description": "U22 (TPS54226) feedback divider not found, estimated_vout=None",
+          "analyzer_section": "signal_analysis.power_regulators"
+        },
+        {
+          "description": "4 MCP9700A temperature sensors missed",
+          "analyzer_section": "signal_analysis.sensor_interfaces"
+        }
+      ],
+      "suggestions": [
+        "Detect battery charger ICs by BOM description ('BAT CHG') and known part families (LT3652, BQ25883)",
+        "Recognize INA230/219/226 as current sense monitors",
+        "Classify TPS63070 as buck-boost based on inductor pin connections, not LDO",
+        "Detect supervisor ICs (MAX708/MAX809) by pin names (~RESET, ~WDI, PFI)"
+      ],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "id": "FND-00002518",
+      "repo": "Sierra-Lobo/mainboard-hardware",
+      "project": "revC-fm_mainboard",
+      "created": "2026-04-09T06:41:39.226124+00:00",
+      "datasheets_used": []
+    }
+  ]
+}

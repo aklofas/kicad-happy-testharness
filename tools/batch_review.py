@@ -225,17 +225,53 @@ def cmd_prompts(args):
         print()
 
 
+def _auto_project(repo, source_file=None):
+    """Auto-detect project name from reference/ directory or source_file hint."""
+    ref_dir = HARNESS_DIR / "reference" / repo
+    if not ref_dir.exists():
+        return None
+
+    projects = [p.name for p in ref_dir.iterdir() if p.is_dir()]
+    if len(projects) == 1:
+        return projects[0]
+
+    # If source_file hint given, match against project names
+    if source_file:
+        stem = Path(source_file).stem
+        for proj in projects:
+            if stem.startswith(proj) or proj.startswith(stem.split(".")[0]):
+                return proj
+    return projects[0] if projects else None
+
+
 def cmd_save(args):
-    """Import a finding from JSON."""
+    """Import a finding from JSON file or stdin."""
     from regression.findings import add_finding
 
-    data = json.loads(Path(args.file).read_text())
+    if args.file == "-":
+        data = json.loads(sys.stdin.read())
+    else:
+        data = json.loads(Path(args.file).read_text())
+
+    # Auto-detect project if not given
+    project = args.project
+    if not project:
+        source_file = None
+        if isinstance(data, dict):
+            source_file = data.get("source_file")
+        project = _auto_project(args.repo, source_file)
+        if not project:
+            print(f"Error: could not auto-detect project for {args.repo}. "
+                  f"Use --project.", file=sys.stderr)
+            sys.exit(1)
+        print(f"Auto-detected project: {project}")
+
     if isinstance(data, dict):
-        fid = add_finding(args.repo, args.project, data)
+        fid = add_finding(args.repo, project, data)
         print(f"Added {fid}: {data.get('summary', '?')[:80]}")
     elif isinstance(data, list):
         for finding in data:
-            fid = add_finding(args.repo, args.project, finding)
+            fid = add_finding(args.repo, project, finding)
             print(f"Added {fid}: {finding.get('summary', '?')[:80]}")
 
 
@@ -266,10 +302,10 @@ def main():
     p_prompts = sub.add_parser("prompts", help="Generate review prompts")
     p_prompts.add_argument("--count", "-n", type=int, default=5)
 
-    p_save = sub.add_parser("save", help="Import finding from JSON")
+    p_save = sub.add_parser("save", help="Import finding from JSON (file or stdin with -)")
     p_save.add_argument("--repo", required=True)
-    p_save.add_argument("--project", required=True)
-    p_save.add_argument("--file", required=True)
+    p_save.add_argument("--project", help="Project name (auto-detected if omitted)")
+    p_save.add_argument("--file", required=True, help="JSON file path, or - for stdin")
 
     p_status = sub.add_parser("status", help="Show coverage stats")
 
