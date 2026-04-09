@@ -364,6 +364,160 @@ def test_get_current_run_returns_path_and_metadata():
         shutil.rmtree(outputs_dir)
 
 
+# === Helpers for retention tests ===
+
+def _create_numbered_runs(adir, count, pinned=None):
+    """Create `count` runs with sequential IDs, optionally pin some."""
+    if pinned is None:
+        pinned = set()
+    for i in range(count):
+        rid = f"run{i:03d}"
+        out = tempfile.mkdtemp(prefix="test_out_")
+        with open(os.path.join(out, "schematic.json"), "w") as f:
+            json.dump({"run": i}, f)
+        analysis_cache.create_run(adir, out, source_hashes={}, scripts={}, run_id=rid)
+        shutil.rmtree(out)
+        if i in pinned:
+            analysis_cache.pin_run(adir, rid)
+
+
+# === TestRetentionPruning ===
+
+def test_prune_runs_removes_oldest_beyond_retention():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_prune_")
+    try:
+        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        _create_numbered_runs(adir, 7)
+        manifest = analysis_cache.load_manifest(adir)
+        assert manifest["current"] == "run006", "current should be last created"
+        pruned = analysis_cache.prune_runs(adir, retention=5)
+        assert len(pruned) == 2, f"expected 2 pruned, got {len(pruned)}"
+        assert "run000" in pruned
+        assert "run001" in pruned
+        manifest = analysis_cache.load_manifest(adir)
+        assert manifest["current"] == "run006", "current must survive"
+        for rid in pruned:
+            assert rid not in manifest["runs"], f"{rid} should be removed"
+            assert not os.path.isdir(os.path.join(adir, rid)), \
+                f"{rid} folder should be deleted"
+    finally:
+        shutil.rmtree(project_dir)
+
+
+def test_prune_runs_preserves_pinned():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_pin_prune_")
+    try:
+        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        _create_numbered_runs(adir, 7, pinned={0, 1})
+        pruned = analysis_cache.prune_runs(adir, retention=3)
+        manifest = analysis_cache.load_manifest(adir)
+        # Pinned runs must survive
+        assert "run000" in manifest["runs"], "pinned run000 should survive"
+        assert "run001" in manifest["runs"], "pinned run001 should survive"
+        # Current (run006) must survive
+        assert manifest["current"] == "run006"
+        assert "run006" in manifest["runs"], "current run006 should survive"
+        # Pinned runs must not be in pruned list
+        assert "run000" not in pruned
+        assert "run001" not in pruned
+        assert "run006" not in pruned
+    finally:
+        shutil.rmtree(project_dir)
+
+
+def test_prune_runs_noop_under_limit():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_noop_")
+    try:
+        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        _create_numbered_runs(adir, 3)
+        pruned = analysis_cache.prune_runs(adir, retention=5)
+        assert pruned == [], f"expected no pruning, got {pruned}"
+        manifest = analysis_cache.load_manifest(adir)
+        assert len(manifest["runs"]) == 3
+    finally:
+        shutil.rmtree(project_dir)
+
+
+def test_prune_runs_zero_retention_keeps_all():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_zero_")
+    try:
+        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        _create_numbered_runs(adir, 5)
+        pruned = analysis_cache.prune_runs(adir, retention=0)
+        assert pruned == [], "retention=0 means unlimited, no pruning"
+        manifest = analysis_cache.load_manifest(adir)
+        assert len(manifest["runs"]) == 5
+    finally:
+        shutil.rmtree(project_dir)
+
+
+def test_pin_unpin_toggles_flag():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_toggle_")
+    try:
+        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        out = tempfile.mkdtemp(prefix="test_out_")
+        with open(os.path.join(out, "schematic.json"), "w") as f:
+            json.dump({"ok": True}, f)
+        analysis_cache.create_run(adir, out, source_hashes={}, scripts={},
+                                  run_id="toggle_run")
+        shutil.rmtree(out)
+        # Initially unpinned
+        manifest = analysis_cache.load_manifest(adir)
+        assert manifest["runs"]["toggle_run"].get("pinned", False) is False
+        # Pin
+        analysis_cache.pin_run(adir, "toggle_run")
+        manifest = analysis_cache.load_manifest(adir)
+        assert manifest["runs"]["toggle_run"]["pinned"] is True
+        # Unpin
+        analysis_cache.unpin_run(adir, "toggle_run")
+        manifest = analysis_cache.load_manifest(adir)
+        assert manifest["runs"]["toggle_run"]["pinned"] is False
+    finally:
+        shutil.rmtree(project_dir)
+
+
+def test_prune_never_removes_current():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_keep_cur_")
+    try:
+        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        _create_numbered_runs(adir, 7)
+        pruned = analysis_cache.prune_runs(adir, retention=1)
+        manifest = analysis_cache.load_manifest(adir)
+        assert manifest["current"] == "run006", "current must survive"
+        assert "run006" in manifest["runs"]
+        assert os.path.isdir(os.path.join(adir, "run006")), \
+            "current run folder must survive"
+        assert "run006" not in pruned
+    finally:
+        shutil.rmtree(project_dir)
+
+
+# === TestNewRunDecision ===
+
+def test_should_create_new_run_true_when_no_current():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_newrun_")
+    try:
+        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        out = tempfile.mkdtemp(prefix="test_out_")
+        with open(os.path.join(out, "schematic.json"), "w") as f:
+            json.dump({"analyzer_type": "schematic"}, f)
+        result = analysis_cache.should_create_new_run(adir, out)
+        assert result is True, "should return True when no current run exists"
+        shutil.rmtree(out)
+    finally:
+        shutil.rmtree(project_dir)
+
+
+def test_get_current_run_none_when_empty():
+    project_dir = tempfile.mkdtemp(prefix="test_ac_empty_")
+    try:
+        adir = analysis_cache.ensure_analysis_dir(project_dir, "test.kicad_pro")
+        result = analysis_cache.get_current_run(adir)
+        assert result is None, "should return None when no runs exist"
+    finally:
+        shutil.rmtree(project_dir)
+
+
 # === Runner ===
 
 if __name__ == "__main__":
