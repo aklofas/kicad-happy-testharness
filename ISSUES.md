@@ -34,7 +34,7 @@ Issue numbers are **globally unique and never reused**. Before assigning a new n
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
 number: **KH-228**. Next TH number: **TH-011**.
 
-> 12 open issues (10 KH-*, 2 TH-*) from Layer 3 batch reviews (2026-04-09).
+> 10 open issues (10 KH-*) from Layer 3 batch reviews (2026-04-09).
 
 ---
 
@@ -295,56 +295,4 @@ repo (all converted to `.kicad_sch`). Reopen if repro file is located.
 8. KH-225 — LM2664 charge pump classified as LDO topology (LOW)
 9. KH-226 — NUCLEO dev board module classified as switching regulator (LOW)
 10. KH-227 — Logic gates misclassified as level_shifter_ic (LOW)
-11. TH-009 — Constants audit doesn't flag Vref heuristic fallback coverage gap (MEDIUM)
-12. TH-010 — Legacy findings cleanup: missing IDs, non-standard analyzer_type values (LOW)
-
----
-
-## Test Harness Issues
-
-### TH-009 — Constants audit doesn't flag Vref heuristic fallback coverage gap (MEDIUM)
-
-**Symptom:** KH-218 (wrong Vref for TPS62912/TPS73601/LM22676) should have been caught
-by `audit_constants.py corpus`, which cross-references the `_REGULATOR_VREF` lookup
-table against corpus outputs. But the audit only counts table entries that matched or
-didn't match — it does not check how many corpus regulators **fell back to the 0.6V
-heuristic** because their part wasn't in the table.
-
-**Scope:** 1,276 regulators across 368 unique parts hit the heuristic fallback (9.2% of
-13,808 total). The data is available in outputs: `vref_source: "heuristic"` and
-`assumed_vref: 0.6`. The audit just doesn't check it.
-
-**Fix:** `audit_constants.py corpus` should scan `power_regulators` in all schematic
-outputs, collect entries where `vref_source == "heuristic"`, and report:
-- Count of heuristic-fallback regulators
-- Top N unique part values by frequency
-- Flag any part appearing 5+ times as a candidate for the lookup table
-
-This would have surfaced TPS62912 (13 hits), TLV62569 (69 hits), AP64501 (26 hits)
-etc. as missing table entries.
-
-**Discovered:** 2026-04-09 — KH-218 found via Layer 3 review, not constants audit.
-
----
-
-### TH-010 — Legacy findings cleanup: missing IDs, non-standard analyzer_type values (LOW)
-
-**Symptom:** `batch_review.py status` shows 27 findings with `unknown` type, 3 with
-`analyze_schematic`/`analyze_pcb`/`analyze_gerbers` (wrong prefix), and many old findings
-with no ID (pre-FND era). These are from early manual reviews before the subagent workflow
-was standardized.
-
-**Scope:** ~30 findings with non-standard types, ~900+ findings with no `id` field.
-Repos affected include Fescron/2ch-4-20mA-converter, Netlist-Studio/dut_hub_hw (22
-findings with no id), torvalds/1590A, OLIMEX/USB-GIGABIT (analyze_* prefix), and
-~1,000+ early findings across 1bitsquared, dbuchwald, etc.
-
-**Fix:** Write a one-time migration script that:
-1. Assigns FND-* IDs to all findings missing an `id` field
-2. Normalizes `analyze_schematic` → `schematic`, `analyze_pcb` → `pcb`,
-   `analyze_gerbers` → `gerber`
-3. Sets `analyzer_type: "schematic"` for findings with no type (they're all schematic)
-4. Re-renders findings.md for all affected repos
-
-**Discovered:** 2026-04-09 via `batch_review.py status` type breakdown.
 

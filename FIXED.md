@@ -11,6 +11,24 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-09 — Batch 35: Test harness fixes (TH-009, TH-010)
+
+### TH-009 (MEDIUM): Constants audit missing Vref heuristic coverage check
+
+- **File**: `validate/audit_constants.py` — `cmd_corpus()`
+- **Root cause**: The corpus scan only counted `vref_source == "lookup"` hits. Regulators falling back to the 0.6V heuristic (`vref_source == "heuristic"`) were silently ignored, so missing Vref table entries never surfaced.
+- **Fix**: Added `vref_heuristic` accumulator to the existing regulator scan loop. After the Vref summary, reports total heuristic-fallback count, unique parts, and top candidates (5+ hits) for table inclusion.
+- **Verified**: `audit_constants.py corpus` reports 1,277 heuristic regulators across 369 parts, with 65 parts having 5+ hits. Top: TLV62569DBV (44x), TLV62569DRL (41x), TPS62A02 (31x).
+
+### TH-010 (LOW): Legacy findings cleanup
+
+- **File**: `tools/migrate_findings.py` (new one-time script)
+- **Root cause**: Early findings (pre-March 2026) were created before the standardized FND-* ID system and analyzer_type conventions. 89 findings had no ID, 30 had non-standard or missing types.
+- **Fix**: Migration script assigns FND-* IDs via `next_id()` (FND-00002540 through FND-00002628), normalizes `analyze_schematic` → `schematic` etc., defaults missing types to `schematic`, re-renders all 45 affected findings.md files.
+- **Verified**: All 2,596 findings have IDs (0 missing). `batch_review.py status` shows only standard types (schematic: 1656, pcb: 619, gerber: 298). 277 tests pass.
+
+---
+
 ## 2026-04-09 — Batch 34: Layer 3 workflow improvements (TH-011)
 
 ### TH-011 (LOW): batch_review.py multi-project output alignment
