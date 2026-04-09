@@ -16,17 +16,6 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 2 lc_filter simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^lc_filter$",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
       "description": "Exactly 2 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -37,7 +26,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -48,7 +37,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000004",
       "description": "Exactly 2 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -59,13 +48,23 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "R8 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bR8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C56 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC56\\b"
       }
     },
     {
@@ -80,46 +79,6 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "C23 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC23\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "L1 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bL1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "C59 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC59\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "C56 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC56\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
       "description": "R21 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -129,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000009",
       "description": "R38 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -139,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000010",
       "description": "R5 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -149,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000011",
       "description": "R6 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -159,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000012",
       "description": "R5 simulated as feedback_network",
       "check": {
         "path": "simulation_results",
@@ -169,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000013",
       "description": "R6 simulated as feedback_network",
       "check": {
         "path": "simulation_results",
@@ -179,7 +138,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000014",
       "description": "R5 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -189,7 +148,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000015",
       "description": "R6 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",

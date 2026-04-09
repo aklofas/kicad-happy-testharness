@@ -5,21 +5,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~24 (tolerance 10%)",
+      "description": "Simulation count ~21 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 21,
-        "max": 27
+        "min": 18,
+        "max": 24
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 18 passing simulation(s)",
+      "description": "At least 16 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 18
+        "value": 16
       }
     },
     {
@@ -57,13 +57,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "5 inrush simulation(s)",
+      "description": "2 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 5
+        "value": 2
       }
     },
     {

@@ -16,17 +16,27 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 transistor_circuit simulation(s)",
+      "description": "Exactly 2 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Q5 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "Q7 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -36,7 +46,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "C39 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -46,7 +56,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "C26 simulated as decoupling",
       "check": {
         "path": "simulation_results",

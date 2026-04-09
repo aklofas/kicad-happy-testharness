@@ -27,28 +27,17 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 8 rc_filter simulation(s)",
+      "description": "Exactly 9 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 8
+        "value": 9
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 snubber_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^snubber_circuit$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
       "description": "Exactly 15 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -59,7 +48,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000005",
       "description": "Exactly 3 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -70,7 +59,27 @@
       }
     },
     {
+      "id": "STRUCT-00000006",
+      "description": "R40 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR40\\b"
+      }
+    },
+    {
       "id": "STRUCT-00000007",
+      "description": "C22 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC22\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "R35 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -80,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "C23 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -90,7 +99,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "R36 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -100,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "R28 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -110,7 +119,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "C24 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -120,7 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "R29 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -130,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "R37 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -140,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "C25 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -150,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "R63 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -160,7 +169,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "C71 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -170,7 +179,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "R50 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -180,7 +189,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "C50 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -190,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "R130 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -200,7 +209,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "C130 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -210,7 +219,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "R23 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -220,7 +229,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "R24 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -230,7 +239,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
       "description": "R21 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -240,7 +249,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000025",
       "description": "R22 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -250,7 +259,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "R38 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -260,7 +269,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000027",
       "description": "R39 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -270,7 +279,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000028",
       "description": "Y61 simulated as crystal_circuit",
       "check": {
         "path": "simulation_results",
@@ -280,7 +289,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000029",
       "description": "Q24 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -290,7 +299,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000030",
       "description": "Q21 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -300,7 +309,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000031",
       "description": "Q22 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -310,7 +319,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000032",
       "description": "Q25 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -320,7 +329,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000033",
       "description": "Q60 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -330,7 +339,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000034",
       "description": "Q50 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -340,7 +349,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000035",
       "description": "Q51 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -350,7 +359,7 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000036",
       "description": "Q61 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -360,7 +369,7 @@
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000037",
       "description": "Q120 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -370,7 +379,7 @@
       }
     },
     {
-      "id": "STRUCT-00000037",
+      "id": "STRUCT-00000038",
       "description": "Q91 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -380,7 +389,7 @@
       }
     },
     {
-      "id": "STRUCT-00000038",
+      "id": "STRUCT-00000039",
       "description": "Q92 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -390,7 +399,7 @@
       }
     },
     {
-      "id": "STRUCT-00000039",
+      "id": "STRUCT-00000040",
       "description": "Q93 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -400,7 +409,7 @@
       }
     },
     {
-      "id": "STRUCT-00000040",
+      "id": "STRUCT-00000041",
       "description": "Q90 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -410,7 +419,7 @@
       }
     },
     {
-      "id": "STRUCT-00000041",
+      "id": "STRUCT-00000042",
       "description": "Q23 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -420,7 +429,7 @@
       }
     },
     {
-      "id": "STRUCT-00000042",
+      "id": "STRUCT-00000043",
       "description": "Q20 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -430,7 +439,7 @@
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000044",
       "description": "C2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -440,7 +449,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000045",
       "description": "C60 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -450,7 +459,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000046",
       "description": "C61 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -460,7 +469,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000047",
       "description": "C62 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -470,33 +479,13 @@
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000048",
       "description": "C63 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC63\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000048",
-      "description": "R50 simulated as snubber_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR50\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000049",
-      "description": "C50 simulated as snubber_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC50\\b"
       }
     }
   ]

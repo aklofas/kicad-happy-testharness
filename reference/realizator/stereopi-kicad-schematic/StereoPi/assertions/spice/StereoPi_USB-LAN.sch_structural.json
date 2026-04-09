@@ -16,13 +16,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 4 decoupling simulation(s)",
+      "description": "Exactly 7 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 7
       }
     },
     {
@@ -158,12 +158,72 @@
     },
     {
       "id": "STRUCT-00000016",
+      "description": "C50 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC50\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "C51 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC51\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "C55 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC55\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "C3 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "C56 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC56\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
       "description": "C63 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC63\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "C64 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC64\\b"
       }
     }
   ]

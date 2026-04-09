@@ -38,13 +38,13 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 4 inrush simulation(s)",
+      "description": "Exactly 3 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -700,16 +700,6 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC47\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000070",
-      "description": "C59 simulated as inrush",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC59\\b"
       }
     }
   ]

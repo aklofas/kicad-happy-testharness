@@ -5,6 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -15,7 +26,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -26,7 +37,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "R52 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -36,7 +47,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "R63 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -46,13 +57,93 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Q1 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bQ1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C151 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC151\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C216 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC216\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C156 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC156\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C134 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC134\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C218 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC218\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C139 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC139\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C136 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC136\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "C137 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC137\\b"
       }
     }
   ]

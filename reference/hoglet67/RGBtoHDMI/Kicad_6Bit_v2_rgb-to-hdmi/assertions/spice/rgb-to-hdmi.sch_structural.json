@@ -5,28 +5,28 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 rc_filter simulation(s)",
+      "description": "Exactly 1 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
-        "value": 3
+        "pattern": "^decoupling$",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R1 simulated as rc_filter",
+      "description": "C4 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR1\\b"
+        "pattern": "\\bC4\\b"
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "C3 simulated as rc_filter",
+      "description": "C3 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -36,22 +36,22 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "R2 simulated as rc_filter",
+      "description": "C2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR2\\b"
+        "pattern": "\\bC2\\b"
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "R3 simulated as rc_filter",
+      "description": "C1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR3\\b"
+        "pattern": "\\bC1\\b"
       }
     }
   ]

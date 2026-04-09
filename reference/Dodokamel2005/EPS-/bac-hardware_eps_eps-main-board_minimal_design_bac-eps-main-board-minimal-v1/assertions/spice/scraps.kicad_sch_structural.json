@@ -5,83 +5,33 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 6 rc_filter simulation(s)",
+      "description": "Exactly 1 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
-        "value": 6
+        "pattern": "^decoupling$",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R1205 simulated as rc_filter",
+      "description": "C1202 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR1205\\b"
+        "pattern": "\\bC1202\\b"
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "C1201 simulated as rc_filter",
+      "description": "C1201 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC1201\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "R1203 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR1203\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "R1206 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR1206\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "R1201 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR1201\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "R1204 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR1204\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "R1202 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR1202\\b"
       }
     }
   ]

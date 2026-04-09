@@ -5,21 +5,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~68 (tolerance 10%)",
+      "description": "Simulation count ~71 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 64,
-        "max": 72
+        "min": 67,
+        "max": 75
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 48 passing simulation(s)",
+      "description": "At least 44 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 48
+        "value": 44
       }
     },
     {
@@ -57,24 +57,24 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "6 current_sense simulation(s)",
+      "description": "5 current_sense simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^current_sense$",
-        "value": 6
+        "value": 5
       }
     },
     {
       "id": "SEED-00000007",
-      "description": "9 decoupling simulation(s)",
+      "description": "22 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 9
+        "value": 22
       }
     },
     {
@@ -101,13 +101,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "18 rc_filter simulation(s)",
+      "description": "10 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 18
+        "value": 10
       }
     },
     {
@@ -123,13 +123,13 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "7 transistor_circuit simulation(s)",
+      "description": "6 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 7
+        "value": 6
       }
     },
     {

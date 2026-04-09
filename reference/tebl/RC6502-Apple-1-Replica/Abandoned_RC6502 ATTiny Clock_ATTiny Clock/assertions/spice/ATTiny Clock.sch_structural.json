@@ -5,18 +5,29 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 rc_filter simulation(s)",
+      "description": "Exactly 1 crystal_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
+        "pattern": "^crystal_circuit$",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R2 simulated as rc_filter",
+      "description": "Exactly 1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "R2 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -25,13 +36,23 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
-      "description": "C3 simulated as rc_filter",
+      "id": "STRUCT-00000004",
+      "description": "R1 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC3\\b"
+        "pattern": "\\bR1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Y1 simulated as crystal_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bY1\\b"
       }
     }
   ]

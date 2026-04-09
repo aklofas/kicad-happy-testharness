@@ -5,6 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 2 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 current_sense simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -15,36 +26,25 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 3 decoupling simulation(s)",
+      "id": "STRUCT-00000003",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 3
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 1 inrush simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^inrush$",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 3 lc_filter simulation(s)",
+      "description": "Exactly 4 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^lc_filter$",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -70,16 +70,6 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "C71 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC71\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "C70 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -89,7 +79,37 @@
       }
     },
     {
+      "id": "STRUCT-00000008",
+      "description": "C71 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC71\\b"
+      }
+    },
+    {
       "id": "STRUCT-00000009",
+      "description": "L3 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C79 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC79\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "L2 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -99,7 +119,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "C24 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -109,7 +129,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000013",
       "description": "L1 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -119,7 +139,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000014",
       "description": "C9 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -129,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000015",
       "description": "C85 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -139,7 +159,27 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000016",
+      "description": "X2 simulated as crystal_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bX2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "X3 simulated as crystal_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bX3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "R62 simulated as current_sense",
       "check": {
         "path": "simulation_results",
@@ -149,7 +189,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000019",
       "description": "C81 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -159,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000020",
       "description": "C84 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -169,7 +209,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000021",
       "description": "C82 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -179,27 +219,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "C75 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC75\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
-      "description": "C74 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC74\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000022",
       "description": "C73 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -209,7 +229,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000023",
       "description": "C83 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -219,7 +239,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000024",
       "description": "C12 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -229,7 +249,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000025",
       "description": "C11 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -239,58 +259,8 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
-      "description": "C27 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC27\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000025",
-      "description": "C73 simulated as inrush",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC73\\b"
-      }
-    },
-    {
       "id": "STRUCT-00000026",
-      "description": "C83 simulated as inrush",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC83\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000027",
-      "description": "C12 simulated as inrush",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC12\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000028",
-      "description": "C11 simulated as inrush",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC11\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
-      "description": "C27 simulated as inrush",
+      "description": "C27 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",

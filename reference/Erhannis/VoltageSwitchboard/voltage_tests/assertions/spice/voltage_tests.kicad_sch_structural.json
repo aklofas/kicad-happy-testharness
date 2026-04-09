@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 6 decoupling simulation(s)",
+      "description": "Exactly 5 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 6
+        "value": 5
       }
     },
     {
@@ -37,16 +37,6 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "C1_P1V8L1 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC1_P1V8L1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
       "description": "C1_85B1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -56,27 +46,27 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "C3_VI1 simulated as decoupling",
+      "id": "STRUCT-00000005",
+      "description": "C2_85B1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC3_VI1\\b"
+        "pattern": "\\bC2_85B1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C3_VIA1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC3_VIA1\\b"
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "C1_UM1 simulated as decoupling",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC1_UM1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
       "description": "C2_P1V8L1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -86,7 +76,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "C2_P1V8L1 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -96,7 +86,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "C2_UM1 simulated as inrush",
       "check": {
         "path": "simulation_results",

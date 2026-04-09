@@ -16,6 +16,17 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 2 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 2 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -26,7 +37,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "R807 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -36,7 +47,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "R810 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -46,7 +57,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "R808 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -56,7 +67,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "R809 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -66,13 +77,63 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Y801 simulated as crystal_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bY801\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C806 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC806\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C807 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC807\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C803 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC803\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C802 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC802\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C801 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC801\\b"
       }
     }
   ]

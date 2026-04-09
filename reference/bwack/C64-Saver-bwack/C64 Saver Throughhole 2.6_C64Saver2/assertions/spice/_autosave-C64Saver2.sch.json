@@ -15,21 +15,21 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 1 passing simulation(s)",
+      "description": "At least 2 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "1 transistor_circuit simulation(s)",
+      "description": "1 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
+        "pattern": "^decoupling$",
         "value": 1
       }
     },

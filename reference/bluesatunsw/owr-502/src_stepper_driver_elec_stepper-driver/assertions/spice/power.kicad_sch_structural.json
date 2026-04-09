@@ -16,62 +16,51 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 feedback_network simulation(s)",
+      "description": "Exactly 2 feedback_network simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^feedback_network$",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 2 inrush simulation(s)",
+      "description": "Exactly 3 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 1 rc_filter simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "Exactly 1 regulator_feedback simulation(s)",
+      "description": "Exactly 2 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^regulator_feedback$",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 2 voltage_divider simulation(s)",
+      "id": "STRUCT-00000005",
+      "description": "Exactly 3 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 2
+        "value": 3
       }
     },
     {
-      "id": "STRUCT-00000007",
-      "description": "R231 simulated as rc_filter",
+      "id": "STRUCT-00000006",
+      "description": "R231 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -80,17 +69,17 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "C232 simulated as rc_filter",
+      "id": "STRUCT-00000007",
+      "description": "R232 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC232\\b"
+        "pattern": "\\bR232\\b"
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000008",
       "description": "R210 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -100,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000009",
       "description": "R211 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -110,7 +99,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000010",
       "description": "R221 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -120,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "R222 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -130,7 +119,27 @@
       }
     },
     {
+      "id": "STRUCT-00000012",
+      "description": "R231 simulated as feedback_network",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR231\\b"
+      }
+    },
+    {
       "id": "STRUCT-00000013",
+      "description": "R232 simulated as feedback_network",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR232\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
       "description": "R221 simulated as feedback_network",
       "check": {
         "path": "simulation_results",
@@ -140,7 +149,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "R222 simulated as feedback_network",
       "check": {
         "path": "simulation_results",
@@ -150,7 +159,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "C227 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -160,7 +169,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "C210 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -170,7 +179,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "C233 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -180,7 +189,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "C240 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -190,7 +199,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "C250 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -200,7 +209,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "C242 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -210,7 +219,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "R221 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -220,7 +229,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "R222 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -230,7 +239,27 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
+      "description": "R231 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR231\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "R232 simulated as regulator_feedback",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR232\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
       "description": "C242 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -240,13 +269,43 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000027",
       "description": "C227 simulated as inrush",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC227\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
+      "description": "C233 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC233\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000029",
+      "description": "C240 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC240\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "C250 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC250\\b"
       }
     }
   ]

@@ -27,13 +27,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 4 opamp_circuit simulation(s)",
+      "description": "Exactly 5 opamp_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^opamp_circuit$",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -430,22 +430,22 @@
     },
     {
       "id": "STRUCT-00000043",
-      "description": "U3 simulated as opamp_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU3\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000044",
       "description": "U4 simulated as opamp_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000044",
+      "description": "U3 simulated as opamp_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU3\\b"
       }
     },
     {

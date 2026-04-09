@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~20 (tolerance 10%)",
+      "description": "Simulation count ~18 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 18,
-        "max": 22
+        "min": 16,
+        "max": 20
       }
     },
     {
@@ -24,6 +24,17 @@
     },
     {
       "id": "SEED-00000003",
+      "description": "1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
       "description": "1 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -34,7 +45,7 @@
       }
     },
     {
-      "id": "SEED-00000004",
+      "id": "SEED-00000005",
       "description": "2 opamp_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -45,25 +56,14 @@
       }
     },
     {
-      "id": "SEED-00000005",
-      "description": "14 rc_filter simulation(s)",
+      "id": "SEED-00000006",
+      "description": "13 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 14
-      }
-    },
-    {
-      "id": "SEED-00000006",
-      "description": "2 transistor_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
-        "value": 2
+        "value": 13
       }
     },
     {

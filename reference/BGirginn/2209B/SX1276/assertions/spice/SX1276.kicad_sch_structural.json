@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 4 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 4
       }
     },
     {
@@ -131,6 +131,66 @@
     },
     {
       "id": "STRUCT-00000013",
+      "description": "C12 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC12\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "C11 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC11\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "C7 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC7\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "C6 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "C4 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "C5 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
       "description": "C10 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -140,7 +200,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000020",
       "description": "L8 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -150,7 +210,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000021",
       "description": "L7 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -160,7 +220,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000022",
       "description": "C8 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -170,7 +230,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000023",
       "description": "C9 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -180,17 +240,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "U2 simulated as rf_chain",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU2\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000024",
       "description": "U1 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -200,7 +250,17 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000025",
+      "description": "U2 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
       "description": "C4 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -210,7 +270,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000027",
       "description": "C5 simulated as inrush",
       "check": {
         "path": "simulation_results",

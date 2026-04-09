@@ -5,53 +5,73 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 rc_filter simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
-        "value": 3
+        "pattern": "^decoupling$",
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R66 simulated as rc_filter",
+      "description": "C169 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR66\\b"
+        "pattern": "\\bC169\\b"
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "C200 simulated as rc_filter",
+      "description": "C175 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC200\\b"
+        "pattern": "\\bC175\\b"
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "R64 simulated as rc_filter",
+      "description": "C181 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR64\\b"
+        "pattern": "\\bC181\\b"
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "R62 simulated as rc_filter",
+      "description": "C184 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR62\\b"
+        "pattern": "\\bC184\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "C188 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC188\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C204 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC204\\b"
       }
     }
   ]

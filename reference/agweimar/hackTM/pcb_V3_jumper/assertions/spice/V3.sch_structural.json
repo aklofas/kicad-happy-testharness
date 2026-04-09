@@ -5,18 +5,18 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 transistor_circuit simulation(s)",
+      "description": "Exactly 1 bridge_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
-        "value": 2
+        "pattern": "^bridge_circuit$",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Q2 simulated as transistor_circuit",
+      "description": "Q2 simulated as bridge_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -26,7 +26,7 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Q1 simulated as transistor_circuit",
+      "description": "Q1 simulated as bridge_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",

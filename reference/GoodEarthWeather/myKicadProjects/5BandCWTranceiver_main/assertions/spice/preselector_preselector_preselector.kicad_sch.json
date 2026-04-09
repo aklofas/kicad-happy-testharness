@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~21 (tolerance 10%)",
+      "description": "Simulation count ~22 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 18,
-        "max": 24
+        "min": 19,
+        "max": 25
       }
     },
     {
@@ -24,6 +24,17 @@
     },
     {
       "id": "SEED-00000003",
+      "description": "1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
       "description": "16 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -34,7 +45,7 @@
       }
     },
     {
-      "id": "SEED-00000004",
+      "id": "SEED-00000005",
       "description": "5 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",

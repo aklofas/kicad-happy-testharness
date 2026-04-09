@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~7 (tolerance 10%)",
+      "description": "Simulation count ~8 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 6,
-        "max": 8
+        "min": 7,
+        "max": 9
       }
     },
     {
@@ -24,6 +24,17 @@
     },
     {
       "id": "SEED-00000003",
+      "description": "1 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
       "description": "7 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",

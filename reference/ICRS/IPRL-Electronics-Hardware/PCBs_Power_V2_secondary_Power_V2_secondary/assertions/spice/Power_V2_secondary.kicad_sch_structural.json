@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -69,6 +69,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "C23 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC23\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "C24 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -78,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "C13 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -88,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "R26 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -98,7 +108,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "R25 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -108,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "C24 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -118,7 +128,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "C13 simulated as inrush",
       "check": {
         "path": "simulation_results",

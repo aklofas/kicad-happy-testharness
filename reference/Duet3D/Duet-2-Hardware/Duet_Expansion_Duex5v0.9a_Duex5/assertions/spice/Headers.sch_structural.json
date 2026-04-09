@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 lc_filter simulation(s)",
+      "description": "Exactly 6 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^lc_filter$",
-        "value": 4
+        "value": 6
       }
     },
     {
@@ -47,32 +47,32 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "L3 simulated as lc_filter",
+      "description": "C55 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bL3\\b"
+        "pattern": "\\bC55\\b"
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "C61 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC61\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "L2 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bL2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C60 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC60\\b"
       }
     },
     {
@@ -87,6 +87,26 @@
     },
     {
       "id": "STRUCT-00000009",
+      "description": "L3 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bL3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C62 simulated as lc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC62\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "R68 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -96,7 +116,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "R71 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",

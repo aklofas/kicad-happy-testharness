@@ -16,6 +16,17 @@
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 1 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "C39 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -25,7 +36,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "C38 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -35,7 +46,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "C37 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -45,7 +56,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "C32 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -55,7 +66,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "C35 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -65,13 +76,33 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "C33 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC33\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C39 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC39\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C38 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC38\\b"
       }
     }
   ]

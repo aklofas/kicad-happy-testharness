@@ -49,13 +49,13 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 2 rf_matching simulation(s)",
+      "description": "Exactly 1 rf_matching simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rf_matching$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -300,16 +300,6 @@
     },
     {
       "id": "STRUCT-00000030",
-      "description": "C51 simulated as rf_matching",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC51\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000031",
       "description": "U2 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -319,7 +309,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000031",
       "description": "U11 simulated as rf_chain",
       "check": {
         "path": "simulation_results",

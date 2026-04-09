@@ -5,32 +5,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~28 (tolerance 10%)",
+      "description": "Simulation count ~29 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 25,
-        "max": 31
+        "min": 26,
+        "max": 32
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 21 passing simulation(s)",
+      "description": "At least 23 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 21
+        "value": 23
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "4 decoupling simulation(s)",
+      "description": "6 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 6
       }
     },
     {
@@ -57,17 +57,6 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "1 lc_filter simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^lc_filter$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000007",
       "description": "5 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -78,7 +67,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "1 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -89,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "4 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -100,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "11 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",

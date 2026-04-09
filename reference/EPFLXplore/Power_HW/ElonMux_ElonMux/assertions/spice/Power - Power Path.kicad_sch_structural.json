@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 3 decoupling simulation(s)",
+      "description": "Exactly 5 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 3
+        "value": 5
       }
     },
     {
@@ -255,6 +255,26 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC811\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "C814 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC814\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "C812 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC812\\b"
       }
     }
   ]

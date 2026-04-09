@@ -5,6 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 2 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -15,7 +26,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 rf_chain simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -26,7 +37,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "L101 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -36,7 +47,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "C101 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -46,7 +57,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "C103 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -56,23 +67,73 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "U1 simulated as rf_chain",
+      "id": "STRUCT-00000007",
+      "description": "C108 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bU1\\b"
+        "pattern": "\\bC108\\b"
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
+      "description": "C105 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC105\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C106 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC106\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "C104 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "U2 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "U1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1\\b"
       }
     }
   ]

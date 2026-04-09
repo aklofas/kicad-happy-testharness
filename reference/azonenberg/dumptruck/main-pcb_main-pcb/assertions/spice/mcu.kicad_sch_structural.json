@@ -5,17 +5,28 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 3 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "Exactly 1 inrush simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^inrush$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "Exactly 1 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -26,7 +37,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "L4 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -36,7 +47,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "C126 simulated as lc_filter",
       "check": {
         "path": "simulation_results",
@@ -46,7 +57,57 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
+      "description": "C122 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC122\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C124 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC124\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C118 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC118\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C117 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC117\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
+      "description": "C106 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC106\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "C111 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -56,13 +117,53 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000012",
       "description": "C107 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC107\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C109 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC109\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "C125 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC125\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "C105 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC105\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "C127 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC127\\b"
       }
     }
   ]

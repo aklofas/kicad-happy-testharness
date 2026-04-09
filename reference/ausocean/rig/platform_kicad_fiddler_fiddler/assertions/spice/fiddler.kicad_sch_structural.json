@@ -27,13 +27,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 inrush simulation(s)",
+      "description": "Exactly 2 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -639,6 +639,56 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC58\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000064",
+      "description": "C23 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC23\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000065",
+      "description": "C18 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC18\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000066",
+      "description": "C19 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC19\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000067",
+      "description": "C63 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC63\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000068",
+      "description": "C62 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC62\\b"
       }
     }
   ]

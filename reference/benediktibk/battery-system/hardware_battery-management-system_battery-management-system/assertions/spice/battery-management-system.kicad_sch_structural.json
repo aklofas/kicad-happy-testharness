@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 4 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 4
       }
     },
     {
@@ -502,6 +502,56 @@
     },
     {
       "id": "STRUCT-00000050",
+      "description": "C1 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000051",
+      "description": "C2 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000052",
+      "description": "C23 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC23\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000053",
+      "description": "C25 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC25\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000054",
+      "description": "C24 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC24\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000055",
       "description": "C28 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -511,7 +561,7 @@
       }
     },
     {
-      "id": "STRUCT-00000051",
+      "id": "STRUCT-00000056",
       "description": "C27 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -521,7 +571,47 @@
       }
     },
     {
-      "id": "STRUCT-00000052",
+      "id": "STRUCT-00000057",
+      "description": "C16 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC16\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000058",
+      "description": "C18 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC18\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000059",
+      "description": "C17 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC17\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000060",
+      "description": "C12 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC12\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000061",
       "description": "R9 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -531,7 +621,7 @@
       }
     },
     {
-      "id": "STRUCT-00000053",
+      "id": "STRUCT-00000062",
       "description": "R10 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -541,7 +631,7 @@
       }
     },
     {
-      "id": "STRUCT-00000054",
+      "id": "STRUCT-00000063",
       "description": "R37 simulated as snubber_circuit",
       "check": {
         "path": "simulation_results",
@@ -551,7 +641,7 @@
       }
     },
     {
-      "id": "STRUCT-00000055",
+      "id": "STRUCT-00000064",
       "description": "C14 simulated as snubber_circuit",
       "check": {
         "path": "simulation_results",

@@ -5,6 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 decoupling simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 2 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -15,7 +26,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "R16 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -25,7 +36,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "C20 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -35,7 +46,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "R15 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -45,13 +56,43 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "C19 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC19\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "C16 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC16\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "C18 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC18\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "C17 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC17\\b"
       }
     }
   ]

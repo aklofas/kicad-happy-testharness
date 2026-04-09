@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -88,7 +88,7 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "C10 simulated as inrush",
+      "description": "C10 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -98,7 +98,7 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "C5 simulated as inrush",
+      "description": "C5 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -108,7 +108,7 @@
     },
     {
       "id": "STRUCT-00000011",
-      "description": "C6 simulated as inrush",
+      "description": "C6 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -118,7 +118,7 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "C2 simulated as inrush",
+      "description": "C2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -128,6 +128,56 @@
     },
     {
       "id": "STRUCT-00000013",
+      "description": "C7 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC7\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "C10 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC10\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "C5 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "C6 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC6\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "C2 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "C7 simulated as inrush",
       "check": {
         "path": "simulation_results",

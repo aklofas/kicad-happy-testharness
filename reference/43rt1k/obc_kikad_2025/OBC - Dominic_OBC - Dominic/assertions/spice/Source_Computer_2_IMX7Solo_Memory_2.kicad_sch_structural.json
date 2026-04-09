@@ -5,18 +5,18 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 rc_filter simulation(s)",
+      "description": "Exactly 1 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
+        "pattern": "^voltage_divider$",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "R84 simulated as rc_filter",
+      "description": "R84 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -26,12 +26,12 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "C156 simulated as rc_filter",
+      "description": "R85 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC156\\b"
+        "pattern": "\\bR85\\b"
       }
     }
   ]

@@ -5,58 +5,47 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~12 (tolerance 10%)",
+      "description": "Simulation count ~17 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 10,
-        "max": 14
+        "min": 15,
+        "max": 19
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 9 passing simulation(s)",
+      "description": "At least 13 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 9
+        "value": 13
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "1 current_sense simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^current_sense$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000004",
-      "description": "1 decoupling simulation(s)",
+      "description": "5 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 5
       }
     },
     {
-      "id": "SEED-00000005",
-      "description": "2 feedback_network simulation(s)",
+      "id": "SEED-00000004",
+      "description": "3 feedback_network simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^feedback_network$",
-        "value": 2
+        "value": 3
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000005",
       "description": "1 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -67,18 +56,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
-      "description": "1 rc_filter simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^rc_filter$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000008",
+      "id": "SEED-00000006",
       "description": "1 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -89,18 +67,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
-      "description": "1 snubber_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^snubber_circuit$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000010",
+      "id": "SEED-00000007",
       "description": "1 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -111,14 +78,14 @@
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "3 voltage_divider simulation(s)",
+      "id": "SEED-00000008",
+      "description": "6 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 3
+        "value": 6
       }
     }
   ]

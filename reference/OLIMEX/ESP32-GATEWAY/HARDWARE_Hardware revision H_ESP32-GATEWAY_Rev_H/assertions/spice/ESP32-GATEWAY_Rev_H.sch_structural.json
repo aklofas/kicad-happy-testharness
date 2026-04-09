@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 decoupling simulation(s)",
+      "description": "Exactly 5 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -230,6 +230,46 @@
     },
     {
       "id": "STRUCT-00000023",
+      "description": "C15 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC15\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "C14 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC14\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "C12 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC12\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "C11 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC11\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
       "description": "C23 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -239,27 +279,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
-      "description": "U1 simulated as rf_chain",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000025",
-      "description": "U5 simulated as rf_chain",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU5\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000028",
       "description": "U3 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -269,13 +289,33 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000029",
+      "description": "U1 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
       "description": "U4 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bU4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000031",
+      "description": "U5 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU5\\b"
       }
     }
   ]

@@ -5,24 +5,24 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 11 rc_filter simulation(s)",
+      "description": "Exactly 8 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 11
+        "value": 8
       }
     },
     {
@@ -147,26 +147,6 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R310 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR310\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "C335 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC335\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
       "description": "R312 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -176,7 +156,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000016",
       "description": "C337 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -186,17 +166,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
-      "description": "R314 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR314\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000017",
       "description": "R313 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -206,7 +176,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000018",
       "description": "C103 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -216,7 +186,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000019",
       "description": "C303 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -226,7 +196,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000020",
       "description": "C325 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -236,7 +206,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000021",
       "description": "C327 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -246,13 +216,23 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000022",
       "description": "C333 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC333\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "C335 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC335\\b"
       }
     }
   ]

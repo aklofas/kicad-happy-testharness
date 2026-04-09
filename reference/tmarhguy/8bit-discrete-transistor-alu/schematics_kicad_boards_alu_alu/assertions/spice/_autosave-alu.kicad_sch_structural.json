@@ -5,39 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 bridge_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^bridge_circuit$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 1 decoupling simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^decoupling$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 26 transistor_circuit simulation(s)",
+      "description": "Exactly 30 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 26
+        "value": 30
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000002",
       "description": "Q5106 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -47,7 +25,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000003",
       "description": "Q303 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -57,7 +35,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000004",
       "description": "Q310 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -67,13 +45,33 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000005",
       "description": "Q302 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bQ302\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "Q304 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ304\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Q305 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ305\\b"
       }
     },
     {
@@ -298,42 +296,22 @@
     },
     {
       "id": "STRUCT-00000030",
-      "description": "C702 simulated as decoupling",
+      "description": "Q3603 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC702\\b"
+        "pattern": "\\bQ3603\\b"
       }
     },
     {
       "id": "STRUCT-00000031",
-      "description": "C701 simulated as decoupling",
+      "description": "Q3602 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bC701\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000032",
-      "description": "Q304 simulated as bridge_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ304\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000033",
-      "description": "Q305 simulated as bridge_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ305\\b"
+        "pattern": "\\bQ3602\\b"
       }
     }
   ]

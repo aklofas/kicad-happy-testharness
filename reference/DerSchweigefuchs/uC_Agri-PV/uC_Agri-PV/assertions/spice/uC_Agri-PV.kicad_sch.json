@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~52 (tolerance 10%)",
+      "description": "Simulation count ~51 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 49,
-        "max": 55
+        "min": 48,
+        "max": 54
       }
     },
     {
@@ -24,13 +24,13 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "9 decoupling simulation(s)",
+      "description": "13 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 9
+        "value": 13
       }
     },
     {
@@ -57,28 +57,17 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "1 lc_filter simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^lc_filter$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000007",
-      "description": "20 rc_filter simulation(s)",
+      "description": "16 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 20
+        "value": 16
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "1 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -89,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "14 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -100,7 +89,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "3 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",

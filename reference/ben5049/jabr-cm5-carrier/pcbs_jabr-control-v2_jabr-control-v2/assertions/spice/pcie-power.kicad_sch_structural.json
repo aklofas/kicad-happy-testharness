@@ -27,13 +27,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 inrush simulation(s)",
+      "description": "Exactly 2 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 3
+        "value": 2
       }
     },
     {
@@ -336,16 +336,6 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC1514\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000034",
-      "description": "C1502 simulated as inrush",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC1502\\b"
       }
     }
   ]

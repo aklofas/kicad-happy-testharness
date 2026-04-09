@@ -5,28 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 bridge_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^bridge_circuit$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 2 transistor_circuit simulation(s)",
+      "description": "Exactly 4 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 2
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000002",
       "description": "Q4 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -36,18 +25,8 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "Q3 simulated as transistor_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ3\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "Q14 simulated as bridge_circuit",
+      "id": "STRUCT-00000003",
+      "description": "Q14 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -56,13 +35,23 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "Q13 simulated as bridge_circuit",
+      "id": "STRUCT-00000004",
+      "description": "Q13 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bQ13\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Q3 simulated as transistor_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ3\\b"
       }
     }
   ]

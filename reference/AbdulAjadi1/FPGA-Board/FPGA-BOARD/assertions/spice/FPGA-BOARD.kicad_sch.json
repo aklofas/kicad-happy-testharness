@@ -5,36 +5,47 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~54 (tolerance 10%)",
+      "description": "Simulation count ~63 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 51,
-        "max": 57
+        "min": 59,
+        "max": 67
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 41 passing simulation(s)",
+      "description": "At least 48 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 41
+        "value": 48
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "8 decoupling simulation(s)",
+      "description": "1 crystal_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^crystal_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "10 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 8
+        "value": 10
       }
     },
     {
-      "id": "SEED-00000004",
+      "id": "SEED-00000005",
       "description": "4 feedback_network simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -45,18 +56,18 @@
       }
     },
     {
-      "id": "SEED-00000005",
-      "description": "1 inrush simulation(s)",
+      "id": "SEED-00000006",
+      "description": "2 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "SEED-00000006",
+      "id": "SEED-00000007",
       "description": "1 lc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -67,7 +78,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000008",
       "description": "1 protection_device simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -78,18 +89,18 @@
       }
     },
     {
-      "id": "SEED-00000008",
-      "description": "22 rc_filter simulation(s)",
+      "id": "SEED-00000009",
+      "description": "28 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 22
+        "value": 28
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000010",
       "description": "1 regulator_feedback simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -100,14 +111,14 @@
       }
     },
     {
-      "id": "SEED-00000010",
-      "description": "16 voltage_divider simulation(s)",
+      "id": "SEED-00000011",
+      "description": "15 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 16
+        "value": 15
       }
     }
   ]

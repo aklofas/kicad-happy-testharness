@@ -5,6 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 1 bridge_circuit simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^bridge_circuit$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -15,7 +26,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 29 protection_device simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -26,7 +37,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Exactly 2 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
@@ -34,17 +45,6 @@
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
         "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "Exactly 1 transistor_circuit simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
-        "value": 1
       }
     },
     {
@@ -405,6 +405,16 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC12\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000041",
+      "description": "Q3 simulated as bridge_circuit",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bQ3\\b"
       }
     }
   ]

@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~4 (tolerance 10%)",
+      "description": "Simulation count ~5 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 3,
-        "max": 5
+        "min": 4,
+        "max": 6
       }
     },
     {
@@ -24,13 +24,13 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "1 crystal_circuit simulation(s)",
+      "description": "2 crystal_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^crystal_circuit$",
-        "value": 1
+        "value": 2
       }
     },
     {

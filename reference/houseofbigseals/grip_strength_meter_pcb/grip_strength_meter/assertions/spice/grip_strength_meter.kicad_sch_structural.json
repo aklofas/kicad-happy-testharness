@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -416,6 +416,56 @@
     },
     {
       "id": "STRUCT-00000041",
+      "description": "C10 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC10\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000042",
+      "description": "C11 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC11\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000043",
+      "description": "C8 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000044",
+      "description": "C4 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC4\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000045",
+      "description": "C14 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC14\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000046",
       "description": "C3 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -425,7 +475,7 @@
       }
     },
     {
-      "id": "STRUCT-00000042",
+      "id": "STRUCT-00000047",
       "description": "C2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -435,7 +485,7 @@
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000048",
       "description": "R1 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -445,7 +495,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000049",
       "description": "R2 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -455,7 +505,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000050",
       "description": "C17 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -465,7 +515,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000051",
       "description": "L3 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -475,7 +525,7 @@
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000052",
       "description": "C18 simulated as rf_matching",
       "check": {
         "path": "simulation_results",
@@ -485,7 +535,7 @@
       }
     },
     {
-      "id": "STRUCT-00000048",
+      "id": "STRUCT-00000053",
       "description": "R38 simulated as snubber_circuit",
       "check": {
         "path": "simulation_results",
@@ -495,7 +545,7 @@
       }
     },
     {
-      "id": "STRUCT-00000049",
+      "id": "STRUCT-00000054",
       "description": "C25 simulated as snubber_circuit",
       "check": {
         "path": "simulation_results",
@@ -505,7 +555,7 @@
       }
     },
     {
-      "id": "STRUCT-00000050",
+      "id": "STRUCT-00000055",
       "description": "C10 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -515,7 +565,7 @@
       }
     },
     {
-      "id": "STRUCT-00000051",
+      "id": "STRUCT-00000056",
       "description": "C11 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -525,7 +575,7 @@
       }
     },
     {
-      "id": "STRUCT-00000052",
+      "id": "STRUCT-00000057",
       "description": "C8 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -535,7 +585,7 @@
       }
     },
     {
-      "id": "STRUCT-00000053",
+      "id": "STRUCT-00000058",
       "description": "C4 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -545,7 +595,7 @@
       }
     },
     {
-      "id": "STRUCT-00000054",
+      "id": "STRUCT-00000059",
       "description": "C14 simulated as inrush",
       "check": {
         "path": "simulation_results",

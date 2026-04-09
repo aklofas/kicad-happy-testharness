@@ -5,69 +5,17 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 2 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000002",
-      "description": "Exactly 1 inrush simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^inrush$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000003",
-      "description": "Exactly 2 lc_filter simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^lc_filter$",
         "value": 2
       }
     },
     {
-      "id": "STRUCT-00000004",
-      "description": "L1001 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bL1001\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "C1002 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC1002\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "C1003 simulated as lc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bC1003\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000002",
       "description": "C1001 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -77,8 +25,8 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "C1003 simulated as inrush",
+      "id": "STRUCT-00000003",
+      "description": "C1003 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",

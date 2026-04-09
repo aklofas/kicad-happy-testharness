@@ -5,13 +5,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 decoupling simulation(s)",
+      "description": "Exactly 3 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -222,6 +222,66 @@
     },
     {
       "id": "STRUCT-00000022",
+      "description": "C105 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC105\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000023",
+      "description": "C102 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC102\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
+      "description": "C107 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC107\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "C103 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC103\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000026",
+      "description": "C110 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC110\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "C111 simulated as decoupling",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC111\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
       "description": "C112 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -231,7 +291,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000029",
       "description": "C109 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -241,7 +301,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000030",
       "description": "C104 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -251,7 +311,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000031",
       "description": "C106 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -261,7 +321,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000032",
       "description": "R117 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -271,7 +331,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000033",
       "description": "R113 simulated as regulator_feedback",
       "check": {
         "path": "simulation_results",
@@ -281,17 +341,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
-      "description": "U104 simulated as rf_chain",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bU104\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000034",
       "description": "U102 simulated as rf_chain",
       "check": {
         "path": "simulation_results",
@@ -301,7 +351,17 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000035",
+      "description": "U104 simulated as rf_chain",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bU104\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000036",
       "description": "C105 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -311,7 +371,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000037",
       "description": "C102 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -321,7 +381,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000038",
       "description": "C107 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -331,7 +391,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000039",
       "description": "C103 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -341,7 +401,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000040",
       "description": "C112 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -351,7 +411,7 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000041",
       "description": "C109 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -361,7 +421,7 @@
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000042",
       "description": "C104 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -371,7 +431,7 @@
       }
     },
     {
-      "id": "STRUCT-00000037",
+      "id": "STRUCT-00000043",
       "description": "C106 simulated as inrush",
       "check": {
         "path": "simulation_results",

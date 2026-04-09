@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 transistor_circuit simulation(s)",
+      "description": "Exactly 1 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
+        "pattern": "^decoupling$",
         "value": 1
       }
     },
@@ -67,12 +67,12 @@
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Q2 simulated as transistor_circuit",
+      "description": "C1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ2\\b"
+        "pattern": "\\bC1\\b"
       }
     }
   ]

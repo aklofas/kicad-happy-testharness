@@ -27,6 +27,37 @@
     },
     {
       "id": "STRUCT-00000003",
+      "description": "Exactly 1 voltage_divider simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^voltage_divider$",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "R1 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR1\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R2 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Q1 simulated as transistor_circuit",
       "check": {
         "path": "simulation_results",
@@ -36,7 +67,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000007",
       "description": "C2 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -46,7 +77,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000008",
       "description": "C4 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -56,7 +87,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000009",
       "description": "C1 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -66,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000010",
       "description": "C3 simulated as decoupling",
       "check": {
         "path": "simulation_results",

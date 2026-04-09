@@ -1225,9 +1225,9 @@ python3 run/run_emc.py --jobs 8
 
 Check all exit 0. Note any error counts.
 
-**Thermal analysis:** No batch runner exists yet. Thermal is validated via the
-integration test path (Checklist 2c: `format-report.py --thermal`). If a
-`run_thermal.py` batch runner is added, include it here (see Checklist 15).
+```bash
+python3 run/run_thermal.py --jobs 8            # thermal (needs sch+pcb)
+```
 
 ### 16c. Full assertion suite
 

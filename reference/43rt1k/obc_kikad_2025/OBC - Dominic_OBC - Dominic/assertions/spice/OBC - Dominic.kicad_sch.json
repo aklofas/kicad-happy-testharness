@@ -5,21 +5,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~78 (tolerance 10%)",
+      "description": "Simulation count ~103 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 74,
-        "max": 82
+        "min": 97,
+        "max": 109
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 40 passing simulation(s)",
+      "description": "At least 59 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 40
+        "value": 59
       }
     },
     {
@@ -35,13 +35,13 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "2 decoupling simulation(s)",
+      "description": "11 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^decoupling$",
-        "value": 2
+        "value": 11
       }
     },
     {
@@ -57,13 +57,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "2 inrush simulation(s)",
+      "description": "3 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -112,24 +112,24 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "10 transistor_circuit simulation(s)",
+      "description": "8 transistor_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^transistor_circuit$",
-        "value": 10
+        "value": 8
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "29 voltage_divider simulation(s)",
+      "description": "46 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^voltage_divider$",
-        "value": 29
+        "value": 46
       }
     }
   ]
