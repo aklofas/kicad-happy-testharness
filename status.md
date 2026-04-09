@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-06 (corpus expansion: 1,478 → 5,829 repos)
+Last updated: 2026-04-08 (health check after corpus expansion + SPICE/EMC full run)
 
 ---
 
@@ -13,68 +13,103 @@ Last updated: 2026-04-06 (corpus expansion: 1,478 → 5,829 repos)
 
 | Metric | Count |
 |--------|------:|
-| Total repos in repos.md | 5,829 |
-| Checked out in repos/ | 5,829 |
-| Repos with baselines | 5,829 |
-| Repos with assertions | 5,829 |
-| **Total assertions** | **1,353,667** |
+| Total repos in repos.md | 5,822 |
+| Repos with baselines (reference/) | 5,852 |
+| Schematic output files | 36,546 |
+| PCB output files | 18,727 |
+| Gerber output files | 5,448 |
+| **Total assertions** | **1,979,126** |
+| SEED assertions | 968,037 |
+| STRUCT assertions | 1,006,294 |
+| FND assertions | 4,718 |
+| BUGFIX assertions | 77 |
+| Aspirational assertions | 1,989 |
 | Assertion pass rate | 100.0% |
 | Bugfix registry entries | 67 |
-| Unit tests | 270 |
+| Unit tests | 276 |
 | Layer 3 reviewed repos | 992 |
 | Total findings | 2,575 |
-| Open KH-* issues | 0 |
-| Closed KH-* issues | 193 |
+| Open KH-* issues | 3 |
+| Closed KH-* issues | 179 |
+| Constants | 298 (295 verified, 3 unverified) |
+| Schematic detectors | 40 |
+| Cross-analyzer agreement | 91.9% (97,012 checks) |
 
 ### SPICE simulation summary
 
 | Metric | Count |
 |--------|------:|
-| Schematic files processed | 6,845 |
-| Files with simulations | 4,338 |
-| Total subcircuit simulations | 30,646 |
+| Schematic files processed | 36,534 |
+| SPICE output files | 36,541 |
+| Repos with simulations | 3,386 |
+| Files with simulations | 21,536 |
+| Total subcircuit simulations | 145,758 |
 | Subcircuit types | 17 |
-| Pass | 28,354 (92.5%) |
-| Warn | 1,366 (4.5%) |
-| Fail | 4 (0.01%) |
-| Skip | 922 (3.0%) |
-| Cross-validation types | 7 (voltage_divider, rc_filter, lc_filter, current_sense, feedback_network, opamp_circuit, regulator_feedback) |
-| Cross-validation checks | 13,667 |
-| Cross-validation agreement | 97.6% |
+| Pass | 123,601 (84.8%) |
+| Warn | 17,642 (12.1%) |
+| Fail | 86 (0.06%) |
+| Skip | 4,429 (3.0%) |
+| Cross-validation checks | 101 |
+| Cross-validation agreement | 100.0% |
 
 ### SPICE parasitic-aware simulation summary
 
 | Metric | Count |
 |--------|------:|
-| Schematic files processed | 6,853 |
-| Parasitics extracted from PCB | 2,088 (with `--full` data) |
-| Files with parasitic net data | 1,553 (49.1% of extracted) |
-| Total nets with parasitics | 75,998 |
-| Total simulations | 30,646 |
-| Pass rate | 92.5% |
-| Script errors | 0 |
+| Parasitic output files | 10,019 |
+| Repos with parasitics | 670 |
 
 ### EMC analysis summary
 
 | Metric | Count |
 |--------|------:|
-| Schematic files processed | 6,853 |
-| Files paired with PCB | 3,165 (46%) |
-| Files with findings | 6,838 |
-| Total findings | 141,343 |
-| CRITICAL | 69,649 |
-| HIGH | 36,573 |
-| MEDIUM | 21,140 |
-| LOW | 13,981 |
-| Rule categories | 15 (ground_plane, io_filtering, decoupling, clock_routing, stackup, diff_pair, board_edge, via_stitching, esd_path, switching_emc, thermal_emc, pdn, emi_filter, shielding, emission_estimate) |
+| EMC output files | 36,515 |
+| Repos with EMC | 4,159 |
+| Files with findings | 16,454 |
+| Total findings | 192,008 |
+| CRITICAL | 4,210 |
+| HIGH | 45,779 |
+| MEDIUM | 44,088 |
+| LOW | 97,931 |
+| Rule categories | 14 (io_filtering, decoupling, ground_plane, stackup, clock_routing, via_stitching, diff_pair, switching_emc, board_edge, pdn, esd_path, thermal_emc, emi_filter, shielding) |
 | EMC standards supported | 6 (FCC A/B, CISPR A/B, CISPR-25, MIL-STD-461) |
-| Cross-validation checks | 14,415 |
-| Cross-validation agreement | 90.1% |
+| Cross-validation checks | 112,602 |
+| Cross-validation agreement | 93.7% |
 | Script errors | 0 |
 
 ---
 
 ## Completed batches
+
+### Health Check (2026-04-08)
+
+Full corpus health check after expansion + SPICE/EMC batch runs.
+
+**Unit tests:** 276/276 pass (100%).
+
+**Assertions:** 1,979,126 total at 100% pass rate. Smoke cross-section verified.
+
+**Staleness:** Significant staleness from expansion batch — 1,016 repos with stale
+schematic assertions, 700 EMC, 237 PCB, 82 gerber (outputs are newer than assertions).
+37 assertion sets have no matching output. 56,110 output files have no assertions
+(expected — new repos got outputs but many haven't been seeded for all types yet).
+
+**Schema drift:** 9 new fields detected (input_protection, bob_smith_termination,
+missing_freewheeling, _enriched_from_hierarchy, cross_sheet_loads, wdi_net, sqw_net,
+cross_sheet_load in various schematic detectors). Need assertion seeding.
+
+**Detector coverage:** 40 detectors tracked, all with corpus hits. power_sequencing_validation
+has 0 corpus hits (expected — rare pattern).
+
+**Cross-analyzer consistency:** 91.9% agreement (97,012 checks). Mismatches: net_count
+(5,674), component_vs_footprint_count (407).
+
+**SPICE cross-validation:** 101 checks, 100% agreement.
+
+**EMC cross-validation:** 112,602 checks, 93.7% agreement. switching_regulator_count
+still low (12.8%) due to EMC's limited part number lookup table.
+
+**Health report:** Logged to health_log.jsonl. No drop warnings.
 
 ### Corpus Expansion (2026-04-04 to 2026-04-06)
 

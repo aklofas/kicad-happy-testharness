@@ -11,6 +11,31 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-08 — Batch 31: power_tree figure quality (KH-201, KH-202, KH-203)
+
+### KH-201 (LOW): power_tree legend always shows green for output rails
+
+- **File**: `skills/kidoc/scripts/figures/generators/power_tree/__init__.py`
+- **Root cause**: Legend hardcoded a single "Output Rail" entry using the first color from `output_color_map`, regardless of how many output rails exist or what colors they use.
+- **Fix**: When <= 5 output rails, render one legend entry per rail with its actual assigned color and rail name. When > 5, fall back to a single "Output Rails" entry to avoid overflow.
+- **Verified**: Syntax check passes. Visual inspection pending next kidoc render.
+
+### KH-202 (MEDIUM): power_tree output rail boxes lack context
+
+- **File**: `skills/kidoc/scripts/figures/generators/power_tree/__init__.py`
+- **Root cause**: `prepare()` only extracted rail name and voltage for output rails. No information about what loads each rail powers.
+- **Fix**: In `prepare()`, collect load context per output rail: cascade regulators (other regulators fed by this rail) and `cross_sheet_loads` from feeding regulators. In `render()`, display up to 2 load items as a subtitle below the voltage (e.g. "U3 (LDO), U4 (Buck)"). Truncated with "+N" for >2 loads.
+- **Verified**: Syntax check passes. Visual inspection pending next kidoc render.
+
+### KH-203 (MEDIUM): power_tree regulator boxes have minimal detail
+
+- **File**: `skills/kidoc/scripts/figures/generators/power_tree/__init__.py`
+- **Root cause**: Regulator body_lines only showed topology and output cap summary. No voltage conversion context (input→output).
+- **Fix**: In `prepare()`, resolve input voltage per regulator from upstream regulator `estimated_vout` or `_infer_voltage()` on input rail name. In `render()`, restructured body_lines: line 1 = voltage conversion (e.g. "5.0V → 3.3V"), line 2 = topology + inductor, line 3 = Cout summary.
+- **Verified**: Syntax check passes. Visual inspection pending next kidoc render.
+
+---
+
 ## 2026-04-06 — Batch 30: kidoc test plan bugs (KH-199, KH-200)
 
 ### KH-199 (P0): power_tree figure generator crashes on None rail names

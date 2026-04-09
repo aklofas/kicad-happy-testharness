@@ -346,8 +346,10 @@ def diff_inventories(saved, current):
                 })
                 continue
 
-            # Added fields
+            # Added fields (skip internal _-prefixed metadata fields)
             for field in sorted(current_fields - saved_fields):
+                if field.startswith("_"):
+                    continue
                 count = current_cat[detector][field]
                 changes.append({
                     "category": category,
@@ -357,8 +359,10 @@ def diff_inventories(saved, current):
                     "details": f"appears in {count} items",
                 })
 
-            # Removed fields
+            # Removed fields (skip internal _-prefixed metadata fields)
             for field in sorted(saved_fields - current_fields):
+                if field.startswith("_"):
+                    continue
                 prev_count = saved_cat[detector][field]
                 changes.append({
                     "category": category,
