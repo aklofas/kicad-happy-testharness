@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~180 (tolerance 10%)",
+      "description": "Net count ~185 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 171,
-        "max": 189
+        "min": 175,
+        "max": 195
       }
     },
     {
@@ -110,7 +110,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "3 decoupling_analysis detected",
+      "description": "9 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "min_count",
@@ -119,7 +119,7 @@
     },
     {
       "id": "SEED-00000013",
-      "description": "18 design_observations detected",
+      "description": "25 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -169,7 +169,7 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "2 feedback_networks detected",
+      "description": "3 feedback_networks detected",
       "check": {
         "path": "signal_analysis.feedback_networks",
         "op": "min_count",
@@ -188,7 +188,7 @@
     },
     {
       "id": "SEED-00000020",
-      "description": "4 lc_filters detected",
+      "description": "7 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
         "op": "min_count",
@@ -267,21 +267,20 @@
     },
     {
       "id": "SEED-00000028",
-      "description": "14 rc_filters detected",
+      "description": "3 protection_devices detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.protection_devices",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000029",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "description": "13 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "op": "min_count",
+        "value": 1
       }
     },
     {
@@ -305,7 +304,7 @@
     },
     {
       "id": "SEED-00000032",
-      "description": "7 voltage_dividers detected",
+      "description": "13 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "min_count",

@@ -42,11 +42,11 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 11 design_observations",
+      "description": "Exactly 13 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 11
+        "value": 13
       }
     },
     {
@@ -69,11 +69,11 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 power_regulators",
+      "description": "Exactly 3 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -88,6 +88,16 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "U401 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U401$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "U402 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -97,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "Exactly 1 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -106,7 +116,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "D401 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -116,7 +126,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "Exactly 1 sensor_interfaces",
       "check": {
         "path": "signal_analysis.sensor_interfaces",
@@ -125,7 +135,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "Exactly 1 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -134,7 +144,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "Q301 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -144,7 +154,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -153,7 +163,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "R301 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

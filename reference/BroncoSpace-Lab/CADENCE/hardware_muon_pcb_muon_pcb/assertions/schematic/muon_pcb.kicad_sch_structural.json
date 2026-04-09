@@ -133,6 +133,25 @@
         "field": "ref",
         "pattern": "^U4$"
       }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Exactly 1 rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R14 in rc_filters",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R14$"
+      }
     }
   ]
 }

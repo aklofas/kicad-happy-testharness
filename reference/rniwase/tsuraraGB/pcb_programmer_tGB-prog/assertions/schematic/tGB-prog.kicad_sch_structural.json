@@ -33,11 +33,11 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 10 design_observations",
+      "description": "Exactly 11 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 10
+        "value": 11
       }
     },
     {
@@ -51,6 +51,25 @@
     },
     {
       "id": "STRUCT-00000006",
+      "description": "Exactly 1 feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R9 in feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R9$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 led_audit",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -59,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,7 +87,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "U3 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -78,22 +97,22 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 1 rc_filters",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 1 voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "equals",
         "value": 1
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "R10 in rc_filters",
+      "id": "STRUCT-00000012",
+      "description": "R9 in voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R10$"
+        "field": "r_top.ref",
+        "pattern": "^R9$"
       }
     }
   ]

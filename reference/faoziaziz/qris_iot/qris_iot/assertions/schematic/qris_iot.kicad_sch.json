@@ -221,6 +221,36 @@
     },
     {
       "id": "SEED-00000023",
+      "description": "1 level_shifters detected",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000024",
+      "description": "All level_shifters have ref",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000025",
+      "description": "All level_shifters type values are valid",
+      "check": {
+        "path": "signal_analysis.level_shifters",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(level_shifter_ic|discrete_level_shifter)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000026",
       "description": "4 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -229,7 +259,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000027",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -239,7 +269,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000028",
       "description": "3 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -248,7 +278,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000029",
       "description": "5 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -257,7 +287,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000030",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -267,7 +297,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000031",
       "description": "Has 5 battery(s)",
       "check": {
         "path": "statistics.component_types.battery",
@@ -276,7 +306,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000032",
       "description": "Has 78 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -285,7 +315,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000033",
       "description": "Has 16 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -294,7 +324,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000034",
       "description": "Has 7 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -303,7 +333,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000035",
       "description": "Has 12 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -312,7 +342,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000036",
       "description": "Has 85 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -321,7 +351,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000037",
       "description": "Has 13 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
@@ -330,7 +360,7 @@
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000038",
       "description": "Has 5 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

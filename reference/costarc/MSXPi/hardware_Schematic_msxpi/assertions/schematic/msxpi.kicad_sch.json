@@ -131,6 +131,47 @@
     },
     {
       "id": "SEED-00000014",
+      "description": "1 led_audit detected",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000015",
+      "description": "All led_audit have ref",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000016",
+      "description": "All led_audit type values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(indicator_led)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000017",
+      "description": "All led_audit drive_method values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "drive_method",
+        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000018",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -139,7 +180,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000019",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -149,7 +190,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000020",
       "description": "1 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -158,7 +199,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000021",
       "description": "All voltage_dividers have non-zero ratio",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -168,7 +209,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000022",
       "description": "Has 8 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -177,7 +218,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000023",
       "description": "Has 5 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
@@ -186,7 +227,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000024",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

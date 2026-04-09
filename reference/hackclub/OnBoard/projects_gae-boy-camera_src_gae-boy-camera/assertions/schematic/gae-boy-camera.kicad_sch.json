@@ -42,7 +42,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "4 design_observations detected",
+      "description": "6 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -92,6 +92,25 @@
     },
     {
       "id": "SEED-00000010",
+      "description": "2 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
       "description": "Has 5 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

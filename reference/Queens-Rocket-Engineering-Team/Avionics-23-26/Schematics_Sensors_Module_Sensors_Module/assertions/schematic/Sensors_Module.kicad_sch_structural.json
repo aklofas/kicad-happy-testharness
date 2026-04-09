@@ -80,20 +80,20 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 3 decoupling_analysis",
+      "description": "Exactly 4 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 15 design_observations",
+      "description": "Exactly 16 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 15
+        "value": 16
       }
     },
     {
@@ -245,6 +245,25 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000027",
+      "description": "Exactly 1 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
+      "description": "R30 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R30$"
       }
     }
   ]

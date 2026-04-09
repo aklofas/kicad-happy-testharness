@@ -42,15 +42,6 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "4 buzzer_speaker_circuits detected",
-      "check": {
-        "path": "signal_analysis.buzzer_speaker_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000006",
       "description": "1 debug_interfaces detected",
       "check": {
         "path": "signal_analysis.debug_interfaces",
@@ -59,7 +50,7 @@
       }
     },
     {
-      "id": "SEED-00000007",
+      "id": "SEED-00000006",
       "description": "All debug_interfaces have connector_ref",
       "check": {
         "path": "signal_analysis.debug_interfaces",
@@ -69,7 +60,7 @@
       }
     },
     {
-      "id": "SEED-00000008",
+      "id": "SEED-00000007",
       "description": "All debug_interfaces interface_type values are valid",
       "check": {
         "path": "signal_analysis.debug_interfaces",
@@ -80,7 +71,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000008",
       "description": "1 decoupling_analysis detected",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
@@ -89,7 +80,7 @@
       }
     },
     {
-      "id": "SEED-00000010",
+      "id": "SEED-00000009",
       "description": "2 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -98,8 +89,8 @@
       }
     },
     {
-      "id": "SEED-00000011",
-      "description": "2 esd_coverage_audit detected",
+      "id": "SEED-00000010",
+      "description": "11 esd_coverage_audit detected",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "min_count",
@@ -107,7 +98,7 @@
       }
     },
     {
-      "id": "SEED-00000012",
+      "id": "SEED-00000011",
       "description": "All esd_coverage_audit have connector_ref",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -117,29 +108,29 @@
       }
     },
     {
-      "id": "SEED-00000013",
+      "id": "SEED-00000012",
       "description": "All esd_coverage_audit coverage values are valid",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "count_matches",
         "field": "coverage",
         "pattern": "^(full|partial|none)$",
-        "value": 2
+        "value": 11
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000013",
       "description": "All esd_coverage_audit risk_level values are valid",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "count_matches",
         "field": "risk_level",
         "pattern": "^(high_risk|medium_risk|low_risk)$",
-        "value": 2
+        "value": 11
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000014",
       "description": "5 led_audit detected",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -148,7 +139,7 @@
       }
     },
     {
-      "id": "SEED-00000016",
+      "id": "SEED-00000015",
       "description": "All led_audit have ref",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -158,7 +149,7 @@
       }
     },
     {
-      "id": "SEED-00000017",
+      "id": "SEED-00000016",
       "description": "All led_audit type values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -169,7 +160,7 @@
       }
     },
     {
-      "id": "SEED-00000018",
+      "id": "SEED-00000017",
       "description": "All led_audit drive_method values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -180,7 +171,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000018",
       "description": "1 memory_interfaces detected",
       "check": {
         "path": "signal_analysis.memory_interfaces",
@@ -189,7 +180,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000019",
       "description": "1 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -198,7 +189,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000020",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -208,7 +199,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000021",
       "description": "2 sensor_interfaces detected",
       "check": {
         "path": "signal_analysis.sensor_interfaces",
@@ -217,7 +208,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000022",
       "description": "All sensor_interfaces have ref",
       "check": {
         "path": "signal_analysis.sensor_interfaces",
@@ -227,7 +218,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000023",
       "description": "All sensor_interfaces type values are valid",
       "check": {
         "path": "signal_analysis.sensor_interfaces",
@@ -238,12 +229,21 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000024",
       "description": "Has 8 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
         "op": "min_count",
         "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000025",
+      "description": "Has 11 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 8
       }
     },
     {
@@ -266,11 +266,11 @@
     },
     {
       "id": "SEED-00000028",
-      "description": "Has 11 resistor(s)",
+      "description": "Has 7 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
         "op": "min_count",
-        "value": 8
+        "value": 5
       }
     },
     {

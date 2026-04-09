@@ -14,24 +14,33 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 2 design_observations",
+      "description": "Exactly 2 decoupling_analysis",
       "check": {
-        "path": "signal_analysis.design_observations",
+        "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 7 esd_coverage_audit",
+      "description": "Exactly 8 design_observations",
       "check": {
-        "path": "signal_analysis.esd_coverage_audit",
+        "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 7
+        "value": 8
       }
     },
     {
       "id": "STRUCT-00000004",
+      "description": "Exactly 6 esd_coverage_audit",
+      "check": {
+        "path": "signal_analysis.esd_coverage_audit",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Exactly 1 feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -40,22 +49,13 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "R11 in feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R11$"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "Exactly 1 opamp_circuits",
-      "check": {
-        "path": "signal_analysis.opamp_circuits",
-        "op": "equals",
-        "value": 1
       }
     },
     {

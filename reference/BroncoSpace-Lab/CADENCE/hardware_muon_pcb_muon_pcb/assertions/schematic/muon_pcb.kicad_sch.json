@@ -238,6 +238,25 @@
     },
     {
       "id": "SEED-00000025",
+      "description": "1 rc_filters detected",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000026",
+      "description": "All rc_filters have non-zero cutoff_hz",
+      "check": {
+        "path": "signal_analysis.rc_filters",
+        "op": "not_contains_match",
+        "field": "cutoff_hz",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000027",
       "description": "Has 24 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -246,7 +265,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000028",
       "description": "Has 11 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -255,7 +274,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000029",
       "description": "Has 7 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -264,7 +283,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000030",
       "description": "Has 16 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -273,7 +292,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000031",
       "description": "Has 5 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

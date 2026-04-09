@@ -52,11 +52,11 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 2 decoupling_analysis",
+      "description": "Exactly 3 decoupling_analysis",
       "check": {
         "path": "signal_analysis.decoupling_analysis",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -70,11 +70,11 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 6 esd_coverage_audit",
+      "description": "Exactly 5 esd_coverage_audit",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
         "op": "equals",
-        "value": 6
+        "value": 5
       }
     },
     {
@@ -88,11 +88,11 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 1 power_regulators",
+      "description": "Exactly 2 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -103,6 +103,16 @@
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "U3 in power_regulators",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
       }
     }
   ]

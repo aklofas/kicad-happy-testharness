@@ -38,6 +38,25 @@
         "op": "equals",
         "value": 1
       }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "Exactly 1 protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "D17 in protection_devices",
+      "check": {
+        "path": "signal_analysis.protection_devices",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^D17$"
+      }
     }
   ]
 }
