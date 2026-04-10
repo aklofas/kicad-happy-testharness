@@ -11,6 +11,17 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-10 — Batch 40: TH-013 filesystem name length fix
+
+### TH-013 (HIGH): Flattened project/file names exceed NAME_MAX on eCryptfs and ext4
+
+- **Files**: `utils.py` (new `project_key`, `_truncate_with_hash` helpers; added `NAME_MAX_BYTES=143`, `_NAME_HASH_LEN=10`; updated `project_prefix`, `safe_name`, `discover_projects`), `regression/findings.py` (4 inline sites), `regression/generate_bugfix_assertions.py`, `regression/audit_bugfix_paths.py` (3 sites), `validate/validate_invariants.py`, `validate/validate_outputs.py`, `tools/figure_review.py`, plus new `tools/migrate_th013_rename.py` and 9,055+ rename operations across `reference/`.
+- **Root cause**: `utils.py:296-302` (`discover_projects`) flattened project paths with `_` and appended the `.kicad_pro` stem without any length awareness. Two compounding problems: (1) KiCad convention of `foo/foo.kicad_pro` produced `..._foo_foo` duplicated names on ~30% of project directories (4,989 of 16,766); (2) no filesystem limit enforcement meant deeply nested or Cyrillic project dirs blew past 143-byte eCryptfs and 255-byte ext4 NAME_MAX. Worst offender: 570-byte Cyrillic directories in `reference/Exaster/4Labs/`. Additionally, 15 inline `replace("/", "_")` sites across 7 files duplicated the same logic without centralized length capping.
+- **Fix**: Centralized flattening into `project_key(pdir, stem)` and `_truncate_with_hash(name, budget)` helpers in `utils.py`. Added stem deduplication (when `Path(pdir).name == stem`) and 143-byte cap with SHA1[:10] suffix fallback. Replaced all 15 inline call sites with helper calls. Updated `discover_projects()` to use `project_key()` and store a `stem` field on returned project dicts. Added symmetric collision resolution (mirroring the helper in utils.discover_projects for conflict handling). One-shot migration script `tools/migrate_th013_rename.py` used `git mv` to rename affected directories while preserving history — featuring: (a) walker that skips `assertions`/`baselines` at repo level for old-layout data, (b) reverse-engineering fallback for metadata-less orphans, (c) best-effort orphan rename via trailing-duplicate detection, (d) empty-shell orphan deletion pass (122 dirs), (e) file-level basename rename pass (42 files with >143-byte names inside correctly-renamed project dirs).
+- **Verified**: New `tests/test_safe_names.py` (22 tests) all pass. Full unit suite: 424 tests green. Post-migration byte-length scan: 0 components >143 bytes, 0 components >255 bytes (256,221 tracked files). Smoke cross-section: 26,137/26,138 (1 pre-existing orphan error). Quick_200: 584,730/584,732 (2 pre-existing orphan errors). Local clean-clone: succeeded, 256,220 files checked out on ext4. Cyrillic Exaster case: 570-byte dirs → exactly 143 bytes. AmbassadorDoge/Solder-Start stem-dedup: 130 bytes → 93 bytes. Metadata `project` field updated on 9,044 files to match new enclosing directory.
+
+---
+
 ## 2026-04-10 — Batch 39: KH-229 USB compliance crash fix
 
 ### KH-229 (HIGH): USB compliance vbus_capacitance crashes analyzer

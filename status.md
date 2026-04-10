@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-08 (validated 5 new kicad-happy commits, re-seeded to 2.02M)
+Last updated: 2026-04-10 (TH-013 filename-length migration: 9,050+ dir renames, 42 file renames, 122 empty orphan deletions, 143-byte eCryptfs-safe cap landed on main)
 
 ---
 
