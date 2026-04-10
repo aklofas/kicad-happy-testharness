@@ -26,7 +26,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (OUTPUTS_DIR, MANIFESTS_DIR, REPOS_DIR, list_repos,
-                   DEFAULT_JOBS, add_repo_filter_args, resolve_repos)
+                   DEFAULT_JOBS, add_repo_filter_args, resolve_repos,
+                   _truncate_with_hash)
 
 
 def check_invariants(data, filepath=""):
@@ -138,7 +139,7 @@ def _check_repo(repo_pair):
         parts = relpath.replace("\\", "/").split("/", 1)
         repo_name = parts[0]
         within_repo = parts[1] if len(parts) > 1 else relpath
-        safe_name = within_repo.replace(os.sep, "_").replace("/", "_")
+        safe_name = _truncate_with_hash(within_repo.replace(os.sep, "_").replace("/", "_"))
 
         json_path = OUTPUTS_DIR / "schematic" / repo_name / f"{safe_name}.json"
         if json_path.exists():

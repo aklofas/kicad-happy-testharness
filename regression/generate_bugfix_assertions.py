@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import DATA_DIR, data_dir, list_projects_in_data
+from utils import DATA_DIR, data_dir, list_projects_in_data, _truncate_with_hash
 
 REGISTRY_FILE = Path(__file__).resolve().parent / "bugfix_registry.json"
 
@@ -86,7 +86,7 @@ def generate_bugfix_assertions(issue_filter=None, dry_run=True):
             }
 
             # Build safe filename
-            safe = source_file.replace("/", "_").replace("\\", "_")
+            safe = _truncate_with_hash(source_file.replace("/", "_").replace("\\", "_"))
 
             if dry_run:
                 print(f"  {issue} -> {repo}/{project}: {desc}")

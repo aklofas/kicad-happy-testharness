@@ -5,14 +5,16 @@ used across discover.py, analyzer runners, baselines, and validators.
 """
 
 import functools
+import hashlib
 import json
+from collections import Counter
 import os
 import re
 import subprocess
 import sys
 import time
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 HARNESS_DIR = Path(__file__).resolve().parent
 REPOS_DIR = HARNESS_DIR / "repos"
@@ -31,13 +33,70 @@ INTEGRATION_TEST_TIMEOUT = 600
 # Default parallelism — use all available CPUs for max throughput
 DEFAULT_JOBS = os.cpu_count() or 4
 
+# Filesystem name-length safety (TH-013)
+# 143 bytes is the eCryptfs-with-filename-encryption limit; covers plain
+# ext4/xfs/btrfs/APFS (255) automatically. Any name longer than this gets
+# deterministically truncated with a SHA1[:10] hash suffix.
+NAME_MAX_BYTES = 143
+_NAME_HASH_LEN = 10
+
+
+def _truncate_with_hash(name: str, budget: int = NAME_MAX_BYTES) -> str:
+    """Truncate a name to fit within `budget` bytes, appending a short stable hash.
+
+    Uses byte-based truncation (not character-based) so that multi-byte UTF-8
+    sequences never get cut mid-character. Deterministic — same input always
+    produces the same output.
+    """
+    encoded = name.encode("utf-8")
+    if len(encoded) <= budget:
+        return name
+    digest = hashlib.sha1(encoded).hexdigest()[:_NAME_HASH_LEN]
+    # budget = truncated_prefix + "_" + digest
+    truncate_to = budget - _NAME_HASH_LEN - 1
+    truncated = encoded[:truncate_to].decode("utf-8", errors="ignore")
+    return f"{truncated}_{digest}"
+
+
+def project_key(pdir: str, stem: str) -> str:
+    """Flatten a KiCad project's in-repo path + file stem into a safe directory name.
+
+    Used by discover_projects() to build the `reference/{owner}/{repo}/{key}/`
+    directory name for each project. Handles three concerns:
+
+    1. **Separator normalization**: turns `/` and `\\` into `_`.
+    2. **Stem deduplication**: when the last path component equals the stem
+       (KiCad convention — `foo/foo.kicad_pro`), the stem is not re-appended.
+       Saves 30-50% on affected names at zero information cost.
+    3. **Length cap**: final name is guaranteed to fit within NAME_MAX_BYTES
+       via `_truncate_with_hash()`.
+    """
+    pdir = (pdir or "").replace("\\", "/").strip("/")
+    if not pdir or pdir == ".":
+        flat = stem
+    elif PurePosixPath(pdir).name == stem:
+        # Dedupe — directory basename already equals stem
+        flat = pdir.replace("/", "_")
+    else:
+        flat = pdir.replace("/", "_") + "_" + stem
+    return _truncate_with_hash(flat)
+
+
 CROSS_SECTIONS_FILE = HARNESS_DIR / "reference" / "cross_sections.json"
 
 
 def project_prefix(project_path: str) -> str:
-    """Convert a project path to a filename prefix (e.g., 'sub/dir' → 'sub_dir_')."""
+    """Convert a project path to a filename prefix (e.g., 'sub/dir' → 'sub_dir_').
+
+    Applies the TH-013 length cap to the flattened prefix. The trailing
+    underscore is preserved so callers that do `prefix + filename` still work,
+    but note: for very long paths the prefix itself may be hash-suffixed, and
+    the caller should verify the FINAL concatenated name fits in NAME_MAX_BYTES
+    (use `_truncate_with_hash` on the final string if unsure).
+    """
     if project_path and project_path != ".":
-        return project_path.replace("/", "_").replace("\\", "_") + "_"
+        flat = project_path.replace("/", "_").replace("\\", "_")
+        return _truncate_with_hash(flat, budget=NAME_MAX_BYTES - 1) + "_"
     return ""
 
 
@@ -118,9 +177,11 @@ def within_repo_path(path):
 def safe_name(path):
     """Create a flat safe filename from a within-repo path.
 
-    Replaces path separators with underscores.
+    Replaces path separators with underscores and applies the TH-013 length
+    cap. Returned name is guaranteed ≤ NAME_MAX_BYTES.
     """
-    return within_repo_path(path).replace(os.sep, "_").replace("/", "_")
+    flat = within_repo_path(path).replace(os.sep, "_").replace("/", "_")
+    return _truncate_with_hash(flat)
 
 
 def list_repos():
@@ -258,11 +319,17 @@ def discover_projects(repo_name):
     A project is identified by a directory containing a .kicad_pro (KiCad 6+)
     or .kicad_pcb file.
 
-    Returns list of dicts sorted by name:
-        [{"name": "Hardware_OpenMowerMainboard", "path": "Hardware/OpenMowerMainboard"}, ...]
+    Returns list of dicts sorted by name. Each dict has three fields:
+        [{"name": "Hardware_OpenMowerMainboard",
+          "path": "Hardware/OpenMowerMainboard",
+          "stem": "OpenMowerMainboard"}, ...]
 
-    The name is the directory path from repo root with / → _.
-    For root-level projects, the name is the .kicad_pro/.kicad_pcb stem.
+    The name is built via `project_key(path, stem)` which handles separator
+    normalization, stem deduplication (when the directory basename equals the
+    stem, per KiCad convention), and the TH-013 length cap. The stem is the
+    basename of the .kicad_pro/.kicad_pcb/.pro marker file (without extension)
+    and is retained in the dict so tools like the TH-013 migration script can
+    reconstruct the original (pdir, stem) tuple without re-scanning repos/.
     """
     repo_dir = REPOS_DIR / repo_name
     if not repo_dir.exists():
@@ -295,22 +362,18 @@ def discover_projects(repo_name):
 
     projects = []
     for pdir, stem in sorted(project_dirs.items()):
-        if pdir == ".":
-            name = stem
-        else:
-            name = pdir.replace("/", "_").replace("\\", "_") + "_" + stem
-        projects.append({"name": name, "path": pdir})
+        projects.append({"name": project_key(pdir, stem), "path": pdir, "stem": stem})
 
-    # Check for uniqueness
-    names = [p["name"] for p in projects]
-    if len(names) != len(set(names)):
-        # Resolve conflicts by appending path hash
-        seen = {}
+    # Resolve conflicts symmetrically: if two or more projects share a name,
+    # ALL of them get disambiguated with a path-derived hash. The old code
+    # only hashed the second-seen entry, leaving the first with an ambiguous
+    # name. Pre-computing the collision set fixes that asymmetry.
+    name_counts = Counter(p["name"] for p in projects)
+    if any(c > 1 for c in name_counts.values()):
         for p in projects:
-            if p["name"] in seen:
-                # Conflict — disambiguate with parent dir
-                p["name"] = p["path"].replace("/", "_").replace("\\", "_") or p["name"]
-            seen[p["name"]] = p
+            if name_counts[p["name"]] > 1:
+                pdir_hash = hashlib.sha1(p["path"].encode("utf-8")).hexdigest()[:_NAME_HASH_LEN]
+                p["name"] = _truncate_with_hash(f"{p['name']}_{pdir_hash}")
 
     return sorted(projects, key=lambda p: p["name"])
 

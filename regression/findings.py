@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import DATA_DIR, data_dir
+from utils import DATA_DIR, data_dir, project_prefix, _truncate_with_hash
 
 
 def _iter_findings_files(repo_name=None):
@@ -295,7 +295,7 @@ def _strip_project_prefix(safe, repo, proj):
             meta = json.loads(meta_file.read_text())
             pp = meta.get("project_path", "")
             if pp and pp != ".":
-                pp_prefix = pp.replace("/", "_").replace("\\", "_") + "_"
+                pp_prefix = project_prefix(pp)
                 if safe.startswith(pp_prefix):
                     return safe[len(pp_prefix):]
         except Exception:
@@ -402,9 +402,9 @@ def promote_to_assertion(finding_id, dry_run=False):
     # Strip {type}/{repo}/ prefix if present
     parts = source_stripped.replace("\\", "/").split("/")
     if len(parts) >= 3 and parts[0] == atype and parts[1] == repo:
-        safe = "_".join(parts[2:])
+        safe = _truncate_with_hash("_".join(parts[2:]))
     else:
-        safe = source_stripped.replace("/", "_").replace("\\", "_")
+        safe = _truncate_with_hash(source_stripped.replace("/", "_").replace("\\", "_"))
     # Strip project prefix if present (output files include it but file_pattern shouldn't).
     # First try the current project, then check all projects in case it's cross-project.
     target_proj = proj
@@ -420,7 +420,7 @@ def promote_to_assertion(finding_id, dry_run=False):
                 meta = json.loads(meta_file.read_text())
                 pp = meta.get("project_path", "")
                 if pp and pp != ".":
-                    pp_prefix = pp.replace("/", "_").replace("\\", "_") + "_"
+                    pp_prefix = project_prefix(pp)
             except Exception:
                 pass
         expected = _outputs_dir / (pp_prefix + safe + ".json")
@@ -439,10 +439,7 @@ def promote_to_assertion(finding_id, dry_run=False):
                     except Exception:
                         continue
                     ppp = pm.get("project_path", "")
-                    if ppp and ppp != ".":
-                        p_prefix = ppp.replace("/", "_").replace("\\", "_") + "_"
-                    else:
-                        p_prefix = ""
+                    p_prefix = project_prefix(ppp)
                     candidate_fp = _strip_project_prefix(safe, repo, pdir.name)
                     candidate = _outputs_dir / (p_prefix + candidate_fp + ".json")
                     if candidate.exists():

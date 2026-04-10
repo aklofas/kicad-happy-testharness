@@ -35,7 +35,7 @@ from typing import Dict, List, Optional, Tuple
 # Test harness utils
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import (OUTPUTS_DIR, REPOS_DIR, resolve_kicad_happy_dir,
-                   list_repos, safe_load_json)
+                   list_repos, safe_load_json, _truncate_with_hash)
 
 # kicad-happy figure system — added to sys.path after resolution
 _kicad_happy = resolve_kicad_happy_dir()
@@ -332,7 +332,7 @@ def generate_figure(entry: GeneratorEntry, selection_item: dict,
         figures_dir.mkdir(parents=True, exist_ok=True)
 
         # Sanitize filename: owner_repo_projectfile.svg
-        safe_name = repo.replace("/", "_") + "_" + Path(project_file).stem
+        safe_name = _truncate_with_hash(repo.replace("/", "_") + "_" + Path(project_file).stem)
 
         if entry.multi_output:
             # Multi-output: render all, collect paths

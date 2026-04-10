@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import load_assertions, load_project_metadata
 from run_checks import find_output_file
-from utils import OUTPUTS_DIR, DATA_DIR, project_prefix, discover_projects
+from utils import OUTPUTS_DIR, DATA_DIR, project_prefix, discover_projects, _truncate_with_hash
 
 REGISTRY_FILE = Path(__file__).resolve().parent / "bugfix_registry.json"
 
@@ -70,7 +70,7 @@ def _suggest_correction(repo, project_name, source_file, atype):
     candidates = []
     for proj in projects:
         prefix = project_prefix(proj["path"])
-        safe_sf = source_file.replace("/", "_").replace("\\", "_")
+        safe_sf = _truncate_with_hash(source_file.replace("/", "_").replace("\\", "_"))
         target = prefix + safe_sf + ".json"
         if target in outputs:
             candidates.append({
@@ -83,7 +83,7 @@ def _suggest_correction(repo, project_name, source_file, atype):
         return candidates[0]
 
     # Try: for each output, see if it ends with source_file
-    safe_sf = source_file.replace("/", "_").replace("\\", "_")
+    safe_sf = _truncate_with_hash(source_file.replace("/", "_").replace("\\", "_"))
     for out in outputs:
         stem = out.removesuffix(".json")
         if stem.endswith(safe_sf):
@@ -184,7 +184,7 @@ def audit(fix=False):
 
             # Resolve project_path the same way assertions do at runtime
             pp = _resolve_project_path(repo, project)
-            safe_sf = source_file.replace("/", "_").replace("\\", "_")
+            safe_sf = _truncate_with_hash(source_file.replace("/", "_").replace("\\", "_"))
             out = find_output_file(safe_sf, repo, pp, atype)
 
             result = {
