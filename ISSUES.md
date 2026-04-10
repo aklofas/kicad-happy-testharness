@@ -32,9 +32,9 @@ Last updated: 2026-04-09
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-229**. Next TH number: **TH-013**.
+number: **KH-230**. Next TH number: **TH-013**.
 
-> 0 open issues.
+> 1 open issue (1 KH-*).
 
 ---
 
@@ -49,7 +49,38 @@ number: **KH-229**. Next TH number: **TH-013**.
 
 ## kicad-happy Analyzer Issues
 
-(none)
+### KH-229 — USB compliance vbus_capacitance check crashes analyzer (HIGH)
+
+**Symptom:** `analyze_schematic.py` crashes with `TypeError: unhashable type: 'dict'`
+at line 7289 in `analyze_usb_compliance()` when a schematic has USB connectors with
+VBUS capacitors. The analyzer aborts — no output produced. Affects any schematic with
+USB connectors where VBUS cap detection fires.
+
+**Root cause:** The `vbus_capacitance` check (lines 7251-7262) stores a **dict**
+`{"status": "warning", "total_uf": ..., "detail": ...}` into `conn_checks["checks"]`,
+while all other checks store plain strings (`"pass"`, `"fail"`, `"info"`). The summary
+loop at line 7289 iterates `conn_c["checks"].values()` and uses each value as a dict
+key (`all_checks[status]`), which fails when the value is a dict.
+
+**Fix:** Either:
+1. Store only the status string in `checks` and move the detail to a separate field:
+   `conn_checks["checks"]["vbus_capacitance"] = "warning"` with
+   `conn_checks["vbus_capacitance_detail"] = {...}`
+2. Or extract `status` from dict values in the summary loop:
+   `s = status["status"] if isinstance(status, dict) else status`
+
+Option 1 is cleaner — keeps `checks` as a uniform `{name: status_string}` dict.
+
+**Impact:** HIGH — crashes the analyzer entirely for any schematic with USB connectors
+where VBUS capacitors are present. This blocks all output generation, not just USB
+compliance. Introduced by commit d005983 (protocol electrical parameter checks).
+
+**File:** `analyze_schematic.py:7251-7262` (dict assignment) and `:7289` (crash site).
+
+**Repro:** `Dylanfg123/Zebra-X` — `ZeBra-X.kicad_sch` (has USB connectors with VBUS
+caps). Any schematic with USB connectors + VBUS decoupling will trigger this.
+
+**Discovered:** 2026-04-10 during --analysis-dir bug fix verification.
 
 ---
 
@@ -61,5 +92,5 @@ number: **KH-229**. Next TH number: **TH-013**.
 
 ## Priority Queue (open issues, ordered by impact)
 
-(empty)
+1. KH-229 — USB compliance vbus_capacitance crashes analyzer (HIGH)
 
