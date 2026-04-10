@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Gerber",
+  "analyzer_type": "gerber",
+  "created_from": "FND-00000644",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00000644-AST-01",
+      "description": "The alignment check only considers F.Cu, B.Cu, Edge.Cuts and inner copper layers - silkscreen is excluded. B.SilkS content is offset ~147mm from board origin. This is a real misalignment (silkscreen items are completely outside the board area) but the analyzer reports aligned=true with no issues. The layer_extents output does include the SilkS sizes for reference, but no issue is flagged.",
+      "created_from": "FND-00000644",
+      "check": {
+        "path": "signal_analysis",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

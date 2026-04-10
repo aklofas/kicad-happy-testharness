@@ -1,0 +1,19 @@
+{
+  "file_pattern": "KP08Hub_keypad.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_bugfix_assertions.py",
+  "assertions": [
+    {
+      "id": "BUGFIX-KH-127-01",
+      "description": "KH-127: CY7C65642 USB hub not falsely in power_regulators",
+      "issue": "KH-127",
+      "fix_type": "false_positive_fix",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^U3$"
+      }
+    }
+  ]
+}

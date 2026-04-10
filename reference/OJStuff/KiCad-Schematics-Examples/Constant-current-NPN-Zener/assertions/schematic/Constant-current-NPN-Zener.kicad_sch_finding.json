@@ -1,0 +1,19 @@
+{
+  "file_pattern": "Constant-current-NPN-Zener.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00002206",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00002206-AST-01",
+      "description": "The schematic is a classic NPN constant-current source: Zener diode D1 (BZX84C5V6, 5.6V) sets the base voltage via R1 (1k), and R2 (80\u03a9 emitter resistor) sets the constant collector current Ic \u2248 (Vz - Vbe)/R2 \u2248 60mA. The analyzer detects the transistor circuit correctly (with base_resistors=[R1] and emitter_resistor=R2) but reports zero current_sense entries and zero power_regulators. The Zener diode's role in establishing the reference voltage for the base bias is not captured anywhere in the output.",
+      "created_from": "FND-00002206",
+      "check": {
+        "path": "signal_analysis.current_sense",
+        "op": "min_count",
+        "value": 1
+      },
+      "aspirational": true
+    }
+  ]
+}

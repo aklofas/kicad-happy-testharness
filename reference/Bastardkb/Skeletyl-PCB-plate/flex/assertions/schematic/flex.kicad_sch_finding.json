@@ -1,0 +1,41 @@
+{
+  "file_pattern": "flex.kicad_sch",
+  "analyzer_type": "schematic",
+  "created_from": "FND-00001407",
+  "generated_by": "findings.py promote",
+  "assertions": [
+    {
+      "id": "FND-00001407-AST-01",
+      "description": "The key matrix detector identifies 4 row nets and 5 column nets, and correctly reports estimated_keys=15 (not the na\u00efve 4\u00d75=20), matching the actual 15 switches and 15 diodes on the matrix. This matches the Skeletyl 3\u00d75 layout (15-key per half) via net-name detection. The detection_method='net_name' is appropriate here since nets are labeled row2\u2013row5, col2\u2013col6.",
+      "created_from": "FND-00001407",
+      "check": {
+        "path": "signal_analysis.key_matrices[0].estimated_keys",
+        "value": 15,
+        "op": "equals"
+      },
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected 15, got None"
+    },
+    {
+      "id": "FND-00001407-AST-02",
+      "description": "BOM breakdown: 15 SK6812MINI LEDs per footprint variant (two variants \u00d7 15 = 30 total LEDs), 15 SOD-123 diodes, 15 MX switches, 2 capacitors, 2 resistors, 5 connectors. Total 69 matches the components list. The 4 extra footprints in the PCB (73 vs 69) are expected \u2014 they represent fiducials or additional mechanical elements not in the schematic.",
+      "created_from": "FND-00001407",
+      "check": {
+        "path": "statistics.total_components",
+        "value": 69,
+        "op": "equals"
+      }
+    },
+    {
+      "id": "FND-00001407-AST-03",
+      "description": "INCORRECT: The analyzer finds three addressable LED chains: two of length 15 and one of length 1 (D6 alone). The two 15-element chains both start at D5 and share only D5 in their component lists \u2014 they represent two parallel sub-chains branching from the same data input. D6 (also from the same input net) is reported as a degenerate single-element chain. Total unique LEDs across all chains = 30 which matches statistics.component_types.led=30, but the chain count and topology are misleading. This keyboard PCB has two parallel chains of 15 LEDs each (left/right halves), not 2 complete+1 degenerate.",
+      "created_from": "FND-00001407",
+      "check": {
+        "path": "signal_analysis.addressable_led_chains",
+        "value": 2,
+        "op": "max_count"
+      },
+      "aspirational": true
+    }
+  ]
+}

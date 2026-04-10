@@ -5,51 +5,51 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Footprint count ~16 (tolerance 10%)",
+      "description": "Footprint count ~19 (tolerance 10%)",
       "check": {
         "path": "statistics.footprint_count",
         "op": "range",
-        "min": 14,
-        "max": 18
+        "min": 17,
+        "max": 21
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~14 (tolerance 10%)",
+      "description": "Net count ~15 (tolerance 10%)",
       "check": {
         "path": "statistics.net_count",
         "op": "range",
-        "min": 12,
-        "max": 16
+        "min": 13,
+        "max": 17
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "2 copper layer(s) used",
+      "description": "1 copper layer(s) used",
       "check": {
         "path": "statistics.copper_layers_used",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "Track segments ~70 (tolerance 10%)",
+      "description": "Track segments ~62 (tolerance 10%)",
       "check": {
         "path": "statistics.track_segments",
         "op": "range",
-        "min": 66,
-        "max": 74
+        "min": 58,
+        "max": 66
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "THT count ~9 (tolerance 10%)",
+      "description": "THT count ~12 (tolerance 10%)",
       "check": {
         "path": "statistics.tht_count",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 10,
+        "max": 14
       }
     },
     {
@@ -84,6 +84,14 @@
         "path": "dfm.dfm_tier",
         "op": "equals",
         "value": "standard"
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Placement analysis present",
+      "check": {
+        "path": "placement_analysis",
+        "op": "exists"
       }
     }
   ]

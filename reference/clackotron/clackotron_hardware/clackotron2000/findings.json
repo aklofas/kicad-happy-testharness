@@ -1,0 +1,69 @@
+{
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "schematic_clackotron_hardware_clackotron2000_clackotron2000.kicad_sch.json",
+      "status": "promoted",
+      "summary": "R-78B5.0-1.0 switching regulator estimated_vout is 1.0V instead of 5.0V; RS-485 differential pair (RS485_A / RS485_B) not detected as differential_pairs; All four level-shifter MOSFETs report spuri...",
+      "correct": [
+        {
+          "description": "The analyzer correctly identifies PCF85263ATL (RTC, U1) and ESP32-S3-WROOM (U2) on both SCL and SDA nets, with R3 (10k to +3V3) on SCL and R4 (10k to +3V3) on SDA. Both have has_pull_up: true.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.bus_analysis.i2c",
+            "op": "min_count",
+            "value": 2
+          }
+        },
+        {
+          "description": "The analyzer correctly identifies D1 as a single-LED WS2812B chain (protocol: 'single-wire (WS2812)', estimated_current_mA: 60) with data input on LED_Data_5V, and correctly classifies the BSN20 transistors as 'level_shifter' topology for the 3.3V-to-5V level translation network.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The analyzer reports estimated_vout=1.0 for U4 (R-78B5.0-1.0) with vref_source='fixed_suffix'. The part number encodes both output voltage (5.0V) and current rating (1.0A) separated by dashes. The parser extracted the last numeric token '1.0' (the current rating) instead of the voltage token '5.0'. This triggers a false vout_net_mismatch observation (80% mismatch against the +5V rail) when the regulator is in fact correctly matched to +5V.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.power_regulators[?ref=='U4'].estimated_vout",
+            "op": "equals",
+            "value": 5.0
+          }
+        },
+        {
+          "description": "Each of the four BSN20 transistors (Q1\u2013Q4) is reported with a led_driver field pointing to D1 (WS2812B) with various gate resistors (R15, R16, R17, R18 at 10k each). Only Q4 actually drives the LED data line (LED_Data/LED_Data_5V). Q1, Q2, and Q3 are level-shifters for DataRX, DataEN, and DataTX respectively \u2014 not LED drivers. The association appears to be a false match caused by proximity or shared net heuristics.",
+          "analyzer_section": "signal_analysis",
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 4
+          }
+        }
+      ],
+      "missed": [
+        {
+          "description": "The design uses a MAX481E RS-485 transceiver (U6) with nets RS485_A and RS485_B, each protected by SMBJ12CA TVS diodes (D10, D9). The analyzer detects USB D+/D- as a differential pair but does not identify RS485_A/RS485_B as a differential pair, even though they follow standard naming conventions (_A/_B suffix) and are connected to a known RS-485 IC. The bus_analysis section has no CAN or special RS-485 entry for these nets either.",
+          "analyzer_section": "design_analysis",
+          "check": {
+            "path": "design_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 2
+          }
+        }
+      ],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "clackotron/clackotron_hardware",
+      "project": "clackotron2000_clackotron2000",
+      "created": "2026-03-24T08:48:30.133550+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002307"
+    }
+  ]
+}
