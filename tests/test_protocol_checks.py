@@ -512,6 +512,64 @@ def test_diff_pair_skew_usb_within_tolerance():
         "intra_pair_skew should not be present for 0.3mm skew"
 
 
+# ===========================================================================
+# 3j. KH-229 — vbus_capacitance must be string, detail in separate key
+# ===========================================================================
+
+def test_kh229_vbus_capacitance_is_string():
+    """KH-229: vbus_capacitance must be a status string, not a dict."""
+    def check(data):
+        uc = data.get("usb_compliance", {})
+        for conn in uc.get("connectors", []):
+            checks = conn.get("checks", {})
+            if "vbus_capacitance" in checks:
+                return True
+        return False
+
+    data, path = _find_output_with("schematic", check, max_scan=8000)
+    if _skip_if_none(data, "USB vbus_capacitance"):
+        return
+    uc = data["usb_compliance"]
+    for conn in uc["connectors"]:
+        vc = conn["checks"].get("vbus_capacitance")
+        if vc is not None:
+            assert isinstance(vc, str), \
+                f"KH-229: vbus_capacitance should be a string, got {type(vc).__name__}: {vc!r}"
+            assert vc in ("pass", "warning", "fail", "info"), \
+                f"unexpected status value: {vc!r}"
+            break
+
+
+def test_kh229_vbus_detail_separate():
+    """KH-229: vbus_capacitance_detail dict on connector when status is pass/warning."""
+    def check(data):
+        uc = data.get("usb_compliance", {})
+        for conn in uc.get("connectors", []):
+            vc = conn.get("checks", {}).get("vbus_capacitance")
+            if isinstance(vc, str) and vc in ("pass", "warning"):
+                return True
+        return False
+
+    data, path = _find_output_with("schematic", check, max_scan=8000)
+    if _skip_if_none(data, "USB vbus_capacitance pass/warning with detail"):
+        return
+    uc = data["usb_compliance"]
+    for conn in uc["connectors"]:
+        vc = conn.get("checks", {}).get("vbus_capacitance")
+        if isinstance(vc, str) and vc in ("pass", "warning"):
+            # detail lives on the connector dict, not inside checks
+            detail = conn.get("vbus_capacitance_detail")
+            assert detail is not None, \
+                "vbus_capacitance_detail should exist when status is pass/warning"
+            assert isinstance(detail, dict), \
+                f"vbus_capacitance_detail should be a dict, got {type(detail).__name__}"
+            assert "total_uf" in detail, \
+                "vbus_capacitance_detail must contain total_uf key"
+            assert isinstance(detail["total_uf"], (int, float)), \
+                f"total_uf should be numeric, got {type(detail['total_uf']).__name__}"
+            break
+
+
 # ---------------------------------------------------------------------------
 # __main__ runner
 # ---------------------------------------------------------------------------
