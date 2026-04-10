@@ -24,7 +24,7 @@ Contains enough detail to resume work with zero conversation history.
 > result, (2) the actual input values from the repro file, (3) what the code returns vs
 > what it should return.
 
-Last updated: 2026-04-09
+Last updated: 2026-04-10
 
 ---
 
@@ -32,9 +32,9 @@ Last updated: 2026-04-09
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-230**. Next TH number: **TH-014**.
+number: **KH-231**. Next TH number: **TH-014**.
 
-> 0 open issues.
+> 1 open issue.
 
 ---
 
@@ -49,7 +49,41 @@ number: **KH-230**. Next TH number: **TH-014**.
 
 ## kicad-happy Analyzer Issues
 
-(none)
+### KH-230: Empty placed Value silently substituted with lib_symbol default
+
+**Severity:** LOW
+**Discovered:** 2026-04-10 by `validate/verify_parser.py` (P1 Parser Verification, full corpus run)
+**Repro:** `hamster/SAINTCON/CHC/2022/Circuits - Series and Parallel.kicad_sch`
+
+The file has two placed `(symbol (lib_id "Device:R") ...)` instances both
+annotated as `R1` (a duplicate-annotation design issue independent of this
+bug). The second instance has `(property "Value" "")` — explicitly empty —
+but the analyzer reports `value: "R"` for it, which is the `Device:R`
+lib_symbol's placeholder default Value.
+
+**Expected:** `components[].value` should reflect the placed instance's
+property exactly. An empty placed Value should serialize as `""`, not be
+silently replaced by the lib_symbol template default. Otherwise downstream
+detectors and BOM logic see a fabricated value that doesn't exist in the
+source.
+
+**Evidence:**
+- sexp parse: R1 instance #2 Value = `""`
+- analyzer output: R1 instance #2 value = `"R"` (= lib_symbol default)
+- file: `repos/hamster/SAINTCON/CHC/2022/Circuits - Series and Parallel.kicad_sch`
+- analyzer output: `results/outputs/schematic/hamster/SAINTCON/CHC_2022_Circuits - Series and Parallel.kicad_sch.json`
+
+Likely in `analyze_schematic.py` symbol parsing path — when the placed
+Value property is empty, the code is falling back to `sym_def.get("value")`
+or similar instead of preserving the empty string.
+
+Severity is LOW because it requires both a duplicate-annotation defect
+AND an empty Value on one of the duplicates, and only 1/25,625 corpus
+files hits it.
+
+---
+
+
 
 ---
 
@@ -67,5 +101,5 @@ number: **KH-230**. Next TH number: **TH-014**.
 
 ## Priority Queue (open issues, ordered by impact)
 
-(empty)
+1. **KH-230** — LOW — empty placed Value silently replaced with lib_symbol default (1 file in corpus)
 
