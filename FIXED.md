@@ -11,6 +11,17 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-10 — Batch 39: KH-229 USB compliance crash fix
+
+### KH-229 (HIGH): USB compliance vbus_capacitance crashes analyzer
+
+- **File**: `analyze_schematic.py` — `analyze_usb_compliance()`, lines 7251-7262
+- **Root cause**: `vbus_capacitance` check stored a dict `{"status": "warning", "total_uf": ...}` in `conn_checks["checks"]` where all other checks store plain strings. Summary loop at line 7289 used the value as a dict key, crashing with `TypeError: unhashable type: 'dict'`.
+- **Fix**: `checks["vbus_capacitance"]` now stores "warning" or "pass" string. Detail data moved to separate `vbus_capacitance_detail` field.
+- **Verified**: Dylanfg123/Zebra-X (repro case) no longer crashes. Output has `vbus_capacitance: "pass"` (string) and `vbus_capacitance_detail: {"total_uf": 4.7}` (dict). Regression test added.
+
+---
+
 ## 2026-04-09 — Batch 38: TH-012 structural seed stale cleanup
 
 ### TH-012 (MEDIUM): seed_structural.py leaves stale assertions when detections drop to zero

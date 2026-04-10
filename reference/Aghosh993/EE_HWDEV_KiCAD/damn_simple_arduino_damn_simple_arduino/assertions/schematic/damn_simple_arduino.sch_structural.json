@@ -5,6 +5,15 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 6 connector_ground_audit",
+      "check": {
+        "path": "signal_analysis.connector_ground_audit",
+        "op": "equals",
+        "value": 6
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 1 crystal_circuits",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -13,7 +22,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Y1 in crystal_circuits",
       "check": {
         "path": "signal_analysis.crystal_circuits",
@@ -23,7 +32,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Exactly 2 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -32,7 +41,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "Exactly 6 esd_coverage_audit",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -41,7 +50,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 led_audit",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -50,7 +59,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Exactly 3 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -59,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "R3 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -69,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "R1 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -79,13 +88,22 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "R2 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "Exactly 2 suggested_certifications",
+      "check": {
+        "path": "signal_analysis.suggested_certifications",
+        "op": "equals",
+        "value": 2
       }
     }
   ]

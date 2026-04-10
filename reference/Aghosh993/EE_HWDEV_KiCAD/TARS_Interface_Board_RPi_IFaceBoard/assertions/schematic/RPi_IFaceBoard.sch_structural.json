@@ -5,6 +5,15 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 4 connector_ground_audit",
+      "check": {
+        "path": "signal_analysis.connector_ground_audit",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
       "description": "Exactly 13 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
@@ -13,7 +22,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000003",
       "description": "Exactly 14 esd_coverage_audit",
       "check": {
         "path": "signal_analysis.esd_coverage_audit",
@@ -22,7 +31,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "Exactly 3 lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -31,7 +40,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
       "description": "L4 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -41,7 +50,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000006",
       "description": "L3 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -51,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "Exactly 2 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -60,7 +69,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "U1 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -70,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U2 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -80,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Exactly 2 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -89,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "R8 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -99,13 +108,22 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "R12 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "contains_match",
         "field": "resistor.ref",
         "pattern": "^R12$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Exactly 2 suggested_certifications",
+      "check": {
+        "path": "signal_analysis.suggested_certifications",
+        "op": "equals",
+        "value": 2
       }
     }
   ]
