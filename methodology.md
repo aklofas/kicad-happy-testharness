@@ -1,18 +1,18 @@
 # Methodology
 
-How we validate a suite of KiCad analyzers against 5,829 real-world open-source hardware designs, and why the system is built the way it is.
+How we validate a suite of KiCad analyzers against 5,822 real-world open-source hardware designs, and why the system is built the way it is.
 
 ---
 
 ## The problem
 
-kicad-happy includes three deterministic Python analyzers that parse KiCad schematics, PCB layouts, and Gerber files. They extract components, nets, and signal paths, then run 40 signal detectors (voltage dividers, regulators, filters, bus protocols, opamp circuits, etc.) to produce structured JSON output. A fourth tool, `simulate_subcircuits.py`, generates ngspice testbenches from detector output to validate circuit behavior via SPICE simulation (see [spice.md](spice.md)).
+kicad-happy includes three deterministic Python analyzers that parse KiCad schematics, PCB layouts, and Gerber files. They extract components, nets, and signal paths, then run 42 signal detectors (voltage dividers, regulators, filters, bus protocols, opamp circuits, etc.) to produce structured JSON output. A fourth tool, `simulate_subcircuits.py`, generates ngspice testbenches from detector output to validate circuit behavior via SPICE simulation (see [spice.md](spice.md)).
 
-These analyzers contain 180+ hardcoded constants: voltage reference tables sourced from datasheets, component classification keyword lists, regex patterns for net name matching, and numeric thresholds for detection heuristics. A single wrong entry — a hallucinated Vref value, an overly broad regex, a misclassified component prefix — can silently produce incorrect results across hundreds of projects.
+These analyzers contain 335 hardcoded constants: voltage reference tables sourced from datasheets, component classification keyword lists, regex patterns for net name matching, and numeric thresholds for detection heuristics. A single wrong entry — a hallucinated Vref value, an overly broad regex, a misclassified component prefix — can silently produce incorrect results across hundreds of projects.
 
 The problem is: **how do you know the analyzers are correct?**
 
-Manual review doesn't scale. There are 6,800+ schematic files across the corpus, each producing hundreds of structured observations. A human reviewer can check a few dozen files per session. Without automation, regressions accumulate faster than they can be caught.
+Manual review doesn't scale. There are 36,500+ schematic files across the corpus, each producing hundreds of structured observations. A human reviewer can check a few dozen files per session. Without automation, regressions accumulate faster than they can be caught.
 
 ---
 
@@ -22,7 +22,7 @@ Several constraints shaped the architecture:
 
 1. **No ground truth exists.** There is no authoritative database of "correct" signal analysis results for arbitrary KiCad projects. The analyzers are producing novel observations — voltage divider ratios, regulator configurations, filter topologies — that no prior tool has computed.
 
-2. **The corpus is too large for a single session.** 5,829 repos with 36,000+ schematics. Cross-sections (`--cross-section quick_200`) enable targeted testing of representative subsets. All tools auto-parallelize with `--jobs` and support `--resume` for interrupted runs.
+2. **The corpus is too large for a single session.** 5,822 repos with 36,500+ schematics. Cross-sections (`--cross-section quick_200`) enable targeted testing of representative subsets. All tools auto-parallelize with `--jobs` and support `--resume` for interrupted runs.
 
 3. **Analyzer changes are frequent.** Bug fixes, new detectors, and constant table updates happen regularly. Each change can affect outputs across the entire corpus. Regression detection must be fast and precise enough to distinguish intentional improvements from unintended breakage.
 
@@ -44,7 +44,7 @@ We use three complementary regression layers, each catching different classes of
 
 **How it works:** `snapshot.py` extracts a compact manifest from each analyzer output: component counts by type, signal detection counts, net statistics, and a list of output sections present. These manifests are checked into git under `reference/{repo}/{project}/baselines/`. When the analyzer changes, `compare.py` diffs current outputs against baselines to flag structural shifts.
 
-**Why compact manifests, not full outputs?** Full analyzer JSON for a single schematic can be 100KB+. Across 6,800 files, that's ~680MB of git-tracked data. Baselines compress this to ~1KB per file by storing only counts and section names. The full outputs live in git-ignored `results/` and are regenerated on demand.
+**Why compact manifests, not full outputs?** Full analyzer JSON for a single schematic can be 100KB+. Across 36,500+ files, that's ~3.6GB of git-tracked data. Baselines compress this to ~1KB per file by storing only counts and section names. The full outputs live in git-ignored `results/` and are regenerated on demand.
 
 **Limitations:** Baselines detect *that* something changed, not *whether* the change is correct. A baseline that says "voltage_dividers: 5 -> 3" doesn't tell you if the two removed detections were false positives (improvement) or true detections that regressed (bug). That's what Layer 2 is for.
 
@@ -263,7 +263,7 @@ LLM review discovers bug → KH-NNN filed in ISSUES.md
 
 ### Selection criteria
 
-The corpus started at 1,052 repos curated from publicly available GitHub repositories containing KiCad project files. 87 repos were purged after audit (18 Eagle-only, 14 tool/library repos, 22 PCB-only, 33 with fewer than 3 components). In April 2026, the corpus was expanded to 5,829 repos via automated discovery across GitHub, GitLab, and Codeberg using `search_repos.py`, `validate_candidates.py`, and `add_repos.py`.
+The corpus started at 1,052 repos curated from publicly available GitHub repositories containing KiCad project files. 87 repos were purged after audit (18 Eagle-only, 14 tool/library repos, 22 PCB-only, 33 with fewer than 3 components). In April 2026, the corpus was expanded via automated discovery across GitHub, GitLab, and Codeberg using `search_repos.py`, `validate_candidates.py`, and `add_repos.py`, then refined through additional audit passes to the current 5,822 repos.
 
 ### Reproducibility
 
@@ -303,22 +303,91 @@ This separation means the git repository tracks only curated regression data (~5
 
 ## Current state
 
-As of 2026-04-06:
+As of 2026-04-10 (v1.2 released, TH-013 fixed):
 
 | Metric | Value |
 |--------|-------|
-| Repos in corpus | 5,829 |
-| Repos with baselines + assertions | 5,829 |
-| Total assertions | ~808,800 |
-| Assertion pass rate | 99.9% |
+| Repos in corpus | 5,822 |
+| Repos with baselines + assertions | 5,822 |
+| Total assertions | 2,109,133 |
+| Assertion pass rate | 100% |
+| Aspirational assertions (known bugs) | 7 |
 | Bugfix registry entries | 67 |
-| KH-* issues filed/closed | 200/200 |
-| Open KH-* issues | 0 |
-| Layer 3 reviewed repos | 992 |
-| Total findings | 2,575 |
+| Unit tests | 424 across 23 files |
+| Schematic detectors (auto-discovered) | 42 |
+| Analyzer types | 6 (schematic, pcb, gerber, spice, emc, thermal) |
+| Constants tracked | 335 (0 critical-risk) |
+| Equations tracked | 86 |
+| KH-* issues filed/closed | 229/229 |
+| Open KH-* / TH-* issues | 0 / 0 |
+| Layer 3 reviewed repos | 1,045 (17% of corpus) |
+| Total findings | 2,596 |
+| SPICE simulations | 145,758 (84.8% pass, 12.1% warn) |
+| EMC findings | 192,000+ across 15 rule categories |
 | Cross-sections | 9 named subsets (smoke=20, quick_200=243, etc.) |
+| Cross-analyzer agreement | 91.9% (97,012 checks) |
 
-All repos have been tested at Layer 1-2 with baselines and assertions. Layer 3 coverage spans 992 repos. Cross-sections enable targeted validation (smoke, quick_200, etc.) and batch runs use high parallelism (--jobs 16+) for corpus-wide operations.
+All repos have been tested at Layers 1-2 with baselines and assertions. Layer 3 coverage spans 1,045 repos. Cross-sections enable targeted validation and batch runs use high parallelism (`--jobs 16+`) for corpus-wide operations.
+
+---
+
+## Toward correctness (v1.3 direction)
+
+The methodology above describes a **consistency** testing system. It catches when outputs change unexpectedly and preserves insights from LLM review. It does not, and cannot, prove that the captured state is actually right. The "Weaknesses and limitations" section below enumerates this gap in detail — v1.3 is the first attempt in this codebase to narrow part of it, and this section is honest about how much it actually changes.
+
+### The scope of the change
+
+v1.3 adds correctness-testing infrastructure that tests analyzer outputs against sources of truth independent of the analyzer itself. The key word is "adds" — none of the existing consistency layers go away, and the new correctness layers apply to a small fraction of the corpus:
+
+- **Synthetic fixtures**: ~30-60 hand-built `.kicad_sch` files with known-correct answers. Deterministic but artificial — they don't exercise real-world parser edge cases, messy library resolution, or hierarchical designs.
+- **Gold-standard tier**: ~10 real repos initially, hand-reviewed with structured claim files. Target growth: 1-3/month. At that rate, meaningful corpus coverage is years away.
+- **Metamorphic variants**: ~30 transforms across the synthetic fixtures, not applied to real corpus files in v1.3.
+- **Parser verification**: applies to all 5,822 repos, but only verifies *extraction* (component refs, nets, labels). Semantic interpretation bugs are out of scope.
+- **Property invariants**: ~5 universal rules applied to all outputs. Catches structural violations but can't verify whether any specific detection is right.
+
+**Coverage math:** Of the 5,822 repos, ~5,812 will still have zero direct correctness evidence after v1.3 ships. Their assertions remain consistency-only. The new layers give independent ground truth for the specific corners they cover — that's a meaningful improvement over zero, but it's not corpus-wide correctness.
+
+### Five kinds of evidence, five different oracles
+
+Different questions need different oracles. Each oracle has its own limitations.
+
+1. **Parse correctness** — Did we extract the right facts from the KiCad source file? Oracle: an independent S-expression reader (`validate/verify_parser.py`) that walks the raw `.kicad_sch`/`.kicad_pcb` and compares extracted component references, nets, and labels against the analyzer output. **Limitation:** catches extraction bugs, not interpretation bugs. If the parser correctly extracts R15 but the signal detector misclassifies its role, parser verification passes.
+
+2. **Numeric correctness** — Given a correctly identified subcircuit, is the computed value right? Oracle: SPICE simulation. **Limitation:** SPICE models are approximations. SPICE can tell you a divider ratio is wrong, but can't tell you the analyzer should not have called the circuit a divider in the first place. Also: if the analyzer misses a subcircuit entirely, SPICE can't flag the miss.
+
+3. **Detector semantics** — Did we identify the right circuit at all? Oracle: synthetic fixtures with hand-built `.kicad_sch` files where the correct answer is known by construction. **Limitation:** synthetic files don't cover the messy real-world edge cases that real corpus files exercise — weird library substitutions, hierarchical cross-sheet references, unusual naming conventions. A detector can pass every synthetic fixture and still fail on the first real project in an unfamiliar domain.
+
+4. **Causal sensitivity** — Does the detector respond to actual changes in the input, or is it pattern-matching on cosmetic features? Oracle: metamorphic tests — variants of each synthetic fixture with invariance transforms (reorder symbols, rename unused nets) and covariance transforms (change R value, swap opamp inputs). **Limitation:** metamorphic tests run on synthetic fixtures in v1.3, not on real corpus files. A detector can pass every metamorphic test on synthetic inputs and still be insensitive on real layouts with different structural complexity.
+
+5. **External anchoring** — For a small curated set of real designs, are the analyzer's claims consistent with human-verified truth? Oracle: a hand-reviewed gold-standard tier under `reference_gold/` with structured claim files. **Limitation:** the reviewer is Claude or a human, both of which are fallible. The gold tier starts at ~10 cases and grows 1-3/month. Even if each claim is correct, corpus coverage is tiny. The gold tier anchors *specific* claims, not general correctness.
+
+### Structured findings and evidence provenance
+
+A transverse v1.3 change: finding items gain structured fields (`claim_type`, `subject_refs`, `expected_relation`, `detector`, `confidence`) instead of relying on free-text descriptions that `generate_finding_checks.py` parses via regex. Benefit: finding-based checks become robust against description rewording, and drift detection can match specific claims rather than falling back to section-level counts.
+
+This is a building block for several other v1.3 layers (gold tier uses the same schema; risk-weighted review prioritization needs structured fields to reason about detector coverage). It does not, on its own, make findings *more correct* — it just makes the checks derived from them less fragile. A wrongly-judged finding produces a wrongly-scoped structured check just as easily as a wrongly-scoped regex check.
+
+Alongside structured findings, every correctness asset (assertion, finding, bugfix entry) gains an `evidence_source` field: one of `human_review`, `datasheet`, `spice`, `cross_analyzer`, `corpus_heuristic`, `auto_seeded`. Reports weight findings by provenance — a `human_review` + `datasheet` claim is stronger than `auto_seeded`. This makes trust level visible in aggregate metrics, but does not change what any individual check verifies.
+
+### Bug cemetery
+
+Every fixed KH-* bug produces a minimal reproducer fixture in `tests/fixtures/regressions/` alongside its KH-NNN entry in `FIXED.md`. The BUGFIX registry already covers part of this goal; v1.3 formalizes it as a policy — any bug fix that changes detector logic must add or update a regression fixture in the same session. **Limitation:** this only protects against the specific failure modes that were actually caught and filed. Systematic errors that have never been noticed cannot be prevented by a bug cemetery.
+
+### Property-based invariants
+
+Universal structural rules that should hold for every analyzer run — examples: `voltage_dividers[].ratio ∈ (0, 1)`, `rc_filters[].cutoff_hz > 0` when R > 0 and C > 0, no duplicate refs in `components[]`. These catch structural violations that SEED/STRUCT assertions miss (because SEED/STRUCT encode current behavior, including wrong current behavior). **Limitation:** invariants catch bugs in output *shape*, not in output *content*. A detector that reports a consistent but wrong `ratio = 0.5` for every divider passes every invariant.
+
+### What v1.3 does not achieve
+
+To be blunt about the limits:
+
+- **Corpus-wide correctness is still not tested.** ~99.8% of the corpus (~5,812 of 5,822 repos) has no direct correctness evidence after v1.3. Those assertions remain pure consistency checks against auto-seeded prior output.
+- **Systematic analyzer errors remain invisible.** If the analyzer has a structural bug that affects every file in the same way, every consistency layer happily locks it in as the "expected" answer. Parser verification catches this for extraction bugs; the other layers only catch it for cases covered by fixtures, gold entries, or metamorphic tests.
+- **Reviewer fallibility is not reduced.** Gold tier entries, Layer 3 findings, and the bug cemetery all depend on a human or LLM correctly interpreting a circuit. Nothing in v1.3 adds a second reviewer, so errors in review propagate into the "correctness" layers just as they do into FND assertions today.
+- **Coverage is narrow by design.** v1.3 deliberately starts with a small number of fixtures and gold entries rather than racing toward breadth. The tradeoff is that a narrow benchmark can actually be maintained and trusted; a broad benchmark that nobody has time to curate becomes a liability. But the tradeoff is real — a lot of the corpus stays outside the correctness testing envelope.
+- **The 100% assertion pass rate remains a consistency metric.** It does not become a correctness metric in v1.3. Any claims of "improved correctness" must point to specific new layers and their specific coverage, not to the headline pass rate.
+
+The consistency layer remains the backbone. The 2.1M assertions and the BUGFIX registry still do most of the work of catching regressions between accepted states. v1.3 adds independent oracles for a specific curated subset — a starting point, not an ending point.
 
 ---
 

@@ -1,6 +1,6 @@
 # Test Harness Runbook
 
-20 operational checklists for the kicad-happy test harness. Designed for Claude Code
+24 operational checklists for the kicad-happy test harness (20 original + 4 added for the v1.3 correctness direction). Designed for Claude Code
 agents working autonomously or with minimal supervision.
 
 **This is the primary operational reference.** Agents MUST follow the relevant
@@ -58,6 +58,51 @@ python3 regression/run_checks.py --type {type}
 
 Compare pass/fail counts against status.md. Any NEW failures (not pre-existing) are
 regressions caused by the code change.
+
+### 1c2. Run parser verification (v1.3+)
+
+If the schematic or PCB analyzer changed, run the independent parser verification:
+
+```bash
+python3 validate/verify_parser.py --type schematic     # if schematic affected
+python3 validate/verify_parser.py --type pcb           # if pcb affected
+```
+
+An independent S-expression reader walks the raw KiCad source and compares extracted
+component refs, nets, and labels against the analyzer output. Any mismatches are
+extraction bugs — they corrupt every downstream detector, so always investigate before
+continuing. File as KH-* with an `analyzer_section=parsing` label.
+
+**Limitation:** parser verification catches extraction bugs, not interpretation bugs.
+A detector that reads R15 correctly but misclassifies its role will still pass this
+check. See philosophy.md § "v1.3 correctness layers" for what each layer does and
+does not cover.
+
+### 1c3. Run property invariants (v1.3+)
+
+```bash
+python3 validate/invariants.py --cross-section quick_200
+```
+
+Universal structural rules (e.g., divider ratio ∈ (0, 1), filter cutoff > 0 when
+R > 0 and C > 0, no duplicate component refs). Invariant failures are shape bugs,
+always investigate before any re-seed.
+
+**Limitation:** invariants catch bugs in output *shape*, not *content*. A detector
+that consistently reports a wrong `ratio = 0.5` for every divider still passes every
+invariant.
+
+### 1c4. Run A/B diff against prior kicad-happy commit (v1.3+)
+
+For a blast-radius view larger than pass/fail counts:
+
+```bash
+python3 validate/ab_test.py HEAD~1 HEAD --cross-section quick_200
+```
+
+Reports files changed, new detections added, detections removed, values changed, and
+top changed fields. Target runtime < 5 minutes on `quick_200`. Use this to distinguish
+small code changes with large downstream impact from innocuous refactors.
 
 ### 1d. Run cross-validation
 
@@ -216,6 +261,48 @@ python3 run_tests.py --unit
 ```
 
 Must be 100% pass. If not, fix before doing anything else.
+
+### 3h. Run gold-standard benchmark (v1.3+)
+
+```bash
+python3 validate/run_gold_checks.py
+```
+
+Expected: 100% pass. The gold tier has ~10 hand-reviewed real-design cases with
+structured claim files. Any failure is either a real analyzer regression against
+human-verified truth, or a case that needs re-review. Investigate carefully — never
+auto-regenerate gold data.
+
+**Limitation:** ~10 cases do not generalize to the full 5,822-repo corpus. Gold-tier
+pass rate is a narrow signal, not overall correctness. See philosophy.md § "v1.3
+correctness layers" for scope.
+
+### 3i. Run metamorphic test suite (v1.3+)
+
+```bash
+python3 tests/test_metamorphic.py
+```
+
+Expected: all invariance and covariance cases pass on the synthetic fixtures.
+Failures indicate detectors that aren't causally responding to input changes, or that
+are responding to cosmetic changes they should ignore. Investigate before any re-seed.
+
+**Limitation:** v1.3 metamorphic tests run on synthetic fixtures only, not on real
+corpus files. A detector can pass every metamorphic test on synthetic inputs and still
+be insensitive on real layouts. Full real-corpus metamorphic testing is a v1.4
+candidate.
+
+### 3j. Run full-corpus parser verification (v1.3+)
+
+```bash
+python3 validate/verify_parser.py --all --jobs 16
+```
+
+Expected: 100% exact match on component references, 99.9%+ on values. Any mismatches
+are parser bugs — file as KH-* and fix before the next corpus re-seed. Report lands in
+`reports/parser_verification/latest.md`.
+
+**Limitation:** catches extraction bugs only, not interpretation bugs.
 
 ---
 
@@ -830,6 +917,34 @@ Layer 3 uses Claude to review analyzer outputs against source files, discovering
 semantic issues that assertions can't catch (wrong detection, missed circuit, incorrect
 parameter values).
 
+### 13-pre. Use the structured finding schema (v1.3+)
+
+When creating or editing findings, prefer structured fields over free-text
+descriptions. Each finding item in `correct`, `incorrect`, and `missed` arrays should
+include:
+
+- `claim_type`: `"correct" | "incorrect" | "missed"` (matches the array name)
+- `detector`: analyzer section name (e.g., `"voltage_dividers"`)
+- `subject_refs`: list of component references (e.g., `["R15", "R16"]`)
+- `expected_relation`: `"in_detector" | "not_in_detector" | "field_value_equals" | ...`
+- `why`: short human-readable explanation (does NOT replace the structured fields)
+- `confidence`: 0.0-1.0
+- `evidence_source`: typically `"human_review"` for Layer 3 findings
+- Optional `canonical_check`: explicit machine-checkable form when the auto-generated
+  one would be wrong
+
+**Legacy findings** have only `description` free-text. `generate_finding_checks.py`
+parses those via regex — it works but is fragile (see methodology.md § "Check field
+generation is fragile"). Don't mass-migrate legacy findings prophylactically. Only
+upgrade a legacy finding when you're already touching it for another reason (editing,
+re-reviewing, promoting to assertions).
+
+**Why structured:** explicit fields eliminate regex parsing, enable precise drift
+detection, and let future layers (risk-weighted review, counterexample mining) reason
+about findings without guessing. The limitation: structured fields don't make a
+wrongly-judged finding correct, they just make its downstream representation less
+fragile.
+
 ### 13a. Generate review packets
 
 ```bash
@@ -1371,6 +1486,26 @@ Record alongside the tag:
 - Unit test count
 - Cross-validation agreement rates
 
+### 16-v1.3. v1.3 correctness exit criteria (once v1.3 ships)
+
+In addition to the standard exit criteria above, v1.3 releases must verify:
+
+- [ ] **Parser verification**: 100% exact match on component references, 99.9%+ on values, across full corpus
+- [ ] **Synthetic fixture suite**: 5 detector families × 4 buckets each, all positive cases detect correctly, all negative cases produce zero false detections
+- [ ] **Metamorphic tests**: all invariance and covariance cases pass on the synthetic suite
+- [ ] **Gold-standard tier**: 10+ curated cases, 100% pass rate against current analyzer
+- [ ] **Bug cemetery**: 10+ minimal reproducer fixtures in `tests/fixtures/regressions/`
+- [ ] **Structured findings schema**: migration helper run, new findings use structured form
+- [ ] **Evidence provenance**: field present on findings, assertions, and bugfix registry entries
+- [ ] **Property invariants**: 5 universal rules in place, 100% pass on full corpus
+- [ ] **SPICE coverage metrics**: per-detector-class coverage reported (what % of dividers simulated)
+- [ ] **Automated A/B framework**: runs `quick_200` in <5 min
+- [ ] **Zero regressions** in hobbyist corpus pass rate
+
+Remember: none of these individually prove analyzer correctness. They are specific
+slices of independent evidence. See methodology.md § "Toward correctness" for the
+framework and § "Weaknesses and limitations" for what v1.3 still does not cover.
+
 ---
 
 ## Checklist 17: Executing a test plan from the kicad-happy agent
@@ -1798,6 +1933,332 @@ Update corpus count in `status.md`. Record the expansion as a new batch entry.
 
 The `reference/` directory will have large diffs (new baselines and assertions
 for every new repo). This is expected.
+
+---
+
+## Checklist 21: Parser verification (v1.3+)
+
+Use when verifying that the analyzer's extraction matches the raw KiCad source files
+exactly. This is a correctness check on extraction only — it does NOT verify
+interpretation (detector semantics). See methodology.md § "Toward correctness" for
+scope.
+
+### 21a. Run the verifier on a cross-section
+
+```bash
+python3 validate/verify_parser.py --cross-section smoke --type schematic
+python3 validate/verify_parser.py --cross-section quick_200 --type schematic --jobs 16
+```
+
+The verifier parses each `.kicad_sch` with an independent S-expression reader (sharing
+no analyzer code) and compares extracted facts against the analyzer output. Scope for
+schematic:
+
+- Component reference set (exact match required)
+- Component count (exact match required)
+- Value properties (exact or normalized)
+- Net name set (exact after normalization)
+- Power symbol count
+- Hierarchical label count
+- No-connect marker count
+
+Each field is reported as one of: `verified_exact`, `verified_with_normalization`,
+`not_verifiable_yet`, or `mismatch`.
+
+### 21b. Investigate mismatches
+
+For each mismatch, classify:
+
+- **Missing item** (analyzer output is missing a component/net in the source) → analyzer bug
+- **Extra item** (analyzer output has something not in the source) → analyzer bug
+- **Wrong property value** → analyzer bug
+- **Wrong normalization** → verifier normalization rule needs expansion
+- **Unsupported format** → file the file for later; don't count it as a failure
+
+File each real mismatch class as a KH-* issue with the affected file, field, and exact
+diff.
+
+### 21c. Run full corpus verification
+
+Only after single-repo and cross-section runs are clean:
+
+```bash
+python3 validate/verify_parser.py --all --jobs 16 --type schematic
+```
+
+Expected: 100% exact match on component references, 99.9%+ on values. Report to
+`reports/parser_verification/latest.md`.
+
+### 21d. When to re-run
+
+- After any `kicad_utils.py` or `sexp_parser.py` change
+- As part of Checklist 1 (code change validation) when schematic or PCB code changed
+- As part of Checklist 3 (full corpus health check)
+- Before any v1.3+ release (Checklist 16)
+
+**Limitation:** parser verification catches extraction bugs only. If the parser
+correctly extracts R15 but a downstream detector misclassifies it, parser verification
+passes.
+
+---
+
+## Checklist 22: Synthetic detector fixtures (v1.3+)
+
+Use when adding, validating, or debugging the synthetic fixture suite under
+`tests/fixtures/detectors/`. Fixtures are hand-built `.kicad_sch` files with correct
+answers known by construction — they test detector semantics on deterministic ground
+truth.
+
+### 22a. Directory layout
+
+```
+tests/fixtures/detectors/
+  voltage_divider/
+    positive/{basic_equal,unequal_to_adc,etc.}/case.kicad_sch + expected.json
+    negative/{series_r_pullup,pull_up_no_load}/...
+    near_miss/{three_resistor_ladder}/...
+    regressions/{KH-NNN_*}/... + bug.md
+  rc_filter/
+  power_regulator/
+  protection_device/
+  crystal_circuit/
+```
+
+Each case directory has:
+
+- `case.kicad_sch` (hand-built or generated via `tests/fixtures/_build_sch.py`)
+- `expected.json` (narrow assertions, NOT a full output snapshot)
+- Optional `notes.md` explaining what the case tests
+- For regressions: `bug.md` with the KH-* issue reference and root-cause summary
+
+### 22b. Run the synthetic test suite
+
+```bash
+python3 tests/test_synthetic.py                              # all fixtures
+python3 tests/test_synthetic.py --detector voltage_divider   # one family
+python3 tests/test_synthetic.py --bucket negative            # negative cases only
+```
+
+Failures classify into five categories:
+
+- `fail_false_positive` — detector fires on a negative or near-miss case
+- `fail_false_negative` — detector misses a positive case
+- `fail_wrong_label` — detector fires but with wrong topology
+- `fail_wrong_numeric` — detector fires with wrong computed value
+- `fail_unexpected_confidence` — confidence level doesn't match expected bucket
+
+### 22c. Add a new fixture case
+
+1. Create the case directory: `tests/fixtures/detectors/{family}/{bucket}/{case_name}/`
+2. Either hand-write `case.kicad_sch` or use the `_build_sch.py` helper
+3. Write `expected.json` with narrow assertions:
+
+```json
+{
+  "assertions": [
+    {"path": "signal_analysis.voltage_dividers", "match": {"count": 1}},
+    {"path": "signal_analysis.voltage_dividers[0].ratio",
+     "match": {"approx": 0.5, "abs_tol": 1e-6}}
+  ]
+}
+```
+
+4. Run `tests/test_synthetic.py --detector {family}` to verify it passes
+5. Commit the fixture
+
+### 22d. Metamorphic variants
+
+For each base fixture, generate variants via `_build_sch.py` helpers:
+
+- **Invariance** (output should be identical): reorder symbols, rename neutral labels, add floating component
+- **Covariance** (output should change predictably): change R value, change regulator suffix, delete filter leg
+
+Store expected deltas in `metamorphic.json` alongside the base case. Run via
+`tests/test_metamorphic.py`.
+
+### 22e. When to re-run
+
+- After any detector change in kicad-happy signal-detection code
+- After any kicad-happy schematic parser change
+- Before any v1.3+ release (Checklist 16)
+- As part of Checklist 3 (full corpus health check) subsection 3i
+
+**Limitation:** synthetic fixtures test detector semantics on hand-built inputs. They
+do NOT exercise real-world edge cases (messy library resolution, hierarchical
+cross-sheet references, unusual naming conventions). A detector can pass every
+synthetic fixture and still fail on real corpus files in an unfamiliar domain.
+
+---
+
+## Checklist 23: Gold-standard benchmark (v1.3+)
+
+Use when adding, validating, or running the curated gold-standard tier under
+`reference_gold/`. Gold entries are hand-reviewed real designs with structured claim
+files that anchor the analyzer to verified truth on specific cases.
+
+### 23a. Directory layout
+
+```
+reference_gold/
+  {owner}/{repo}/{project}/
+    case.kicad_sch           (symlink or copy from repos/)
+    claims.json              (structured claims)
+    evidence/
+      datasheet_refs.md
+      reviewer_notes.md
+    review_metadata.json     (reviewer, date, confidence, review round)
+```
+
+### 23b. Run the gold benchmark
+
+```bash
+python3 validate/run_gold_checks.py                       # all gold entries
+python3 validate/run_gold_checks.py --repo owner/repo     # one entry
+```
+
+Expected: 100% pass. Any failure is either a real analyzer regression against
+human-verified truth, or a case that needs re-review.
+
+### 23c. Add a new gold entry
+
+1. Select a real repo/project — prefer ones with existing Layer 3 reviews (reuse work)
+2. Create directory `reference_gold/{owner}/{repo}/{project}/`
+3. Copy the `.kicad_sch` case file (or symlink to `repos/`)
+4. Hand-review and write `claims.json`:
+
+```json
+{
+  "board": "owner/repo/project",
+  "reviewer": "your-name",
+  "review_date": "2026-04-15",
+  "confidence": 0.9,
+  "evidence_source": "human_review",
+  "claims": [
+    {
+      "id": "rail_3v3_present",
+      "claim_type": "correct",
+      "detector": "power_regulators",
+      "subject_refs": ["U2"],
+      "expected_relation": "field_value_equals",
+      "field": "vout_v",
+      "expected": 3.3,
+      "evidence": [
+        {"source": "datasheet", "note": "AP2112K-3.3 fixed output"}
+      ]
+    }
+  ]
+}
+```
+
+5. Write `evidence/datasheet_refs.md` with links to every cited datasheet
+6. Write `review_metadata.json` with reviewer name and date
+7. Run `validate/run_gold_checks.py --repo owner/repo` to verify
+8. Commit the gold entry
+
+### 23d. Claim selection guidance
+
+Choose claims that are:
+
+- **Important** (regulator output rails, interface buses, oscillator frequencies, current-sense topology)
+- **Verifiable** (datasheet citation possible)
+- **Diverse** (cover multiple detector families)
+- **Stable** (unlikely to change between review rounds)
+
+Avoid subtle-but-low-value claims (minor thermal hotspot, small decoupling placement issue).
+
+### 23e. When to update gold entries
+
+- **Never for consistency** — if the analyzer drifts from a gold entry, investigate the analyzer, not the gold entry
+- **Only when the original review was wrong** — and mark as `superseded` rather than deleted, with the reason
+- **When a repo is updated upstream** — update `case.kicad_sch` to the new pinned commit, re-review all claims, bump `review_round` in metadata
+
+### 23f. Growth target
+
+1-3 new gold entries per month. Quality > quantity. Ten carefully-curated cases with
+verified claims are more valuable than a hundred with vague notes.
+
+**Limitation:** ~10 cases at the start, 1-3/month growth. Meaningful corpus coverage
+is years away. Every claim inherits the fallibility of its reviewer (Claude or human);
+there is no second reviewer. The gold tier anchors *specific* claims, not general
+correctness.
+
+---
+
+## Checklist 24: Structured findings migration (v1.3+)
+
+Use when migrating legacy free-text findings to the structured schema, or when
+creating new findings that should use the structured form from day one.
+
+### 24a. The schema
+
+Each finding item in `correct`, `incorrect`, or `missed` arrays should have:
+
+- `claim_type`: `"correct" | "incorrect" | "missed"` (matches the array name)
+- `detector`: analyzer section name (e.g., `"voltage_dividers"`)
+- `subject_refs`: list of component references (e.g., `["R15", "R16"]`)
+- `expected_relation`: one of `"in_detector" | "not_in_detector" | "field_value_equals" | "field_value_approx" | "count_equals" | "count_min" | "count_max"`
+- `why`: short human explanation (does NOT replace structured fields)
+- `confidence`: 0.0-1.0
+- `evidence_source`: typically `"human_review"` for Layer 3 findings
+- Optional `canonical_check`: explicit machine-checkable form when auto-generation would be wrong
+
+### 24b. Migrating a legacy finding
+
+Legacy findings have free-text `description` only. `generate_finding_checks.py`
+parses them via regex. To upgrade:
+
+```bash
+python3 regression/findings.py show FND-NNNNNNNN
+```
+
+For each item in `correct`/`incorrect`/`missed`, extract the structured fields from
+the description:
+
+- Component refs → `subject_refs` list
+- Detector name → `detector` field (match `REF_FIELD_MAP` keys)
+- "is a X" → `claim_type: "correct"`, `expected_relation: "in_detector"`
+- "is falsely detected as X" → `claim_type: "incorrect"`, `expected_relation: "not_in_detector"`
+- "is missing from X" → `claim_type: "missed"`, `expected_relation: "in_detector"`
+
+Edit the finding JSON directly, run `regression/findings.py render` to regenerate the
+markdown, and verify:
+
+```bash
+python3 regression/generate_finding_checks.py --repo {repo} --dry-run
+```
+
+Checks derived from structured fields should now be precise (exact ref matching)
+rather than regex-extracted.
+
+### 24c. Don't mass-migrate
+
+**Policy:** Only upgrade legacy findings when you touch them for another reason
+(editing, re-reviewing, promoting to assertions). Prophylactic mass migration is not
+required. The `generate_finding_checks.py` regex path still works for legacy findings
+— it's just less robust.
+
+### 24d. New findings use structured form
+
+When creating a new finding (any source: Layer 3 review, manual observation, drift
+detection), populate the structured fields from the start. The regex-parsing fallback
+is for legacy items only.
+
+### 24e. Evidence provenance
+
+Every finding should have `evidence_source`:
+
+- `human_review` — Layer 3 or manual review
+- `datasheet` — backed by a datasheet citation
+- `spice` — validated via SPICE simulation
+- `cross_analyzer` — validated via cross-analyzer consistency check
+- `corpus_heuristic` — derived from corpus patterns (lower trust)
+- `auto_seeded` — from automated seeding (lowest trust)
+
+Reports should weight findings by provenance. A `human_review` + `datasheet` claim is
+stronger than `auto_seeded`.
+
+**Limitation:** structured fields don't make a wrongly-judged finding correct. They
+just make its downstream representation less fragile and searchable.
 
 ---
 

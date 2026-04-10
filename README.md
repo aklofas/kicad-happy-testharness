@@ -1,6 +1,10 @@
 # kicad-happy Test Harness
 
-Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 5,829 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 808K+ machine-checkable assertions, 276 unit tests, 40 auto-discovered signal detectors, 30,000+ SPICE simulations across 17 subcircuit types, and 141,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
+Test harness for validating [kicad-happy](https://github.com/aklofas/kicad-happy) analyzers against a corpus of 5,822 real-world open-source KiCad projects (organized as `owner/repo` subdirectories). Provides a 3-layer regression testing system with 2.1M+ machine-checkable assertions, 424 unit tests across 23 test files, 42 auto-discovered signal detectors, 145,000+ SPICE simulations across 17 subcircuit types, and 192,000+ EMC pre-compliance findings across 15 rule categories with SPICE-enhanced PDN analysis.
+
+**The system primarily tests consistency, not correctness.** A 100% assertion pass rate means outputs haven't drifted since they were last seeded — it does not mean the analyzers are right. See [philosophy.md](philosophy.md) for the distinction and [methodology.md](methodology.md) § "Weaknesses and limitations" for the full accounting of what this harness cannot verify.
+
+v1.2 released 2026-04-10. v1.3 is in progress and begins adding correctness-testing infrastructure (parser verification, synthetic detector fixtures, a small curated gold-standard tier, metamorphic tests, property invariants) for a narrow subset of the corpus — see [methodology.md](methodology.md) § "Toward correctness" for the scope and explicit limitations.
 
 For a deep dive into the architecture, reasoning, and design decisions, see [methodology.md](methodology.md).
 
@@ -210,7 +214,7 @@ python3 regression/promote.py --repo {repo} --apply   # promote
 
 ## Constants audit
 
-The analyzer scripts contain 292 hardcoded constants: lookup tables, keyword lists, numeric thresholds, and regex patterns. `audit_constants.py` scans analyzer source using Python AST, builds a registry of all constants, and tracks verification status.
+The analyzer scripts contain 335 hardcoded constants: lookup tables, keyword lists, numeric thresholds, and regex patterns. `audit_constants.py` scans analyzer source using Python AST, builds a registry of all constants, and tracks verification status.
 
 ```bash
 python3 validate/audit_constants.py scan                # scan scripts, update registry
@@ -350,7 +354,7 @@ python3 tools/generate_catalog.py --query "category=ESP32"    # query by categor
 python3 tools/generate_catalog.py --query "tags contains rf"  # query by tag
 
 # Testing
-python3 run_tests.py --unit                             # unit tests (276 tests)
+python3 run_tests.py --unit                             # unit tests (424 tests)
 python3 run_tests.py --tier unit                        # same as --unit
 python3 run_tests.py --tier online                      # integration tests (need API keys)
 python3 run_tests.py --quick-sanity                     # assertions on smoke pack repos
@@ -394,7 +398,7 @@ Prefixes: `KH-*` for analyzer bugs, `TH-*` for harness issues. Numbers are globa
 ```
 spice.md                    # SPICE simulation documentation
 emc.md                      # EMC pre-compliance testing documentation
-repos.md                    # Master repo list (5,829 repos, categories via ## headers)
+repos.md                    # Master repo list (5,822 repos, categories via ## headers)
 status.md                   # Batch testing progress log
 ISSUES.md                   # Open issues (KH-* analyzer, TH-* harness)
 FIXED.md                    # Closed issues with fix details
@@ -465,17 +469,30 @@ validate/                   # Output quality + constants audit
   validate_mpns.py          #   Validate MPNs against distributor APIs
   analyze_bom_mismatch.py   #   BOM qty vs component count analysis
   download_datasheets.py    #   Download datasheets from multiple sources
-  audit_constants.py        #   AST-based constant registry + verification (292 constants)
+  audit_constants.py        #   AST-based constant registry + verification (335 constants)
   audit_equations.py        #   EQ-tag equation tracking + verification (86 equations)
 
-tests/                      # Unit tests (276 tests, TIER="unit")
+tests/                      # Unit tests (424 tests across 23 files, TIER="unit")
+  test_analysis_cache.py    #   Analysis cache correctness (26 tests)
+  test_batch_review.py      #   Batch review prefix extraction
   test_checks.py            #   Assertion evaluation engine (43 tests)
+  test_datasheet_verify.py  #   Datasheet extraction verification (27 tests)
+  test_design_intent.py     #   design_intent schema + auto-detection (9 tests)
+  test_detect_sub_sheet.py  #   Sub-sheet detection 5-tier strategy (10 tests)
+  test_detection_schema.py  #   Stable detection_id field validation
+  test_diff_analysis.py     #   Diff-aware design review output
   test_differ.py            #   Baseline diff engine (13 tests)
   test_emc.py               #   EMC seed + structural + cross-val (35 tests)
+  test_enrichment_fields.py #   Bus params, power dissipation, ESD, proximity
+  test_invariants.py        #   Property-based invariants (12 tests)
+  test_kh_bugfixes.py       #   KH-* regression tests (19 tests, 1 skipped)
+  test_protocol_checks.py   #   I2C/SPI/UART/USB/Ethernet/HDMI/LVDS checks (18 tests)
   test_refextract.py        #   Reference extraction (33 tests)
+  test_safe_names.py        #   TH-013 filename-length helpers (22 tests)
   test_schema.py            #   Schema validation + KNOWN_OPS (24 tests)
   test_seed.py              #   Seed assertion generation (23 tests)
   test_spice.py             #   SPICE seed + structural + cross-val (28 tests)
+  test_switching_loop.py    #   Switching loop area pre-computation
   test_utils.py             #   Path utilities + bracket notation (22 tests)
   test_validate_outputs.py  #   Output validation (27 tests)
   test_validate_spice.py    #   SPICE cross-validation (28 tests)
@@ -484,7 +501,7 @@ integration/                # End-to-end tests
   test_datasheet_extraction.py # Datasheet download + extraction pipeline
 
 reference/                  # Tracked in git -- known-good regression data
-  constants_registry.json   #   Constant audit registry (292 constants)
+  constants_registry.json   #   Constant audit registry (335 constants)
   constants_registry.md     #   Auto-generated constant summary
   equation_registry.json    #   Equation tracking registry (86 equations)
   equation_registry.md      #   Auto-generated equation summary
@@ -512,4 +529,4 @@ results/                    # Git-ignored -- outputs, manifests, review packets
 
 ## Usage warning
 
-The test corpus has 5,829 repos. Use `--cross-section smoke` (20 repos) or `--cross-section quick_200` (~200 repos) for targeted testing instead of full corpus runs. All tools auto-parallelize with `--jobs` (default: cpu_count) and support `--resume` to skip completed files after interruption.
+The test corpus has 5,822 repos. Use `--cross-section smoke` (20 repos) or `--cross-section quick_200` (~200 repos) for targeted testing instead of full corpus runs. All tools auto-parallelize with `--jobs` (default: cpu_count) and support `--resume` to skip completed files after interruption.

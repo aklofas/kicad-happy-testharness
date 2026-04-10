@@ -1,6 +1,6 @@
 # EMC Pre-Compliance Testing
 
-The test harness validates the kicad-happy EMC pre-compliance analyzer (`analyze_emc.py`) against the full 5,829-repo corpus. **Note:** SPICE/EMC statistics below reflect the original 1,035-repo subset and will update when EMC is re-run on the expanded corpus. The EMC skill reads schematic and/or PCB analyzer JSON outputs, applies geometric rule checks and analytical formulas, and produces a structured risk report with findings, severity scores, and recommendations.
+The test harness validates the kicad-happy EMC pre-compliance analyzer (`analyze_emc.py`) against the full 5,822-repo corpus. Full-corpus EMC run completed 2026-04 with 192,000+ findings across 15 rule categories. The EMC skill reads schematic and/or PCB analyzer JSON outputs, applies geometric rule checks and analytical formulas, and produces a structured risk report with findings, severity scores, and recommendations.
 
 Unlike SPICE (which runs simulations), EMC is purely analytical — all estimates come from textbook formulas (Ott, Paul, Bogatin) and geometric heuristics on the PCB layout. No external tools are required.
 
