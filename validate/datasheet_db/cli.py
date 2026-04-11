@@ -434,8 +434,8 @@ def main(argv=None) -> int:
     p_fetch.add_argument("--mpn", help="Filter to records containing this MPN (not yet wired)")
     p_fetch.add_argument("--manufacturer", help="Filter by manufacturer (not yet wired)")
     p_fetch.add_argument("--jobs", type=int, default=None,
-                         help="Parallel workers (not yet wired)")
-    p_fetch.add_argument("--rate-limit", help="Rate limit (not yet wired)")
+                         help="Parallel workers (default: min(cpu_count, 8))")
+    p_fetch.add_argument("--rate-limit", help="Per-domain rate limit, e.g. \"2/s\" or \"30/min\" (default: 1/s)")
     p_fetch.add_argument("--timeout", type=float, default=60.0, help="Per-request timeout")
     p_fetch.add_argument("--retry-dead", action="store_true",
                          help="Retry URLs previously marked as dead")
