@@ -256,6 +256,37 @@ def _mark_url_dead(rec: dict, dead_url: str, now: str) -> None:
     save_record(updated)
 
 
+def cmd_migrate(args) -> int:
+    """Dispatcher: shells out to tools/migrate_datasheets_to_db.py.
+
+    The migration script is a one-shot tool that's deleted after the
+    successful migration run (per the harness sole-maintainer policy).
+    Until that script exists (Tasks 26-30), invoking this subcommand
+    will fail with a clear error.
+    """
+    import os
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    harness_root = Path(__file__).resolve().parent.parent.parent
+    script = harness_root / "tools" / "migrate_datasheets_to_db.py"
+    if not script.exists():
+        print(
+            f"ERROR: migration script not found at {script}\n"
+            "       (the script is created by Tasks 26-30 of the datasheet_db plan)",
+            file=sys.stderr,
+        )
+        return 1
+
+    cmd = [sys.executable, str(script)]
+    if args.dry_run:
+        cmd.append("--dry-run")
+
+    # Forward env vars (DATASHEET_DB_STORE_DIR, DATASHEET_DB_MANIFEST_DIR)
+    return subprocess.call(cmd, env=os.environ.copy())
+
+
 def cmd_fetch_missing(args) -> int:
     import os
     import threading
@@ -442,6 +473,13 @@ def main(argv=None) -> int:
     p_fetch.add_argument("--max", type=int, default=None,
                          help="Stop after N successful downloads (for testing)")
 
+    p_migrate = sub.add_parser(
+        "migrate",
+        help="One-shot migration from legacy datasheet locations to the new store",
+    )
+    p_migrate.add_argument("--dry-run", action="store_true",
+                           help="Phases 1-2 only; report what would happen, write nothing")
+
     args = parser.parse_args(argv)
 
     handlers = {
@@ -451,5 +489,6 @@ def main(argv=None) -> int:
         "verify": cmd_verify,
         "list": cmd_list,
         "fetch-missing": cmd_fetch_missing,
+        "migrate": cmd_migrate,
     }
     return handlers[args.command](args)

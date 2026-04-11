@@ -526,6 +526,18 @@ def test_fetch_missing_local_fallback_from_repo_found_in():
     _with_temp_store_and_manifest_dirs(inner)
 
 
+def test_migrate_help_lists_dry_run_flag():
+    """`migrate --help` should exit 0 and mention --dry-run."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        store = tmp / "store"
+        manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        result = _run_cli(["migrate", "--help"], store, manifest)
+        assert result.returncode == 0, result.stderr
+        assert "--dry-run" in result.stdout
+
+
 if __name__ == "__main__":
     tests = [(name, obj) for name, obj in globals().items()
              if name.startswith("test_") and callable(obj)]
