@@ -8,6 +8,8 @@ Usage:
     python3 run_tests.py --tier unit      # Only tier=unit tests
     python3 run_tests.py --tier online    # Only tier=online tests
     python3 run_tests.py --tier all       # All tiers
+    python3 run_tests.py --smoke          # Curated PR-gate subset (<1s, no corpus)
+    python3 run_tests.py --list-smoke     # Print smoke subset, one per line
     python3 run_tests.py --json           # JSON output
 """
 
@@ -20,6 +22,34 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(HARNESS_DIR))
 from utils import TEST_TIMEOUT, INTEGRATION_TEST_TIMEOUT
+
+
+# Curated smoke subset for CI PR gates. Selection criteria:
+#   1. Zero corpus dependency — runs cleanly in a fresh checkout with no
+#      `repos/`, `results/`, or `reference/` data present.
+#   2. Has a stdlib `if __name__ == "__main__"` runner block (so the file
+#      actually executes its tests when invoked as a script). Files
+#      missing this block silently exit 0 — see TH-014.
+#   3. Covers diverse subsystems: core utils, schema, diff engine,
+#      assertion engine, validators, naming, parser verifier, datasheets.
+#   4. Total runtime < 1 second on a developer laptop (measured 0.34s
+#      on 2026-04-10 against the 242-test set below).
+#
+# When adding new test files, decide whether they meet (1)+(2)+(4) and
+# add them here if they do. Don't include tests that read from corpus
+# directories — those belong in the full unit suite.
+SMOKE_TESTS = [
+    "tests/test_invariants.py",      # 12 tests — structural invariants
+    "tests/test_utils.py",           # 22 tests — shared utilities
+    "tests/test_safe_names.py",      # 22 tests — name flattening (TH-013)
+    "tests/test_diff_analysis.py",   # 25 tests — diff engine
+    "tests/test_differ.py",          # 13 tests — diff library
+    "tests/test_checks.py",          # 43 tests — assertion engine
+    "tests/test_schema.py",          # 24 tests — schema validation
+    "tests/test_validate_outputs.py",  # 27 tests — output structural checks
+    "tests/test_verify_parser.py",   # 27 tests — P1 parser verifier
+    "tests/test_datasheet_verify.py",  # 27 tests — datasheet extraction validation
+]
 
 
 def discover_tests(dirs, tier_filter=None):
@@ -112,29 +142,55 @@ def main():
                         help="Integration tests only (alias for --tier online)")
     parser.add_argument("--tier", choices=["unit", "online", "all"],
                         help="Run tests matching this tier (unit, online, all)")
+    parser.add_argument("--smoke", action="store_true",
+                        help="Curated PR-gate subset — fast, no corpus deps. See SMOKE_TESTS.")
+    parser.add_argument("--list-smoke", action="store_true",
+                        help="Print smoke subset filenames, one per line, then exit")
     parser.add_argument("--quick-sanity", action="store_true",
                         help="Run assertions on 5 repos as a quick sanity check")
     parser.add_argument("--json", action="store_true", help="JSON output")
     args = parser.parse_args()
 
+    if args.list_smoke:
+        for path in SMOKE_TESTS:
+            print(path)
+        return 0
+
     if args.quick_sanity:
         sys.exit(run_quick_sanity())
 
-    # Resolve tier filter from flags
-    tier_filter = args.tier
-    if args.unit:
-        tier_filter = "unit"
-    elif args.integration:
-        tier_filter = "online"
+    if args.smoke:
+        # Skip discovery — use the curated list. Verify each file exists
+        # so a typo or rename in SMOKE_TESTS surfaces immediately rather
+        # than silently shrinking the gate.
+        tests = []
+        missing = []
+        for rel in SMOKE_TESTS:
+            path = HARNESS_DIR / rel
+            if path.exists():
+                tests.append(path)
+            else:
+                missing.append(rel)
+        if missing:
+            print(f"ERROR: smoke set references missing files: {missing}")
+            return 2
+    else:
+        # Resolve tier filter from flags
+        tier_filter = args.tier
+        if args.unit:
+            tier_filter = "unit"
+        elif args.integration:
+            tier_filter = "online"
 
-    # Determine which directories to scan
-    dirs = ["tests", "integration"]
-    if tier_filter == "unit":
-        dirs = ["tests"]
-    elif tier_filter == "online":
-        dirs = ["integration"]
+        # Determine which directories to scan
+        dirs = ["tests", "integration"]
+        if tier_filter == "unit":
+            dirs = ["tests"]
+        elif tier_filter == "online":
+            dirs = ["integration"]
 
-    tests = discover_tests(dirs, tier_filter=tier_filter)
+        tests = discover_tests(dirs, tier_filter=tier_filter)
+
     if not tests:
         print("No test files found.")
         return 0
