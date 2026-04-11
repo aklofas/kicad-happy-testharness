@@ -1338,6 +1338,32 @@ def _ref_prefix(ref):
     return prefix
 
 
+def _resolve_datasheet_path(mpn):
+    """Return the local path to the PDF for `mpn`, or None if not present.
+
+    Forward-looking helper — not currently called from audit_constants but
+    provided so future verification features (e.g. re-reading a datasheet
+    to confirm a constant value) can resolve PDFs via the datasheet_db
+    manifest instead of hand-rolling path lookups. Added as part of
+    Sub-project A (datasheet store) Phase 8 integration.
+
+    Uses the datasheet_db manifest to locate records by MPN and returns the
+    blob storage path. Returns None if no record is found or if the blob file
+    does not exist on disk.
+    """
+    try:
+        from validate.datasheet_db.manifest import find_by_mpn
+        from validate.datasheet_db.storage import store_path
+    except ImportError:
+        return None
+
+    matches = find_by_mpn(mpn)
+    if not matches:
+        return None
+    path = store_path(matches[0])
+    return path if path.exists() else None
+
+
 # Map signal_analysis section names to the constant names (in signal_detectors.py
 # or kicad_utils.py) that drive their detection.  This lets us measure which
 # detector functions fire across the corpus.
