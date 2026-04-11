@@ -3,7 +3,9 @@
 
 This script handles the deterministic parts of the datasheet pipeline:
   1. Download PDFs via sync_datasheets_digikey.py (requires DigiKey API credentials)
-  2. Validate/score existing extractions cached in datasheets/extracted/
+  2. Register downloaded PDFs into datasheet_db as a side effect (sub-project A
+     integration) — new records for novel SHAs, merged found_in for dupes
+  3. Validate/score existing extractions cached in datasheets/extracted/
 
 The actual PDF→JSON extraction step is NOT automated here — it happens
 interactively when a user runs the kicad skill in a Claude Code session.
@@ -204,6 +206,102 @@ def validate_extractions(repo_dir):
     return report
 
 
+def _register_repo_pdfs_in_datasheet_db(repo_name, repo_dir):
+    """Register newly-downloaded PDFs from repo_dir/datasheets/ into datasheet_db
+    as a side effect of the download phase.
+
+    Walks the repo's `datasheets/` subdirectory, computes SHA256 for each PDF,
+    and either creates a new datasheet_db record (with `found_in` pointing at
+    the repo path) or merges into an existing record with dedup. The primary
+    MPN is inferred from the filename stem.
+
+    Errors are swallowed because this is opportunistic — the main run_datasheets
+    flow (download + validate) owns the tool's core purpose, and datasheet_db
+    ingestion is bonus bookkeeping.
+
+    Returns (ingested, merged) counts, or (0, 0) on any setup failure.
+    """
+    try:
+        from datetime import datetime, timezone
+        from validate.datasheet_db.storage import (
+            compute_sha256, write_blob_atomic, store_path
+        )
+        from validate.datasheet_db.manifest import (
+            load_record, save_record, merge_record
+        )
+    except ImportError:
+        return 0, 0
+
+    datasheets_dir = repo_dir / "datasheets"
+    if not datasheets_dir.exists():
+        return 0, 0
+
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    ingested = merged_count = 0
+
+    for pdf in datasheets_dir.rglob("*.pdf"):
+        try:
+            size = pdf.stat().st_size
+            if size == 0:
+                continue  # skip 0-byte broken downloads
+            sha = compute_sha256(pdf)
+            data = pdf.read_bytes()
+        except OSError:
+            continue
+
+        try:
+            rel = pdf.relative_to(datasheets_dir)
+            found_in_entry = {
+                "type": "repo",
+                "ref": repo_name,
+                "path": f"datasheets/{rel}",
+                "first_seen": now,
+            }
+        except ValueError:
+            continue
+
+        try:
+            existing = load_record(sha)
+        except Exception:
+            continue
+
+        if existing is not None:
+            try:
+                merged_rec = merge_record(
+                    existing, {"found_in": [found_in_entry]}, now=now
+                )
+                save_record(merged_rec)
+                merged_count += 1
+            except Exception:
+                pass  # side effect; ignore errors
+            continue
+
+        # New record — derive primary MPN from filename stem
+        record_skel = {
+            "sha256": sha,
+            "size_bytes": size,
+            "page_count": None,
+            "mpns": [{"mpn": pdf.stem, "primary": True}],
+            "manufacturers": [],
+            "source_urls": [],
+            "filename_aliases": [pdf.name],
+            "found_in": [found_in_entry],
+            "revision_label": None,
+            "first_seen": now,
+            "last_seen": now,
+            "verified": False,
+            "verification_notes": None,
+        }
+        try:
+            write_blob_atomic(store_path(record_skel), data, expected_sha256=sha)
+            save_record(record_skel)
+            ingested += 1
+        except Exception:
+            pass  # side effect; ignore errors
+
+    return ingested, merged_count
+
+
 def process_repo(repo_name, sync_script, ds_out_dir, download_only=False,
                  validate_only=False, dry_run=False, delay=0.3, parallel=4):
     """Process a single repo: download + validate.
@@ -218,6 +316,8 @@ def process_repo(repo_name, sync_script, ds_out_dir, download_only=False,
         "repo": repo_name,
         "downloaded": 0,
         "download_failed": 0,
+        "db_ingested": 0,
+        "db_merged": 0,
         "report": None,
     }
 
@@ -227,6 +327,17 @@ def process_repo(repo_name, sync_script, ds_out_dir, download_only=False,
         if dl:
             result["downloaded"] = dl[0]
             result["download_failed"] = dl[1]
+        # Opportunistically register downloaded PDFs into datasheet_db.
+        # Errors are swallowed — the main download flow is authoritative.
+        if not dry_run:
+            try:
+                ingested, merged_count = _register_repo_pdfs_in_datasheet_db(
+                    repo_name, repo_dir
+                )
+                result["db_ingested"] = ingested
+                result["db_merged"] = merged_count
+            except Exception:
+                pass
 
     if not download_only:
         report = validate_extractions(repo_dir)
@@ -297,6 +408,8 @@ def main():
     total_stale = 0
     total_sufficient = 0
     total_parts = 0
+    total_db_ingested = 0
+    total_db_merged = 0
     repos_processed = 0
     all_categories = Counter()
 
@@ -307,10 +420,13 @@ def main():
 
         nonlocal total_downloaded, total_failed, total_extracted
         nonlocal total_stale, total_sufficient, total_parts, repos_processed
+        nonlocal total_db_ingested, total_db_merged
 
         repos_processed += 1
         total_downloaded += result["downloaded"]
         total_failed += result["download_failed"]
+        total_db_ingested += result.get("db_ingested", 0)
+        total_db_merged += result.get("db_merged", 0)
 
         report = result["report"]
         if report:
@@ -355,6 +471,8 @@ def main():
         "total_parts": total_parts,
         "total_downloaded": total_downloaded,
         "total_failed": total_failed,
+        "total_db_ingested": total_db_ingested,
+        "total_db_merged": total_db_merged,
         "total_extracted": total_extracted,
         "total_stale": total_stale,
         "total_sufficient": total_sufficient,
@@ -373,6 +491,8 @@ def main():
     if not args.validate_only:
         print(f"PDFs downloaded:        {total_downloaded}")
         print(f"Download failures:      {total_failed}")
+        print(f"datasheet_db ingested:  {total_db_ingested} (new records)")
+        print(f"datasheet_db merged:    {total_db_merged} (dedup hits)")
     if not args.download_only:
         print(f"Total parts:            {total_parts}")
         print(f"Extracted:              {total_extracted}")
