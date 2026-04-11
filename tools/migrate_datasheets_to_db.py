@@ -148,3 +148,82 @@ def phase2_group(entries: list) -> list:
             "verification_notes": None,
         })
     return records
+
+
+def phase3_stage(records, staging_store, staging_manifest):
+    """Copy blobs to `staging_store` and write record JSONs to `staging_manifest`.
+
+    Each record's first `found_in` entry is used as the source path for the
+    blob copy. The blob lands at `staging_store/{canonical_filename(rec)}`.
+    The record JSON lands at `staging_manifest/{sha[:2]}/{sha}.json`.
+    """
+    import json
+    import shutil
+    from validate.datasheet_db.storage import canonical_filename
+
+    staging_store = Path(staging_store)
+    staging_manifest = Path(staging_manifest)
+    staging_store.mkdir(parents=True, exist_ok=True)
+    staging_manifest.mkdir(parents=True, exist_ok=True)
+
+    for rec in records:
+        found_in = rec.get("found_in") or []
+        if not found_in:
+            continue
+        source_path = Path(found_in[0]["path"])
+        if not source_path.exists():
+            continue
+
+        # Copy the blob
+        blob_target = staging_store / canonical_filename(rec)
+        blob_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(str(source_path), str(blob_target))
+
+        # Write the record JSON to the sharded staging manifest
+        sha = rec["sha256"]
+        record_target = staging_manifest / sha[:2] / f"{sha}.json"
+        record_target.parent.mkdir(parents=True, exist_ok=True)
+        with open(record_target, "w", encoding="utf-8") as f:
+            json.dump(rec, f, indent=2, sort_keys=True)
+            f.write("\n")
+
+
+def phase4_swap(live_store, live_manifest, staging_store, staging_manifest,
+                bulk_bak, preserved_root, preserved_bak):
+    """Swap staging directories into live positions, backing up the originals.
+
+    Sequence (each step is a single rename, atomic on POSIX):
+      1. live_store → bulk_bak (preserve original bulk tree)
+      2. staging_store → live_store (promote staging to live)
+      3. preserved_root → preserved_bak (preserve original repo-preserved tree)
+      4. staging_manifest → live_manifest (promote staging manifest to live)
+
+    If interrupted between any two steps, the state is recoverable manually
+    via the .bak directories.
+    """
+    import shutil
+
+    live_store = Path(live_store)
+    live_manifest = Path(live_manifest)
+    staging_store = Path(staging_store)
+    staging_manifest = Path(staging_manifest)
+    bulk_bak = Path(bulk_bak)
+    preserved_root = Path(preserved_root)
+    preserved_bak = Path(preserved_bak)
+
+    # Step 1: back up live store (if it exists)
+    if live_store.exists():
+        shutil.move(str(live_store), str(bulk_bak))
+
+    # Step 2: promote staging store to live
+    shutil.move(str(staging_store), str(live_store))
+
+    # Step 3: back up preserved tree (if it exists)
+    if preserved_root.exists():
+        shutil.move(str(preserved_root), str(preserved_bak))
+
+    # Step 4: promote staging manifest to live
+    if live_manifest.exists():
+        # Defensive: a previous failed migration may have left a manifest behind
+        shutil.rmtree(str(live_manifest))
+    shutil.move(str(staging_manifest), str(live_manifest))

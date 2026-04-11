@@ -10,7 +10,9 @@ HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 sys.path.insert(0, str(HARNESS_DIR / "tools"))
 
-from migrate_datasheets_to_db import phase1_enumerate, phase2_group
+from migrate_datasheets_to_db import (
+    phase1_enumerate, phase2_group, phase3_stage, phase4_swap
+)
 
 
 def test_phase1_enumerate_finds_pdfs_in_tmp_tree():
@@ -86,6 +88,99 @@ def test_phase2_group_unknown_manufacturer_falls_back():
     records = phase2_group(entries)
     assert len(records) == 1
     assert records[0]["manufacturers"] == ["Unknown"]
+
+
+def test_phase3_stage_copies_blobs_and_writes_records():
+    """phase3_stage copies the source blob into staging_store under canonical
+    filename and writes the record JSON to staging_manifest under shard dir."""
+    import json
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        # Plant a fake source PDF
+        source = tmp / "source" / "AD8605.pdf"
+        source.parent.mkdir(parents=True)
+        source.write_bytes(b"%PDF-1.5\n" + b"stage-test")
+        # Build a record that points at the source path
+        from migrate_datasheets_to_db import phase2_group
+        # Compute the actual SHA via the same path the migration would
+        sys.path.insert(0, str(HARNESS_DIR))
+        from validate.datasheet_db.storage import compute_sha256, canonical_filename
+        sha = compute_sha256(source)
+        records = phase2_group([{
+            "path": str(source),
+            "sha256": sha,
+            "size": source.stat().st_size,
+            "filename": "AD8605.pdf",
+            "origin_kind": "bulk",
+            "origin_ref": "bulk",
+        }])
+        assert len(records) == 1
+
+        staging_store = tmp / "datasheets.new"
+        staging_manifest = tmp / "manifest.staging"
+        phase3_stage(records, staging_store, staging_manifest)
+
+        # Blob should exist at the canonical filename
+        canonical = canonical_filename(records[0])
+        assert (staging_store / canonical).exists(), \
+            f"missing staged blob {canonical}"
+        # Manifest record should exist at sharded path
+        record_file = staging_manifest / sha[:2] / f"{sha}.json"
+        assert record_file.exists(), f"missing staged record {record_file}"
+        loaded = json.load(open(record_file))
+        assert loaded["sha256"] == sha
+
+
+def test_phase4_swap_atomic_renames():
+    """phase4_swap renames the four directories: live store → bulk bak,
+    staging store → live, preserved → preserved bak, staging manifest → live."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        # Set up the four directories with marker files
+        live_store = tmp / "datasheets"
+        live_manifest = tmp / "manifest"  # NOT pre-existing
+        staging_store = tmp / "datasheets.new"
+        staging_manifest = tmp / "manifest.staging"
+        bulk_bak = tmp / "datasheets.bulk_bak"
+        preserved_root = tmp / "datasheets_from_repos"
+        preserved_bak = tmp / "datasheets_from_repos.bak"
+
+        live_store.mkdir()
+        (live_store / "old.pdf").write_text("old")
+        staging_store.mkdir()
+        (staging_store / "new.pdf").write_text("new")
+        staging_manifest.mkdir()
+        (staging_manifest / "ab").mkdir()
+        (staging_manifest / "ab" / "fake.json").write_text("{}")
+        preserved_root.mkdir()
+        (preserved_root / "preserved.pdf").write_text("preserved")
+
+        phase4_swap(
+            live_store=live_store,
+            live_manifest=live_manifest,
+            staging_store=staging_store,
+            staging_manifest=staging_manifest,
+            bulk_bak=bulk_bak,
+            preserved_root=preserved_root,
+            preserved_bak=preserved_bak,
+        )
+
+        # Live store should now contain the staged content
+        assert live_store.exists()
+        assert (live_store / "new.pdf").exists()
+        assert not (live_store / "old.pdf").exists()
+        # Live manifest should now exist with the staged content
+        assert live_manifest.exists()
+        assert (live_manifest / "ab" / "fake.json").exists()
+        # Backups should contain the originals
+        assert bulk_bak.exists()
+        assert (bulk_bak / "old.pdf").exists()
+        assert preserved_bak.exists()
+        assert (preserved_bak / "preserved.pdf").exists()
+        # Staging dirs should no longer exist
+        assert not staging_store.exists()
+        assert not staging_manifest.exists()
+        assert not preserved_root.exists()
 
 
 if __name__ == "__main__":
