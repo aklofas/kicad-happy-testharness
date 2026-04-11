@@ -12,7 +12,8 @@ HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 
 from validate.datasheet_db.storage import (
-    _sanitize_mpn, _truncate_to_byte_limit, canonical_filename, compute_sha256
+    _sanitize_mpn, _truncate_to_byte_limit, canonical_filename,
+    compute_sha256, write_blob_atomic, BlobSha256Mismatch
 )
 
 
@@ -237,6 +238,66 @@ def test_compute_sha256_large_file_streams():
         assert compute_sha256(path) == expected.hexdigest()
     finally:
         os.unlink(path)
+
+
+# === write_blob_atomic ===
+
+def test_write_blob_atomic_success():
+    """Write bytes to a path atomically when SHA256 matches."""
+    content = b"hello world"
+    expected_sha = hashlib.sha256(content).hexdigest()
+    with tempfile.TemporaryDirectory() as tmp:
+        target = Path(tmp) / "out.pdf"
+        write_blob_atomic(target, content, expected_sha256=expected_sha)
+        assert target.exists()
+        assert target.read_bytes() == content
+
+
+def test_write_blob_atomic_sha_mismatch_raises():
+    """If expected SHA doesn't match, raise and leave no partial file."""
+    content = b"hello world"
+    wrong_sha = "00" * 32
+    with tempfile.TemporaryDirectory() as tmp:
+        target = Path(tmp) / "out.pdf"
+        try:
+            write_blob_atomic(target, content, expected_sha256=wrong_sha)
+            assert False, "should have raised"
+        except BlobSha256Mismatch as e:
+            assert "mismatch" in str(e).lower() or "sha" in str(e).lower()
+        assert not target.exists()
+        # No leftover .partial files
+        assert list(Path(tmp).glob("*.partial*")) == []
+
+
+def test_write_blob_atomic_creates_parent_dirs():
+    """Parent directories are created if they don't exist."""
+    content = b"x"
+    sha = hashlib.sha256(content).hexdigest()
+    with tempfile.TemporaryDirectory() as tmp:
+        target = Path(tmp) / "deep" / "nested" / "out.pdf"
+        write_blob_atomic(target, content, expected_sha256=sha)
+        assert target.exists()
+
+
+def test_write_blob_atomic_overwrites_existing():
+    """If the target already exists, it's overwritten (after SHA verify)."""
+    content_old = b"old"
+    content_new = b"new"
+    sha_new = hashlib.sha256(content_new).hexdigest()
+    with tempfile.TemporaryDirectory() as tmp:
+        target = Path(tmp) / "out.pdf"
+        target.write_bytes(content_old)
+        write_blob_atomic(target, content_new, expected_sha256=sha_new)
+        assert target.read_bytes() == content_new
+
+
+def test_write_blob_atomic_no_expected_sha_computes():
+    """When expected_sha256 is None, no verification — just write."""
+    content = b"whatever"
+    with tempfile.TemporaryDirectory() as tmp:
+        target = Path(tmp) / "out.pdf"
+        write_blob_atomic(target, content, expected_sha256=None)
+        assert target.read_bytes() == content
 
 
 if __name__ == "__main__":

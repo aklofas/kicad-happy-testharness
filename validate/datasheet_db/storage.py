@@ -1,6 +1,9 @@
 """Blob storage: filename sanitization, atomic write, SHA256 computation."""
 
 import hashlib
+import os
+import uuid
+from pathlib import Path
 
 _BAD_CHARS = set('/\\:*?"<>|')
 
@@ -113,3 +116,41 @@ def compute_sha256(path) -> str:
                 break
             h.update(chunk)
     return h.hexdigest()
+
+
+class BlobSha256Mismatch(Exception):
+    """Raised when bytes written to the store don't hash to the expected SHA256."""
+
+
+def write_blob_atomic(target_path, data: bytes, expected_sha256: str = None) -> None:
+    """Write `data` to `target_path` atomically, verifying SHA256 if provided.
+
+    Steps:
+      1. Ensure parent directories exist
+      2. Write to a temp file sibling of `target_path`
+      3. If `expected_sha256` is not None, verify the bytes hash to it.
+         On mismatch, delete the temp file and raise BlobSha256Mismatch
+      4. Atomic rename to the final target path (overwrites existing)
+
+    `target_path` may be str or Path.
+    """
+    target = Path(str(target_path))
+    target.parent.mkdir(parents=True, exist_ok=True)
+    temp = target.parent / f"{target.name}.partial-{os.getpid()}-{uuid.uuid4().hex}"
+    try:
+        with open(temp, "wb") as f:
+            f.write(data)
+        if expected_sha256 is not None:
+            actual = hashlib.sha256(data).hexdigest()
+            if actual != expected_sha256:
+                raise BlobSha256Mismatch(
+                    f"SHA256 mismatch writing to {target}: "
+                    f"expected {expected_sha256[:12]}..., got {actual[:12]}..."
+                )
+        os.replace(str(temp), str(target))
+    finally:
+        if temp.exists():
+            try:
+                os.unlink(str(temp))
+            except OSError:
+                pass
