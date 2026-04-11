@@ -4,12 +4,18 @@ TIER = "unit"
 
 import sys
 from pathlib import Path
+import tempfile
+import os
+import json
+from unittest.mock import patch
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 
 from validate.datasheet_db._validators import validate_record
-from validate.datasheet_db.manifest import record_path, MANIFEST_DIR
+from validate.datasheet_db.manifest import (
+    record_path, MANIFEST_DIR, save_record, load_record
+)
 
 
 def _valid_record():
@@ -132,6 +138,68 @@ def test_record_path_rejects_short_sha():
         assert False, "should have raised"
     except ValueError:
         pass
+
+
+# === save_record / load_record ===
+
+def _with_temp_manifest_dir(fn):
+    """Helper: run `fn(tmp_path)` with MANIFEST_DIR pointed at a tmp dir."""
+    from validate.datasheet_db import manifest as m
+    original = m.MANIFEST_DIR
+    with tempfile.TemporaryDirectory() as tmp:
+        m.MANIFEST_DIR = Path(tmp)
+        try:
+            fn(Path(tmp))
+        finally:
+            m.MANIFEST_DIR = original
+
+
+def test_save_and_load_round_trip():
+    def inner(tmp):
+        rec = _valid_record()
+        save_record(rec)
+        loaded = load_record(rec["sha256"])
+        assert loaded == rec
+    _with_temp_manifest_dir(inner)
+
+
+def test_save_record_creates_sharded_directory():
+    def inner(tmp):
+        rec = _valid_record()
+        save_record(rec)
+        assert (tmp / rec["sha256"][:2]).is_dir()
+        assert (tmp / rec["sha256"][:2] / f"{rec['sha256']}.json").exists()
+    _with_temp_manifest_dir(inner)
+
+
+def test_save_record_raises_on_invariant_violation():
+    """Saving a record with a broken invariant raises."""
+    def inner(tmp):
+        bad = _valid_record()
+        bad["mpns"] = []  # violates "non-empty mpns"
+        try:
+            save_record(bad)
+            assert False, "should have raised"
+        except ValueError as e:
+            assert "mpn" in str(e).lower()
+    _with_temp_manifest_dir(inner)
+
+
+def test_load_record_missing_returns_none():
+    def inner(tmp):
+        assert load_record("aa" * 32) is None
+    _with_temp_manifest_dir(inner)
+
+
+def test_save_record_is_atomic():
+    """save_record writes via a .tmp file then renames."""
+    def inner(tmp):
+        rec = _valid_record()
+        save_record(rec)
+        # No leftover .tmp files in the shard dir
+        shard = tmp / rec["sha256"][:2]
+        assert list(shard.glob("*.tmp")) == []
+    _with_temp_manifest_dir(inner)
 
 
 if __name__ == "__main__":
