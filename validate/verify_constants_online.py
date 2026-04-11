@@ -35,6 +35,30 @@ VERIFIABLE_CONSTANTS = {
 }
 
 
+def _resolve_datasheet_path(mpn):
+    """Return the local path to the PDF for `mpn`, or None if not present.
+
+    Forward-looking helper — not currently called from this module but
+    provided so future verification features (e.g. fetching a constant
+    value directly from a local datasheet PDF instead of re-querying the
+    DigiKey API) can resolve PDFs via the datasheet_db manifest. Added as
+    part of Sub-project A (datasheet store) Phase 8 integration.
+
+    Returns None if no record is found or if the blob file does not exist.
+    """
+    try:
+        from validate.datasheet_db.manifest import find_by_mpn
+        from validate.datasheet_db.storage import store_path
+    except ImportError:
+        return None
+
+    matches = find_by_mpn(mpn)
+    if not matches:
+        return None
+    path = store_path(matches[0])
+    return path if path.exists() else None
+
+
 def get_digikey_token():
     """Get OAuth token for DigiKey API."""
     client_id = os.environ.get("DIGIKEY_CLIENT_ID", "")
