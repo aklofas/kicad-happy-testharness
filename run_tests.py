@@ -49,6 +49,8 @@ SMOKE_TESTS = [
     "tests/test_validate_outputs.py",  # 27 tests — output structural checks
     "tests/test_verify_parser.py",   # 27 tests — P1 parser verifier
     "tests/test_datasheet_verify.py",  # 27 tests — datasheet extraction validation
+    "tests/test_datasheet_db_storage.py",   # 30 tests — datasheet store primitives (sub-project A)
+    "tests/test_datasheet_db_manifest.py",  # 34 tests — datasheet manifest layer (sub-project A)
 ]
 
 
