@@ -11,6 +11,21 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-10 — Batch 41: TH-014 missing __main__ runner blocks
+
+### TH-014 (MED): Two test files silently passing — 36 tests never executed
+
+- **Files**: `tests/test_batch_review.py` (added TIER + runner block, +21 LOC), `tests/test_detection_schema.py` (added KNOWN_FAILURES set + XFAIL-aware runner block, +44 LOC).
+- **Root cause**: Both files defined `def test_*` functions but lacked the standard `if __name__ == "__main__":` runner block at the bottom. When `run_tests.py` invoked them via `subprocess.run([python, file])` they imported cleanly and exited 0 with no output. The runner's empty-output fallback at `run_tests.py:188-195` then assigned `p=1, status="ok"` and reported PASS — masking 36 dead tests across the two files.
+- **Fix**: Appended the standard stdlib runner block to both files (pattern lifted from `tests/test_verify_parser.py:394-410`). For `test_detection_schema.py`, the runner additionally honors a `KNOWN_FAILURES` dict mapping test names to KH-* IDs — those tests report as `XFAIL` with the issue ID and don't break the suite, while still appearing in every run as a visible TODO. When a known-failing test starts passing, the runner prints `XPASS (remove from KNOWN_FAILURES, ... may be fixed)` to nudge cleanup.
+- **Dormant bugs surfaced** (filed as new KH issues, all currently `XFAIL`):
+  - **KH-231 (HIGH)** — `opamp_circuits` non-inverting recalc returns `-Rf/Ri` (the inverting formula) regardless of `configuration` field. Affects 3 tests.
+  - **KH-232 (MED)** — `lc_filters` schema has no inverse solver registered for `resonant_hz`. Affects 1 test.
+  - **KH-233 (MED)** — `SCHEMAS` dict missing 22 detector entries (coverage gap; downstream code that walks SCHEMAS silently skips them). Affects 1 test.
+- **Verified**: `python3 tests/test_batch_review.py` reports `6 passed, 0 failed (6 total)` (was: silent exit). `python3 tests/test_detection_schema.py` reports `25 passed, 0 failed, 5 xfailed (30 total)` exit 0 (was: silent exit). Full unit suite: `480 passed, 0 failed, 3 skipped, 24 files (24 ok)` — net +29 visible passes vs pre-fix (was 451). Smoke gate (`run_tests.py --smoke`) unchanged: `218 passed, 0 failed, 10 files`.
+
+---
+
 ## 2026-04-10 — Batch 40: TH-013 filesystem name length fix
 
 ### TH-013 (HIGH): Flattened project/file names exceed NAME_MAX on eCryptfs and ext4

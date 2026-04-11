@@ -32,9 +32,9 @@ Last updated: 2026-04-10
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-231**. Next TH number: **TH-015**.
+number: **KH-234**. Next TH number: **TH-015**.
 
-> 2 open issues.
+> 4 open issues.
 
 ---
 
@@ -48,6 +48,122 @@ number: **KH-231**. Next TH number: **TH-015**.
 ---
 
 ## kicad-happy Analyzer Issues
+
+### KH-231: opamp_circuits non-inverting gain uses inverting formula
+
+**Severity:** HIGH
+**Discovered:** 2026-04-10 by re-enabling `tests/test_detection_schema.py` (TH-014 fix)
+**Where:** `kicad_utils.py` or `detection_schema.py` in `kicad-happy/skills/kicad/scripts/` — the `recalc_derived` path for the `opamp_circuits` schema.
+
+**Repro:**
+```python
+from detection_schema import recalc_derived
+det = {"feedback_resistor": {"ohms": 47000},
+       "input_resistor": {"ohms": 10000},
+       "configuration": "non_inverting"}
+recalc_derived(det, "opamp_circuits")
+print(det["gain"])  # got -4.7, expected 5.7 (= 1 + Rf/Ri)
+```
+
+The recalc returns `-Rf/Ri` (the inverting formula) regardless of the
+`configuration` field. Same wrong value for both `non_inverting` and
+`inverting` cases — the configuration switch is missing or broken.
+
+**Affected tests** (all currently `XFAIL` in the harness):
+- `test_recalc_opamp_non_inverting` — direct gain check
+- `test_inverse_opamp_gain` — inverse solver targeting `gain=10` (gets -9)
+- `test_inverse_opamp_gain_dB` — inverse solver targeting `gain_dB=20` (gets 19.08 ≈ 20·log10(9))
+
+**Expected fix:** in `recalc_derived` for opamp_circuits, branch on
+`det["configuration"]`:
+- `non_inverting` → `gain = 1 + Rf/Ri`
+- `inverting` → `gain = -Rf/Ri`
+
+**Impact:** every opamp_circuits detection in 36,541 schematic outputs
+has wrong gain values. Severity is HIGH because the bug is silent (wrong
+numbers, no errors) and the field is consumed by downstream detectors.
+
+**How to verify the fix:** in the harness, re-run
+`python3 tests/test_detection_schema.py` — the three tests should flip
+from XFAIL to XPASS. Remove the entries from `KNOWN_FAILURES` in that
+file. Then re-run the smoke set and the full unit suite.
+
+---
+
+### KH-232: lc_filters has no inverse solver registered for resonant_hz
+
+**Severity:** MEDIUM
+**Discovered:** 2026-04-10 by re-enabling `tests/test_detection_schema.py` (TH-014 fix)
+**Where:** `detection_schema.py` in `kicad-happy/skills/kicad/scripts/` — the `lc_filters` schema's inverse solver registry.
+
+**Repro:**
+```python
+from detection_schema import get_inverse_solver
+solver = get_inverse_solver("lc_filters", "resonant_hz")
+print(solver)  # got None, expected a callable
+```
+
+`get_inverse_solver` returns `None` for `(lc_filters, resonant_hz)`.
+Either the solver was never registered or it was removed without
+removing the test. Other schemas (`crystal_circuits`, `current_sense`,
+`opamp_circuits`) have inverse solvers registered for their primary
+fields and the corresponding tests pass.
+
+**Affected tests** (currently `XFAIL`):
+- `test_inverse_lc_resonant` — expects a solver that recommends C given
+  fixed L and target resonant_hz
+
+**Expected fix:** register an inverse solver for `(lc_filters, resonant_hz)`.
+Math: `f = 1 / (2π√(LC))` so `C = 1 / (L·(2πf)²)`. Should also handle
+solving for L given fixed C.
+
+**Impact:** users asking "what cap should I use for a 100 kHz LC filter
+with this inductor?" get no answer. Functional gap, not a wrong value.
+
+**How to verify the fix:** in the harness, re-run
+`python3 tests/test_detection_schema.py` — `test_inverse_lc_resonant`
+should flip from XFAIL to XPASS. Remove the entry from `KNOWN_FAILURES`.
+
+---
+
+### KH-233: SCHEMAS dict missing 22 detector entries
+
+**Severity:** MEDIUM
+**Discovered:** 2026-04-10 by re-enabling `tests/test_detection_schema.py` (TH-014 fix)
+**Where:** `detection_schema.py` in `kicad-happy/skills/kicad/scripts/` — the top-level `SCHEMAS` registry.
+
+**Repro:** `python3 tests/test_detection_schema.py` →
+`test_schema_completeness_zebra_x` reports 22 `signal_analysis` keys
+present in real analyzer outputs but absent from `SCHEMAS`:
+
+```
+addressable_led_chains, adc_circuits, audio_circuits, battery_chargers,
+buzzer_speaker_circuits, clock_distribution, connector_ground_audit,
+debug_interfaces, display_interfaces, hdmi_dvi_interfaces, key_matrices,
+led_driver_ics, level_shifters, lvds_interfaces, motor_drivers,
+rail_voltages, reset_supervisors, rtc_circuits, sensor_interfaces,
+snubbers, suggested_certifications, thermocouple_rtd
+```
+
+These detectors fire and write into the analyzer JSON but have no
+schema entry — meaning identity/derived field metadata, recalc
+functions, and inverse solvers are unavailable for them.
+
+**Expected fix:** add a `DetectionSchema` entry per detector to
+`SCHEMAS`. Most are simple (identity fields only, no derived). A few
+(rail_voltages, battery_chargers) have computable values that warrant
+derived fields and inverse solvers in a follow-up.
+
+**Impact:** downstream code that walks SCHEMAS to determine field
+semantics (regression seeding, validation, packet generation) silently
+skips these 22 detector classes. Coverage gap.
+
+**How to verify the fix:** in the harness, re-run
+`python3 tests/test_detection_schema.py` — `test_schema_completeness_zebra_x`
+should flip from XFAIL to XPASS once all 22 keys are present. Remove the
+entry from `KNOWN_FAILURES`.
+
+---
 
 ### KH-230: Empty placed Value silently substituted with lib_symbol default
 
@@ -89,58 +205,7 @@ files hits it.
 
 ## Test Harness Issues
 
-### TH-014: Two test files silently pass — missing `__main__` runner block
-
-**Severity:** MEDIUM
-**Discovered:** 2026-04-10 while building the `--smoke` PR-gate subset
-
-The harness uses a stdlib test runner pattern: each `tests/test_*.py` file
-ends with `if __name__ == "__main__":` that iterates `def test_*` functions
-and reports counts. `run_tests.py` invokes each file via `subprocess.run`
-and parses the summary line.
-
-Two files are missing this runner block entirely:
-- `tests/test_detection_schema.py` — defines 30 test functions, none execute
-- `tests/test_batch_review.py` — defines 6 test functions, none execute
-
-When invoked as `python3 tests/test_detection_schema.py`, the module
-imports cleanly, defines all functions, then exits 0 with no output.
-`run_tests.py` parses the empty summary, falls through to its "p=1, ok"
-fallback at line 188-195, and reports the file as PASS — so the suite
-shows green while 36 tests never actually ran.
-
-**Fix:** Add the standard runner block to both files. Pattern from any
-working test file (e.g. `tests/test_verify_parser.py:394-410`):
-
-```python
-if __name__ == "__main__":
-    tests = [(name, obj) for name, obj in globals().items()
-             if name.startswith("test_") and callable(obj)]
-    passed = failed = 0
-    for name, fn in sorted(tests):
-        try:
-            fn()
-            passed += 1
-            print(f"  PASS: {name}")
-        except AssertionError as e:
-            failed += 1
-            print(f"  FAIL: {name}: {e}")
-        except Exception as e:
-            failed += 1
-            print(f"  FAIL: {name}: {type(e).__name__}: {e}")
-    print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
-    sys.exit(1 if failed else 0)
-```
-
-After fixing, run `python3 run_tests.py --unit` and verify the file count
-in the summary increases by the actual test count (rather than +1 each).
-
-Severity is MEDIUM rather than HIGH because the tests probably DID work
-when written and just got copy-pasted from a template that lost the
-runner. Also worth a `--detect-silent-passes` audit step in `run_tests.py`
-to catch this regression class going forward.
-
----
+(none)
 
 
 
@@ -154,6 +219,8 @@ to catch this regression class going forward.
 
 ## Priority Queue (open issues, ordered by impact)
 
-1. **TH-014** — MED — two test files have no `__main__` runner; 36 tests silently never run
-2. **KH-230** — LOW — empty placed Value silently replaced with lib_symbol default (1 file in corpus)
+1. **KH-231** — HIGH — opamp non-inverting gain uses inverting formula (silent wrong value across all opamp_circuits detections)
+2. **KH-232** — MED — lc_filters missing inverse solver for resonant_hz
+3. **KH-233** — MED — SCHEMAS dict missing 22 detector entries (coverage gap)
+4. **KH-230** — LOW — empty placed Value silently replaced with lib_symbol default (1 file in corpus)
 

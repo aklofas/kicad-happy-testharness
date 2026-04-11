@@ -420,3 +420,55 @@ def test_derived_fields_are_derived_field():
             assert callable(df.recalc), (
                 f"SCHEMAS[{key!r}].{df.name} recalc is not callable"
             )
+
+
+# Known-failing tests that document real kicad-happy bugs surfaced when
+# TH-014 was fixed (these tests had been silently dead because the file
+# was missing its __main__ runner block — see commit history). Remove
+# names from this set as the corresponding KH issues are closed in
+# kicad-happy. Each entry is a (test_name, kh_issue_id) tuple.
+KNOWN_FAILURES = {
+    # KH-231: opamp_circuits non_inverting recalc returns -Rf/Ri (the
+    # inverting formula) regardless of configuration.
+    "test_recalc_opamp_non_inverting": "KH-231",
+    "test_inverse_opamp_gain": "KH-231",
+    "test_inverse_opamp_gain_dB": "KH-231",
+    # KH-232: lc_filters schema has no inverse solver registered for
+    # resonant_hz, so get_inverse_solver returns None.
+    "test_inverse_lc_resonant": "KH-232",
+    # KH-233: SCHEMAS dict has not kept up with detector additions in
+    # analyze_schematic.py — 22 signal_analysis output keys lack a
+    # corresponding SCHEMAS entry as of 2026-04-10.
+    "test_schema_completeness_zebra_x": "KH-233",
+}
+
+
+if __name__ == "__main__":
+    tests = [(name, obj) for name, obj in globals().items()
+             if name.startswith("test_") and callable(obj)]
+    passed = failed = xfailed = 0
+    for name, fn in sorted(tests):
+        try:
+            fn()
+            if name in KNOWN_FAILURES:
+                # Test passed unexpectedly — bug fixed upstream, stop
+                # treating it as known-failing so the skip list doesn't
+                # rot.
+                passed += 1
+                print(f"  XPASS (remove from KNOWN_FAILURES, "
+                      f"{KNOWN_FAILURES[name]} may be fixed): {name}")
+            else:
+                passed += 1
+                print(f"  PASS: {name}")
+        except (AssertionError, Exception) as e:
+            if name in KNOWN_FAILURES:
+                xfailed += 1
+                kh = KNOWN_FAILURES[name]
+                print(f"  XFAIL ({kh}): {name}: {type(e).__name__}: {e}")
+            else:
+                failed += 1
+                print(f"  FAIL: {name}: {type(e).__name__}: {e}")
+    total = passed + failed + xfailed
+    print(f"\n{passed} passed, {failed} failed, {xfailed} xfailed "
+          f"({total} total)")
+    sys.exit(1 if failed else 0)
