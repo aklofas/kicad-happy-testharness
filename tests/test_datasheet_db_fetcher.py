@@ -11,7 +11,8 @@ HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 
 from validate.datasheet_db.fetcher import (
-    sanitize_url, DomainRateLimiter, FetchResult, fetch_bytes, FetchError
+    sanitize_url, DomainRateLimiter, FetchResult, fetch_bytes, FetchError,
+    fetch_verified, ShaVerificationResult
 )
 
 
@@ -148,6 +149,32 @@ def test_fetch_bytes_rejects_non_pdf_magic_bytes():
             assert False, "should have raised"
         except FetchError:
             pass
+
+
+def test_fetch_verified_matches():
+    body = b"%PDF-1.5\n" + b"X" * 100
+    sha = hashlib.sha256(body).hexdigest()
+    with patch("urllib.request.urlopen", return_value=_mock_response(body)):
+        result = fetch_verified("https://x.com/a.pdf", expected_sha256=sha)
+        assert result.matched is True
+        assert result.fetch_result.sha256 == sha
+
+
+def test_fetch_verified_mismatch():
+    body = b"%PDF-1.5\n" + b"X" * 100
+    wrong_sha = "00" * 32
+    with patch("urllib.request.urlopen", return_value=_mock_response(body)):
+        result = fetch_verified("https://x.com/a.pdf", expected_sha256=wrong_sha)
+        assert result.matched is False
+        assert result.fetch_result.sha256 != wrong_sha
+
+
+def test_fetch_verified_no_expected_always_matches():
+    """expected_sha256=None means 'take whatever you get'."""
+    body = b"%PDF-1.5\n" + b"X" * 100
+    with patch("urllib.request.urlopen", return_value=_mock_response(body)):
+        result = fetch_verified("https://x.com/a.pdf", expected_sha256=None)
+        assert result.matched is True
 
 
 if __name__ == "__main__":

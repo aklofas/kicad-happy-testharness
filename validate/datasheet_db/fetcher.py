@@ -148,3 +148,30 @@ def fetch_bytes(url: str, timeout: float = _FETCH_DEFAULT_TIMEOUT) -> FetchResul
         size_bytes=len(body),
         content_type=content_type,
     )
+
+
+@dataclass
+class ShaVerificationResult:
+    """Result of fetch_verified: the underlying FetchResult + match status."""
+    fetch_result: FetchResult
+    matched: bool      # True if no expected sha, or if expected matches actual
+    expected_sha256: str  # None if no verification was requested
+
+
+def fetch_verified(url: str, expected_sha256: str = None, timeout: float = _FETCH_DEFAULT_TIMEOUT) -> ShaVerificationResult:
+    """Fetch `url` and report whether its SHA256 matches `expected_sha256`.
+
+    Does NOT raise on mismatch — returns `matched=False` so the caller
+    can handle drift vs corruption as appropriate. Still raises on
+    network errors and non-PDF content.
+    """
+    result = fetch_bytes(url, timeout=timeout)
+    if expected_sha256 is None:
+        return ShaVerificationResult(
+            fetch_result=result, matched=True, expected_sha256=None
+        )
+    return ShaVerificationResult(
+        fetch_result=result,
+        matched=(result.sha256 == expected_sha256),
+        expected_sha256=expected_sha256,
+    )
