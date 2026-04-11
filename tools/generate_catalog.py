@@ -64,7 +64,7 @@ def _load_categories():
     cats = {}
     current_category = "Uncategorized"
     try:
-        text = REPOS_MD.read_text()
+        text = REPOS_MD.read_text(encoding="utf-8")
     except OSError:
         return cats
     for line in text.splitlines():
@@ -623,7 +623,7 @@ def main():
             print(f"No catalog at {CATALOG_JSON}. Run without --query first.",
                   file=sys.stderr)
             sys.exit(1)
-        catalog = json.loads(CATALOG_JSON.read_text())
+        catalog = json.loads(CATALOG_JSON.read_text(encoding="utf-8"))
         results = query_catalog(catalog, args.query)
         if args.json:
             print(json.dumps(results, indent=2))
@@ -643,9 +643,9 @@ def main():
     if not args.repo:
         # Write files
         CATALOG_JSON.parent.mkdir(parents=True, exist_ok=True)
-        CATALOG_JSON.write_text(json.dumps(catalog, indent=2, sort_keys=False) + "\n")
+        CATALOG_JSON.write_text(json.dumps(catalog, indent=2, sort_keys=False) + "\n", encoding="utf-8")
         md = render_markdown(catalog)
-        CATALOG_MD.write_text(md)
+        CATALOG_MD.write_text(md, encoding="utf-8")
         print(f"Catalog: {len(catalog)} repos")
         print(f"  JSON: {CATALOG_JSON}")
         print(f"  Markdown: {CATALOG_MD}")

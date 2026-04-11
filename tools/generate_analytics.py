@@ -41,7 +41,7 @@ def collect_assertion_data():
         repo = Path(f).parts[-5]
         repos_with_assertions.add(repo)
         try:
-            data = json.loads(Path(f).read_text())
+            data = json.loads(Path(f).read_text(encoding="utf-8"))
             assertions = data if isinstance(data, list) else data.get("assertions", [])
             for a in assertions:
                 aid = a.get("id", "")
@@ -74,7 +74,7 @@ def collect_findings_data():
     for f in glob.glob(str(REFERENCE_DIR / "*" / "*" / "findings.json")):
         repo = Path(f).parts[-3]
         try:
-            data = json.loads(Path(f).read_text())
+            data = json.loads(Path(f).read_text(encoding="utf-8"))
             findings = data.get("findings", [])
             n = len(findings)
             total += n
@@ -94,7 +94,7 @@ def collect_findings_per_repo():
     for f in glob.glob(str(REFERENCE_DIR / "*" / "*" / "findings.json")):
         repo = Path(f).parts[-3]
         try:
-            data = json.loads(Path(f).read_text())
+            data = json.loads(Path(f).read_text(encoding="utf-8"))
             repo_counts[repo] += len(data.get("findings", []))
         except Exception:
             pass
@@ -126,7 +126,7 @@ def collect_issue_data():
     kh_count = 0
     th_count = 0
     by_severity = Counter()
-    text = fixed_file.read_text()
+    text = fixed_file.read_text(encoding="utf-8")
 
     for line in text.splitlines():
         if line.startswith("### KH-"):
@@ -156,7 +156,7 @@ def collect_signal_detector_coverage():
         repo = Path(f).parts[-2]
         total_repos.add(repo)
         try:
-            data = json.loads(Path(f).read_text())
+            data = json.loads(Path(f).read_text(encoding="utf-8"))
             sa = data.get("signal_analysis", {})
             for key, val in sa.items():
                 if isinstance(val, list) and len(val) > 0:
@@ -174,7 +174,7 @@ def collect_corpus_stats():
     repos_in_md = 0
     repos_file = HARNESS_DIR / "repos.md"
     if repos_file.exists():
-        for line in repos_file.read_text().splitlines():
+        for line in repos_file.read_text(encoding="utf-8").splitlines():
             if line.strip().startswith("- http"):
                 repos_in_md += 1
 
@@ -203,7 +203,7 @@ def collect_spice_data():
     if not agg_file.exists():
         return {}
     try:
-        return json.loads(agg_file.read_text())
+        return json.loads(agg_file.read_text(encoding="utf-8"))
     except Exception:
         return {}
 
@@ -214,7 +214,7 @@ def collect_emc_data():
     if not agg_file.exists():
         return {}
     try:
-        return json.loads(agg_file.read_text())
+        return json.loads(agg_file.read_text(encoding="utf-8"))
     except Exception:
         return {}
 
@@ -511,7 +511,7 @@ def generate_issue_history_svg():
     issues_file = HARNESS_DIR / "ISSUES.md"
     kh_open = 0
     if issues_file.exists():
-        for line in issues_file.read_text().splitlines():
+        for line in issues_file.read_text(encoding="utf-8").splitlines():
             if line.startswith("### KH-"):
                 kh_open += 1
 
@@ -956,7 +956,7 @@ def main():
         svg = generator()
         if svg:
             path = ANALYTICS_DIR / filename
-            path.write_text(svg)
+            path.write_text(svg, encoding="utf-8")
             print(f"  Generated {path}")
         else:
             print(f"  Skipped {filename} (no data)")
@@ -977,7 +977,7 @@ def main():
         "| ![Findings Distribution](analytics/findings_distribution.svg) | ![Issue Tracker](analytics/issue_tracker.svg) |\n"
         "| ![Signal Detector Coverage](analytics/signal_detector_coverage.svg) | ![Corpus Complexity](analytics/corpus_complexity.svg) |\n"
         "| ![SPICE Status](analytics/spice_status.svg) | ![SPICE Coverage](analytics/spice_coverage.svg) |\n"
-        "| ![EMC Severity](analytics/emc_severity.svg) | ![EMC Categories](analytics/emc_categories.svg) |\n"
+        "| ![EMC Severity](analytics/emc_severity.svg) | ![EMC Categories](analytics/emc_categories.svg) |\n", encoding="utf-8"
     )
     print(f"\n  README snippet: {snippet}")
     print("  Copy the contents of analytics/README_SNIPPET.md into README.md")

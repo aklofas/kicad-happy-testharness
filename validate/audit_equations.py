@@ -121,7 +121,7 @@ def scan_file(filepath, source_text=None):
     Returns list of equation info dicts.
     """
     if source_text is None:
-        source_text = filepath.read_text()
+        source_text = filepath.read_text(encoding="utf-8")
 
     lines = source_text.splitlines()
     try:
@@ -175,7 +175,7 @@ def find_untagged(filepath, source_text=None):
     Returns list of (function_name, line, math_op_count, indicators_found).
     """
     if source_text is None:
-        source_text = filepath.read_text()
+        source_text = filepath.read_text(encoding="utf-8")
 
     try:
         tree = ast.parse(source_text)
@@ -241,7 +241,7 @@ def scan_all():
             if not fpath.exists():
                 print(f"  Skipping {subdir}/{fname} (not found)", file=sys.stderr)
                 continue
-            source = fpath.read_text()
+            source = fpath.read_text(encoding="utf-8")
             tagged = scan_file(fpath, source)
             untagged = find_untagged(fpath, source)
             all_tagged.extend(tagged)
@@ -261,14 +261,14 @@ def scan_all():
 def load_registry():
     """Load equation registry from JSON file."""
     if REGISTRY_PATH.exists():
-        return json.loads(REGISTRY_PATH.read_text())
+        return json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     return {"version": 1, "last_scan": None, "equations": []}
 
 
 def save_registry(registry):
     """Save equation registry to JSON file."""
     REGISTRY_PATH.parent.mkdir(parents=True, exist_ok=True)
-    REGISTRY_PATH.write_text(json.dumps(registry, indent=2))
+    REGISTRY_PATH.write_text(json.dumps(registry, indent=2), encoding="utf-8")
 
 
 def update_registry(registry, scanned):
@@ -539,7 +539,7 @@ def cmd_render(args):
             )
         lines.append("")
 
-    MARKDOWN_PATH.write_text("\n".join(lines))
+    MARKDOWN_PATH.write_text("\n".join(lines), encoding="utf-8")
     print(f"Rendered {MARKDOWN_PATH} ({total} equations)")
 
 

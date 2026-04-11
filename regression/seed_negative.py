@@ -44,7 +44,7 @@ def scan_findings_for_negatives(repo_name=None):
 
     for repo, proj, ff in _iter_findings_files(repo_name):
         try:
-            data = json.loads(ff.read_text())
+            data = json.loads(ff.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError):
             continue
 
@@ -129,7 +129,7 @@ def _write_repo_worker(repo, project, assertions):
     file_pattern = None
     for existing in out_dir.glob("*.json"):
         try:
-            ed = json.loads(existing.read_text())
+            ed = json.loads(existing.read_text(encoding="utf-8"))
             file_pattern = ed.get("file_pattern")
             atype = ed.get("analyzer_type", atype)
             if file_pattern:
@@ -147,7 +147,7 @@ def _write_repo_worker(repo, project, assertions):
         "generated_by": "seed_negative.py",
         "assertions": assertions,
     }
-    outfile.write_text(json.dumps(data, indent=2) + "\n")
+    outfile.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
     return f"{repo}/{project}", 1
 
 

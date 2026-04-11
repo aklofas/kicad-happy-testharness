@@ -408,7 +408,7 @@ def _mutation_test_one_repo(repo, analyzer_type, num_mutations, seed, domain_onl
             continue
 
         try:
-            data = json.loads(output_file.read_text())
+            data = json.loads(output_file.read_text(encoding="utf-8"))
         except Exception:
             continue
 

@@ -267,8 +267,8 @@ def main():
                 continue
 
             try:
-                sch_data = json.loads(sch_file.read_text())
-                spice_data = json.loads(spice_file.read_text())
+                sch_data = json.loads(sch_file.read_text(encoding="utf-8"))
+                spice_data = json.loads(spice_file.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
                 continue
 

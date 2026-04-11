@@ -74,17 +74,17 @@ def run_one_thermal(analyzer_script, schematic_json, pcb_json, output_json,
             return 0, data.get("summary", {}), elapsed
         else:
             err_file = output_json.with_suffix(".err")
-            err_file.write_text(result.stderr or f"exit {result.returncode}")
+            err_file.write_text(result.stderr or f"exit {result.returncode}", encoding="utf-8")
             return result.returncode, None, elapsed
     except subprocess.TimeoutExpired:
         elapsed = time.time() - t0
         err_file = output_json.with_suffix(".err")
-        err_file.write_text(f"Timed out after {timeout}s")
+        err_file.write_text(f"Timed out after {timeout}s", encoding="utf-8")
         return None, None, elapsed
     except Exception as e:
         elapsed = time.time() - t0
         err_file = output_json.with_suffix(".err")
-        err_file.write_text(str(e))
+        err_file.write_text(str(e), encoding="utf-8")
         return -1, None, elapsed
 
 
@@ -205,7 +205,7 @@ def main():
         if returncode != 0 and returncode is not None:
             errors += 1
             err_file = output_json.with_suffix(".err")
-            err_msg = (err_file.read_text().strip().splitlines()[-1]
+            err_msg = (err_file.read_text(encoding="utf-8").strip().splitlines()[-1]
                        if err_file.exists() else "unknown error")
             print(f"FAIL [{i:4d}] {rel}")
             print(f"           {err_msg}")
@@ -267,7 +267,7 @@ def main():
         "severity": severity_counts,
     }
     agg_file.parent.mkdir(parents=True, exist_ok=True)
-    agg_file.write_text(json.dumps(agg, indent=2))
+    agg_file.write_text(json.dumps(agg, indent=2), encoding="utf-8")
     print(f"\nAggregate report: {agg_file}")
 
     # Write timing data
@@ -278,7 +278,7 @@ def main():
         "avg_per_file_s": round(avg_elapsed, 3),
         "slowest": [{"file": p, "elapsed_s": round(t, 3)} for p, t in slowest],
     }
-    timing_file.write_text(json.dumps(timing_data, indent=2))
+    timing_file.write_text(json.dumps(timing_data, indent=2), encoding="utf-8")
 
     sys.exit(1 if errors > 0 else 0)
 

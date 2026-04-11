@@ -98,7 +98,7 @@ def _collect_outputs(repo):
         files = []
         for j in sorted(out_dir.glob("*.json")):
             try:
-                d = json.loads(j.read_text())
+                d = json.loads(j.read_text(encoding="utf-8"))
                 tc = d.get("statistics", {}).get("total_components", 0)
                 sa = d.get("signal_analysis", {})
                 sc = sum(len(v) for v in sa.values() if isinstance(v, list))
@@ -170,7 +170,7 @@ def _collect_outputs(repo):
             sup_path = sup_dir / sch_stem
             if sup_path.exists():
                 try:
-                    d = json.loads(sup_path.read_text())
+                    d = json.loads(sup_path.read_text(encoding="utf-8"))
                     has_content = False
                     if sup_type == "spice":
                         sims = d.get("simulation_results", [])
@@ -198,7 +198,7 @@ def _collect_outputs(repo):
         thermal_path = thermal_dir / f"{pcb_prefix}_thermal.json"
         if thermal_path.exists():
             try:
-                d = json.loads(thermal_path.read_text())
+                d = json.loads(thermal_path.read_text(encoding="utf-8"))
                 # Include if there are any thermal assessments or findings
                 assessments = d.get("thermal_assessments", [])
                 findings = d.get("findings", [])
@@ -244,7 +244,7 @@ def _unreviewed_repos(max_count=None):
             best_score = 0
             for j in jsons:
                 try:
-                    d = json.loads(j.read_text())
+                    d = json.loads(j.read_text(encoding="utf-8"))
                     tc = d.get("statistics", {}).get("total_components", 0)
                     total_components += tc
                     sa = d.get("signal_analysis", {})
@@ -297,7 +297,7 @@ def _find_source_path(repo, atype, output_json_path):
     if manifest_name:
         manifest = MANIFESTS_DIR / repo / manifest_name
         if manifest.exists():
-            for line in manifest.read_text().splitlines():
+            for line in manifest.read_text(encoding="utf-8").splitlines():
                 line = line.strip()
                 if not line:
                     continue
@@ -593,7 +593,7 @@ def cmd_save(args):
     if args.file == "-":
         data = json.loads(sys.stdin.read())
     else:
-        data = json.loads(Path(args.file).read_text())
+        data = json.loads(Path(args.file).read_text(encoding="utf-8"))
 
     # Auto-detect project if not given
     project = args.project
@@ -642,7 +642,7 @@ def cmd_status(args):
                 ff = proj / "findings.json"
                 if ff.exists():
                     try:
-                        data = json.loads(ff.read_text())
+                        data = json.loads(ff.read_text(encoding="utf-8"))
                         for f in data.get("findings", []):
                             atype = f.get("analyzer_type", "unknown")
                             type_counts[atype] = type_counts.get(atype, 0) + 1

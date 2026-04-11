@@ -236,7 +236,7 @@ def test_order(csv_path: Path, output_dir: Path, verbose: bool = False) -> dict:
             fpath = Path(info["file"])
             checks[f"order_{supplier}_exists"] = fpath.exists()
             if fpath.exists():
-                content = fpath.read_text().strip()
+                content = fpath.read_text(encoding="utf-8").strip()
                 checks[f"order_{supplier}_not_empty"] = len(content) > 0
                 checks[f"order_{supplier}_lines"] = info["lines"]
 

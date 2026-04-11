@@ -80,7 +80,7 @@ def _load(path):
     if path is None:
         return None
     try:
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None
 

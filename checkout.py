@@ -44,7 +44,7 @@ def parse_repos_md(path: Path) -> list[dict]:
     repos = []
     category = ""
 
-    for line in path.read_text().splitlines():
+    for line in path.read_text(encoding="utf-8").splitlines():
         stripped = line.strip()
 
         # Track category from ## headings
@@ -90,7 +90,7 @@ def _repo_name_from_url(url: str) -> str:
 
 def pin_hash_in_repos_md(url: str, full_hash: str):
     """Write the full commit hash into repos.md for a specific repo URL."""
-    lines = REPOS_MD.read_text().splitlines()
+    lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
 
     for i, line in enumerate(lines):
         stripped = line.strip()
@@ -111,7 +111,7 @@ def pin_hash_in_repos_md(url: str, full_hash: str):
         if shallow:
             new_line += " (shallow)"
         lines[i] = new_line
-        REPOS_MD.write_text("\n".join(lines) + "\n")
+        REPOS_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
         return
 
 

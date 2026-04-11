@@ -709,7 +709,7 @@ def risk_level(score):
 def load_registry():
     """Load the constants registry from disk."""
     if REGISTRY_PATH.exists():
-        return json.loads(REGISTRY_PATH.read_text())
+        return json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     return {"version": 1, "last_scan": None, "constants": []}
 
 
@@ -717,7 +717,7 @@ def save_registry(registry):
     """Save the constants registry to disk."""
     REGISTRY_PATH.parent.mkdir(parents=True, exist_ok=True)
     REGISTRY_PATH.write_text(
-        json.dumps(registry, indent=2, ensure_ascii=False) + "\n"
+        json.dumps(registry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
 
 
@@ -1282,7 +1282,7 @@ def cmd_render(args):
     # Write
     content = "\n".join(lines) + "\n"
     MARKDOWN_PATH.parent.mkdir(parents=True, exist_ok=True)
-    MARKDOWN_PATH.write_text(content)
+    MARKDOWN_PATH.write_text(content, encoding="utf-8")
     print(f"Rendered {MARKDOWN_PATH} ({len(entries)} constants)")
 
 
@@ -1309,7 +1309,7 @@ def _iter_schematic_outputs():
 def _load_json_quiet(path):
     """Load JSON, returning None on error."""
     try:
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None
 

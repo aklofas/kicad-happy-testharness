@@ -122,7 +122,7 @@ def _scan_outputs(repo_filter=None, analyzer_types=("schematic", "pcb")):
                     continue
                 stats["files_checked"] += 1
                 try:
-                    data = json.loads(json_file.read_text())
+                    data = json.loads(json_file.read_text(encoding="utf-8"))
                 except (json.JSONDecodeError, OSError):
                     continue
                 filepath = f"{atype}/{repo_name}/{json_file.name}"

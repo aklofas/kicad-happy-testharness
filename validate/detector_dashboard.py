@@ -46,7 +46,7 @@ def collect_detector_stats(detector_filter=None):
                 continue
             for f in repo_dir.glob("*.json"):
                 try:
-                    data = json.loads(f.read_text())
+                    data = json.loads(f.read_text(encoding="utf-8"))
                 except Exception:
                     continue
                 sa = data.get("signal_analysis", {})

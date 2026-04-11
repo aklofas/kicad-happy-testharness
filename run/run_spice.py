@@ -83,17 +83,17 @@ def run_one_spice(simulator_script, input_json, output_json, timeout=5,
             return 0, data.get("summary", {}), elapsed
         else:
             err_file = output_json.with_suffix(".err")
-            err_file.write_text(result.stderr or f"exit {result.returncode}")
+            err_file.write_text(result.stderr or f"exit {result.returncode}", encoding="utf-8")
             return result.returncode, None, elapsed
     except subprocess.TimeoutExpired:
         elapsed = time.time() - t0
         err_file = output_json.with_suffix(".err")
-        err_file.write_text("Timed out after 60s")
+        err_file.write_text("Timed out after 60s", encoding="utf-8")
         return None, None, elapsed
     except Exception as e:
         elapsed = time.time() - t0
         err_file = output_json.with_suffix(".err")
-        err_file.write_text(str(e))
+        err_file.write_text(str(e), encoding="utf-8")
         return -1, None, elapsed
 
 
@@ -280,7 +280,7 @@ def main():
         if returncode != 0 or summary is None:
             errors += 1
             err_file = output_json.with_suffix(".err")
-            err_msg = err_file.read_text().strip().splitlines()[-1] if err_file.exists() else "unknown error"
+            err_msg = err_file.read_text(encoding="utf-8").strip().splitlines()[-1] if err_file.exists() else "unknown error"
             print(f"FAIL [{i:4d}] {rel}")
             print(f"           {err_msg}")
             continue
@@ -363,7 +363,7 @@ def main():
         "slowest": [{"file": p, "elapsed_s": round(t, 3)} for p, t in slowest],
     }
     timing_file.parent.mkdir(parents=True, exist_ok=True)
-    timing_file.write_text(json.dumps(timing_data, indent=2))
+    timing_file.write_text(json.dumps(timing_data, indent=2), encoding="utf-8")
 
     # Write aggregate report
     agg_file = spice_out_dir / "_aggregate.json"
@@ -382,7 +382,7 @@ def main():
     if args.with_parasitics:
         agg["parasitics_extracted"] = parasitics_extracted
     agg_file.parent.mkdir(parents=True, exist_ok=True)
-    agg_file.write_text(json.dumps(agg, indent=2))
+    agg_file.write_text(json.dumps(agg, indent=2), encoding="utf-8")
     print(f"\nAggregate report: {agg_file}")
 
     # Exit with error if any script failures

@@ -770,7 +770,7 @@ def main():
 
     # Write output
     CANDIDATES_FILE.parent.mkdir(parents=True, exist_ok=True)
-    CANDIDATES_FILE.write_text(json.dumps(candidates, indent=2) + "\n")
+    CANDIDATES_FILE.write_text(json.dumps(candidates, indent=2) + "\n", encoding="utf-8")
     print(f"\nWrote {len(candidates)} candidates to {CANDIDATES_FILE}")
 
     if args.json:

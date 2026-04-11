@@ -46,7 +46,7 @@ def parse_fixed_md():
         return []
 
     entries = []
-    text = FIXED_MD.read_text()
+    text = FIXED_MD.read_text(encoding="utf-8")
 
     # Match "### KH-NNN (SEVERITY): Title"
     pattern = re.compile(r'^### (KH-\d+)\s*\((\w+)\):\s*(.+)', re.MULTILINE)
@@ -81,7 +81,7 @@ def load_registry():
     """Load bugfix_registry.json. Returns dict of issue → entry."""
     if not REGISTRY.exists():
         return {}
-    data = json.loads(REGISTRY.read_text())
+    data = json.loads(REGISTRY.read_text(encoding="utf-8"))
     return {entry["issue"]: entry for entry in data}
 
 

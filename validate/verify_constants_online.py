@@ -120,7 +120,7 @@ def load_verifiable_entries(constant_filter=None):
     if not REGISTRY_FILE.exists():
         return []
 
-    data = json.loads(REGISTRY_FILE.read_text())
+    data = json.loads(REGISTRY_FILE.read_text(encoding="utf-8"))
     entries = []
 
     for c in data.get("constants", []):

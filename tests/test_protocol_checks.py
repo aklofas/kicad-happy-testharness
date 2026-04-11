@@ -48,7 +48,7 @@ def _find_output_with(output_type, check_fn, max_scan=5000):
                 continue
             for jf in sorted(repo.glob("*.json")):
                 try:
-                    data = json.loads(jf.read_text())
+                    data = json.loads(jf.read_text(encoding="utf-8"))
                     if check_fn(data):
                         return data, str(jf)
                 except Exception:

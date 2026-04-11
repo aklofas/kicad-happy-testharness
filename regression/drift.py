@@ -29,7 +29,7 @@ def _load_output(analyzer_type, repo, source_file):
     if not output_path.exists():
         return None
     try:
-        return json.loads(output_path.read_text())
+        return json.loads(output_path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         return None
 

@@ -614,7 +614,7 @@ def test_check_schematic_file_clean_match():
             '    (property "Reference" "R1") (property "Value" "10k")\n'
             '    (property "Footprint" "R_0603"))\n'
             '  (label "SDA" (at 30 40 0))\n'
-            ')\n'
+            ')\n', encoding="utf-8"
         )
         analyzer_output = {
             "components": [{"reference": "R1", "value": "10k", "footprint": "R_0603"}],
@@ -633,7 +633,7 @@ def test_check_schematic_file_missing_component():
             '(kicad_sch\n'
             '  (symbol (lib_id "Device:R") (at 10 20 0) (property "Reference" "R1") (property "Value" "10k"))\n'
             '  (symbol (lib_id "Device:R") (at 30 20 0) (property "Reference" "R2") (property "Value" "20k"))\n'
-            ')\n'
+            ')\n', encoding="utf-8"
         )
         analyzer_output = {
             "components": [{"reference": "R1", "value": "10k", "footprint": ""}],

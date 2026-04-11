@@ -56,14 +56,14 @@ def safe_filename(mpn: str) -> str:
 def load_status() -> dict:
     """Load download status tracking."""
     if STATUS_FILE.exists():
-        return json.loads(STATUS_FILE.read_text())
+        return json.loads(STATUS_FILE.read_text(encoding="utf-8"))
     return {}
 
 
 def save_status(status: dict):
     """Save download status tracking."""
     STATUS_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATUS_FILE.write_text(json.dumps(status, indent=2) + "\n")
+    STATUS_FILE.write_text(json.dumps(status, indent=2) + "\n", encoding="utf-8")
 
 
 def pdf_exists(mpn: str) -> bool:
@@ -307,7 +307,7 @@ def main():
         print(f"Error: {input_file} not found. Run extract_mpns.py first.")
         sys.exit(1)
 
-    entries = json.loads(input_file.read_text())
+    entries = json.loads(input_file.read_text(encoding="utf-8"))
 
     if args.project:
         entries = [e for e in entries if e["source_project"] == args.project]

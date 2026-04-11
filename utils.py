@@ -103,7 +103,7 @@ def project_prefix(project_path: str) -> str:
 def safe_load_json(path, default=None):
     """Load JSON from a file path, returning default on any error."""
     try:
-        return json.loads(Path(path).read_text())
+        return json.loads(Path(path).read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError, OSError):
         return default
 
@@ -208,7 +208,7 @@ def load_cross_section(name):
         print(f"Error: {CROSS_SECTIONS_FILE} not found. "
               "Run: python3 generate_cross_sections.py", file=sys.stderr)
         sys.exit(1)
-    data = json.loads(CROSS_SECTIONS_FILE.read_text())
+    data = json.loads(CROSS_SECTIONS_FILE.read_text(encoding="utf-8"))
     sections = data.get("sections", {})
     if name not in sections:
         available = ", ".join(sorted(sections.keys()))
@@ -256,7 +256,7 @@ def resolve_repos(args):
             print(f"Error: {path} not found", file=sys.stderr)
             sys.exit(1)
         repos = []
-        for line in path.read_text().splitlines():
+        for line in path.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if line and not line.startswith("#"):
                 repos.append(line)
@@ -293,7 +293,7 @@ def load_project_metadata(repo_name, project_name):
     """Load baseline metadata for a project. Returns dict (empty if missing)."""
     meta_file = DATA_DIR / repo_name / project_name / "baselines" / "metadata.json"
     try:
-        return json.loads(meta_file.read_text())
+        return json.loads(meta_file.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         return {}
 
@@ -352,7 +352,7 @@ def discover_projects(repo_name):
         rel = str(pro5.parent.relative_to(repo_dir))
         if rel not in project_dirs:
             try:
-                first_line = pro5.read_text(errors="replace").split("\n", 1)[0].strip()
+                first_line = pro5.read_text(errors="replace", encoding="utf-8").split("\n", 1)[0].strip()
                 if (first_line.startswith("update=")
                         or first_line.startswith("[pcbnew")
                         or first_line.startswith("[eeschema")):
@@ -418,7 +418,7 @@ def should_skip_resume(outfile, resume):
     if not outfile.exists() or outfile.stat().st_size < 3:
         return False
     try:
-        json.loads(outfile.read_text())
+        json.loads(outfile.read_text(encoding="utf-8"))
         return True
     except (json.JSONDecodeError, OSError):
         return False
@@ -544,7 +544,7 @@ def validate_output(outfile, analyzer_type):
     if not outfile.exists():
         return False, "output file missing"
     try:
-        data = json.loads(outfile.read_text())
+        data = json.loads(outfile.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
         return False, f"invalid JSON: {e}"
     if not isinstance(data, dict):
@@ -570,10 +570,10 @@ def _run_one(analyzer, file_path, outfile, errfile, extra_args=None):
         result = subprocess.run(
             cmd, capture_output=True, text=True, timeout=ANALYZER_TIMEOUT,
         )
-        errfile.write_text(result.stderr)
+        errfile.write_text(result.stderr, encoding="utf-8")
         return result.returncode, outfile, time.time() - t0
     except subprocess.TimeoutExpired:
-        errfile.write_text(f"Timed out after {ANALYZER_TIMEOUT}s")
+        errfile.write_text(f"Timed out after {ANALYZER_TIMEOUT}s", encoding="utf-8")
         return None, outfile, time.time() - t0
 
 
@@ -590,7 +590,7 @@ def _print_detector_aggregate(sch_output_dir):
                 continue
             for f in repo_dir.glob("*.json"):
                 try:
-                    data = json.loads(f.read_text())
+                    data = json.loads(f.read_text(encoding="utf-8"))
                     sa = data.get("signal_analysis", {})
                     for det, items in sa.items():
                         if isinstance(items, list) and items:
@@ -645,7 +645,7 @@ def run_analyzer(config, args=None):
         print(f"Error: {config['manifest_file']} not found. Run discover.py first.", file=sys.stderr)
         sys.exit(1)
 
-    files = [line.strip() for line in manifest.read_text().splitlines() if line.strip()]
+    files = [line.strip() for line in manifest.read_text(encoding="utf-8").splitlines() if line.strip()]
 
     repo_list = resolve_repos(args)
     if repo_list:
@@ -707,7 +707,7 @@ def run_analyzer(config, args=None):
             return False, f"FAIL [{i}] {relpath}\n     Timed out"
         else:
             err_path = outfile.with_suffix(".err")
-            err_lines = err_path.read_text().strip().splitlines() if err_path.exists() else []
+            err_lines = err_path.read_text(encoding="utf-8").strip().splitlines() if err_path.exists() else []
             err_msg = err_lines[-1] if err_lines else f"exit {returncode}"
             return False, f"FAIL [{i}] {relpath}\n     {err_msg}"
 
@@ -777,7 +777,7 @@ def run_analyzer(config, args=None):
         "all": [{"file": p, "elapsed_s": round(t, 3)} for p, t in
                 sorted(timings, key=lambda x: x[0])],
     }
-    timing_file.write_text(json.dumps(timing_data, indent=2))
+    timing_file.write_text(json.dumps(timing_data, indent=2), encoding="utf-8")
 
     # Detector aggregate for schematic runs
     if output_subdir == "schematic":

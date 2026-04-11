@@ -28,7 +28,7 @@ def load_registry():
     if not REGISTRY_FILE.exists():
         print(f"Registry not found: {REGISTRY_FILE}")
         return []
-    return json.loads(REGISTRY_FILE.read_text())
+    return json.loads(REGISTRY_FILE.read_text(encoding="utf-8"))
 
 
 def generate_bugfix_assertions(issue_filter=None, dry_run=True):
@@ -107,14 +107,14 @@ def generate_bugfix_assertions(issue_filter=None, dry_run=True):
 
             # Merge with existing if present
             if out_file.exists():
-                existing = json.loads(out_file.read_text())
+                existing = json.loads(out_file.read_text(encoding="utf-8"))
                 if existing.get("generated_by") == "generate_bugfix_assertions.py":
                     existing_ids = {a["id"] for a in existing.get("assertions", [])}
                     if assertion["id"] not in existing_ids:
                         existing["assertions"].append(assertion)
                     assertion_data = existing
 
-            out_file.write_text(json.dumps(assertion_data, indent=2) + "\n")
+            out_file.write_text(json.dumps(assertion_data, indent=2) + "\n", encoding="utf-8")
             assertions_generated += 1
 
     return entries_processed, assertions_generated

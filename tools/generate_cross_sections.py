@@ -27,13 +27,13 @@ OUTPUT_FILE = HARNESS_DIR / "reference" / "cross_sections.json"
 
 def load_catalog(path):
     """Load repo catalog, return list of repo dicts."""
-    return json.loads(path.read_text())
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def parse_smoke_pack(path):
     """Parse smoke_pack.md into a list of repo names."""
     repos = []
-    for line in path.read_text().splitlines():
+    for line in path.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if line and not line.startswith("#"):
             repos.append(line)
@@ -288,7 +288,7 @@ def main():
         if not args.output.exists():
             print(f"Error: {args.output} not found. Run without --list/--show first.")
             sys.exit(1)
-        data = json.loads(args.output.read_text())
+        data = json.loads(args.output.read_text(encoding="utf-8"))
         sections = data.get("sections", {})
 
         if args.list:
@@ -332,7 +332,7 @@ def main():
     }
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(output, indent=2) + "\n")
+    args.output.write_text(json.dumps(output, indent=2) + "\n", encoding="utf-8")
 
     print(f"\nGenerated {len(sections)} cross-sections:")
     for name in sorted(sections.keys()):

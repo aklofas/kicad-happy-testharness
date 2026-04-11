@@ -70,7 +70,7 @@ def _load_known_detectors():
     inventory_file = DATA_DIR / "schema_inventory.json"
     if inventory_file.exists():
         try:
-            inv = json.loads(inventory_file.read_text())
+            inv = json.loads(inventory_file.read_text(encoding="utf-8"))
             detectors = sorted(inv.get("schematic", {}).keys())
             if detectors:
                 _known_detectors_cache = detectors
@@ -1025,7 +1025,7 @@ def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
         for af in sorted(type_dir.glob("*.json")):
             # Only prune SEED assertions
             try:
-                adata = json.loads(af.read_text())
+                adata = json.loads(af.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
                 continue
             if adata.get("generated_by") != "generate_seed_assertions.py":
@@ -1042,7 +1042,7 @@ def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
                 reason = "output missing"
             else:
                 try:
-                    odata = json.loads(out.read_text())
+                    odata = json.loads(out.read_text(encoding="utf-8"))
                 except (json.JSONDecodeError, OSError):
                     should_prune = True
                     reason = "output unreadable"
@@ -1109,7 +1109,7 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
 
         for output_file in proj_outputs:
             try:
-                data_content = json.loads(output_file.read_text())
+                data_content = json.loads(output_file.read_text(encoding="utf-8"))
             except Exception:
                 continue
 
@@ -1163,11 +1163,11 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
             out_file = out_dir / f"{file_pattern}.json"
 
             if out_file.exists():
-                existing = json.loads(out_file.read_text())
+                existing = json.loads(out_file.read_text(encoding="utf-8"))
                 if existing.get("generated_by") != "generate_seed_assertions.py":
                     continue
 
-            out_file.write_text(json.dumps(assertion_data, indent=2) + "\n")
+            out_file.write_text(json.dumps(assertion_data, indent=2) + "\n", encoding="utf-8")
             total_files += 1
             total_assertions += len(assertions)
 

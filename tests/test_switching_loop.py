@@ -272,7 +272,7 @@ def test_end_to_end_corpus_output():
                 continue
             for jf in sorted(repo.glob("*.json")):
                 try:
-                    data = json.loads(jf.read_text())
+                    data = json.loads(jf.read_text(encoding="utf-8"))
                     if data.get("switching_loop_areas"):
                         found = (data, str(jf))
                         break

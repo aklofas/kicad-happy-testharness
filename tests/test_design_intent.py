@@ -129,7 +129,7 @@ def test_corpus_spot_check():
     if not found:
         return  # skip if no outputs
 
-    data = json.loads(found.read_text())
+    data = json.loads(found.read_text(encoding="utf-8"))
     issues = validate_design_intent(data, str(found.name))
     assert issues == [], f"Real output {found.name} has design_intent issues: {issues}"
 

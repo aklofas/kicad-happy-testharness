@@ -76,13 +76,13 @@ def write_manifest(out_dir, result):
     """Write manifest files to a directory."""
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "schematics.txt").write_text(
-        "\n".join(result["schematics"]) + "\n" if result["schematics"] else "")
+        "\n".join(result["schematics"]) + "\n" if result["schematics"] else "", encoding="utf-8")
     (out_dir / "pcbs.txt").write_text(
-        "\n".join(result["pcbs"]) + "\n" if result["pcbs"] else "")
+        "\n".join(result["pcbs"]) + "\n" if result["pcbs"] else "", encoding="utf-8")
     (out_dir / "gerbers.txt").write_text(
-        "\n".join(result["gerbers"]) + "\n" if result["gerbers"] else "")
+        "\n".join(result["gerbers"]) + "\n" if result["gerbers"] else "", encoding="utf-8")
     (out_dir / "projects.txt").write_text(
-        "\n".join(result["projects"]) + "\n" if result["projects"] else "")
+        "\n".join(result["projects"]) + "\n" if result["projects"] else "", encoding="utf-8")
 
 
 def main():
@@ -138,13 +138,13 @@ def main():
     all_gerbers.sort()
     all_projects.sort()
     (MANIFESTS_DIR / "all_schematics.txt").write_text(
-        "\n".join(all_schematics) + "\n" if all_schematics else "")
+        "\n".join(all_schematics) + "\n" if all_schematics else "", encoding="utf-8")
     (MANIFESTS_DIR / "all_pcbs.txt").write_text(
-        "\n".join(all_pcbs) + "\n" if all_pcbs else "")
+        "\n".join(all_pcbs) + "\n" if all_pcbs else "", encoding="utf-8")
     (MANIFESTS_DIR / "all_gerbers.txt").write_text(
-        "\n".join(all_gerbers) + "\n" if all_gerbers else "")
+        "\n".join(all_gerbers) + "\n" if all_gerbers else "", encoding="utf-8")
     (MANIFESTS_DIR / "all_projects.txt").write_text(
-        "\n".join(all_projects) + "\n" if all_projects else "")
+        "\n".join(all_projects) + "\n" if all_projects else "", encoding="utf-8")
 
     kicad_sch_count = sum(1 for s in all_schematics if s.endswith(".kicad_sch"))
     legacy_sch_count = len(all_schematics) - kicad_sch_count

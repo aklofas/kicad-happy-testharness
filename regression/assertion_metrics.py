@@ -97,7 +97,7 @@ def record_metrics(repo_filter=None, type_filter=None):
             continue
 
         try:
-            data = json.loads(output_file.read_text())
+            data = json.loads(output_file.read_text(encoding="utf-8"))
         except Exception:
             continue
 
@@ -130,7 +130,7 @@ def load_metrics():
     if not METRICS_FILE.exists():
         return []
     records = []
-    for line in METRICS_FILE.read_text().splitlines():
+    for line in METRICS_FILE.read_text(encoding="utf-8").splitlines():
         if line.strip():
             try:
                 records.append(json.loads(line))

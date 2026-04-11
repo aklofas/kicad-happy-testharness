@@ -81,7 +81,7 @@ def compare_project(repo_name, project_name, project_path, analyzer_type, only_c
     if not baseline_file.exists():
         return {"error": f"No baseline for {project_name}/{analyzer_type}"}
 
-    baseline_manifest = json.loads(baseline_file.read_text())
+    baseline_manifest = json.loads(baseline_file.read_text(encoding="utf-8"))
 
     # Build current manifest from outputs matching this project
     prefix = project_prefix(project_path)
@@ -91,7 +91,7 @@ def compare_project(repo_name, project_name, project_path, analyzer_type, only_c
         for jf in filter_project_outputs(current_dir, project_path):
             key = jf.name[len(prefix):] if prefix else jf.name
             try:
-                data = json.loads(jf.read_text())
+                data = json.loads(jf.read_text(encoding="utf-8"))
                 current_manifest[key] = extract_manifest_entry(data, analyzer_type)
             except Exception as e:
                 current_manifest[key] = {"error": str(e)}

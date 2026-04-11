@@ -42,7 +42,7 @@ PROGRESS_FILE = HARNESS_DIR / "results" / "add_repos_progress.json"
 
 def load_candidates(path, limit=0):
     """Load candidates from JSON file."""
-    data = json.loads(path.read_text())
+    data = json.loads(path.read_text(encoding="utf-8"))
     if limit:
         data = data[:limit]
     return data
@@ -51,7 +51,7 @@ def load_candidates(path, limit=0):
 def load_progress():
     """Load progress tracker from disk."""
     if PROGRESS_FILE.exists():
-        return json.loads(PROGRESS_FILE.read_text())
+        return json.loads(PROGRESS_FILE.read_text(encoding="utf-8"))
     return {
         "completed": [],
         "failed": [],
@@ -68,7 +68,7 @@ def load_progress():
 def save_progress(progress):
     """Save progress tracker to results/add_repos_progress.json."""
     PROGRESS_FILE.parent.mkdir(parents=True, exist_ok=True)
-    PROGRESS_FILE.write_text(json.dumps(progress, indent=2) + "\n")
+    PROGRESS_FILE.write_text(json.dumps(progress, indent=2) + "\n", encoding="utf-8")
 
 
 def _find_category_insert_point(lines, category):
@@ -123,19 +123,19 @@ def append_to_repos_md(url, commit_hash, category):
 
     If the category doesn't exist, falls back to 'Miscellaneous KiCad projects'.
     """
-    lines = REPOS_MD.read_text().splitlines()
+    lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
     new_line = f"- {url} @ {commit_hash}"
     insert_at = _find_category_insert_point(lines, category)
     lines.insert(insert_at, new_line)
-    REPOS_MD.write_text("\n".join(lines) + "\n")
+    REPOS_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def remove_from_repos_md(url):
     """Remove a repo entry from repos.md by URL."""
-    lines = REPOS_MD.read_text().splitlines()
+    lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
     filtered = [line for line in lines
                 if not (line.strip().startswith("- ") and url in line)]
-    REPOS_MD.write_text("\n".join(filtered) + "\n")
+    REPOS_MD.write_text("\n".join(filtered) + "\n", encoding="utf-8")
 
 
 def _pre_add_repo(candidate):
@@ -195,7 +195,7 @@ def _pipeline_one_repo(repo_name, skip_spice, skip_emc):
     for mf in ["schematics.txt", "pcbs.txt"]:
         mf_path = manifest_dir / mf
         if mf_path.exists():
-            lines = [l.strip() for l in mf_path.read_text().splitlines() if l.strip()]
+            lines = [l.strip() for l in mf_path.read_text(encoding="utf-8").splitlines() if l.strip()]
             if lines:
                 has_files = True
                 break

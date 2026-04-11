@@ -272,11 +272,12 @@ with tempfile.TemporaryDirectory() as tmpdir:
            specs is not None and specs["gbw_hz"] == 1e6 and "_source" in specs)
 
 # 4.2 Missing returns None
-specs = fetch_specs_from_extraction("NOPE", "/tmp/empty")
+empty_dir = os.path.join(tempfile.gettempdir(), "kicad_happy_empty_nonexistent")
+specs = fetch_specs_from_extraction("NOPE", empty_dir)
 report("4.2 Missing returns None", specs is None)
 
 # 4.3 Full cascade
-specs, source = fetch_specs("DEFINITELY_NOT_REAL_12345", project_dir="/tmp/empty")
+specs, source = fetch_specs("DEFINITELY_NOT_REAL_12345", project_dir=empty_dir)
 report("4.3 Cascade missing part", specs is None)
 
 # ===== Group 5: End-to-end =====

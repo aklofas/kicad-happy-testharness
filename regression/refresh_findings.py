@@ -100,7 +100,7 @@ def main():
 
     for repo, proj, ff in _iter_findings_files(args.repo):
         try:
-            data = json.loads(ff.read_text())
+            data = json.loads(ff.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError):
             continue
 
@@ -183,7 +183,7 @@ def main():
                 finding["missed"] = new_missed
 
         if modified and args.apply:
-            ff.write_text(json.dumps(data, indent=2) + "\n")
+            ff.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
             render_md(repo, proj, data)
 
     if args.json:

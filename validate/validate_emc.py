@@ -179,7 +179,7 @@ def find_source_json(emc_json_path):
     schematic_data = None
     if sch_path.exists():
         try:
-            schematic_data = json.loads(sch_path.read_text())
+            schematic_data = json.loads(sch_path.read_text(encoding="utf-8"))
         except Exception:
             pass
 
@@ -195,7 +195,7 @@ def find_source_json(emc_json_path):
         pcb_path = OUTPUTS_DIR / "pcb" / repo_name / pcb_name
         if pcb_path.exists():
             try:
-                pcb_data = json.loads(pcb_path.read_text())
+                pcb_data = json.loads(pcb_path.read_text(encoding="utf-8"))
             except Exception:
                 pass
 
@@ -236,7 +236,7 @@ def main():
                 if emc_file.name.startswith("_"):
                     continue
                 try:
-                    emc_data = json.loads(emc_file.read_text())
+                    emc_data = json.loads(emc_file.read_text(encoding="utf-8"))
                 except Exception:
                     continue
 

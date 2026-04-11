@@ -41,7 +41,7 @@ def discover_tests(dirs, tier_filter=None):
                 # Read TIER from file
                 tier = default_tier
                 try:
-                    for line in f.read_text().splitlines()[:30]:
+                    for line in f.read_text(encoding="utf-8").splitlines()[:30]:
                         if line.startswith("TIER"):
                             tier = line.split("=")[1].strip().strip("'\"")
                             break
@@ -58,7 +58,7 @@ def _load_smoke_repos(count=5):
     smoke_file = HARNESS_DIR / "reference" / "smoke_pack.md"
     repos = []
     try:
-        for line in smoke_file.read_text().splitlines():
+        for line in smoke_file.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if not line or line.startswith("#"):
                 continue

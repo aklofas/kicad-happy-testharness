@@ -294,7 +294,7 @@ def generate_packet(source_path, analyzer_type="schematic"):
 
     if output_file:
         try:
-            data = json.loads(output_file.read_text())
+            data = json.loads(output_file.read_text(encoding="utf-8"))
             if analyzer_type == "schematic":
                 summary = _summarize_schematic_output(data)
             elif analyzer_type == "pcb":
@@ -324,7 +324,7 @@ def select_random(manifest_file, count, analyzer_type, repo=None):
     """Select random files from a manifest."""
     if not manifest_file.exists():
         return []
-    lines = [l.strip() for l in manifest_file.read_text().splitlines() if l.strip()]
+    lines = [l.strip() for l in manifest_file.read_text(encoding="utf-8").splitlines() if l.strip()]
     if repo:
         lines = filter_manifest_by_repo(lines, repo)
     available = [l for l in lines if _find_output(l, analyzer_type)]
@@ -359,7 +359,7 @@ def select_changed(repo_name, count, analyzer_type):
     manifest_file = MANIFESTS_DIR / f"all_{'schematics' if analyzer_type == 'schematic' else analyzer_type + 's'}.txt"
     source_map = {}
     if manifest_file.exists():
-        for line in manifest_file.read_text().splitlines():
+        for line in manifest_file.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if line:
                 safe = _safe_name(line) + ".json"
@@ -392,7 +392,7 @@ def main():
             return
         for p in packets:
             try:
-                data = json.loads(p.read_text())
+                data = json.loads(p.read_text(encoding="utf-8"))
                 src = data.get("source_file", "?")
                 if len(src) > 50:
                     src = "..." + src[-47:]
@@ -428,7 +428,7 @@ def main():
 
         safe = _safe_name(source)
         packet_file = PACKETS_DIR / f"{safe}.json"
-        packet_file.write_text(json.dumps(packet, indent=2) + "\n")
+        packet_file.write_text(json.dumps(packet, indent=2) + "\n", encoding="utf-8")
 
         repos_dir = str(REPOS_DIR)
         display = source

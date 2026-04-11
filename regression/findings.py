@@ -69,12 +69,12 @@ def load_findings(repo_name=None, project_name=None):
     if repo_name and project_name:
         ff = data_dir(repo_name, project_name) / "findings.json"
         if ff.exists():
-            return json.loads(ff.read_text())
+            return json.loads(ff.read_text(encoding="utf-8"))
         return {"findings": []}
 
     for repo, proj, ff in _iter_findings_files(repo_name):
         try:
-            data = json.loads(ff.read_text())
+            data = json.loads(ff.read_text(encoding="utf-8"))
             for f in data.get("findings", []):
                 f.setdefault("repo", repo)
                 f.setdefault("project", proj)
@@ -207,14 +207,14 @@ def render_md(repo_name, project_name, data=None):
 
     proj_dir = data_dir(repo_name, project_name)
     proj_dir.mkdir(parents=True, exist_ok=True)
-    (proj_dir / "findings.md").write_text("\n".join(lines))
+    (proj_dir / "findings.md").write_text("\n".join(lines), encoding="utf-8")
 
 
 def save_findings(repo_name, project_name, data):
     """Save findings.json and auto-regenerate findings.md."""
     proj_dir = data_dir(repo_name, project_name)
     proj_dir.mkdir(parents=True, exist_ok=True)
-    (proj_dir / "findings.json").write_text(json.dumps(data, indent=2) + "\n")
+    (proj_dir / "findings.json").write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
     render_md(repo_name, project_name, data)
 
 
@@ -230,7 +230,7 @@ def next_id():
     max_num = 0
     for _, _, ff in _iter_findings_files():
         try:
-            data = json.loads(ff.read_text())
+            data = json.loads(ff.read_text(encoding="utf-8"))
             for f in data.get("findings", []):
                 try:
                     max_num = max(max_num, int(f["id"].split("-")[1]))
@@ -242,12 +242,12 @@ def next_id():
     # Also check the counter file (may be ahead of scan if rapid saves)
     if counter_file.exists():
         try:
-            max_num = max(max_num, int(counter_file.read_text().strip()))
+            max_num = max(max_num, int(counter_file.read_text(encoding="utf-8").strip()))
         except (ValueError, OSError):
             pass
 
     next_num = max_num + 1
-    counter_file.write_text(str(next_num))
+    counter_file.write_text(str(next_num), encoding="utf-8")
     return f"FND-{next_num:08d}"
 
 
@@ -278,7 +278,7 @@ def _find_finding(finding_id):
     """
     for repo, proj, ff in _iter_findings_files():
         try:
-            data = json.loads(ff.read_text())
+            data = json.loads(ff.read_text(encoding="utf-8"))
             for f in data.get("findings", []):
                 if f.get("id") == finding_id:
                     return repo, proj, data, f
@@ -292,7 +292,7 @@ def _strip_project_prefix(safe, repo, proj):
     meta_file = data_dir(repo, proj, "baselines") / "metadata.json"
     if meta_file.exists():
         try:
-            meta = json.loads(meta_file.read_text())
+            meta = json.loads(meta_file.read_text(encoding="utf-8"))
             pp = meta.get("project_path", "")
             if pp and pp != ".":
                 pp_prefix = project_prefix(pp)
@@ -417,7 +417,7 @@ def promote_to_assertion(finding_id, dry_run=False):
         pp_prefix = ""
         if meta_file.exists():
             try:
-                meta = json.loads(meta_file.read_text())
+                meta = json.loads(meta_file.read_text(encoding="utf-8"))
                 pp = meta.get("project_path", "")
                 if pp and pp != ".":
                     pp_prefix = project_prefix(pp)
@@ -435,7 +435,7 @@ def promote_to_assertion(finding_id, dry_run=False):
                     if not pmeta.exists():
                         continue
                     try:
-                        pm = json.loads(pmeta.read_text())
+                        pm = json.loads(pmeta.read_text(encoding="utf-8"))
                     except Exception:
                         continue
                     ppp = pm.get("project_path", "")
@@ -469,13 +469,13 @@ def promote_to_assertion(finding_id, dry_run=False):
 
     # Merge with existing if present
     if out_file.exists():
-        existing = json.loads(out_file.read_text())
+        existing = json.loads(out_file.read_text(encoding="utf-8"))
         existing_ids = {a["id"] for a in existing.get("assertions", [])}
         new_assertions = [a for a in assertions if a["id"] not in existing_ids]
         existing["assertions"].extend(new_assertions)
         assertion_data = existing
 
-    out_file.write_text(json.dumps(assertion_data, indent=2) + "\n")
+    out_file.write_text(json.dumps(assertion_data, indent=2) + "\n", encoding="utf-8")
 
     # Update finding status
     finding["status"] = "promoted"
@@ -614,7 +614,7 @@ def main():
         for repo, proj, ff in _iter_findings_files():
             if repo_filter and repo != repo_filter:
                 continue
-            data = json.loads(ff.read_text())
+            data = json.loads(ff.read_text(encoding="utf-8"))
             render_md(repo, proj, data)
             n = len(data.get("findings", []))
             print(f"  {repo}/{proj}: {n} findings")

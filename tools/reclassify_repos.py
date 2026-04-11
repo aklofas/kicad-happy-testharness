@@ -417,7 +417,7 @@ def reclassify_in_repos_md(moves):
 
     moves: list of (repo_name, url_line, old_category, new_category)
     """
-    lines = REPOS_MD.read_text().splitlines()
+    lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
 
     # Build index: category header line numbers
     category_ends = {}  # category -> last entry line index
@@ -472,7 +472,7 @@ def reclassify_in_repos_md(moves):
         if insert_at is not None:
             new_lines.insert(insert_at, line_content)
 
-    REPOS_MD.write_text("\n".join(new_lines) + "\n")
+    REPOS_MD.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
 
 
 def main():
@@ -494,13 +494,13 @@ def main():
         print(f"Error: {CATALOG_FILE} not found. Run generate_catalog.py first.")
         sys.exit(1)
 
-    catalog = json.loads(CATALOG_FILE.read_text())
+    catalog = json.loads(CATALOG_FILE.read_text(encoding="utf-8"))
     misc = [r for r in catalog if r.get("category") == MISC_CATEGORY]
 
     # Load validated.json for topics + descriptions
     v_map = {}
     if VALIDATED_FILE.exists():
-        validated = json.loads(VALIDATED_FILE.read_text())
+        validated = json.loads(VALIDATED_FILE.read_text(encoding="utf-8"))
         v_map = {f"{r['owner']}/{r['repo']}": r for r in validated}
 
     if args.stats:
@@ -578,7 +578,7 @@ def main():
     if args.apply:
         # Build move instructions for repos.md
         # Need to find the URL line for each repo
-        lines = REPOS_MD.read_text().splitlines()
+        lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
         repo_to_url = {}
         for line in lines:
             stripped = line.strip()

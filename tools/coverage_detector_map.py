@@ -30,7 +30,7 @@ def _load_detectors():
     """Load detector list from schema inventory (auto-discovered)."""
     if SCHEMA_INVENTORY.exists():
         try:
-            inv = json.loads(SCHEMA_INVENTORY.read_text())
+            inv = json.loads(SCHEMA_INVENTORY.read_text(encoding="utf-8"))
             detectors = sorted(inv.get("schematic", {}).keys())
             if detectors:
                 return detectors
@@ -69,7 +69,7 @@ def count_corpus_hits():
                 if f.name.startswith("_"):
                     continue
                 try:
-                    data = json.loads(f.read_text())
+                    data = json.loads(f.read_text(encoding="utf-8"))
                     sa = data.get("signal_analysis", {})
                     for det, items in sa.items():
                         if isinstance(items, list) and len(items) > 0:

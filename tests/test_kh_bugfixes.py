@@ -42,7 +42,7 @@ def _load_outputs(repo: str, filename_substring: str = ""):
     for f in sorted(repo_dir.rglob("*.json")):
         if filename_substring and filename_substring not in f.name:
             continue
-        outputs.append(json.loads(f.read_text()))
+        outputs.append(json.loads(f.read_text(encoding="utf-8")))
     if not outputs:
         _skip(f"no matching outputs in {repo}")
     return outputs
@@ -170,7 +170,7 @@ def test_kh221_tia_in_corpus():
         if not repo_dir.exists():
             continue
         for f in repo_dir.rglob("*.json"):
-            data = json.loads(f.read_text())
+            data = json.loads(f.read_text(encoding="utf-8"))
             sa = data.get("signal_analysis", {})
             opamps = sa.get("opamp_analysis", [])
             for o in opamps:

@@ -134,7 +134,7 @@ def cmd_status(args):
     """
     log_path = HARNESS_DIR / "reference" / "health_log.jsonl"
     if log_path.exists():
-        lines = [l.strip() for l in log_path.read_text().splitlines() if l.strip()]
+        lines = [l.strip() for l in log_path.read_text(encoding="utf-8").splitlines() if l.strip()]
         if lines:
             latest = json.loads(lines[-1])
             assertions = latest.get("assertions", {})
@@ -159,7 +159,7 @@ def cmd_status(args):
     # batches) that aren't useful as a quick summary.
     status_md = HARNESS_DIR / "status.md"
     if status_md.exists():
-        text = status_md.read_text()
+        text = status_md.read_text(encoding="utf-8")
         in_summary = False
         rows = []
         for line in text.splitlines():

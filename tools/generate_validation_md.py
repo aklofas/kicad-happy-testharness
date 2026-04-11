@@ -49,7 +49,7 @@ def _count_kh_issues():
     for path, is_open in [(ISSUES_FILE, True), (FIXED_FILE, False)]:
         if not path.exists():
             continue
-        for line in path.read_text().splitlines():
+        for line in path.read_text(encoding="utf-8").splitlines():
             if line.strip().startswith("### KH-"):
                 if is_open:
                     open_count += 1
@@ -67,7 +67,7 @@ def _load_catalog_stats():
     """Load and summarize repo catalog, including assertion totals."""
     if not CATALOG_FILE.exists():
         return {}
-    catalog = json.loads(CATALOG_FILE.read_text())
+    catalog = json.loads(CATALOG_FILE.read_text(encoding="utf-8"))
 
     categories = Counter(r.get("category", "?") for r in catalog)
     versions = Counter()
@@ -122,7 +122,7 @@ def generate_markdown():
     open_kh, closed_kh, max_kh = _count_kh_issues()
     bugfix_count = 0
     if BUGFIX_FILE.exists():
-        bugfix_count = len(json.loads(BUGFIX_FILE.read_text()))
+        bugfix_count = len(json.loads(BUGFIX_FILE.read_text(encoding="utf-8")))
 
     # Count output files
     sch_files = _count_output_files("schematic")
@@ -292,7 +292,7 @@ def main():
     md = generate_markdown()
 
     if args.output:
-        args.output.write_text(md)
+        args.output.write_text(md, encoding="utf-8")
         print(f"Wrote {args.output} ({len(md)} bytes)")
     else:
         print(md)

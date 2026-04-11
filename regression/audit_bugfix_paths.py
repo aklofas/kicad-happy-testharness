@@ -163,7 +163,7 @@ def _suggest_correction(repo, project_name, source_file, atype):
 
 def audit(fix=False):
     """Audit all registry entries. Returns list of result dicts."""
-    registry = json.loads(REGISTRY_FILE.read_text())
+    registry = json.loads(REGISTRY_FILE.read_text(encoding="utf-8"))
     results = []
 
     for entry in registry:
@@ -210,7 +210,7 @@ def audit(fix=False):
 
 def apply_fixes(results):
     """Apply suggested fixes to the registry."""
-    registry = json.loads(REGISTRY_FILE.read_text())
+    registry = json.loads(REGISTRY_FILE.read_text(encoding="utf-8"))
 
     # Build a lookup: (issue, assertion_index) -> suggestion
     fix_map = {}
@@ -244,7 +244,7 @@ def apply_fixes(results):
                     print(f"  {issue}[{i}]: source_file {old_sf!r} -> {fix['source_file']!r}")
                 fixed += 1
 
-    REGISTRY_FILE.write_text(json.dumps(registry, indent=2) + "\n")
+    REGISTRY_FILE.write_text(json.dumps(registry, indent=2) + "\n", encoding="utf-8")
     print(f"\nFixed {fixed} entries in {REGISTRY_FILE.name}")
     return fixed
 

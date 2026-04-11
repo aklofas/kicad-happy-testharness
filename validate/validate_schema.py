@@ -59,7 +59,7 @@ def scan_schematic_outputs(repos):
             continue
         for f in repo_dir.glob("*.json"):
             try:
-                data = json.loads(f.read_text())
+                data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
                 continue
 
@@ -97,7 +97,7 @@ def scan_pcb_outputs(repos):
             continue
         for f in repo_dir.glob("*.json"):
             try:
-                data = json.loads(f.read_text())
+                data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
                 continue
 
@@ -133,7 +133,7 @@ def scan_spice_outputs(repos):
             continue
         for f in repo_dir.glob("*.json"):
             try:
-                data = json.loads(f.read_text())
+                data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
                 continue
 
@@ -160,7 +160,7 @@ def scan_emc_outputs(repos):
             continue
         for f in repo_dir.glob("*.json"):
             try:
-                data = json.loads(f.read_text())
+                data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
                 continue
 
@@ -201,7 +201,7 @@ def scan_gerber_outputs(repos):
             continue
         for f in repo_dir.glob("*.json"):
             try:
-                data = json.loads(f.read_text())
+                data = json.loads(f.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
                 continue
 
@@ -428,7 +428,7 @@ def cmd_scan(args):
             or getattr(args, "repo_list", None)):
         # Save full inventory (not per-repo or cross-section scans)
         INVENTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
-        INVENTORY_FILE.write_text(json.dumps(inventory, indent=2, sort_keys=True) + "\n")
+        INVENTORY_FILE.write_text(json.dumps(inventory, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         if not args.json:
             print(f"Saved inventory to {INVENTORY_FILE}")
 
@@ -440,7 +440,7 @@ def cmd_diff(args):
               file=sys.stderr)
         sys.exit(1)
 
-    saved = json.loads(INVENTORY_FILE.read_text())
+    saved = json.loads(INVENTORY_FILE.read_text(encoding="utf-8"))
     repos = resolve_repos(args)
     if repos is None:
         repos = list_repos()
@@ -506,7 +506,7 @@ def find_stale_assertions(changes):
     stale = []
     for f in DATA_DIR.rglob("assertions/*/*.json"):
         try:
-            data = json.loads(f.read_text())
+            data = json.loads(f.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError):
             continue
         atype = data.get("analyzer_type", "schematic")
@@ -555,7 +555,7 @@ def cmd_auto_seed(args):
         print(f"No saved inventory. Run 'scan' first.", file=sys.stderr)
         sys.exit(1)
 
-    saved = json.loads(INVENTORY_FILE.read_text())
+    saved = json.loads(INVENTORY_FILE.read_text(encoding="utf-8"))
     repos = resolve_repos(args)
     if repos is None:
         repos = list_repos()

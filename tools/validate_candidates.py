@@ -60,7 +60,7 @@ def _count_components_kicad_sch(path):
     Counts (lib_id occurrences — each is a component placement.
     """
     try:
-        text = path.read_text(errors="ignore")
+        text = path.read_text(errors="ignore", encoding="utf-8")
         return len(re.findall(r"\(lib_id ", text))
     except (OSError, IOError):
         return 0
@@ -72,7 +72,7 @@ def _count_components_legacy_sch(path):
     Counts $Comp blocks.
     """
     try:
-        text = path.read_text(errors="ignore")
+        text = path.read_text(errors="ignore", encoding="utf-8")
         return text.count("$Comp")
     except (OSError, IOError):
         return 0
@@ -81,7 +81,7 @@ def _count_components_legacy_sch(path):
 def _count_footprints_pcb(path):
     """Count footprint instances in a .kicad_pcb file."""
     try:
-        text = path.read_text(errors="ignore")
+        text = path.read_text(errors="ignore", encoding="utf-8")
         return len(re.findall(r"^\s{2}\(footprint ", text, re.MULTILINE))
     except (OSError, IOError):
         return 0
@@ -293,14 +293,14 @@ def main():
         print(f"Error: {args.input} not found. Run search_repos.py first.")
         sys.exit(1)
 
-    candidates = json.loads(args.input.read_text())
+    candidates = json.loads(args.input.read_text(encoding="utf-8"))
     if args.limit:
         candidates = candidates[:args.limit]
 
     # Resume support: skip already-validated repos
     already_validated = set()
     if args.resume and args.output.exists():
-        existing = json.loads(args.output.read_text())
+        existing = json.loads(args.output.read_text(encoding="utf-8"))
         already_validated = {f"{c['owner']}/{c['repo']}" for c in existing}
         print(f"Resuming: {len(already_validated)} already validated")
 
@@ -354,7 +354,7 @@ def main():
             all_passed = passed
             if args.resume and args.output.exists():
                 try:
-                    existing = json.loads(args.output.read_text())
+                    existing = json.loads(args.output.read_text(encoding="utf-8"))
                     # Merge: existing + new, dedup by owner/repo
                     seen = {f"{c['owner']}/{c['repo']}" for c in existing}
                     merged = existing + [c for c in passed
@@ -363,7 +363,7 @@ def main():
                 except (json.JSONDecodeError, KeyError):
                     all_passed = passed
             args.output.parent.mkdir(parents=True, exist_ok=True)
-            args.output.write_text(json.dumps(all_passed, indent=2) + "\n")
+            args.output.write_text(json.dumps(all_passed, indent=2) + "\n", encoding="utf-8")
 
     def _print_progress(done_count, total):
         if done_count % 10 == 0 or done_count == total:
@@ -405,7 +405,7 @@ def main():
 
     # Merge with previously validated if resuming
     if args.resume and args.output.exists():
-        existing = json.loads(args.output.read_text())
+        existing = json.loads(args.output.read_text(encoding="utf-8"))
         passed = existing + passed
 
     # Apply min-score filter
@@ -465,7 +465,7 @@ def main():
 
     if not args.dry_run:
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(json.dumps(passed, indent=2) + "\n")
+        args.output.write_text(json.dumps(passed, indent=2) + "\n", encoding="utf-8")
         print(f"\nWrote {len(passed)} validated candidates to {args.output}")
         print(f"\nNext: python3 add_repos.py --input {args.output}")
     else:

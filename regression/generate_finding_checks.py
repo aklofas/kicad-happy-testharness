@@ -163,7 +163,7 @@ def generate_checks(repo_name=None, dry_run=True):
     items_skipped = 0
 
     for repo, proj, ff in _iter_findings_files(repo_name):
-        data = json.loads(ff.read_text())
+        data = json.loads(ff.read_text(encoding="utf-8"))
         modified = False
 
         for finding in data.get("findings", []):

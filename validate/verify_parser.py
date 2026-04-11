@@ -467,7 +467,7 @@ def _check_repo(repo_pair):
             continue
 
         try:
-            analyzer_output = json.loads(json_path.read_text())
+            analyzer_output = json.loads(json_path.read_text(encoding="utf-8"))
         except Exception as e:
             all_findings.append({
                 "kind": "parse_error",

@@ -91,7 +91,7 @@ def main():
     modified_files = set()
 
     for _repo, _proj, fpath in _iter_findings_files(args.repo):
-        fdata = json.loads(fpath.read_text())
+        fdata = json.loads(fpath.read_text(encoding="utf-8"))
         changed = False
 
         for finding in fdata.get("findings", []):
@@ -110,7 +110,7 @@ def main():
                         changed = True
 
         if changed:
-            fpath.write_text(json.dumps(fdata, indent=2) + "\n")
+            fpath.write_text(json.dumps(fdata, indent=2) + "\n", encoding="utf-8")
             modified_files.add(fpath)
 
     print(f"\nModified {len(modified_files)} findings.json files")

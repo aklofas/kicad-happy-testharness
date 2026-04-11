@@ -199,7 +199,7 @@ def main():
             "bugfix": metrics["bugfix"],
         }
         HEALTH_BASELINE.parent.mkdir(parents=True, exist_ok=True)
-        HEALTH_BASELINE.write_text(json.dumps(baseline, indent=2) + "\n")
+        HEALTH_BASELINE.write_text(json.dumps(baseline, indent=2) + "\n", encoding="utf-8")
         print(f"Baseline set: {args.reset_baseline}")
         print(f"  Assertions: {metrics['assertions']['total']:,}")
         print(f"  Written to: {HEALTH_BASELINE}")
@@ -209,12 +209,12 @@ def main():
     prev_assertions = None
     if HEALTH_BASELINE.exists():
         try:
-            bl = json.loads(HEALTH_BASELINE.read_text())
+            bl = json.loads(HEALTH_BASELINE.read_text(encoding="utf-8"))
             bl_ts = bl.get("timestamp", "")
             # Use baseline if it's newer than the last log entry
             last_log_ts = ""
             if HEALTH_LOG.exists():
-                lines = HEALTH_LOG.read_text().strip().splitlines()
+                lines = HEALTH_LOG.read_text(encoding="utf-8").strip().splitlines()
                 if lines:
                     last_log_ts = json.loads(lines[-1]).get("timestamp", "")
             if bl_ts >= last_log_ts:
@@ -224,7 +224,7 @@ def main():
 
     if prev_assertions is None and HEALTH_LOG.exists():
         try:
-            lines = HEALTH_LOG.read_text().strip().splitlines()
+            lines = HEALTH_LOG.read_text(encoding="utf-8").strip().splitlines()
             if lines:
                 prev_assertions = json.loads(lines[-1]).get("assertions", {})
         except (json.JSONDecodeError, KeyError):

@@ -49,7 +49,7 @@ def check_assertions(data_dir, repo_name=None, analyzer_type=None):
             continue
 
         try:
-            data = json.loads(output_file.read_text())
+            data = json.loads(output_file.read_text(encoding="utf-8"))
         except Exception:
             n = len(assertions)
             errors += n
@@ -141,7 +141,7 @@ def _check_one_set(aset):
         return result
 
     try:
-        data = json.loads(output_file.read_text())
+        data = json.loads(output_file.read_text(encoding="utf-8"))
     except Exception as e:
         for assertion in aset.get("assertions", []):
             if assertion.get("aspirational"):

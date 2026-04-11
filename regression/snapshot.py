@@ -97,19 +97,19 @@ def create_snapshot(repo_name):
                 else:
                     key = jf.name
                 try:
-                    d = json.loads(jf.read_text())
+                    d = json.loads(jf.read_text(encoding="utf-8"))
                     manifest[key] = extract_manifest_entry(d, atype)
                 except Exception as e:
                     manifest[key] = {"error": str(e)}
 
             (baseline_dir / f"{atype}.json").write_text(
-                json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+                json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
         if total_files == 0:
             continue
 
         (baseline_dir / "metadata.json").write_text(
-            json.dumps(metadata, indent=2) + "\n")
+            json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
         print(f"  {repo_name}/{proj_name}: {total_files} files")
         created += 1
 
@@ -137,7 +137,7 @@ def list_snapshots():
                 meta_file = proj_dir / "baselines" / "metadata.json"
                 if not meta_file.exists():
                     continue
-                meta = json.loads(meta_file.read_text())
+                meta = json.loads(meta_file.read_text(encoding="utf-8"))
                 total = sum(meta.get("file_counts", {}).values())
                 commit = (meta.get("analyzer_commit") or "unknown")[:12]
                 created = meta["created"][:19].replace("T", " ")

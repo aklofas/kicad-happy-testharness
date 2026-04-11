@@ -97,7 +97,7 @@ def get_changed_functions(kicad_happy_dir, filepath, since="HEAD~1"):
     except Exception:
         old_source = ""
 
-    new_source = full_path.read_text()
+    new_source = full_path.read_text(encoding="utf-8")
 
     old_funcs = _extract_functions(old_source)
     new_funcs = _extract_functions(new_source)
@@ -179,7 +179,7 @@ ENTRY_POINTS = {
 def _scan_imports(filepath):
     """AST-parse a Python file and return set of local module names imported."""
     try:
-        source = filepath.read_text()
+        source = filepath.read_text(encoding="utf-8")
         tree = ast.parse(source)
     except (OSError, SyntaxError):
         return set()

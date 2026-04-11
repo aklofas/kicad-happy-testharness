@@ -131,7 +131,7 @@ def main():
         print(f"Error: {CATALOG_FILE} not found")
         sys.exit(1)
 
-    catalog = json.loads(CATALOG_FILE.read_text())
+    catalog = json.loads(CATALOG_FILE.read_text(encoding="utf-8"))
     print(f"Loaded {len(catalog)} repos from catalog")
 
     # Find duplicates by fingerprint
@@ -176,7 +176,7 @@ def main():
 
     # Save to file
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(result, indent=2) + "\n")
+    args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(f"\nSaved to {args.output}")
 
     # Print confirmed duplicates

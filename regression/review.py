@@ -35,7 +35,7 @@ def _load_manifest():
     mf = MANIFESTS_DIR / "all_schematics.txt"
     if not mf.exists():
         return []
-    return [l.strip() for l in mf.read_text().splitlines() if l.strip()]
+    return [l.strip() for l in mf.read_text(encoding="utf-8").splitlines() if l.strip()]
 
 
 def _score_file(source_path):
@@ -51,7 +51,7 @@ def _score_file(source_path):
         return 0, 0, 0, False
 
     try:
-        data = json.loads(output_file.read_text())
+        data = json.loads(output_file.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         return 0, 0, 0, False
 
@@ -74,7 +74,11 @@ def _file_to_project(source_path, repo_name):
     projects = discover_projects(repo_name)
     within = within_repo_path(source_path)
 
-    # Find the project whose path is the best prefix match
+    # Find the project whose path is the best prefix match.
+    # Compare via PurePosixPath segments rather than string startswith so
+    # the same code works on Windows where Path returns backslash separators.
+    from pathlib import PurePosixPath
+    within_parts = PurePosixPath(within.replace("\\", "/")).parts
     best_match = None
     best_len = -1
     for proj in projects:
@@ -83,7 +87,10 @@ def _file_to_project(source_path, repo_name):
             if best_len < 0:
                 best_match = proj
                 best_len = 0
-        elif within.startswith(ppath + "/") or within.startswith(ppath + "\\"):
+            continue
+        proj_parts = PurePosixPath(ppath.replace("\\", "/")).parts
+        if (len(within_parts) > len(proj_parts)
+                and within_parts[:len(proj_parts)] == proj_parts):
             if len(ppath) > best_len:
                 best_match = proj
                 best_len = len(ppath)
@@ -206,7 +213,7 @@ def show_status():
                     ff = proj_dir / "findings.json"
                     if ff.exists():
                         try:
-                            data = json.loads(ff.read_text())
+                            data = json.loads(ff.read_text(encoding="utf-8"))
                             n = len(data.get("findings", []))
                             if n > 0:
                                 repos_with_findings.add(repo_key)
@@ -240,7 +247,7 @@ def import_findings(repo_name, project_name, findings_file):
     """Import findings from a JSON file."""
     from regression.findings import add_finding
 
-    data = json.loads(Path(findings_file).read_text())
+    data = json.loads(Path(findings_file).read_text(encoding="utf-8"))
 
     if isinstance(data, list):
         for finding in data:

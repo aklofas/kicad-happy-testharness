@@ -57,7 +57,7 @@ def collect_urls(repo_filter=None):
 
             for json_file in repo_dir.glob("*.json"):
                 try:
-                    data = json.loads(json_file.read_text())
+                    data = json.loads(json_file.read_text(encoding="utf-8"))
                 except Exception:
                     continue
 

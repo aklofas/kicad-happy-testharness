@@ -41,7 +41,7 @@ def is_valid_mpn(mpn: str) -> bool:
 def extract_from_json(json_path: Path) -> list:
     """Extract MPN entries from an analyzer JSON output file."""
     try:
-        data = json.loads(json_path.read_text())
+        data = json.loads(json_path.read_text(encoding="utf-8"))
     except Exception:
         return []
 
@@ -117,7 +117,7 @@ def main():
 
     entries.sort(key=lambda e: (e.get("manufacturer", "").lower(), e["mpn"].lower()))
 
-    output_file.write_text(json.dumps(entries, indent=2) + "\n")
+    output_file.write_text(json.dumps(entries, indent=2) + "\n", encoding="utf-8")
     print(f"Extracted {len(entries)} unique MPN entries from {len(projects)} projects")
 
     from collections import Counter

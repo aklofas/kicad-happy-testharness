@@ -311,7 +311,7 @@ def load_assertions(data_dir, analyzer_type=None, file_pattern=None, repo_name=N
             for type_dir in type_dirs:
                 for f in sorted(type_dir.glob("*.json")):
                     try:
-                        data = json.loads(f.read_text())
+                        data = json.loads(f.read_text(encoding="utf-8"))
                         if file_pattern:
                             fp = data.get("file_pattern", "")
                             if not fnmatch.fnmatch(fp, file_pattern):

@@ -676,7 +676,7 @@ def find_running_server() -> Optional[int]:
     if not PID_FILE.exists():
         return None
     try:
-        info = json.loads(PID_FILE.read_text())
+        info = json.loads(PID_FILE.read_text(encoding="utf-8"))
         pid = info["pid"]
         port = info["port"]
         # Check if the process is still alive
@@ -696,7 +696,7 @@ def _stop_existing_server() -> None:
     if not PID_FILE.exists():
         return
     try:
-        info = json.loads(PID_FILE.read_text())
+        info = json.loads(PID_FILE.read_text(encoding="utf-8"))
         pid = info["pid"]
         if pid == os.getpid():
             return  # don't kill ourselves
