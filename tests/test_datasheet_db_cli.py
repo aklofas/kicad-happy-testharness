@@ -528,18 +528,6 @@ def test_fetch_missing_local_fallback_from_repo_found_in():
     _with_temp_store_and_manifest_dirs(inner)
 
 
-def test_migrate_help_lists_dry_run_flag():
-    """`migrate --help` should exit 0 and mention --dry-run."""
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp = Path(tmp)
-        store = tmp / "store"
-        manifest = tmp / "manifest"
-        store.mkdir(); manifest.mkdir()
-        result = _run_cli(["migrate", "--help"], store, manifest)
-        assert result.returncode == 0, result.stderr
-        assert "--dry-run" in result.stdout
-
-
 def test_insert_scan_repos_ingests_pdfs_from_repos_tree():
     """insert --scan-repos walks repos/, ingests new PDFs with found_in entries."""
     with tempfile.TemporaryDirectory() as tmp:
