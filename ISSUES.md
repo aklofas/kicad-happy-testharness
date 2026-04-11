@@ -32,9 +32,9 @@ Last updated: 2026-04-10
 
 Issue numbers are **globally unique and never reused**. Before assigning a new number,
 check both ISSUES.md (open) and FIXED.md (closed) for the current maximum. Next KH
-number: **KH-231**. Next TH number: **TH-014**.
+number: **KH-231**. Next TH number: **TH-015**.
 
-> 1 open issue.
+> 2 open issues.
 
 ---
 
@@ -89,7 +89,60 @@ files hits it.
 
 ## Test Harness Issues
 
-(none)
+### TH-014: Two test files silently pass — missing `__main__` runner block
+
+**Severity:** MEDIUM
+**Discovered:** 2026-04-10 while building the `--smoke` PR-gate subset
+
+The harness uses a stdlib test runner pattern: each `tests/test_*.py` file
+ends with `if __name__ == "__main__":` that iterates `def test_*` functions
+and reports counts. `run_tests.py` invokes each file via `subprocess.run`
+and parses the summary line.
+
+Two files are missing this runner block entirely:
+- `tests/test_detection_schema.py` — defines 30 test functions, none execute
+- `tests/test_batch_review.py` — defines 6 test functions, none execute
+
+When invoked as `python3 tests/test_detection_schema.py`, the module
+imports cleanly, defines all functions, then exits 0 with no output.
+`run_tests.py` parses the empty summary, falls through to its "p=1, ok"
+fallback at line 188-195, and reports the file as PASS — so the suite
+shows green while 36 tests never actually ran.
+
+**Fix:** Add the standard runner block to both files. Pattern from any
+working test file (e.g. `tests/test_verify_parser.py:394-410`):
+
+```python
+if __name__ == "__main__":
+    tests = [(name, obj) for name, obj in globals().items()
+             if name.startswith("test_") and callable(obj)]
+    passed = failed = 0
+    for name, fn in sorted(tests):
+        try:
+            fn()
+            passed += 1
+            print(f"  PASS: {name}")
+        except AssertionError as e:
+            failed += 1
+            print(f"  FAIL: {name}: {e}")
+        except Exception as e:
+            failed += 1
+            print(f"  FAIL: {name}: {type(e).__name__}: {e}")
+    print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
+    sys.exit(1 if failed else 0)
+```
+
+After fixing, run `python3 run_tests.py --unit` and verify the file count
+in the summary increases by the actual test count (rather than +1 each).
+
+Severity is MEDIUM rather than HIGH because the tests probably DID work
+when written and just got copy-pasted from a template that lost the
+runner. Also worth a `--detect-silent-passes` audit step in `run_tests.py`
+to catch this regression class going forward.
+
+---
+
+
 
 ---
 
@@ -101,5 +154,6 @@ files hits it.
 
 ## Priority Queue (open issues, ordered by impact)
 
-1. **KH-230** — LOW — empty placed Value silently replaced with lib_symbol default (1 file in corpus)
+1. **TH-014** — MED — two test files have no `__main__` runner; 36 tests silently never run
+2. **KH-230** — LOW — empty placed Value silently replaced with lib_symbol default (1 file in corpus)
 
