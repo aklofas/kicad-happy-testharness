@@ -11,6 +11,7 @@ tool policy. See docs/superpowers/specs/2026-04-10-datasheet-store-design.md
 """
 
 import sys
+import re
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -80,3 +81,70 @@ def _preserved_ref(pdf: Path, preserved_root: Path) -> str:
     if len(parts) >= 2:
         return f"{parts[0]}/{parts[1]}"
     return "unknown"
+
+
+_MPN_TOKEN_RE = re.compile(r"[A-Z0-9][A-Z0-9_\-]{3,}[A-Z0-9]")
+
+_MANUFACTURER_PREFIXES = {
+    "ad": "Analog Devices", "adi": "Analog Devices",
+    "ti": "Texas Instruments", "txn": "Texas Instruments",
+    "stm": "STMicroelectronics", "st": "STMicroelectronics",
+    "nxp": "NXP",
+    "pic": "Microchip", "atmel": "Microchip",
+    "on": "ON Semiconductor",
+    "ltc": "Linear Technology",
+    "max": "Maxim Integrated",
+}
+
+
+def _infer_mpn(filename: str) -> str:
+    """Return the longest MPN-looking token from `filename` stem, or the stem itself."""
+    stem = Path(filename).stem.upper().replace("-", "_")
+    tokens = _MPN_TOKEN_RE.findall(stem)
+    if tokens:
+        return max(tokens, key=len)
+    return Path(filename).stem
+
+
+def _infer_manufacturer(filename: str) -> str:
+    lower = Path(filename).stem.lower()
+    for prefix, mfr in _MANUFACTURER_PREFIXES.items():
+        if lower.startswith(prefix):
+            return mfr
+    return "Unknown"
+
+
+def phase2_group(entries: list) -> list:
+    """Group entries by SHA256, return one record per unique SHA."""
+    from datetime import datetime, timezone
+    from collections import defaultdict
+    buckets = defaultdict(list)
+    for e in entries:
+        buckets[e["sha256"]].append(e)
+
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    records = []
+    for sha, bucket in buckets.items():
+        filenames = sorted({e["filename"] for e in bucket})
+        primary_mpn = _infer_mpn(filenames[0])
+        manufacturer = _infer_manufacturer(filenames[0])
+        records.append({
+            "sha256": sha,
+            "size_bytes": bucket[0]["size"],
+            "page_count": None,
+            "mpns": [{"mpn": primary_mpn, "primary": True}],
+            "manufacturers": [manufacturer],
+            "source_urls": [],
+            "filename_aliases": filenames,
+            "found_in": sorted([
+                {"type": e["origin_kind"], "ref": e["origin_ref"],
+                 "path": e["path"], "first_seen": now}
+                for e in bucket
+            ], key=lambda f: (f["type"], f["ref"], f["path"])),
+            "revision_label": None,
+            "first_seen": now,
+            "last_seen": now,
+            "verified": False,
+            "verification_notes": None,
+        })
+    return records
