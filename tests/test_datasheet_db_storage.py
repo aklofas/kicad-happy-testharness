@@ -8,7 +8,9 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 
-from validate.datasheet_db.storage import _sanitize_mpn, _truncate_to_byte_limit
+from validate.datasheet_db.storage import (
+    _sanitize_mpn, _truncate_to_byte_limit, canonical_filename
+)
 
 
 # === _sanitize_mpn ===
@@ -111,6 +113,81 @@ def test_truncate_counts_bytes_not_chars():
 def test_truncate_tiny_limit():
     """A byte limit smaller than the current name truncates correctly."""
     assert _truncate_to_byte_limit("ABCDEFG", 3) == "AB_"
+
+
+# === canonical_filename ===
+
+def _make_record(primary_mpn, sha256):
+    """Build a minimal manifest record dict for canonical_filename tests."""
+    return {
+        "sha256": sha256,
+        "mpns": [{"mpn": primary_mpn, "primary": True}],
+    }
+
+
+def test_canonical_filename_simple():
+    """Simple primary MPN produces {mpn}-{sha256[:8]}.pdf."""
+    rec = _make_record("STM32F405RGT6", "ab1234cdef0123456789abcdef0123456789abcdef0123456789abcdef012345")
+    assert canonical_filename(rec) == "STM32F405RGT6-ab1234cd.pdf"
+
+
+def test_canonical_filename_sanitizes_primary_mpn():
+    """MPN with bad characters is sanitized in the filename."""
+    rec = _make_record("AD8605/8606", "cd1234cdef0123456789abcdef0123456789abcdef0123456789abcdef012345")
+    assert canonical_filename(rec) == "AD8605_8606-cd1234cd.pdf"
+
+
+def test_canonical_filename_empty_primary_fallback():
+    """Pathological MPN that sanitizes to empty uses 'unknown' fallback."""
+    rec = _make_record("///", "ef1234cdef0123456789abcdef0123456789abcdef0123456789abcdef012345")
+    assert canonical_filename(rec) == "unknown-ef1234cd.pdf"
+
+
+def test_canonical_filename_truncates_long_primary():
+    """Primary MPN over byte budget is truncated to fit the 143-byte filename limit."""
+    long_mpn = "X" * 200  # 200 bytes, well over the 130-byte budget for the MPN
+    sha = "aa" * 32  # 64 hex chars
+    rec = _make_record(long_mpn, sha)
+    out = canonical_filename(rec)
+    # Total filename must fit in the 143-byte TH-013 limit
+    assert len(out.encode("utf-8")) <= 143
+    # Must still end in -{hash}.pdf
+    assert out.endswith("-aaaaaaaa.pdf")
+
+
+def test_canonical_filename_total_byte_budget():
+    """Filename budget is 143 bytes including the -{hash}.pdf suffix (13 bytes)."""
+    # Budget for primary_mpn is 143 - 13 = 130 bytes
+    mpn_130 = "M" * 130
+    sha = "bb" * 32
+    rec = _make_record(mpn_130, sha)
+    out = canonical_filename(rec)
+    assert len(out.encode("utf-8")) <= 143
+    # At exactly 130, no truncation needed
+    assert out == mpn_130 + "-bbbbbbbb.pdf"
+
+
+def test_canonical_filename_raises_on_missing_primary():
+    """Record with no primary MPN is a programming error — raise."""
+    rec = {
+        "sha256": "cc" * 32,
+        "mpns": [{"mpn": "X", "primary": False}],
+    }
+    try:
+        canonical_filename(rec)
+        assert False, "should have raised"
+    except ValueError as e:
+        assert "primary" in str(e).lower()
+
+
+def test_canonical_filename_raises_on_empty_mpns():
+    """Record with empty mpns list is a programming error — raise."""
+    rec = {"sha256": "dd" * 32, "mpns": []}
+    try:
+        canonical_filename(rec)
+        assert False, "should have raised"
+    except ValueError:
+        pass
 
 
 if __name__ == "__main__":

@@ -53,3 +53,42 @@ def _truncate_to_byte_limit(name: str, byte_limit: int) -> str:
     # Reserve one byte for the trailing underscore marker
     truncated = encoded[: byte_limit - 1].decode("utf-8", errors="ignore")
     return truncated + "_"
+
+
+# The total filename budget is 143 bytes to stay within the TH-013
+# eCryptfs filename-length limit (see FIXED.md → TH-013). The suffix
+# "-{sha256[:8]}.pdf" is always exactly 13 bytes (1 + 8 + 4), leaving
+# 130 bytes for the sanitized primary MPN.
+_FILENAME_BYTE_LIMIT = 143
+_SUFFIX_BYTES = len("-12345678.pdf")  # 13
+_PRIMARY_MPN_BYTE_BUDGET = _FILENAME_BYTE_LIMIT - _SUFFIX_BYTES  # 130
+
+
+def canonical_filename(record: dict) -> str:
+    """Return the canonical on-disk filename for a manifest record.
+
+    Form: `{sanitize(primary_mpn)}-{sha256[:8]}.pdf`. Truncated if the
+    sanitized primary MPN exceeds the 130-byte budget. Falls back to
+    `unknown-{sha256[:8]}.pdf` if the primary MPN sanitizes to empty.
+
+    Raises ValueError if the record lacks a primary MPN entry — this is a
+    programming error, not a data-quality issue, and should never happen
+    on records loaded from disk (invariant checks catch it earlier).
+    """
+    mpns = record.get("mpns") or []
+    primary = None
+    for entry in mpns:
+        if entry.get("primary"):
+            primary = entry.get("mpn", "")
+            break
+    if primary is None:
+        raise ValueError(
+            f"record {record.get('sha256', '?')[:12]} has no primary MPN "
+            f"(mpns={mpns})"
+        )
+    sanitized = _sanitize_mpn(primary)
+    if not sanitized:
+        sanitized = "unknown"
+    truncated = _truncate_to_byte_limit(sanitized, _PRIMARY_MPN_BYTE_BUDGET)
+    sha = record["sha256"]
+    return f"{truncated}-{sha[:8]}.pdf"
