@@ -231,6 +231,62 @@ def test_verify_fast_skips_hashing():
         assert fast.returncode == 0
 
 
+def test_list_returns_all_records():
+    """list with no filters returns one line per record."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        store = tmp / "store"
+        manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        # Insert 3 distinct records
+        for i, mpn in enumerate(["LST1", "LST2", "LST3"]):
+            fake = tmp / f"src{i}.pdf"
+            _make_fake_pdf(fake, f"list-{mpn}".encode())
+            _run_cli(["insert", "--file", str(fake), "--mpn", mpn], store, manifest)
+        result = _run_cli(["list"], store, manifest)
+        assert result.returncode == 0, result.stderr
+        # 3 lines, each containing one of the MPNs
+        for mpn in ["LST1", "LST2", "LST3"]:
+            assert mpn in result.stdout
+
+
+def test_list_filter_by_manufacturer():
+    """--manufacturer FOO returns only records from that manufacturer."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); store = tmp / "store"; manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        # Two records with different manufacturers
+        for i, (mpn, mfr) in enumerate([("FILT1", "Acme"), ("FILT2", "Other Corp")]):
+            fake = tmp / f"src{i}.pdf"
+            _make_fake_pdf(fake, f"filter-{mpn}".encode())
+            _run_cli(
+                ["insert", "--file", str(fake), "--mpn", mpn, "--manufacturer", mfr],
+                store, manifest,
+            )
+        result = _run_cli(["list", "--manufacturer", "Acme"], store, manifest)
+        assert result.returncode == 0
+        assert "FILT1" in result.stdout
+        assert "FILT2" not in result.stdout
+
+
+def test_list_format_json():
+    """--format json prints a valid JSON array."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); store = tmp / "store"; manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        fake = tmp / "src.pdf"
+        _make_fake_pdf(fake, b"json-output")
+        _run_cli(["insert", "--file", str(fake), "--mpn", "JSONLIST"], store, manifest)
+        result = _run_cli(["list", "--format", "json"], store, manifest)
+        assert result.returncode == 0
+        import json
+        data = json.loads(result.stdout)
+        assert isinstance(data, list)
+        assert len(data) == 1
+        mpn_names = {m["mpn"] for m in data[0]["mpns"]}
+        assert "JSONLIST" in mpn_names
+
+
 if __name__ == "__main__":
     tests = [(name, obj) for name, obj in globals().items()
              if name.startswith("test_") and callable(obj)]

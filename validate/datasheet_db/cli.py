@@ -163,6 +163,41 @@ def cmd_verify(args) -> int:
     return 1 if mismatched > 0 else 0
 
 
+def cmd_list(args) -> int:
+    from validate.datasheet_db.manifest import iter_records
+    from validate.datasheet_db.storage import store_path
+
+    records = list(iter_records())
+
+    # Filters
+    if args.manufacturer:
+        records = [r for r in records
+                   if args.manufacturer in (r.get("manufacturers") or [])]
+    if args.unverified:
+        records = [r for r in records if not r.get("verified")]
+    if args.missing:
+        records = [r for r in records if not store_path(r).exists()]
+
+    if args.format == "json":
+        import json
+        print(json.dumps(records, indent=2))
+        return 0
+
+    if args.format == "tsv":
+        for rec in records:
+            primary = next((m["mpn"] for m in rec.get("mpns", []) if m.get("primary")), "?")
+            mfrs = ",".join(rec.get("manufacturers") or [])
+            print(f"{rec['sha256'][:12]}\t{primary}\t{mfrs}\t{store_path(rec).name}")
+        return 0
+
+    # default: text columns
+    for rec in records:
+        primary = next((m["mpn"] for m in rec.get("mpns", []) if m.get("primary")), "?")
+        mfrs = ",".join(rec.get("manufacturers") or []) or "Unknown"
+        print(f"{rec['sha256'][:12]}  {primary:<30}  {mfrs:<20}  {store_path(rec).name}")
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="datasheet_db")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -190,6 +225,15 @@ def main(argv=None) -> int:
     p_verify.add_argument("--record", help="Verify a single record by sha256 (not yet wired)")
     p_verify.add_argument("--json", action="store_true", help="Machine-readable output (not yet wired)")
 
+    p_list = sub.add_parser("list", help="List records (with optional filters)")
+    p_list.add_argument("--manufacturer", help="Filter by manufacturer name")
+    p_list.add_argument("--missing", action="store_true",
+                        help="Show only records whose blob is missing from the store")
+    p_list.add_argument("--unverified", action="store_true",
+                        help="Show only unverified records")
+    p_list.add_argument("--format", choices=["text", "tsv", "json"], default="text",
+                        help="Output format (default: text)")
+
     args = parser.parse_args(argv)
 
     handlers = {
@@ -197,5 +241,6 @@ def main(argv=None) -> int:
         "insert": cmd_insert,
         "find": cmd_find,
         "verify": cmd_verify,
+        "list": cmd_list,
     }
     return handlers[args.command](args)
