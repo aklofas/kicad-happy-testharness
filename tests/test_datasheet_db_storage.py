@@ -8,7 +8,7 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 
-from validate.datasheet_db.storage import _sanitize_mpn
+from validate.datasheet_db.storage import _sanitize_mpn, _truncate_to_byte_limit
 
 
 # === _sanitize_mpn ===
@@ -72,6 +72,45 @@ def test_sanitize_mpn_pathological_returns_empty():
     """MPN consisting only of problematic chars returns empty string."""
     assert _sanitize_mpn("///") == ""
     assert _sanitize_mpn("   ") == ""
+
+
+# === _truncate_to_byte_limit ===
+
+def test_truncate_short_name_unchanged():
+    """A name well under the limit is returned as-is."""
+    assert _truncate_to_byte_limit("STM32F405RGT6", 130) == "STM32F405RGT6"
+
+
+def test_truncate_at_exact_limit():
+    """A name exactly at the byte limit is returned as-is."""
+    name = "A" * 130
+    assert _truncate_to_byte_limit(name, 130) == name
+
+
+def test_truncate_over_limit_ascii():
+    """An ASCII name over the limit is truncated with a trailing underscore."""
+    name = "A" * 200
+    out = _truncate_to_byte_limit(name, 130)
+    assert len(out.encode("utf-8")) <= 130
+    assert out.endswith("_")
+
+
+def test_truncate_counts_bytes_not_chars():
+    """Byte-based truncation, not character-based.
+
+    The TH-013 143-byte eCryptfs limit is measured in bytes after UTF-8
+    encoding. All characters going into this function are already
+    sanitized to ASCII, but we still use byte length consistently with the
+    rest of the harness (see utils._truncate_with_hash)."""
+    # Every char is 1 byte since sanitize removed non-ASCII
+    name = "X" * 140
+    out = _truncate_to_byte_limit(name, 130)
+    assert len(out.encode("utf-8")) <= 130
+
+
+def test_truncate_tiny_limit():
+    """A byte limit smaller than the current name truncates correctly."""
+    assert _truncate_to_byte_limit("ABCDEFG", 3) == "AB_"
 
 
 if __name__ == "__main__":

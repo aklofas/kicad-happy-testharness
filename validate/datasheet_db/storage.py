@@ -35,3 +35,21 @@ def _sanitize_mpn(mpn: str) -> str:
             prev_underscore = False
     # Strip leading/trailing _ and .
     return "".join(collapsed).strip("_.")
+
+
+def _truncate_to_byte_limit(name: str, byte_limit: int) -> str:
+    """Truncate `name` so its UTF-8 byte length is <= `byte_limit`.
+
+    When truncation happens, the last character is replaced with '_' to
+    signal a truncation visually. If the name already fits, return as-is.
+
+    All callers pass already-sanitized ASCII-only names, so byte length
+    equals character length in practice — we still count bytes for
+    consistency with the TH-013 fix conventions (see
+    utils._truncate_with_hash)."""
+    encoded = name.encode("utf-8")
+    if len(encoded) <= byte_limit:
+        return name
+    # Reserve one byte for the trailing underscore marker
+    truncated = encoded[: byte_limit - 1].decode("utf-8", errors="ignore")
+    return truncated + "_"
