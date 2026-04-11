@@ -14,7 +14,7 @@ sys.path.insert(0, str(HARNESS_DIR))
 
 from validate.datasheet_db._validators import validate_record
 from validate.datasheet_db.manifest import (
-    record_path, MANIFEST_DIR, save_record, load_record
+    record_path, MANIFEST_DIR, save_record, load_record, merge_record
 )
 
 
@@ -200,6 +200,94 @@ def test_save_record_is_atomic():
         shard = tmp / rec["sha256"][:2]
         assert list(shard.glob("*.tmp")) == []
     _with_temp_manifest_dir(inner)
+
+
+# === merge_record ===
+
+def test_merge_adds_new_mpn_alias():
+    existing = _valid_record()
+    existing["mpns"] = [{"mpn": "R1", "primary": True}]
+    incoming = {"mpns": [{"mpn": "R2", "primary": False}]}
+    merged = merge_record(existing, incoming)
+    mpn_names = [m["mpn"] for m in merged["mpns"]]
+    assert "R1" in mpn_names
+    assert "R2" in mpn_names
+    # R1 stays primary
+    assert [m["primary"] for m in merged["mpns"] if m["mpn"] == "R1"] == [True]
+
+
+def test_merge_dedupes_duplicate_mpn():
+    existing = _valid_record()
+    existing["mpns"] = [{"mpn": "R1", "primary": True}]
+    incoming = {"mpns": [{"mpn": "R1", "primary": False}]}
+    merged = merge_record(existing, incoming)
+    assert len(merged["mpns"]) == 1
+
+
+def test_merge_adds_new_source_url():
+    existing = _valid_record()
+    existing["source_urls"] = [
+        {"url": "https://a.example/", "first_seen_at": "2026-04-10T00:00:00Z",
+         "last_verified_at": "2026-04-10T00:00:00Z", "status": "live"}
+    ]
+    incoming = {"source_urls": [
+        {"url": "https://b.example/", "first_seen_at": "2026-04-11T00:00:00Z",
+         "last_verified_at": "2026-04-11T00:00:00Z", "status": "live"}
+    ]}
+    merged = merge_record(existing, incoming)
+    urls = [u["url"] for u in merged["source_urls"]]
+    assert urls == ["https://a.example/", "https://b.example/"]  # sorted
+
+
+def test_merge_dedupes_source_url_by_url_key():
+    existing = _valid_record()
+    existing["source_urls"] = [
+        {"url": "https://a.example/", "first_seen_at": "2026-04-10T00:00:00Z",
+         "last_verified_at": "2026-04-10T00:00:00Z", "status": "live"}
+    ]
+    incoming = {"source_urls": [
+        {"url": "https://a.example/", "first_seen_at": "2026-04-12T00:00:00Z",
+         "last_verified_at": "2026-04-12T00:00:00Z", "status": "live"}
+    ]}
+    merged = merge_record(existing, incoming)
+    assert len(merged["source_urls"]) == 1
+    # last_verified_at updated to the later timestamp
+    assert merged["source_urls"][0]["last_verified_at"] == "2026-04-12T00:00:00Z"
+
+
+def test_merge_adds_filename_alias_sorted_and_deduped():
+    existing = _valid_record()
+    existing["filename_aliases"] = ["a.pdf"]
+    incoming = {"filename_aliases": ["c.pdf", "b.pdf", "a.pdf"]}
+    merged = merge_record(existing, incoming)
+    assert merged["filename_aliases"] == ["a.pdf", "b.pdf", "c.pdf"]
+
+
+def test_merge_adds_found_in_entry():
+    existing = _valid_record()
+    existing["found_in"] = []
+    incoming = {"found_in": [
+        {"type": "repo", "ref": "skot/bitaxe", "path": "datasheets/R1.pdf",
+         "first_seen": "2026-04-10T00:00:00Z"}
+    ]}
+    merged = merge_record(existing, incoming)
+    assert len(merged["found_in"]) == 1
+
+
+def test_merge_bumps_last_seen():
+    existing = _valid_record()
+    existing["last_seen"] = "2026-04-10T00:00:00Z"
+    incoming = {"filename_aliases": ["new.pdf"]}
+    merged = merge_record(existing, incoming, now="2026-04-11T00:00:00Z")
+    assert merged["last_seen"] == "2026-04-11T00:00:00Z"
+
+
+def test_merge_preserves_first_seen():
+    existing = _valid_record()
+    existing["first_seen"] = "2026-04-10T00:00:00Z"
+    incoming = {"filename_aliases": ["new.pdf"]}
+    merged = merge_record(existing, incoming, now="2026-04-11T00:00:00Z")
+    assert merged["first_seen"] == "2026-04-10T00:00:00Z"
 
 
 if __name__ == "__main__":

@@ -54,3 +54,67 @@ def load_record(sha256: str) -> dict:
         return None
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def merge_record(existing: dict, incoming: dict, now: str = None) -> dict:
+    """Merge `incoming` into `existing` and return a new record dict.
+
+    Rules:
+      - New MPN aliases are added (deduped by .mpn); existing primary wins
+      - New source URLs are added (deduped by .url); on match, last_verified_at
+        is updated to the max of existing and incoming
+      - New filename_aliases are added, sorted, deduped
+      - New found_in entries are added, deduped by (type, ref, path)
+      - last_seen bumped to `now` (or current UTC if not provided)
+      - first_seen preserved from existing
+
+    Does NOT change the record's sha256 or mpns-primary flag.
+    """
+    import copy
+    if now is None:
+        from datetime import datetime, timezone
+        now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    merged = copy.deepcopy(existing)
+
+    # Merge mpns (dedup by mpn string, existing primary wins)
+    seen_mpns = {m["mpn"] for m in merged["mpns"]}
+    for m in incoming.get("mpns", []) or []:
+        if m["mpn"] not in seen_mpns:
+            merged["mpns"].append({"mpn": m["mpn"], "primary": False})
+            seen_mpns.add(m["mpn"])
+
+    # Merge source_urls (dedup by url, update last_verified_at on match)
+    url_map = {u["url"]: u for u in merged.get("source_urls", []) or []}
+    for u in incoming.get("source_urls", []) or []:
+        key = u["url"]
+        if key in url_map:
+            existing_u = url_map[key]
+            # Max of last_verified_at
+            if u.get("last_verified_at", "") > existing_u.get("last_verified_at", ""):
+                existing_u["last_verified_at"] = u["last_verified_at"]
+        else:
+            url_map[key] = dict(u)
+    merged["source_urls"] = sorted(url_map.values(), key=lambda x: x["url"])
+
+    # Merge filename_aliases (sort + dedup)
+    aliases = set(merged.get("filename_aliases") or [])
+    for a in incoming.get("filename_aliases", []) or []:
+        aliases.add(a)
+    merged["filename_aliases"] = sorted(aliases)
+
+    # Merge found_in (dedup by (type, ref, path))
+    found_keys = {(f["type"], f["ref"], f.get("path", ""))
+                  for f in (merged.get("found_in") or [])}
+    for f in incoming.get("found_in", []) or []:
+        key = (f["type"], f["ref"], f.get("path", ""))
+        if key not in found_keys:
+            merged.setdefault("found_in", []).append(dict(f))
+            found_keys.add(key)
+    merged["found_in"] = sorted(
+        merged.get("found_in", []),
+        key=lambda f: (f["type"], f["ref"], f.get("path", ""))
+    )
+
+    merged["last_seen"] = now
+    return merged
