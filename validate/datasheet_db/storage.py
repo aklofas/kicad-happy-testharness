@@ -154,3 +154,15 @@ def write_blob_atomic(target_path, data: bytes, expected_sha256: str = None) -> 
                 os.unlink(str(temp))
             except OSError:
                 pass
+
+
+HARNESS_DIR = Path(__file__).resolve().parent.parent.parent
+STORE_DIR = Path(os.environ.get(
+    "DATASHEET_DB_STORE_DIR",
+    str(HARNESS_DIR / "datasheets")
+))
+
+
+def store_path(record: dict) -> Path:
+    """Return the on-disk path for a record's blob."""
+    return STORE_DIR / canonical_filename(record)

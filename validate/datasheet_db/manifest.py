@@ -1,10 +1,14 @@
 """Manifest layer: sharded per-record JSON load/save and lookup indexes."""
 
 import json
+import os
 from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent.parent
-MANIFEST_DIR = HARNESS_DIR / "reference" / "datasheet_manifest"
+MANIFEST_DIR = Path(os.environ.get(
+    "DATASHEET_DB_MANIFEST_DIR",
+    str(HARNESS_DIR / "reference" / "datasheet_manifest")
+))
 
 
 def record_path(sha256: str) -> Path:
