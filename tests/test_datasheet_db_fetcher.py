@@ -8,7 +8,7 @@ from pathlib import Path
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 
-from validate.datasheet_db.fetcher import sanitize_url
+from validate.datasheet_db.fetcher import sanitize_url, DomainRateLimiter
 
 
 def test_sanitize_url_strips_signature():
@@ -37,6 +37,54 @@ def test_sanitize_url_no_query():
 
 def test_sanitize_url_only_bad_params_drops_query():
     assert sanitize_url("https://x.com/p.pdf?sig=a&token=b") == "https://x.com/p.pdf"
+
+
+def test_rate_limiter_no_wait_on_first_call():
+    import time
+    rl = DomainRateLimiter(interval_seconds=1.0)
+    t0 = time.monotonic()
+    rl.wait("example.com")
+    elapsed = time.monotonic() - t0
+    assert elapsed < 0.1, f"first call should not wait, waited {elapsed}"
+
+
+def test_rate_limiter_waits_on_second_call_same_domain():
+    import time
+    rl = DomainRateLimiter(interval_seconds=0.2)
+    rl.wait("example.com")
+    t0 = time.monotonic()
+    rl.wait("example.com")
+    elapsed = time.monotonic() - t0
+    assert 0.15 <= elapsed <= 0.35
+
+
+def test_rate_limiter_no_wait_for_different_domain():
+    import time
+    rl = DomainRateLimiter(interval_seconds=1.0)
+    rl.wait("a.example.com")
+    t0 = time.monotonic()
+    rl.wait("b.example.com")
+    elapsed = time.monotonic() - t0
+    assert elapsed < 0.1
+
+
+def test_rate_limiter_treats_subdomains_distinctly():
+    import time
+    rl = DomainRateLimiter(interval_seconds=1.0)
+    rl.wait("www.example.com")
+    t0 = time.monotonic()
+    rl.wait("api.example.com")
+    elapsed = time.monotonic() - t0
+    assert elapsed < 0.1
+
+
+def test_rate_limiter_extracts_domain_from_url():
+    import time
+    rl = DomainRateLimiter(interval_seconds=0.2)
+    rl.wait_for_url("https://example.com/a.pdf")
+    t0 = time.monotonic()
+    rl.wait_for_url("https://example.com/b.pdf")
+    assert time.monotonic() - t0 >= 0.15
 
 
 if __name__ == "__main__":
