@@ -9,6 +9,7 @@ HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 
 from validate.datasheet_db._validators import validate_record
+from validate.datasheet_db.manifest import record_path, MANIFEST_DIR
 
 
 def _valid_record():
@@ -107,6 +108,30 @@ def test_validate_record_filename_aliases_not_sorted():
     rec["filename_aliases"] = ["z.pdf", "a.pdf"]
     violations = validate_record(rec)
     assert any("sorted" in v or "alias" in v for v in violations)
+
+
+# === record_path ===
+
+def test_record_path_shards_by_first_two_chars():
+    """Record path is MANIFEST_DIR/{sha256[:2]}/{sha256}.json."""
+    sha = "ab1234cdef0123456789abcdef0123456789abcdef0123456789abcdef012345"
+    expected = MANIFEST_DIR / "ab" / f"{sha}.json"
+    assert record_path(sha) == expected
+
+
+def test_record_path_returns_path_object():
+    """record_path returns a pathlib.Path."""
+    sha = "cd" * 32
+    assert isinstance(record_path(sha), Path)
+
+
+def test_record_path_rejects_short_sha():
+    """Too-short sha raises ValueError."""
+    try:
+        record_path("abc")
+        assert False, "should have raised"
+    except ValueError:
+        pass
 
 
 if __name__ == "__main__":
