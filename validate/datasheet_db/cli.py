@@ -27,15 +27,107 @@ def cmd_stats(args) -> int:
     return 0
 
 
+def cmd_insert(args) -> int:
+    from datetime import datetime, timezone
+    from pathlib import Path
+    from validate.datasheet_db.storage import (
+        compute_sha256, write_blob_atomic, store_path, BlobSha256Mismatch
+    )
+    from validate.datasheet_db.manifest import (
+        load_record, save_record, merge_record
+    )
+
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    if args.file:
+        path = Path(args.file)
+        if not path.exists():
+            print(f"ERROR: file not found: {path}", file=sys.stderr)
+            return 2
+        # Check first bytes for PDF magic
+        with open(path, "rb") as f:
+            head = f.read(8)
+        if not head.startswith(b"%PDF-"):
+            print(f"ERROR: {path} is not a PDF (magic: {head!r})", file=sys.stderr)
+            return 1
+        sha = compute_sha256(path)
+        size = path.stat().st_size
+        data = path.read_bytes()
+    elif args.url:
+        from validate.datasheet_db.fetcher import fetch_bytes, FetchError
+        try:
+            result = fetch_bytes(args.url)
+        except FetchError as e:
+            print(f"ERROR: {e}", file=sys.stderr)
+            return 1
+        sha = result.sha256
+        size = result.size_bytes
+        data = result.body
+    else:
+        print("ERROR: --mpn-only insert requires a downloader chain; not yet implemented", file=sys.stderr)
+        return 3
+
+    # Build a record skeleton from args
+    primary_mpn = args.mpn or Path(args.file or "unknown.pdf").stem
+    record_skel = {
+        "sha256": sha,
+        "size_bytes": size,
+        "page_count": None,
+        "mpns": [{"mpn": primary_mpn, "primary": True}],
+        "manufacturers": [args.manufacturer] if args.manufacturer else [],
+        "source_urls": [],
+        "filename_aliases": [Path(args.file).name] if args.file else [],
+        "found_in": [],
+        "revision_label": None,
+        "first_seen": now,
+        "last_seen": now,
+        "verified": False,
+        "verification_notes": None,
+    }
+    if args.url:
+        from validate.datasheet_db.fetcher import sanitize_url
+        record_skel["source_urls"] = [{
+            "url": sanitize_url(args.url),
+            "first_seen_at": now,
+            "last_verified_at": now,
+            "status": "live",
+        }]
+
+    existing = load_record(sha)
+    if existing is not None:
+        merged = merge_record(existing, record_skel, now=now)
+        save_record(merged)
+        print(f"merged {sha}")
+        return 0
+
+    # New record — write blob then save
+    try:
+        write_blob_atomic(store_path(record_skel), data, expected_sha256=sha)
+    except BlobSha256Mismatch as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 1
+    save_record(record_skel)
+    print(f"new {sha}")
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="datasheet_db")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_stats = sub.add_parser("stats", help="Print store summary")
 
+    p_insert = sub.add_parser("insert", help="Insert a datasheet")
+    p_insert.add_argument("--url")
+    p_insert.add_argument("--file")
+    p_insert.add_argument("--mpn")
+    p_insert.add_argument("--manufacturer")
+    p_insert.add_argument("--source", choices=["digikey", "lcsc", "auto"])
+
     args = parser.parse_args(argv)
 
     handlers = {
         "stats": cmd_stats,
+        "insert": cmd_insert,
     }
     return handlers[args.command](args)
