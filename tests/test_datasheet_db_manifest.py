@@ -14,7 +14,8 @@ sys.path.insert(0, str(HARNESS_DIR))
 
 from validate.datasheet_db._validators import validate_record
 from validate.datasheet_db.manifest import (
-    record_path, MANIFEST_DIR, save_record, load_record, merge_record
+    record_path, MANIFEST_DIR, save_record, load_record, merge_record,
+    iter_records, find_by_mpn, find_by_url, find_by_sha256_prefix
 )
 
 
@@ -288,6 +289,103 @@ def test_merge_preserves_first_seen():
     incoming = {"filename_aliases": ["new.pdf"]}
     merged = merge_record(existing, incoming, now="2026-04-11T00:00:00Z")
     assert merged["first_seen"] == "2026-04-10T00:00:00Z"
+
+
+# === iter_records / find_by_mpn / find_by_url / find_by_sha256_prefix ===
+
+def _seed_three_records(tmp):
+    """Helper: write three valid records with distinct MPNs and URLs."""
+    records = []
+    for i, (sha, mpn, url) in enumerate([
+        ("aa" * 32, "R1", "https://a.example/r1.pdf"),
+        ("bb" * 32, "R2", "https://a.example/r2.pdf"),
+        ("cc" * 32, "R3", "https://b.example/r3.pdf"),
+    ]):
+        rec = _valid_record()
+        rec["sha256"] = sha
+        rec["mpns"] = [{"mpn": mpn, "primary": True}]
+        rec["source_urls"] = [{
+            "url": url,
+            "first_seen_at": "2026-04-10T00:00:00Z",
+            "last_verified_at": "2026-04-10T00:00:00Z",
+            "status": "live",
+        }]
+        save_record(rec)
+        records.append(rec)
+    return records
+
+
+def test_iter_records_yields_all():
+    def inner(tmp):
+        _seed_three_records(tmp)
+        found = list(iter_records())
+        assert len(found) == 3
+        shas = {r["sha256"] for r in found}
+        assert shas == {"aa" * 32, "bb" * 32, "cc" * 32}
+    _with_temp_manifest_dir(inner)
+
+
+def test_iter_records_empty_dir():
+    def inner(tmp):
+        assert list(iter_records()) == []
+    _with_temp_manifest_dir(inner)
+
+
+def test_find_by_mpn_exact_match():
+    def inner(tmp):
+        _seed_three_records(tmp)
+        matches = find_by_mpn("R2")
+        assert len(matches) == 1
+        assert matches[0]["sha256"] == "bb" * 32
+    _with_temp_manifest_dir(inner)
+
+
+def test_find_by_mpn_matches_alias():
+    def inner(tmp):
+        rec = _valid_record()
+        rec["sha256"] = "dd" * 32
+        rec["mpns"] = [
+            {"mpn": "AD8605", "primary": True},
+            {"mpn": "AD8606", "primary": False},
+        ]
+        save_record(rec)
+        assert len(find_by_mpn("AD8606")) == 1
+    _with_temp_manifest_dir(inner)
+
+
+def test_find_by_mpn_no_match():
+    def inner(tmp):
+        _seed_three_records(tmp)
+        assert find_by_mpn("DOES_NOT_EXIST") == []
+    _with_temp_manifest_dir(inner)
+
+
+def test_find_by_url_exact_match():
+    def inner(tmp):
+        _seed_three_records(tmp)
+        matches = find_by_url("https://a.example/r1.pdf")
+        assert len(matches) == 1
+        assert matches[0]["sha256"] == "aa" * 32
+    _with_temp_manifest_dir(inner)
+
+
+def test_find_by_sha256_prefix_match():
+    def inner(tmp):
+        _seed_three_records(tmp)
+        matches = find_by_sha256_prefix("aa")
+        assert len(matches) == 1
+    _with_temp_manifest_dir(inner)
+
+
+def test_find_by_sha256_prefix_ambiguous():
+    """Common prefix across records returns all matches."""
+    def inner(tmp):
+        for sha in ["abcdef" + "0" * 58, "abcdef" + "1" * 58]:
+            rec = _valid_record()
+            rec["sha256"] = sha
+            save_record(rec)
+        assert len(find_by_sha256_prefix("abcdef")) == 2
+    _with_temp_manifest_dir(inner)
 
 
 if __name__ == "__main__":

@@ -118,3 +118,48 @@ def merge_record(existing: dict, incoming: dict, now: str = None) -> dict:
 
     merged["last_seen"] = now
     return merged
+
+
+def iter_records():
+    """Yield every record in the manifest directory.
+
+    Walks MANIFEST_DIR/{00..ff}/*.json. Returns an iterator of dicts.
+    """
+    if not MANIFEST_DIR.exists():
+        return
+    for shard in sorted(MANIFEST_DIR.iterdir()):
+        if not shard.is_dir():
+            continue
+        for record_file in sorted(shard.glob("*.json")):
+            try:
+                with open(record_file, "r", encoding="utf-8") as f:
+                    yield json.load(f)
+            except (json.JSONDecodeError, OSError):
+                continue
+
+
+def find_by_mpn(mpn: str) -> list:
+    """Return all records whose mpns list contains `mpn` (primary or alias)."""
+    matches = []
+    for rec in iter_records():
+        for m in rec.get("mpns", []):
+            if m.get("mpn") == mpn:
+                matches.append(rec)
+                break
+    return matches
+
+
+def find_by_url(url: str) -> list:
+    """Return all records whose source_urls contain `url`."""
+    matches = []
+    for rec in iter_records():
+        for u in rec.get("source_urls", []):
+            if u.get("url") == url:
+                matches.append(rec)
+                break
+    return matches
+
+
+def find_by_sha256_prefix(prefix: str) -> list:
+    """Return all records whose sha256 starts with `prefix`."""
+    return [rec for rec in iter_records() if rec["sha256"].startswith(prefix)]
