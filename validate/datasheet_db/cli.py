@@ -198,6 +198,58 @@ def cmd_list(args) -> int:
     return 0
 
 
+def cmd_fetch_missing(args) -> int:
+    from datetime import datetime, timezone
+    from validate.datasheet_db.manifest import iter_records, save_record, merge_record
+    from validate.datasheet_db.storage import store_path, write_blob_atomic, compute_sha256
+    from validate.datasheet_db.fetcher import fetch_verified, FetchError
+
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    downloaded = skipped = failed = unrecoverable = 0
+
+    for rec in iter_records():
+        # Skip if blob already present and verified
+        path = store_path(rec)
+        if path.exists() and compute_sha256(path) == rec["sha256"]:
+            skipped += 1
+            continue
+
+        # Filter URL list (drop dead URLs unless --retry-dead)
+        urls = [u for u in (rec.get("source_urls") or [])
+                if u.get("status", "live") != "dead" or args.retry_dead]
+        if not urls:
+            unrecoverable += 1
+            continue
+
+        if args.dry_run:
+            print(f"[dry-run] would fetch: {rec['sha256'][:12]} from {urls[0]['url']}")
+            continue
+
+        # Try URLs in order
+        success = False
+        for url_entry in urls:
+            try:
+                result = fetch_verified(url_entry["url"], expected_sha256=rec["sha256"])
+                if result.matched:
+                    write_blob_atomic(path, result.fetch_result.body, expected_sha256=rec["sha256"])
+                    downloaded += 1
+                    success = True
+                    break
+                else:
+                    # Drift handling — deferred to Task 23
+                    pass
+            except FetchError:
+                continue
+        if not success:
+            failed += 1
+
+    print(f"Downloaded: {downloaded}")
+    print(f"Skipped: {skipped}")
+    print(f"Failed: {failed}")
+    print(f"Unrecoverable: {unrecoverable}")
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="datasheet_db")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -234,6 +286,20 @@ def main(argv=None) -> int:
     p_list.add_argument("--format", choices=["text", "tsv", "json"], default="text",
                         help="Output format (default: text)")
 
+    p_fetch = sub.add_parser("fetch-missing", help="Download blobs missing from the store")
+    p_fetch.add_argument("--dry-run", action="store_true",
+                         help="Report what would happen, fetch nothing")
+    p_fetch.add_argument("--mpn", help="Filter to records containing this MPN (not yet wired)")
+    p_fetch.add_argument("--manufacturer", help="Filter by manufacturer (not yet wired)")
+    p_fetch.add_argument("--jobs", type=int, default=None,
+                         help="Parallel workers (not yet wired)")
+    p_fetch.add_argument("--rate-limit", help="Rate limit (not yet wired)")
+    p_fetch.add_argument("--timeout", type=float, default=60.0, help="Per-request timeout")
+    p_fetch.add_argument("--retry-dead", action="store_true",
+                         help="Retry URLs previously marked as dead")
+    p_fetch.add_argument("--max", type=int, default=None,
+                         help="Stop after N successful downloads (for testing)")
+
     args = parser.parse_args(argv)
 
     handlers = {
@@ -242,5 +308,6 @@ def main(argv=None) -> int:
         "find": cmd_find,
         "verify": cmd_verify,
         "list": cmd_list,
+        "fetch-missing": cmd_fetch_missing,
     }
     return handlers[args.command](args)

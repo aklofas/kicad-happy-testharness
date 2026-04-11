@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 import hashlib
+from unittest.mock import patch, MagicMock
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
@@ -40,6 +41,65 @@ def _make_fake_pdf(path, content_suffix=b"dummy"):
     """Write a minimal valid-looking PDF to path."""
     with open(path, "wb") as f:
         f.write(b"%PDF-1.5\n" + content_suffix)
+
+
+def _with_temp_store_and_manifest_dirs(fn):
+    """In-process test helper: override BOTH manifest.MANIFEST_DIR and
+    storage.STORE_DIR for the duration of fn(tmp_path).
+
+    Used by tests that need to call cli.main() directly (e.g. fetch-missing
+    tests that mock urllib.request.urlopen)."""
+    from validate.datasheet_db import manifest as m
+    from validate.datasheet_db import storage as s
+    orig_manifest = m.MANIFEST_DIR
+    orig_store = s.STORE_DIR
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        m.MANIFEST_DIR = tmp / "manifest"
+        s.STORE_DIR = tmp / "store"
+        m.MANIFEST_DIR.mkdir(parents=True)
+        s.STORE_DIR.mkdir(parents=True)
+        try:
+            fn(tmp)
+        finally:
+            m.MANIFEST_DIR = orig_manifest
+            s.STORE_DIR = orig_store
+
+
+def _mock_urlopen_response(body: bytes, content_type: str = "application/pdf"):
+    """Build a MagicMock that mimics urllib.request.urlopen's context-manager response."""
+    mock = MagicMock()
+    mock.headers.get.return_value = content_type
+    mock.__enter__ = lambda self: self
+    mock.__exit__ = lambda self, *a: None
+    chunks = [body[i:i + 8192] for i in range(0, len(body), 8192)] + [b""]
+    mock.read.side_effect = chunks
+    return mock
+
+
+def _seed_record_with_url(sha256: str, url: str, mpn: str = "TESTMPN"):
+    """Save a manifest record without writing the blob to the store."""
+    from validate.datasheet_db.manifest import save_record
+    save_record({
+        "sha256": sha256,
+        "size_bytes": 1024,
+        "page_count": None,
+        "mpns": [{"mpn": mpn, "primary": True}],
+        "manufacturers": [],
+        "source_urls": [{
+            "url": url,
+            "first_seen_at": "2026-04-10T00:00:00Z",
+            "last_verified_at": "2026-04-10T00:00:00Z",
+            "status": "live",
+        }],
+        "filename_aliases": [],
+        "found_in": [],
+        "revision_label": None,
+        "first_seen": "2026-04-10T00:00:00Z",
+        "last_seen": "2026-04-10T00:00:00Z",
+        "verified": False,
+        "verification_notes": None,
+    })
 
 
 def test_insert_file_creates_record_and_blob():
@@ -285,6 +345,64 @@ def test_list_format_json():
         assert len(data) == 1
         mpn_names = {m["mpn"] for m in data[0]["mpns"]}
         assert "JSONLIST" in mpn_names
+
+
+def test_fetch_missing_dry_run_no_side_effects():
+    """Dry run reports missing records without downloading anything."""
+    def inner(tmp):
+        from validate.datasheet_db.cli import main as cli_main
+        # Seed a record with a URL but no blob in the store
+        body = b"%PDF-1.5\n" + b"X" * 200
+        sha = hashlib.sha256(body).hexdigest()
+        _seed_record_with_url(sha, "https://x.com/test.pdf", mpn="DRYRUN")
+        # Run dry-run
+        rc = cli_main(["fetch-missing", "--dry-run"])
+        assert rc == 0
+        # No blob should have been written
+        store = tmp / "store"
+        blobs = list(store.glob("*.pdf"))
+        assert len(blobs) == 0
+    _with_temp_store_and_manifest_dirs(inner)
+
+
+def test_fetch_missing_downloads_valid_url():
+    """Mock a successful HTTP response; verify the blob lands in the store."""
+    def inner(tmp):
+        from validate.datasheet_db.cli import main as cli_main
+        body = b"%PDF-1.5\n" + b"Y" * 500
+        sha = hashlib.sha256(body).hexdigest()
+        _seed_record_with_url(sha, "https://x.com/file.pdf", mpn="DOWNLOAD1")
+        with patch("urllib.request.urlopen", return_value=_mock_urlopen_response(body)):
+            rc = cli_main(["fetch-missing"])
+        assert rc == 0
+        # Blob should now exist
+        store = tmp / "store"
+        blobs = list(store.glob("*.pdf"))
+        assert len(blobs) == 1
+        # SHA must match
+        from validate.datasheet_db.storage import compute_sha256
+        assert compute_sha256(blobs[0]) == sha
+    _with_temp_store_and_manifest_dirs(inner)
+
+
+def test_fetch_missing_skips_present_blobs():
+    """A record whose blob is already present and verified is skipped."""
+    def inner(tmp):
+        from validate.datasheet_db.cli import main as cli_main
+        from validate.datasheet_db.manifest import load_record
+        from validate.datasheet_db.storage import store_path, write_blob_atomic
+        body = b"%PDF-1.5\n" + b"Z" * 300
+        sha = hashlib.sha256(body).hexdigest()
+        _seed_record_with_url(sha, "https://x.com/already.pdf", mpn="SKIPME")
+        # Pre-write the blob to the store
+        rec = load_record(sha)
+        write_blob_atomic(store_path(rec), body, expected_sha256=sha)
+        # Now run fetch-missing — should NOT call urlopen
+        with patch("urllib.request.urlopen") as mock_open:
+            rc = cli_main(["fetch-missing"])
+            assert mock_open.call_count == 0, "should not have called urlopen for an already-present blob"
+        assert rc == 0
+    _with_temp_store_and_manifest_dirs(inner)
 
 
 if __name__ == "__main__":
