@@ -137,6 +137,32 @@ def cmd_find(args) -> int:
     return 0
 
 
+def cmd_verify(args) -> int:
+    from validate.datasheet_db.manifest import iter_records
+    from validate.datasheet_db.storage import store_path, compute_sha256
+    scanned = matched = mismatched = missing_blob = 0
+    for rec in iter_records():
+        scanned += 1
+        path = store_path(rec)
+        if not path.exists():
+            missing_blob += 1
+            continue
+        if args.fast:
+            matched += 1
+            continue
+        actual = compute_sha256(path)
+        if actual == rec["sha256"]:
+            matched += 1
+        else:
+            mismatched += 1
+            print(f"MISMATCH: {path} (expected {rec['sha256'][:12]}, got {actual[:12]})")
+    print(f"Scanned: {scanned}")
+    print(f"Matched: {matched}")
+    print(f"Mismatched: {mismatched}")
+    print(f"Missing blob: {missing_blob}")
+    return 1 if mismatched > 0 else 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="datasheet_db")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -158,11 +184,18 @@ def main(argv=None) -> int:
     p_find.add_argument("--json", action="store_true", help="Print full record as JSON array")
     p_find.add_argument("--open", action="store_true", help="xdg-open the result (not implemented)")
 
+    p_verify = sub.add_parser("verify", help="Re-hash store blobs and check against manifest")
+    p_verify.add_argument("--fast", action="store_true",
+                          help="Skip re-hashing; only check blob existence")
+    p_verify.add_argument("--record", help="Verify a single record by sha256 (not yet wired)")
+    p_verify.add_argument("--json", action="store_true", help="Machine-readable output (not yet wired)")
+
     args = parser.parse_args(argv)
 
     handlers = {
         "stats": cmd_stats,
         "insert": cmd_insert,
         "find": cmd_find,
+        "verify": cmd_verify,
     }
     return handlers[args.command](args)

@@ -163,6 +163,74 @@ def test_find_no_match_exits_non_zero():
         assert result.returncode == 1
 
 
+def test_verify_clean_store_exits_zero():
+    """Verify on a freshly-inserted store returns exit 0."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        store = tmp / "store"
+        manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        fake = tmp / "source.pdf"
+        _make_fake_pdf(fake, b"verify-test")
+        _run_cli(["insert", "--file", str(fake), "--mpn", "VERIFY1"], store, manifest)
+        result = _run_cli(["verify"], store, manifest)
+        assert result.returncode == 0, result.stderr
+        assert "Matched" in result.stdout
+
+
+def test_verify_mismatched_blob_exits_nonzero():
+    """Mutate a blob on disk; verify should detect the mismatch and exit 1."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); store = tmp / "store"; manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        fake = tmp / "source.pdf"
+        _make_fake_pdf(fake, b"original-content")
+        _run_cli(["insert", "--file", str(fake), "--mpn", "MUT1"], store, manifest)
+        # Find the blob and corrupt it
+        blobs = list(store.glob("*.pdf"))
+        assert len(blobs) == 1
+        blobs[0].write_bytes(b"%PDF-1.5\nCORRUPTED")
+        result = _run_cli(["verify"], store, manifest)
+        assert result.returncode != 0
+        assert "MISMATCH" in result.stdout or "Mismatched" in result.stdout
+
+
+def test_verify_missing_blob_reported_but_exit_zero():
+    """Missing blob is reported (a fresh clone is expected to be missing) but exit 0."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); store = tmp / "store"; manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        fake = tmp / "source.pdf"
+        _make_fake_pdf(fake, b"missing-test")
+        _run_cli(["insert", "--file", str(fake), "--mpn", "MISS1"], store, manifest)
+        # Delete the blob
+        blobs = list(store.glob("*.pdf"))
+        assert len(blobs) == 1
+        blobs[0].unlink()
+        result = _run_cli(["verify"], store, manifest)
+        assert result.returncode == 0, f"missing blob should not fail verify; got {result.returncode}: {result.stderr}"
+        assert "Missing" in result.stdout
+
+
+def test_verify_fast_skips_hashing():
+    """--fast skips re-hashing, so a mutated blob is NOT detected (file just exists)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); store = tmp / "store"; manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        fake = tmp / "source.pdf"
+        _make_fake_pdf(fake, b"fast-test")
+        _run_cli(["insert", "--file", str(fake), "--mpn", "FAST1"], store, manifest)
+        # Corrupt the blob
+        blobs = list(store.glob("*.pdf"))
+        blobs[0].write_bytes(b"%PDF-1.5\nCORRUPTED")
+        # Slow verify catches it
+        slow = _run_cli(["verify"], store, manifest)
+        assert slow.returncode != 0
+        # Fast verify does NOT (no re-hash)
+        fast = _run_cli(["verify", "--fast"], store, manifest)
+        assert fast.returncode == 0
+
+
 if __name__ == "__main__":
     tests = [(name, obj) for name, obj in globals().items()
              if name.startswith("test_") and callable(obj)]
