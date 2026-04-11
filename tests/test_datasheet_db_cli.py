@@ -100,6 +100,69 @@ def test_insert_file_missing_path():
         assert result.returncode != 0
 
 
+def test_find_by_mpn_prints_store_path():
+    """find MPN prints the absolute path to the blob in the store."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        store = tmp / "store"
+        manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        fake = tmp / "source.pdf"
+        _make_fake_pdf(fake, b"AD8605 data")
+        # Insert first
+        _run_cli(["insert", "--file", str(fake), "--mpn", "AD8605"], store, manifest)
+        # Then find
+        result = _run_cli(["find", "AD8605"], store, manifest)
+        assert result.returncode == 0, result.stderr
+        assert "AD8605" in result.stdout
+        assert ".pdf" in result.stdout
+
+
+def test_find_by_mpn_json_output():
+    """find MPN --json prints a JSON array of full records."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); store = tmp / "store"; manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        fake = tmp / "source.pdf"
+        _make_fake_pdf(fake, b"STM32 content")
+        _run_cli(["insert", "--file", str(fake), "--mpn", "STM32F405"], store, manifest)
+        result = _run_cli(["find", "STM32F405", "--json"], store, manifest)
+        assert result.returncode == 0
+        import json
+        data = json.loads(result.stdout)
+        assert isinstance(data, list)
+        assert len(data) == 1
+        assert any(m["mpn"] == "STM32F405" for m in data[0]["mpns"])
+
+
+def test_find_by_sha256_prefix():
+    """find --sha256 PREFIX returns matching records."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); store = tmp / "store"; manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        fake = tmp / "source.pdf"
+        _make_fake_pdf(fake, b"sha256-prefix-test")
+        _run_cli(["insert", "--file", str(fake), "--mpn", "X"], store, manifest)
+        # Get the actual sha by listing the manifest record
+        records = list(manifest.rglob("*.json"))
+        assert len(records) == 1
+        import json
+        rec = json.load(open(records[0]))
+        sha_prefix = rec["sha256"][:6]
+        result = _run_cli(["find", "--sha256", sha_prefix], store, manifest)
+        assert result.returncode == 0
+        assert ".pdf" in result.stdout
+
+
+def test_find_no_match_exits_non_zero():
+    """find on a missing MPN returns exit 1 with no stdout output."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp); store = tmp / "store"; manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        result = _run_cli(["find", "DOES_NOT_EXIST"], store, manifest)
+        assert result.returncode == 1
+
+
 if __name__ == "__main__":
     tests = [(name, obj) for name, obj in globals().items()
              if name.startswith("test_") and callable(obj)]

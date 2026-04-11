@@ -111,6 +111,32 @@ def cmd_insert(args) -> int:
     return 0
 
 
+def cmd_find(args) -> int:
+    from validate.datasheet_db.manifest import (
+        find_by_mpn, find_by_sha256_prefix, find_by_url
+    )
+    from validate.datasheet_db.storage import store_path
+
+    if args.sha256:
+        matches = find_by_sha256_prefix(args.sha256)
+    elif args.url:
+        matches = find_by_url(args.url)
+    else:
+        matches = find_by_mpn(args.query)
+
+    if not matches:
+        return 1
+
+    if args.json:
+        import json
+        print(json.dumps(matches, indent=2))
+        return 0
+
+    for rec in matches:
+        print(str(store_path(rec)))
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="datasheet_db")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -124,10 +150,19 @@ def main(argv=None) -> int:
     p_insert.add_argument("--manufacturer")
     p_insert.add_argument("--source", choices=["digikey", "lcsc", "auto"])
 
+    p_find = sub.add_parser("find", help="Look up a datasheet")
+    p_find.add_argument("query", nargs="?", default=None,
+                        help="MPN to look up (or omit and use --sha256/--url)")
+    p_find.add_argument("--sha256", help="Look up by sha256 prefix")
+    p_find.add_argument("--url", help="Look up by source URL")
+    p_find.add_argument("--json", action="store_true", help="Print full record as JSON array")
+    p_find.add_argument("--open", action="store_true", help="xdg-open the result (not implemented)")
+
     args = parser.parse_args(argv)
 
     handlers = {
         "stats": cmd_stats,
         "insert": cmd_insert,
+        "find": cmd_find,
     }
     return handlers[args.command](args)
