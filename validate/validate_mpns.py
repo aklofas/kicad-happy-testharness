@@ -16,6 +16,7 @@ Environment:
 import argparse
 import json
 import os
+import subprocess
 import sys
 import time
 import urllib.error
@@ -25,6 +26,31 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import HARNESS_DIR
+
+
+def _ingest_datasheet_url(url: str, mpn: str, manufacturer: str = "") -> None:
+    """Pipe a captured datasheet URL into the datasheet_db store.
+
+    Called as a side effect of MPN validation. Errors are swallowed because
+    the main flow (MPN validation) is more important than datasheet ingest,
+    which is an opportunistic cache of what the DigiKey/Mouser APIs return.
+    """
+    if not url or not mpn:
+        return
+    harness_root = Path(__file__).resolve().parent.parent
+    cmd = [
+        sys.executable,
+        str(harness_root / "tools" / "datasheet_db.py"),
+        "insert",
+        "--url", url,
+        "--mpn", mpn,
+    ]
+    if manufacturer:
+        cmd.extend(["--manufacturer", manufacturer])
+    try:
+        subprocess.run(cmd, capture_output=True, timeout=120, check=False)
+    except Exception:
+        pass  # side effect; ignore errors
 
 
 def get_digikey_token():
@@ -70,7 +96,7 @@ def search_digikey(mpn: str, token: str, client_id: str, max_retries: int = 3) -
         mpn_upper = mpn.upper()
         for p in products:
             if p.get("ManufacturerProductNumber", "").upper() == mpn_upper:
-                return {
+                result = {
                     "mpn": p["ManufacturerProductNumber"],
                     "manufacturer": p.get("Manufacturer", {}).get("Name", ""),
                     "datasheet_url": p.get("DatasheetUrl", ""),
@@ -78,8 +104,10 @@ def search_digikey(mpn: str, token: str, client_id: str, max_retries: int = 3) -
                     "in_stock": p.get("QuantityAvailable", 0),
                     "exact_match": True,
                 }
+                _ingest_datasheet_url(result["datasheet_url"], result["mpn"], result["manufacturer"])
+                return result
         p = products[0]
-        return {
+        result = {
             "mpn": p.get("ManufacturerProductNumber", ""),
             "manufacturer": p.get("Manufacturer", {}).get("Name", ""),
             "datasheet_url": p.get("DatasheetUrl", ""),
@@ -87,6 +115,8 @@ def search_digikey(mpn: str, token: str, client_id: str, max_retries: int = 3) -
             "in_stock": p.get("QuantityAvailable", 0),
             "exact_match": False,
         }
+        _ingest_datasheet_url(result["datasheet_url"], result["mpn"], result["manufacturer"])
+        return result
     except urllib.error.HTTPError as e:
         if e.code == 429 and max_retries > 0:
             print("  DigiKey rate limited, waiting 5s...", file=sys.stderr)
@@ -118,7 +148,7 @@ def search_mouser(mpn: str, api_key: str) -> dict | None:
         mpn_upper = mpn.upper()
         for p in parts:
             if p.get("ManufacturerPartNumber", "").upper() == mpn_upper:
-                return {
+                result = {
                     "mpn": p["ManufacturerPartNumber"],
                     "manufacturer": p.get("Manufacturer", ""),
                     "datasheet_url": p.get("DataSheetUrl", ""),
@@ -126,8 +156,10 @@ def search_mouser(mpn: str, api_key: str) -> dict | None:
                     "in_stock": int(p.get("AvailabilityInStock", "0") or "0"),
                     "exact_match": True,
                 }
+                _ingest_datasheet_url(result["datasheet_url"], result["mpn"], result["manufacturer"])
+                return result
         p = parts[0]
-        return {
+        result = {
             "mpn": p.get("ManufacturerPartNumber", ""),
             "manufacturer": p.get("Manufacturer", ""),
             "datasheet_url": p.get("DataSheetUrl", ""),
@@ -135,6 +167,8 @@ def search_mouser(mpn: str, api_key: str) -> dict | None:
             "in_stock": int(p.get("AvailabilityInStock", "0") or "0"),
             "exact_match": False,
         }
+        _ingest_datasheet_url(result["datasheet_url"], result["mpn"], result["manufacturer"])
+        return result
     except Exception:
         return None
 
