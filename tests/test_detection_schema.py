@@ -427,18 +427,14 @@ def test_derived_fields_are_derived_field():
 # was missing its __main__ runner block — see commit history). Remove
 # names from this set as the corresponding KH issues are closed in
 # kicad-happy. Each entry is a (test_name, kh_issue_id) tuple.
+#
+# KH-231 closed 2026-04-10 PM (kicad-happy commit beaddb8) — 3 entries removed.
+# KH-232 closed 2026-04-10 PM (same commit) — 1 entry removed.
 KNOWN_FAILURES = {
-    # KH-231: opamp_circuits non_inverting recalc returns -Rf/Ri (the
-    # inverting formula) regardless of configuration.
-    "test_recalc_opamp_non_inverting": "KH-231",
-    "test_inverse_opamp_gain": "KH-231",
-    "test_inverse_opamp_gain_dB": "KH-231",
-    # KH-232: lc_filters schema has no inverse solver registered for
-    # resonant_hz, so get_inverse_solver returns None.
-    "test_inverse_lc_resonant": "KH-232",
     # KH-233: SCHEMAS dict has not kept up with detector additions in
     # analyze_schematic.py — 22 signal_analysis output keys lack a
-    # corresponding SCHEMAS entry as of 2026-04-10.
+    # corresponding SCHEMAS entry as of 2026-04-10. Deferred to a
+    # dedicated kicad-happy plan.
     "test_schema_completeness_zebra_x": "KH-233",
 }
 

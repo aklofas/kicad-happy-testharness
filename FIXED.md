@@ -11,6 +11,32 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-10 — Batch 42: KH-231/KH-232 dormant analyzer bugs (fixed in kicad-happy)
+
+### KH-231 (HIGH): opamp_circuits non_inverting recalc used inverting formula
+
+- **Where fixed:** kicad-happy repo, commit `beaddb8` (not this repo)
+- **Root cause:** branch ordering in `detection_schema.py::_recalc_opamp_gain` checked `inverting` before `non_inverting`, which matched both configurations and applied `-Rf/Ri` to non-inverting parts. The `_inverse_opamp_gain` solver had the correct ordering, which is why the inverse tests still computed sensible intermediate values (they just disagreed with the broken forward pass).
+- **Fix:** reversed the branch order so `non_inverting` is checked first, mirroring `_inverse_opamp_gain`.
+- **Impact before fix:** every opamp_circuits detection in 36,541 schematic outputs had `gain = -Rf/Ri` regardless of configuration. Silent wrong value across the entire corpus.
+- **Verified on harness side:** after pulling kicad-happy to `beaddb8` and re-running `python3 tests/test_detection_schema.py`, three tests flipped XFAIL → XPASS:
+  - `test_recalc_opamp_non_inverting`
+  - `test_inverse_opamp_gain`
+  - `test_inverse_opamp_gain_dB`
+  Runner explicitly printed "remove from KNOWN_FAILURES, KH-231 may be fixed" for each.
+- **Harness cleanup (this commit):** removed the three entries from `KNOWN_FAILURES` in `tests/test_detection_schema.py`. Test file now declares 25 passing tests + 1 xfailed (KH-233 only).
+
+### KH-232 (MED): lc_filters had no inverse solver for resonant_hz
+
+- **Where fixed:** kicad-happy repo, commit `beaddb8` (same commit as KH-231)
+- **Root cause:** the `_inverse_lc_resonant` solver function existed but was never wired into the `lc_filters` schema's `DerivedField("resonant_hz", ...)` constructor. `get_inverse_solver("lc_filters", "resonant_hz")` returned None.
+- **Fix:** added `_inverse_lc_resonant` as the third argument to the DerivedField constructor. One-line wiring fix.
+- **Side effect noted by kicad-happy agent:** `get_inverse_solver("lc_filters", "impedance_ohms")` now falls through to `_inverse_lc_resonant` via the second-pass loop in `get_inverse_solver`. Harness grep confirmed no test asserts None for that lookup — safe.
+- **Verified on harness side:** `test_inverse_lc_resonant` flipped XFAIL → XPASS.
+- **Harness cleanup (this commit):** removed the entry from `KNOWN_FAILURES`.
+
+---
+
 ## 2026-04-10 — Batch 41: TH-014 missing __main__ runner blocks
 
 ### TH-014 (MED): Two test files silently passing — 36 tests never executed
