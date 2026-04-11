@@ -2,6 +2,7 @@
 
 TIER = "unit"
 
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -11,7 +12,8 @@ sys.path.insert(0, str(HARNESS_DIR))
 sys.path.insert(0, str(HARNESS_DIR / "tools"))
 
 from migrate_datasheets_to_db import (
-    phase1_enumerate, phase2_group, phase3_stage, phase4_swap
+    phase1_enumerate, phase2_group, phase3_stage, phase4_swap,
+    phase5_verify, phase6_absorb_verification_json
 )
 
 
@@ -181,6 +183,75 @@ def test_phase4_swap_atomic_renames():
         assert not staging_store.exists()
         assert not staging_manifest.exists()
         assert not preserved_root.exists()
+
+
+def test_phase5_verify_runs_against_clean_store():
+    """phase5_verify shells out to datasheet_db verify; returns 0 on clean store."""
+    import subprocess
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        store = tmp / "store"
+        manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+        # Empty store + empty manifest = clean (no records to verify)
+        # Call the CLI directly via subprocess with the env vars
+        # phase5_verify needs to know which store/manifest to verify
+        env = os.environ.copy()
+        env["DATASHEET_DB_STORE_DIR"] = str(store)
+        env["DATASHEET_DB_MANIFEST_DIR"] = str(manifest)
+        rc = phase5_verify(harness_root=HARNESS_DIR, env=env)
+        assert rc == 0
+
+
+def test_phase6_marks_existing_record_verified():
+    """phase6_absorb_verification_json sets verified=true on records that already exist."""
+    import json
+    import os
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        store = tmp / "store"
+        manifest = tmp / "manifest"
+        store.mkdir(); manifest.mkdir()
+
+        # Override the manifest module's MANIFEST_DIR to point at our temp dir
+        from validate.datasheet_db import manifest as m
+        from validate.datasheet_db.manifest import save_record, load_record
+        original = m.MANIFEST_DIR
+        m.MANIFEST_DIR = manifest
+        try:
+            # Seed an unverified record
+            sha = "ab" * 32
+            save_record({
+                "sha256": sha,
+                "size_bytes": 1024,
+                "page_count": None,
+                "mpns": [{"mpn": "AD8605", "primary": True}],
+                "manufacturers": ["Analog Devices"],
+                "source_urls": [],
+                "filename_aliases": [],
+                "found_in": [],
+                "revision_label": None,
+                "first_seen": "2026-04-10T00:00:00Z",
+                "last_seen": "2026-04-10T00:00:00Z",
+                "verified": False,
+                "verification_notes": None,
+            })
+            # Write a verification_json with that sha
+            ver_json = tmp / "datasheets_verification.json"
+            ver_json.write_text(json.dumps([
+                {"sha256": sha, "mpn": "AD8605", "manufacturer": "Analog Devices"}
+            ]))
+
+            phase6_absorb_verification_json(ver_json)
+
+            # The record should now be verified=true
+            rec = load_record(sha)
+            assert rec is not None
+            assert rec["verified"] is True
+            # The verification_json file should be deleted
+            assert not ver_json.exists()
+        finally:
+            m.MANIFEST_DIR = original
 
 
 if __name__ == "__main__":

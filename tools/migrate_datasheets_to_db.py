@@ -227,3 +227,102 @@ def phase4_swap(live_store, live_manifest, staging_store, staging_manifest,
         # Defensive: a previous failed migration may have left a manifest behind
         shutil.rmtree(str(live_manifest))
     shutil.move(str(staging_manifest), str(live_manifest))
+
+
+def phase5_verify(harness_root, env=None) -> int:
+    """Shell out to `datasheet_db verify` against the live store.
+
+    Returns the subprocess exit code. Use the `env` parameter to override
+    DATASHEET_DB_STORE_DIR and DATASHEET_DB_MANIFEST_DIR (e.g., for tests).
+    """
+    import os
+    import subprocess
+    if env is None:
+        env = os.environ.copy()
+    cmd = [
+        sys.executable,
+        str(Path(harness_root) / "tools" / "datasheet_db.py"),
+        "verify",
+    ]
+    return subprocess.call(cmd, env=env)
+
+
+def phase6_absorb_verification_json(json_path) -> int:
+    """Read hand-curated entries from `json_path`, promote to manifest records.
+
+    For each entry:
+      - If sha256 is present and a manifest record exists at that sha, set
+        verified=true on it and save
+      - If sha256 is present and no record exists, create a new record with
+        verified=true, mpns/manufacturers from the entry, found_in containing
+        a "verification_json" origin
+      - Entries with only a URL (no sha256) are skipped — they require
+        fetch-missing to populate
+
+    After processing, deletes the JSON file. Returns the count of records
+    promoted or updated.
+    """
+    import copy
+    import json
+    from datetime import datetime, timezone
+    from validate.datasheet_db.manifest import load_record, save_record
+
+    json_path = Path(json_path)
+    if not json_path.exists():
+        return 0
+
+    with open(json_path, "r", encoding="utf-8") as f:
+        entries = json.load(f)
+
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    count = 0
+
+    for entry in entries:
+        sha = entry.get("sha256")
+        if not sha:
+            # URL-only entries can't be created without bytes; skip
+            continue
+
+        existing = load_record(sha)
+        if existing is not None:
+            updated = copy.deepcopy(existing)
+            updated["verified"] = True
+            updated["last_seen"] = now
+            save_record(updated)
+            count += 1
+            continue
+
+        # Create a new record
+        mpn = entry.get("mpn", "unknown")
+        mfr = entry.get("manufacturer")
+        url = entry.get("url")
+        new_record = {
+            "sha256": sha,
+            "size_bytes": entry.get("size_bytes", 0),
+            "page_count": None,
+            "mpns": [{"mpn": mpn, "primary": True}],
+            "manufacturers": [mfr] if mfr else [],
+            "source_urls": [{
+                "url": url,
+                "first_seen_at": now,
+                "last_verified_at": now,
+                "status": "live",
+            }] if url else [],
+            "filename_aliases": [],
+            "found_in": [{
+                "type": "verification_json",
+                "ref": str(json_path.name),
+                "first_seen": now,
+            }],
+            "revision_label": None,
+            "first_seen": now,
+            "last_seen": now,
+            "verified": True,
+            "verification_notes": "Promoted from datasheets_verification.json",
+        }
+        save_record(new_record)
+        count += 1
+
+    # Delete the JSON file after processing
+    json_path.unlink()
+    return count
