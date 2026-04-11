@@ -4,12 +4,15 @@ TIER = "unit"
 
 import sys
 from pathlib import Path
+import hashlib
+import tempfile
+import os
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 
 from validate.datasheet_db.storage import (
-    _sanitize_mpn, _truncate_to_byte_limit, canonical_filename
+    _sanitize_mpn, _truncate_to_byte_limit, canonical_filename, compute_sha256
 )
 
 
@@ -188,6 +191,52 @@ def test_canonical_filename_raises_on_empty_mpns():
         assert False, "should have raised"
     except ValueError:
         pass
+
+
+# === compute_sha256 ===
+
+def test_compute_sha256_small_file():
+    """SHA256 of a known small blob matches hashlib's direct output."""
+    content = b"hello world"
+    expected = hashlib.sha256(content).hexdigest()
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+        f.write(content)
+        path = f.name
+    try:
+        assert compute_sha256(path) == expected
+    finally:
+        os.unlink(path)
+
+
+def test_compute_sha256_empty_file():
+    """SHA256 of an empty file is the hashlib constant."""
+    empty_hash = hashlib.sha256(b"").hexdigest()
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+        path = f.name
+    try:
+        assert compute_sha256(path) == empty_hash
+    finally:
+        os.unlink(path)
+
+
+def test_compute_sha256_large_file_streams():
+    """SHA256 of a 5 MB blob works without loading into memory.
+
+    We can't easily assert "no memory load" in a unit test, but the
+    implementation should use an 8 KB read loop (see implementation).
+    This test just confirms correctness on a file larger than typical
+    chunk sizes."""
+    chunk = b"A" * 8192
+    expected = hashlib.sha256()
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+        for _ in range(640):  # 640 * 8 KB = ~5 MB
+            f.write(chunk)
+            expected.update(chunk)
+        path = f.name
+    try:
+        assert compute_sha256(path) == expected.hexdigest()
+    finally:
+        os.unlink(path)
 
 
 if __name__ == "__main__":

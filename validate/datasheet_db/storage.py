@@ -1,5 +1,7 @@
 """Blob storage: filename sanitization, atomic write, SHA256 computation."""
 
+import hashlib
+
 _BAD_CHARS = set('/\\:*?"<>|')
 
 
@@ -92,3 +94,22 @@ def canonical_filename(record: dict) -> str:
     truncated = _truncate_to_byte_limit(sanitized, _PRIMARY_MPN_BYTE_BUDGET)
     sha = record["sha256"]
     return f"{truncated}-{sha[:8]}.pdf"
+
+
+_SHA256_CHUNK_BYTES = 8192
+
+
+def compute_sha256(path) -> str:
+    """Return the SHA256 hex digest of the file at `path`.
+
+    Streams the file in 8 KB chunks to avoid loading large PDFs into
+    memory. `path` may be a str or pathlib.Path.
+    """
+    h = hashlib.sha256()
+    with open(str(path), "rb") as f:
+        while True:
+            chunk = f.read(_SHA256_CHUNK_BYTES)
+            if not chunk:
+                break
+            h.update(chunk)
+    return h.hexdigest()
