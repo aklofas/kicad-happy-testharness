@@ -125,31 +125,66 @@ def cmd_health(args):
 
 
 def cmd_status(args):
-    """Print quick status summary from latest health data."""
-    # Load latest health log entry
+    """Print quick status summary from latest health data.
+
+    Falls back to summarizing status.md if reference/health_log.jsonl is
+    missing (fresh checkout). Always exits 0 — status is the natural first
+    command a contributor runs and should never make the harness look
+    broken on a fresh clone.
+    """
     log_path = HARNESS_DIR / "reference" / "health_log.jsonl"
-    if not log_path.exists():
-        print("No health log found. Run: python3 harness.py health")
-        return False
+    if log_path.exists():
+        lines = [l.strip() for l in log_path.read_text().splitlines() if l.strip()]
+        if lines:
+            latest = json.loads(lines[-1])
+            assertions = latest.get("assertions", {})
+            findings = latest.get("findings", {})
+            schema = latest.get("schema", {})
+            print(f"Repos:       {latest.get('repos_in_reference', '?')}")
+            print(f"Assertions:  {assertions.get('total', '?')} "
+                  f"({assertions.get('files', '?')} files)")
+            print(f"Detectors:   {schema.get('schematic_detectors', '?')}")
+            print(f"Findings:    {findings.get('total_items', '?')} "
+                  f"across {findings.get('repos_with_findings', '?')} repos")
+            print(f"Timestamp:   {latest.get('timestamp', '?')}")
+            return True
+        # Empty log — fall through to status.md
+        print("(reference/health_log.jsonl exists but is empty)")
 
-    # Read last line
-    lines = [l.strip() for l in log_path.read_text().splitlines() if l.strip()]
-    if not lines:
-        print("Health log is empty.")
-        return False
+    # Fallback: summarize from status.md (last-known committed state).
+    # status.md has a "## Corpus summary" section with markdown tables —
+    # extract rows from the FIRST table only (stop at the first ### or ##
+    # header following it). This keeps the output concise on a fresh
+    # checkout — the full status.md has many sub-tables (SPICE, EMC,
+    # batches) that aren't useful as a quick summary.
+    status_md = HARNESS_DIR / "status.md"
+    if status_md.exists():
+        text = status_md.read_text()
+        in_summary = False
+        rows = []
+        for line in text.splitlines():
+            if line.startswith("## Corpus summary"):
+                in_summary = True
+                continue
+            if in_summary:
+                if line.startswith("## ") or line.startswith("### "):
+                    break
+                # Parse `| Label | value |` rows; skip header and divider
+                if line.startswith("|") and "---" not in line and "Metric" not in line:
+                    parts = [p.strip(" *`") for p in line.strip().strip("|").split("|")]
+                    if len(parts) == 2 and parts[1]:
+                        rows.append(parts)
+        if rows:
+            print("Status summary (from status.md — last committed state):")
+            for label, value in rows:
+                print(f"  {label:<35} {value}")
+            print()
+            print("Hint: run `python3 harness.py health` to generate fresh data.")
+            return True
 
-    latest = json.loads(lines[-1])
-    assertions = latest.get("assertions", {})
-    findings = latest.get("findings", {})
-    schema = latest.get("schema", {})
-
-    print(f"Repos:       {latest.get('repos_in_reference', '?')}")
-    print(f"Assertions:  {assertions.get('total', '?')} "
-          f"({assertions.get('files', '?')} files)")
-    print(f"Detectors:   {schema.get('schematic_detectors', '?')}")
-    print(f"Findings:    {findings.get('total_items', '?')} "
-          f"across {findings.get('repos_with_findings', '?')} repos")
-    print(f"Timestamp:   {latest.get('timestamp', '?')}")
+    # Neither file present — bare repo, but still don't fail.
+    print("No status data found. This looks like a fresh checkout.")
+    print("Hint: run `python3 harness.py health` once you have results to summarize.")
     return True
 
 
