@@ -14,11 +14,13 @@ HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
 
 
-def _run_cli(args, store_dir, manifest_dir, **kwargs):
-    """Run datasheet_db with tmp dirs set."""
+def _run_cli(args, store_dir, manifest_dir, extra_env=None, **kwargs):
+    """Run datasheet_db with tmp dirs set. Optionally pass extra env vars."""
     env = os.environ.copy()
     env["DATASHEET_DB_STORE_DIR"] = str(store_dir)
     env["DATASHEET_DB_MANIFEST_DIR"] = str(manifest_dir)
+    if extra_env:
+        env.update(extra_env)
     return subprocess.run(
         [sys.executable, str(HARNESS_DIR / "tools" / "datasheet_db.py")] + args,
         capture_output=True, text=True, env=env, **kwargs
@@ -536,6 +538,40 @@ def test_migrate_help_lists_dry_run_flag():
         result = _run_cli(["migrate", "--help"], store, manifest)
         assert result.returncode == 0, result.stderr
         assert "--dry-run" in result.stdout
+
+
+def test_insert_scan_repos_ingests_pdfs_from_repos_tree():
+    """insert --scan-repos walks repos/, ingests new PDFs with found_in entries."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        store = tmp / "store"
+        manifest = tmp / "manifest"
+        repos = tmp / "repos"
+        store.mkdir(); manifest.mkdir()
+        # Create a fake repos tree: repos/owner/repo/datasheets/foo.pdf
+        repo_subdir = repos / "owner" / "repo" / "datasheets"
+        repo_subdir.mkdir(parents=True)
+        (repo_subdir / "foo.pdf").write_bytes(b"%PDF-1.5\n" + b"scan-test")
+        result = _run_cli(
+            ["insert", "--scan-repos"],
+            store, manifest,
+            extra_env={"DATASHEET_DB_REPOS_DIR": str(repos)},
+        )
+        assert result.returncode == 0, result.stderr
+        # One record should exist in the manifest
+        records = list(manifest.rglob("*.json"))
+        assert len(records) == 1, f"expected 1 record, got {len(records)}: {result.stdout}"
+        # Verify the found_in entry references the repo
+        import json
+        rec = json.load(open(records[0]))
+        assert rec["found_in"], "found_in should be populated"
+        entry = rec["found_in"][0]
+        assert entry["type"] == "repo"
+        assert entry["ref"] == "owner/repo"
+        assert "datasheets/foo.pdf" in entry["path"]
+        # Blob should be in the store
+        blobs = list(store.glob("*.pdf"))
+        assert len(blobs) == 1
 
 
 if __name__ == "__main__":

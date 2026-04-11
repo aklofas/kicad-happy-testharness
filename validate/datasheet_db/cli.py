@@ -27,6 +27,113 @@ def cmd_stats(args) -> int:
     return 0
 
 
+def _scan_repos_and_ingest(args, now: str) -> int:
+    """Walk REPOS_DIR for PDFs and ingest any not yet in the manifest.
+
+    Filter rule: include files where either (a) the path contains a
+    case-insensitive 'datasheet' segment, or (b) the file is > 50 KB.
+    Excludes README PDFs, schematic printouts, etc.
+
+    For each new PDF, creates a manifest record with `found_in` pointing
+    at the repo path. Existing records get a merge with the additional
+    `found_in` entry.
+    """
+    from pathlib import Path
+    from validate.datasheet_db.storage import (
+        compute_sha256, write_blob_atomic, store_path, REPOS_DIR, BlobSha256Mismatch
+    )
+    from validate.datasheet_db.manifest import (
+        load_record, save_record, merge_record
+    )
+
+    if not REPOS_DIR.exists():
+        print(f"ERROR: REPOS_DIR does not exist: {REPOS_DIR}", file=sys.stderr)
+        return 2
+
+    ingested = merged = skipped = 0
+
+    for pdf in sorted(REPOS_DIR.rglob("*.pdf")):
+        # Filter: must look like a datasheet (path mentions datasheet OR > 50KB)
+        path_str = str(pdf).lower()
+        try:
+            size = pdf.stat().st_size
+        except OSError:
+            continue
+        if "datasheet" not in path_str and size <= 50_000:
+            continue
+
+        try:
+            sha = compute_sha256(pdf)
+            data = pdf.read_bytes()
+        except OSError:
+            continue
+
+        # Build owner/repo ref + relative path
+        try:
+            rel = pdf.relative_to(REPOS_DIR)
+        except ValueError:
+            continue
+        parts = rel.parts
+        if len(parts) >= 2:
+            ref = f"{parts[0]}/{parts[1]}"
+            inner_path = str(Path(*parts[2:])) if len(parts) > 2 else parts[-1]
+        else:
+            ref = "unknown"
+            inner_path = str(rel)
+
+        found_in_entry = {
+            "type": "repo",
+            "ref": ref,
+            "path": inner_path,
+            "first_seen": now,
+        }
+
+        existing = load_record(sha)
+        if existing is not None:
+            # Merge: add the found_in entry
+            merged_rec = merge_record(existing, {"found_in": [found_in_entry]}, now=now)
+            save_record(merged_rec)
+            merged += 1
+            continue
+
+        # New record — derive primary MPN from filename stem
+        primary_mpn = pdf.stem
+        record_skel = {
+            "sha256": sha,
+            "size_bytes": size,
+            "page_count": None,
+            "mpns": [{"mpn": primary_mpn, "primary": True}],
+            "manufacturers": [],
+            "source_urls": [],
+            "filename_aliases": [pdf.name],
+            "found_in": [found_in_entry],
+            "revision_label": None,
+            "first_seen": now,
+            "last_seen": now,
+            "verified": False,
+            "verification_notes": None,
+        }
+
+        if args.dry_run:
+            print(f"[dry-run] would ingest: {sha[:12]} ({pdf.name})")
+            skipped += 1
+            continue
+
+        try:
+            write_blob_atomic(store_path(record_skel), data, expected_sha256=sha)
+        except BlobSha256Mismatch as e:
+            print(f"ERROR: {e}", file=sys.stderr)
+            continue
+        save_record(record_skel)
+        ingested += 1
+
+    print(f"Ingested: {ingested}")
+    print(f"Merged: {merged}")
+    if args.dry_run:
+        print(f"Would-ingest (dry-run): {skipped}")
+    return 0
+
+
 def cmd_insert(args) -> int:
     from datetime import datetime, timezone
     from pathlib import Path
@@ -38,6 +145,9 @@ def cmd_insert(args) -> int:
     )
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    if args.scan_repos:
+        return _scan_repos_and_ingest(args, now)
 
     if args.file:
         path = Path(args.file)
@@ -435,6 +545,10 @@ def main(argv=None) -> int:
     p_insert.add_argument("--mpn")
     p_insert.add_argument("--manufacturer")
     p_insert.add_argument("--source", choices=["digikey", "lcsc", "auto"])
+    p_insert.add_argument("--scan-repos", action="store_true",
+                          help="Walk repos/ and ingest any new PDFs (idempotent)")
+    p_insert.add_argument("--dry-run", action="store_true",
+                          help="With --scan-repos: report what would happen, ingest nothing")
 
     p_find = sub.add_parser("find", help="Look up a datasheet")
     p_find.add_argument("query", nargs="?", default=None,

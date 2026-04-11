@@ -161,6 +161,10 @@ STORE_DIR = Path(os.environ.get(
     "DATASHEET_DB_STORE_DIR",
     str(HARNESS_DIR / "datasheets")
 ))
+REPOS_DIR = Path(os.environ.get(
+    "DATASHEET_DB_REPOS_DIR",
+    str(HARNESS_DIR / "repos")
+))
 
 
 def store_path(record: dict) -> Path:
