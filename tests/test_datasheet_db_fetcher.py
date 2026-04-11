@@ -12,7 +12,7 @@ sys.path.insert(0, str(HARNESS_DIR))
 
 from validate.datasheet_db.fetcher import (
     sanitize_url, DomainRateLimiter, FetchResult, fetch_bytes, FetchError,
-    fetch_verified, ShaVerificationResult
+    fetch_verified, ShaVerificationResult, handle_drift
 )
 
 
@@ -175,6 +175,111 @@ def test_fetch_verified_no_expected_always_matches():
     with patch("urllib.request.urlopen", return_value=_mock_response(body)):
         result = fetch_verified("https://x.com/a.pdf", expected_sha256=None)
         assert result.matched is True
+
+
+def _with_temp_manifest_dir(fn):
+    """Helper: run `fn(tmp_path)` with MANIFEST_DIR pointed at a tmp dir."""
+    from validate.datasheet_db import manifest as m
+    original = m.MANIFEST_DIR
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        m.MANIFEST_DIR = Path(tmp)
+        try:
+            fn(Path(tmp))
+        finally:
+            m.MANIFEST_DIR = original
+
+
+def test_handle_drift_creates_new_record():
+    """Drift creates a new record with the new SHA and inherits metadata."""
+    def inner(tmp):
+        from validate.datasheet_db.manifest import save_record, load_record
+        old_sha = "aa" * 32
+        new_body = b"%PDF-1.5\n" + b"Y" * 100
+        new_sha = hashlib.sha256(new_body).hexdigest()
+        old_record = {
+            "sha256": old_sha,
+            "size_bytes": 1024,
+            "page_count": 10,
+            "mpns": [{"mpn": "R1", "primary": True}],
+            "manufacturers": ["Acme"],
+            "source_urls": [{
+                "url": "https://x.com/a.pdf",
+                "first_seen_at": "2026-04-10T00:00:00Z",
+                "last_verified_at": "2026-04-10T00:00:00Z",
+                "status": "live",
+            }],
+            "filename_aliases": [],
+            "found_in": [],
+            "revision_label": None,
+            "first_seen": "2026-04-10T00:00:00Z",
+            "last_seen": "2026-04-10T00:00:00Z",
+            "verified": True,
+            "verification_notes": None,
+        }
+        save_record(old_record)
+
+        handle_drift(
+            old_record=old_record,
+            drifted_url="https://x.com/a.pdf",
+            new_body=new_body,
+            new_sha256=new_sha,
+            now="2026-04-11T00:00:00Z",
+        )
+
+        new_record = load_record(new_sha)
+        assert new_record is not None
+        assert new_record["sha256"] == new_sha
+        # Inherited MPN (marked as inherited)
+        assert len(new_record["mpns"]) == 1
+        assert new_record["mpns"][0]["mpn"] == "R1"
+        # possible_revision_of back-reference
+        assert old_sha in new_record.get("possible_revision_of", [])
+        # verified=False (human must re-verify)
+        assert new_record["verified"] is False
+
+    _with_temp_manifest_dir(inner)
+
+
+def test_handle_drift_updates_old_record_url_status():
+    """Drift marks the old record's matching URL entry as 'drifted'."""
+    def inner(tmp):
+        from validate.datasheet_db.manifest import save_record, load_record
+        # Same setup as above
+        old_sha = "bb" * 32
+        new_body = b"%PDF-1.5\n" + b"Z" * 100
+        new_sha = hashlib.sha256(new_body).hexdigest()
+        old_record = {
+            "sha256": old_sha,
+            "size_bytes": 1024,
+            "page_count": 10,
+            "mpns": [{"mpn": "R2", "primary": True}],
+            "manufacturers": ["Acme"],
+            "source_urls": [{
+                "url": "https://y.com/b.pdf",
+                "first_seen_at": "2026-04-10T00:00:00Z",
+                "last_verified_at": "2026-04-10T00:00:00Z",
+                "status": "live",
+            }],
+            "filename_aliases": [],
+            "found_in": [],
+            "revision_label": None,
+            "first_seen": "2026-04-10T00:00:00Z",
+            "last_seen": "2026-04-10T00:00:00Z",
+            "verified": True,
+            "verification_notes": None,
+        }
+        save_record(old_record)
+
+        handle_drift(old_record, "https://y.com/b.pdf", new_body, new_sha,
+                     now="2026-04-11T00:00:00Z")
+
+        reloaded = load_record(old_sha)
+        url_entry = next(u for u in reloaded["source_urls"] if u["url"] == "https://y.com/b.pdf")
+        assert url_entry["status"] == "drifted"
+        assert url_entry["drifted_to_sha256"] == new_sha
+
+    _with_temp_manifest_dir(inner)
 
 
 if __name__ == "__main__":

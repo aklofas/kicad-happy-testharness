@@ -175,3 +175,61 @@ def fetch_verified(url: str, expected_sha256: str = None, timeout: float = _FETC
         matched=(result.sha256 == expected_sha256),
         expected_sha256=expected_sha256,
     )
+
+
+def handle_drift(old_record: dict, drifted_url: str, new_body: bytes,
+                 new_sha256: str, now: str = None) -> dict:
+    """Handle a URL that returned different bytes than the manifest claims.
+
+    Creates a new manifest record at `new_sha256` inheriting MPN and
+    manufacturer metadata from `old_record`, and updates the old record's
+    matching source_urls entry with `status="drifted"` and
+    `drifted_to_sha256=new_sha256`.
+
+    Does NOT write the new blob to `datasheets/` — that's the caller's
+    job (storage.write_blob_atomic). This function only handles the
+    manifest-side bookkeeping.
+
+    Returns the new record dict (already saved to disk).
+    """
+    from datetime import datetime, timezone
+    from validate.datasheet_db.manifest import save_record, load_record, merge_record
+    import copy
+
+    if now is None:
+        now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # Build the new inherited record
+    new_record = {
+        "sha256": new_sha256,
+        "size_bytes": len(new_body),
+        "page_count": None,  # caller can update if they extract it
+        "mpns": [dict(m) for m in old_record["mpns"]],
+        "manufacturers": list(old_record.get("manufacturers") or []),
+        "source_urls": [{
+            "url": drifted_url,
+            "first_seen_at": now,
+            "last_verified_at": now,
+            "status": "live",
+        }],
+        "filename_aliases": [],
+        "found_in": [],
+        "revision_label": None,
+        "first_seen": now,
+        "last_seen": now,
+        "verified": False,
+        "verification_notes": f"Created from drift on {drifted_url}; see possible_revision_of",
+        "possible_revision_of": [old_record["sha256"]],
+    }
+    save_record(new_record)
+
+    # Update the old record's matching URL entry
+    old_updated = copy.deepcopy(old_record)
+    for u in old_updated.get("source_urls") or []:
+        if u["url"] == drifted_url:
+            u["status"] = "drifted"
+            u["drifted_to_sha256"] = new_sha256
+    old_updated["last_seen"] = now
+    save_record(old_updated)
+
+    return new_record
