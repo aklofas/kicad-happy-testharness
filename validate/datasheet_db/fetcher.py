@@ -3,6 +3,9 @@
 from urllib.parse import urlparse, parse_qsl, urlencode, urlunparse
 import threading
 import time
+import hashlib
+import urllib.request
+from dataclasses import dataclass
 
 
 # Query parameter names that indicate auth tokens or session-specific state.
@@ -75,3 +78,73 @@ class DomainRateLimiter:
         parsed = urlparse(url)
         domain = parsed.netloc.lower()
         self.wait(domain)
+
+
+class FetchError(Exception):
+    """Raised when an HTTP fetch fails or returns non-PDF content."""
+
+
+@dataclass
+class FetchResult:
+    """Return value from fetch_bytes: the downloaded body + metadata."""
+    body: bytes
+    sha256: str
+    size_bytes: int
+    content_type: str
+
+
+_FETCH_CHUNK_BYTES = 8192
+_FETCH_USER_AGENT = "kicad-happy-testharness/1.3 (+https://github.com/aklofas/kicad-happy-testharness)"
+_FETCH_MAX_REDIRECTS = 5
+_FETCH_DEFAULT_TIMEOUT = 60.0
+_PDF_MAGIC = b"%PDF-"
+_ACCEPTED_CONTENT_TYPES = {"application/pdf", "application/octet-stream", ""}
+
+
+def fetch_bytes(url: str, timeout: float = _FETCH_DEFAULT_TIMEOUT) -> FetchResult:
+    """Download `url` and return a FetchResult.
+
+    Streams the body in 8 KB chunks, computing SHA256 as it goes. Verifies
+    content-type is PDF-like OR the first bytes match the PDF magic number.
+    Raises FetchError on any network failure or non-PDF response.
+
+    Does NOT perform SHA256 verification against an expected value — that's
+    the caller's job (see fetch_verified in Task 15).
+    """
+    req = urllib.request.Request(url, headers={"User-Agent": _FETCH_USER_AGENT})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            content_type = resp.headers.get("Content-Type", "").split(";")[0].strip().lower()
+            buf = bytearray()
+            h = hashlib.sha256()
+            while True:
+                chunk = resp.read(_FETCH_CHUNK_BYTES)
+                if not chunk:
+                    break
+                buf.extend(chunk)
+                h.update(chunk)
+            body = bytes(buf)
+    except FetchError:
+        raise
+    except Exception as e:
+        raise FetchError(f"HTTP error fetching {url}: {e}")
+
+    # PDF sniff: either the content-type is PDF-ish OR the magic bytes match
+    is_pdf_ctype = content_type in _ACCEPTED_CONTENT_TYPES and "pdf" in content_type
+    is_pdf_magic = body.startswith(_PDF_MAGIC)
+    if content_type == "application/pdf":
+        pass  # trust explicit PDF content-type
+    elif is_pdf_magic:
+        pass  # trust magic bytes
+    else:
+        raise FetchError(
+            f"fetched {url} but content is not a PDF "
+            f"(content-type={content_type!r}, first 8 bytes={body[:8]!r})"
+        )
+
+    return FetchResult(
+        body=body,
+        sha256=h.hexdigest(),
+        size_bytes=len(body),
+        content_type=content_type,
+    )
