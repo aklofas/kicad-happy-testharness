@@ -323,7 +323,8 @@ python3 validate/validate_schema.py diff                # detect schema drift
 python3 validate/validate_schema.py auto-seed           # generate assertions for new fields
 python3 validate/extract_mpns.py --repo {repo}          # extract MPNs from outputs
 python3 validate/analyze_bom_mismatch.py --repo {repo}  # BOM qty vs component count
-python3 validate/download_datasheets.py --project {repo} --status   # datasheet downloads
+python3 tools/datasheet_db.py fetch-missing             # download missing datasheets
+python3 tools/datasheet_db.py stats                     # datasheet store summary
 python3 validate/validate_mpns.py --limit 50            # validate MPNs against APIs
 python3 validate/verify_constants_online.py --dry-run   # verify constants vs DigiKey API
 
@@ -468,7 +469,7 @@ validate/                   # Output quality + constants audit
   extract_mpns.py           #   Extract MPN + manufacturer pairs
   validate_mpns.py          #   Validate MPNs against distributor APIs
   analyze_bom_mismatch.py   #   BOM qty vs component count analysis
-  download_datasheets.py    #   Download datasheets from multiple sources
+  datasheet_db/             #   Content-addressed datasheet store (storage, manifest, fetcher, cli)
   audit_constants.py        #   AST-based constant registry + verification (335 constants)
   audit_equations.py        #   EQ-tag equation tracking + verification (86 equations)
 
