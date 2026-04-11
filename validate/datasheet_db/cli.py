@@ -198,55 +198,197 @@ def cmd_list(args) -> int:
     return 0
 
 
+def _parse_rate_limit(spec: str) -> float:
+    """Parse "N/s" or "N/min" → seconds-per-request interval. Default 1.0 (1/s)."""
+    if not spec:
+        return 1.0
+    try:
+        n_str, _, unit = spec.partition("/")
+        n = float(n_str)
+        unit = unit.strip().lower()
+        if unit in ("s", "sec", "second", ""):
+            return 1.0 / n if n > 0 else 1.0
+        elif unit in ("min", "m", "minute"):
+            return 60.0 / n if n > 0 else 60.0
+    except Exception:
+        pass
+    return 1.0
+
+
+def _try_found_in_fallback(rec: dict):
+    """If `rec` has a recoverable `found_in` entry pointing at a local file
+    whose bytes hash to rec['sha256'], return those bytes (bytes object).
+    Otherwise return None."""
+    from pathlib import Path
+    from validate.datasheet_db.storage import compute_sha256, HARNESS_DIR
+    for entry in rec.get("found_in") or []:
+        kind = entry.get("type")
+        if kind not in ("repo", "preserved"):
+            continue
+        ref = entry.get("ref", "")
+        rel = entry.get("path", "")
+        if not rel:
+            continue
+        if kind == "repo":
+            candidate = HARNESS_DIR / "repos" / ref / rel
+        else:  # preserved
+            candidate = HARNESS_DIR / "datasheets_from_repos" / ref / rel
+        if not candidate.exists():
+            continue
+        try:
+            if compute_sha256(candidate) == rec["sha256"]:
+                return candidate.read_bytes()
+        except OSError:
+            continue
+    return None
+
+
+def _mark_url_dead(rec: dict, dead_url: str, now: str) -> None:
+    """Update a record's source_urls entry to status='dead' and persist."""
+    import copy
+    from validate.datasheet_db.manifest import save_record
+    updated = copy.deepcopy(rec)
+    for u in updated.get("source_urls") or []:
+        if u["url"] == dead_url:
+            u["status"] = "dead"
+            u["last_verified_at"] = now
+    updated["last_seen"] = now
+    save_record(updated)
+
+
 def cmd_fetch_missing(args) -> int:
+    import os
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
     from datetime import datetime, timezone
-    from validate.datasheet_db.manifest import iter_records, save_record, merge_record
-    from validate.datasheet_db.storage import store_path, write_blob_atomic, compute_sha256
-    from validate.datasheet_db.fetcher import fetch_verified, FetchError
+    from validate.datasheet_db.manifest import (
+        iter_records, save_record, load_record, merge_record
+    )
+    from validate.datasheet_db.storage import (
+        store_path, write_blob_atomic, compute_sha256
+    )
+    from validate.datasheet_db.fetcher import (
+        fetch_verified, FetchError, handle_drift, DomainRateLimiter
+    )
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    downloaded = skipped = failed = unrecoverable = 0
 
-    for rec in iter_records():
-        # Skip if blob already present and verified
+    # Default --jobs cap: min(cpu_count, 8)
+    jobs = args.jobs if args.jobs is not None else min(os.cpu_count() or 1, 8)
+
+    # Rate limiter shared across all workers
+    interval = _parse_rate_limit(args.rate_limit) if args.rate_limit else 1.0
+    rate_limiter = DomainRateLimiter(interval_seconds=interval)
+
+    counters = {"downloaded": 0, "skipped": 0, "failed": 0,
+                "unrecoverable": 0, "drifted": 0}
+    counters_lock = threading.Lock()
+    drift_log = []  # list of (old_sha[:12], new_sha[:12], url) for the report
+    drift_log_lock = threading.Lock()
+
+    def _bump(bucket: str):
+        with counters_lock:
+            counters[bucket] = counters.get(bucket, 0) + 1
+
+    def _process_record(rec: dict) -> str:
+        """Process one record and return the bucket name."""
         path = store_path(rec)
-        if path.exists() and compute_sha256(path) == rec["sha256"]:
-            skipped += 1
-            continue
 
-        # Filter URL list (drop dead URLs unless --retry-dead)
+        # 1. Skip if blob present and verified
+        if path.exists():
+            try:
+                if compute_sha256(path) == rec["sha256"]:
+                    return "skipped"
+            except OSError:
+                pass  # treat as missing
+
+        # 2. Filter URL list (drop dead unless --retry-dead)
         urls = [u for u in (rec.get("source_urls") or [])
                 if u.get("status", "live") != "dead" or args.retry_dead]
-        if not urls:
-            unrecoverable += 1
-            continue
 
+        # 3. If no URLs left, try found_in fallback
+        if not urls:
+            local_bytes = _try_found_in_fallback(rec)
+            if local_bytes is not None:
+                if args.dry_run:
+                    print(f"[dry-run] would copy local: {rec['sha256'][:12]}")
+                    return "skipped"  # dry-run; not really downloaded
+                write_blob_atomic(path, local_bytes, expected_sha256=rec["sha256"])
+                return "downloaded"
+            return "unrecoverable"
+
+        # 4. Dry-run: print and return without bucketing
         if args.dry_run:
             print(f"[dry-run] would fetch: {rec['sha256'][:12]} from {urls[0]['url']}")
-            continue
+            return "skipped"  # dry-run records don't increment real buckets
 
-        # Try URLs in order
-        success = False
+        # 5. Try URLs in order
+        success_bucket = None
         for url_entry in urls:
+            url = url_entry["url"]
+            rate_limiter.wait_for_url(url)
             try:
-                result = fetch_verified(url_entry["url"], expected_sha256=rec["sha256"])
-                if result.matched:
-                    write_blob_atomic(path, result.fetch_result.body, expected_sha256=rec["sha256"])
-                    downloaded += 1
-                    success = True
-                    break
-                else:
-                    # Drift handling — deferred to Task 23
-                    pass
+                result = fetch_verified(url, expected_sha256=rec["sha256"])
             except FetchError:
+                # Mark URL as dead and persist
+                _mark_url_dead(rec, url, now)
                 continue
-        if not success:
-            failed += 1
+            if result.matched:
+                write_blob_atomic(
+                    path, result.fetch_result.body, expected_sha256=rec["sha256"]
+                )
+                success_bucket = "downloaded"
+                break
+            else:
+                # Drift! Create new record + new blob
+                new_record = handle_drift(
+                    old_record=rec,
+                    drifted_url=url,
+                    new_body=result.fetch_result.body,
+                    new_sha256=result.fetch_result.sha256,
+                    now=now,
+                )
+                # Write the new blob to the store
+                new_path = store_path(new_record)
+                write_blob_atomic(
+                    new_path, result.fetch_result.body,
+                    expected_sha256=result.fetch_result.sha256,
+                )
+                with drift_log_lock:
+                    drift_log.append(
+                        (rec["sha256"][:12], result.fetch_result.sha256[:12], url)
+                    )
+                success_bucket = "drifted"
+                break
 
-    print(f"Downloaded: {downloaded}")
-    print(f"Skipped: {skipped}")
-    print(f"Failed: {failed}")
-    print(f"Unrecoverable: {unrecoverable}")
+        return success_bucket if success_bucket else "failed"
+
+    records = list(iter_records())
+
+    # Note: dry-run forces sequential to keep print order deterministic
+    if args.dry_run or jobs <= 1:
+        for rec in records:
+            bucket = _process_record(rec)
+            if not args.dry_run:
+                _bump(bucket)
+    else:
+        with ThreadPoolExecutor(max_workers=jobs) as ex:
+            for bucket in ex.map(_process_record, records):
+                _bump(bucket)
+
+    # Summary
+    print(f"Downloaded: {counters['downloaded']}")
+    print(f"Skipped: {counters['skipped']}")
+    print(f"Drifted: {counters['drifted']}")
+    print(f"Failed: {counters['failed']}")
+    print(f"Unrecoverable: {counters['unrecoverable']}")
+
+    if drift_log:
+        print()
+        print("Drift detected — manual review recommended:")
+        for old_sha, new_sha, url in drift_log:
+            print(f"  {old_sha} → {new_sha} ({url})")
+
     return 0
 
 

@@ -405,6 +405,127 @@ def test_fetch_missing_skips_present_blobs():
     _with_temp_store_and_manifest_dirs(inner)
 
 
+def test_fetch_missing_handles_drift():
+    """URL returns different bytes → new record created, old URL marked drifted."""
+    def inner(tmp):
+        from validate.datasheet_db.cli import main as cli_main
+        from validate.datasheet_db.manifest import load_record
+        # Seed a record with a URL; the actual server will return DIFFERENT bytes
+        old_body = b"%PDF-1.5\n" + b"O" * 200
+        old_sha = hashlib.sha256(old_body).hexdigest()
+        new_body = b"%PDF-1.5\n" + b"N" * 200
+        new_sha = hashlib.sha256(new_body).hexdigest()
+        _seed_record_with_url(old_sha, "https://x.com/drifted.pdf", mpn="DRIFT1")
+
+        # Mock urlopen to return new_body when fetched
+        with patch("urllib.request.urlopen", return_value=_mock_urlopen_response(new_body)):
+            rc = cli_main(["fetch-missing", "--jobs", "1"])
+        assert rc == 0
+
+        # Old record's URL should be marked drifted
+        old_rec = load_record(old_sha)
+        assert old_rec is not None
+        url_entry = next(u for u in old_rec["source_urls"]
+                         if u["url"] == "https://x.com/drifted.pdf")
+        assert url_entry["status"] == "drifted"
+        assert url_entry["drifted_to_sha256"] == new_sha
+
+        # New record should exist
+        new_rec = load_record(new_sha)
+        assert new_rec is not None
+        assert new_rec["sha256"] == new_sha
+        assert old_sha in new_rec.get("possible_revision_of", [])
+
+        # New blob should be in the store
+        from validate.datasheet_db.storage import store_path, compute_sha256
+        new_blob_path = store_path(new_rec)
+        assert new_blob_path.exists()
+        assert compute_sha256(new_blob_path) == new_sha
+    _with_temp_store_and_manifest_dirs(inner)
+
+
+def test_fetch_missing_marks_dead_url_after_fetch_error():
+    """When fetch_verified raises FetchError, the URL is marked dead."""
+    def inner(tmp):
+        from validate.datasheet_db.cli import main as cli_main
+        from validate.datasheet_db.manifest import load_record
+        body = b"%PDF-1.5\n" + b"D" * 100
+        sha = hashlib.sha256(body).hexdigest()
+        _seed_record_with_url(sha, "https://x.com/dead.pdf", mpn="DEAD1")
+
+        # Mock urlopen to raise (simulating 404 or connection error)
+        with patch("urllib.request.urlopen", side_effect=Exception("HTTP 404")):
+            rc = cli_main(["fetch-missing", "--jobs", "1"])
+        assert rc == 0
+
+        # URL should be marked dead in the record
+        rec = load_record(sha)
+        url_entry = next(u for u in rec["source_urls"]
+                         if u["url"] == "https://x.com/dead.pdf")
+        assert url_entry["status"] == "dead"
+    _with_temp_store_and_manifest_dirs(inner)
+
+
+def test_fetch_missing_local_fallback_from_repo_found_in():
+    """Record with no source_urls but a repo found_in entry → copy from local file."""
+    def inner(tmp):
+        from validate.datasheet_db.cli import main as cli_main
+        from validate.datasheet_db.manifest import save_record, load_record
+        from validate.datasheet_db.storage import store_path, compute_sha256, HARNESS_DIR
+
+        body = b"%PDF-1.5\n" + b"L" * 150
+        sha = hashlib.sha256(body).hexdigest()
+
+        # Create a fake "repo" file at HARNESS_DIR/repos/owner/repo/some/file.pdf
+        # Note: HARNESS_DIR is the real harness root, so we plant a temp file
+        # under repos/.test_fallback/ to avoid polluting real repos.
+        # The found_in entry references it.
+        test_owner = ".test_fallback"
+        test_repo = "test_repo_xyz"
+        rel_path = "datasheets/local.pdf"
+        local_full = HARNESS_DIR / "repos" / test_owner / test_repo / rel_path
+        local_full.parent.mkdir(parents=True, exist_ok=True)
+        local_full.write_bytes(body)
+
+        try:
+            # Seed a record with found_in pointing at the local file, no URLs
+            save_record({
+                "sha256": sha,
+                "size_bytes": len(body),
+                "page_count": None,
+                "mpns": [{"mpn": "FALLBACK1", "primary": True}],
+                "manufacturers": [],
+                "source_urls": [],
+                "filename_aliases": [],
+                "found_in": [{
+                    "type": "repo",
+                    "ref": f"{test_owner}/{test_repo}",
+                    "path": rel_path,
+                    "first_seen": "2026-04-10T00:00:00Z",
+                }],
+                "revision_label": None,
+                "first_seen": "2026-04-10T00:00:00Z",
+                "last_seen": "2026-04-10T00:00:00Z",
+                "verified": False,
+                "verification_notes": None,
+            })
+
+            # Run fetch-missing — no urlopen mock needed because no URL
+            rc = cli_main(["fetch-missing", "--jobs", "1"])
+            assert rc == 0
+
+            # Blob should be in the store
+            rec = load_record(sha)
+            blob_path = store_path(rec)
+            assert blob_path.exists()
+            assert compute_sha256(blob_path) == sha
+        finally:
+            # Clean up the planted file
+            import shutil
+            shutil.rmtree(HARNESS_DIR / "repos" / test_owner, ignore_errors=True)
+    _with_temp_store_and_manifest_dirs(inner)
+
+
 if __name__ == "__main__":
     tests = [(name, obj) for name, obj in globals().items()
              if name.startswith("test_") and callable(obj)]
