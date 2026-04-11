@@ -326,3 +326,122 @@ def phase6_absorb_verification_json(json_path) -> int:
     # Delete the JSON file after processing
     json_path.unlink()
     return count
+
+
+def main(argv=None, harness_root=None) -> int:
+    """Run the full migration sequence: phases 1-6 in order.
+
+    With --dry-run, stops after phase 2 and writes nothing. The idempotence
+    guard refuses to run if the live manifest already contains more than 100
+    records (indicating a prior successful migration).
+    """
+    import argparse
+    import os
+
+    parser = argparse.ArgumentParser(
+        prog="migrate_datasheets_to_db",
+        description="One-shot migration from legacy datasheet locations to the new store",
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true",
+        help="Phases 1-2 only; report what would happen, write nothing",
+    )
+    args = parser.parse_args(argv)
+
+    if harness_root is None:
+        harness_root = Path(__file__).resolve().parent.parent
+    harness_root = Path(harness_root)
+
+    # Resolve all paths from harness_root
+    repos_root = harness_root / "repos"
+    bulk_root = harness_root / "datasheets"
+    preserved_root = harness_root / "datasheets_from_repos"
+    staging_store = harness_root / "datasheets.new"
+    staging_manifest = harness_root / "reference" / "datasheet_manifest.staging"
+    live_store = bulk_root  # same path
+    live_manifest = harness_root / "reference" / "datasheet_manifest"
+    bulk_bak = harness_root / "datasheets.bulk_bak"
+    preserved_bak = harness_root / "datasheets_from_repos.bak"
+    verification_json = harness_root / "reference" / "datasheets_verification.json"
+
+    # Idempotence guard
+    if live_manifest.exists():
+        existing_count = sum(1 for _ in live_manifest.rglob("*.json"))
+        if existing_count > 100:
+            print(
+                f"ERROR: live manifest already has {existing_count} records",
+                file=sys.stderr,
+            )
+            print(
+                "       Migration appears to have run successfully already.",
+                file=sys.stderr,
+            )
+            print(
+                "       Remove reference/datasheet_manifest/ to re-run.",
+                file=sys.stderr,
+            )
+            return 1
+
+    # Phase 1: enumerate
+    print("Phase 1: enumerating PDFs across 3 source trees...")
+    entries = list(phase1_enumerate(repos_root, bulk_root, preserved_root))
+    print(f"  Found {len(entries)} PDFs")
+
+    # Phase 2: group
+    print("Phase 2: grouping by SHA256...")
+    records = phase2_group(entries)
+    print(f"  Grouped into {len(records)} unique records")
+    if entries:
+        dedup_pct = (1 - len(records) / len(entries)) * 100
+        print(f"  Dedup ratio: {dedup_pct:.1f}%")
+
+    if args.dry_run:
+        print("DRY RUN: stopping after phase 2 (no writes)")
+        return 0
+
+    # Phase 3: stage
+    print("Phase 3: staging blobs and records...")
+    phase3_stage(records, staging_store, staging_manifest)
+    print(f"  Staged {len(records)} records into {staging_store.name}/")
+
+    # Phase 4: swap
+    print("Phase 4: atomic swap into live...")
+    phase4_swap(
+        live_store=live_store,
+        live_manifest=live_manifest,
+        staging_store=staging_store,
+        staging_manifest=staging_manifest,
+        bulk_bak=bulk_bak,
+        preserved_root=preserved_root,
+        preserved_bak=preserved_bak,
+    )
+    print(f"  Originals backed up to {bulk_bak.name}/ and {preserved_bak.name}/")
+
+    # Update the manifest module's MANIFEST_DIR so phase 5/6 see the live one
+    from validate.datasheet_db import manifest as m
+    m.MANIFEST_DIR = live_manifest
+
+    # Phase 5: verify
+    print("Phase 5: verifying live store...")
+    env = os.environ.copy()
+    env["DATASHEET_DB_STORE_DIR"] = str(live_store)
+    env["DATASHEET_DB_MANIFEST_DIR"] = str(live_manifest)
+    rc = phase5_verify(harness_root, env=env)
+    if rc != 0:
+        print(f"ERROR: phase 5 verify failed with rc={rc}", file=sys.stderr)
+        return rc
+    print("  Verify passed")
+
+    # Phase 6: absorb verification_json
+    if verification_json.exists():
+        print("Phase 6: absorbing datasheets_verification.json...")
+        count = phase6_absorb_verification_json(verification_json)
+        print(f"  Promoted/updated {count} records")
+
+    print()
+    print("Migration complete!")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

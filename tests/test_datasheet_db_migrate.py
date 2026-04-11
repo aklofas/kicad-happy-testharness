@@ -13,7 +13,7 @@ sys.path.insert(0, str(HARNESS_DIR / "tools"))
 
 from migrate_datasheets_to_db import (
     phase1_enumerate, phase2_group, phase3_stage, phase4_swap,
-    phase5_verify, phase6_absorb_verification_json
+    phase5_verify, phase6_absorb_verification_json, main as migrate_main
 )
 
 
@@ -252,6 +252,46 @@ def test_phase6_marks_existing_record_verified():
             assert not ver_json.exists()
         finally:
             m.MANIFEST_DIR = original
+
+
+def test_main_dry_run_makes_no_changes():
+    """--dry-run runs phases 1-2 only, no staging dirs are created."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        # Create the three source trees
+        (tmp / "datasheets").mkdir()
+        (tmp / "datasheets" / "test.pdf").write_bytes(b"%PDF-1.5\n" + b"X" * 100)
+        (tmp / "datasheets_from_repos").mkdir()
+        (tmp / "repos").mkdir()
+        (tmp / "reference").mkdir()
+
+        rc = migrate_main(argv=["--dry-run"], harness_root=tmp)
+        assert rc == 0
+        # No staging dirs created
+        assert not (tmp / "datasheets.new").exists()
+        assert not (tmp / "reference" / "datasheet_manifest.staging").exists()
+        # Bulk source untouched (not renamed to .bak)
+        assert (tmp / "datasheets" / "test.pdf").exists()
+        assert not (tmp / "datasheets.bulk_bak").exists()
+
+
+def test_main_idempotence_guard_refuses_if_manifest_full():
+    """If live manifest already has > 100 records, refuse to run."""
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        # Create the three source trees (so we don't fail for a different reason)
+        (tmp / "datasheets").mkdir()
+        (tmp / "datasheets_from_repos").mkdir()
+        (tmp / "repos").mkdir()
+        # Create a fake live manifest with >100 records
+        live_manifest = tmp / "reference" / "datasheet_manifest"
+        shard = live_manifest / "ab"
+        shard.mkdir(parents=True)
+        for i in range(101):
+            (shard / f"ab{i:062d}.json").write_text("{}")
+
+        rc = migrate_main(argv=[], harness_root=tmp)
+        assert rc != 0, "should refuse to run when manifest is already populated"
 
 
 if __name__ == "__main__":
