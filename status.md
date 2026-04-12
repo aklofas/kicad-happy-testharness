@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-10 (TH-013 filename-length migration: 9,050+ dir renames, 42 file renames, 122 empty orphan deletions, 143-byte eCryptfs-safe cap landed on main)
+Last updated: 2026-04-12 (TH-015 fixed — run_checks.py exit code on errors; issue tracker split harness/main-repo; KH-234/235/238/239 moved to FIXED.md Batch 43)
 
 ---
 
@@ -26,7 +26,7 @@ Last updated: 2026-04-10 (TH-013 filename-length migration: 9,050+ dir renames, 
 | Aspirational assertions | 1,989 |
 | Assertion pass rate | 100.0% |
 | Bugfix registry entries | 67 |
-| Unit tests | 276 |
+| Unit tests | 287 |
 | Layer 3 reviewed repos | 992 |
 | Total findings | 2,575 |
 | Open KH-* issues | 0 |
@@ -82,6 +82,121 @@ Last updated: 2026-04-10 (TH-013 filename-length migration: 9,050+ dir renames, 
 ---
 
 ## Completed batches
+
+### Prefix-collision investigation + KH-234/238/239 verification (2026-04-11)
+
+Main-repo agent forwarded a 4-investigation handoff brief (Vref prefix collisions,
+switching-frequency prefix collisions, feedback divider pair-ordering, LED pullup
+misclassification) + 1 regression smoke test (bare-filename crash). Diagnostic-only
+session, no analyzer changes. Blast-radius scans produced per-item reports,
+YAML assertion lists, and DigiKey verification stubs.
+
+**Issues filed (KH-236 through KH-239):**
+- **KH-239 MED** — LED current-limit resistors double-classified as `pull_up` in
+  `analyze_sleep_current`. 4,123 double-classifications across 1,746 files in
+  733 repos.
+- **KH-238 HIGH** — Feedback divider pair-ordering drops valid R-R pairs when
+  encountered with r1=bottom/r2=top AND top-of-divider net is unnamed. 1,156
+  confirmed misses across 447 projects (before filtering hierarchical false
+  positives).
+- **KH-237 HIGH** — Switching-frequency prefix collisions (2 copies of table,
+  `signal_detectors.py` startswith + `emc_rules.py` substring). 10 real mixed-
+  family collisions, 1,300+ regulator instances.
+- **KH-236 MED** — Regulator Vref prefix collisions in `_REGULATOR_VREF`. 27
+  real mixed-family collisions, ~1,600+ instances.
+
+**Bare-filename regression guard** shipped to the integration test suite:
+`integration/test_analyzer_cli_bare_filename.py` (commit `be0bbcfc7b`). Tests 5
+fixture projects with bare-filename invocation; passes now (kicad-happy HEAD
+has the `9693347` fix), will FAIL if the bug is ever reintroduced.
+
+**Inspection deliverables** remain local under
+`inspections/2026-04-11_prefix_collisions/` (not committed per
+`inspections/` local-only policy).
+
+**Post-fix verification** (same session):
+
+Main-repo shipped three fixes in rapid succession — `a37c1c0` (KH-234),
+`9c8ec19` (KH-238), `a39a7d1` (KH-239). Harness re-ran schematic analysis on
+the union of KH-238+KH-239 affected repos: **14,101 files across 1,042 repos,
+1 spurious FAIL** (`cristobalcuevas/Kicad/LT3514/LT3514.kicad_sch`, unrelated
+to the fixes). Then ran per-YAML verification:
+
+- **KH-239:** 4,122/4,123 fixed (100.0%). 1 straggler
+  (electronicarapida/TecEletrotecnia contactors exercício) is a stale
+  pre-TH-013 output file — re-running the analyzer directly on the source
+  produces only the `led_indicator` entry, confirming the fix works. Orphaned
+  output file is a harness housekeeping issue, not a regression.
+- **KH-238:** 342/342 in-scope records fixed (100.0%). The other 814 entries
+  in the 1,156-assertion YAML are false positives from my original inspection
+  script:
+  - **797 hierarchical-sheet misses** — the schematic output file has 0
+    resistors on it, meaning the regulator and its divider live on different
+    sheets in a hierarchical project. KH-238 is a pair-ordering fix; the
+    cross-sheet case is a separate bug class (deferred P3 item from the
+    original inspection report, needs cross-sheet net tracing).
+  - **17 op-amp false positives** — ADA4817-2ACPZ-R7, HX711, and similar ICs
+    got flagged as adjustable-output regulators by my inspection but aren't
+    actual regulators.
+- **KH-234:** verified analytically. Harness thermal coverage is too sparse
+  (only 4 files with populated `thermal_assessments`, 2 matched to PCB outputs,
+  both with `margin_c > 30`) for a direct flagged-count delta. Instead:
+  quick_200 PCB outputs have **100% correct `component`/`via_count` keys**
+  across 3,489 `thermal_pad_vias` entries — confirming the fix reads real
+  data. The via_count distribution has 42.9% ≥4 vias and 51.1% ≥2 vias,
+  bracketing the main-repo's predicted 50-90% drop in flagged components
+  from below. A full flagged-count delta would require running
+  `run/run_thermal.py --cross-section quick_200` first (deferred to a future
+  session to avoid saturating CPU).
+
+**KH-235 pre-fix audit:**
+
+Main-repo held the KH-235 fix waiting on a corpus audit for a symmetric bug
+at `kicad_utils.py:1200-1204` (the `netclass_patterns` loop). Scan of all
+12,551 `.kicad_pro` files in the corpus found:
+- **0 files** with list-valued `netclass` field inside `netclass_patterns`
+  entries → no symmetric bug, **ship single-site fix** (assignments loop only).
+- **139 files** with list-valued `netclass_assignments` values (the original
+  KH-235 crash path) — 28× higher than the quick_200 estimate of 30-50.
+  Dominant format: `"NET_NAME": ["NET_NAME"]` (single-element list wrapping
+  the net name as class name, likely KiCad 8 default).
+- Both confirmed target crashers (CIRCUITSTATE/Mitayi-Pico-D1,
+  bluerobotics/ping-dev-kit) hit the assignments path only — neither has
+  list-valued `netclass_patterns`.
+
+**Output status:** 8 open KH issues remaining in harness `ISSUES.md` before
+verification → after verification, KH-234/238/239 awaiting main-repo close,
+KH-235 ready to fix with confirmed single-site scope, KH-236/237 deferred
+behind a DigiKey verification session, KH-230/233 still pending.
+
+### v1.3 #10 Tier 2 thermal via re-seed (2026-04-11)
+
+Main-repo shipped commit `35ce56b` adding `analyze_thermal_pad_vias()` Tier 2
+"nearby-search" support — detects vias that are copper-connected to a thermal
+pad but placed just outside the footprint. Harness re-ran PCB analysis on
+`quick_200` (255 repos, ~4,900 PCB files) to catch any regression signatures.
+
+**Result: zero harness-side commits.** Compact baselines track section
+presence, not internal fields, and `thermal_pad_vias` was already a populated
+section pre-#10. No baseline flipping.
+
+**Assertion run:** `regression/run_checks.py --cross-section quick_200`
+returned **584,730/584,732 passing** (2 errors from the pre-existing KH-235
+`extract_pro_net_classes` crash, filed separately).
+
+**Tier 2 distribution across quick_200:** 562 hits — 49.6% `in_pad`,
+11.5% `mixed`, 4.6% `nearby_fillet`, 31.8% `none`. Inside the 5-20% main-repo
+prediction for nearby-adequate vs in_pad ratio.
+
+### Datasheet Store sub-project A (2026-04-11)
+
+See TODO-v1.3-roadmap.md "Sub-project A" section for full details. Shipped
+`validate/datasheet_db/` package (5 modules, ~900 LOC), 110 unit tests
+(tests/test_datasheet_db_*), 3 online integration tests, and `tools/datasheet_db.py`
+CLI with 8 subcommands. Migration run on real corpus produced 13,297 records in
+`reference/datasheet_manifest/` (sharded by sha256[:2], ~26 MB git-tracked).
+Three follow-ups captured: filter tightening (~13k → 6-8k records), manufacturer
+prefix-matcher expansion, Phase 6 JSON format fix.
 
 ### Validate 5 kicad-happy commits (2026-04-08)
 
