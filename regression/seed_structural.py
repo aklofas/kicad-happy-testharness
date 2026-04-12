@@ -388,7 +388,8 @@ def generate_for_repo(repo_name, atype, strict, min_components,
                 total_sims = data_content.get("summary", {}).get("total", 0)
                 below_threshold = total_sims < 1
             elif atype == "emc":
-                total_checks = data_content.get("summary", {}).get("total_checks", 0)
+                s = data_content.get("summary", {})
+                total_checks = s.get("total_findings", s.get("total_checks", 0))
                 below_threshold = total_checks < 1
             elif atype == "datasheets":
                 extracted = data_content.get("extracted", 0)

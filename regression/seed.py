@@ -789,16 +789,17 @@ def generate_emc_assertions(data, tolerance=0.10):
     assertions = []
     ast_num = 1
 
-    total = summary.get("total_checks", 0)
+    total = summary.get("total_findings", summary.get("total_checks", 0))
     if total == 0:
         return assertions
 
-    # Total findings count range
+    # Total findings count range — use total_findings (KH-246 rename)
+    total_key = "summary.total_findings" if "total_findings" in summary else "summary.total_checks"
     lo, hi = _range_bounds(total, tolerance)
     assertions.append({
         "id": f"SEED-{ast_num:08d}",
         "description": f"Finding count ~{total} (tolerance {tolerance:.0%})",
-        "check": {"path": "summary.total_checks", "op": "range",
+        "check": {"path": total_key, "op": "range",
                   "min": lo, "max": hi},
     })
     ast_num += 1
@@ -985,7 +986,8 @@ def _meets_seeding_threshold(data, atype, min_components=10):
     elif atype == "spice":
         return data.get("summary", {}).get("total", 0) >= 1
     elif atype == "emc":
-        return data.get("summary", {}).get("total_checks", 0) >= 1
+        s = data.get("summary", {})
+        return s.get("total_findings", s.get("total_checks", 0)) >= 1
     elif atype == "datasheets":
         return data.get("extracted", 0) >= 1
     return False
