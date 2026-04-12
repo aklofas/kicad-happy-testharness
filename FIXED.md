@@ -11,6 +11,17 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-12 — Batch 44: TH-015 run_checks.py false PASS on errors
+
+### TH-015 (MED): run_checks.py exits 0 when errors > 0, harness reports false PASS
+
+- **Files**: `regression/run_checks.py` (exit code logic + new `--allow-errors` flag), `utils.py` (env var override for test isolation)
+- **Root cause**: Two bugs. (1) `sys.exit(1 if failed > 0 else 0)` at line 300 only checked `failed`, ignoring `errors` — a run with thousands of missing-output errors and zero failures exited 0. (2) The `--json` code path at line 275 used `return` instead of falling through to the exit code, so JSON mode always exited 0 regardless of failures. `harness.py` trusted the exit code and reported `[PASS]`.
+- **Fix**: Restructured `main()` so JSON and text output are `if/else` branches that both fall through to a unified exit code block. Exit nonzero when `failed > 0` OR `errors > 0` (unless `--allow-errors` flag set). Added `KICAD_HAPPY_TESTHARNESS_DATA_DIR` env var override to `utils.py` for test isolation.
+- **Verified**: New `tests/test_run_checks.py` (5 tests) covers all exit code paths. Added to smoke gate (287 tests, 13 files, all pass).
+
+---
+
 ## 2026-04-12 — Batch 43: KH-234/KH-235/KH-238/KH-239 (fixed in kicad-happy)
 
 ### KH-234 (MED): cross_verify thermal-via dict-key bug

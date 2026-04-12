@@ -124,19 +124,7 @@ Full data at `inspections/2026-04-11_prefix_collisions/vref_prefix_collisions.md
 
 ## Test Harness Issues
 
-### TH-015: regression/run_checks.py exits 0 when errors > 0 and harness.py reports PASS
-
-**Severity:** MEDIUM
-**Discovered:** 2026-04-11 during TODO-combined-findings triage
-**Where:**
-- `regression/run_checks.py:300` — `sys.exit(1 if failed > 0 else 0)`
-- `harness.py:31-42` — `_run()` only inspects `result.returncode`
-
-**Root cause:** `run_checks.py` exits nonzero only on `failed > 0`. A run with 26,138 errors and 0 failures exits 0. `harness.py` trusts exit code and reports `[PASS]`. Observed in shallow-clone state.
-
-**Suggested fix:** Exit nonzero when `errors > 0` unless `--allow-missing-outputs`. Add a `SKIP`/`INCOMPLETE` terminal state for shallow-clone mode.
-
-**Test plan:** `harness.py validate --cross-section smoke` in shallow-clone. Post-fix: nonzero exit, `[FAIL]` with error count.
+(None currently open.)
 
 ---
 
@@ -144,6 +132,5 @@ Full data at `inspections/2026-04-11_prefix_collisions/vref_prefix_collisions.md
 
 1. **KH-237** — HIGH — Switching-freq prefix-collision. Needs DigiKey verification.
 2. **KH-236** — MED — Vref prefix-collision. Same DigiKey session.
-3. **TH-015** — MED — `run_checks.py` exits 0 on errors. Harness code fix.
 
-> 3 open issues.
+> 2 open issues.
