@@ -18,9 +18,10 @@ from pathlib import Path, PurePosixPath
 
 HARNESS_DIR = Path(__file__).resolve().parent
 REPOS_DIR = HARNESS_DIR / "repos"
-DATA_DIR = HARNESS_DIR / "reference"
+_data_override = os.environ.get("KICAD_HAPPY_TESTHARNESS_DATA_DIR")
+DATA_DIR = Path(_data_override) / "reference" if _data_override else HARNESS_DIR / "reference"
+OUTPUTS_DIR = Path(_data_override) / "results" / "outputs" if _data_override else HARNESS_DIR / "results" / "outputs"
 MANIFESTS_DIR = HARNESS_DIR / "results" / "manifests"
-OUTPUTS_DIR = HARNESS_DIR / "results" / "outputs"
 ANALYZER_TYPES = ["schematic", "pcb", "gerber", "spice", "emc", "thermal", "datasheets"]
 MISC_CATEGORY = "Miscellaneous KiCad projects"
 
