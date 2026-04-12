@@ -11,6 +11,76 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-12 — Batch 46: KH-240 + KH-233
+
+### KH-240 (MED): Battery-negative rails not classified as ground
+
+- **Where fixed:** kicad-happy repo, commit `23f62e3`
+- **Root cause:** `kicad_utils.py:is_ground_name()` only recognized GND/VSS/COM/0V variants. Battery-negative rails (BATT-, BAT-, VBAT-) used as circuit ground in single-supply designs were classified as ordinary signals.
+- **Fix:** Added narrow exact-match set for battery-negative patterns. Deliberately excludes V-/VEE (legitimate bipolar supplies).
+
+### KH-233 (MED): SCHEMAS dict missing 22 detector entries
+
+- **Where fixed:** kicad-happy repo, commit `d5a7f09`
+- **Root cause:** `detection_schema.py:SCHEMAS` had entries for 19 detector types but the analyzer emits 40. 21 types had no schema entry. Also `snubber_circuits` key didn't match the analyzer's `snubbers` key.
+- **Fix:** Added 21 DetectionSchema entries (identity-only, no derived fields). Renamed `snubber_circuits` → `snubbers`.
+
+---
+
+## 2026-04-12 — Batch 45: Trust restoration (KH-241 through KH-248)
+
+8 core bugs fixed in kicad-happy main repo. All fixes verified via py_compile + --help smoke tests. Full analysis behind each issue is in `kicad-happy/TODO-combined-findings.md`.
+
+### KH-241 (HIGH): EMC --compact flag overrides severity threshold
+
+- **Where fixed:** kicad-happy repo, commit `2681e04`
+- **Root cause:** `analyze_emc.py:357` had `severity = 'low' if args.compact else args.severity`, so `--compact` widened the severity filter instead of just hiding INFO findings.
+- **Fix:** Keep `args.severity` authoritative for `run_all_checks()`. Strip INFO findings in post-processing only.
+
+### KH-242 (HIGH): EMC suppressions don't filter derived metrics
+
+- **Where fixed:** kicad-happy repo, commit `751b4fd`
+- **Root cause:** `analyze_emc.py:419-426` fed full `findings` (including suppressed) into `compute_risk_score`, `generate_test_plan`, `compute_per_net_scores`, `analyze_regulatory_coverage`. Suppressed findings still dragged down score.
+- **Fix:** `active_findings = [f for f in findings if not f.get('suppressed')]`, used for all derived metrics. Mirrors thermal analyzer pattern.
+
+### KH-243 (HIGH): Schematic design-intent title_block handoff dead
+
+- **Where fixed:** kicad-happy repo, commit `f91f89e`
+- **Root cause:** `analyze_schematic.py:8339-8344` checked `if 'metadata' in result:` but result has no `metadata` key — title_block is at top level (`:8084`). Title-block IPC detection was dead code.
+- **Fix:** `'title_block': result.get('title_block', {})`.
+
+### KH-244 (HIGH): PCB design-intent misroutes metadata/net_classes/net_names
+
+- **Where fixed:** kicad-happy repo, commit `dbccedf`
+- **Root cause:** `analyze_pcb.py:5182-5188` had three wiring bugs: `result.get('metadata', {})` (should be `board_metadata`), net_classes pulled from DRC wrapper (should be top-level), net_names hardcoded to `{}`.
+- **Fix:** Use `board_metadata`, direct `net_classes`, build `net_names` from `net_name_to_id`.
+
+### KH-245 (MED): EMC/thermal config auto-discovery uses JSON-internal path
+
+- **Where fixed:** kicad-happy repo, commit `23553d6`
+- **Root cause:** `analyze_emc.py:379-383` and `analyze_thermal.py:804-820` discovered `.kicad-happy.json` from `schematic.get('file', '')` — a path stored inside the JSON. Fails when consuming cached JSON or JSON moved between machines.
+- **Fix:** Prefer `os.path.dirname(os.path.abspath(args.schematic))`, fall back to JSON-internal path.
+
+### KH-246 (LOW): summary.total_checks = len(findings) misleading
+
+- **Where fixed:** kicad-happy repo, commit `67ac089`
+- **Root cause:** `analyze_emc.py:451` and `analyze_thermal.py:879` both used `total_checks: len(findings)`. Clean board = `total_checks: 0` = "no analysis ran."
+- **Fix:** Renamed to `total_findings`, added `categories_checked` (EMC) and `components_assessed` (thermal).
+
+### KH-247 (HIGH): TH-001/PDN silently defaults MLCC package to 0603
+
+- **Where fixed:** kicad-happy repo, commit `f92bea6`
+- **Root cause:** `signal_detectors.py:1745-1749` didn't carry package from footprint into `output_capacitors[]`. `emc_rules.py:2974,3272` did `cap.get('package', '0603')` — fabricated input for package-sensitive derating.
+- **Fix:** Extract package from footprint in detector. Skip package-dependent derating when package unknown.
+
+### KH-248 (MED): SPICE drops generator-time failures silently
+
+- **Where fixed:** kicad-happy repo, commit `58541c0`
+- **Root cause:** `simulate_subcircuits.py:134-139` returned `(None, 0)` on generator exceptions. `_run_detection_batch:194-203` only emitted skip when `elapsed > 0`. Generator failures (elapsed=0) vanished from report.
+- **Fix:** Return sentinel dict on generator failure, emit skip record with reason in batch handler.
+
+---
+
 ## 2026-04-12 — Batch 44: TH-015 run_checks.py false PASS on errors
 
 ### TH-015 (MED): run_checks.py exits 0 when errors > 0, harness reports false PASS

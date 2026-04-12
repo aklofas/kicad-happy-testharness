@@ -36,7 +36,7 @@ Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
 maximum. Next KH number: **KH-276**. Next TH number: **TH-016**.
 
-> 5 open issues.
+> 3 open issues.
 
 ---
 
@@ -50,18 +50,6 @@ maximum. Next KH number: **KH-276**. Next TH number: **TH-016**.
 ---
 
 ## kicad-happy Analyzer Issues
-
-### KH-240: Battery-negative rails (BATT-/BAT-/VBAT-) not classified as ground
-
-**Severity:** MEDIUM
-**Discovered:** 2026-04-11 during KH-238 spot-check
-**Where:** `kicad-happy/skills/kicad/scripts/kicad_utils.py:937-955` in `is_ground_name()`
-
-**Root cause:** `is_ground_name()` only recognizes GND/VSS/COM/0V variants. Battery-negative rails (`BATT-`, `BAT-`, `VBAT-`) used as circuit ground in single-supply designs are classified as ordinary signal nets. Cascades into missed feedback dividers, decoupling, sleep_current. Blast radius pending — harness KH-238 tail showed 0 BATT- stragglers, so may be narrow.
-
-**Suggested fix:** Narrow keyword set for battery-ground (option a from original filing). Deliberately excludes V-/VEE which are legitimate bipolar supplies.
-
----
 
 ### KH-237: Switching frequency prefix-collision + duplicated table
 
@@ -172,16 +160,6 @@ Entries like `'LM78': 1.25` and `'LM317': 1.25` are redundant — LM317 is adjus
 
 ---
 
-### KH-233: SCHEMAS dict missing 22 detector entries
-
-**Severity:** MEDIUM
-**Discovered:** 2026-04-10 by re-enabling `tests/test_detection_schema.py`
-**Where:** `kicad-happy/skills/kicad/scripts/detection_schema.py`
-
-22 `signal_analysis` keys present in real output but absent from SCHEMAS. Downstream code that walks SCHEMAS silently skips these detector classes.
-
----
-
 ### KH-230: Empty placed Value silently substituted with lib_symbol default
 
 **Severity:** LOW
@@ -196,6 +174,4 @@ Entries like `'LM78': 1.25` and `'LM317': 1.25` are redundant — LM317 is adjus
 
 1. **KH-237** — HIGH — Switching-freq prefix-collision. DigiKey verified, fix plan ready. Phase 1 (extract+dedup) first, then Phase 2 (table rebuild).
 2. **KH-236** — MED — Vref prefix-collision. DigiKey verified, fix plan ready. Coordinate with KH-237 (shared `kicad_utils.py` refactor).
-3. **KH-240** — MED — Battery-negative rails. Self-contained fix.
-4. **KH-233** — MED — SCHEMAS backfill.
-5. **KH-230** — LOW — Empty Value substitution.
+3. **KH-230** — LOW — Empty Value substitution.

@@ -392,6 +392,9 @@ report doesn't flag the intentional count change as a regression.
 
 ### Filing a new issue
 
+Either agent (main-repo or harness) can file issues. All issues live in the
+harness repo's `ISSUES.md` — this is the single source of truth.
+
 1. Check `ISSUES.md` "Numbering convention" for the next available number
    - KH-* for kicad-happy analyzer bugs
    - TH-* for test harness infrastructure bugs
@@ -430,31 +433,152 @@ instead of expected W. Trace: [step-by-step through the code path].
    `memory/project_issues_testharness.md` with the new next number and open
    issue count.
 
-### Fixing an issue
+### Fixing an issue — main-repo agent (kicad-happy)
 
-1. Fix the bug in the appropriate repo
-2. **In the same session:**
-   - Remove the issue from ISSUES.md
-   - Add it to FIXED.md using this exact format:
+The main-repo agent owns the code fix and local verification. It edits
+harness files (ISSUES.md, FIXED.md) but does not commit them — the harness
+agent owns git in this repo.
+
+**Push policy:** The main-repo agent commits freely but does NOT push until
+the user explicitly says to. Stacked commits are fine. Pushes are gated on
+completed/coherent snapshots at the user's discretion. The harness agent
+can commit and push its own repo freely.
+
+1. **Fix the bug** in the kicad-happy repo.
+2. **Verify locally:**
+   - `python3 -m py_compile <changed_file>` for every modified file.
+   - `python3 <script> --help` smoke test for every modified CLI.
+   - Run any synthetic unit tests (inline `python3 -c "..."`) that exercise
+     the fix against controlled inputs.
+3. **Commit** in the kicad-happy repo with message `Fix KH-NNN <short desc>`.
+4. **Update harness tracker** (edit, do not commit):
+   - Remove the issue from `ISSUES.md`.
+   - Update the open issue count and "Next KH/TH number" in `ISSUES.md`.
+   - Add it to `FIXED.md` using this format:
 
 ```markdown
 ## YYYY-MM-DD — Batch NN: Short description (KH-NNN)
 
 ### KH-NNN (SEVERITY): One-line title
 
-- **File**: `path/to/file.py` — `function_name()`
+- **Where fixed:** kicad-happy repo, commit `SHA`
 - **Root cause**: Detailed explanation of WHY it broke
-- **Fix**: What was changed (numbered steps if multiple)
-- **Verified**: Test results proving the fix (files tested, pass rates, edge cases)
+- **Fix**: What was changed
+- **Verified**: Local verification (py_compile, --help, synthetic tests)
+- **Harness verification**: Affected analyzer types. Suggested corpus cross-section or specific repos to re-run.
+```
+5. **Write targeted verification tests** — for each fix, write a short
+   Python script (or inline `python3 -c "..."` command) that the harness
+   agent can run against corpus outputs to confirm the fix is working.
+   These tests should:
+   - Run against real analyzer output JSON (not synthetic data — that was
+     the local verification in step 2)
+   - Check the specific field or behavior that was broken
+   - Be self-contained (no imports beyond stdlib + the analyzer scripts)
+   - Print PASS/FAIL with a count of checked items
+   - Be runnable from the harness repo root
+
+   Good targeted tests check the *contract* the fix restores. Examples:
+   - KH-241 (compact severity): run analyzer with `--compact --severity high`,
+     verify finding count matches `--severity high` alone
+   - KH-242 (suppression filtering): load output JSON with suppressed findings,
+     verify `emc_risk_score` excludes them
+   - KH-247 (MLCC package): scan `output_capacitors` in schematic JSONs,
+     verify `package` field is present when footprint contains a known SMD size
+   - KH-240 (battery ground): scan for regulators on BATT-/BAT- rails,
+     verify they now get feedback_divider detection
+
+6. **Write a harness handoff prompt** — a self-contained message the user
+   can copy-paste to the harness agent session. Use this template:
+
+````markdown
+## Harness verification needed
+
+kicad-happy pushed N commits fixing KH-NNN [, KH-NNN, ...].
+
+**Commits:**
+| SHA | Fix | Affected analyzers |
+|-----|-----|--------------------|
+| `SHA` | KH-NNN: one-line desc | schematic / PCB / EMC / thermal / SPICE |
+
+**What changed (brief):**
+- bullet per fix, enough for the harness agent to understand the blast radius
+
+**ISSUES.md / FIXED.md already edited** — review and commit when verification passes.
+
+**Targeted verification tests:**
+
+For each fix, a self-contained test to run against corpus data:
+
+```python
+# KH-NNN: description
+# Run: python3 -c "..." or save as verify_kh_nnn.py and run
+# Expected: PASS with N items checked
+[test code]
 ```
 
-3. If in kicad-happy: re-run affected analyzer type, verify assertions pass
-4. If a BUGFIX assertion is warranted (prevents regression of a fixed analyzer bug):
+**Broad verification:**
+1. Pull kicad-happy
+2. Re-run: `python3 run/run_{type}.py --jobs 16` for affected types
+3. `python3 regression/run_checks.py --type {type}` — expect pass or legitimate re-seed
+4. Run the targeted tests above against fresh outputs
+5. Consider BUGFIX assertions for: [list specific fixes worth regression-protecting]
+6. Commit tracker + assertion changes
+````
+
+### Fixing an issue — harness agent
+
+The harness agent owns corpus validation, regression assertions, and git in
+this repo. The main-repo agent will have already edited ISSUES.md and
+FIXED.md. Work arrives via a handoff prompt from the user.
+
+1. **Pull the fix** from the kicad-happy repo.
+2. **Review ISSUES.md / FIXED.md edits** left by the main-repo agent.
+3. **Run targeted verification tests** provided in the handoff prompt.
+   These are per-fix tests that check specific fields or behaviors against
+   real corpus outputs. Run each one and record PASS/FAIL.
+4. **Re-run affected analyzer types** on the appropriate corpus cross-section:
+   - Use `quick_200` for broad smoke checks.
+   - Use targeted repo lists from the issue's blast radius data if available.
+5. **Verify assertions pass:**
+   - `python3 regression/run_checks.py --type {analyzer_type}`
+   - If new fields appeared, run `auto-seed` to generate assertions.
+   - If assertion counts changed legitimately, re-seed (Checklist 4).
+6. **Add BUGFIX assertion** if warranted (prevents regression of a specific
+   fixed behavior):
    - Add entry to `regression/bugfix_registry.json`
    - Run `python3 regression/generate_bugfix_assertions.py`
-5. Update the "Next KH/TH number" in ISSUES.md if it was advanced
-6. Update memory files — update `memory/project_issues_kicad_happy.md` or
-   `memory/project_issues_testharness.md` with new open issue count and next number.
+7. **Commit** the ISSUES.md/FIXED.md changes (already edited by main-repo agent)
+   along with any new/updated assertions and status.md updates.
+8. **Update memory files** — update `memory/project_issues_kicad_happy.md` or
+   `memory/project_issues_testharness.md` with new open issue count and next
+   number.
+9. **Write a handoff response** the user can paste back to the main-repo agent:
+
+````markdown
+## Harness verification complete
+
+**Targeted test results:**
+| Fix | Test | Items checked | Result |
+|-----|------|--------------|--------|
+| KH-NNN | description | N | PASS/FAIL |
+
+**Broad verification:**
+| Analyzer | Cross-section | Assertions | Result |
+|----------|--------------|------------|--------|
+| schematic | quick_200 | N pass, N fail | PASS/FAIL |
+
+**Re-seeded:** [list any re-seeded assertions, or "none"]
+**BUGFIX assertions added:** [list, or "none"]
+**New issues found:** [KH-NNN filed, or "none"]
+**Committed:** `SHA` — tracker + assertions
+````
+
+### Fixing a TH-* issue (harness code)
+
+For test harness infrastructure bugs, the harness agent handles everything:
+fix the code, update ISSUES.md/FIXED.md, run unit tests, commit. No
+main-repo agent involvement needed.
 
 ### Issue severity levels
 
