@@ -192,6 +192,52 @@ def validate_new_sections(ctx, name, data):
             ctx.anomalies["many_ground_domains"].append((name, f"{len(domains)} ground domains"))
 
 
+_DESIGN_INTENT_REQUIRED = {"product_class", "ipc_class", "target_market",
+                           "confidence", "detection_signals", "source"}
+_PRODUCT_CLASSES = {"prototype", "production"}
+_TARGET_MARKETS = {"hobby", "consumer", "industrial", "medical",
+                   "automotive", "aerospace"}
+
+
+def validate_design_intent(ctx, name, data):
+    """Check design_intent section structure and value constraints."""
+    di = data.get("design_intent")
+    if di is None:
+        return  # absent is OK for legacy/empty files
+    if not isinstance(di, dict):
+        ctx.anomalies["design_intent_not_dict"].append((name, f"type={type(di).__name__}"))
+        return
+
+    for field in _DESIGN_INTENT_REQUIRED:
+        if field not in di:
+            ctx.anomalies["design_intent_missing_field"].append((name, f"missing '{field}'"))
+
+    ipc = di.get("ipc_class")
+    if ipc is not None and ipc not in (1, 2, 3):
+        ctx.anomalies["design_intent_bad_ipc"].append((name, f"ipc_class={ipc!r}"))
+
+    pc = di.get("product_class")
+    if pc is not None and pc not in _PRODUCT_CLASSES:
+        ctx.anomalies["design_intent_bad_product_class"].append((name, f"product_class={pc!r}"))
+
+    tm = di.get("target_market")
+    if tm is not None and tm not in _TARGET_MARKETS:
+        ctx.anomalies["design_intent_bad_target_market"].append((name, f"target_market={tm!r}"))
+
+    conf = di.get("confidence")
+    if conf is not None:
+        if not isinstance(conf, (int, float)) or conf < 0.0 or conf > 1.0:
+            ctx.anomalies["design_intent_bad_confidence"].append((name, f"confidence={conf!r}"))
+
+    ds = di.get("detection_signals")
+    if ds is not None and not isinstance(ds, list):
+        ctx.anomalies["design_intent_bad_signals"].append((name, f"type={type(ds).__name__}"))
+
+    src = di.get("source")
+    if src is not None and not isinstance(src, dict):
+        ctx.anomalies["design_intent_bad_source"].append((name, f"type={type(src).__name__}"))
+
+
 def _validate_schematics(schematics):
     """Validate a list of schematic paths. Worker function for parallel execution.
 
@@ -235,6 +281,7 @@ def _validate_schematics(schematics):
         validate_nets(ctx, name, data, total_comps)
         validate_signal_analysis(ctx, name, data)
         validate_design_analysis(ctx, name, data)
+        validate_design_intent(ctx, name, data)
         if is_modern and total_comps > 0:
             validate_new_sections(ctx, name, data)
 

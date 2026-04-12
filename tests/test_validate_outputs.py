@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "validate"))
 from validate_outputs import (
     ValidationContext, validate_structural, validate_components,
     validate_nets, validate_signal_analysis, validate_design_analysis,
-    validate_new_sections,
+    validate_new_sections, validate_design_intent,
 )
 
 
@@ -237,6 +237,83 @@ def test_new_sections_many_ground_domains():
     data = {"ground_domains": {"domains": [{"name": f"GND{i}"} for i in range(12)]}}
     validate_new_sections(ctx, "test", data)
     assert "many_ground_domains" in ctx.anomalies
+
+
+# === validate_design_intent ===
+
+def _valid_design_intent():
+    return {
+        "product_class": "prototype",
+        "ipc_class": 2,
+        "target_market": "hobby",
+        "confidence": 0.3,
+        "detection_signals": [],
+        "source": {"ipc_class": "auto"},
+    }
+
+def test_design_intent_valid():
+    ctx = ValidationContext()
+    validate_design_intent(ctx, "test", {"design_intent": _valid_design_intent()})
+    assert not ctx.anomalies
+
+def test_design_intent_absent_ok():
+    ctx = ValidationContext()
+    validate_design_intent(ctx, "test", {})
+    assert not ctx.anomalies
+
+def test_design_intent_not_dict():
+    ctx = ValidationContext()
+    validate_design_intent(ctx, "test", {"design_intent": "bad"})
+    assert "design_intent_not_dict" in ctx.anomalies
+
+def test_design_intent_missing_field():
+    ctx = ValidationContext()
+    di = _valid_design_intent()
+    del di["confidence"]
+    validate_design_intent(ctx, "test", {"design_intent": di})
+    assert "design_intent_missing_field" in ctx.anomalies
+
+def test_design_intent_bad_ipc():
+    ctx = ValidationContext()
+    di = _valid_design_intent()
+    di["ipc_class"] = 5
+    validate_design_intent(ctx, "test", {"design_intent": di})
+    assert "design_intent_bad_ipc" in ctx.anomalies
+
+def test_design_intent_bad_product_class():
+    ctx = ValidationContext()
+    di = _valid_design_intent()
+    di["product_class"] = "military"
+    validate_design_intent(ctx, "test", {"design_intent": di})
+    assert "design_intent_bad_product_class" in ctx.anomalies
+
+def test_design_intent_bad_target_market():
+    ctx = ValidationContext()
+    di = _valid_design_intent()
+    di["target_market"] = "space"
+    validate_design_intent(ctx, "test", {"design_intent": di})
+    assert "design_intent_bad_target_market" in ctx.anomalies
+
+def test_design_intent_bad_confidence():
+    ctx = ValidationContext()
+    di = _valid_design_intent()
+    di["confidence"] = 1.5
+    validate_design_intent(ctx, "test", {"design_intent": di})
+    assert "design_intent_bad_confidence" in ctx.anomalies
+
+def test_design_intent_bad_signals():
+    ctx = ValidationContext()
+    di = _valid_design_intent()
+    di["detection_signals"] = "not a list"
+    validate_design_intent(ctx, "test", {"design_intent": di})
+    assert "design_intent_bad_signals" in ctx.anomalies
+
+def test_design_intent_bad_source():
+    ctx = ValidationContext()
+    di = _valid_design_intent()
+    di["source"] = "not a dict"
+    validate_design_intent(ctx, "test", {"design_intent": di})
+    assert "design_intent_bad_source" in ctx.anomalies
 
 
 # === Runner ===
