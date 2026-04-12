@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~24 (tolerance 10%)",
+      "description": "Finding count ~16 (tolerance 10%)",
       "check": {
-        "path": "summary.total_checks",
+        "path": "summary.total_findings",
         "op": "range",
-        "min": 21,
-        "max": 27
+        "min": 14,
+        "max": 18
       }
     },
     {
@@ -25,12 +25,12 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "low count ~21",
+      "description": "low count ~12",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 18,
-        "max": 24
+        "min": 10,
+        "max": 14
       }
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "id": "SEED-00000008",
-      "description": "21 io_filtering finding(s)",
+      "description": "12 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 21
+        "value": 12
       }
     },
     {
@@ -107,11 +107,11 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "~27 probe point(s) in test plan",
+      "description": "~18 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 24
+        "value": 16
       }
     },
     {

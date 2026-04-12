@@ -609,11 +609,11 @@
     },
     {
       "id": "STRUCT-00000063",
-      "description": "Exactly 5 voltage_dividers",
+      "description": "Exactly 10 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 5
+        "value": 10
       }
     },
     {
@@ -648,6 +648,26 @@
     },
     {
       "id": "STRUCT-00000067",
+      "description": "R21 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R21$"
+      }
+    },
+    {
+      "id": "STRUCT-00000068",
+      "description": "R47 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R47$"
+      }
+    },
+    {
+      "id": "STRUCT-00000069",
       "description": "R46 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -657,13 +677,43 @@
       }
     },
     {
-      "id": "STRUCT-00000068",
+      "id": "STRUCT-00000070",
+      "description": "R62 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R62$"
+      }
+    },
+    {
+      "id": "STRUCT-00000071",
+      "description": "R48 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R48$"
+      }
+    },
+    {
+      "id": "STRUCT-00000072",
       "description": "R61 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R61$"
+      }
+    },
+    {
+      "id": "STRUCT-00000073",
+      "description": "R63 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R63$"
       }
     }
   ]

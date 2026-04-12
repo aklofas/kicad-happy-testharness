@@ -138,7 +138,7 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "2 rc_filters detected",
+      "description": "1 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
@@ -185,6 +185,25 @@
     },
     {
       "id": "SEED-00000020",
+      "description": "1 voltage_dividers detected",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000021",
+      "description": "All voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000022",
       "description": "Has 116 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -193,7 +212,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000023",
       "description": "Has 105 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -202,7 +221,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000024",
       "description": "Has 103 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -211,7 +230,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000025",
       "description": "Has 14 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -220,7 +239,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000026",
       "description": "Has 111 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

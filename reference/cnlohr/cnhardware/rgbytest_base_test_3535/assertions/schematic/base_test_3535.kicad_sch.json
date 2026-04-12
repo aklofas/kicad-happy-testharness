@@ -92,30 +92,30 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "1 rc_filters detected",
+      "description": "2 suggested_certifications detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.suggested_certifications",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000011",
-      "description": "All rc_filters have non-zero cutoff_hz",
+      "description": "1 voltage_dividers detected",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
       }
     },
     {
       "id": "SEED-00000012",
-      "description": "2 suggested_certifications detected",
+      "description": "All voltage_dividers have non-zero ratio",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
-        "op": "min_count",
-        "value": 1
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {

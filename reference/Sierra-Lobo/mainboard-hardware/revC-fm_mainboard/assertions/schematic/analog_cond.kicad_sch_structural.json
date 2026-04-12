@@ -91,15 +91,25 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 1 voltage_dividers",
+      "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000011",
+      "description": "R255 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R255$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
       "description": "R254 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

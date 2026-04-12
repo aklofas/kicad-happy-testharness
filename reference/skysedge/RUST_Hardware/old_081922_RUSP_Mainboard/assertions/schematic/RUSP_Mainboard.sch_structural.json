@@ -409,11 +409,11 @@
     },
     {
       "id": "STRUCT-00000043",
-      "description": "Exactly 6 voltage_dividers",
+      "description": "Exactly 8 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 6
+        "value": 8
       }
     },
     {
@@ -428,6 +428,16 @@
     },
     {
       "id": "STRUCT-00000045",
+      "description": "R31 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R31$"
+      }
+    },
+    {
+      "id": "STRUCT-00000046",
       "description": "R25 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -437,7 +447,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000047",
       "description": "R42 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -447,7 +457,7 @@
       }
     },
     {
-      "id": "STRUCT-00000047",
+      "id": "STRUCT-00000048",
       "description": "R66 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -457,7 +467,7 @@
       }
     },
     {
-      "id": "STRUCT-00000048",
+      "id": "STRUCT-00000049",
       "description": "R68 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -467,13 +477,23 @@
       }
     },
     {
-      "id": "STRUCT-00000049",
+      "id": "STRUCT-00000050",
       "description": "R70 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R70$"
+      }
+    },
+    {
+      "id": "STRUCT-00000051",
+      "description": "R77 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R77$"
       }
     }
   ]

@@ -7,7 +7,7 @@
       "id": "SEED-00000001",
       "description": "Finding count ~18 (tolerance 10%)",
       "check": {
-        "path": "summary.total_checks",
+        "path": "summary.total_findings",
         "op": "range",
         "min": 16,
         "max": 20
@@ -25,42 +25,42 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "high count ~5",
+      "description": "high count ~4",
       "check": {
         "path": "summary.high",
+        "op": "range",
+        "min": 3,
+        "max": 5
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "medium count ~5",
+      "check": {
+        "path": "summary.medium",
         "op": "range",
         "min": 4,
         "max": 6
       }
     },
     {
-      "id": "SEED-00000004",
-      "description": "medium count ~6",
-      "check": {
-        "path": "summary.medium",
-        "op": "range",
-        "min": 5,
-        "max": 7
-      }
-    },
-    {
       "id": "SEED-00000005",
-      "description": "low count ~6",
+      "description": "low count ~4",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 5,
-        "max": 7
+        "min": 3,
+        "max": 5
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "EMC risk score ~27 (+-10)",
+      "description": "EMC risk score ~38 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 17,
-        "max": 37
+        "min": 28,
+        "max": 48
       }
     },
     {
@@ -87,13 +87,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "8 io_filtering finding(s)",
+      "description": "6 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 8
+        "value": 6
       }
     },
     {
@@ -109,13 +109,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "3 switching_emc finding(s)",
+      "description": "1 switching_emc finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^switching_emc$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -138,11 +138,11 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "~7 probe point(s) in test plan",
+      "description": "~5 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 6
+        "value": 4
       }
     },
     {

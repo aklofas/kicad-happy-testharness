@@ -168,25 +168,6 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "2 rc_filters detected",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000019",
-      "description": "All rc_filters have non-zero cutoff_hz",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "not_contains_match",
-        "field": "cutoff_hz",
-        "pattern": "^(0(\\.0+)?|None|)$"
-      }
-    },
-    {
-      "id": "SEED-00000020",
       "description": "2 suggested_certifications detected",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -195,7 +176,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000019",
       "description": "6 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -204,13 +185,32 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000020",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
         "op": "not_contains_match",
         "field": "reference",
         "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000021",
+      "description": "7 voltage_dividers detected",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000022",
+      "description": "All voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
       }
     },
     {

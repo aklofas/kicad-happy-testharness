@@ -5,12 +5,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~73 (tolerance 10%)",
+      "description": "Finding count ~75 (tolerance 10%)",
       "check": {
-        "path": "summary.total_checks",
+        "path": "summary.total_findings",
         "op": "range",
-        "min": 69,
-        "max": 77
+        "min": 71,
+        "max": 79
       }
     },
     {
@@ -35,12 +35,12 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "low count ~57",
+      "description": "low count ~54",
       "check": {
         "path": "summary.low",
         "op": "range",
-        "min": 54,
-        "max": 60
+        "min": 51,
+        "max": 57
       }
     },
     {
@@ -99,13 +99,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "59 io_filtering finding(s)",
+      "description": "56 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 59
+        "value": 56
       }
     },
     {
@@ -139,11 +139,11 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "~50 probe point(s) in test plan",
+      "description": "~47 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 45
+        "value": 42
       }
     },
     {
@@ -166,11 +166,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "~5 net(s) with EMC scores",
+      "description": "~6 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 4
+        "value": 5
       }
     }
   ]

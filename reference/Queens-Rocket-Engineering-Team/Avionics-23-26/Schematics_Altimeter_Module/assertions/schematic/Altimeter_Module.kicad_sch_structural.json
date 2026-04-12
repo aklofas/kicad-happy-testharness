@@ -229,11 +229,11 @@
     },
     {
       "id": "STRUCT-00000025",
-      "description": "Exactly 5 voltage_dividers",
+      "description": "Exactly 8 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 5
+        "value": 8
       }
     },
     {
@@ -248,6 +248,16 @@
     },
     {
       "id": "STRUCT-00000027",
+      "description": "R27 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R27$"
+      }
+    },
+    {
+      "id": "STRUCT-00000028",
       "description": "R20 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -257,7 +267,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000029",
       "description": "R9 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -267,7 +277,17 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000030",
+      "description": "R18 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R18$"
+      }
+    },
+    {
+      "id": "STRUCT-00000031",
       "description": "R10 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -277,13 +297,23 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000032",
       "description": "R30 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R30$"
+      }
+    },
+    {
+      "id": "STRUCT-00000033",
+      "description": "R24 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R24$"
       }
     }
   ]

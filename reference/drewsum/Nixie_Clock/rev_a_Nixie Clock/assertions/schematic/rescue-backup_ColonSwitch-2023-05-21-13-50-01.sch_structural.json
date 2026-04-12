@@ -58,6 +58,35 @@
         "field": "reference",
         "pattern": "^Q1102$"
       }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 2 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R1101 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R1101$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R1104 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R1104$"
+      }
     }
   ]
 }

@@ -23,11 +23,11 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 design_observations",
+      "description": "Exactly 4 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -41,6 +41,25 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "Exactly 1 feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R88 in feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R88$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -49,7 +68,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "U14 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -59,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "Exactly 1 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -68,32 +87,13 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "D37 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^D37$"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 1 rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "R88 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R88$"
       }
     },
     {
@@ -107,11 +107,11 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 3 voltage_dividers",
+      "description": "Exactly 4 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -136,6 +136,16 @@
     },
     {
       "id": "STRUCT-00000015",
+      "description": "R88 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R88$"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
       "description": "R83 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

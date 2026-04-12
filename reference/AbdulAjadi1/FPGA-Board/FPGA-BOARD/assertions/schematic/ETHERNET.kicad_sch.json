@@ -200,7 +200,7 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "5 rc_filters detected",
+      "description": "4 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
@@ -228,6 +228,25 @@
     },
     {
       "id": "SEED-00000024",
+      "description": "2 voltage_dividers detected",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000025",
+      "description": "All voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000026",
       "description": "Has 28 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -236,7 +255,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000027",
       "description": "Has 31 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -128,7 +128,7 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "20 design_observations detected",
+      "description": "22 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -178,6 +178,25 @@
     },
     {
       "id": "SEED-00000019",
+      "description": "2 feedback_networks detected",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000020",
+      "description": "All feedback_networks have r_top ref present",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "not_contains_match",
+        "field": "r_top.ref",
+        "pattern": "^(None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000021",
       "description": "3 lc_filters detected",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -186,7 +205,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
+      "id": "SEED-00000022",
       "description": "All lc_filters have non-zero resonant_hz",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -196,7 +215,7 @@
       }
     },
     {
-      "id": "SEED-00000021",
+      "id": "SEED-00000023",
       "description": "1 led_audit detected",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -205,7 +224,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000024",
       "description": "All led_audit have ref",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -215,7 +234,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000025",
       "description": "All led_audit type values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -226,7 +245,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000026",
       "description": "All led_audit drive_method values are valid",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -237,7 +256,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000027",
       "description": "1 motor_drivers detected",
       "check": {
         "path": "signal_analysis.motor_drivers",
@@ -246,7 +265,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000028",
       "description": "All motor_drivers have driver_reference",
       "check": {
         "path": "signal_analysis.motor_drivers",
@@ -256,7 +275,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000029",
       "description": "All motor_drivers driver_type values are valid",
       "check": {
         "path": "signal_analysis.motor_drivers",
@@ -267,7 +286,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000030",
       "description": "6 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -276,7 +295,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000031",
       "description": "All opamp_circuits have reference present",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -286,7 +305,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000032",
       "description": "5 power_regulators detected",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -295,7 +314,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000033",
       "description": "All power_regulators have ref present",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -305,7 +324,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000034",
       "description": "2 protection_devices detected",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -314,8 +333,8 @@
       }
     },
     {
-      "id": "SEED-00000033",
-      "description": "23 rc_filters detected",
+      "id": "SEED-00000035",
+      "description": "19 rc_filters detected",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "min_count",
@@ -323,7 +342,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000036",
       "description": "All rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -333,7 +352,7 @@
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000037",
       "description": "1 rf_chains detected",
       "check": {
         "path": "signal_analysis.rf_chains",
@@ -342,7 +361,7 @@
       }
     },
     {
-      "id": "SEED-00000036",
+      "id": "SEED-00000038",
       "description": "8 rf_matching detected",
       "check": {
         "path": "signal_analysis.rf_matching",
@@ -351,7 +370,7 @@
       }
     },
     {
-      "id": "SEED-00000037",
+      "id": "SEED-00000039",
       "description": "2 suggested_certifications detected",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -360,7 +379,7 @@
       }
     },
     {
-      "id": "SEED-00000038",
+      "id": "SEED-00000040",
       "description": "6 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -369,7 +388,7 @@
       }
     },
     {
-      "id": "SEED-00000039",
+      "id": "SEED-00000041",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -379,8 +398,8 @@
       }
     },
     {
-      "id": "SEED-00000040",
-      "description": "9 voltage_dividers detected",
+      "id": "SEED-00000042",
+      "description": "15 voltage_dividers detected",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "min_count",
@@ -388,7 +407,7 @@
       }
     },
     {
-      "id": "SEED-00000041",
+      "id": "SEED-00000043",
       "description": "All voltage_dividers have non-zero ratio",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -398,7 +417,7 @@
       }
     },
     {
-      "id": "SEED-00000042",
+      "id": "SEED-00000044",
       "description": "Has 211 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -407,7 +426,7 @@
       }
     },
     {
-      "id": "SEED-00000043",
+      "id": "SEED-00000045",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -416,7 +435,7 @@
       }
     },
     {
-      "id": "SEED-00000044",
+      "id": "SEED-00000046",
       "description": "Has 8 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -425,7 +444,7 @@
       }
     },
     {
-      "id": "SEED-00000045",
+      "id": "SEED-00000047",
       "description": "Has 37 ferrite_bead(s)",
       "check": {
         "path": "statistics.component_types.ferrite_bead",
@@ -434,7 +453,7 @@
       }
     },
     {
-      "id": "SEED-00000046",
+      "id": "SEED-00000048",
       "description": "Has 45 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -443,7 +462,7 @@
       }
     },
     {
-      "id": "SEED-00000047",
+      "id": "SEED-00000049",
       "description": "Has 30 mounting_hole(s)",
       "check": {
         "path": "statistics.component_types.mounting_hole",
@@ -452,7 +471,7 @@
       }
     },
     {
-      "id": "SEED-00000048",
+      "id": "SEED-00000050",
       "description": "Has 141 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -461,7 +480,7 @@
       }
     },
     {
-      "id": "SEED-00000049",
+      "id": "SEED-00000051",
       "description": "Has 8 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",
@@ -470,7 +489,7 @@
       }
     },
     {
-      "id": "SEED-00000050",
+      "id": "SEED-00000052",
       "description": "Has 6 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

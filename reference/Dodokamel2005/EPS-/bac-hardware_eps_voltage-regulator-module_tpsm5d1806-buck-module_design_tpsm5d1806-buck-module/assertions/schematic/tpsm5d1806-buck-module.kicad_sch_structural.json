@@ -23,11 +23,11 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 2 design_observations",
+      "description": "Exactly 3 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
@@ -41,15 +41,25 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 feedback_networks",
+      "description": "Exactly 2 feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000006",
+      "description": "R104 in feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R104$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "R106 in feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -59,7 +69,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U101 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -78,7 +88,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "Exactly 2 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -87,16 +97,26 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
-      "description": "Exactly 3 voltage_dividers",
+      "id": "STRUCT-00000011",
+      "description": "Exactly 4 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
+      "description": "R104 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R104$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
       "description": "R106 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -106,7 +126,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000014",
       "description": "R101 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
