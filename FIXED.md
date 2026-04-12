@@ -11,6 +11,38 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-12 — Batch 43: KH-234/KH-235/KH-238/KH-239 (fixed in kicad-happy)
+
+### KH-234 (MED): cross_verify thermal-via dict-key bug
+
+- **Where fixed:** kicad-happy repo, commit `a37c1c0`
+- **Root cause:** `cross_verify.py:566-569` (`check_thermal_vias`, not `check_thermal_via_adequacy` as originally filed) used wrong dict keys when accessing thermal pad via data, causing KeyError or silent misclassification.
+- **Fix:** Corrected dict keys to `component`/`via_count` matching the actual `thermal_pad_vias` output schema.
+- **Verified:** 3,489 `thermal_pad_vias` entries in quick_200 have 100% correct `component`/`via_count` keys post-fix. Corpus too sparse for direct flagged-count delta (only 7 populated `thermal_assessments` corpus-wide).
+
+### KH-235 (MED): extract_pro_net_classes TypeError on list-valued assignments
+
+- **Where fixed:** kicad-happy repo, commit `6dd0ab0`
+- **Root cause:** `kicad_utils.py:1207-1209` (`extract_pro_net_classes`) iterated net-class assignment values assuming strings, but KiCad 8 `.kicad_pro` files can have list values like `"NET_NAME": ["NET_NAME"]`. Crashed `analyze_pcb.py` before `analyze_thermal_pad_vias` ran.
+- **Fix:** Single-site fix (~8 LOC) wrapping the assignments-loop value access. Pre-fix audit confirmed 139 corpus files affected (~1.1% of 12,551 `.kicad_pro` files), patterns-loop at line 1200-1204 had 0 corpus hits (no symmetric bug).
+- **Verified:** Both confirmed target crashers (Mitayi-Pico-D1, bluerobotics/ping-dev-kit) no longer crash. Audit scripts at `inspections/2026-04-11_kh235_audit/` (local).
+
+### KH-238 (HIGH): feedback divider pair-ordering bug
+
+- **Where fixed:** kicad-happy repo, commit `9c8ec19`
+- **Root cause:** `signal_detectors.py:274-280` had a pair-ordering bug in feedback divider detection, causing missed or misidentified divider pairs.
+- **Fix:** Corrected pair ordering logic.
+- **Verified:** 342/342 in-scope records fixed (100.0%). The remaining 814 records in the original 1,156-assertion YAML were false positives from the inspection: 797 hierarchical-sheet misses (resistors on different sheet than regulator, now KH-259) + 17 op-amp false positives (ADA4817, HX711, now KH-260).
+
+### KH-239 (MED): LED current-limit resistors double-classified as pull_up
+
+- **Where fixed:** kicad-happy repo, commit `a39a7d1`
+- **Root cause:** `analyze_schematic.py` `analyze_sleep_current` classified LED current-limit resistors as pull-up resistors, double-counting them in sleep current analysis.
+- **Fix:** Added exclusion for LED series resistors in the pull-up classification path.
+- **Verified:** 4,122/4,123 fixed (100.0%). The 1 straggler is a stale pre-TH-013 output file (safe_name truncation left orphaned old-name copy on disk), not a regression.
+
+---
+
 ## 2026-04-10 — Batch 42: KH-231/KH-232 dormant analyzer bugs (fixed in kicad-happy)
 
 ### KH-231 (HIGH): opamp_circuits non_inverting recalc used inverting formula
