@@ -76,6 +76,34 @@ def check_invariants(data, filepath=""):
         if load <= 0:
             _add(f"crystal_circuits[{i}].effective_load_pF={load} <= 0")
 
+    # --- Every net referenced in signal_analysis exists in extracted nets ---
+    nets = data.get("nets", {})
+    if isinstance(nets, dict):
+        net_names = set(nets.keys())
+    elif isinstance(nets, list):
+        net_names = {n.get("name", "") for n in nets if isinstance(n, dict)}
+    else:
+        net_names = set()
+
+    if net_names and sa:
+        for det_name, items in sa.items():
+            if not isinstance(items, list):
+                continue
+            for i, item in enumerate(items):
+                if not isinstance(item, dict):
+                    continue
+                for field, val in item.items():
+                    if field.endswith("_net") and isinstance(val, str) and val:
+                        if val not in net_names:
+                            _add(f"{det_name}[{i}].{field}='{val}' not in nets")
+
+    # --- total_components >= len(components) ---
+    components = data.get("components", [])
+    stats = data.get("statistics", {})
+    total = stats.get("total_components")
+    if total is not None and len(components) > total:
+        _add(f"len(components)={len(components)} > total_components={total}")
+
     # --- Component count: total_components >= sum(component_types) ---
     stats = data.get("statistics", {})
     total = stats.get("total_components")
