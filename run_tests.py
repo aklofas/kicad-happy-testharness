@@ -45,6 +45,7 @@ SMOKE_TESTS = [
     "tests/test_diff_analysis.py",   # 25 tests — diff engine
     "tests/test_differ.py",          # 13 tests — diff library
     "tests/test_checks.py",          # 43 tests — assertion engine
+    "tests/test_run_checks.py",      # 5 tests — run_checks exit code (TH-015)
     "tests/test_schema.py",          # 24 tests — schema validation
     "tests/test_validate_outputs.py",  # 27 tests — output structural checks
     "tests/test_verify_parser.py",   # 27 tests — P1 parser verifier
