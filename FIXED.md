@@ -11,6 +11,21 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-12 — Batch 47: KH-237 switching frequency prefix-collision
+
+### KH-237 (HIGH): Switching frequency prefix-collision + duplicated table
+
+- **Where fixed:** kicad-happy repo, commits `356c363` (phase 1), `c4bf52b` (phase 2), `dedf767` (phase 3)
+- **Root cause:** `_KNOWN_FREQS` table used 8 broad prefixes (TPS54, TPS62, etc.) that collided across distinct part families with different switching frequencies. 175 confirmed mismatches across 302 DigiKey-verified variants. Table was also duplicated between `signal_detectors.py` and `emc_rules.py` with divergent matchers (startswith vs substring).
+- **Fix (3 phases):**
+  1. Extracted `_KNOWN_FREQS` + `lookup_switching_freq()` to `kicad_utils.py` as single source of truth. Deleted EMC copy. Standardized all callers to `startswith`.
+  2. Replaced 8 collision prefixes with 92 DigiKey-verified per-sub-family entries (105 total). Key corrections: TPS54302=400kHz (was 570kHz), TPS62203=1MHz (was 2.5MHz), TPS560430=1.1MHz (was 500kHz), LTC3601=2MHz (was 1MHz).
+  3. Added `freq_source` annotation (`lookup_table`/`topology_default`) to regulator output.
+- **Verified:** py_compile on all 3 files, 18/18 targeted assertions pass (collision fixes + regression), CLI smoke tests pass.
+- **Harness verification:** Affected: schematic + EMC analyzers. Re-run `run_schematic.py` + `run_emc.py` on quick_200. Expect `switching_frequency_hz` changes on TPS54/62/61/56/63 regulators + corresponding SW-001 harmonic shifts. BUGFIX assertion candidates: TPS54302→400kHz, TPS62203→1MHz.
+
+---
+
 ## 2026-04-12 — Batch 46: KH-240 + KH-233
 
 ### KH-240 (MED): Battery-negative rails not classified as ground

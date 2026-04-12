@@ -36,7 +36,7 @@ Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
 maximum. Next KH number: **KH-276**. Next TH number: **TH-016**.
 
-> 3 open issues.
+> 2 open issues.
 
 ---
 
@@ -50,60 +50,6 @@ maximum. Next KH number: **KH-276**. Next TH number: **TH-016**.
 ---
 
 ## kicad-happy Analyzer Issues
-
-### KH-237: Switching frequency prefix-collision + duplicated table
-
-**Severity:** HIGH
-**Discovered:** 2026-04-11 during main-repo inspection brief (#5)
-**Where:**
-- `kicad-happy/skills/kicad/scripts/signal_detectors.py:29` (`_KNOWN_FREQS`, 21 entries, uses `str.startswith`)
-- `kicad-happy/skills/emc/scripts/emc_rules.py:866` (`known_freqs` local copy, identical content, uses `prefix in val` — substring match, even looser)
-- `signal_detectors.py:78` `_get_known_switching_freq()` — also uses `prefix in val` (substring)
-
-**Blast radius:** 302 variants verified via DigiKey API on 2026-04-12. **175 confirmed mismatches** across 8 of 10 collision prefixes. Only LM259/LM257 (same-family, same freq) are clean. Worst offenders:
-
-| Prefix | Table freq | Verified distinct freqs | Mismatches | Example |
-|--------|-----------|------------------------|-----------|---------|
-| TPS54 | 570 kHz | **11** (50–700 kHz) | 43/49 | TPS54302=400k, TPS54218=200k, TPS5430=500k |
-| TPS62 | 2500 kHz | **10** (1000–4000 kHz) | 42/56 | TPS62203=1000k, TPS62840=1800k, TPS62088=4000k |
-| TPS61 | 1000 kHz | **12** (50–3500 kHz) | 37/43 | TPS61041=50k, TPS61088=200k, TPS61253=3500k |
-| TPS56 | 500 kHz | **9** (500–1400 kHz) | 30/38 | TPS560430=1100k, TPS563240=1400k, TPS561243=1280k |
-| TPS63 | 2400 kHz | 5 (1250–2500 kHz) | 10/24 | TPS63001=1250k, TPS631000=2000k |
-| TPS629 | 2200 kHz | 4 (200–2500 kHz) | 8/9 | TPS62933=200k, TPS62913=1000k |
-| ADP2 | 700 kHz | 5 (200–2500 kHz) | 4/7 | ADP2503=2500k, ADP2301=1400k |
-| LTC36 | 1000 kHz | 2 (1000–2000 kHz) | 1/1 | LTC3601=2000k |
-
-Full verification data: `inspections/2026-04-11_prefix_collisions/freq_verified.json` (302 variants, 278 verified, 16 not found, 8 no param).
-
-**Root cause:** The `_KNOWN_FREQS` design assumes one frequency per MPN prefix family. This is false for TI's TPS54/61/62/56/63 families where 3-4 character prefixes span dozens of distinct product families with different switching frequencies.
-
-**Fix plan (main repo, 3 phases):**
-
-**Phase 1: Extract + deduplicate (structural, no value changes)**
-1. Move `_KNOWN_FREQS` from `signal_detectors.py:29` to `kicad_utils.py` as the single source of truth.
-2. Delete the local `known_freqs` copy from `emc_rules.py:866`.
-3. Add `from kicad_utils import _KNOWN_FREQS, lookup_switching_freq` in both consumers.
-4. Standardize both call sites on `str.startswith` (drop the `prefix in val` substring match at `signal_detectors.py:78` and `emc_rules.py:890`).
-5. Unit test: verify `_KNOWN_FREQS` is imported from one location and both callers produce the same results.
-
-**Phase 2: Replace broad prefixes with exact-MPN entries**
-Replace the 8 collision-prone prefixes with longer/exact entries from DigiKey data. Strategy per prefix:
-- **TPS54**: Replace `'TPS54': 570e3` with 11 entries: `'TPS54331': 570e3, 'TPS5430': 500e3, 'TPS54302': 400e3, 'TPS54308': 350e3, 'TPS54218': 200e3, 'TPS546D2': 225e3, 'TPS5410': 500e3, 'TPS54202': 500e3, 'TPS54561': 100e3, 'TPS5405': 50e3, 'TPS5450': 500e3` (plus remaining sub-families grouped by frequency from the verified JSON).
-- Same pattern for TPS62, TPS61, TPS56, TPS63, TPS629, ADP2, LTC36.
-- Keep LM259 (150 kHz) and LM257 (52 kHz) as-is — verified no collisions.
-- Keep the 10 non-colliding single-family entries (MP2307, MP1584, MP2359, AP3012, RT8059, SY820, MCP1640, MCP1603, XL6009, XL4015, MT3608) as-is.
-- Source all replacement values from `freq_verified.json` (already populated).
-
-**Phase 3: Add confidence + fallback**
-- When `lookup_switching_freq()` finds a match, annotate with `"freq_source": "lookup_table"`.
-- When no match, use the existing behavior (no frequency) but consider adding a `"freq_source": "unknown"` annotation.
-- For adjustable-frequency regulators (e.g., TPS54335: 50 kHz–1.6 MHz), store the typical/default and annotate `"freq_range": [50e3, 1.6e6]`.
-
-**Estimated effort:** Phase 1: ~30 min (structural refactor). Phase 2: ~1–2 hours (table rebuild from verified JSON, ~80 entries replacing 8). Phase 3: ~30 min (optional, deferred OK).
-
-**Test plan:** Synthetic schematic fixtures with TPS54302 (→ 400 kHz), TPS62203 (→ 1000 kHz), TPS61088 (→ 200 kHz). Assert correct `switching_frequency_hz` in output. Assert EMC SW-001 harmonics shift to match. Run `quick_200` cross-section before/after for regression.
-
----
 
 ### KH-236: Regulator Vref prefix-collision in _REGULATOR_VREF table
 
@@ -172,6 +118,5 @@ Entries like `'LM78': 1.25` and `'LM317': 1.25` are redundant — LM317 is adjus
 
 ## Priority Queue
 
-1. **KH-237** — HIGH — Switching-freq prefix-collision. DigiKey verified, fix plan ready. Phase 1 (extract+dedup) first, then Phase 2 (table rebuild).
-2. **KH-236** — MED — Vref prefix-collision. DigiKey verified, fix plan ready. Coordinate with KH-237 (shared `kicad_utils.py` refactor).
-3. **KH-230** — LOW — Empty Value substitution.
+1. **KH-236** — MED — Vref prefix-collision. DigiKey verified, fix plan ready.
+2. **KH-230** — LOW — Empty Value substitution.
