@@ -23,11 +23,11 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 feedback_networks",
+      "description": "Exactly 2 feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -42,6 +42,16 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "R90 in feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R90$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -50,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "U35 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -60,7 +70,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Exactly 2 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -69,22 +79,32 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
-      "description": "Exactly 1 voltage_dividers",
+      "id": "STRUCT-00000009",
+      "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "R89 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R89$"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
+      "description": "R90 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R90$"
       }
     }
   ]

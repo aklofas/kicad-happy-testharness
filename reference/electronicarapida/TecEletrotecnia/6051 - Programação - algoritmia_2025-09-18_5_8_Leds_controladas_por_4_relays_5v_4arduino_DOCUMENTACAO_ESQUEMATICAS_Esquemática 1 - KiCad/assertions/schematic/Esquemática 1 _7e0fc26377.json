@@ -1,0 +1,131 @@
+{
+  "file_pattern": "Esquem\u00e1tica 1 _7e0fc26377",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~33 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 29,
+        "max": 37
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~56 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 53,
+        "max": 59
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "8 led_audit detected",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "All led_audit have ref",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^$"
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "All led_audit type values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "type",
+        "pattern": "^(indicator_led)$",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All led_audit drive_method values are valid",
+      "check": {
+        "path": "signal_analysis.led_audit",
+        "op": "count_matches",
+        "field": "drive_method",
+        "pattern": "^(resistor_limited|direct_drive|ic_direct)$",
+        "value": 8
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "2 suggested_certifications detected",
+      "check": {
+        "path": "signal_analysis.suggested_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "4 transistor_circuits detected",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "All transistor_circuits have reference present",
+      "check": {
+        "path": "signal_analysis.transistor_circuits",
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000012",
+      "description": "Has 8 led(s)",
+      "check": {
+        "path": "statistics.component_types.led",
+        "op": "min_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "SEED-00000013",
+      "description": "Has 12 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 9
+      }
+    }
+  ]
+}

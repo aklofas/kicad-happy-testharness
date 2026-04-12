@@ -179,11 +179,11 @@
     },
     {
       "id": "STRUCT-00000019",
-      "description": "Exactly 14 voltage_dividers",
+      "description": "Exactly 15 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 14
+        "value": 15
       }
     },
     {
@@ -324,6 +324,16 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R62$"
+      }
+    },
+    {
+      "id": "STRUCT-00000034",
+      "description": "R46 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R46$"
       }
     }
   ]

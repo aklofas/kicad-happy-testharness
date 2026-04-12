@@ -238,6 +238,25 @@
     },
     {
       "id": "SEED-00000025",
+      "description": "1 voltage_dividers detected",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000026",
+      "description": "All voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000027",
       "description": "Has 10 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

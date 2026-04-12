@@ -5,11 +5,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 6 design_observations",
+      "description": "Exactly 7 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 6
+        "value": 7
       }
     },
     {
@@ -23,11 +23,11 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 feedback_networks",
+      "description": "Exactly 2 feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -42,6 +42,16 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "R182 in feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R182$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "Exactly 1 lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -50,7 +60,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000007",
       "description": "L10 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -60,7 +70,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000008",
       "description": "Exactly 3 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -69,7 +79,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U20 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -79,7 +89,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000010",
       "description": "U19 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -89,7 +99,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "U18 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -99,7 +109,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "Exactly 1 reset_supervisors",
       "check": {
         "path": "signal_analysis.reset_supervisors",
@@ -108,7 +118,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "Exactly 2 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -117,16 +127,16 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "Exactly 2 voltage_dividers",
+      "id": "STRUCT-00000014",
+      "description": "Exactly 3 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "R183 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -136,13 +146,23 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "R187 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R187$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R182 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R182$"
       }
     }
   ]

@@ -50,11 +50,11 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 4 rc_filters",
+      "description": "Exactly 3 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -89,16 +89,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "R108 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R108$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "Exactly 2 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -107,7 +97,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "Exactly 1 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -116,13 +106,42 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000012",
       "description": "Q9 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q9$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "Exactly 2 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
+      "description": "R108 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R108$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R103 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R103$"
       }
     }
   ]

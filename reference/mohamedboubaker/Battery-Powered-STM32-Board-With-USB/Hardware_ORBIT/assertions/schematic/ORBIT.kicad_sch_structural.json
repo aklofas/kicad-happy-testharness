@@ -135,25 +135,6 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "Exactly 2 rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
-      "description": "R11 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R11$"
-      }
-    },
-    {
-      "id": "STRUCT-00000017",
       "description": "Exactly 4 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -162,16 +143,26 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 1 voltage_dividers",
+      "id": "STRUCT-00000016",
+      "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000017",
+      "description": "R11 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R11$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
       "description": "R7 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

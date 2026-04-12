@@ -239,11 +239,11 @@
     },
     {
       "id": "STRUCT-00000026",
-      "description": "Exactly 4 voltage_dividers",
+      "description": "Exactly 5 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -268,6 +268,16 @@
     },
     {
       "id": "STRUCT-00000029",
+      "description": "R27 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R27$"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
       "description": "R32 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -277,7 +287,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000031",
       "description": "R38 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

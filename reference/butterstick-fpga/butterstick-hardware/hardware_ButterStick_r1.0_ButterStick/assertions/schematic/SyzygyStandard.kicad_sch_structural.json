@@ -41,11 +41,11 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 1 feedback_networks",
+      "description": "Exactly 2 feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -60,6 +60,16 @@
     },
     {
       "id": "STRUCT-00000007",
+      "description": "R82 in feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R82$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -68,7 +78,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000009",
       "description": "U14 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -78,22 +88,12 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
-      "description": "Exactly 2 rc_filters",
+      "id": "STRUCT-00000010",
+      "description": "Exactly 1 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000010",
-      "description": "R82 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R82$"
+        "value": 1
       }
     },
     {
@@ -117,11 +117,11 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "Exactly 1 voltage_dividers",
+      "description": "Exactly 2 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -132,6 +132,16 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R83$"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "R82 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R82$"
       }
     }
   ]

@@ -1,0 +1,80 @@
+{
+  "file_pattern": "Themis-2019-03-12-22-23-55.sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~35 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 31,
+        "max": 39
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~16 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 14,
+        "max": 18
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "2 suggested_certifications detected",
+      "check": {
+        "path": "signal_analysis.suggested_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "Has 5 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 3
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "Has 10 connector(s)",
+      "check": {
+        "path": "statistics.component_types.connector",
+        "op": "min_count",
+        "value": 7
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "Has 13 resistor(s)",
+      "check": {
+        "path": "statistics.component_types.resistor",
+        "op": "min_count",
+        "value": 9
+      }
+    }
+  ]
+}

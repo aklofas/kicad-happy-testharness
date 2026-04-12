@@ -91,11 +91,11 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "Exactly 1 voltage_dividers",
+      "description": "Exactly 3 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 1
+        "value": 3
       }
     },
     {
@@ -106,6 +106,26 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R4_D100MSP1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R3_D100MSP1 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R3_D100MSP1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R3_D100MSPB1 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R3_D100MSPB1$"
       }
     }
   ]

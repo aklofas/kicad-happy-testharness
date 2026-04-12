@@ -271,6 +271,55 @@
         "field": "reference",
         "pattern": "^Q402$"
       }
+    },
+    {
+      "id": "STRUCT-00000029",
+      "description": "Exactly 4 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 4
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "R227 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R227$"
+      }
+    },
+    {
+      "id": "STRUCT-00000031",
+      "description": "R226 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R226$"
+      }
+    },
+    {
+      "id": "STRUCT-00000032",
+      "description": "R213 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R213$"
+      }
+    },
+    {
+      "id": "STRUCT-00000033",
+      "description": "R214 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R214$"
+      }
     }
   ]
 }

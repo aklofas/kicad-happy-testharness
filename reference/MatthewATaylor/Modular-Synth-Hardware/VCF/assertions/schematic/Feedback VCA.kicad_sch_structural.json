@@ -24,25 +24,6 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
-      "description": "R301 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R301$"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
       "description": "Exactly 2 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -51,7 +32,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000004",
       "description": "Exactly 3 transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -60,7 +41,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000005",
       "description": "Q301 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -70,7 +51,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000006",
       "description": "Q302 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -80,13 +61,32 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000007",
       "description": "Q303 in transistor_circuits",
       "check": {
         "path": "signal_analysis.transistor_circuits",
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q303$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "Exactly 1 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R307 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R307$"
       }
     }
   ]

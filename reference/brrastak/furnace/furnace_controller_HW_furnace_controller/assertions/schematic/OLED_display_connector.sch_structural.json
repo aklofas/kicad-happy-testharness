@@ -29,6 +29,25 @@
         "op": "equals",
         "value": 2
       }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "Exactly 1 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
+      "description": "R11 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R11$"
+      }
     }
   ]
 }

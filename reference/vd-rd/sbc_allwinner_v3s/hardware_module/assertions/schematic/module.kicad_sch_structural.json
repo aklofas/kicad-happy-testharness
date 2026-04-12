@@ -52,11 +52,11 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 29 design_observations",
+      "description": "Exactly 30 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 29
+        "value": 30
       }
     },
     {
@@ -70,15 +70,25 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 1 feedback_networks",
+      "description": "Exactly 2 feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000009",
+      "description": "R601 in feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R601$"
+      }
+    },
+    {
+      "id": "STRUCT-00000010",
       "description": "R901 in feedback_networks",
       "check": {
         "path": "signal_analysis.feedback_networks",
@@ -88,7 +98,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000011",
       "description": "Exactly 1 lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -97,7 +107,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "L3 in lc_filters",
       "check": {
         "path": "signal_analysis.lc_filters",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "Exactly 1 led_audit",
       "check": {
         "path": "signal_analysis.led_audit",
@@ -116,7 +126,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
+      "id": "STRUCT-00000014",
       "description": "Exactly 1 led_driver_ics",
       "check": {
         "path": "signal_analysis.led_driver_ics",
@@ -125,7 +135,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "Exactly 1 power_path",
       "check": {
         "path": "signal_analysis.power_path",
@@ -134,7 +144,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "Exactly 4 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -143,7 +153,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "U910 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -153,7 +163,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "U900 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -163,7 +173,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "U800 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -173,7 +183,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "U600 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -183,7 +193,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "Exactly 2 protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -192,7 +202,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "D2 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -202,7 +212,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "U1 in protection_devices",
       "check": {
         "path": "signal_analysis.protection_devices",
@@ -212,22 +222,12 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
-      "description": "Exactly 2 rc_filters",
+      "id": "STRUCT-00000024",
+      "description": "Exactly 1 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
-      "description": "R601 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R601$"
+        "value": 1
       }
     },
     {
@@ -251,15 +251,25 @@
     },
     {
       "id": "STRUCT-00000027",
-      "description": "Exactly 2 voltage_dividers",
+      "description": "Exactly 3 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 2
+        "value": 3
       }
     },
     {
       "id": "STRUCT-00000028",
+      "description": "R601 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R601$"
+      }
+    },
+    {
+      "id": "STRUCT-00000029",
       "description": "R901 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
@@ -269,7 +279,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000030",
       "description": "R105 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

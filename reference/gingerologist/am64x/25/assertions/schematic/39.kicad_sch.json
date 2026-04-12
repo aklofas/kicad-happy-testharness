@@ -1,0 +1,108 @@
+{
+  "file_pattern": "39.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "generate_seed_assertions.py",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~26 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 23,
+        "max": 29
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~18 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 16,
+        "max": 20
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "BOM is non-empty",
+      "check": {
+        "path": "bom",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "Signal analysis section exists",
+      "check": {
+        "path": "signal_analysis",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "7 decoupling_analysis detected",
+      "check": {
+        "path": "signal_analysis.decoupling_analysis",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000006",
+      "description": "7 design_observations detected",
+      "check": {
+        "path": "signal_analysis.design_observations",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000007",
+      "description": "3 power_regulators detected",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000008",
+      "description": "All power_regulators have ref present",
+      "check": {
+        "path": "signal_analysis.power_regulators",
+        "op": "not_contains_match",
+        "field": "ref",
+        "pattern": "^(None|\\?|)$"
+      }
+    },
+    {
+      "id": "SEED-00000009",
+      "description": "2 suggested_certifications detected",
+      "check": {
+        "path": "signal_analysis.suggested_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000010",
+      "description": "Has 12 capacitor(s)",
+      "check": {
+        "path": "statistics.component_types.capacitor",
+        "op": "min_count",
+        "value": 9
+      }
+    },
+    {
+      "id": "SEED-00000011",
+      "description": "Has 6 test_point(s)",
+      "check": {
+        "path": "statistics.component_types.test_point",
+        "op": "min_count",
+        "value": 4
+      }
+    }
+  ]
+}

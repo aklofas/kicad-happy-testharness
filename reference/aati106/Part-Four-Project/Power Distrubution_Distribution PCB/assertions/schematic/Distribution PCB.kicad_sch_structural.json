@@ -52,11 +52,11 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 15 design_observations",
+      "description": "Exactly 16 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 15
+        "value": 16
       }
     },
     {
@@ -206,11 +206,11 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "Exactly 6 rc_filters",
+      "description": "Exactly 5 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 6
+        "value": 5
       }
     },
     {
@@ -225,16 +225,6 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "R25 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R25$"
-      }
-    },
-    {
-      "id": "STRUCT-00000025",
       "description": "R11 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -244,7 +234,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "R15 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -254,7 +244,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000026",
       "description": "R14 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -264,7 +254,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000027",
       "description": "R20 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -274,7 +264,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000028",
       "description": "Exactly 2 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -283,22 +273,32 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
-      "description": "Exactly 3 voltage_dividers",
+      "id": "STRUCT-00000029",
+      "description": "Exactly 4 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000030",
       "description": "R1 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000031",
+      "description": "R25 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R25$"
       }
     },
     {

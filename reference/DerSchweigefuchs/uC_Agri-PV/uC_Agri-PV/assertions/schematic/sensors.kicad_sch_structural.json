@@ -23,11 +23,11 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 design_observations",
+      "description": "Exactly 4 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -41,6 +41,25 @@
     },
     {
       "id": "STRUCT-00000005",
+      "description": "Exactly 1 feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R813 in feedback_networks",
+      "check": {
+        "path": "signal_analysis.feedback_networks",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R813$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
       "description": "Exactly 1 power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
@@ -49,32 +68,13 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "U801 in power_regulators",
       "check": {
         "path": "signal_analysis.power_regulators",
         "op": "contains_match",
         "field": "ref",
         "pattern": "^U801$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
-      "description": "Exactly 1 rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000008",
-      "description": "R813 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R813$"
       }
     },
     {
@@ -153,6 +153,35 @@
         "op": "contains_match",
         "field": "reference",
         "pattern": "^Q802$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "Exactly 2 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R802 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R802$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "R813 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R813$"
       }
     }
   ]

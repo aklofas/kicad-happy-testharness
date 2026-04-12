@@ -247,6 +247,25 @@
     },
     {
       "id": "SEED-00000026",
+      "description": "3 voltage_dividers detected",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000027",
+      "description": "All voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000028",
       "description": "Has 73 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -255,7 +274,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000029",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -264,7 +283,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000030",
       "description": "Has 8 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -273,7 +292,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000031",
       "description": "Has 10 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -282,7 +301,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000032",
       "description": "Has 8 inductor(s)",
       "check": {
         "path": "statistics.component_types.inductor",
@@ -291,7 +310,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000033",
       "description": "Has 34 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -71,40 +71,60 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Exactly 2 rc_filters",
+      "description": "Exactly 2 suggested_certifications",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.suggested_certifications",
         "op": "equals",
         "value": 2
       }
     },
     {
       "id": "STRUCT-00000009",
-      "description": "R27 in rc_filters",
+      "description": "Exactly 4 voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R27$"
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000010",
-      "description": "R40 in rc_filters",
+      "description": "R27 in voltage_dividers",
       "check": {
-        "path": "signal_analysis.rc_filters",
+        "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R40$"
+        "field": "r_top.ref",
+        "pattern": "^R27$"
       }
     },
     {
       "id": "STRUCT-00000011",
-      "description": "Exactly 2 suggested_certifications",
+      "description": "R35 in voltage_dividers",
       "check": {
-        "path": "signal_analysis.suggested_certifications",
-        "op": "equals",
-        "value": 2
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R35$"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "R40 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R40$"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "R45 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R45$"
       }
     }
   ]

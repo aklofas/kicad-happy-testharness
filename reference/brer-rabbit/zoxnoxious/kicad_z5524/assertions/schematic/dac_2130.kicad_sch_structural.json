@@ -42,11 +42,11 @@
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Exactly 11 rc_filters",
+      "description": "Exactly 9 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 11
+        "value": 9
       }
     },
     {
@@ -91,16 +91,6 @@
     },
     {
       "id": "STRUCT-00000010",
-      "description": "R37 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R37$"
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
       "description": "R10 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -110,7 +100,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000011",
       "description": "R17 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -120,17 +110,7 @@
       }
     },
     {
-      "id": "STRUCT-00000013",
-      "description": "R41 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R41$"
-      }
-    },
-    {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000012",
       "description": "R14 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -140,7 +120,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000013",
       "description": "R4 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -150,7 +130,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000014",
       "description": "R15 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -160,12 +140,51 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000015",
       "description": "Exactly 2 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",
         "op": "equals",
         "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "Exactly 3 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
+      "description": "R41 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R41$"
+      }
+    },
+    {
+      "id": "STRUCT-00000018",
+      "description": "R37 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R37$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "R18 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R18$"
       }
     }
   ]

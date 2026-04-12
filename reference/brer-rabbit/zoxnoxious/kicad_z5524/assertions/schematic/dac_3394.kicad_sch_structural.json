@@ -52,11 +52,11 @@
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Exactly 10 rc_filters",
+      "description": "Exactly 9 rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
         "op": "equals",
-        "value": 10
+        "value": 9
       }
     },
     {
@@ -131,16 +131,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "R67 in rc_filters",
-      "check": {
-        "path": "signal_analysis.rc_filters",
-        "op": "contains_match",
-        "field": "resistor.ref",
-        "pattern": "^R67$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "R69 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -150,7 +140,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "R68 in rc_filters",
       "check": {
         "path": "signal_analysis.rc_filters",
@@ -160,7 +150,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000016",
       "description": "Exactly 2 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -169,22 +159,32 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
-      "description": "Exactly 3 voltage_dividers",
+      "id": "STRUCT-00000017",
+      "description": "Exactly 5 voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "equals",
-        "value": 3
+        "value": 5
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "R100 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R100$"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "R67 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R67$"
       }
     },
     {
@@ -199,6 +199,16 @@
     },
     {
       "id": "STRUCT-00000021",
+      "description": "R106 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R106$"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
       "description": "R96 in voltage_dividers",
       "check": {
         "path": "signal_analysis.voltage_dividers",

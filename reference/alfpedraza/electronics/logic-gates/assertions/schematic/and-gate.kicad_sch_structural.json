@@ -59,6 +59,25 @@
         "field": "reference",
         "pattern": "^Q27$"
       }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "Exactly 1 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R81 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R81$"
+      }
     }
   ]
 }

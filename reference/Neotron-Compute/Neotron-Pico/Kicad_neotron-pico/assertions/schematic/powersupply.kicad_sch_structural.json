@@ -135,6 +135,25 @@
         "field": "reference",
         "pattern": "^Q1302$"
       }
+    },
+    {
+      "id": "STRUCT-00000015",
+      "description": "Exactly 1 voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R1304 in voltage_dividers",
+      "check": {
+        "path": "signal_analysis.voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R1304$"
+      }
     }
   ]
 }
