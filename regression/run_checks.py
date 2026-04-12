@@ -194,6 +194,8 @@ def main():
     parser.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
                         help=f"Parallel workers (default: {DEFAULT_JOBS})")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--allow-errors", action="store_true",
+                        help="Exit 0 when errors > 0 but failures == 0 (shallow-clone mode)")
     args = parser.parse_args()
 
     # Resolve repo filtering
@@ -272,32 +274,36 @@ def main():
                 "failed": aspirational_failed,
             }
         print(json.dumps(out, indent=2))
-        return
+    else:
+        print("=" * 70)
+        print("ASSERTION CHECK RESULTS")
+        print("=" * 70)
+        print(f"\nTotal:  {total}")
+        print(f"Passed: {passed}")
+        print(f"Failed: {failed}")
+        print(f"Errors: {errors}")
+        if total > 0:
+            print(f"Rate:   {passed/total*100:.1f}%")
 
-    print("=" * 70)
-    print("ASSERTION CHECK RESULTS")
-    print("=" * 70)
-    print(f"\nTotal:  {total}")
-    print(f"Passed: {passed}")
-    print(f"Failed: {failed}")
-    print(f"Errors: {errors}")
-    if total > 0:
-        print(f"Rate:   {passed/total*100:.1f}%")
+        if aspirational_total > 0:
+            print(f"\nAspirational: {aspirational_total} total, "
+                  f"{aspirational_passed} passing, {aspirational_failed} failing")
 
-    if aspirational_total > 0:
-        print(f"\nAspirational: {aspirational_total} total, "
-              f"{aspirational_passed} passing, {aspirational_failed} failing")
+        if failures:
+            print(f"\n--- Failures ---")
+            for f in failures:
+                proj = f.get("project", "")
+                print(f"  FAIL {proj}/{f.get('file', '?')}: {f['description']}")
+                print(f"       Expected: {f.get('expected', '?')}, Actual: {f.get('actual', '?')}")
+                if f.get("error"):
+                    print(f"       Error: {f['error']}")
 
-    if failures:
-        print(f"\n--- Failures ---")
-        for f in failures:
-            proj = f.get("project", "")
-            print(f"  FAIL {proj}/{f.get('file', '?')}: {f['description']}")
-            print(f"       Expected: {f.get('expected', '?')}, Actual: {f.get('actual', '?')}")
-            if f.get("error"):
-                print(f"       Error: {f['error']}")
-
-    sys.exit(1 if failed > 0 else 0)
+    if failed > 0:
+        sys.exit(1)
+    elif errors > 0 and not args.allow_errors:
+        sys.exit(1)
+    else:
+        sys.exit(0)
 
 
 if __name__ == "__main__":
