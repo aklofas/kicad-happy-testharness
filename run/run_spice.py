@@ -170,21 +170,12 @@ def main():
             print(f"Error: {extractor} not found", file=sys.stderr)
             sys.exit(1)
 
-    # Check ngspice (the simulator script handles NGSPICE_PATH and Windows paths,
-    # but do a basic check here for early feedback)
+    # Check ngspice availability for early feedback
     import shutil
     ngspice_path = os.environ.get("NGSPICE_PATH") or shutil.which("ngspice")
     if not ngspice_path:
-        # Check common Windows location
-        for candidate in [r"C:\Spice64\bin\ngspice.exe"]:
-            if os.path.isfile(candidate):
-                ngspice_path = candidate
-                break
-    if not ngspice_path:
         print("Error: ngspice not found.", file=sys.stderr)
-        print("  Linux:   apt install ngspice", file=sys.stderr)
-        print("  macOS:   brew install ngspice", file=sys.stderr)
-        print("  Windows: download from ngspice.sourceforge.io", file=sys.stderr)
+        print("  Install: apt install ngspice  (or brew install ngspice)", file=sys.stderr)
         print("  Or set NGSPICE_PATH env var.", file=sys.stderr)
         sys.exit(1)
 

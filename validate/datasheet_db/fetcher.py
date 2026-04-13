@@ -129,8 +129,7 @@ def fetch_bytes(url: str, timeout: float = _FETCH_DEFAULT_TIMEOUT) -> FetchResul
     except Exception as e:
         raise FetchError(f"HTTP error fetching {url}: {e}")
 
-    # PDF sniff: either the content-type is PDF-ish OR the magic bytes match
-    is_pdf_ctype = content_type in _ACCEPTED_CONTENT_TYPES and "pdf" in content_type
+    # PDF sniff: check magic bytes and content-type
     is_pdf_magic = body.startswith(_PDF_MAGIC)
     if content_type == "application/pdf":
         pass  # trust explicit PDF content-type

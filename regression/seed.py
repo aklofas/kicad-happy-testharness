@@ -21,6 +21,7 @@ import argparse
 import fnmatch
 import json
 import math
+import re
 import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
@@ -270,7 +271,6 @@ def _quality_assertions(sig_type, detections, ast_num):
 
     field, desc, pattern = qc
     # Only assert the quality invariant if ALL detections actually satisfy it
-    import re
     pat = re.compile(pattern)
     for det in detections:
         val = det
@@ -605,7 +605,6 @@ def generate_gerber_assertions(data, tolerance=0.10):
     comp = data.get("completeness", {})
     alignment = data.get("alignment", {})
     drill_class = data.get("drill_classification", {})
-    pad_summary = data.get("pad_summary", {})
 
     assertions = []
     ast_num = 1

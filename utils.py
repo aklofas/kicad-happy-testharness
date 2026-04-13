@@ -7,13 +7,13 @@ used across discover.py, analyzer runners, baselines, and validators.
 import functools
 import hashlib
 import json
-from collections import Counter
+from collections import Counter, defaultdict
 import os
 import re
 import subprocess
 import sys
 import time
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path, PurePosixPath
 
 HARNESS_DIR = Path(__file__).resolve().parent
@@ -580,7 +580,6 @@ def _run_one(analyzer, file_path, outfile, errfile, extra_args=None):
 
 def _print_detector_aggregate(sch_output_dir):
     """Print per-detector hit summary after a schematic batch run."""
-    from collections import defaultdict
     detector_files = defaultdict(int)
     detector_items = defaultdict(int)
     for owner_dir in sorted(sch_output_dir.iterdir()):
