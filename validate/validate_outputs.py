@@ -251,14 +251,17 @@ def _validate_schematics(schematics):
         if sch_path.startswith(repos_dir):
             relpath = sch_path[len(repos_dir):].lstrip("/").lstrip(os.sep)
 
-        # Determine repo and within-repo safe name
-        parts = relpath.replace("\\", "/").split("/", 1)
-        repo = parts[0]
-        within_repo = parts[1] if len(parts) > 1 else relpath
+        # Determine owner/repo and within-repo safe name
+        parts = relpath.replace("\\", "/").split("/", 2)
+        if len(parts) < 3:
+            continue
+        owner = parts[0]
+        repo = parts[1]
+        within_repo = parts[2]
         safe_name = _truncate_with_hash(within_repo.replace(os.sep, "_").replace("/", "_"))
 
-        # Look for output in per-repo dir
-        json_path = OUTPUTS_DIR / "schematic" / repo / f"{safe_name}.json"
+        # Look for output in per-repo dir (owner/repo structure)
+        json_path = OUTPUTS_DIR / "schematic" / owner / repo / f"{safe_name}.json"
 
         if not json_path.exists():
             ctx.anomalies["missing_result"].append((sch_path, "no JSON output"))

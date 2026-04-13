@@ -164,12 +164,15 @@ def _check_repo(repo_pair):
         if sch_path.startswith(repos_dir):
             relpath = sch_path[len(repos_dir):].lstrip("/").lstrip(os.sep)
 
-        parts = relpath.replace("\\", "/").split("/", 1)
-        repo_name = parts[0]
-        within_repo = parts[1] if len(parts) > 1 else relpath
+        parts = relpath.replace("\\", "/").split("/", 2)
+        if len(parts) < 3:
+            continue
+        owner = parts[0]
+        repo_name = parts[1]
+        within_repo = parts[2]
         safe_name = _truncate_with_hash(within_repo.replace(os.sep, "_").replace("/", "_"))
 
-        json_path = OUTPUTS_DIR / "schematic" / repo_name / f"{safe_name}.json"
+        json_path = OUTPUTS_DIR / "schematic" / owner / repo_name / f"{safe_name}.json"
         if json_path.exists():
             all_violations.extend(_check_file(json_path))
 
