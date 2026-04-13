@@ -5,7 +5,7 @@ Use this file to record completed batches, corpus maintenance (purges, additions
 and aggregate metrics. Do not track individual issues here — use
 [ISSUES.md](ISSUES.md) for open bugs and [FIXED.md](FIXED.md) for closed ones.
 
-Last updated: 2026-04-12 (TH-015 fixed — run_checks.py exit code on errors; issue tracker split harness/main-repo; KH-234/235/238/239 moved to FIXED.md Batch 43)
+Last updated: 2026-04-13 (v1.3-full shipped — all 12/12 exit criteria met, 819 tests, pushed to origin)
 
 ---
 
@@ -26,7 +26,8 @@ Last updated: 2026-04-12 (TH-015 fixed — run_checks.py exit code on errors; is
 | Aspirational assertions | 1,989 |
 | Assertion pass rate | 100.0% |
 | Bugfix registry entries | 67 |
-| Unit tests | 287 |
+| Unit tests (smoke gate) | 481 |
+| Unit tests (full suite) | 819 |
 | Layer 3 reviewed repos | 992 |
 | Total findings | 2,575 |
 | Open KH-* issues | 0 |
