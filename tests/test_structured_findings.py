@@ -216,6 +216,56 @@ def test_enrich_item_no_section():
     assert "expected_relation" not in enriched
 
 
+from checks import evaluate_assertion
+
+
+def test_roundtrip_in_detector():
+    """Round-trip: structured item → check → evaluate against mock output."""
+    item = {
+        "detector": "power_regulators",
+        "subject_refs": ["U1"],
+        "expected_relation": "in_detector",
+    }
+    check = _check_from_structured(item, "correct")
+    assert check is not None
+
+    assertion = {
+        "id": "TEST-001",
+        "description": "U1 in regulators",
+        "check": check,
+    }
+    output = {
+        "signal_analysis": {
+            "power_regulators": [
+                {"ref": "U1", "value": "LM7805"},
+            ]
+        }
+    }
+    result = evaluate_assertion(assertion, output)
+    assert result["passed"], f"Round-trip failed: {result}"
+
+
+def test_roundtrip_not_in_detector():
+    """Round-trip: not_in_detector check should fail when ref IS present."""
+    item = {
+        "detector": "voltage_dividers",
+        "subject_refs": ["R15"],
+        "expected_relation": "not_in_detector",
+    }
+    check = _check_from_structured(item, "incorrect")
+    assertion = {"id": "TEST-002", "description": "R15 not divider", "check": check}
+
+    output = {
+        "signal_analysis": {
+            "voltage_dividers": [
+                {"r_top": {"ref": "R15", "value": "10k"}, "r_bottom": {"ref": "R16", "value": "10k"}, "ratio": 0.5},
+            ]
+        }
+    }
+    result = evaluate_assertion(assertion, output)
+    assert not result["passed"], f"not_in_detector should fail when ref present: {result}"
+
+
 # === Runner ===
 
 if __name__ == "__main__":
