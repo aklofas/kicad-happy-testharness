@@ -63,7 +63,7 @@ SMOKE_TESTS = [
     "tests/test_spice_coverage.py",  # 14 tests — SPICE coverage metrics (P10)
     "tests/test_bug_cemetery.py",    # 11 tests — historical bug reproducers (P8)
     "tests/test_metamorphic.py",     # 10 tests — invariance/covariance (P5)
-    "tests/test_structured_findings.py",  # 24 tests — structured finding checks + migration (P3.A)
+    "tests/test_structured_findings.py",  # 11 tests — structured finding checks (P3.A)
 ]
 
 
