@@ -52,6 +52,12 @@ SMOKE_TESTS = [
     "tests/test_datasheet_verify.py",  # 27 tests — datasheet extraction validation
     "tests/test_datasheet_db_storage.py",   # 30 tests — datasheet store primitives (sub-project A)
     "tests/test_datasheet_db_manifest.py",  # 34 tests — datasheet manifest layer (sub-project A)
+    "tests/test_ab_test.py",          # 14 tests — A/B blast-radius framework (P11)
+    "tests/test_generate_analytics.py",  # 9 tests — analytics chart data collection
+    "tests/test_reclassify_repos.py",  # 9 tests — repo classification scoring
+    "tests/test_generate_catalog.py",  # 18 tests — catalog query + matching
+    "tests/test_detect_changes.py",  # 14 tests — upstream change detection mapping
+    "tests/test_add_repos.py",       # 6 tests — category insert point logic
 ]
 
 
