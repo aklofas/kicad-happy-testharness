@@ -7,6 +7,7 @@ verify the analysis quality.
 
 Usage:
     python3 regression/packet.py --strategy random --count 5
+    python3 regression/packet.py --strategy risk --count 10
     python3 regression/packet.py --strategy changed --repo OpenMower --count 5
     python3 regression/packet.py --file "repos/hackrf/hardware/hackrf-one/hackrf-one.kicad_sch"
     python3 regression/packet.py --repo OpenMower --strategy random --count 3
@@ -372,9 +373,80 @@ def select_changed(repo_name, count, analyzer_type):
     return selected
 
 
+def select_risk(count, analyzer_type, repo=None):
+    """Select files with highest risk score — no prior review + high complexity.
+
+    Risk score = component_count + signal_detection_count * 2 + 100 (if unreviewed).
+    Prioritizes complex designs that haven't been reviewed yet.
+    """
+    # Collect reviewed files (those with findings)
+    reviewed = set()
+    for ff in DATA_DIR.rglob("findings.json"):
+        try:
+            data = json.loads(ff.read_text(encoding="utf-8"))
+            for finding in data.get("findings", []):
+                sf = finding.get("source_file", "")
+                if sf:
+                    reviewed.add(sf)
+        except (json.JSONDecodeError, OSError):
+            pass
+
+    # Score all output files
+    scored = []
+    sch_dir = OUTPUTS_DIR / analyzer_type
+    if not sch_dir.exists():
+        return []
+
+    for owner_dir in sorted(sch_dir.iterdir()):
+        if not owner_dir.is_dir():
+            continue
+        for repo_dir in sorted(owner_dir.iterdir()):
+            if not repo_dir.is_dir():
+                continue
+            repo_name = f"{owner_dir.name}/{repo_dir.name}"
+            if repo and repo_name != repo:
+                continue
+            for out_file in repo_dir.glob("*.json"):
+                if out_file.name.startswith("_"):
+                    continue
+                try:
+                    output = json.loads(out_file.read_text(encoding="utf-8"))
+                except (json.JSONDecodeError, OSError):
+                    continue
+
+                components = len(output.get("components", []))
+                signal = output.get("signal_analysis", {})
+                detections = sum(len(v) for v in signal.values() if isinstance(v, list))
+
+                score = components + detections * 2
+                if out_file.name not in reviewed:
+                    score += 100  # unreviewed bonus
+
+                scored.append((out_file.name, repo_name, score))
+
+    scored.sort(key=lambda x: x[2], reverse=True)
+
+    # Map back to source paths
+    manifest_name = "all_schematics.txt" if analyzer_type == "schematic" else f"all_{analyzer_type}s.txt"
+    manifest_file = MANIFESTS_DIR / manifest_name
+    source_map = {}
+    if manifest_file.exists():
+        for line in manifest_file.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line:
+                safe = _safe_name(line) + ".json"
+                source_map[safe] = line
+
+    selected = []
+    for fname, _repo, _score in scored[:count]:
+        source = source_map.get(fname, fname)
+        selected.append(source)
+    return selected
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate review packets")
-    parser.add_argument("--strategy", choices=["random", "changed"],
+    parser.add_argument("--strategy", choices=["random", "changed", "risk"],
                         help="File selection strategy")
     parser.add_argument("--count", "-n", type=int, default=5, help="Number of files")
     parser.add_argument("--repo", help="Filter to a specific repo")
@@ -412,6 +484,8 @@ def main():
             print("Error: --repo required with --strategy changed")
             sys.exit(1)
         sources = select_changed(args.repo, args.count, args.type)
+    elif args.strategy == "risk":
+        sources = select_risk(args.count, args.type, repo=args.repo)
     else:
         print("Error: specify --file or --strategy")
         sys.exit(1)
