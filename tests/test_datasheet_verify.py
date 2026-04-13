@@ -71,7 +71,7 @@ def test_parse_cap_empty():
 
 def _make_extraction(pins):
     """Build a minimal extraction dict with given pins."""
-    return {"pins": pins}
+    return {"pins": pins, "meta": {"extraction_score": 10.0}}
 
 
 def _write_extraction(tmpdir, mpn, extraction):
@@ -295,6 +295,7 @@ def _make_decoupling_scenario(num_caps, required_count, required_text,
     tmpdir = tempfile.mkdtemp()
 
     extraction = {
+        "meta": {"extraction_score": 10.0},
         "pins": [
             {"number": "1", "name": "VIN", "type": "power",
              "direction": "input"},
