@@ -11,6 +11,18 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-12 — Batch 53: KH-282 (ML-001 inductor shielding)
+
+### KH-282 (LOW): classify_inductor_shielding hyphen/underscore mismatch
+
+- **Where fixed:** kicad-happy repo, commit `4e84f6f`
+- **Root cause:** `_SHIELDED_PATTERNS` in `kicad_utils.py` contained `WE-MAPI` (hyphen) but KiCad footprint libraries use underscores (`Inductor_WE_MAPI`). Pattern match failed for Wurth WE-series families.
+- **Impact:** 3 false positives in quick_200 (ISSUIUC/ISS-PCB TARS-MK4-PMB L103, 3 board revisions).
+- **Fix:** Normalized hyphens to underscores in shielding classifier.
+- **Harness verification:** Pending (verify when Batch 1-3 handoffs arrive — EMC re-run will confirm 3 false positives resolved).
+
+---
+
 ## 2026-04-12 — Batch 52: TH-021..TH-025 + B5/B7 (Phase 1 bug fixes)
 
 ### TH-021 (MED): harness.py _run() catches TimeoutExpired
