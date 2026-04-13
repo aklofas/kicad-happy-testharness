@@ -220,7 +220,7 @@ def main():
         if not DATA_DIR.exists():
             print("No data found.")
             sys.exit(1)
-        repos = sorted(d.name for d in DATA_DIR.iterdir() if d.is_dir())
+        repos = list_repos()
     else:
         parser.print_help()
         sys.exit(1)
