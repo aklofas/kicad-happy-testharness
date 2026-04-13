@@ -34,9 +34,9 @@ Last updated: 2026-04-12
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-282**. Next TH number: **TH-026**.
+maximum. Next KH number: **KH-283**. Next TH number: **TH-026**.
 
-> 0 open issues.
+> 1 open issue.
 
 ---
 
@@ -51,7 +51,13 @@ maximum. Next KH number: **KH-282**. Next TH number: **TH-026**.
 
 ## kicad-happy Analyzer Issues
 
-(None currently open — KH-276 through KH-281 fixed in Batch 50, KH-277 closed as won't-fix.)
+### KH-282 (LOW): classify_inductor_shielding hyphen/underscore mismatch
+
+- **Where**: `kicad_utils.py:~1278`, `classify_inductor_shielding()`
+- **Bug**: `_SHIELDED_PATTERNS` contains `WE-MAPI` (hyphen) but KiCad footprint libraries use underscores (`Inductor_WE_MAPI:2.2_74438356022`). Pattern matching fails for WE-MAPI, WE-LHMI, WE-MASH families.
+- **Impact**: 3 confirmed false positives in quick_200 (ISSUIUC/ISS-PCB TARS-MK4-PMB L103, 3 board revisions). Shielded inductors misclassified as "unknown" and flagged by ML-001.
+- **Fix**: Normalize hyphens to underscores before pattern matching, or add underscore variants to `_SHIELDED_PATTERNS`.
+- **Severity**: LOW — affects only Wurth WE-series with underscore naming. Other shielded families (Coilcraft XGL/XAL, Vishay IHLP, TDK SPM) use consistent naming.
 
 ---
 
@@ -63,4 +69,4 @@ maximum. Next KH number: **KH-282**. Next TH number: **TH-026**.
 
 ## Priority Queue
 
-0 open issues. Remaining work tracked in `TODO-v1.3-roadmap.md`.
+1 open issue (KH-282). Remaining work tracked in `TODO-v1.3-roadmap.md`.

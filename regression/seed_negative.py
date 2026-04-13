@@ -145,6 +145,7 @@ def _write_repo_worker(repo, project, assertions):
         "file_pattern": file_pattern,
         "analyzer_type": atype,
         "generated_by": "seed_negative.py",
+        "evidence_source": "auto_seeded",
         "assertions": assertions,
     }
     outfile.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")

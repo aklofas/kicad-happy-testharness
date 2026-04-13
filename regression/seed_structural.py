@@ -484,6 +484,7 @@ def generate_for_repo(repo_name, atype, strict, min_components,
                 "file_pattern": file_pattern,
                 "analyzer_type": atype,
                 "generated_by": "seed_structural.py",
+                "evidence_source": "auto_seeded",
                 "assertions": assertions,
             }
 

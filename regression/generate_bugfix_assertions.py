@@ -102,6 +102,7 @@ def generate_bugfix_assertions(issue_filter=None, dry_run=True):
                 "file_pattern": safe,
                 "analyzer_type": atype,
                 "generated_by": "generate_bugfix_assertions.py",
+                "evidence_source": "human_review",
                 "assertions": [assertion],
             }
 

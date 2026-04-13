@@ -204,7 +204,8 @@ building against what's actually in the schematic. Produce a JSON finding:
   }}],
   "suggestions": ["<actionable fix>"],
   "related_issues": [],
-  "should_become_assertion": true
+  "should_become_assertion": true,
+  "evidence_source": "human_review"
 }}
 
 expected_relation values: in_detector, not_in_detector, field_value_equals, count_equals, section_exists.

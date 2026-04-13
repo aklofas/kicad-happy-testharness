@@ -1216,6 +1216,7 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
                 "file_pattern": file_pattern,
                 "analyzer_type": atype,
                 "generated_by": "seed.py",
+                "evidence_source": "auto_seeded",
                 "assertions": assertions,
             }
 
