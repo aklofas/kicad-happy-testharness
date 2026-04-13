@@ -244,9 +244,18 @@ def main():
         print("Error: need both schematic and spice outputs", file=sys.stderr)
         sys.exit(1)
 
-    repos = [args.repo] if args.repo else sorted(
-        d.name for d in spice_dir.iterdir() if d.is_dir()
-    )
+    # Build owner/repo list from two-level directory structure
+    if args.repo:
+        repos = [args.repo]
+    else:
+        repos = []
+        for owner_dir in sorted(spice_dir.iterdir()):
+            if not owner_dir.is_dir():
+                continue
+            for repo_dir in sorted(owner_dir.iterdir()):
+                if not repo_dir.is_dir():
+                    continue
+                repos.append(f"{owner_dir.name}/{repo_dir.name}")
 
     total_checks = 0
     total_match = 0
