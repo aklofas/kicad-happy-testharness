@@ -135,12 +135,13 @@ def promote_repo(repo_name, dry_run=True):
     print(f"\n  Promoting baselines...")
     create_snapshot(repo_name)
 
-    # Regenerate seed assertions
+    # Regenerate seed assertions for all analyzer types
     print(f"  Regenerating seed assertions...")
-    files, assertions, skipped = generate_for_repo(
-        repo_name, "schematic", 0.10, 10, "", False)
-    if files:
-        print(f"    {assertions} assertions across {files} files")
+    for atype in ANALYZER_TYPES:
+        files, assertions, skipped = generate_for_repo(
+            repo_name, atype, 0.10, 10, "", False)
+        if files:
+            print(f"    {atype}: {assertions} assertions across {files} files")
 
     print(f"  Done.")
     return True
