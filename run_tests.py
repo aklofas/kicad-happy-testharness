@@ -64,6 +64,7 @@ SMOKE_TESTS = [
     "tests/test_bug_cemetery.py",    # 11 tests — historical bug reproducers (P8)
     "tests/test_metamorphic.py",     # 10 tests — invariance/covariance (P5)
     "tests/test_structured_findings.py",  # 11 tests — structured finding checks (P3.A)
+    "tests/test_manufacturer_match.py",  # 11 tests — manufacturer prefix matching (DS-2)
 ]
 
 
