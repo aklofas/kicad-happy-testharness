@@ -18,10 +18,17 @@ Supported operators:
 """
 
 import fnmatch
+import functools
 import json
 import re
 import sys
 from pathlib import Path
+
+
+@functools.lru_cache(maxsize=256)
+def _compile(pattern):
+    """Compile and cache a regex pattern (case-insensitive)."""
+    return re.compile(pattern, re.IGNORECASE)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from utils import resolve_path, load_project_metadata
@@ -199,7 +206,7 @@ def evaluate_assertion(assertion, data):
         for item in val:
             if isinstance(item, dict):
                 field_val = str(_item_field(item, field))
-                if re.search(pattern, field_val, re.IGNORECASE):
+                if _compile(pattern).search(field_val):
                     result["passed"] = True
                     result["actual"] = field_val
                     result["expected"] = f"match for /{pattern}/"
@@ -216,7 +223,7 @@ def evaluate_assertion(assertion, data):
         for item in val:
             if isinstance(item, dict):
                 field_val = str(_item_field(item, field))
-                if re.search(pattern, field_val, re.IGNORECASE):
+                if _compile(pattern).search(field_val):
                     result["passed"] = False
                     result["actual"] = field_val
                     result["expected"] = f"no match for /{pattern}/"
@@ -230,9 +237,9 @@ def evaluate_assertion(assertion, data):
         else:
             field = check.get("field", "")
             pattern = check.get("pattern", ".*")
+            pat = _compile(pattern)
             count = sum(1 for item in val if isinstance(item, dict)
-                        and re.search(pattern, str(_item_field(item, field)),
-                                      re.IGNORECASE))
+                        and pat.search(str(_item_field(item, field))))
             result["actual"] = count
         expected = check.get("value", 0)
         result["passed"] = result["actual"] == expected

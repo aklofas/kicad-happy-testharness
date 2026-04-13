@@ -1096,7 +1096,7 @@ def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
                 adata = json.loads(af.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
                 continue
-            if adata.get("generated_by") != "generate_seed_assertions.py":
+            if adata.get("generated_by") != "seed.py":
                 continue
 
             checked += 1
@@ -1215,7 +1215,7 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
             assertion_data = {
                 "file_pattern": file_pattern,
                 "analyzer_type": atype,
-                "generated_by": "generate_seed_assertions.py",
+                "generated_by": "seed.py",
                 "assertions": assertions,
             }
 
@@ -1234,7 +1234,7 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
 
             if out_file.exists():
                 existing = json.loads(out_file.read_text(encoding="utf-8"))
-                if existing.get("generated_by") != "generate_seed_assertions.py":
+                if existing.get("generated_by") != "seed.py":
                     continue
 
             out_file.write_text(json.dumps(assertion_data, indent=2) + "\n", encoding="utf-8")
