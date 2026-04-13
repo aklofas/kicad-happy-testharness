@@ -12,7 +12,6 @@ Usage:
 
 import argparse
 import json
-import glob
 import math
 import os
 import re
@@ -36,9 +35,10 @@ def collect_assertion_data():
     total_files = 0
     repos_with_assertions = set()
 
-    for f in glob.glob(str(REFERENCE_DIR / "*" / "*" / "assertions" / "*" / "*.json")):
+    for f in REFERENCE_DIR.rglob("assertions/*/*.json"):
         total_files += 1
-        repo = Path(f).parts[-5]
+        # reference/{owner}/{repo}/{project}/assertions/{type}/{file}.json
+        repo = f"{f.parts[-6]}/{f.parts[-5]}"
         repos_with_assertions.add(repo)
         try:
             data = json.loads(Path(f).read_text(encoding="utf-8"))
@@ -71,10 +71,11 @@ def collect_findings_data():
     by_repo = {}
     total = 0
 
-    for f in glob.glob(str(REFERENCE_DIR / "*" / "*" / "findings.json")):
-        repo = Path(f).parts[-3]
+    for f in REFERENCE_DIR.rglob("findings.json"):
+        # reference/{owner}/{repo}/{project}/findings.json
+        repo = f"{f.parts[-3]}/{f.parts[-2]}" if len(f.parts) >= 4 else f.parts[-2]
         try:
-            data = json.loads(Path(f).read_text(encoding="utf-8"))
+            data = json.loads(f.read_text(encoding="utf-8"))
             findings = data.get("findings", [])
             n = len(findings)
             total += n
@@ -91,10 +92,10 @@ def collect_findings_data():
 def collect_findings_per_repo():
     """Get distribution of findings per repo."""
     repo_counts = defaultdict(int)
-    for f in glob.glob(str(REFERENCE_DIR / "*" / "*" / "findings.json")):
-        repo = Path(f).parts[-3]
+    for f in REFERENCE_DIR.rglob("findings.json"):
+        repo = f"{f.parts[-3]}/{f.parts[-2]}" if len(f.parts) >= 4 else f.parts[-2]
         try:
-            data = json.loads(Path(f).read_text(encoding="utf-8"))
+            data = json.loads(f.read_text(encoding="utf-8"))
             repo_counts[repo] += len(data.get("findings", []))
         except Exception:
             pass
@@ -152,8 +153,9 @@ def collect_signal_detector_coverage():
     detector_repos = defaultdict(set)
     total_repos = set()
 
-    for f in glob.glob(str(RESULTS_DIR / "outputs" / "schematic" / "*" / "*.json")):
-        repo = Path(f).parts[-2]
+    for f in (RESULTS_DIR / "outputs" / "schematic").rglob("*.json"):
+        # results/outputs/schematic/{owner}/{repo}/{file}.json
+        repo = f"{f.parts[-3]}/{f.parts[-2]}"
         total_repos.add(repo)
         try:
             data = json.loads(Path(f).read_text(encoding="utf-8"))
