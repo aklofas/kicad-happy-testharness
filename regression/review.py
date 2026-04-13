@@ -178,18 +178,43 @@ building against what's actually in the schematic. Produce a JSON finding:
   "source_file": "{output_rel}",
   "status": "confirmed",
   "summary": "<1-2 sentences: board purpose, overall assessment>",
-  "correct": [{{"description": "<specific correct detection with refs>", "analyzer_section": "<dotted.path>"}}],
-  "incorrect": [{{"description": "<error>", "analyzer_section": "<dotted.path>"}}],
-  "missed": [{{"description": "<what was missed>", "analyzer_section": "<dotted.path>"}}],
+  "correct": [{{
+    "description": "<specific correct detection with refs>",
+    "analyzer_section": "<dotted.path>",
+    "detector": "<section_name>",
+    "subject_refs": ["<R1>", "<R2>"],
+    "expected_relation": "in_detector",
+    "confidence": 0.95
+  }}],
+  "incorrect": [{{
+    "description": "<error>",
+    "analyzer_section": "<dotted.path>",
+    "detector": "<section_name>",
+    "subject_refs": ["<R1>"],
+    "expected_relation": "not_in_detector",
+    "confidence": 0.95
+  }}],
+  "missed": [{{
+    "description": "<what was missed>",
+    "analyzer_section": "<dotted.path>",
+    "detector": "<section_name>",
+    "subject_refs": ["<U1>"],
+    "expected_relation": "in_detector",
+    "confidence": 0.9
+  }}],
   "suggestions": ["<actionable fix>"],
   "related_issues": [],
   "should_become_assertion": true
 }}
 
+expected_relation values: in_detector, not_in_detector, field_value_equals, count_equals, section_exists.
+For field_value_equals, add "field" and "expected_value" keys.
+For count_equals, add "expected_value" key.
+
 Rules: Name specific components (U1, R3). Every incorrect/missed needs
-analyzer_section (dotted path like signal_analysis.voltage_dividers or
-signal_analysis.current_sense). Don't fabricate issues -- if the analyzer did
-well, say so."""
+analyzer_section (dotted path like signal_analysis.voltage_dividers).
+Include subject_refs with component designators. Don't fabricate issues --
+if the analyzer did well, say so."""
 
     return prompt
 
