@@ -96,12 +96,81 @@ def _pick_best_ref(refs, ref_field, detector_name):
     return refs[0]
 
 
+def _check_from_structured(item, item_type):
+    """Generate a check dict from structured finding fields.
+
+    Uses detector, subject_refs, expected_relation to produce a deterministic
+    check without text parsing. Returns check dict or None.
+    """
+    detector = item.get("detector", "")
+    refs = item.get("subject_refs", [])
+    relation = item.get("expected_relation", "")
+    section_path = f"signal_analysis.{detector}"
+
+    if relation == "in_detector":
+        ref_field = REF_FIELD_MAP.get(detector)
+        if refs and ref_field:
+            ref = _pick_best_ref(refs, ref_field, detector)
+            op = "contains_match" if item_type != "incorrect" else "not_contains_match"
+            return {
+                "path": section_path,
+                "op": op,
+                "field": ref_field,
+                "pattern": f"^{re.escape(ref)}$",
+            }
+        if refs and not ref_field:
+            # Refs provided but detector unknown — can't generate a useful check
+            return None
+        return {"path": section_path, "op": "min_count", "value": 1}
+
+    elif relation == "not_in_detector":
+        ref_field = REF_FIELD_MAP.get(detector)
+        if refs and ref_field:
+            ref = _pick_best_ref(refs, ref_field, detector)
+            return {
+                "path": section_path,
+                "op": "not_contains_match",
+                "field": ref_field,
+                "pattern": f"^{re.escape(ref)}$",
+            }
+        return None
+
+    elif relation == "field_value_equals":
+        field = item.get("field")
+        value = item.get("expected_value")
+        if field is not None and value is not None:
+            return {
+                "path": section_path,
+                "op": "field_equals",
+                "field": field,
+                "value": value,
+            }
+        return None
+
+    elif relation == "count_equals":
+        value = item.get("expected_value")
+        if value is not None:
+            return {"path": section_path, "op": "equals", "value": value}
+        return None
+
+    elif relation == "section_exists":
+        if item_type == "incorrect":
+            return {"path": section_path, "op": "not_exists"}
+        return {"path": section_path, "op": "exists"}
+
+    return None
+
+
 def _generate_check_for_item(item, item_type):
     """Generate a check dict for a finding item.
 
     item_type: "correct", "incorrect", or "missed"
     Returns check dict or None.
     """
+    # Structured path — deterministic, no heuristics
+    if item.get("expected_relation") and item.get("detector"):
+        return _check_from_structured(item, item_type)
+
     section = item.get("analyzer_section", "")
     desc = item.get("description", "")
     if not section:
