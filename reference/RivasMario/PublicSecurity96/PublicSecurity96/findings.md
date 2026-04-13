@@ -1,4 +1,4 @@
-# Findings: PublicSecurity96 / PublicSecurity96_PublicSecurity96
+# Findings: RivasMario/PublicSecurity96 / PublicSecurity96
 
 ## FND-00001123: Keyboard matrix design correctly analyzed: 100 MX switches, 100 diodes, RP2040 MCU, XC6206 LDO, SRV05-4 ESD; USB compliance check fails CC pull-down: 5.1k resistors R1/R2 are correctly placed but m...
 

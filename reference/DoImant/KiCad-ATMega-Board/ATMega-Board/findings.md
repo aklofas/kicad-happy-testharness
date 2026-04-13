@@ -1,4 +1,4 @@
-# Findings: KiCad-ATMega-Board / ATMega-Board
+# Findings: DoImant/KiCad-ATMega-Board / ATMega-Board
 
 ## FND-00000730: MCP1703A-5002 LDO correctly identified with accurate input/output rails; Regulator_caps observation falsely reports input cap missing despite C2 (1uF) on VDC_IN; Crystal circuit Y1 (8MHz) detected ...
 

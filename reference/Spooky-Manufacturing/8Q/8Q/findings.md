@@ -1,4 +1,4 @@
-# Findings: 8Q / 8Q_8Q
+# Findings: Spooky-Manufacturing/8Q / 8Q
 
 ## FND-00000341: SDRAM chip IS42S16400J-xC with STM32F429BITx not flagged in design_observations despite identifiable lib_ids
 

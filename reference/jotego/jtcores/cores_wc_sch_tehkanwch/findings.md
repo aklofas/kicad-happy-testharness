@@ -1,4 +1,4 @@
-# Findings: jotego/jtcores / cores_wc_sch_tehkanwch_tehkanwch
+# Findings: jotego/jtcores / cores_wc_sch_tehkanwch
 
 ## FND-00002609: Tehkan World Cup arcade PCB reverse-engineering schematic by JOTEGO, featuring Z80 CPUs, 74LS logic, YM2149 sound, OKI-M5205 ADPCM, and 27128/27256 EPROMs. The analyzer correctly identifies crystals, RC filters, and the LM324 voltage-divider reference, but massively misclassifies component types because this board uses a positional grid reference scheme (C=column, D=row, F=row, V=row, etc.) rather than type-based designators, causing 187+ IC instances to be classified as capacitor, diode, fuse, varistor, mounting_hole, or relay.
 

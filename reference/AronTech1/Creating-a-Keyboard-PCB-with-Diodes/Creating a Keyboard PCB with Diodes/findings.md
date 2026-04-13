@@ -1,4 +1,4 @@
-# Findings: Creating-a-Keyboard-PCB-with-Diodes / Creating a Keyboard PCB with Diodes
+# Findings: AronTech1/Creating-a-Keyboard-PCB-with-Diodes / Creating a Keyboard PCB with Diodes
 
 ## FND-00000432: connectivity_issues.single_pin_nets is empty but 9 single-pin nets exist; MX_stab stabilizer components (S1, S2, S3) are classified as type 'switch'
 

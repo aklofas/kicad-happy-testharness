@@ -1,4 +1,4 @@
-# Findings: KiCad-Lappy / new2
+# Findings: saianonymous/KiCad-Lappy / new2
 
 ## FND-00000684: LM741 inverting amplifier misclassified as comparator_or_open_loop
 

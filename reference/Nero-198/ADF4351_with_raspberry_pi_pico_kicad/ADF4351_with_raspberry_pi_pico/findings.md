@@ -1,4 +1,4 @@
-# Findings: ADF4351_with_raspberry_pi_pico_kicad / ADF4351_with_raspberry_pi_pico
+# Findings: Nero-198/ADF4351_with_raspberry_pi_pico_kicad / ADF4351_with_raspberry_pi_pico
 
 ## FND-00000337: I2C pull-up status contradicts between design_observations and bus_analysis; DNP pull-up resistors reported as active pull-ups in design_observations; ADF4351 3-wire SPI control interface not detec...
 

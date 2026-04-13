@@ -1,4 +1,4 @@
-# Findings: RP2040-PICO-PC / HARDWARE_RP2040-PICO-PC hardware revision B_RP2040-PICO-PC_rev_B
+# Findings: OLIMEX/RP2040-PICO-PC / HARDWARE_RP2040-PICO-PC hardware revision B_RP2040-PICO-PC_rev_B
 
 ## FND-00001160: I2C bus detector false-fires on GND, PWM_L, PICO_CK-, VSYS and other non-I2C nets; FET3 (BSS138 level-shifter) transistor circuit shows drain_net and source_net both as +3.3V; FET2 (BSS138) correct...
 

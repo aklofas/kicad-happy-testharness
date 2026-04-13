@@ -1,4 +1,4 @@
-# Findings: aswinvenu/beaglev-kicad / BeagleV_BeagleV
+# Findings: aswinvenu/beaglev-kicad / BeagleV
 
 ## FND-00002593: BeagleV v0.7 RISC-V SBC (VIC-V10 SoC, LPDDR4, USB3 hub, Ethernet, HDMI, WiFi/BT) - 19-sheet hierarchical design with 643 components; good signal detection for crystals, RC filters, I2C, and one voltage divider; missed LPDDR4 memory interfaces, misidentified HDMI connector and TPS65086100 feedback, LMR62014 Vref wrong
 

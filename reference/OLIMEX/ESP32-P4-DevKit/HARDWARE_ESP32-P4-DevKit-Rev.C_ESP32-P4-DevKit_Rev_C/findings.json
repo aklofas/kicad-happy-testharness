@@ -60,8 +60,15 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R16$"
-          }
+            "pattern": "^R14$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R14",
+            "R16"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal oscillator components (R12 10M feedback resistor with C1/C2 22pF load caps) misidentified as RC low-pass filter at 723Hz instead of crystal circuit",
@@ -71,7 +78,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R12$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "R12"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RMII Ethernet signals (GPIO35/RMII_TXD1, RMII_RXDV, RMII_RXD0, etc.) misclassified as UART instead of Ethernet/RMII bus",
@@ -87,7 +102,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^P4$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "P4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MIPI-DSI connector (MIPI-DSI1) and MIPI-CSI connector (MIPI-CSI1) present but differential pairs not detected",
@@ -123,7 +144,11 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

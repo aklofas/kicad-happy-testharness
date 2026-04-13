@@ -1,4 +1,4 @@
-# Findings: esphome-entry / docs_schematics_esphome-entry board_esphome-entry board
+# Findings: futurewidgets/esphome-entry / docs_schematics_esphome-entry board
 
 ## FND-00002057: LM393 dual comparator ic_pin_analysis shows only 2 pins (power unit only); the 3 functional comparator pins from unit 1 are reported separately as a second ic_pin_analysis entry
 

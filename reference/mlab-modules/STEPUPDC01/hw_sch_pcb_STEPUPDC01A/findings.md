@@ -1,4 +1,4 @@
-# Findings: STEPUPDC01 / hw_sch_pcb_STEPUPDC01A
+# Findings: mlab-modules/STEPUPDC01 / hw_sch_pcb_STEPUPDC01A
 
 ## FND-00001300: MAX5026 step-up output_rail incorrectly identified as 'Vin' instead of 'Vout'; Feedback voltage divider R2(140k)/R3(6k49) from Vout to FB to GND not detected; Missing footprints for U1 and D2 corre...
 

@@ -1,4 +1,4 @@
-# Findings: PinCode_Scheme_KiCad / sushnikov_efbo_02_23_sushnikov_efbo_02_23
+# Findings: Dancoi/PinCode_Scheme_KiCad / sushnikov_efbo_02_23
 
 ## FND-00001104: Component extraction correct: 15 parts (9R, 2 LED, 2 IC, 1 DIP switch, 1 rotary encoder); STM32F407 misidentified as 'power_regulators' with topology 'ic_with_internal_regulator'; No decoupling cap...
 

@@ -14,7 +14,16 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U5$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L3",
+            "R19",
+            "R20",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RT9080-3.3 (U10, U11) correctly identified as fixed 3.3V LDO regulators via value suffix parsing",
@@ -24,7 +33,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U10$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U10",
+            "U11"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Y1 12MHz crystal with C9=15pF and C7=15pF load caps correctly detected, effective load 10.5pF calculated",
@@ -34,7 +50,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C7",
+            "C9",
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R28=41.2k/R29=10k voltage divider from VRAW to VIN_MEAS correctly detected as ADC measurement input to U1 pin 57 (RP2350B)",
@@ -44,7 +68,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R28$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R28",
+            "R29",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D2 DT1042-04SO correctly identified as USB ESD protection on USBC+/USBC- lines",
@@ -54,7 +86,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D2$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "F1 and F2 correctly identified as fuses protecting VRAW and VUSB rails",
@@ -64,7 +102,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^F1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "F1",
+            "F2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "WS2812B (D4) addressable LED chain correctly detected with single-wire protocol",
@@ -73,7 +118,13 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [
+            "D4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R35=10k/C36=0.1uF low-pass RC filter on ~{USER_BTN} at 159Hz correctly detected as button debounce",
@@ -83,7 +134,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R35$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C36",
+            "R35"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R7=200/C3=4.7uF and R8=33/C5=4.7uF RC filters on 3.3V correctly detected as power filtering for RP2350B analog domains",
@@ -93,7 +151,16 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R7$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C3",
+            "C5",
+            "R7",
+            "R8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 RE1C001ZPTL correctly identified as P-channel MOSFET with gate control from BATT_PWR net and R21=10k gate resistor",
@@ -103,7 +170,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "R21"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MCP73831 (U9) LiPo charger and MAX17048 (U8) fuel gauge correctly classified as ICs",
@@ -121,7 +195,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "R24=10k/R25=1M voltage divider feeding U10 EN pin (PERI_POW) correctly detected as GPIO-controlled enable",
@@ -131,7 +209,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R24$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R24",
+            "R25",
+            "U10"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -143,7 +229,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U6$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R10=1k/C9=15pF detected as 10.6MHz low-pass RC filter, but these are actually the crystal Y1 load circuit (R10 is a feedback resistor in the crystal oscillator, not a standalone filter)",
@@ -153,7 +245,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R10$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C9",
+            "R10",
+            "Y1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -165,7 +265,14 @@
             "op": "contains_match",
             "field": "bms_reference",
             "pattern": "^U9$"
-          }
+          },
+          "detector": "bms_systems",
+          "subject_refs": [
+            "R23",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MAX17048 (U8) fuel gauge IC with I2C interface on SDA/SCL not detected as part of battery management system",
@@ -175,16 +282,30 @@
             "op": "contains_match",
             "field": "bms_reference",
             "pattern": "^U8$"
-          }
+          },
+          "detector": "bms_systems",
+          "subject_refs": [
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus on SDA/SCL nets connecting U1 (RP2350B) and U8 (MAX17048) with I2C pull-up jumper JP3 not detected",
           "analyzer_section": "signal_analysis.bus_interfaces",
           "check": {
             "path": "signal_analysis.bus_interfaces",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "equals",
+            "value": 3
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [
+            "U1",
+            "U8"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 3
         },
         {
           "description": "QSPI flash (U3 W25Q128JVPIM) and QSPI PSRAM (U4 APS6404L-3SQR-ZR) memory interfaces not detected",
@@ -194,7 +315,14 @@
             "op": "contains_match",
             "field": "memory_reference",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB data pairs on USB_D+/USB_D- and USBC+/USBC- not detected as USB bus interfaces despite ESD protection and series resistors R3=27/R4=27",
@@ -203,7 +331,14 @@
             "path": "signal_analysis.bus_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [
+            "R3",
+            "R4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

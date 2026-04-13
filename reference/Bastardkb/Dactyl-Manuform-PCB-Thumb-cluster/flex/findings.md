@@ -1,4 +1,4 @@
-# Findings: Dactyl-Manuform-PCB-Thumb-cluster / flex_flex
+# Findings: Bastardkb/Dactyl-Manuform-PCB-Thumb-cluster / flex
 
 ## FND-00000464: Component inventory correctly extracted: 5 diodes, 5 switches, 1 connector; Net connectivity correctly resolved for all 11 nets; Key matrix correctly detected as 1×5 with 5 switches and 5 diodes; J...
 

@@ -1,4 +1,4 @@
-# Findings: anotterwatchHW / anotterwatch
+# Findings: badgeteam/anotterwatchHW / anotterwatch
 
 ## FND-00001838: Total component count 133 correctly aggregated across all 3 hierarchical sheets; 4 addressable SK6812MINI LEDs (D1-D4) correctly detected in a single-wire chain; I2C bus correctly detected with 3 d...
 

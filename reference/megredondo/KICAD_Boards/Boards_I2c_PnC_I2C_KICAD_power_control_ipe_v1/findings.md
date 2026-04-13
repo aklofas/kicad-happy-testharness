@@ -1,4 +1,4 @@
-# Findings: KICAD_Boards / Boards_I2c_PnC_I2C_KICAD_power_control_ipe_v1
+# Findings: megredondo/KICAD_Boards / Boards_I2c_PnC_I2C_KICAD_power_control_ipe_v1
 
 ## FND-00000621: Source file does not exist — repo not checked out or wrong path
 

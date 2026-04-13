@@ -40,7 +40,11 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Component count accurate: 86 total (41 LEDs + 43 caps + 2 connectors)",
@@ -55,7 +59,11 @@
       "incorrect": [
         {
           "description": "41 separate single-LED chains detected instead of one 41-LED daisy chain -- the SK6812 LEDs are connected DOUT-to-DIN in series but the legacy .sch parser returns empty pin lists for all LED components, preventing chain detection",
-          "analyzer_section": "signal_analysis.addressable_led_chains"
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "detector": "addressable_led_chains",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -66,7 +74,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: ka3005p-display / ka3005p_displaydriver
+# Findings: djedditt/ka3005p-display / ka3005p_displaydriver
 
 ## FND-00002225: AZ1117-3.3 regulator reported with input_rail '+3V3' — input and output rails appear reversed; 74HC595 shift-register SPI bus not detected despite two chained devices with shared clock/data; Q7 col...
 

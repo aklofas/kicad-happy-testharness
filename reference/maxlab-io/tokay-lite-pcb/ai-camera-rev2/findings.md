@@ -1,4 +1,4 @@
-# Findings: tokay-lite-pcb / ai-camera-rev2_ai-camera-rev2
+# Findings: maxlab-io/tokay-lite-pcb / ai-camera-rev2
 
 ## FND-00000278: Tokay-lite AI camera rev2 (ESP32, 176 components). Multiple issues: Q8 false LED driver association (no net connectivity to D7). 3 TVS diodes (BSD5C051L) missed in protection_devices. USB-C CC pull-down check fails despite correct 5.1k resistors (relies on net names not connectivity). MT9284 LED driver misclassified as voltage regulator with output_rail=VBUS. I2C bus_analysis reports has_pull_up=false despite pull-ups present.
 

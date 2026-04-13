@@ -1,4 +1,4 @@
-# Findings: zx-sizif-512 / pcb_rev.E_sizif512
+# Findings: UzixLS/zx-sizif-512 / pcb_rev.E_sizif512
 
 ## FND-00000266: ZX Spectrum clone rev.E (KiCad 6, 195 components). 10 transistors falsely identified as LED drivers for standalone D1. MOSFET gate_driver_ics inflated by +3.3V power net traversal. Bridge rectifier D2 not detected. LM311/LM386 absent from opamp_circuits. kicad_version='unknown'.
 

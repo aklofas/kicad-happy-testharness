@@ -9,11 +9,21 @@
       "incorrect": [
         {
           "description": "Decoupling cap C6 double-counted - listed on both +3V3 and +5V rails",
-          "analyzer_section": "signal_analysis.decoupling"
+          "analyzer_section": "signal_analysis.decoupling",
+          "detector": "decoupling",
+          "subject_refs": [
+            "C6"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Key matrix reports 78 switches on 5x15 matrix (75 positions) - 3 extra switches unexplained",
-          "analyzer_section": "signal_analysis.key_matrix"
+          "analyzer_section": "signal_analysis.key_matrix",
+          "detector": "key_matrix",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [],

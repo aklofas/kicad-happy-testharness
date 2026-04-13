@@ -1,4 +1,4 @@
-# Findings: DonCon2040 / pcb_DonConIO_DonConIO
+# Findings: ravinrabbid/DonCon2040 / pcb_DonConIO
 
 ## FND-00000138: Taiko drum game controller with RP2040: voltage dividers over-detected from LED current limiting networks, good power rail identification with +/-12V for piezo amplification
 

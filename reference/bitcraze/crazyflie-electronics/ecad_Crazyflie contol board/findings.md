@@ -1,4 +1,4 @@
-# Findings: crazyflie-electronics / ecad_Crazyflie contol board
+# Findings: bitcraze/crazyflie-electronics / ecad_Crazyflie contol board
 
 ## FND-00002022: 
 

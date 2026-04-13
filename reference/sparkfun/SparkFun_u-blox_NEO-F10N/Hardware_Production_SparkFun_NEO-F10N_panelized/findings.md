@@ -1,4 +1,4 @@
-# Findings: SparkFun_u-blox_NEO-F10N / Hardware_Production_SparkFun_NEO-F10N_panelized
+# Findings: sparkfun/SparkFun_u-blox_NEO-F10N / Hardware_Production_SparkFun_NEO-F10N_panelized
 
 ## FND-00001562: total_no_connects reported as 0 despite 17 explicit no-connect markers in the schematic; PWR_FLAG warnings for GND, 5V, VBUS, 3.3V_A, 3.3V_P, VCC are over-flagged for a connector-powered design; an...
 

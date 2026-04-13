@@ -1,4 +1,4 @@
-# Findings: HB100_Microwave_Demo / KiCad_HB100demo
+# Findings: xxJian/HB100_Microwave_Demo / KiCad_HB100demo
 
 ## FND-00000577: LMV358 dual op-amp (U2) not detected as amplifier; RC filter R1/C2: input_net and output_net are swapped relative to signal flow; LDO regulator NCP1117DT33G (U3) correctly detected with +5V input a...
 

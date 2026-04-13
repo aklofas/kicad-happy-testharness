@@ -1,4 +1,4 @@
-# Findings: A600Reborn / A600_Svideo_Working_KiCAD_Amiga600
+# Findings: istedman/A600Reborn / A600_Svideo_Working_KiCAD_Amiga600
 
 ## FND-00000348: X1 oscillator module misclassified as crystal_circuit; 0.33uF decoupling cap listed as load cap
 

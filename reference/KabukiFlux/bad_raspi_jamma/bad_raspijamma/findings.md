@@ -1,4 +1,4 @@
-# Findings: bad_raspi_jamma / bad_raspijamma
+# Findings: KabukiFlux/bad_raspi_jamma / bad_raspijamma
 
 ## FND-00001849: Component counts and types are accurate for bad_raspi_jamma; I2C bus detected with missing pull-up resistors; RC low-pass filters on PWM audio paths correctly detected; pwr_flag_warnings incorrectl...
 

@@ -1,4 +1,4 @@
-# Findings: LoRa1276-breakout-board / LoRa
+# Findings: eugeniobaglieri/LoRa1276-breakout-board / LoRa
 
 ## FND-00000862: RF chain not detected for LoRa module U1 (SX1276-based) despite ANT pin present; Most U1 pins on isolated single-pin unnamed nets — KiCad 5 net resolution problem; SPI bus detected on U1 with SCK/M...
 

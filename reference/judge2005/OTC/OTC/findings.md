@@ -1,4 +1,4 @@
-# Findings: OTC / OTC
+# Findings: judge2005/OTC / OTC
 
 ## FND-00000964: Board height reported as 0.0mm due to circular outline mishandling; Courtyard overlaps correctly detected for densely packed components; Two ground domains (GND and GNDPWR) correctly identified wit...
 

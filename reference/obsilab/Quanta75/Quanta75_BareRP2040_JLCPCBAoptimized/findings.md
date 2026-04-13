@@ -1,4 +1,4 @@
-# Findings: Quanta75 / Quanta75_BareRP2040_JLCPCBAoptimized_Quanta75_BareRP2040_JLCPCBAoptimized
+# Findings: obsilab/Quanta75 / Quanta75_BareRP2040_JLCPCBAoptimized
 
 ## FND-00001150: kicad_version reported as 'unknown' for all schematics; file_version 20230121 maps to KiCad 7; USB-C CC resistor fail correctly flagged for BareRP2040 and RP2040Stamp_JLCPCBA; I2C missing pull-up r...
 

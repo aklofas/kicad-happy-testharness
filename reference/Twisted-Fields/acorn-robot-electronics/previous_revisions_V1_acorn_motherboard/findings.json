@@ -13,7 +13,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "8 CDSOT23-SM712 TVS protection devices on RS-485 lines correctly detected",
@@ -22,7 +26,11 @@
             "path": "signal_analysis.protection_devices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "I2C bus with 4 devices (ADS1115 x2, MCP23017, HDC1080) correctly detected",
@@ -38,10 +46,17 @@
           "analyzer_section": "signal_analysis.transistor_circuits",
           "check": {
             "path": "signal_analysis.transistor_circuits",
-            "op": "contains_match",
-            "field": "reference",
-            "pattern": "^Q1$"
-          }
+            "op": "equals",
+            "value": 8
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D8",
+            "Q1"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 8
         },
         {
           "description": "LC filter L2+C99 on 48V input correctly identified",
@@ -51,7 +66,14 @@
             "op": "contains_match",
             "field": "inductor.ref",
             "pattern": "^L2$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "C99",
+            "L2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -63,7 +85,13 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q12$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q12"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -75,7 +103,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "Q48",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SPBW06F-12 (PS1) isolated converter (48V to 15V) classified as 'connector' preventing regulator detection",
@@ -84,7 +119,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "ACS725LCTR-10AU (U14) Hall-effect current sensor on +48V path not detected in current_sense",
@@ -94,7 +133,13 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^U14$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "U14"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

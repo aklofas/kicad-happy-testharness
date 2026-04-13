@@ -1,4 +1,4 @@
-# Findings: eurorack-kicad / AK4458VN_breakout_AK4458VN_breakout
+# Findings: HelveticaScenario/eurorack-kicad / AK4458VN_breakout
 
 ## FND-00000258: AK4458VN 8-ch DAC breakout (85 components). False parallel cap in RC filter inflates capacitance 10x. I2C config pins falsely detected as bus lines. NE5532 difference amplifiers classified as compensator. I2S/TDM audio interface not detected (no detector exists).
 

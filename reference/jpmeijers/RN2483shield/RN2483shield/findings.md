@@ -1,4 +1,4 @@
-# Findings: RN2483shield / RN2483shield
+# Findings: jpmeijers/RN2483shield / RN2483shield
 
 ## FND-00001175: SHIELD1 (Arduino shield connector) classified as 'switch' instead of 'connector'; BATTERY and 3.3VOLT nets classified as 'signal' instead of 'power'; only GND detected as power rail; UART bus corre...
 

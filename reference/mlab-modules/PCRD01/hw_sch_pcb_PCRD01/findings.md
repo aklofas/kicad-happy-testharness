@@ -1,4 +1,4 @@
-# Findings: PCRD01 / hw_sch_pcb_PCRD01
+# Findings: mlab-modules/PCRD01 / hw_sch_pcb_PCRD01
 
 ## FND-00001074: Op-amp circuit detection correct: U1 (MAX4475) and U2 (AD8692) both found with configurations; assembly_complexity reports 41 SMD, 0 THT — misses 9 THT connectors/mounting holes
 

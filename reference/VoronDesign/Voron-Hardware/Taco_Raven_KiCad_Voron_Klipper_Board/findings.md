@@ -1,4 +1,4 @@
-# Findings: Voron-Hardware / Taco_Raven_KiCad_Voron_Klipper_Board
+# Findings: VoronDesign/Voron-Hardware / Taco_Raven_KiCad_Voron_Klipper_Board
 
 ## FND-00000074: Taco Raven 3D printer controller board - good signal detection on legacy schematic with 358 components
 

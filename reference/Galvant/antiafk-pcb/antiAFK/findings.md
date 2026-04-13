@@ -1,4 +1,4 @@
-# Findings: antiafk-pcb / antiAFK
+# Findings: Galvant/antiafk-pcb / antiAFK
 
 ## FND-00001939: 18 components correctly identified for ATmega16U4-based USB HID board; 16MHz crystal circuit with 18pF load capacitors correctly detected; USB differential pair with 22Ω series resistors detected c...
 

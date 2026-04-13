@@ -1,4 +1,4 @@
-# Findings: Namii65 / PCB_namii65
+# Findings: iFIKOZ/Namii65 / PCB_namii65
 
 ## FND-00000984: Key matrix correctly detected as 8x10 with 73 estimated keys; assembly_complexity reports unique_footprints=1 but there are 12 unique footprints; pwr_flag_warnings for VCC and GND are false positiv...
 

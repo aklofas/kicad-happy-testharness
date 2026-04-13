@@ -41,11 +41,19 @@
         },
         {
           "description": "Transistor load_type shown as other for all 4 relay drivers - should be relay or indicate relay coil load",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "PRTR5V0U2X decoupling warning for VCC rail - PRTR5V0U2X does not need dedicated decoupling on VCC (it is internally clamped)",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -56,7 +64,11 @@
             "path": "signal_analysis.isolation_barriers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Relay flyback/freewheeling diodes (1N4007) not linked to their corresponding relay coils",
@@ -75,7 +87,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Relay indicator LEDs (D2, D4, D6, D8 RED_LED) not linked to relay channels",

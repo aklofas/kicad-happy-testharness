@@ -1,4 +1,4 @@
-# Findings: hawk / hawk
+# Findings: MalphasWats/hawk / hawk
 
 ## FND-00002120: KiCad 5 power pin names reported swapped for U1 ATSAMD10 (VDD on GND net, GND on +3.3V net); LDO regulator AP7333-33 correctly identified with battery input and 3.3V output
 

@@ -1,4 +1,4 @@
-# Findings: Abacus_Rev2 / AbacusPCB_AbacusPCB
+# Findings: nickolaij/Abacus_Rev2 / AbacusPCB
 
 ## FND-00000359: KEYSW keyboard switches misclassified as type 'relay' instead of 'switch'; key_matrices switches_on_matrix=0 despite 45 KEYSW switches present on matrix nets; decoupling_analysis is empty despite 1...
 

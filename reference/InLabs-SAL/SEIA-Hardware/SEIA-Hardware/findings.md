@@ -1,4 +1,4 @@
-# Findings: SEIA-Hardware / SEIA-Hardware
+# Findings: InLabs-SAL/SEIA-Hardware / SEIA-Hardware
 
 ## FND-00001186: TLV70433DBVR LDO regulator (PS1) classified as 'connector' type instead of 'regulator' or 'power'; power_regulators[] is empty despite TLV70433DBVR being correctly identified as 'linear regulator' ...
 

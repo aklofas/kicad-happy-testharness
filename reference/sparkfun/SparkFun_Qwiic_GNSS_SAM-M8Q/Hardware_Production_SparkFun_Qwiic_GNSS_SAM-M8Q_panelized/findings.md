@@ -1,4 +1,4 @@
-# Findings: SparkFun_Qwiic_GNSS_SAM-M8Q / Hardware_Production_SparkFun_Qwiic_GNSS_SAM-M8Q_panelized
+# Findings: sparkfun/SparkFun_Qwiic_GNSS_SAM-M8Q / Hardware_Production_SparkFun_Qwiic_GNSS_SAM-M8Q_panelized
 
 ## FND-00001453: Component counts are accurate: 48 total, 3 ICs, 5 caps, 10 resistors, 5 connectors, 5 jumpers, 3 diodes, 2 LEDs, 4 fiducials, 4 mounting holes, 2 test points, 1 battery; Power rails correctly ident...
 

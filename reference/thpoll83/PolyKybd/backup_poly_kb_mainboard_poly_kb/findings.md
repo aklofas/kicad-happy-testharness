@@ -1,4 +1,4 @@
-# Findings: PolyKybd / backup_poly_kb_mainboard_poly_kb
+# Findings: thpoll83/PolyKybd / backup_poly_kb_mainboard_poly_kb
 
 ## FND-00000287: PolyKybd prototype mainboard (STM32F407, 14x 74HCT595, WS2812B per-key LEDs, USB-C, 16MHz HSE). Key matrix missed entirely. Several false positives in differential pairs, level-shifter flags, and ESD attribution. Analyzer correctly surfaces VCAP/NRST/BOOT0 isolation and missing I2C pullups.
 

@@ -1,4 +1,4 @@
-# Findings: MIDI4MiSTer / kicad_MIDI_4_MiSTer
+# Findings: KabukiFlux/MIDI4MiSTer / kicad_MIDI_4_MiSTer
 
 ## FND-00000866: AMS1117 LDO correctly detected with +5V in, +3V3 out topology; 6N138 optocoupler not detected as isolation barrier; USB-C CC pull-down failures are false positives for a USB input-only device; foot...
 

@@ -15,7 +15,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "type": "protection_devices",
@@ -26,7 +32,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^F1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "F1",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "type": "decoupling",
@@ -36,7 +49,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "type": "bus_protocols",
@@ -66,7 +83,24 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R11$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C10",
+            "C11",
+            "C12",
+            "C13",
+            "C8",
+            "C9",
+            "R11",
+            "R12",
+            "R13",
+            "R14",
+            "R15",
+            "R16"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "type": "lc_filters",
@@ -77,7 +111,14 @@
             "op": "contains_match",
             "field": "inductor.ref",
             "pattern": "^FB1$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "C7",
+            "FB1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

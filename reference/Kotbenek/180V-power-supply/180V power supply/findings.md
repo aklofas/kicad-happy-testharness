@@ -1,4 +1,4 @@
-# Findings: 180V-power-supply / 180V power supply
+# Findings: Kotbenek/180V-power-supply / 180V power supply
 
 ## FND-00000311: Voltage feedback divider (R1+R3+R4+R5) not detected as voltage_divider; RC filter R3+C2 is a false positive — these are not a filter pair; Transistor circuits Q1 (BC557) and Q2 (IRF740) not detecte...
 

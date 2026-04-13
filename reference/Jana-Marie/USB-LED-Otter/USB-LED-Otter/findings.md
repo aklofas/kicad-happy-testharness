@@ -1,4 +1,4 @@
-# Findings: USB-LED-Otter / USB-LED-Otter
+# Findings: Jana-Marie/USB-LED-Otter / USB-LED-Otter
 
 ## FND-00001647: Component count: 14 total components correctly parsed from KiCad 5 legacy schematic; USB differential pair (USB_P/USB_N) correctly detected; MCP1700 LDO regulator topology not resolved — input/outp...
 

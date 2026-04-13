@@ -1,4 +1,4 @@
-# Findings: Minesweeper / Master2
+# Findings: Shawky-MAHa/Minesweeper / Master2
 
 ## FND-00000952: kicad_version reported as 'unknown' for file_version 20230121 (KiCad 7); sheets_parsed is None for a single-sheet file; L7812 and L7805 classified as topology='LDO' — they are standard linear regul...
 

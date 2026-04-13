@@ -1,4 +1,4 @@
-# Findings: avdisplay-cape / avdisplay-cape
+# Findings: gpgreen/avdisplay-cape / avdisplay-cape
 
 ## FND-00001847: Crystal circuit correctly detected with Y101 16 MHz and 30pF load capacitors C103/C104; I2C bus correctly detected on I2C2_SCL/SDA with 5.6K pull-ups and CAT24C256 EEPROM; CAN bus correctly detecte...
 

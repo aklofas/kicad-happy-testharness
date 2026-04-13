@@ -1,4 +1,4 @@
-# Findings: Adafruit-KB2040-PCB / Adafruit KB2040_Adafruit KB2040
+# Findings: Bastardkb/Adafruit-KB2040-PCB / Adafruit KB2040
 
 ## FND-00000345: Crystal load caps C19 and C20 not detected in crystal_circuits; CONN1 (STEMMA I2C connector) misclassified as type 'capacitor'; Fiducial markers U$34 and U$35 misclassified as type 'ic'; design_obs...
 

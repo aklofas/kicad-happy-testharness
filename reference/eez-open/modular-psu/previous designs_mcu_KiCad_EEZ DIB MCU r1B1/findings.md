@@ -1,4 +1,4 @@
-# Findings: modular-psu / previous designs_mcu_KiCad_EEZ DIB MCU r1B1
+# Findings: eez-open/modular-psu / previous designs_mcu_KiCad_EEZ DIB MCU r1B1
 
 ## FND-00000186: EEZ DIB MCU r1B2 (189 components, 6 hierarchical sheets). Correct: STM32F769 176 pins, Ethernet PHY, SDRAM, LD1117 LDO, TPS61169, ESD protection, USB pairs. Incorrect: STM32F769 power pins mapped to wrong signal nets (systematic multi-unit pin-swap bug), SPEED1/TOUCH1/VBUS1 LEDs misclassified (switch/transformer/varistor), ZD1/ZD2 TVS as other, IC4 duplicated 4x in power_regulators, crystal feedback R/C detected as RC filter, VLED+/- as differential pair. Missed: crystal load caps, SPI/SDMMC/JTAG buses, voltage dividers.
 

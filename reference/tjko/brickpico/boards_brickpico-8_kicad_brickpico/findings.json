@@ -25,7 +25,22 @@
       "incorrect": [
         {
           "description": "9 false positive RF matching networks. All 9 polyfuses (F2-F10) are falsely identified as antennas with pi_match topology. The buck converter inductor L1 (3.3uH) and its input/output capacitors (22uF) form a power filter, not an RF matching network. The polyfuses are overcurrent protection on LED outputs, not RF components.",
-          "analyzer_section": "signal_analysis.rf_matching"
+          "analyzer_section": "signal_analysis.rf_matching",
+          "detector": "rf_matching",
+          "subject_refs": [
+            "F10",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7",
+            "F8",
+            "F9",
+            "L1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "All 118 components have category=None despite correct component_types in statistics",
@@ -39,7 +54,13 @@
             "op": "not_contains_match",
             "field": "inductor.ref",
             "pattern": "^L1$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "L1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -59,8 +80,17 @@
             "path": "signal_analysis.power_regulators",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^L1$"
-          }
+            "pattern": "^C5$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "C5",
+            "C6",
+            "C7",
+            "L1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No USB detection for the Pico module USB connection",

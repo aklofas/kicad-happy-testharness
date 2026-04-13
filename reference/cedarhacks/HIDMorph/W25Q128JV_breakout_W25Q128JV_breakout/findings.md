@@ -1,4 +1,4 @@
-# Findings: HIDMorph / W25Q128JV_breakout_W25Q128JV_breakout_W25Q128JV_breakout
+# Findings: cedarhacks/HIDMorph / W25Q128JV_breakout_W25Q128JV_breakout
 
 ## FND-00000580: Component inventory accurately parsed: 42 total, correct breakdown by type; LDO regulator U1 (SPX1117M3-L-3-3/TR) detected with correct topology, input/output rails; False positive: regulator_caps ...
 

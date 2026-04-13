@@ -1,4 +1,4 @@
-# Findings: SNES-Userport-Adapter / SNES-Userport-Adapter
+# Findings: pdaehne/SNES-Userport-Adapter / SNES-Userport-Adapter
 
 ## FND-00001292: Edge.Cuts counted as copper layer, copper_layers_used reported as 3 instead of 2; Edge clearance warning for J2 (SNES socket) at -0.5mm is likely a false positive; GND copper zone correctly identif...
 

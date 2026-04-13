@@ -1,4 +1,4 @@
-# Findings: ice4pi / ice4pi
+# Findings: lightside-instruments/ice4pi / ice4pi
 
 ## FND-00002215: SPI bus detected twice: once correctly as bus 'ICE', and again as duplicate 'pin_U2' with MOSI/MISO roles swapped; False positive I2C detection on PIO0_20/PIO0_21: FPGA GPIO pin-name aliases trigge...
 

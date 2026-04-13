@@ -1,4 +1,4 @@
-# Findings: KicadSchModule / KicadSchModule_KicadSchModule
+# Findings: wujique/KicadSchModule / KicadSchModule
 
 ## FND-00000753: SPI flash ICs (W25Q128JVS, GD5F1GQ4) not detected as memory_interfaces or SPI bus — signal_analysis.memory_interfaces and bus_analysis.spi are both empty despite SPI0_MOSI/MISO/CLK/CS nets being pr...
 

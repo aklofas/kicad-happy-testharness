@@ -1,4 +1,4 @@
-# Findings: ESP-PROG-Adapter / PCB_ESPPROG-Adapter
+# Findings: 0xjmux/ESP-PROG-Adapter / PCB_ESPPROG-Adapter
 
 ## FND-00000491: All four components correctly identified with correct refs, types, and footprints; Net connectivity for JTAG signals (TMS, TCK, TDI, TDO) correctly traced between J2 and J3; Reset net (~{RST}) corr...
 

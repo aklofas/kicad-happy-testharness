@@ -1,4 +1,4 @@
-# Findings: led-controller-hardware / led-controller
+# Findings: markus-k/led-controller-hardware / led-controller
 
 ## FND-00002377: False positive I2C detection: ENABLE and RESET pins on ATWINC1500 are not I2C; LTV-814 optocoupler not detected as isolation barrier; 12 N-channel MOSFETs correctly detected as LED driver circuits ...
 

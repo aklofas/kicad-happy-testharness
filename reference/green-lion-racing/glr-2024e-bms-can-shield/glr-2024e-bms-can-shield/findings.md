@@ -1,4 +1,4 @@
-# Findings: glr-2024e-bms-can-shield / glr-2024e-bms-can-shield
+# Findings: green-lion-racing/glr-2024e-bms-can-shield / glr-2024e-bms-can-shield
 
 ## FND-00002103: CAN bus not detected in bus_analysis despite two TLE6250 CAN transceivers with CANH/CANL pins; design_observations incorrectly reports +5V as rails_without_caps for IC1/IC2, contradicting pin-level...
 

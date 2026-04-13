@@ -1,4 +1,4 @@
-# Findings: audio-amp / Audio Amp
+# Findings: trieck/audio-amp / Audio Amp
 
 ## FND-00001843: VCC1 terminal block connector misclassified as varistor and listed as protection device; TA8251AH 4-channel audio amplifier correctly identified with 13 total components and 30 nets; Audio amplifie...
 

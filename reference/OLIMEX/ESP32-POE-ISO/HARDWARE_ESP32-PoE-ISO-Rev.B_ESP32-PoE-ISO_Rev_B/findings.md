@@ -1,4 +1,4 @@
-# Findings: ESP32-POE-ISO / HARDWARE_ESP32-PoE-ISO-Rev.B_ESP32-PoE-ISO_Rev_B
+# Findings: OLIMEX/ESP32-POE-ISO / HARDWARE_ESP32-PoE-ISO-Rev.B_ESP32-PoE-ISO_Rev_B
 
 ## FND-00000539: DCDC1 (F0505S-2WR2 isolated DC-DC module) misclassified as type 'diode'; isolation_barriers detector empty — DCDC1 (F0505S-2WR2) is a galvanic isolation barrier; U5 (TX4138 PoE buck converter) miss...
 

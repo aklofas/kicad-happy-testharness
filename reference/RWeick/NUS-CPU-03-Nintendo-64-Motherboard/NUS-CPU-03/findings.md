@@ -1,4 +1,4 @@
-# Findings: NUS-CPU-03-Nintendo-64-Motherboard / NUS-CPU-03
+# Findings: RWeick/NUS-CPU-03-Nintendo-64-Motherboard / NUS-CPU-03
 
 ## FND-00000172: Nintendo 64 NUS-CPU-03 motherboard with 271 components. Correct: LM78M05/7VZ5 regulators, crystal circuits, voltage dividers, LED driver, bus topology, RC filters, decoupling. Incorrect: I2S SDAT misidentified as I2C, VOUT signal net as power rail, ferrite beads as fuses, BOM grouping merges inductors+caps, reset observation shows entire +3.3V rail. Missed: RDRAM memory interface, I2S audio bus, video encoder output path, clock generator function.
 

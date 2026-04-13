@@ -11,10 +11,23 @@
           "analyzer_section": "signal_analysis.feedback_networks",
           "check": {
             "path": "signal_analysis.feedback_networks",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R33$"
-          }
+            "op": "field_equals",
+            "field": "vout",
+            "value": 3.3
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "R16",
+            "R26",
+            "R33",
+            "R34",
+            "U4",
+            "U6"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "vout",
+          "expected_value": 3.3
         },
         {
           "description": "U3 WR0331-18FF4R LDO (3.3V\u21921.8V) correctly detected with fixed output from part suffix",
@@ -24,7 +37,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "4 ESD protection diodes (D5-D8, DF2S6.8FS) correctly identified protecting SPI bus pins",
@@ -34,7 +53,16 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D5$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D5",
+            "D6",
+            "D7",
+            "D8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "X1 24MHz crystal with C14/C15 (12pF) load caps correctly detected, effective load 9pF",
@@ -44,7 +72,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^X1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C14",
+            "C15",
+            "X1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "2 RC filters on reset circuit (R7/C3 1.59kHz, R7/C16 72.34Hz) correctly identified",
@@ -54,7 +90,15 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R7$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C16",
+            "C3",
+            "R7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -66,7 +110,16 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q4$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q4",
+            "U1",
+            "U3",
+            "U5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

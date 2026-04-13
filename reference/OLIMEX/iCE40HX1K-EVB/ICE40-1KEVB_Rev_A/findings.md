@@ -1,4 +1,4 @@
-# Findings: iCE40HX1K-EVB / iCE40HX1K-EVB_Rev_B
+# Findings: OLIMEX/iCE40HX1K-EVB / ICE40-1KEVB_Rev_A
 
 ## FND-00002210: SPI flash U1 (W25Q16) memory_interfaces reports only 1 shared signal net with FPGA, obscuring the broken SPI connection; JTAG connector (PGM1) not detected as JTAG/SPI programming interface in bus_...
 

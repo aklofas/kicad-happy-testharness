@@ -1,4 +1,4 @@
-# Findings: kicad-testing-station / testing-station
+# Findings: solar-cooker-UHasselt-mirror/kicad-testing-station / testing-station
 
 ## FND-00002268: SPI bus analysis creates 6 separate bus entries instead of 2 coherent buses; 74HC4050D (IC3) level-shifting buffer not identified as a level shifter; I2C bus correctly detected on DS3231 RTC with 1...
 

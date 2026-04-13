@@ -1,4 +1,4 @@
-# Findings: E159-KICAD-Design-File / AVR_Controller_E159_E3
+# Findings: tasmmai/E159-KICAD-Design-File / AVR_Controller_E159_E3
 
 ## FND-00000487: All 14 component references, values, and types extracted correctly; Net connectivity for U1 ATmega328-P is fully and correctly extracted; Crystal oscillator circuit detected with correct load capac...
 

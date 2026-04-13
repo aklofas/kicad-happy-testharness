@@ -1,4 +1,4 @@
-# Findings: Dilemma / 3x5_2_dilemma
+# Findings: Bastardkb/Dilemma / 3x5_2_dilemma
 
 ## FND-00000470: Key matrix row_nets and col_nets fields are swapped; PSW1 (SW_DPDT) power switch misclassified as 'connector' instead of 'switch'; Voltage divider on 'hand' net correctly detected (R7 5.1k / R1 5.1...
 

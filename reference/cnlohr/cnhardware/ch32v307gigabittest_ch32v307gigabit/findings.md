@@ -1,4 +1,4 @@
-# Findings: cnhardware / ch32v307gigabittest_ch32v307gigabit
+# Findings: cnlohr/cnhardware / ch32v307gigabittest_ch32v307gigabit
 
 ## FND-00000160: CH32V307 Gigabit Ethernet test board with RTL8211E PHY. Ethernet interface not detected; gigabit magnetics transformer U4 classified as IC despite 'Transformer' in lib_id; unannotated components silently dropped.
 

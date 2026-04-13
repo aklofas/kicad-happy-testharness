@@ -13,8 +13,20 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R5$"
-          }
+            "pattern": "^R10$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R10",
+            "R11",
+            "R12",
+            "R5",
+            "R6",
+            "R7",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Two anti-aliasing RC low-pass filters R2/C4 and R1/C3 (3.3k/2.2nF at 21.92 kHz) correctly detected on audio output paths",
@@ -23,18 +35,35 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R2$"
-          }
+            "pattern": "^R1$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C3",
+            "C4",
+            "R1",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Four op-amp buffer circuits correctly identified: U1 units 1-4 (TL074) all in buffer configuration with gain=1.0",
           "analyzer_section": "signal_analysis.opamp_circuits",
           "check": {
             "path": "signal_analysis.opamp_circuits",
-            "op": "contains_match",
-            "field": "reference",
-            "pattern": "^U1$"
-          }
+            "op": "field_equals",
+            "field": "gain",
+            "value": 1.0
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "gain",
+          "expected_value": 1.0
         },
         {
           "description": "U2 (L7805) correctly detected as LDO regulator with input=VCC, output=5V",
@@ -44,7 +73,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L7805",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "A1 (Electrosmith_Daisy_Seed_Rev7) correctly classified as IC (DSP module)",
@@ -89,7 +125,13 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "L7805"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [],
@@ -102,7 +144,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U5$"
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [
@@ -119,47 +167,190 @@
       "correct": [
         {
           "description": "U2 (L7805) correctly identified as a linear regulator with VCC input rail and 5V output rail",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L7805",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "Voltage divider R5 (1M) / R6 (1M) from 5V to GND with 0.5 ratio feeding U1 pin 12 (unit 4 non-inverting input) and C12 bypass",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "C12",
+            "R5",
+            "R6",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R5$"
+          }
         },
         {
           "description": "Voltage divider R7 (1M) / R10 (1M) from 5V to GND with 0.5 ratio feeding U1 pin 5 (unit 2 non-inverting input) and C13 bypass",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "C13",
+            "R10",
+            "R7",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R10$"
+          }
         },
         {
           "description": "Voltage divider R11 (1M) / R12 (1M) from 5V to GND with 0.5 ratio feeding U1 pin 10 (unit 3 non-inverting input) and C14, R3",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "C14",
+            "R11",
+            "R12",
+            "R3",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R11$"
+          }
         },
         {
           "description": "RC low-pass filter R2 (3K3) + C4 (2.2nF) on AUDIO_OUT_BUFFER_LEFT with correct cutoff of 21.92 kHz (anti-aliasing)",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C4",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R2$"
+          }
         },
         {
           "description": "RC low-pass filter R1 (3K3) + C3 (2.2nF) on AUDIO_OUT_BUFFER_RIGHT with correct cutoff of 21.92 kHz (anti-aliasing)",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C3",
+            "R1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R1$"
+          }
         },
         {
           "description": "U1 unit 1 (TL074) correctly identified as buffer on AUDIO_IN_BUFFER_LEFT",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "U1 unit 3 (TL074) correctly identified as buffer on AUDIO_IN_BUFFER_RIGHT",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "U1 unit 2 (TL074) correctly identified as buffer with R16 (100 ohms) - left output buffer",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "R16",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "U1 unit 4 (TL074) correctly identified as buffer with R15 (100 ohms) - right output buffer",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "R15",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "LED1 and LED2 correctly identified with 1K series resistors (R20, R19) driven from A1 (Daisy Seed)",
-          "analyzer_section": "signal_analysis.led_audit"
+          "analyzer_section": "signal_analysis.led_audit",
+          "detector": "led_audit",
+          "subject_refs": [
+            "A1",
+            "R19",
+            "R20"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Duplicate reference POT4 correctly flagged in annotation_issues",
@@ -175,7 +366,13 @@
         },
         {
           "description": "Power sequencing correctly identifies 5V rail from U2 regulator as always-on",
-          "analyzer_section": "signal_analysis.power_sequencing_validation"
+          "analyzer_section": "signal_analysis.power_sequencing_validation",
+          "detector": "power_sequencing_validation",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Single-pin net warning for 3V3_D (A1 pin 38) is correct - unused digital 3.3V output",
@@ -183,17 +380,48 @@
         },
         {
           "description": "ESD coverage audit correctly identifies MIDI IN/OUT jacks (J4, J5) as having no ESD protection",
-          "analyzer_section": "signal_analysis.esd_coverage_audit"
+          "analyzer_section": "signal_analysis.esd_coverage_audit",
+          "detector": "esd_coverage_audit",
+          "subject_refs": [
+            "J4",
+            "J5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
         {
           "description": "U2 (L7805) topology labeled as 'LDO' but the L7805 is a classic fixed linear regulator (~2V dropout), not a low-dropout regulator",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L7805",
+            "U2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "Design observation claims missing regulator input/output caps for U2, but C6 (100uF), C7/C8 (100nF) are on VCC input and C9/C10 (100nF) are on 5V output",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "C10",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "U2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Net classification marks '5V' as 'signal' when it is clearly a power rail (output of L7805). Similarly '3V3_A' classified as 'signal' but is a 3.3V analog power rail",
@@ -201,7 +429,19 @@
         },
         {
           "description": "U1 unit 5 (power pins V+/V-) listed as opamp_circuit with configuration 'unknown' - this is the power supply unit, not a signal circuit",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "All 6 potentiometer instances reported as POT4 with identical net connections (GND, 3V3_A, POT_6) due to schematic annotation bug propagated without flagging different actual connections per instance",
@@ -209,7 +449,11 @@
         },
         {
           "description": "ESD coverage audit lists POT4 as a connector 6 times with identical signal nets, creating redundant entries from the duplicate reference",
-          "analyzer_section": "signal_analysis.esd_coverage_audit"
+          "analyzer_section": "signal_analysis.esd_coverage_audit",
+          "detector": "esd_coverage_audit",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "BOM groups R15 (100 ohm resistor) together with C1/C2 (100pF capacitors) under the same '100' value label, creating ambiguity",
@@ -219,15 +463,57 @@
       "missed": [
         {
           "description": "Fourth voltage divider R13 (1M) / R14 (1M) from 5V to GND biasing U1 pin 3 (unit 1 non-inverting input) was not detected. Identical topology to the three detected dividers",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R13",
+            "R14",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R13$"
+          }
         },
         {
           "description": "MIDI input isolation barrier via U5 (H11L1 optocoupler) not detected. Provides galvanic isolation between MIDI input jack and Daisy Seed UART RX with D2 (1N4148) protection, R30 (220R) current limiting, R31 (470R) pull-up, R32 (10R) output",
-          "analyzer_section": "signal_analysis.isolation_barriers"
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "detector": "isolation_barriers",
+          "subject_refs": [
+            "D2",
+            "R30",
+            "R31",
+            "R32",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.isolation_barriers",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D2$"
+          }
         },
         {
           "description": "D1 (1N5817 Schottky diode) reverse polarity protection in power input path not detected. Standard guitar pedal power protection circuit",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          }
         },
         {
           "description": "MIDI interface not detected as UART bus. A1 pins connected to MIDI_OUT and MIDI_IN through MIDI I/O circuitry. Standard MIDI uses 31.25 kbaud UART",
@@ -235,15 +521,38 @@
         },
         {
           "description": "Audio input AC coupling capacitors C1 and C2 (100pF) not detected as part of audio signal chain",
-          "analyzer_section": "signal_analysis.audio_circuits"
+          "analyzer_section": "signal_analysis.audio_circuits",
+          "detector": "audio_circuits",
+          "subject_refs": [
+            "C1",
+            "C2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Complete audio signal chain (input jack -> AC coupling -> bias resistor -> buffer -> Daisy Seed -> RC filter -> output buffer -> output jack) not characterized as audio_circuit",
-          "analyzer_section": "signal_analysis.audio_circuits"
+          "analyzer_section": "signal_analysis.audio_circuits",
+          "detector": "audio_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.audio_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Decoupling capacitor C30 (100nF) on 3V3_A rail near U5 not identified in decoupling_analysis",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C30",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus detected but Daisy Seed I2C pins are not connected to external devices - should note unused bus or not report it",

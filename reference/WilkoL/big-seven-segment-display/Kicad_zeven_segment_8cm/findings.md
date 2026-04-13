@@ -1,4 +1,4 @@
-# Findings: big-seven-segment-display / Kicad_zeven_segment_8cm
+# Findings: WilkoL/big-seven-segment-display / Kicad_zeven_segment_8cm
 
 ## FND-00001991: Component counts and types correct: 42 total, 28 J5630 segments, 2 ICs, 5 resistors, 2 caps, 2 connectors, 3 mounting holes; 6V5 power input rail classified as 'signal' instead of 'power', causing ...
 

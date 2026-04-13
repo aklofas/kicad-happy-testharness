@@ -1,4 +1,4 @@
-# Findings: D21SequansAdapterBoard / D21SequansAdapterBoard
+# Findings: briantate/D21SequansAdapterBoard / D21SequansAdapterBoard
 
 ## FND-00000447: Component inventory (22 total, all types) correctly identified; All 4 NPN LED driver circuits correctly detected with proper component mappings; Net connectivity for named signal nets correctly tra...
 

@@ -1,4 +1,4 @@
-# Findings: SensorBoard-Hardware / RoomSensorV2
+# Findings: sebdehne/SensorBoard-Hardware / RoomSensorV2
 
 ## FND-00001405: 3V3 power net omitted from power_rails despite being a primary supply; I2C pullup resistors R2/R3 not detected — has_pullup incorrectly false; Voltage divider (R6+R7 on V_Bat_READ) correctly identi...
 

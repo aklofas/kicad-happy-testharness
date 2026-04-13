@@ -1,4 +1,4 @@
-# Findings: halcyon / Template module_template-module
+# Findings: splitkb/halcyon / Template module_template-module
 
 ## FND-00002114: copper_layers_used reported as 0 despite a filled GND zone present on both F.Cu and B.Cu; Unrouted pad list shows H1.1 and H2.1 each duplicated four times rather than listing distinct pads
 

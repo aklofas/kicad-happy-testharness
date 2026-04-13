@@ -1,4 +1,4 @@
-# Findings: FeatherWing / FeatherWing_FeatherWing
+# Findings: jenschr/FeatherWing / FeatherWing
 
 ## FND-00000551: Component count, types, and BOM correctly identified; Named nets bat/sck/mo/mi/rx/tx/rst show empty pins[] despite being wired to connectors; Net 'en' mapped to J1 pin 1 but 'bat' (the actual pin-1...
 

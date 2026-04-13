@@ -1,4 +1,4 @@
-# Findings: CAE32 / Schematics_CAE32_PCB_Hall_PCB_hall_pcb_hall_pcb
+# Findings: janc18/CAE32 / Schematics_CAE32_PCB_Hall_PCB_hall_pcb
 
 ## FND-00000418: Local signal label 'Vout' incorrectly listed as a power rail
 

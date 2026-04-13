@@ -1,4 +1,4 @@
-# Findings: hw_projects / skadis_clock_kicad_skadis_clock
+# Findings: agkaminski/hw_projects / skadis_clock_kicad_skadis_clock
 
 ## FND-00000188: Skadis clock (112 components, 5 sheets). Correct: crystal, BC807 PNP transistors, USB-C CC pulldowns, SPI bus, decoupling. Incorrect: duplicate SPI bus detection (MCU and ISP connector report same bus twice), crystal frequency null despite Crystal value.
 

@@ -1,4 +1,4 @@
-# Findings: MM1_FLASH_128k_A / MM1_FLASH_128k_A
+# Findings: JonathSpirit/MM1_FLASH_128k_A / MM1_FLASH_128k_A
 
 ## FND-00000874: Legacy .sch parser misses U1 (SST39LF010 flash) data pin net connections
 

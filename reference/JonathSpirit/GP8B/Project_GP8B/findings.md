@@ -1,4 +1,4 @@
-# Findings: GP8B / Project_GP8B
+# Findings: JonathSpirit/GP8B / Project_GP8B
 
 ## FND-00000568: Multi-sheet parsing: all 8 hierarchical sheets correctly discovered and parsed; LDO regulator TPS7A0518PDBZR correctly detected as 3.3V→1.8V LDO; SPI bus detected with correct signal net names; Dec...
 

@@ -1,4 +1,4 @@
-# Findings: hwboard-bike-computer / PCB_hwboard-bike-computer
+# Findings: axoulc/hwboard-bike-computer / PCB_hwboard-bike-computer
 
 ## FND-00002132: TPS61089 boost converter output voltage estimated as 2.496V instead of ~5V due to wrong Vref assumption
 

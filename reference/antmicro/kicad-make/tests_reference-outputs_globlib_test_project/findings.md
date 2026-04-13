@@ -1,4 +1,4 @@
-# Findings: kicad-make / tests_reference-outputs_globlib_test_project
+# Findings: antmicro/kicad-make / tests_reference-outputs_globlib_test_project
 
 ## FND-00002252: HDMI connector and 8 differential pairs correctly detected in hierarchical schematic; Power symbols in hierarchical schematic all return None reference and None net; HDMI bus alias member resolutio...
 

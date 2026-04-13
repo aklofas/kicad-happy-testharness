@@ -1,4 +1,4 @@
-# Findings: KiClearance / examples_clearance_example
+# Findings: upb-lea/KiClearance / examples_clearance_example
 
 ## FND-00000744: Simple test schematic: all 6 components correctly extracted (J1, J2, J3, R1, D1, U2); Isolation barrier (NSL-32 optocoupler) not detected in isolation_barriers
 

@@ -1,4 +1,4 @@
-# Findings: Kicad-Breakout-Boards / Breakout Board STM32L041x6 - TSSOP20_Breakout Board STM32L041x6 - TSSOP20
+# Findings: stoyan-shopov/Kicad-Breakout-Boards / Breakout Board STM32L041x6 - TSSOP20
 
 ## FND-00000782: RC filter false positive: C8 paired with both R5 and R6 producing two spurious filter entries; single_pin_nets observation incorrectly identifies U1 VDDA pin as net 'pa0'; Crystal circuit correctly...
 

@@ -1,4 +1,4 @@
-# Findings: ISM01 / hw_sch_pcb_ISM01
+# Findings: mlab-modules/ISM01 / hw_sch_pcb_ISM01
 
 ## FND-00000626: BOM groups L1/L2 (Device:L_Small, 0R) with R1/R21 (Device:R, 0R) and assigns all type 'inductor'; Crystal frequency not extracted from part values Y1 (ABS07-120-32.768KHZ) and Y2 (ABM3B-30.000MHZ-1...
 

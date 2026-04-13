@@ -1,4 +1,4 @@
-# Findings: esp8266-for-uppatvind / Hardware_Air-Purifier-Uppatvind
+# Findings: horvathgergo/esp8266-for-uppatvind / Hardware_Air-Purifier-Uppatvind
 
 ## FND-00002056: MC34063 switching regulator Vref heuristic uses 0.6V instead of 1.25V, producing a wrong Vout estimate of 1.59V instead of ~3.3V; SPI bus detected as false positive: MISO, MOSI, and SCLK pins on ES...
 

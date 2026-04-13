@@ -1,4 +1,4 @@
-# Findings: hoverboard-breakout / bobbycar_breakout_bobbycar
+# Findings: Jana-Marie/hoverboard-breakout / bobbycar_breakout_bobbycar
 
 ## FND-00002130: I2C bus not detected despite SCL/SDA nets and pull-up resistors present; R2/R3 + C1/C2 detected as RC low-pass filters instead of I2C pull-up resistors with bypass caps
 

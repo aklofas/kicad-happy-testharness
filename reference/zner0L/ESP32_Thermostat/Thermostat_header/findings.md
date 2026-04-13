@@ -1,4 +1,4 @@
-# Findings: ESP32_Thermostat / Thermostat_header_Thermostat_header
+# Findings: zner0L/ESP32_Thermostat / Thermostat_header
 
 ## FND-00000499: Component count, references, values, and footprints all correctly extracted; Net connectivity for 3.3V and GND rails correctly traced; Pull-up resistor topology on ESP32 GPIO lines correctly identi...
 

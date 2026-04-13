@@ -1,4 +1,4 @@
-# Findings: bitaxe / bitaxeUltra
+# Findings: skot/bitaxe / bitaxeUltra
 
 ## FND-00000033: Q1/Q2 CSD17311Q5 MOSFETs completely missing from all nets
 

@@ -1,4 +1,4 @@
-# Findings: KiwiSDR_PCB / KiwiSDR_kiwi
+# Findings: mfkiwl/KiwiSDR_PCB / KiwiSDR_kiwi
 
 ## FND-00000274: KiwiSDR SDR receiver (KiCad 5, 173 components). Core RF path well detected: 6 LC filter pairs in 30MHz anti-alias chain, LTC6401-20 ADC driver, TCXO, 4 power regulators. Two KiCad 5 legacy pin-swap bugs: LMR10530Y fb_net='SW1' instead of 'FB', and LTC6401-20 +IN/-IN and +OUT/-OUT systematically swapped.
 

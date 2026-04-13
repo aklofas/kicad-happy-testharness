@@ -22,7 +22,13 @@
             "op": "not_contains_match",
             "field": "shunt.ref",
             "pattern": "^R49$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R49"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -65,7 +71,14 @@
             "op": "not_contains_match",
             "field": "r_top.ref",
             "pattern": "^R30$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R30",
+            "R48"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "type": "voltage_divider",
@@ -76,8 +89,15 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R56$"
-          }
+            "pattern": "^R48$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R48",
+            "R56"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "type": "voltage_divider",
@@ -88,8 +108,15 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R5$"
-          }
+            "pattern": "^R4$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R4",
+            "R5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

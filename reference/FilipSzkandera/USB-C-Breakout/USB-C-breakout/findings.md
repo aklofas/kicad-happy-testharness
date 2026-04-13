@@ -1,4 +1,4 @@
-# Findings: USB-C-Breakout / USB-C-breakout
+# Findings: FilipSzkandera/USB-C-Breakout / USB-C-breakout
 
 ## FND-00001553: USB interface not detected for USB4105-GF-A connector; Differential pairs not detected for DP1/DN1 and DP2/DN2 nets; Component count and types correctly extracted
 

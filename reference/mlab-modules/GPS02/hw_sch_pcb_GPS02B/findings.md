@@ -1,4 +1,4 @@
-# Findings: GPS02 / hw_sch_pcb_GPS02B
+# Findings: mlab-modules/GPS02 / hw_sch_pcb_GPS02B
 
 ## FND-00000599: ESD protection for D- reported as has_esd_protection=False despite U1 (USBLC6-2SC6) protecting it; I2C pullups R2 and R3 (10k to +3V3) not detected; has_pull_up=False for both SDA and SCL; MIC5504-...
 

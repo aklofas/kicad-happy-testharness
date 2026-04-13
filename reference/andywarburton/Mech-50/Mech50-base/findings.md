@@ -1,4 +1,4 @@
-# Findings: Mech-50 / Mech50-base_Mech50-base
+# Findings: andywarburton/Mech-50 / Mech50-base
 
 ## FND-00000892: Mechanical-only schematic with 9 mounting holes correctly parsed
 

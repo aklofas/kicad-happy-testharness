@@ -1,4 +1,4 @@
-# Findings: bms-8s50-ic / kicad_bms-8s50-ic
+# Findings: LibreSolar/bms-8s50-ic / kicad_bms-8s50-ic
 
 ## FND-00002287: BMS cell_count reported as 7 but ISL94202 design is an 8S BMS; False positive I2C bus detection on SCL/SDA nets that are ISL94202 non-I2C pins; RJ45 connectors JP1/JP2 misclassified as type 'jumper...
 

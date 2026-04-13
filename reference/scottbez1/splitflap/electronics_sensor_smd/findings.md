@@ -1,4 +1,4 @@
-# Findings: splitflap / electronics_sensor_smd_sensor_smd
+# Findings: scottbez1/splitflap / electronics_sensor_smd
 
 ## FND-00000081: KiCad 6+ hall effect sensor board. Small design with 7 components and 5 nets. 1 signal path detected (design observation about missing decoupling cap). Component extraction and net connectivity are correct. This is a simple but well-analyzed design.
 

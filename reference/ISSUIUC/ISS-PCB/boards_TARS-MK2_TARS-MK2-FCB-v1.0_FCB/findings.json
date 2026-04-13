@@ -13,8 +13,14 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Y201$"
-          }
+            "pattern": "^Y101$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y101"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "CAN bus detection with MCP2518FDT and TCAN337G correct",
@@ -23,7 +29,11 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB differential pair detection correct",
@@ -32,7 +42,11 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -44,7 +58,14 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U305$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U305",
+            "U505"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

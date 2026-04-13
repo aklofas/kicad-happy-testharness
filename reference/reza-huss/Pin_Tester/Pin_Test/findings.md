@@ -1,4 +1,4 @@
-# Findings: Pin_Tester / Pin_Test
+# Findings: reza-huss/Pin_Tester / Pin_Test
 
 ## FND-00001114: Component count and types correct: 61 components (26 LEDs, 26 resistors, 9 connectors); False positive differential pair M0+/M0- on J8 connector; Single-pin nets correctly flagged: 10 nets with iso...
 

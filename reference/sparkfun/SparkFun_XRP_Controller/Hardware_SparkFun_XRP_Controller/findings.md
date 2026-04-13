@@ -1,4 +1,4 @@
-# Findings: SparkFun_XRP_Controller / Hardware_SparkFun_XRP_Controller
+# Findings: sparkfun/SparkFun_XRP_Controller / Hardware_SparkFun_XRP_Controller
 
 ## FND-00000168: SparkFun XRP robot controller with RP2350B. AP63357 reference voltage wrong, bus widths inflated, QSPI interface missed.
 

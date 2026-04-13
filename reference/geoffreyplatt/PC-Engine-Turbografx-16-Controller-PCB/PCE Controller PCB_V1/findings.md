@@ -1,4 +1,4 @@
-# Findings: PC-Engine-Turbografx-16-Controller-PCB / PCE Controller PCB_V1
+# Findings: geoffreyplatt/PC-Engine-Turbografx-16-Controller-PCB / PCE Controller PCB_V1
 
 ## FND-00000973: Capacitor C2 value '0.1f' parsed as 0.1 farads instead of 0.1uF; ERC 'no_driver' false positive on 5V net — connector-powered design has no PWR_FLAG; Component counts, types, and net topology corre...
 

@@ -1,4 +1,4 @@
-# Findings: modular-psu / aux-ps_EDA files_KiCad_EEZ DIB AUX-PS
+# Findings: eez-open/modular-psu / aux-ps_EDA files_KiCad_EEZ DIB AUX-PS
 
 ## FND-00000304: Gerber review: Eagle vs KiCad across 16 sets. Three HIGH Eagle bugs: .TXT drill, .G2L inner layers, inch units
 

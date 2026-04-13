@@ -22,7 +22,11 @@
             "path": "signal_analysis.ethernet_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "ethernet_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "25MHz crystals with 33pF load caps detected",
@@ -31,7 +35,11 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "ESDS314DBVR ESD ICs correctly detected",
@@ -40,7 +48,11 @@
             "path": "signal_analysis.protection_devices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -62,7 +74,11 @@
         },
         {
           "description": "False three-phase bridge circuit from PHY address strap FETs",
-          "analyzer_section": "signal_analysis.bridge_circuits"
+          "analyzer_section": "signal_analysis.bridge_circuits",
+          "detector": "bridge_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -74,7 +90,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^VR1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "VR1",
+            "VR2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MICRO_SD1, MICROPHONE1 classified as other instead of connector",

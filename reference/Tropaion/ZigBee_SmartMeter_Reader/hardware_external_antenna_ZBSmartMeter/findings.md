@@ -1,4 +1,4 @@
-# Findings: ZigBee_SmartMeter_Reader / hardware_external_antenna_ZBSmartMeter
+# Findings: Tropaion/ZigBee_SmartMeter_Reader / hardware_external_antenna_ZBSmartMeter
 
 ## FND-00001973: TLV1117-33 LDO regulator correctly identified with estimated 3.3V output; USB-C differential pair correctly identified with ESD protection; UART interfaces correctly detected for NCN5150 and ESP32-...
 

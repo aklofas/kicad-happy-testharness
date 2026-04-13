@@ -1,4 +1,4 @@
-# Findings: PCBsCollection / 8x8MatrixOldSchool_8x8MatrixOldSchool
+# Findings: hasecilu/PCBsCollection / 8x8MatrixOldSchool
 
 ## FND-00001704: Component count and net topology correctly parsed for simple 2-connector ISP adapter; J2 'USBasp' flagged as USB connector in usb_compliance check; Assembly complexity marks PinSocket THT connector...
 

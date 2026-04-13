@@ -1,4 +1,4 @@
-# Findings: ESP32-Home-Automation-System-KiCAD-9.0-Open-Source-Hardware-Project / Amit_Amp_V0.1
+# Findings: Amitkmr948/ESP32-Home-Automation-System-KiCAD-9.0-Open-Source-Hardware-Project / Amit_Amp_V0.1
 
 ## FND-00000511: Component count (62), net count (82), and BOM groupings are all accurate; UART detection correctly identifies CH340C (U2) to ESP32 (U4) connection on RXD/TXD nets; USB Type-C compliance checks are ...
 

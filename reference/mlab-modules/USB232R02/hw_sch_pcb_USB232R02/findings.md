@@ -1,4 +1,4 @@
-# Findings: USB232R02 / hw_sch_pcb_USB232R02
+# Findings: mlab-modules/USB232R02 / hw_sch_pcb_USB232R02
 
 ## FND-00001752: Component count of 28 correctly detected with accurate type breakdown; Voltage divider R1/R2 correctly detected as reset pull-up network for FT231X; ESD protection device USBLC6-2SC6 correctly dete...
 

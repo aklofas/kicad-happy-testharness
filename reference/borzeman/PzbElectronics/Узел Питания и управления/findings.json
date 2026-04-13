@@ -8,11 +8,29 @@
       "correct": [
         {
           "description": "12 IRF4905 P-channel MOSFETs correctly identified with is_pchannel=true",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "24 TVS diodes and 25 fuses correctly identified as protection_devices",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "363 components and 669 nets correctly extracted across 25+ sheets",
@@ -52,11 +70,43 @@
       "missed": [
         {
           "description": "12 SB560 flyback diodes across lock solenoids not detected (has_flyback_diode=false on all MOSFETs)",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "R1-R12 gate resistors not detected for MOSFET circuits due to hierarchical net tracing gaps",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "R1",
+            "R10",
+            "R11",
+            "R12",
+            "R2",
+            "R3",
+            "R4",
+            "R5",
+            "R6",
+            "R7",
+            "R8",
+            "R9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^R1$"
+          }
         },
         {
           "description": "RS-485 bus protocol not detected despite RS485 nets and dedicated sub-sheet",

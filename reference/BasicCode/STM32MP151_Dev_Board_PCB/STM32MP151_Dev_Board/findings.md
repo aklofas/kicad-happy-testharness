@@ -1,4 +1,4 @@
-# Findings: STM32MP151_Dev_Board_PCB / STM32MP151_Dev_Board
+# Findings: BasicCode/STM32MP151_Dev_Board_PCB / STM32MP151_Dev_Board
 
 ## FND-00001281: AE1 (Antenna_Dipole) classified as type 'ic'; U1 (STM32MP151 SoM compute module) misidentified as power regulator with estimated_vout=6.5V; I2C bus correctly detected with pull-ups R18/R19 (4K7) to...
 

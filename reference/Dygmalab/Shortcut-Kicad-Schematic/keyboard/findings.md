@@ -1,4 +1,4 @@
-# Findings: Shortcut-Kicad-Schematic / keyboard
+# Findings: Dygmalab/Shortcut-Kicad-Schematic / keyboard
 
 ## FND-00001351: Component count and type breakdown accurate for the three parsed sheets; Key matrix column count inflated: 14 columns detected but only 7 are wired to components; Crystal/resonator circuit (X1 CSTC...
 

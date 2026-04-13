@@ -1,4 +1,4 @@
-# Findings: PCB_schematic_KiCad / pcb_pcb
+# Findings: Unnati2310/PCB_schematic_KiCad / pcb
 
 ## FND-00000242: STM32 board (104 components). Crystal Y1 present but not detected. Multi-driver VCC conflict (2 regulators driving same net). 3 regulators detected. 7 components missing value.
 

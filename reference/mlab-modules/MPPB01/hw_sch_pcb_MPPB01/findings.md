@@ -1,4 +1,4 @@
-# Findings: MPPB01 / hw_sch_pcb_MPPB01
+# Findings: mlab-modules/MPPB01 / hw_sch_pcb_MPPB01
 
 ## FND-00000927: 64 Epiphany e-link signals misclassified as UART; I2C bus (I2C_SCL/I2C_SDA) not detected in bus_analysis; assembly_complexity total (29) is higher than statistics total_components (27); Differentia...
 

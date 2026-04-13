@@ -1,4 +1,4 @@
-# Findings: cm4-carriers / hardware_cm4-carrier-net_cm4-carrier-net
+# Findings: jkiv/cm4-carriers / hardware_cm4-carrier-net
 
 ## FND-00002018: USB_D- incorrectly reported as unprotected despite TPD2EUSB30 protecting both D+ and D-; SDIO bus (4-bit SD card), I2C, ESD protection, and PMOS power switch all detected correctly; PMOS Q1 transis...
 

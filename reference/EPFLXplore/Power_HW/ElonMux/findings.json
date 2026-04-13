@@ -13,13 +13,29 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
         {
           "description": "LTC3126 estimated_vout=2.41V using assumed Vref=0.6V -- actual Vref=0.8V (VSET pins to GND), correct Vout=3.3V matching +3V3 output rail",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 2.41,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 2.41
+          }
         },
         {
           "description": "IC801/IC802 LTC7000EMSE gate drivers have 0 pins parsed due to lib_name/lib_id mismatch -- lib_symbols keyed by local name but lookup uses lib_id",
@@ -35,7 +51,14 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^R701$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R701",
+            "R702"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

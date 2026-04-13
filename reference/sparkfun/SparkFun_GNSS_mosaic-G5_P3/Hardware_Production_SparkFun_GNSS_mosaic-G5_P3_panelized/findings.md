@@ -1,4 +1,4 @@
-# Findings: SparkFun_GNSS_mosaic-G5_P3 / Hardware_Production_SparkFun_GNSS_mosaic-G5_P3_panelized
+# Findings: sparkfun/SparkFun_GNSS_mosaic-G5_P3 / Hardware_Production_SparkFun_GNSS_mosaic-G5_P3_panelized
 
 ## FND-00001434: Board dimensions, layer count, net count, and component counts are accurate; mosaic-G5 PCB correctly shows more zones than ZED-X20P (6 vs 2), consistent with larger GNSS IC
 

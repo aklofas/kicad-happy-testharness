@@ -1,4 +1,4 @@
-# Findings: Neptune / hardware_board_mainboard
+# Findings: wntrblm/Neptune / hardware_board_mainboard
 
 ## FND-00000276: Neptune analog synth filter mainboard (273 components, 6 TL074 ICs). Opamp circuits, RC filters, voltage dividers, BJT VCA transistors all well detected. U1 unit3 non-inverting amplifier (+8VREF generator, gain=3.2) misclassified as transimpedance_or_buffer. Duplicate design_observations: U1 decoupling warning emitted 5 times (once per TL074 unit).
 

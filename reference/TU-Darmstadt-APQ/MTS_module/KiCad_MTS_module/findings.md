@@ -1,4 +1,4 @@
-# Findings: MTS_module / KiCad_MTS_module
+# Findings: TU-Darmstadt-APQ/MTS_module / KiCad_MTS_module
 
 ## FND-00000932: kicad_version reported as 'unknown' for file_version 20230121 (KiCad 7); LT3045xMSE (positive LDO) marked inverting=True in main hierarchical sheet; RF chain/signal-path detectors entirely missed f...
 

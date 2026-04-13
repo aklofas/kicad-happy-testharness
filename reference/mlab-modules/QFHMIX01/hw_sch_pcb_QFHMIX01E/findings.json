@@ -13,7 +13,11 @@
             "path": "signal_analysis.lc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Power regulators correctly detected",
@@ -22,7 +26,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -33,8 +41,19 @@
             "path": "signal_analysis.rc_filters",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R14$"
-          }
+            "pattern": "^R11$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C11",
+            "C12",
+            "C13",
+            "R11",
+            "R14",
+            "R15"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

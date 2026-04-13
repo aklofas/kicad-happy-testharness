@@ -1,4 +1,4 @@
-# Findings: Kicad-Hardware-USB / HARDWARE_USB
+# Findings: snaraender0937n/Kicad-Hardware-USB / HARDWARE_USB
 
 ## FND-00000791: V-USB style ATtiny85 circuit correctly parsed: 68R series resistors and 3.6V Zener clamps on D+/D- detected; U2 (USB connector with value '~') classified as 'ic' type instead of 'connector'
 

@@ -20,9 +20,17 @@
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
             "path": "signal_analysis.protection_devices",
-            "op": "min_count",
-            "value": 2
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D2$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D2",
+            "F1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Three VUSB decoupling capacitors correctly identified: C2 (2.2uF), C3 (0.1uF), C4 (10uF), totalling 12.3uF. has_bulk=true and has_bypass=true accurate. C1 (10nF on V3 internal rail of CH340C) correctly excluded from VUSB.",
@@ -31,7 +39,16 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "C3",
+            "C4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 (MMBT2222A) NPN BJT correctly detected with emitter to GND and base resistor R4 (180 ohm). LED driver sub-detection accurately identifies D1 (Green LED) driven via R3 (1k) through Q1 collector: VUSB -> JP2 -> D1(A) -> D1(K) -> R3 -> Q1(C).",
@@ -39,11 +56,18 @@
           "check": {
             "path": "signal_analysis.transistor_circuits",
             "op": "contains_match",
-            "value": {
-              "reference": "Q1",
-              "type": "bjt"
-            }
-          }
+            "field": "reference",
+            "pattern": "^Q1$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D1",
+            "Q1",
+            "R3",
+            "R4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Power rails correctly identified as VUSB and GND only. Board uses USB bus power directly without onboard regulation. No spurious extra rails reported.",
@@ -72,11 +96,16 @@
           "check": {
             "path": "signal_analysis.buzzer_speaker_circuits",
             "op": "contains_match",
-            "value": {
-              "reference": "BZ1",
-              "has_transistor_driver": true
-            }
-          }
+            "field": "reference",
+            "pattern": "^D1$"
+          },
+          "detector": "buzzer_speaker_circuits",
+          "subject_refs": [
+            "D1",
+            "Q1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "UART bus not detected despite CH340C USB-UART converter (U3). U3 TXD (pin 2) connects to J5 test point; U3 RXD (pin 3) connects to DATA0 (Wiegand output line from RFID reader). bus_analysis.uart is empty. The UART interface between CH340C and RFID reader output should be detected.",

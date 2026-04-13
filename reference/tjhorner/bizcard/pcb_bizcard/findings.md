@@ -1,4 +1,4 @@
-# Findings: bizcard / pcb_bizcard_bkup
+# Findings: tjhorner/bizcard / pcb_bizcard
 
 ## FND-00001993: RP2040 PCB business card: all major circuits correctly detected — LDO, crystal, WS2812B chain, W25Q128 flash, buzzer, decoupling; WS2812B addressable LED chain correctly detected: chain_length=4, d...
 

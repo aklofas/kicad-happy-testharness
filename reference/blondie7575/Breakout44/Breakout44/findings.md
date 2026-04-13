@@ -1,4 +1,4 @@
-# Findings: Breakout44 / Breakout44
+# Findings: blondie7575/Breakout44 / Breakout44
 
 ## FND-00000437: SPI bus not detected despite MOSI/MISO/SCLK/SS pins present on ATmega32U4-A; UART not detected despite TXD/RXD pins present on ATmega32U4-A; All component refs are null in the components array desp...
 

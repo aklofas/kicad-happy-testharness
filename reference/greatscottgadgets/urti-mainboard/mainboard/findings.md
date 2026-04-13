@@ -1,4 +1,4 @@
-# Findings: urti-mainboard / mainboard
+# Findings: greatscottgadgets/urti-mainboard / mainboard
 
 ## FND-00000122: Good overall analysis of complex FPGA+RF mainboard with correct unit parsing, proper bus detection, and comprehensive power domain mapping. Key gaps in RF component role identification and opamp configuration analysis.
 

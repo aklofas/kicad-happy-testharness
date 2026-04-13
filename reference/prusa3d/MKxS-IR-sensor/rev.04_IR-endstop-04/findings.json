@@ -55,7 +55,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage divider R2/R3/R4 network for signal conditioning not detected",
@@ -65,7 +71,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R2$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R2",
+            "R3",
+            "R4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "BAT54K Schottky diode D2 ESD/clamp protection not detected",
@@ -75,7 +89,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D2$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No power rail detected other than GND - VCC/+5V rail should exist via connector P1",

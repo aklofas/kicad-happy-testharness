@@ -1,4 +1,4 @@
-# Findings: RFIQINT01 / hw_sch_pcb_RFIQINT01B
+# Findings: mlab-modules/RFIQINT01 / hw_sch_pcb_RFIQINT01B
 
 ## FND-00001108: LM1117-3.3 (U3) correctly identified as LDO regulator generating +3V3 from VCC; MAX9321 differential line receivers (U1, U2) correctly identified as ICs with 8-pin SOIC footprints; Differential pai...
 

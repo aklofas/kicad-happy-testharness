@@ -1,4 +1,4 @@
-# Findings: HASwitchPlate / PCB_HASwitchPlate
+# Findings: aderusha/HASwitchPlate / PCB_HASwitchPlate
 
 ## FND-00000590: Component count (8), type breakdown, and power rail detection are accurate; Net label tracing bug: LCD_TX/LCD_RX labels not resolved to J2 connector pins in KiCad 5 legacy format; Reset pin observa...
 

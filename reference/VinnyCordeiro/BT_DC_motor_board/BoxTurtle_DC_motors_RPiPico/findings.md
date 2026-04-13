@@ -1,4 +1,4 @@
-# Findings: BT_DC_motor_board / BoxTurtle_DC_motors_RPiPico
+# Findings: VinnyCordeiro/BT_DC_motor_board / BoxTurtle_DC_motors_RPiPico
 
 ## FND-00000399: SW1–SW12 classified as 'switch' instead of 'connector'; Connector count understated due to SW1–SW12 misclassification; CAN bus interface not detected in bus_analysis; bus_topology.detected_bus_sign...
 

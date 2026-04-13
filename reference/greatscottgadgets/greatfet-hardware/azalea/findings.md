@@ -1,4 +1,4 @@
-# Findings: greatfet-hardware / azalea_azalea
+# Findings: greatscottgadgets/greatfet-hardware / azalea
 
 ## FND-00002149: MC4558CPT dual op-amp falsely classified as active_oscillator in crystal_circuits
 

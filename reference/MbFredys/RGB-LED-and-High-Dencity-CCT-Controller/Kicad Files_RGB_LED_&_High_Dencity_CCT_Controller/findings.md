@@ -1,4 +1,4 @@
-# Findings: RGB-LED-and-High-Dencity-CCT-Controller / Kicad Files_RGB_LED_&_High_Dencity_CCT_Controller
+# Findings: MbFredys/RGB-LED-and-High-Dencity-CCT-Controller / Kicad Files_RGB_LED_&_High_Dencity_CCT_Controller
 
 ## FND-00001147: LM2678T-ADJ (U1) buck regulator detected with topology='unknown' instead of 'buck'; ground_domains.multiple_domains=False even though GND_LOGIC and GND_PWR are separate domains connected by a NetTi...
 

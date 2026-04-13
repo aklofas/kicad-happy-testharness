@@ -1,4 +1,4 @@
-# Findings: itsmevjnk/MelbourneTrainTracker / Hardware_Rev2_Rev2
+# Findings: itsmevjnk/MelbourneTrainTracker / Hardware_Rev2
 
 ## FND-00002513: Melbourne train tracker: ESP32-S3 drives 11 AW20216S LED matrix controllers over SPI via 74LS125 bus buffers, with USB-C, SD card, and 3.3V LDO. Correct hierarchical parsing and power regulation, but RGB LEDs misclassified as diodes, SPI CS detection failure, LED driver ICs missed.
 

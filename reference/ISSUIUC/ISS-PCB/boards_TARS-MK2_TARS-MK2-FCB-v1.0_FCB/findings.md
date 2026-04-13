@@ -1,4 +1,4 @@
-# Findings: ISS-PCB / boards_TARS-MK2_TARS-MK2-FCB-v1.0_FCB
+# Findings: ISSUIUC/ISS-PCB / boards_TARS-MK2_TARS-MK2-FCB-v1.0_FCB
 
 ## FND-00000153: Flight computer with OSD3358 SiP, MIMXRT1062, sensors, LoRa, GPS. Good basic parsing but SPI-as-I2C false positives, LDO inverting flag errors, and TVS IC detection gaps.
 

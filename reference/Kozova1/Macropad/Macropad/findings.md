@@ -1,4 +1,4 @@
-# Findings: Macropad / Macropad
+# Findings: Kozova1/Macropad / Macropad
 
 ## FND-00000940: Key matrix 4x3 with 12 switches and 12 diodes correctly detected; SK6812 addressable LED chain of 12 correctly detected with NeoPixelControls net; FALSE POSITIVE: pwr_flag_warnings incorrectly repo...
 

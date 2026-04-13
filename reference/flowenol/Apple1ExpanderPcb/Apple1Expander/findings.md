@@ -1,4 +1,4 @@
-# Findings: Apple1ExpanderPcb / Apple1Expander
+# Findings: flowenol/Apple1ExpanderPcb / Apple1Expander
 
 ## FND-00000368: 44-pin edge connectors misclassified as transformer and ic; Power rails 5V, 12V, -12V not detected in power_rails list; APPLE1_EDGE1 connector pins all unresolved to named nets; -12V net has zero p...
 

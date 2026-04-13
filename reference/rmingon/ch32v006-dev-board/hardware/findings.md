@@ -1,4 +1,4 @@
-# Findings: ch32v006-dev-board / hardware_hardware
+# Findings: rmingon/ch32v006-dev-board / hardware
 
 ## FND-00002010: 
 

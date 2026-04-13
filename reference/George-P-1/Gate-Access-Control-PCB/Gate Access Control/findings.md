@@ -1,4 +1,4 @@
-# Findings: Gate-Access-Control-PCB / Gate Access Control
+# Findings: George-P-1/Gate-Access-Control-PCB / Gate Access Control
 
 ## FND-00000574: kicad_version reported as 'unknown' for version 20230121 (KiCad 7); False positive I2C detection: 'SDA/SS' net is SPI SS, not I2C SDA; Crystal circuit with load caps correctly identified (Y1, 22pF ...
 

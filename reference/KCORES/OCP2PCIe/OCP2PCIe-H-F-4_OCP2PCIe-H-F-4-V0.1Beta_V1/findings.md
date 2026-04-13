@@ -1,4 +1,4 @@
-# Findings: OCP2PCIe / OCP2PCIe-H-F-4_OCP2PCIe-H-F-4-V0.1Beta_V1
+# Findings: KCORES/OCP2PCIe / OCP2PCIe-H-F-4_OCP2PCIe-H-F-4-V0.1Beta_V1
 
 ## FND-00000998: Decoupling observation falsely reports U1 (DM02) has no +12V bypass caps; P5V_AUX and 3V3AUX classified as 'signal' nets instead of power; Component types, power rails (+12V, +3V3, GND), and BOM co...
 

@@ -1,4 +1,4 @@
-# Findings: AeonLabs-pcb-template-esp32-s3 / KiCad_ESP32_S3_PCB_TEMPLATE
+# Findings: aeonSolutions/AeonLabs-pcb-template-esp32-s3 / KiCad_ESP32_S3_PCB_TEMPLATE
 
 ## FND-00000374: LR1 (Device:R, 330R resistor) misclassified as inductor; EL1 (Device:L, 1.8nH inductor) misclassified as other instead of inductor; Crystal circuits ECY1 (32.768MHz) and ECY2 (40MHz) not detected i...
 

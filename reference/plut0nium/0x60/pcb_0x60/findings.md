@@ -1,4 +1,4 @@
-# Findings: 0x60 / pcb_0x60
+# Findings: plut0nium/0x60 / pcb_0x60
 
 ## FND-00000307: 20 undriven_input_label warnings are false positives for hierarchical subsheet labels; All 77 keyboard switches misclassified as SMD; MXOnly footprints are THT; assembly_complexity.unique_footprint...
 

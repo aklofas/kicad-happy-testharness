@@ -28,7 +28,19 @@
       "incorrect": [
         {
           "description": "Estimated Vout of 5.95V flagged with 19% mismatch vs +5V net name, but TPS61032 Vref is actually 0.5V not 0.595V, so actual Vout = 0.5*(1+1620k/180k) = 5.0V exactly matching +5V rail",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "vout",
+          "expected_value": 0.5,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "field_equals",
+            "field": "vout",
+            "value": 0.5
+          }
         }
       ],
       "missed": [],

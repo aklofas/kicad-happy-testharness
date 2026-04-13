@@ -1,4 +1,4 @@
-# Findings: greenhouse_hw / Hardware_v1_Greenhouse
+# Findings: probablythomas/greenhouse_hw / Hardware_v1_Greenhouse
 
 ## FND-00002107: TL2575-05IN switching buck converter not detected as power regulator; MOSFET Q1 drain and source nets are swapped relative to schematic symbol placement
 

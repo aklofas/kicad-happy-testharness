@@ -1,4 +1,4 @@
-# Findings: FreeSK8-NRF52-BLE-Hardware / FreeSK8-NRF52-Dongle_Freesk8-NRF52-Dongle
+# Findings: FreeSK8/FreeSK8-NRF52-BLE-Hardware / FreeSK8-NRF52-Dongle_Freesk8-NRF52-Dongle
 
 ## FND-00000555: BT840F (U1) right-side pin-to-net assignments are systematically wrong; Net 'P0.09' assigned to U1 pin 1 (P0.26/SDA) and net 'SDA' assigned to U1 pin 7 (P0.09) — swapped; I2C bus misdetection: GPS-...
 

@@ -1,4 +1,4 @@
-# Findings: RP2040pc / HARDWARE_RP2040pc-REV.B_RP2040pc_Rev_B
+# Findings: OLIMEX/RP2040pc / HARDWARE_RP2040pc-REV.B_RP2040pc_Rev_B
 
 ## FND-00000135: RP2040 SBC with DVI, USB, battery management - good power regulation analysis with 3 regulators detected and 7 voltage dividers; audio PWM filters and protection diodes correctly found; crystal circuit undetected; DVI interface not analyzed
 

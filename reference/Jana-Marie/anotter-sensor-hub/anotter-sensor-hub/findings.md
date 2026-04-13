@@ -1,4 +1,4 @@
-# Findings: anotter-sensor-hub / anotter-sensor-hub
+# Findings: Jana-Marie/anotter-sensor-hub / anotter-sensor-hub
 
 ## FND-00001937: Component count of 29 correctly captured including ESP32-WROOM-32, AMS1117, connectors, jumpers, and mounting holes; I2C bus with pull-ups correctly detected; SPI and UART buses on ESP32 correctly ...
 

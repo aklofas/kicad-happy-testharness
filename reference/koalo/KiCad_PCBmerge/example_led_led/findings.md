@@ -1,4 +1,4 @@
-# Findings: KiCad_PCBmerge / example_led_led
+# Findings: koalo/KiCad_PCBmerge / example_led_led
 
 ## FND-00000746: KiCad 5 legacy schematic parsed correctly: 4 components (LED, R, 2 connectors), 5 nets
 

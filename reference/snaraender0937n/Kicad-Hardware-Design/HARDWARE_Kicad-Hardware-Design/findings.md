@@ -1,4 +1,4 @@
-# Findings: Kicad-Hardware-Design / HARDWARE_Kicad-Hardware-Design
+# Findings: snaraender0937n/Kicad-Hardware-Design / HARDWARE_Kicad-Hardware-Design
 
 ## FND-00000785: L7805 regulator with bridge rectifier and filter caps correctly identified; Bridge rectifier topology not identified as a distinct detector finding; power_rails shows only GND and PWR_FLAG — missin...
 

@@ -1,4 +1,4 @@
-# Findings: SofleChocWireless / SofleChocWireless_Case_PCBBottom_SofleKeyboardBottomPlate
+# Findings: db-ok/SofleChocWireless / SofleChocWireless_Case_PCBBottom_SofleKeyboardBottomPlate
 
 ## FND-00001364: Keyboard matrix correctly identified as 5x6 with 31 keys on this half; RSW1 (SW_RST reset tact switch) misclassified as type 'resistor' instead of 'switch'; Addressable LED chain (SK6812 Mini-E per...
 

@@ -1,4 +1,4 @@
-# Findings: bms_hw_voltmod / AISLER-2Layer-Simple_AISLER-2Layer
+# Findings: ganjoe/bms_hw_voltmod / AISLER-2Layer-Simple_AISLER-2Layer
 
 ## FND-00002288: RS485 interface not detected despite ISO3082DW RS485 isolated transceiver being present
 

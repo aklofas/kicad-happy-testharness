@@ -1,4 +1,4 @@
-# Findings: CE_Getting_To_Blink / getting_to_blinky
+# Findings: Fabien-Chouteau/CE_Getting_To_Blink / getting_to_blinky
 
 ## FND-00000420: U1 pin 1 (GND) not resolved to GND net; U1 pin 8 (VDD) not resolved to VDD net; power domain incorrect; U1 timing and control pins (2,4,5,6,7) all isolated in single-pin unnamed nets; R2/C1 timing ...
 

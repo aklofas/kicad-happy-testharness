@@ -1,4 +1,4 @@
-# Findings: fidget / hardware_Fidget_Fidget
+# Findings: transistorfet/fidget / hardware_Fidget
 
 ## FND-00000214: FPGA development board with ICE40HX4K-TQ144 (U2), AT25SF081 SPI flash (U1), three LDO regulators, two active oscillators, and bus-level I/O via 74-series buffers/transceivers. The analyzer correctly identified the power regulation chain, memory interface, oscillators, and decoupling. No significant errors found.
 

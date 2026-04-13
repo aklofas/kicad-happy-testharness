@@ -1,4 +1,4 @@
-# Findings: SOLARMINIBAT01 / hw_sch_pcb_SOLARMINIBAT01
+# Findings: mlab-modules/SOLARMINIBAT01 / hw_sch_pcb_SOLARMINIBAT01
 
 ## FND-00001256: TPS63060 (X1) misclassified as 'connector' instead of 'ic' or 'regulator'; TPS63060 switching regulator not detected in power_regulators despite feedback network found
 

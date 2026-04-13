@@ -1,4 +1,4 @@
-# Findings: alps64_plate / alps64
+# Findings: tmk/alps64_plate / alps64
 
 ## FND-00001961: Correct component count of 87 (1 connector + 86 KEYSW) for plate schematic; 86 KEYSW components misclassified as 'relay' in plate schematic (same issue as alps64); Key matrix not detected in plate ...
 

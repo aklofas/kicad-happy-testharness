@@ -1,4 +1,4 @@
-# Findings: KiVar / demo_kivar-demo
+# Findings: markh-de/KiVar / demo_kivar-demo
 
 ## FND-00000726: statistics.dnp_parts reports 0 but 9 components are DNP; bus_topology reports width=6 for prefix 'A' but range is A0..A2 (3 signals); missing_mpn list correctly excludes DNP, not-in-BOM, and compon...
 

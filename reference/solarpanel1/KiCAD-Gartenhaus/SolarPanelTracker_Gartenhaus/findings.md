@@ -1,4 +1,4 @@
-# Findings: KiCAD-Gartenhaus / SolarPanelTracker_Gartenhaus
+# Findings: solarpanel1/KiCAD-Gartenhaus / SolarPanelTracker_Gartenhaus
 
 ## FND-00000638: 8 connector symbols in sub-sheet (A1-A8) misclassified as type 'ic'; PWR_FLAG warning incorrectly flagged for GND and +5V rails that have PWR_FLAG symbols; RS-485 transceiver (SP3485EN-L/TR) not de...
 

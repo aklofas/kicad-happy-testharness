@@ -1,4 +1,4 @@
-# Findings: Breadboard-Power-Supply-KiCad-9.0 / Breadboard_Power_Supply
+# Findings: piyushmaru22/Breadboard-Power-Supply-KiCad-9.0 / Breadboard_Power_Supply
 
 ## FND-00000394: R1+C1 falsely detected as RC low-pass filter; R2+C3 falsely detected as RC low-pass filter; PWR_FLAG warning incorrectly fired for GND net; Named power rails 12V, 3.3V, and 5V classified as 'signal...
 

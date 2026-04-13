@@ -1,4 +1,4 @@
-# Findings: RP2040_Dev_Board / lib_KiCad-RP-Pico_Test_Test
+# Findings: DhruvaG2000/RP2040_Dev_Board / lib_KiCad-RP-Pico_Test
 
 ## FND-00001165: Test.sch parsed correctly as minimal Pico breakout board
 

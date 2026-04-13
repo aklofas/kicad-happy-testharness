@@ -1,4 +1,4 @@
-# Findings: esp32-lifepo4-board / esp32-lifepo4
+# Findings: pho/esp32-lifepo4-board / esp32-lifepo4
 
 ## FND-00002047: TPS709 LDO regulator (U3) not detected in power_regulators; Seven false-positive no_driver ERC warnings for ESP32 I/O nets; CN3058E LiFePO4 charger correctly identified in power_regulators with top...
 

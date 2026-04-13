@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_Koeg-Board_src_koeg-board-pcb
+# Findings: hackclub/OnBoard / projects_Koeg-Board_src_koeg-board-pcb
 
 ## FND-00000086: Keyboard PCB with nRF52-based BLE. Key matrix (5x5, 42 keys) correctly detected. RF matching networks identified for dual chip antennas. BOM sum (260) does not match total_components (290) — gap of 30 partially explained by 26 non-BOM types.
 

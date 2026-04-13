@@ -1,4 +1,4 @@
-# Findings: diy-logging-volt-ampmeter / hardware_high-accuracy-logging-volt-ampmeter_high-accuracy-logging-volt-ampmeter
+# Findings: Fescron/diy-logging-volt-ampmeter / hardware_high-accuracy-logging-volt-ampmeter
 
 ## FND-00002026: 
 

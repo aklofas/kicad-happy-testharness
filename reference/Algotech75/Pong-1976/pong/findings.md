@@ -1,4 +1,4 @@
-# Findings: Pong-1976 / pong_pong
+# Findings: Algotech75/Pong-1976 / pong
 
 ## FND-00001116: Crystal circuit detection correct: Y1 2MHz with 30pF load caps, CL_eff=18pF; LM7805 classified as 'LDO' topology — it is a standard linear regulator; VCC PWR_FLAG warning correct — VCC is external ...
 

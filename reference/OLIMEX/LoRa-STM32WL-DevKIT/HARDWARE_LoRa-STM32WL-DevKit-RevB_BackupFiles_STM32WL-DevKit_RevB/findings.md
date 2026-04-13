@@ -1,4 +1,4 @@
-# Findings: LoRa-STM32WL-DevKIT / HARDWARE_LoRa-STM32WL-DevKit-RevB_BackupFiles_STM32WL-DevKit_RevB
+# Findings: OLIMEX/LoRa-STM32WL-DevKIT / HARDWARE_LoRa-STM32WL-DevKit-RevB_BackupFiles_STM32WL-DevKit_RevB
 
 ## FND-00000828: ME6210A33PG LDO regulator (U1) not detected in power_regulators; I2C1_SCL reported as missing pullup, but R10 is present and connected; RC filter, I2C bus topology, protection diode, and decoupling...
 

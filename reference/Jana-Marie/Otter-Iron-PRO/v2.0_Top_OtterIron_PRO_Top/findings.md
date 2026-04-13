@@ -1,4 +1,4 @@
-# Findings: Otter-Iron-PRO / v2.0_Top_OtterIron_PRO_Top
+# Findings: Jana-Marie/Otter-Iron-PRO / v2.0_Top_OtterIron_PRO_Top
 
 ## FND-00000148: Otter Iron PRO v2.0 top board (33 components): I2C OLED display and USB detected, but very sparse signal analysis for a soldering iron control board
 

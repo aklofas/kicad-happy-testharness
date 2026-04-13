@@ -1,4 +1,4 @@
-# Findings: MM1_Writer / MM1_Writer
+# Findings: JonathSpirit/MM1_Writer / MM1_Writer
 
 ## FND-00000878: UC_RX net incorrectly assigned to U1 VBUS pin instead of UART RX; U1 power domain wrongly includes UC_RX and unnamed nets as power rails; False positive level-shifter warnings for SRCLK and RCLK; C...
 

@@ -1,4 +1,4 @@
-# Findings: kicad_devboard_f070 / dev_f070
+# Findings: maxmarvil/kicad_devboard_f070 / dev_f070
 
 ## FND-00002355: total_components reports 7 but 24 components are present in the components list; AMS1117-3.3 linear voltage regulator not detected in power_regulators; Decoupling analysis misidentifies all C? caps...
 

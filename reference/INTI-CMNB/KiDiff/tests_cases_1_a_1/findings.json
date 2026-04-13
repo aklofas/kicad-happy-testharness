@@ -20,9 +20,14 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "equals",
+            "value": 3
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 3
         },
         {
           "description": "Q1/Q2 auto-reset circuit correctly traced",
@@ -32,7 +37,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -43,12 +55,39 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q3$"
-          }
+            "pattern": "^Q10$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D10",
+            "D3",
+            "D4",
+            "D5",
+            "D6",
+            "D7",
+            "D8",
+            "D9",
+            "Q10",
+            "Q3",
+            "Q4",
+            "Q5",
+            "Q6",
+            "Q7",
+            "Q8",
+            "Q9"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Regulator input cap falsely flagged as missing (C4 1uF is on the input net)",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "C4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -60,7 +99,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D1",
+            "D2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

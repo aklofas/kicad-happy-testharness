@@ -34,7 +34,14 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^U6$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "U6",
+            "U7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "All 138 components have category=None in the component objects despite statistics.component_types correctly classifying them. The per-component category field is never populated.",
@@ -48,7 +55,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Subcircuits have empty neighbor_components arrays for all 7 ICs, meaning the analyzer found no nearby passives associated with these ICs. On an RF board like this, every IC has extensive decoupling and matching networks.",
@@ -81,7 +94,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: fsr_bed_occupancy_sensor / bed_occupacy_sensor
+# Findings: florianmulatz/fsr_bed_occupancy_sensor / bed_occupacy_sensor
 
 ## FND-00002072: FSR voltage divider (R1, R2 with ESP32 ADC) not detected
 

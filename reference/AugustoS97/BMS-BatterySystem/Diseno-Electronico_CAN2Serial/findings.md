@@ -1,4 +1,4 @@
-# Findings: BMS-BatterySystem / Diseno-Electronico_CAN2Serial_CAN2Serial
+# Findings: AugustoS97/BMS-BatterySystem / Diseno-Electronico_CAN2Serial
 
 ## FND-00000403: Component counts correct (38 real components); SPI bus not detected despite MOSI/MISO/SCK/SS_MCP nets present; U2 (MCP2515) and U4 (TJA1050T) have systematically wrong pin-to-net assignments; desig...
 

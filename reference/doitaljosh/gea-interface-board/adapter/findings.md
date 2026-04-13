@@ -1,4 +1,4 @@
-# Findings: gea-interface-board / adapter
+# Findings: doitaljosh/gea-interface-board / adapter
 
 ## FND-00002078: UART bus not detected despite J1201 connector labeled 'UART' carrying explicit TX/RX lines; AMS1117-5.0 linear regulator classified with topology 'unknown' and null input/output rails; R102/R202 (1...
 

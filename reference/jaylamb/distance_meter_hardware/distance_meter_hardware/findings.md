@@ -1,4 +1,4 @@
-# Findings: distance_meter_hardware / distance_meter_hardware_distance_meter_hardware
+# Findings: jaylamb/distance_meter_hardware / distance_meter_hardware
 
 ## FND-00002331: Connector-only adapter board correctly parsed: 6 connectors, 3 named nets, 38 no-connects
 

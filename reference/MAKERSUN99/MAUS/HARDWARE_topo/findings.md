@@ -1,4 +1,4 @@
-# Findings: MAUS / HARDWARE_topo
+# Findings: MAKERSUN99/MAUS / HARDWARE_topo
 
 ## FND-00000864: WS2812B addressable LED chain correctly detected; USB-A connector (J1) identified as non-Type-C, no false compliance failures; PWR_FLAG false positives for USB-powered design with no explicit PWR_F...
 

@@ -1,4 +1,4 @@
-# Findings: Power_HW / ElonMux_ElonMux
+# Findings: EPFLXplore/Power_HW / ElonMux
 
 ## FND-00000157: Power generation sub-sheet of ElonMux power mux design with LTC3126 buck converter. Vout estimation wrong due to heuristic Vref; BQ25756E feedback divider missed; lib_name/lib_id mismatch causes 0-pin parsing.
 

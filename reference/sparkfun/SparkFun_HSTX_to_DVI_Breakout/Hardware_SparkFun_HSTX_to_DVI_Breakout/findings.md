@@ -1,4 +1,4 @@
-# Findings: SparkFun_HSTX_to_DVI_Breakout / Hardware_SparkFun_HSTX_to_DVI_Breakout
+# Findings: sparkfun/SparkFun_HSTX_to_DVI_Breakout / Hardware_SparkFun_HSTX_to_DVI_Breakout
 
 ## FND-00001463: Component count of 22 and type breakdown are accurate; AP3602 classified as LDO regulator; it is actually a charge pump; HDMI connector and differential pairs correctly detected; Voltage divider fo...
 

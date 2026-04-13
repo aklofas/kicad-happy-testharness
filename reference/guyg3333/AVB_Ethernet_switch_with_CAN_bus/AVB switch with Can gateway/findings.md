@@ -1,4 +1,4 @@
-# Findings: AVB_Ethernet_switch_with_CAN_bus / AVB switch with Can gateway
+# Findings: guyg3333/AVB_Ethernet_switch_with_CAN_bus / AVB switch with Can gateway
 
 ## FND-00000356: CAN bus detection misses two of three CAN buses (U5=CAN3, U6=CAN1); Crystal load capacitors C79/C80 have schematic value '20pF' but MPN is a 36pF part
 

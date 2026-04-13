@@ -1,4 +1,4 @@
-# Findings: esp32-4-channel-relays / esp32-4-channel-relays
+# Findings: leomanangka/esp32-4-channel-relays / esp32-4-channel-relays
 
 ## FND-00000139: ESP32 relay board with CH340C USB-UART, 4x relay drivers with optocouplers, and PRTR5V0U2X ESD protection. Good detection of relay driver transistors, USB ESD, fuse, and LDO. PC817 optocouplers provide relay isolation but isolation_barriers not detected.
 

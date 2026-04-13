@@ -1,4 +1,4 @@
-# Findings: SparkFun_Spectral_Sensor_Breakout_AS7343_Qwiic / Hardware_Production_SparkFun_AS7343_Qwiic_panelized
+# Findings: sparkfun/SparkFun_Spectral_Sensor_Breakout_AS7343_Qwiic / Hardware_Production_SparkFun_AS7343_Qwiic_panelized
 
 ## FND-00001493: Component counts are accurate: 38 total, 6 capacitors, 7 resistors, 2 ICs, 2 transistors, 3 LEDs, 3 connectors, 3 jumpers, 4 fiducials, 4 mounting holes; LDO regulator U1 (RT9080-1.8V) correctly de...
 

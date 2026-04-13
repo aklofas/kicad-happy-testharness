@@ -1,4 +1,4 @@
-# Findings: AD4858_Breakout_Board / AD4858_breakout_AD4858_breakout
+# Findings: Sudhamsu98/AD4858_Breakout_Board / AD4858_breakout
 
 ## FND-00000350: LT1761-SD adjustable LDO output voltage estimates use wrong Vref heuristic (0.6V instead of 1.22V)
 

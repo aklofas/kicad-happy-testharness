@@ -1,4 +1,4 @@
-# Findings: Hearty-LED-Necklace-Badge / Vday_Vday
+# Findings: niteshkadyan/Hearty-LED-Necklace-Badge / Vday
 
 ## FND-00000593: Component counts and LED array correctly parsed from KiCad 5 legacy format; LDO regulator input/output rails both shown as unnamed nets; SPI bus with 74HC595 shift registers correctly detected; Vol...
 

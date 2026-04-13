@@ -13,7 +13,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "1 crystal correctly detected",
@@ -22,7 +26,11 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -34,7 +42,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter R11/C19 has output==ground anomaly",
@@ -44,7 +58,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R11$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C19",
+            "R11"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

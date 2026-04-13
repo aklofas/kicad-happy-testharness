@@ -1,4 +1,4 @@
-# Findings: SparkFun_DE9_Breakout / Hardware_Female_SparkFun_DE9_Female_Breakout
+# Findings: sparkfun/SparkFun_DE9_Breakout / Hardware_Female_SparkFun_DE9_Female_Breakout
 
 ## FND-00001385: Component count of 9 and net count of 10 are accurate; pwr_flag_warning fires on GND for a passive breakout board — misleading false positive; missing_footprint flags G2 (SparkFun_Logo with on_boar...
 

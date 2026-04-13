@@ -11,50 +11,97 @@
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R38$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.161
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R38",
+            "R39"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.161
         },
         {
           "description": "Voltage divider R44/R45 (511k/91k) correctly detected feeding U10 (TPS631000) FB pin, ratio=0.151",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R44$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.151
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R44",
+            "R45",
+            "U10"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.151
         },
         {
           "description": "Voltage divider R40/R41 (220k/100k) correctly detected feeding IC3 CAPFB pin, ratio=0.313",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R40$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.313
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R40",
+            "R41"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.313
         },
         {
           "description": "U8 (MIC5504-1.8YM5-TR) correctly identified as LDO with input=+3.3V, output=+1V8, vout=1.8V",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "contains_match",
-            "field": "ref",
-            "pattern": "^U8$"
-          }
+            "op": "field_equals",
+            "field": "vout",
+            "value": 1.8
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U8"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "vout",
+          "expected_value": 1.8
         },
         {
           "description": "U9 (TPS631000) correctly identified as switching regulator with inductor L3, feedback via R42/R43, estimated_vout=5.9V (close to 5V target)",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "contains_match",
-            "field": "ref",
-            "pattern": "^U9$"
-          }
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 5.9
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L3",
+            "R42",
+            "R43",
+            "U9"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 5.9
         },
         {
           "description": "U10 (TPS631000) correctly identified as switching regulator with inductor L4, feedback via R44/R45",
@@ -64,7 +111,16 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U10$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L4",
+            "R44",
+            "R45",
+            "U10"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal Y6 (8MHz) correctly detected with load caps C3/C4 (15pF each), effective CL=10.5pF for ATmega328",
@@ -74,7 +130,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y6$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C3",
+            "C4",
+            "Y6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal Y3 (32MHz) detected for LoRa radio module",
@@ -84,7 +148,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y3$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter R2/C5 (4k7/100nF, fc=338.6Hz) on AREF correctly detected as analog reference filter",
@@ -94,7 +164,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R2$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C5",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter R47/C56 (100R/1nF, fc=1.59MHz) correctly detected as anti-aliasing/EMI filter on DIO2",
@@ -104,7 +181,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R47$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C56",
+            "R47"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "12 LC filters detected around LoRa radio matching network (L11 9n1 with C58/C59 3p3, resonant ~918MHz) - consistent with 868/915MHz ISM band operation",
@@ -114,7 +198,15 @@
             "op": "contains_match",
             "field": "inductor.ref",
             "pattern": "^L11$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "C58",
+            "C59",
+            "L11"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q2 (DMTH3002LPS) NMOS correctly identified as power switch driven by IC3 (LTC4041 battery backup manager)",
@@ -124,7 +216,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q2$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "4 feedback networks correctly identified connecting to IC3 and U10 feedback pins with is_feedback=true",
@@ -133,8 +231,14 @@
             "path": "signal_analysis.feedback_networks",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R44$"
-          }
+            "pattern": "^U10$"
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "U10"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling on +3.3V rail correctly tallied at 48.1uF across C27 (1uF), C38 (100nF), C13 (47uF)",
@@ -143,7 +247,15 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C13",
+            "C27",
+            "C38"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -155,7 +267,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U9$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U9"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U10 (TPS631000) estimated_vout is 3.969V on the +3.3V rail; same Vref heuristic issue. With actual Vref=0.5V, output would be 0.5/0.151=3.31V which matches the +3.3V rail exactly",
@@ -165,7 +283,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U10$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U10"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter R3/C8 (10k/4u7) classified as 'RC-network' with ground_net='+3.3V' which is wrong - this is a reset RC delay circuit, not a ground-referenced filter",
@@ -175,7 +299,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R3$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C8",
+            "R3"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -204,8 +335,16 @@
             "path": "signal_analysis.power_regulators",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U8$"
-          }
+            "pattern": "^U10$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U10",
+            "U8",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "4 feedback networks correctly identified for IC3 (LTC4041) and U10 (TPS631000)",
@@ -214,8 +353,14 @@
             "path": "signal_analysis.feedback_networks",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R44$"
-          }
+            "pattern": "^U10$"
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "U10"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q2 (DMTH3002LPS) gate driven by IC3 correctly identified",
@@ -225,7 +370,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q2$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling on +3.3V (48.1uF), +1V8 (1uF), +5V (47.1uF) correctly tallied",
@@ -234,7 +385,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -245,12 +400,26 @@
             "path": "signal_analysis.power_regulators",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U9$"
-          }
+            "pattern": "^U10$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U10",
+            "U9"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Missing caps observation for U9/U10 claims Vdc input rail lacks decoupling, but input capacitors may be on the parent schematic or connected via hierarchical labels",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U10",
+            "U9"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

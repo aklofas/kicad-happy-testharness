@@ -1,4 +1,4 @@
-# Findings: TOTEM / PCB_totem_0-3_totem_0_3
+# Findings: GEIGEIGEIST/TOTEM / PCB_totem_0-3_totem_0_3
 
 ## FND-00001623: board_width=13.358mm and board_height=48.4mm are far too small; actual component extent is ~237mm x ~78mm
 

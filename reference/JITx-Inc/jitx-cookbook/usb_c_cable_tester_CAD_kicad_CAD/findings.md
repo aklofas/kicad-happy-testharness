@@ -1,4 +1,4 @@
-# Findings: jitx-cookbook / usb_c_cable_tester_CAD_kicad_CAD
+# Findings: JITx-Inc/jitx-cookbook / usb_c_cable_tester_CAD_kicad_CAD
 
 ## FND-00000251: USB-C tester (57 components). 18 test pads not detected as test points (gen_testpad lib_id not recognized). UART detector misclassifies USB 3.1 SuperSpeed signals as UART.
 

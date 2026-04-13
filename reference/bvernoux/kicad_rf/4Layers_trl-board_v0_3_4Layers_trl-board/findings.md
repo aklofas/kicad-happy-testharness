@@ -1,4 +1,4 @@
-# Findings: kicad_rf / 4Layers_trl-board_v0_3_4Layers_trl-board
+# Findings: bvernoux/kicad_rf / 4Layers_trl-board_v0_3_4Layers_trl-board
 
 ## FND-00002365: Legacy 'Top'/'Bottom' layer names not recognized as copper layers — 4-layer board reported as 2-layer; front_side=0 and back_side=0 reported for board with 18 footprints all placed on 'Top' layer
 

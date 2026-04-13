@@ -1,4 +1,4 @@
-# Findings: kicad-projects / projects_led-controller-esp32_led-controller-esp32
+# Findings: longrackslabs/kicad-projects / projects_led-controller-esp32
 
 ## FND-00002257: EIA capacitor code '104' parsed as 104 pF instead of 100 nF
 

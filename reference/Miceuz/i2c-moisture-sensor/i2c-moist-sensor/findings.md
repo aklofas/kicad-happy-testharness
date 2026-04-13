@@ -1,4 +1,4 @@
-# Findings: i2c-moisture-sensor / i2c-moist-sensor
+# Findings: Miceuz/i2c-moisture-sensor / i2c-moist-sensor
 
 ## FND-00002137: IC1 power pins reported on wrong nets due to Y-mirror parsing bug in legacy KiCad 5 parser; Crystal load cap C2 (value '33pp') excluded from crystal_circuits due to unparseable capacitance value; C...
 

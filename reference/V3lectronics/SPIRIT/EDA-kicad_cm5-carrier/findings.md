@@ -1,4 +1,4 @@
-# Findings: SPIRIT / EDA-kicad_cm5-carrier
+# Findings: V3lectronics/SPIRIT / EDA-kicad_cm5-carrier
 
 ## FND-00001327: Complex power sheet with BQ25792, AP3032 boost, and MP3429GL correctly detected
 

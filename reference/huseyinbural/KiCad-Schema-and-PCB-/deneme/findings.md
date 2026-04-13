@@ -1,4 +1,4 @@
-# Findings: KiCad-Schema-and-PCB- / deneme
+# Findings: huseyinbural/KiCad-Schema-and-PCB- / deneme
 
 ## FND-00000696: Empty subsheet correctly yields zero components/nets
 

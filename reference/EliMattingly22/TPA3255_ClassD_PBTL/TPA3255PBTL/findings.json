@@ -14,7 +14,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "L78L33_SO8 (U3) correctly identified as LDO producing +3.3V from +12V",
@@ -24,7 +30,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "XL7015 (U5) correctly identified as switching regulator with L1=100uH inductor and feedback divider R18=30k/R19=2.7k",
@@ -34,7 +46,16 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U5$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L1",
+            "R18",
+            "R19",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R18=30k/R19=2.7k voltage divider from +15V to FB correctly detected as feedback network for U5 XL7015",
@@ -44,7 +65,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R18$"
-          }
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "R18",
+            "R19",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "6 opamp circuits using AD8512 (U4, U6, U7) correctly detected with accurate gain calculations: U4.2 inverting gain=-1, U6.1 buffer, U4.1 inverting with variable gain via RV1",
@@ -54,7 +83,16 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "RV1",
+            "U4",
+            "U6",
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R37=10k/R36=1k and R38=10k/R39=1k voltage dividers on Load1/Load2 feeding U7 comparator inputs correctly detected for speaker load monitoring",
@@ -63,8 +101,18 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R37$"
-          }
+            "pattern": "^R36$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R36",
+            "R37",
+            "R38",
+            "R39",
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R9=10k/R20=4.7k voltage divider from +12V feeding U6 non-inverting input correctly detected as reference voltage generator",
@@ -73,8 +121,16 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R9$"
-          }
+            "pattern": "^R20$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R20",
+            "R9",
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "14 LC filters correctly detected on Class-D output stage including L4=22uH/L5=22uH with various output capacitors",
@@ -84,7 +140,14 @@
             "op": "contains_match",
             "field": "inductor.ref",
             "pattern": "^L4$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "L4",
+            "L5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "13 RC filters correctly detected in the audio signal path including input filtering and anti-aliasing",
@@ -93,7 +156,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Q1 DMP4015SK3 P-channel MOSFET correctly identified as reverse-polarity protection switch on 48V input with R1=10k/R2=10k gate resistors",
@@ -103,7 +170,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "R1",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q2, Q3 DMN10H220L N-channel MOSFETs correctly identified as LED drivers with load_type='led'",
@@ -113,7 +188,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q2$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q2",
+            "Q3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q4, Q5 DMN10H220L correctly identified as reset timing circuit (Q4 drives Q5 gate which pulls RST_ low)",
@@ -123,7 +205,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q4$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q4",
+            "Q5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D1 TVS diode correctly identified as protection device on Power_IN",
@@ -133,7 +222,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D2 6.3V Zener diode correctly classified",
@@ -160,7 +255,11 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -169,10 +268,18 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "not_contains_match",
-            "field": "ref",
-            "pattern": "^U5$"
-          }
+            "op": "field_equals",
+            "field": "vout",
+            "value": 7.267
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "vout",
+          "expected_value": 7.267
         }
       ],
       "missed": [
@@ -183,8 +290,15 @@
             "path": "signal_analysis.buzzer_speaker_circuits",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U1$"
-          }
+            "pattern": "^J3$"
+          },
+          "detector": "buzzer_speaker_circuits",
+          "subject_refs": [
+            "J3",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "XLR audio input (J2 AC3FAH2-XLR) and output (J7 AC3FAH2-XLR, J6 AC3MAH-AU-PRE) connectors not detected as audio interface connectors",
@@ -193,7 +307,15 @@
             "path": "signal_analysis.bus_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [
+            "J2",
+            "J6",
+            "J7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No current sense detection despite R6=3.3ohm, R7=3.3ohm, R8=3R3, R10=3R3 likely being Class-D output sense resistors for overcurrent protection on TPA3255",
@@ -202,8 +324,17 @@
             "path": "signal_analysis.current_sense",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R6$"
-          }
+            "pattern": "^R10$"
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R10",
+            "R6",
+            "R7",
+            "R8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

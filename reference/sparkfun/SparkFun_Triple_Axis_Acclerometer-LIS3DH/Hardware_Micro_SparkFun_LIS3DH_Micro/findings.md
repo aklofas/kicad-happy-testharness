@@ -1,4 +1,4 @@
-# Findings: SparkFun_Triple_Axis_Acclerometer-LIS3DH / Hardware_Micro_SparkFun_LIS3DH_Micro
+# Findings: sparkfun/SparkFun_Triple_Axis_Acclerometer-LIS3DH / Hardware_Micro_SparkFun_LIS3DH_Micro
 
 ## FND-00001542: I2C pull-up detection misses resistors connected through a closed solder jumper; Component count, types, and BOM extraction are accurate for the Micro design; U1 LIS3DH pin mapping and decoupling c...
 

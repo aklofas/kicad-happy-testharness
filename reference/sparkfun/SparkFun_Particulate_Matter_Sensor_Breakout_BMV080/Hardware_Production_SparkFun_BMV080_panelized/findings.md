@@ -1,4 +1,4 @@
-# Findings: SparkFun_Particulate_Matter_Sensor_Breakout_BMV080 / Hardware_Production_SparkFun_BMV080_panelized
+# Findings: sparkfun/SparkFun_Particulate_Matter_Sensor_Breakout_BMV080 / Hardware_Production_SparkFun_BMV080_panelized
 
 ## FND-00001505: Component counts are accurate: 24 total, with correct type breakdown; Power rails correctly identified as 3.3V and GND only; Decoupling capacitor analysis correctly identifies 5 caps at 18.8 uF on ...
 

@@ -1,4 +1,4 @@
-# Findings: Micronova / hardware_board_board
+# Findings: wntrblm/Micronova / hardware_board
 
 ## FND-00000916: U1 (VX7805-500) and U2 (P78E12-1000) both classified as topology=LDO instead of DC-DC switching converter; U3 (P78E12-1000, -12V output) completely absent from signal_analysis.power_regulators; LCF...
 

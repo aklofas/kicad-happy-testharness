@@ -1,4 +1,4 @@
-# Findings: ACOMP01 / hw_sch_pcb_ACOMP01
+# Findings: mlab-modules/ACOMP01 / hw_sch_pcb_ACOMP01
 
 ## FND-00000342: Zener clamp D1 (BZV55C-5.6V) not detected in protection_devices; pwr_flag_warnings incorrectly reports +3V3 and GND lack PWR_FLAG; R1 and R2 with value 'DNF' not flagged as do-not-fit/unpopulated
 

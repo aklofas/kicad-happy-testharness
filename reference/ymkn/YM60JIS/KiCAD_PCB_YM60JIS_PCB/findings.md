@@ -1,4 +1,4 @@
-# Findings: YM60JIS / KiCAD_PCB_YM60JIS_PCB
+# Findings: ymkn/YM60JIS / KiCAD_PCB_YM60JIS_PCB
 
 ## FND-00001773: 165 total components detected matching source (67 SW + 1 BTN + 67 D + 7 R + 17 C + 4 U + 1 J + 1 Y); 5x14 key matrix with 67 keys and 67 diodes correctly detected; RP2040 + W25Q16 memory interface ...
 

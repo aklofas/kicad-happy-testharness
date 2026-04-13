@@ -22,7 +22,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "RC filters for audio path correctly identified",
@@ -31,7 +35,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -42,8 +50,25 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q5$"
-          }
+            "pattern": "^Q10$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D1",
+            "Q10",
+            "Q11",
+            "Q12",
+            "Q13",
+            "Q14",
+            "Q5",
+            "Q6",
+            "Q7",
+            "Q8",
+            "Q9",
+            "R3"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q13/Q14 gate_driver_ics inflated to 19 ICs \u2014 gates statically biased at +3.3V, analyzer traverses entire +3.3V power net listing all connected ICs as gate drivers",
@@ -53,7 +78,14 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q13$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q13",
+            "Q14"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -65,7 +97,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U18$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U18",
+            "U19"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

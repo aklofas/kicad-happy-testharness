@@ -1,4 +1,4 @@
-# Findings: keeb-x3 / keeb-x3
+# Findings: wanesty/keeb-x3 / keeb-x3
 
 ## FND-00002228: Key matrix correctly detected with 6 rows × 18 columns and 105 keys; QSPI bus to W25Q128 flash not detected in bus_analysis despite clear QSPI-* net names; kicad_version reports 'unknown' for a KiC...
 

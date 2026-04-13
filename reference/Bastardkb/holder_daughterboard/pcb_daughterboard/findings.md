@@ -1,4 +1,4 @@
-# Findings: holder_daughterboard / pcb_daughterboard
+# Findings: Bastardkb/holder_daughterboard / pcb_daughterboard
 
 ## FND-00002126: VBUS power rail not recognized as a power net; listed only as unnamed nets __unnamed_3 and __unnamed_11; USB-C CC pulldown check correctly detects 5.1k CC1 and CC2 pulldowns on both J1 and J4
 

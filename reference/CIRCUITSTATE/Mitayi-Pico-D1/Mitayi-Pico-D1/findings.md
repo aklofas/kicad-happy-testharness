@@ -1,4 +1,4 @@
-# Findings: Mitayi-Pico-D1 / Mitayi-Pico-D1
+# Findings: CIRCUITSTATE/Mitayi-Pico-D1 / Mitayi-Pico-D1
 
 ## FND-00000130: RP2040 dev board with good analysis quality. Crystal circuit, SPI flash, LDO, USB, decoupling all detected. Power domains correctly map RP2040 dual-rail (+1V1/+3V3). Minor issues with crystal frequency not parsed from value string and all subcircuit neighbors being identical.
 

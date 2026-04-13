@@ -1,4 +1,4 @@
-# Findings: STM32Hardware / Nucleo_L152RE_ProtoBoard_AA_ProtoBoard
+# Findings: dustinreynolds/STM32Hardware / Nucleo_L152RE_ProtoBoard_AA_ProtoBoard
 
 ## FND-00001272: Multi-sheet hierarchy parsed correctly across 5 sheets
 

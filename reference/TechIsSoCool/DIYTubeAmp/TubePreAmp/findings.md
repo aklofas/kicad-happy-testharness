@@ -1,4 +1,4 @@
-# Findings: DIYTubeAmp / TubePreAmp_TubePreAmp
+# Findings: TechIsSoCool/DIYTubeAmp / TubePreAmp
 
 ## FND-00000458: Component inventory and BOM correctly extracted; -28V net misclassified as 'signal' instead of 'power'; Net tracing is broken: named nets have zero pins listed; Vacuum tubes U1/U2 (CK5654) classifi...
 

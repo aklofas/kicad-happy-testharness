@@ -1,4 +1,4 @@
-# Findings: Charybdis-EC11 / adapter_adapter
+# Findings: Bastardkb/Charybdis-EC11 / adapter
 
 ## FND-00000425: SW1 (Device:RotaryEncoder_Switch) classified as 'switch' instead of 'encoder'; Rotary encoder quadrature interface on SW1 not detected in signal_analysis; addressable_led_chains data_in_net reports...
 

@@ -1,4 +1,4 @@
-# Findings: dragon64 / dragon64
+# Findings: sixxie/dragon64 / dragon64
 
 ## FND-00002333: Crystal circuits not detected despite 4 active crystals (XL1-XL3, XL5) present in design; Memory interfaces not detected despite full 16-bit address bus (A0-A15) and RAM ICs present; LM348 quad op-...
 

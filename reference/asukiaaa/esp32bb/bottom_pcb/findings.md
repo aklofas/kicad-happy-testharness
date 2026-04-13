@@ -1,4 +1,4 @@
-# Findings: esp32bb / bottom_pcb_bottom_pcb
+# Findings: asukiaaa/esp32bb / bottom_pcb
 
 ## FND-00002051: NCP1117ST33T3G LDO (U2) not detected as power regulator; RC filter input/output direction swapped for R3+C1 reset timing circuit on EN pin; RC filter type labeled 'RC-network' instead of 'low-pass'...
 

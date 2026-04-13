@@ -13,7 +13,14 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [
+            "D1",
+            "D44"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Estimated current of 2640mA (44 LEDs x 60mA) correctly calculated",
@@ -22,7 +29,11 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "All 44 SK6812 LEDs correctly classified as type 'led'",
@@ -58,7 +69,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Design observation correctly notes VBUS rail has bypass but no bulk capacitor",
@@ -67,7 +82,11 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Component count accurate: 90 total (44 LEDs + 44 caps + 2 connectors)",

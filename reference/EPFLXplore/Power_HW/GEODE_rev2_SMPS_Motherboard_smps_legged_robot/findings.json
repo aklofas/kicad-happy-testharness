@@ -11,10 +11,19 @@
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R805$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.224
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R804",
+            "R805"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.224
         }
       ],
       "incorrect": [
@@ -35,8 +44,16 @@
             "path": "signal_analysis.feedback_networks",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R805$"
-          }
+            "pattern": "^R804$"
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "R804",
+            "R805",
+            "U802"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

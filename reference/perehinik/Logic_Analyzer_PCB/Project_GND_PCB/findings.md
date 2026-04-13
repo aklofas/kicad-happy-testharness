@@ -1,4 +1,4 @@
-# Findings: Logic_Analyzer_PCB / Project_GND_PCB_GND_PCB
+# Findings: perehinik/Logic_Analyzer_PCB / Project_GND_PCB
 
 ## FND-00000831: JTAG interface (TCK, TMS, TDI_FPGA, TDO_FPGA) not detected in bus_analysis
 

@@ -1,4 +1,4 @@
-# Findings: Dactyl-Manuform-PCB-Plate / flex_flex
+# Findings: Bastardkb/Dactyl-Manuform-PCB-Plate / flex
 
 ## FND-00000463: Component counts are accurate: 32 diodes, 32 switches, 15 connectors, total 79; kicad_version reported as 'unknown' but schematic has version 20210126 (KiCad 6 RC); Key matrix correctly detected: 3...
 

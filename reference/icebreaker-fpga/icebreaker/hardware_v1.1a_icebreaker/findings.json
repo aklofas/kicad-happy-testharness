@@ -20,7 +20,14 @@
             "op": "not_contains_match",
             "field": "inductor.ref",
             "pattern": "^L1$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "L1",
+            "L2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -52,7 +59,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R3$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C39",
+            "R3",
+            "U2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

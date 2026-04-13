@@ -1,4 +1,4 @@
-# Findings: OtterControlNG / AluPCB_AluPCB
+# Findings: Jana-Marie/OtterControlNG / AluPCB
 
 ## FND-00001001: CAN bus, regulators, crystal, LED chain, and protection devices all correctly detected
 

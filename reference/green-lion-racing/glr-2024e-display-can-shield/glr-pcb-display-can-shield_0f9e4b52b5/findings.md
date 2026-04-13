@@ -1,4 +1,4 @@
-# Findings: glr-2024e-display-can-shield / glr-2024e-display-can-shield
+# Findings: green-lion-racing/glr-2024e-display-can-shield / glr-pcb-display-can-shield_0f9e4b52b5
 
 ## FND-00002104: UART false positive: CAN transceiver TX0/RX0 pins detected as UART bus; design_observations reports IC1 +5V rail has no decoupling caps despite C1 being present on its VS pin; LDO regulator correct...
 

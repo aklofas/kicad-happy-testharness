@@ -1,4 +1,4 @@
-# Findings: airboost-kicad-schematics / airboost-kicad
+# Findings: ric03/airboost-kicad-schematics / airboost-kicad
 
 ## FND-00001957: Component count and types correctly identified (8 total: 2 switches, 1 resistor, 1 buzzer, 1 LED, 3 ICs); I2C bus correctly detected on SCL/SDA nets with three devices (SCD30, OLED, Arduino); Missi...
 

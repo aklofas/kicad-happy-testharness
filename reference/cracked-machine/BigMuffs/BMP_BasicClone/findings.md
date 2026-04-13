@@ -1,4 +1,4 @@
-# Findings: BigMuffs / BMP_BasicClone_BMP_BasicClone
+# Findings: cracked-machine/BigMuffs / BMP_BasicClone
 
 ## FND-00000407: Potentiometer misclassified as transformer in component_types; Resistor count inflated by 1 due to POT misclassification
 

@@ -14,7 +14,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2",
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U1 TPD3S014 3-channel ESD protector correctly identified protecting USB DP/DM/VBUS",
@@ -24,27 +31,52 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "2 voltage dividers correct: R23/R24 (100k/33k, ratio=0.248) feedback, R26/R27 (560/680ohm, ratio=0.548) VUSB detection",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R23$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.248
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R23",
+            "R24",
+            "R26",
+            "R27"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.248
         },
         {
           "description": "R23/R24 feedback network for U6 correctly detected",
           "analyzer_section": "signal_analysis.feedback_networks",
           "check": {
             "path": "signal_analysis.feedback_networks",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R23$"
-          }
+            "op": "equals",
+            "value": 6
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "R23",
+            "R24",
+            "U6"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 6
         }
       ],
       "incorrect": [
@@ -56,7 +88,14 @@
             "op": "not_contains_match",
             "field": "inductor.ref",
             "pattern": "^L2$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "C27",
+            "L2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

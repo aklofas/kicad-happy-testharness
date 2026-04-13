@@ -1,4 +1,4 @@
-# Findings: kicad-board-collection / AS5600_AS5600
+# Findings: racerxdl/kicad-board-collection / AS5600
 
 ## FND-00002238: I2C bus not detected despite MPU-9250 + BMP280 with named SDA/SCL nets and 4k7 pull-up resistors
 

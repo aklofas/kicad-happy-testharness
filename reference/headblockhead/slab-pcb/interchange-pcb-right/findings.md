@@ -1,4 +1,4 @@
-# Findings: slab-pcb / interchange-pcb-right_interchange-pcb-right
+# Findings: headblockhead/slab-pcb / interchange-pcb-right
 
 ## FND-00000184: Keyboard/macro pad with RP2040, PCA9555 I/O expanders, TCA4307 I2C buffer, ADS1110 ADC, SK6812 LEDs (139 components). Correct: I2C buses with pullups, PCA9555 address pins, level shifter topology, component counts. Incorrect: I2C1_RDY (status output) falsely listed as I2C SCL line. Missed: level-shifting topology, TCA4307 I2C buffer topology, hierarchical sheet pin net resolution.
 

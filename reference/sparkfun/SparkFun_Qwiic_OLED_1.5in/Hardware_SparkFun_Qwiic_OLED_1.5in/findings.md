@@ -1,4 +1,4 @@
-# Findings: SparkFun_Qwiic_OLED_1.5in / Hardware_SparkFun_Qwiic_OLED_1.5in
+# Findings: sparkfun/SparkFun_Qwiic_OLED_1.5in / Hardware_SparkFun_Qwiic_OLED_1.5in
 
 ## FND-00001512: I2C and SPI bus signals not detected in bus_analysis due to slash-encoded net names; AP3012 boost converter output_rail incorrectly reported as '3.3V' — should be '12V'; I2C pullups on SDA{slash}SD...
 

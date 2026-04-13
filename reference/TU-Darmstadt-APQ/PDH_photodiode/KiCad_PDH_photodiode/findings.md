@@ -1,4 +1,4 @@
-# Findings: PDH_photodiode / KiCad_PDH_photodiode
+# Findings: TU-Darmstadt-APQ/PDH_photodiode / KiCad_PDH_photodiode
 
 ## FND-00001035: LTC6228HS8 (U3) misclassified as power regulator instead of op-amp; V- net classified as 'signal' instead of 'power'; C10 and C11 (value='DNF') not flagged as DNP, dnp_parts=0; RC filter topology f...
 

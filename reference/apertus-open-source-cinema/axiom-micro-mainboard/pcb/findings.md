@@ -1,4 +1,4 @@
-# Findings: axiom-micro-mainboard / pcb_pcb
+# Findings: apertus-open-source-cinema/axiom-micro-mainboard / pcb
 
 ## FND-00001986: 91 components correctly parsed with 13 distinct power rails; Test point pads SCL1/SDA1/GND1/LED1 classified inconsistently — switch, other, and test_point types all assigned to identical components...
 

@@ -14,7 +14,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R13$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R13",
+            "R14"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "14 RC filters correctly detected including DAC output post-filters and ADIB connector filters",
@@ -23,7 +30,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "LP5907, L78L15, L79L15 regulators correctly identified",
@@ -32,7 +43,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "OPA2196 inverting amplifiers with gain -0.121 correctly identified",
@@ -41,7 +56,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "W9812G6KH-6 SDRAM memory interface correctly detected",
@@ -50,7 +69,11 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Q1-Q5 2N7002PS digital output switches and Q9/Q11 IRLML2246 P-FET power switches correct",
@@ -60,7 +83,19 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q11",
+            "Q2",
+            "Q3",
+            "Q4",
+            "Q5",
+            "Q9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SI8641 digital isolator and WE-750315371 transformer correctly in isolation_barriers",
@@ -69,13 +104,21 @@
             "path": "signal_analysis.isolation_barriers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
         {
           "description": "isolation_barriers isolated_power_rails lists [+3V3_ISO, +15V_ISO, +5V_ISO] but omits -15V_ISO and -5V_ISO \u2014 both exist as isolated negative rails through rectifier/regulator chain",
-          "analyzer_section": "signal_analysis.isolation_barriers"
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "detector": "isolation_barriers",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Phantom SPI bus entries 'pin_IC12' and 'pin_IC13' \u2014 artifact entries with MIO_MISO labeled as MOSI and no chip selects, for chips already on main MIO bus",
@@ -83,7 +126,11 @@
         },
         {
           "description": "Duplicate reset_pin observation for IC8 STM32F446 NRST emitted 3 times identically",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "OPA376 (IC16) buffer has spurious input_resistor R17 (9K09) \u2014 R17 belongs to IC19's feedback path on shared 1V25_REF net",
@@ -93,7 +140,13 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^R17$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "R17"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

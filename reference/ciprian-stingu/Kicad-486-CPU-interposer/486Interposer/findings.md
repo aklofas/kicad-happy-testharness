@@ -1,4 +1,4 @@
-# Findings: Kicad-486-CPU-interposer / 486Interposer
+# Findings: ciprian-stingu/Kicad-486-CPU-interposer / 486Interposer
 
 ## FND-00000777: Component enumeration and net extraction correct for 486 interposer; Decoupling warning for 486 socket is a false positive — interposer passes through signals, doesn't power the CPU; No JTAG bus de...
 

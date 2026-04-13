@@ -40,7 +40,13 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus shows has_pull_up=false but ESP32-C3 has internal pull-ups and board may use them intentionally",
@@ -48,7 +54,11 @@
         },
         {
           "description": "Switching regulator output_rail is null - should be +3V3 (SY8088 feeds the 3.3V domain)",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Subcircuit neighbors are identical for all 6 ICs - neighbor detection appears broken, listing same caps for every IC regardless of actual connectivity",

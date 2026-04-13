@@ -1,4 +1,4 @@
-# Findings: BB-ADS1262 / HARDWARE_BB-ADS1262_Rev.A1_BB-ADS1262-Rev.A
+# Findings: OLIMEX/BB-ADS1262 / HARDWARE_BB-ADS1262_Rev.A1_BB-ADS1262-Rev.A
 
 ## FND-00000383: Voltage divider feedback networks for boost regulator U2 (R17+R18) and LDO U3 (R27+R28) not detected; Missing regulator_caps observation for U2 (MT3608 boost converter) in Rev.A1 output; Decoupling...
 

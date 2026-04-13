@@ -1,4 +1,4 @@
-# Findings: JAMMA_2player_xbox360 / KiCAD_Jamma_rgbuntu_xbox360
+# Findings: KabukiFlux/JAMMA_2player_xbox360 / KiCAD_Jamma_rgbuntu_xbox360
 
 ## FND-00000652: SPK+/SPK- flagged as differential pair requiring ESD — false positive; USB_SHIELD flagged as cross-domain signal needing level shifter — false positive; USB D+/D- differential pairs correctly detec...
 

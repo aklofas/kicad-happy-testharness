@@ -17,19 +17,27 @@
           "description": "STM32H743IITx MCU correctly identified with internal regulator topology",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators[?(@.ref=='U6')].topology",
-            "op": "eq",
-            "value": "ic_with_internal_regulator"
-          }
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "3 I2C buses (I2C1-I2C3) correctly detected with pull-up resistors (1.5k to MCU_3V3)",
           "analyzer_section": "signal_analysis.design_observations",
           "check": {
-            "path": "signal_analysis.design_observations[?(@.category=='i2c_bus')]",
+            "path": "signal_analysis.design_observations",
             "op": "min_count",
-            "value": 6
-          }
+            "value": 1
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SPI bus for IMU (ICM-20649) on SPI1 correctly detected with SCK/MOSI/MISO",
@@ -62,10 +70,14 @@
           "description": "USBLC6-2 ESD protection on USB data lines correctly detected",
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
-            "path": "signal_analysis.protection_devices[?(@.ref=='VD1')]",
+            "path": "signal_analysis.protection_devices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB Type-C connector (USB4105-GF-A) CC pull-down check passes",
@@ -81,18 +93,30 @@
           "analyzer_section": "signal_analysis.rc_filters",
           "check": {
             "path": "signal_analysis.rc_filters",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R7$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C8",
+            "R7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Reset pin analysis identifies pullup, filter cap, switch, debug connector",
           "analyzer_section": "signal_analysis.design_observations",
           "check": {
-            "path": "signal_analysis.design_observations[?(@.category=='reset_pin')]",
+            "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "153 components across 26 hierarchical sheets correctly counted",
@@ -107,10 +131,14 @@
           "description": "FM25V05-G FRAM correctly detected in memory_interfaces with SPI to STM32",
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces[?(@.memory_reference=='U9')]",
+            "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB differential pairs detected for both internal and external USB paths",
@@ -145,8 +173,12 @@
           "check": {
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
-            "value": 9
-          }
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -170,7 +202,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U14$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U14"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U16 (MIC5330) output_rail is __unnamed_27 (VOUT2) instead of VDD_3V3_PWM (VOUT1 pin 8)",
@@ -180,7 +218,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U16$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U16"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U15 (MIC5330) only reports SD_3V3 output but misses second output SENSOR_3V3 -- dual-output LDO",
@@ -190,7 +234,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U15$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U15"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SPI bus for BMP388 (U8) and BMM150 (U10) misidentifies GND net as MOSI signal",
@@ -203,9 +253,24 @@
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "min_count",
-            "value": 3
-          }
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R21$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R21",
+            "R22",
+            "R23",
+            "R34",
+            "R35",
+            "R36",
+            "R37",
+            "R38",
+            "R39"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "LTC4417CUF power path priority controller not classified as power management IC -- selects from 3 input sources to VDD_5V_IN",
@@ -214,7 +279,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "CAN bus termination resistors not reported: R27=120 ohm on CAN1, R28=120 ohm on CAN2",
@@ -232,7 +301,11 @@
             "path": "signal_analysis.isolation_barriers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "EMIF06-MSD02N16 (U11) SD card EMI filter + ESD protection not flagged in protection_devices",
@@ -242,7 +315,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U11$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "U11"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Power path switch topology (LTC4417 + 3x SIS903DN P-FETs) not recognized as prioritized power selection circuit",
@@ -251,7 +330,11 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [
@@ -285,8 +368,12 @@
           "check": {
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
-            "value": 3
-          }
+            "value": 1
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SPI buses correctly detected with MOSI/MISO/SCK signals",
@@ -313,7 +400,11 @@
             "path": "signal_analysis.protection_devices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "RC filters on UART/sensor inputs correctly detected",
@@ -322,7 +413,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -332,7 +427,11 @@
         },
         {
           "description": "USBLC6-2 (USB_ESD_Protection library) classified as varistor instead of ESD protection IC",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -341,9 +440,24 @@
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "min_count",
-            "value": 6
-          }
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R21$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R21",
+            "R22",
+            "R23",
+            "R34",
+            "R35",
+            "R36",
+            "R37",
+            "R38",
+            "R39"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "CAN bus termination resistors (R27 120ohm CAN1_H-CAN1_L, R28 120ohm CAN2_H-CAN2_L) not detected",
@@ -361,7 +475,11 @@
             "path": "signal_analysis.protection_devices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

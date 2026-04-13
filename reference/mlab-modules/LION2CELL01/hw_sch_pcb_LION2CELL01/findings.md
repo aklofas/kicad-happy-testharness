@@ -1,4 +1,4 @@
-# Findings: LION2CELL01 / hw_sch_pcb_LION2CELL01
+# Findings: mlab-modules/LION2CELL01 / hw_sch_pcb_LION2CELL01
 
 ## FND-00000808: LDO output voltage estimated at 1.58V for TPS76601 instead of ~3.19V; BAT-MIDPOINT net classified as 'interrupt' in net_classification; Assembly complexity reports 0 THT components, but PCB shows 2...
 

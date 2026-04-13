@@ -1,4 +1,4 @@
-# Findings: ICL8038_VF / ICL8038_VF
+# Findings: zaoyun/ICL8038_VF / ICL8038_VF
 
 ## FND-00000600: ICL8038 waveform generator not recognized as oscillator/function generator; Q1 (S8050-NPN) transistor circuit not detected; R1+C1 reported as low-pass RC filter but R1 is ICL8038 timing resistor; V...
 

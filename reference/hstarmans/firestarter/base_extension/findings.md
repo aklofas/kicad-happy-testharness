@@ -1,4 +1,4 @@
-# Findings: hstarmans/firestarter / base_extension_extension
+# Findings: hstarmans/firestarter / base_extension
 
 ## FND-00002608: Hexastorm laser PCB extension with USB-C PD, 3x TMC2209 stepper drivers, and FPGA expansion connector; power chain and RC filters correct, but SPI/I2C bus detection missed and USB PD controller misidentified as ESD protection
 

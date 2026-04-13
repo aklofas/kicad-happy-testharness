@@ -1,4 +1,4 @@
-# Findings: DATALOGGER01 / hw_sch_pcb_DATALOGGER01
+# Findings: mlab-modules/DATALOGGER01 / hw_sch_pcb_DATALOGGER01
 
 ## FND-00000448: Component inventory accurately extracted: 91 components across all types; I2C bus correctly detected with U3 (ATmega1284P), U4 (PCF85263A RTC), U6 (AT24CS64 EEPROM) on PC0/SCL and PC1/SDA with 10k ...
 

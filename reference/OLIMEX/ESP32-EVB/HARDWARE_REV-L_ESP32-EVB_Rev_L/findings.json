@@ -35,7 +35,11 @@
         },
         {
           "description": "Only 1 power regulator detected (TPS62A02 for 3.3V) but board has additional regulators - the SY8089 buck converter and battery charger circuit are not identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -47,7 +51,13 @@
             "op": "contains_match",
             "field": "phy_reference",
             "pattern": "^U6$"
-          }
+          },
+          "detector": "ethernet_interfaces",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Ethernet magnetics (transformer/common-mode choke between PHY and RJ45 connector) not linked to Ethernet PHY in ethernet_interfaces",
@@ -56,7 +66,11 @@
             "path": "signal_analysis.ethernet_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "ethernet_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "No crystal circuit detected despite ESP32-WROOM module likely having internal crystal; the 50MHz crystal for the LAN8710A PHY is also not identified",
@@ -65,7 +79,11 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Relay driver circuits (Q1/Q2 driving REL1/REL2 with flyback diodes D1/D3) not identified as transistor switch circuits",
@@ -75,7 +93,16 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D1",
+            "D3",
+            "Q1",
+            "Q2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB-UART bridge (likely CH340 or similar) not identified as a subcircuit with its USB data lines",

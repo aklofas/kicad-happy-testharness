@@ -13,8 +13,15 @@
             "path": "signal_analysis.ethernet_interfaces",
             "op": "contains_match",
             "field": "phy_reference",
-            "pattern": "^U6$"
-          }
+            "pattern": "^J10$"
+          },
+          "detector": "ethernet_interfaces",
+          "subject_refs": [
+            "J10",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "TMC2209-LA (U7) correctly identified as motor driver with 29 pins mapped",
@@ -32,7 +39,16 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "R24",
+            "R27",
+            "U3",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SPI signals CS/SCK/MISO/MOSI correctly classified as chip_select/clock/data",
@@ -62,7 +78,14 @@
             "op": "not_contains_match",
             "field": "shunt.ref",
             "pattern": "^R4$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R4",
+            "R5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "DD4012SA (U4, Diodes Inc buck converter) classified as power_symbol because lib_id is 'power:DD4012SA' with in_bom=yes -- excluded from components, ic_pin_analysis, and power_regulators entirely",
@@ -72,7 +95,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "All 109 components have empty string classification field",
@@ -87,7 +116,11 @@
             "path": "signal_analysis.power_budget",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_budget",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

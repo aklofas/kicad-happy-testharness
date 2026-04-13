@@ -1,4 +1,4 @@
-# Findings: zx-sizif-512 / pcb_rev.B_sizif512
+# Findings: UzixLS/zx-sizif-512 / pcb_rev.B_sizif512
 
 ## FND-00000265: ZX Spectrum clone/expansion rev.B (KiCad 5, 216 components). Y-flip transform causes collector/emitter pin swap on BJTs. False LED driver detection for Q1/D12 with no shared nets. DC-DC converter not detected as regulator.
 

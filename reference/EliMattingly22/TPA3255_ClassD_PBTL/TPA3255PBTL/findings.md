@@ -1,4 +1,4 @@
-# Findings: TPA3255_ClassD_PBTL / TPA3255PBTL
+# Findings: EliMattingly22/TPA3255_ClassD_PBTL / TPA3255PBTL
 
 ## FND-00000207: 48V-powered Class-D audio amplifier using TPA3255DDV in PBTL (parallel bridge-tied load) configuration with XL7015 buck converter, XLR audio I/O, LC output filters, and analog input signal conditioning. Analyzer performs well on opamp circuits and LC filters but has a significant voltage estimation error on the XL7015.
 

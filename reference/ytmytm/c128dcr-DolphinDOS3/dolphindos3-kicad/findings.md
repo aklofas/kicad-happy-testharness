@@ -1,4 +1,4 @@
-# Findings: c128dcr-DolphinDOS3 / dolphindos3-kicad_dolphindos3-kicad
+# Findings: ytmytm/c128dcr-DolphinDOS3 / dolphindos3-kicad
 
 ## FND-00002296: multi_driver_nets reports 20 false-positive duplicate-driver entries for glue logic outputs; bus_topology 'width' field counts label instances rather than unique signal count
 

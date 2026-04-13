@@ -1,4 +1,4 @@
-# Findings: MK-pcb-tutorial / ai03-pcb-guide
+# Findings: Jrezky/MK-pcb-tutorial / ai03-pcb-guide
 
 ## FND-00000853: Reset button SW1 counted as a key matrix switch (switches_on_matrix=5, should be 4); Crystal oscillator circuit (16MHz) with 22pF load caps and effective CL=14pF correctly detected; USB full-speed ...
 

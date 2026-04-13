@@ -1,4 +1,4 @@
-# Findings: Hydrogen / hardware_board_board
+# Findings: wntrblm/Hydrogen / hardware_board
 
 ## FND-00000587: pwr_flag_warnings fires for +12V and -12V despite PWR_FLAG symbols being present on both rails; Eurorack reverse-polarity protection diodes (D1/D2 PMEG2005) not detected as protection_devices
 

@@ -13,7 +13,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Q1/Q2 bidirectional I2C level shifters correctly identified",
@@ -23,7 +27,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB D+/D- differential pair correctly detected",
@@ -43,8 +54,17 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q8$"
-          }
+            "pattern": "^Q10$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D7",
+            "Q10",
+            "Q8",
+            "R25"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q5/Q7/Q9 has_snubber=true false positive \u2014 R18 (215k) is an open-drain pull-up, not a snubber",
@@ -54,7 +74,16 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q5$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q5",
+            "Q7",
+            "Q9",
+            "R18"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus_analysis has_pull_up=false for CAM.SDA/SCL despite R29/R30 (10k to +3V3) present; design_observations correctly detects them",
@@ -65,10 +94,18 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "not_contains_match",
-            "field": "ref",
-            "pattern": "^U11$"
-          }
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 2.8
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U11"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 2.8
         }
       ],
       "missed": [],
@@ -101,7 +138,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -116,8 +157,15 @@
             "path": "signal_analysis.power_regulators",
             "op": "not_contains_match",
             "field": "ref",
-            "pattern": "^U8$"
-          }
+            "pattern": "^U7$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U7",
+            "U8"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

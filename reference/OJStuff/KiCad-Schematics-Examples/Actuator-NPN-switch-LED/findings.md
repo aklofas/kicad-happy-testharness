@@ -1,4 +1,4 @@
-# Findings: KiCad-Schematics-Examples / Actuator-NPN-switch-LED_Actuator-NPN-switch-LED
+# Findings: OJStuff/KiCad-Schematics-Examples / Actuator-NPN-switch-LED
 
 ## FND-00002200: Non-inverting amplifier (gain=10x) misclassified as 'transimpedance_or_buffer'
 

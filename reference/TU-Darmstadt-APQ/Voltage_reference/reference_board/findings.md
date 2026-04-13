@@ -1,4 +1,4 @@
-# Findings: Voltage_reference / reference_board
+# Findings: TU-Darmstadt-APQ/Voltage_reference / reference_board
 
 ## FND-00001749: Component count (23) and type breakdown correctly extracted from hierarchical schematic; Net count (20) and BOM extraction are correct; LT1001 (U3) opamp classified as 'comparator_or_open_loop' but...
 

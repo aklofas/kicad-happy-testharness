@@ -1,4 +1,4 @@
-# Findings: 2ch-4-20mA-converter / hardware_1ch-4-20mA_1ch-4-20mA
+# Findings: Fescron/2ch-4-20mA-converter / hardware_1ch-4-20mA
 
 ## FND-00000313: Current-sense amplifier circuit not detected for U1 (LMP8640) with shunt R2; Decoupling observation incorrectly reports VDDA has no bypass capacitor
 

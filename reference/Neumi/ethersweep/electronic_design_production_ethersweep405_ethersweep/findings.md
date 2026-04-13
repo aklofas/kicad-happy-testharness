@@ -1,4 +1,4 @@
-# Findings: ethersweep / electronic_design_production_ethersweep405_ethersweep
+# Findings: Neumi/ethersweep / electronic_design_production_ethersweep405_ethersweep
 
 ## FND-00000150: Stepper motor controller with W5500 Ethernet, TMC2209 driver, AS5600 encoder. Ethernet PHY, motor driver, I2C bus correctly detected. Major gaps in crystal load caps, decoupling, SPI bus, and current sense false positives.
 

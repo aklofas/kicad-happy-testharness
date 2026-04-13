@@ -1,4 +1,4 @@
-# Findings: 3458A-A3-Schematic-KiCad / 3458A A3 1989 ERC 2931_3458A A3 1989 ERC 2931
+# Findings: EleDes/3458A-A3-Schematic-KiCad / 3458A A3 1989 ERC 2931
 
 ## FND-00000268: HP 3458A A3 analog board 1989 recreation (270 components). All 9 rf_matching entries are false positives (clock ferrite beads and precision integrator input filters). EL2018 comparator misclassified as compensator (C403 hysteresis is positive feedback). False RC filter from comparator hysteresis network. Duplicate design_observations per IC unit.
 

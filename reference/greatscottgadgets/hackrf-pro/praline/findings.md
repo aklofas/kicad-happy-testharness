@@ -1,4 +1,4 @@
-# Findings: hackrf-pro / praline
+# Findings: greatscottgadgets/hackrf-pro / praline
 
 ## FND-00000117: KiCad 9 value parsing completely broken: capacitor/inductor farads/henries fields contain raw numeric values without SI prefix conversion (e.g. 18 pF parsed as 18.0 farads, 10 nH as 10.0 henries), causing all derived calculations (resonant freq, cutoff freq, effective load, time constant, total_uF) to be orders of magnitude wrong
 

@@ -1,4 +1,4 @@
-# Findings: Deurnode_ESP32-PoE / Deurnode nieuw
+# Findings: Hans-Beerman/Deurnode_ESP32-PoE / Deurnode nieuw
 
 ## FND-00000469: Component count and BOM are correct; Power rails correctly identified: +3.3V, +5V, +12V, GND, PWR_FLAG; U2 OKI-78SR output voltage estimated at 1.5V instead of 5V; U2 OKI-78SR output net is __unnam...
 

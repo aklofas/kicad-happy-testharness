@@ -25,7 +25,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R32$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C11",
+            "C14",
+            "R32"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "NE5532 differential-to-single-ended output stages (U4-U7) classified as 'compensator' instead of difference amplifier",
@@ -35,7 +43,16 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U4",
+            "U5",
+            "U6",
+            "U7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -46,7 +63,11 @@
             "path": "signal_analysis.bus_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [
@@ -75,7 +96,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "TL072 buffer/comparator classifications correct",
@@ -84,7 +109,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -96,7 +125,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -124,7 +159,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "DAC output anti-aliasing RC filters correctly detected",
@@ -133,7 +172,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [],

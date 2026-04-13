@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_CACKLE - Card Adaptable Controller Kinetic Link Electronics_src_ESP32-S3 Hub_ESP32-S3 Hub
+# Findings: hackclub/OnBoard / projects_CACKLE - Card Adaptable Controller Kinetic Link Electronics_src_ESP32-S3 Hub
 
 ## FND-00000110: ESP32-S3 hub board with 74HC595 shift register, THVD1420 RS-485 transceiver, 40MHz crystal, SPI/I2C buses, and extensive connector system. Good crystal and decoupling analysis but bus protocols and RS-485 not identified.
 

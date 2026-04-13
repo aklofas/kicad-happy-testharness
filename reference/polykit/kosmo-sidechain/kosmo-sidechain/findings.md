@@ -1,4 +1,4 @@
-# Findings: kosmo-sidechain / kosmo-sidechain
+# Findings: polykit/kosmo-sidechain / kosmo-sidechain
 
 ## FND-00002374: Precision rectifier/envelope detector circuit not detected; Vactrol (VTL5C optocoupler) not detected as isolation barrier; TL074 quad op-amp correctly identified with all 4 functional units analyze...
 

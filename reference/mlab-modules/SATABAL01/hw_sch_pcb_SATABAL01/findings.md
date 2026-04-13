@@ -1,4 +1,4 @@
-# Findings: SATABAL01 / hw_sch_pcb_SATABAL01
+# Findings: mlab-modules/SATABAL01 / hw_sch_pcb_SATABAL01
 
 ## FND-00001183: RF balun transformer circuit not detected in signal_analysis — rf_chains and isolation_barriers both empty; Component counts correct: 2 transformers, 3 connectors, 4 mounting holes, 9 total
 

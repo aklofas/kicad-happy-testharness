@@ -1,4 +1,4 @@
-# Findings: hackrf / hardware_marzipan_marzipan
+# Findings: greatscottgadgets/hackrf / hardware_marzipan
 
 ## FND-00000030: "Description" custom field not captured in legacy parser
 

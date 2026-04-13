@@ -1,4 +1,4 @@
-# Findings: icebreaker / hardware_v1.1a_icebreaker
+# Findings: icebreaker-fpga/icebreaker / hardware_v1.1a_icebreaker
 
 ## FND-00000043: Ferrite bead value "600" parsed as 600 Henries
 

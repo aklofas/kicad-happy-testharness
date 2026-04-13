@@ -34,11 +34,21 @@
       "incorrect": [
         {
           "description": "AVDD rail flagged as missing decoupling for RP2040 (U5) but AVDD typically has dedicated filtering via inductor - may be present but on a different net name",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter on OSC_OUT (1K + 30pF, fc=5.3MHz) is actually part of the crystal circuit load capacitor network, not a separate filter",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [

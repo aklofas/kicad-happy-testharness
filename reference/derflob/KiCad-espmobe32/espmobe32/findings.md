@@ -1,4 +1,4 @@
-# Findings: KiCad-espmobe32 / espmobe32
+# Findings: derflob/KiCad-espmobe32 / espmobe32
 
 ## FND-00000704: missing_mpn over-reports: components with LCSC part numbers flagged as missing MPN; Q1 (MMDT3904 dual NPN BJT, ESP32 auto-reset circuit) absent from transistor_circuits; I2C bus detection correct: ...
 

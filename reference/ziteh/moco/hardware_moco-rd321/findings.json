@@ -13,7 +13,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SPI bus detected with STSPIN32F0A and MA702 rotary sensor",
@@ -32,7 +36,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R2$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R2",
+            "R5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "3x SiZ250DT MOSFETs detected with gate resistors and 20mohm source sense resistors",
@@ -41,7 +52,11 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -53,11 +68,21 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "7 identical reset_pin and 6 identical switching_regulator observations in design_observations \u2014 same multi-unit duplication",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -68,7 +93,16 @@
             "path": "signal_analysis.bridge_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bridge_circuits",
+          "subject_refs": [
+            "D1",
+            "Q1",
+            "Q2",
+            "Q3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "current_sense empty \u2014 three 20mohm/3W shunt resistors (R14/R16/R30) in phase paths with differential outputs to STSPIN32F0A internal opamps",
@@ -78,7 +112,15 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^R14$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R14",
+            "R16",
+            "R30"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "opamp_circuits empty \u2014 STSPIN32F0A internal opamps (OP1-OP3) wired for current sensing not detected",
@@ -87,7 +129,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [
@@ -116,7 +162,18 @@
             "path": "signal_analysis.bridge_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bridge_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4",
+            "Q5",
+            "Q6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "DRV8301 correctly identified as ic_with_internal_regulator providing +5V",
@@ -125,7 +182,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "XC6220B331MR LDO producing 3.3V correctly identified",
@@ -134,7 +195,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "MCP25625 CAN bus device correctly detected",
@@ -152,7 +217,11 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SPI bus with DRV8301, MCU, MCP25625, AS5147 correctly detected",
@@ -167,7 +236,13 @@
       "incorrect": [
         {
           "description": "bridge_circuits.driver_ics empty \u2014 DRV8301 (U2) is the gate driver for all 6 FETs but link not established",
-          "analyzer_section": "signal_analysis.bridge_circuits"
+          "analyzer_section": "signal_analysis.bridge_circuits",
+          "detector": "bridge_circuits",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -178,8 +253,15 @@
             "path": "signal_analysis.current_sense",
             "op": "contains_match",
             "field": "shunt.ref",
-            "pattern": "^R32$"
-          }
+            "pattern": "^R27$"
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R27",
+            "R32"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [
@@ -207,7 +289,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "TCAN337 CAN transceiver correctly detected",
@@ -234,13 +320,21 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
         {
           "description": "power_regulators output_rail='__unnamed_41' for STSPIN32G4 \u2014 should be '+3.3V' (REG3V3/VDD pin connects to +3.3V net)",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "5 duplicate power_regulator entries for U1 \u2014 one per schematic unit",
@@ -250,11 +344,23 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "5 duplicate decoupling + 4 duplicate switching_regulator observations for U1",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -265,7 +371,15 @@
             "path": "signal_analysis.bridge_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bridge_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2",
+            "Q3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "current_sense empty \u2014 three 2.2R/125mW shunts (R18/R27/R9) with differential outputs to STSPIN32G4 opamp inputs",
@@ -275,7 +389,15 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^R18$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R18",
+            "R27",
+            "R9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "opamp_circuits empty \u2014 STSPIN32G4 internal opamps not detected",
@@ -284,7 +406,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: RP2040-Decoder / KiCad_Legacy_RP2040-Decoder
+# Findings: gab-k/RP2040-Decoder / KiCad_Legacy_RP2040-Decoder
 
 ## FND-00001156: Core component extraction correct: 57 components, 4 ICs, 5 MOSFETs, crystal load caps, LDO regulator detected; SPI bus not detected despite W25Q64 flash with CLK/DI/DO/CS nets connected to RP2040; ...
 

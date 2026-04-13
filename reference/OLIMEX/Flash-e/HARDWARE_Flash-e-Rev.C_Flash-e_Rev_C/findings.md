@@ -1,4 +1,4 @@
-# Findings: Flash-e / HARDWARE_Flash-e-Rev.C_Flash-e_Rev_C
+# Findings: OLIMEX/Flash-e / HARDWARE_Flash-e-Rev.C_Flash-e_Rev_C
 
 ## FND-00000564: Component counts, types, and BOM parsed correctly; eMMC/SDIO bus detected correctly as 8-bit with devices U1 and U2; U3 VCC (pin 8) incorrectly placed in GND net; SPI bus not detected despite clear...
 

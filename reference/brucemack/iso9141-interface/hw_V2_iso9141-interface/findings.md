@@ -1,4 +1,4 @@
-# Findings: iso9141-interface / hw_V2_iso9141-interface
+# Findings: brucemack/iso9141-interface / hw_V2_iso9141-interface
 
 ## FND-00002224: LDO regulator (NCP1117-5.0) correctly identified with input +12V and output +5V; ISO9141 / K-line single-wire bus interface not recognized as a bus protocol; pwr_flag_warnings incorrectly fire for ...
 

@@ -1,4 +1,4 @@
-# Findings: RetroWiFiModem / kicad_RetroWiFiModem
+# Findings: mecparts/RetroWiFiModem / kicad_RetroWiFiModem
 
 ## FND-00001230: L4931CZ33-AP 3.3V LDO regulator correctly identified with input/output rails; MAX3237CAI+ RS-232 transceiver not identified by function; no serial/UART interface detected; R1 correctly identified a...
 

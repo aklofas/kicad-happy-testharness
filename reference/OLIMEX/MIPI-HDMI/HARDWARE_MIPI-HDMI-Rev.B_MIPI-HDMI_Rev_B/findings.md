@@ -1,4 +1,4 @@
-# Findings: MIPI-HDMI / HARDWARE_MIPI-HDMI-Rev.B_MIPI-HDMI_Rev_B
+# Findings: OLIMEX/MIPI-HDMI / HARDWARE_MIPI-HDMI-Rev.B_MIPI-HDMI_Rev_B
 
 ## FND-00000868: LT8912B MIPI-to-HDMI bridge IC and HDMI connector detected; VR1 (LD1117-ADJ) estimated output voltage is 3.98V instead of ~1.8V; PWR_FLAG warnings are false positives — design has custom OLIMEX_Pow...
 

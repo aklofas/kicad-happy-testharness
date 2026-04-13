@@ -1,4 +1,4 @@
-# Findings: Line-Follower-Analog-Kicad-Design / Line Follower No contoller_Line Follower No contoller
+# Findings: IhsanSA/Line-Follower-Analog-Kicad-Design / Line Follower No contoller
 
 ## FND-00000861: LM358 comparator configuration and motor-driving NPN transistors correctly detected; Decoupling analysis empty despite C1/C2 (10uF) capacitors present on supply rails; AMS1117-5.0 LDO detected with...
 

@@ -1,4 +1,4 @@
-# Findings: buck-converter-kicad-design / buck converter
+# Findings: ExTc-aShiSh/buck-converter-kicad-design / buck converter
 
 ## FND-00002294: Trimmer1 (Device:R_Trim) misclassified as 'transformer' instead of 'resistor'; Feedback voltage divider (R1+R2 on LM2596 FB pin) not detected as feedback_network or voltage_divider; design_observat...
 

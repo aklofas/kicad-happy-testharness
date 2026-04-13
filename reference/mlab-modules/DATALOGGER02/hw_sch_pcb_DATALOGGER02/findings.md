@@ -1,4 +1,4 @@
-# Findings: DATALOGGER02 / hw_sch_pcb_DATALOGGER02
+# Findings: mlab-modules/DATALOGGER02 / hw_sch_pcb_DATALOGGER02
 
 ## FND-00000197: Universal battery-powered SD card datalogger (KiCad 9) with ATmega328, LoRa radio (RFM95), GPS, RTC, power management (LTC4041 + dual TPS631000 buck-boost), and extensive sensor support across multiple sheets. Excellent detection of feedback dividers, switching regulators, crystal circuits, and RF matching. Component count and sheet parsing are thorough.
 

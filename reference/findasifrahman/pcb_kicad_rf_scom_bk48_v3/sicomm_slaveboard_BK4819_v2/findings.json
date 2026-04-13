@@ -28,7 +28,14 @@
       "incorrect": [
         {
           "description": "Design observation reports VBAT in rails_without_caps despite C1(10uF) and C163(100nF) present on that rail. Contradicts IC pin analysis which correctly identifies decoupling.",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "C1",
+            "C163"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -60,7 +67,11 @@
             "path": "signal_analysis.rf_matching",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_matching",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "123 total components, 58 unique parts correctly counted. BOM values verified across 72 caps, 22 resistors, 14 inductors, 7 ICs",
@@ -90,7 +101,13 @@
             "op": "not_contains_match",
             "field": "inductor.ref",
             "pattern": "^L7$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "L7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -102,7 +119,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^X2$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "X2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

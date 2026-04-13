@@ -1,4 +1,4 @@
-# Findings: rp2040-motor-controller / driver_module_driver_module
+# Findings: Twisted-Fields/rp2040-motor-controller / driver_module
 
 ## FND-00000127: BLDC motor driver module: excellent current sense detection with INA240 amplifiers and 3-milliohm shunts, but missing half-bridge gate driver recognition for EG3113
 

@@ -1,4 +1,4 @@
-# Findings: 8IN14NixieShield / 8IN14NixieShield
+# Findings: NEONTEC75/8IN14NixieShield / 8IN14NixieShield
 
 ## FND-00000328: 8 WS2812B LEDs in a single daisy chain reported as 8 separate chains of length 1
 

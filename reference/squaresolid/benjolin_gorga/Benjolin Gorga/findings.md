@@ -1,4 +1,4 @@
-# Findings: benjolin_gorga / Benjolin Gorga_benjolin_1.6_panel
+# Findings: squaresolid/benjolin_gorga / Benjolin Gorga
 
 ## FND-00001949: Component counts correctly extracted from hierarchical subsheet; Power regulators IC7 (LM78L09) and IC8 (LM79L09) detected with correct topology; Op-amp circuits correctly identified for TL072/TL07...
 

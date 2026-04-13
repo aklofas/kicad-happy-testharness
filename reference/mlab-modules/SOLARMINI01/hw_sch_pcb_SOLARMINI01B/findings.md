@@ -1,4 +1,4 @@
-# Findings: SOLARMINI01 / hw_sch_pcb_SOLARMINI01B
+# Findings: mlab-modules/SOLARMINI01 / hw_sch_pcb_SOLARMINI01B
 
 ## FND-00001294: SPV1040 MPPT IC detected as switching regulator with L1 inductor; design_observations incorrectly flags missing output caps for U1; Voltage divider not detected: R7(560k)/R8(270k) feedback network ...
 

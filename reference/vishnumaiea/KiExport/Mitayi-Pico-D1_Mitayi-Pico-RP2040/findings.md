@@ -1,4 +1,4 @@
-# Findings: KiExport / Mitayi-Pico-D1_Mitayi-Pico-RP2040
+# Findings: vishnumaiea/KiExport / Mitayi-Pico-D1_Mitayi-Pico-RP2040
 
 ## FND-00000741: Component counts and BOM extraction correct for RP2040 design; LDO regulator (MIC5219-3.3YM5) correctly detected with input/output rails; Regulator missing-cap warning is a false positive: C13 (10u...
 

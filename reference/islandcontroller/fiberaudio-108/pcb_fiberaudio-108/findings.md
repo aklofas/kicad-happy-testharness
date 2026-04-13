@@ -1,4 +1,4 @@
-# Findings: fiberaudio-108 / pcb_fiberaudio-108
+# Findings: islandcontroller/fiberaudio-108 / pcb_fiberaudio-108
 
 ## FND-00002067: LD1 LED misclassified as inductor type; USB ESD protection device SRV05-4 not detected; has_esd=false for both USB differential pairs; False positive cross-domain level-shifter warning for SPI bus ...
 

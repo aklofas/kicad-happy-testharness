@@ -1,4 +1,4 @@
-# Findings: Chessboard-Hardware / Chessboard Hardware
+# Findings: UnsignedArduino/Chessboard-Hardware / Chessboard Hardware
 
 ## FND-00000438: Bus width for COM bus reported as 24 instead of 8; 12 cross-domain signal warnings are false positives caused by misidentifying Arduino VIN as a power domain; Analog multiplexer chain (64 Hall sens...
 

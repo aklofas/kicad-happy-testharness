@@ -1,4 +1,4 @@
-# Findings: cubesat-boards / ykts-power_ykts-power
+# Findings: cansat-ptl/cubesat-boards / ykts-power
 
 ## FND-00000282: CubeSat power board (KiCad 5, 130 components). Solar cell array with blocking diodes falsely detected as 2x2 key matrix. RC filter double-counting on C5. False missing-input-cap warnings for TPS63001/TPS63002 due to hierarchical PGND/VIN merge. BQ25070 chargers and INA3221 power monitor not detected.
 

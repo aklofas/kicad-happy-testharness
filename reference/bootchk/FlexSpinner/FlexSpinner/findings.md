@@ -1,4 +1,4 @@
-# Findings: FlexSpinner / FlexSpinner
+# Findings: bootchk/FlexSpinner / FlexSpinner
 
 ## FND-00000557: SC1-SC4 (lib_id='D', solar cells) misclassified as switch instead of diode; VMon1 (TPS3839 voltage supervisor) misclassified as varistor; MOSFET Q1 transistor circuit detection is mostly correct; N...
 

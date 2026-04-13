@@ -1,4 +1,4 @@
-# Findings: StickHub / StickHub
+# Findings: rbtsco/StickHub / StickHub
 
 ## FND-00001588: Component counts and types accurate for StickHub 7-port USB hub; Crystal Y1 (12MHz) correctly detected with no external load capacitors; TVS diodes correctly detected as protection devices on all 7...
 

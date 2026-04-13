@@ -1,4 +1,4 @@
-# Findings: KiCAD_STM32_Example / Example_STM32F031K6_Example_STM32F031K6
+# Findings: WRansohoff/KiCAD_STM32_Example / Example_STM32F031K6
 
 ## FND-00000728: LDO regulator (AP2210/AP1117-33) detected with correct topology; Regulator output rail is an unnamed internal net instead of the named +3.3V rail; Decoupling analysis flags missing caps on +3.3V bu...
 

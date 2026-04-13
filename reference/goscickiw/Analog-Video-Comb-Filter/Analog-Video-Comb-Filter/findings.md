@@ -1,4 +1,4 @@
-# Findings: Analog-Video-Comb-Filter / Analog-Video-Comb-Filter_Analog-Video-Comb-Filter
+# Findings: goscickiw/Analog-Video-Comb-Filter / Analog-Video-Comb-Filter
 
 ## FND-00000377: RC pi-filter (C15-R16-C12) double-counted as two separate RC low-pass filters; AD8044 opamp units 2, 3, 4 misclassified as 'transimpedance_or_buffer' instead of non-inverting amplifier gain=2; L780...
 

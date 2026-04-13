@@ -14,7 +14,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal Y1 16MHz with 12pF load caps, effective 9pF correct",
@@ -24,7 +30,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "3 I2C buses correctly flagged as missing pullup resistors",
@@ -43,7 +55,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R2$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Polyfuse F1 (2A) correctly identified on VCC rail",
@@ -53,7 +72,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^F1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "F1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SPI buses with W25N01G NAND flash correctly detected",
@@ -95,7 +120,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R9$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "R9"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -106,7 +138,11 @@
             "path": "signal_analysis.key_matrices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "key_matrices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

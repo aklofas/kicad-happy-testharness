@@ -13,7 +13,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "4 RC filters correctly detected",
@@ -22,13 +26,21 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
         {
           "description": "Protection device count inflated from 14 actual to 40 reported - multi-pin TVS arrays counted per-pin instead of per-device",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [],

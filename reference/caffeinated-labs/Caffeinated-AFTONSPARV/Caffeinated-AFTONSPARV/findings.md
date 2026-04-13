@@ -1,4 +1,4 @@
-# Findings: Caffeinated-AFTONSPARV / Caffeinated-AFTONSPARV
+# Findings: caffeinated-labs/Caffeinated-AFTONSPARV / Caffeinated-AFTONSPARV
 
 ## FND-00000424: Capacitor count wrong: reports 2 capacitors, actual count is 10; DNP count reports 0, but J4 (USB connector) is marked DNP; Multi-project schematic: analyzer reads wrong-project Reference property ...
 

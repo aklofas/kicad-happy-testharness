@@ -1,4 +1,4 @@
-# Findings: kicad_pcb / Pmod-Alinx_Pmod-Alinx_Pmod-Alinx
+# Findings: DRubioG/kicad_pcb / Pmod-Alinx_Pmod-Alinx
 
 ## FND-00002361: Pmod connector components (U1-U3) classified as 'ic' type instead of 'connector'; PWR_FLAG warnings incorrectly raised for connector-only passthrough adapter; Pmod connector VCC/GND pins misidentif...
 

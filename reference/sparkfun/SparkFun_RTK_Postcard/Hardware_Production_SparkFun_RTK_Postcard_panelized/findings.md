@@ -1,4 +1,4 @@
-# Findings: SparkFun_RTK_Postcard / Hardware_Production_SparkFun_RTK_Postcard_panelized
+# Findings: sparkfun/SparkFun_RTK_Postcard / Hardware_Production_SparkFun_RTK_Postcard_panelized
 
 ## FND-00001481: Component counts are accurate: 84 total, 20 resistors, 12 capacitors, 5 ICs, 5 LEDs, 4 diodes; Power rails correctly identified: 3.3V, 5V, GND, VBUS, VCC_RF; LDO regulator U2 (RT9080-3.3) correctly...
 

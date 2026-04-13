@@ -1,4 +1,4 @@
-# Findings: Eurorack_KiCAD_templates / Connector_panels_12HP_Connector_panel_100mm_12HP_Connector_panel_100mm
+# Findings: clacktronics/Eurorack_KiCAD_templates / Connector_panels_12HP_Connector_panel_100mm
 
 ## FND-00000548: file_version reported as '4' but source header says 'EESchema Schematic File Version 2'; Empty schematic correctly produces zero components, nets, and signals
 

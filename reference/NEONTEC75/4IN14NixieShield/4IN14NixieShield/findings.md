@@ -1,4 +1,4 @@
-# Findings: 4IN14NixieShield / 4IN14NixieShield
+# Findings: NEONTEC75/4IN14NixieShield / 4IN14NixieShield
 
 ## FND-00000319: Four WS2812B LEDs in a single daisy-chain reported as 4 separate chains of length 1; WS2812B chain total length should be 4 but each sub-chain reports length 1; IN-14 Nixie tubes (N1–N4) not identi...
 

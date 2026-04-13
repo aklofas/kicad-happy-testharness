@@ -12,71 +12,245 @@
         },
         {
           "description": "Y1 (32.768kHz) crystal with load caps correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "R11/R12 battery voltage divider correctly found with ratio 0.258",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R11",
+            "R12"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R11$"
+          }
         },
         {
           "description": "LT3652HV feedback dividers correctly identified as feedback networks",
-          "analyzer_section": "signal_analysis.feedback_networks"
+          "analyzer_section": "signal_analysis.feedback_networks",
+          "detector": "feedback_networks",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.feedback_networks",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SWD debug interfaces on P2/P3 correctly detected",
-          "analyzer_section": "signal_analysis.debug_interfaces"
+          "analyzer_section": "signal_analysis.debug_interfaces",
+          "detector": "debug_interfaces",
+          "subject_refs": [
+            "P2",
+            "P3"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 3,
+          "check": {
+            "path": "signal_analysis.debug_interfaces",
+            "op": "equals",
+            "value": 3
+          }
         },
         {
           "description": "USB ESD protection (ESD321, TVS0500) correctly identified",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "4 LoRa transceivers correctly found in rf_chains",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Level shifters U2/U3 (SN74LVCH245A) correctly identified",
-          "analyzer_section": "signal_analysis.level_shifters"
+          "analyzer_section": "signal_analysis.level_shifters",
+          "detector": "level_shifters",
+          "subject_refs": [
+            "U2",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
         {
           "description": "U20/U17 (TPS630701, buck-boost) classified as LDO \u2014 have external inductors L5/L6 not detected",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L5",
+            "L6",
+            "U17",
+            "U20"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 6,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "equals",
+            "value": 6
+          }
         },
         {
           "description": "U11/U13 (LT3652HV) estimated_vout=1.523V wrong \u2014 LT3652 is battery charger with Vref=3.3V not 0.6V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U11",
+            "U13"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 1.523,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 1.523
+          }
         },
         {
           "description": "U20 compensation_capacitors contains 30+ unrelated caps (MCU decoupling, crystal loads)",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U20"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U20$"
+          }
         }
       ],
       "missed": [
         {
           "description": "battery_chargers empty but U11/U13 (LT3652HV) and U15 (BQ25883) are charger ICs",
-          "analyzer_section": "signal_analysis.battery_chargers"
+          "analyzer_section": "signal_analysis.battery_chargers",
+          "detector": "battery_chargers",
+          "subject_refs": [
+            "U11",
+            "U13",
+            "U15"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "5 INA230 current monitors (U9/U10/U16/U19/U23) not detected",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "detector": "current_sense",
+          "subject_refs": [
+            "U10",
+            "U16",
+            "U19",
+            "U23",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "contains_match",
+            "field": "shunt.ref",
+            "pattern": "^U10$"
+          }
         },
         {
           "description": "U6 (MAX708) voltage supervisor IC missed \u2014 only RC reset detected",
-          "analyzer_section": "signal_analysis.reset_supervisors"
+          "analyzer_section": "signal_analysis.reset_supervisors",
+          "detector": "reset_supervisors",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "LED12-15 (SK68xx NeoPixel) addressable LEDs missed",
-          "analyzer_section": "signal_analysis.addressable_led_chains"
+          "analyzer_section": "signal_analysis.addressable_led_chains",
+          "detector": "addressable_led_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.addressable_led_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "U22 (TPS54226) feedback divider not found, estimated_vout=None",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U22"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U22$"
+          }
         },
         {
           "description": "4 MCP9700A temperature sensors missed",
-          "analyzer_section": "signal_analysis.sensor_interfaces"
+          "analyzer_section": "signal_analysis.sensor_interfaces",
+          "detector": "sensor_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.sensor_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

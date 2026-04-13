@@ -1,4 +1,4 @@
-# Findings: Power_HW / GEODE_rev2_SMPS_Motherboard_smps_legged_robot
+# Findings: EPFLXplore/Power_HW / GEODE_rev2_SMPS_Motherboard_smps_legged_robot
 
 ## FND-00000158: GEODE rev2 power auxiliary with MAX25262 buck converter and TPS2116 power mux. 0-pin parsing for TPS2116 and PMV90ENER due to lib_name mismatch; voltage divider found but not linked to regulator.
 

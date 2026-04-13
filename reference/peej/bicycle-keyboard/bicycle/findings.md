@@ -1,4 +1,4 @@
-# Findings: bicycle-keyboard / plate
+# Findings: peej/bicycle-keyboard / bicycle
 
 ## FND-00001988: Component counts, power rails, and BOM entries correctly parsed from KiCad 5 legacy schematic; RESET1 (Conn_01x01, value 'Reset') misclassified as 'switch' instead of 'connector'; TX0 (Conn_01x01, ...
 

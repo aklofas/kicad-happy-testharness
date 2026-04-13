@@ -1,4 +1,4 @@
-# Findings: BRIDGEADC01 / hw_sch_pcb_BRIDGEADC01
+# Findings: mlab-modules/BRIDGEADC01 / hw_sch_pcb_BRIDGEADC01
 
 ## FND-00000396: RF matching network falsely detected on reverse-protection diode D2 and ferrite bead L2; Multi-driver net false positives on __unnamed_21 and __unnamed_22 due to MIC4426 multi-unit symbol pin role ...
 

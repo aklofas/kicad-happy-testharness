@@ -1,4 +1,4 @@
-# Findings: Custom-Keyboard-Project / Keyboard files_Keyboard_Schematic
+# Findings: BryanGuan24/Custom-Keyboard-Project / Keyboard files_Keyboard_Schematic
 
 ## FND-00000436: Keyboard switches K1-K4 (KEYSW) misclassified as relay instead of switch; component_types.switch count is 1 but should be 5 (SW1 + K1-K4); Key matrix not detected despite clear 2x2 switch-diode mat...
 

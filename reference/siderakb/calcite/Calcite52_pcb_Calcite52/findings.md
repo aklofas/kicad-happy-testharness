@@ -1,4 +1,4 @@
-# Findings: calcite / Calcite52_pcb_Calcite52
+# Findings: siderakb/calcite / Calcite52_pcb_Calcite52
 
 ## FND-00002298: RP2040 + W25Q128 flash memory interface detected correctly
 

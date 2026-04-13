@@ -1,4 +1,4 @@
-# Findings: SparkFun_ESP32_Qwiic_Pro_Mini / Hardware_Production_SparkFun_ESP32_Qwiic_Pro_Mini_panelized
+# Findings: sparkfun/SparkFun_ESP32_Qwiic_Pro_Mini / Hardware_Production_SparkFun_ESP32_Qwiic_Pro_Mini_panelized
 
 ## FND-00001395: Component count of 26 and BOM breakdown are accurate; LDO regulator (U2 AP2112K-3.3) correctly detected with VCC→+3.3V path; I2C bus not detected despite Qwiic connector and 2.2k pull-up resistors ...
 

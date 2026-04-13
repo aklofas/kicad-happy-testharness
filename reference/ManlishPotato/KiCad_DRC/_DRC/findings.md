@@ -1,4 +1,4 @@
-# Findings: KiCad_DRC / _DRC
+# Findings: ManlishPotato/KiCad_DRC / _DRC
 
 ## FND-00000738: Stepper driver schematic correctly identifies 14 components across 4 types with proper power rails; Decoupling warnings claim C1/C2 caps missing on +5V/+12V, but caps exist on GND/signal nets (not ...
 

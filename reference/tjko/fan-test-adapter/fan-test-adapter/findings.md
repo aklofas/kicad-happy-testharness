@@ -1,4 +1,4 @@
-# Findings: fan-test-adapter / fan-test-adapter
+# Findings: tjko/fan-test-adapter / fan-test-adapter
 
 ## FND-00002063: Logo_Open_Hardware_Small graphic incorrectly listed as a power rail; Capacitors with value 'DNF' not detected as Do-Not-Fit/DNP parts
 

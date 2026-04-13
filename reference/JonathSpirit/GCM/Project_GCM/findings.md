@@ -1,4 +1,4 @@
-# Findings: GCM / Project_GCM
+# Findings: JonathSpirit/GCM / Project_GCM
 
 ## FND-00000566: Multi-sheet parsing: all 10 sheets discovered and parsed; Voltage divider R1/R2 correctly detected for LTC6994 SET pin; SPI bus not detected despite named SPI_MOSI/MISO/SCLK/CS nets; CLK_SELECT_* n...
 

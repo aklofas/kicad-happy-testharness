@@ -1,4 +1,4 @@
-# Findings: 0x42 / pcb_0x42
+# Findings: plut0nium/0x42 / pcb_0x42
 
 ## FND-00000326: ESD protection PRTR5V0U2X not detected; key matrix switch count likely overcounted due to dual-unit Key_Switch_LED symbols
 

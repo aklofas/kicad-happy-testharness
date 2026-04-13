@@ -1,4 +1,4 @@
-# Findings: SparkFun_Portability_Shield / Hardware_SparkFun_Portability_Shield
+# Findings: sparkfun/SparkFun_Portability_Shield / Hardware_SparkFun_Portability_Shield
 
 ## FND-00001472: Main schematic component counts correct: 63 total with 17 resistors, 16 capacitors, 6 ICs, 5 jumpers; SPI bus (SHLD_SCK, SHLD_POCI, SHLD_PICO, SHLD_~{CS}) not detected despite clear SPI signal name...
 

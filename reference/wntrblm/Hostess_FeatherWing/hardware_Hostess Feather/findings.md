@@ -1,4 +1,4 @@
-# Findings: Hostess_FeatherWing / hardware_Hostess Feather
+# Findings: wntrblm/Hostess_FeatherWing / hardware_Hostess Feather
 
 ## FND-00000604: Component extraction, subcircuits, crystal circuit with load caps all correct; Crystal Y1 frequency not extracted from MPN (ABS06-32.768KHz-1-T); ESD protection on USB D+/D- falsely credited to U1 ...
 

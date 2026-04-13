@@ -1,4 +1,4 @@
-# Findings: cyclops_pcb / cyclops
+# Findings: westfoxtrot/cyclops_pcb / cyclops
 
 ## FND-00002033: 
 

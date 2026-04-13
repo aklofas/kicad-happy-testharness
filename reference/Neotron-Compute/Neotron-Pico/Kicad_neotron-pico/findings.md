@@ -1,4 +1,4 @@
-# Findings: Neotron-Pico / Kicad_neotron-pico
+# Findings: Neotron-Compute/Neotron-Pico / Kicad_neotron-pico
 
 ## FND-00001015: I2S bus not detected for TLV320AIC23 CODEC despite clear I2S signals; RC filters R801-R804 / C804-C809 classified as high-pass filters but are DC-blocking coupling caps with load resistors; PWR_FLA...
 

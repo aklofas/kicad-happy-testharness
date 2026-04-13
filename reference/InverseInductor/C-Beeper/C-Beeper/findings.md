@@ -1,4 +1,4 @@
-# Findings: C-Beeper / C-Beeper
+# Findings: InverseInductor/C-Beeper / C-Beeper
 
 ## FND-00000417: LS1 (Device:Speaker_Crystal) classified as 'crystal' instead of speaker/transducer; buzzer_speaker_circuits detector returned empty despite a speaker (LS1) being present; transistor_circuits detect...
 

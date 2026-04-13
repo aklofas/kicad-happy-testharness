@@ -1,4 +1,4 @@
-# Findings: LNA1109 / LNA1109
+# Findings: greatscottgadgets/LNA1109 / LNA1109
 
 ## FND-00000137: LNA1109 is a Great Scott Gadgets low noise amplifier board for 1090 MHz (ADS-B). Uses BGB741L7ESD LNA, FAR-F5QA SAW filter, two GRF6011 RF switches, TVS protection diodes, and SMA connectors. The analyzer correctly detects the RF chain (1 amplifier + 1 filter), 5 LC filters with resonant frequencies around 73 MHz, RF matching network from SMA to switch, and 2 TVS protection devices. However, the LNA is falsely classified as a power regulator, and crystal circuits falsely fire on 4 entries.
 

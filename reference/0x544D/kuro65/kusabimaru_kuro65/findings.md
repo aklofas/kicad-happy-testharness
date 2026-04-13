@@ -1,4 +1,4 @@
-# Findings: kuro65 / kusabimaru_kuro65
+# Findings: 0x544D/kuro65 / kusabimaru_kuro65
 
 ## FND-00000223: Kuro65 keyboard switches sheet (276 components). Key matrix 5x16 correctly detected with 69 keys. Critical: 69 SK6812MINI-E addressable LEDs misclassified as generic diodes, 0 addressable_led_chains detected. BOM shows 138 diodes but 69 are actually RGB LED ICs.
 

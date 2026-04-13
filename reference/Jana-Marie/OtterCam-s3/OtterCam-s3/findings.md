@@ -1,4 +1,4 @@
-# Findings: OtterCam-s3 / OtterCam-s3
+# Findings: Jana-Marie/OtterCam-s3 / OtterCam-s3
 
 ## FND-00000166: Allwinner S3-based camera board top-level sheet. U.FL connector classified as IC, Ethernet nets misidentified as UART, WiFi module as regulator.
 

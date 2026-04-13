@@ -1,4 +1,4 @@
-# Findings: Laser_Backplane_DVI / KiCad_LaserBackplane_DVI
+# Findings: TU-Darmstadt-APQ/Laser_Backplane_DVI / KiCad_LaserBackplane_DVI
 
 ## FND-00000859: -12V and -5V nets classified as 'signal' instead of 'power'; Decoupling analysis misses C8/C11 on +12V and C10/C12 on +5V rails; DVI-I connector J2 detected as hdmi_dvi interface; Both LDO regulato...
 

@@ -1,4 +1,4 @@
-# Findings: Arduino_LMeter_shield / Arduino_LMeter_shield
+# Findings: michpro/Arduino_LMeter_shield / Arduino_LMeter_shield
 
 ## FND-00000371: LC oscillator circuit not detected; RC high-pass filter false positive on BJT emitter degeneration network; Duplicate I2C bus entries for Arduino A4/A5 analog pins; OLED display not counted as I2C ...
 

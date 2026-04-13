@@ -14,7 +14,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1-Q4 BC807 PNP LED drivers correctly identified",
@@ -24,7 +30,16 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB-C 5.1k CC pulldowns pass",

@@ -14,7 +14,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^X1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C60",
+            "X1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MC78L08 8V LDO regulator correctly identified",
@@ -23,7 +30,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "7 transistor circuits all correctly identified including Q5/Q6/Q7 RGB video output",
@@ -33,7 +44,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q5$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q5",
+            "Q6",
+            "Q7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Cassette interface RC filters (R14+C24 HP 72Hz, R18+C25 LP 14kHz) correctly detected",
@@ -43,7 +62,16 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R14$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C24",
+            "C25",
+            "R14",
+            "R18"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R64+C61 and R10+C10 clock filters at 86.83MHz correct",
@@ -52,8 +80,17 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R64$"
-          }
+            "pattern": "^R10$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C10",
+            "C61",
+            "R10",
+            "R64"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "3 voltage dividers including R31+R32 RF modulator video level divider correct",
@@ -63,7 +100,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R31$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R31",
+            "R32"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [],
@@ -93,7 +137,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^X1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C60",
+            "X1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "7 transistor circuits correctly identified",
@@ -102,7 +153,11 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "MC78L08 8V regulator correct",
@@ -111,7 +166,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Cassette RC filters correct",
@@ -120,7 +179,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [

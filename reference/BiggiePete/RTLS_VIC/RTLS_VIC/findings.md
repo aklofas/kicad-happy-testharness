@@ -1,4 +1,4 @@
-# Findings: RTLS_VIC / RTLS_VIC
+# Findings: BiggiePete/RTLS_VIC / RTLS_VIC
 
 ## FND-00001171: Crystal X1 classified as 'connector' type in BOM; Crystal circuit (X1 + load caps C10/C11 + STM32 XIN/XOT) not detected; TPS63900 buck-boost switching regulator correctly detected
 

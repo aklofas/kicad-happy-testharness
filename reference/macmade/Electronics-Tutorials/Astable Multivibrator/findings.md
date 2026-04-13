@@ -1,4 +1,4 @@
-# Findings: Electronics-Tutorials / Astable Multivibrator_Astable Multivibrator
+# Findings: macmade/Electronics-Tutorials / Astable Multivibrator
 
 ## FND-00000506: All components, nets, and pin mappings are correctly extracted; PWR_FLAG warning incorrectly fired for GND rail despite PWR_FLAG symbol being present; PWR_FLAG appears as a spurious power rail in s...
 

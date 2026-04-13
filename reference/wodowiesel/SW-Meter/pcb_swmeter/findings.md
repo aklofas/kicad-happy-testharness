@@ -1,4 +1,4 @@
-# Findings: SW-Meter / pcb_swmeter
+# Findings: wodowiesel/SW-Meter / pcb_swmeter
 
 ## FND-00001315: SW-Meter: LM3914N bar-graph LED driver correctly identified as IC, all THT components correctly classified; LM3914N power domain not detected — U1 appears in power_net_summary GND but not in ic_pow...
 

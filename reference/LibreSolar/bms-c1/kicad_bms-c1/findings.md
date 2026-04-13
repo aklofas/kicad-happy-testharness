@@ -1,4 +1,4 @@
-# Findings: bms-c1 / kicad_bms-c1
+# Findings: LibreSolar/bms-c1 / kicad_bms-c1
 
 ## FND-00000211: Libre Solar BMS C1, 16-cell battery management system with BQ76952. Overall excellent analysis: BMS system, current sense, transistor circuits, and cell input RC filters all correctly identified. Switching regulator Vout estimate is incorrect due to wrong Vref assumption.
 

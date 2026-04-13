@@ -10,19 +10,34 @@
           "description": "AMS1117 (U1) correctly identified as LDO regulator with +5V input and VCC output",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators[*].ref",
-            "op": "contains",
-            "value": "U1"
-          }
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U1$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R27/R28 voltage divider (10k/10k, ratio 0.5) for LCD contrast on VO net correctly detected",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers[*].r_top.ref",
-            "op": "contains",
-            "value": "R27"
-          }
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R27$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R27",
+            "R28"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SPI bus detected with SCK/MOSI/MISO connecting ESP-12E (U4) and RFM69HCW (U3)",
@@ -47,27 +62,59 @@
           "analyzer_section": "signal_analysis.rc_filters",
           "check": {
             "path": "signal_analysis.rc_filters",
-            "op": "min_count",
-            "value": 5
-          }
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R4$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "R4",
+            "R5",
+            "R6",
+            "R7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q2 PMOS high-side switch correctly detected with gate resistors R17/R15 (100k)",
           "analyzer_section": "signal_analysis.transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits[0].reference",
-            "op": "eq",
-            "value": "Q2"
-          }
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q2$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q2",
+            "R15",
+            "R17"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 NMOS gate driver with R15/R16 gate resistors correctly identified",
           "analyzer_section": "signal_analysis.transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits[1].reference",
-            "op": "eq",
-            "value": "Q1"
-          }
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "R15",
+            "R16"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "5 DNP parts correctly identified (R8, R9, R21, R22, R23)",
@@ -94,7 +141,15 @@
             "path": "signal_analysis.decoupling_analysis[0].cap_count",
             "op": "eq",
             "value": 3
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C10",
+            "C12",
+            "C2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Power rails +15V, +5V, GND, VCC all correctly identified",
@@ -128,7 +183,15 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D3",
+            "Q1",
+            "R1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C SDA line (RX0_SDA) with R3 3k3 pull-up to VCC not detected in bus_analysis.i2c. Only TX0_SCL pull-up (R2) is found; the structurally identical R3 pull-up on SDA is missed.",
@@ -143,7 +206,13 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Antenna matching circuit (C14 series cap + AE1 antenna on ANT net) not detected in rf_matching",
@@ -152,25 +221,45 @@
             "path": "signal_analysis.rf_matching",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_matching",
+          "subject_refs": [
+            "C14"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "URB4805YMD-6WR3 (U2) is a 48V-to-5V isolated DC-DC converter not detected in power_regulators. It converts +15V input (from XT30 via PMOS switch) to +5V rail. Pins are named VIN/VOUT/GND.",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators[*].ref",
-            "op": "contains",
-            "value": "U2"
-          }
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D1 (12V Zener diode, D_SOD-323) not detected as a voltage protection/clamping device on the PMOS gate of the power input switch",
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
             "path": "signal_analysis.protection_devices",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D1$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "WS2812 addressable LED output not detected. ESP GPIO2 drives WS2812 label to connector J3 for external LED strip.",
@@ -179,7 +268,13 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [
+            "J3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "ESP-12E (U4) power domain shows __unnamed_26 instead of VCC - the ESP's VCC pin connection is not properly resolved to the VCC power rail",

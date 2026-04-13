@@ -1,4 +1,4 @@
-# Findings: PD-Injector / PD-Injector
+# Findings: Jana-Marie/PD-Injector / PD-Injector
 
 ## FND-00001058: USB SuperSpeed lanes (TX1+/TX1-/TX2+/TX2-/RX1+/RX1-/RX2+/RX2-) falsely detected as UART nets; MK1 (Mechanical:Mounting_Hole_PAD) classified as 'fiducial' instead of 'mechanical' or 'other'; USB-C d...
 

@@ -1,4 +1,4 @@
-# Findings: KiCad-Simulations / 555-bipolar_555bip
+# Findings: labtroll/KiCad-Simulations / 555-bipolar_555bip
 
 ## FND-00002272: Discrete boost converter topology (L+NMOS+D+C) not detected in power_regulators; Simulation voltage sources (VPULSE, VDC, VSIN) misclassified as varistor, causing false protection_devices entries; ...
 

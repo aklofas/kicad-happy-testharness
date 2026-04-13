@@ -1,4 +1,4 @@
-# Findings: kicad_sch_diffs / simple_led_pcb
+# Findings: nickradfc/kicad_sch_diffs / simple_led_pcb
 
 ## FND-00002372: Four single-pin nets from unconnected RGB LED channels not reported in connectivity_issues.single_pin_nets; assembly_complexity reports smd_count=3 for components with no assigned footprints
 

@@ -1,4 +1,4 @@
-# Findings: pcb_kicad_rf_scom_bk48_v3 / sicomm_slaveboard_BK4819_v2
+# Findings: findasifrahman/pcb_kicad_rf_scom_bk48_v3 / sicomm_slaveboard_BK4819_v2
 
 ## FND-00000219: BK4819 RF board power sub-sheet (11 components). False negative: TPLP5907MFX-3.3 linear regulator (U19) not detected as power regulator despite clear LDO topology with input/output decoupling. IC pin analysis correctly identified all 5 pins and decoupling caps. Design observation incorrectly lists VBAT as rail_without_caps despite C1(10uF)+C163(100nF) being present.
 

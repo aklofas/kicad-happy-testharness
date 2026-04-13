@@ -40,11 +40,22 @@
             "op": "not_contains_match",
             "field": "r_top.ref",
             "pattern": "^R96$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R96",
+            "R97"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Isolation barrier lists no isolation_components despite SFH617A optocoupler and LTV-208 dual optocouplers being present in the design",
-          "analyzer_section": "signal_analysis.isolation_barriers"
+          "analyzer_section": "signal_analysis.isolation_barriers",
+          "detector": "isolation_barriers",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -73,7 +84,11 @@
             "path": "signal_analysis.isolation_barriers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Dual CAN bus architecture (MCP2515+CA-IS3052G for CAN0, separate path for CAN1) not described as a redundant/dual CAN topology",

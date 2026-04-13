@@ -1,4 +1,4 @@
-# Findings: AlveoU25_JTAG_Adapter / AlveoU25_JTAG_Adapter
+# Findings: mwrnd/AlveoU25_JTAG_Adapter / AlveoU25_JTAG_Adapter
 
 ## FND-00000376: JTAG bus not detected in bus_analysis; BOM groups J5 and J7 as type 'jumper' instead of 'connector'; bus_topology reports width=16 for B-signal group spanning B1..B12
 

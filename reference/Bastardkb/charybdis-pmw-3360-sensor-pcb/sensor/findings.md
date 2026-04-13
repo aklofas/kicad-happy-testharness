@@ -1,4 +1,4 @@
-# Findings: charybdis-pmw-3360-sensor-pcb / sensor_sensor
+# Findings: Bastardkb/charybdis-pmw-3360-sensor-pcb / sensor
 
 ## FND-00002306: Wrong Vref used for AP7335 LDO causes incorrect estimated output voltage (1.5V instead of 2.0V); Duplicate SPI bus reported: same PMW3360 bus appears twice with different bus_ids; Correctly identif...
 

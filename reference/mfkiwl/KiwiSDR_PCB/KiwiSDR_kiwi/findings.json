@@ -13,7 +13,11 @@
             "path": "signal_analysis.lc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "16.368MHz TCXO correctly classified as active_oscillator",
@@ -22,7 +26,11 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "4 power regulators correct: LMR10530Y buck 1.0V, LP5907 LDOs 1.8V and 3.3V",
@@ -31,7 +39,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SAW filter, SE4150L GPS LNA, Artix-7 FPGA correctly classified",
@@ -52,7 +64,14 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U701$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "SW1",
+            "U701"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "LTC6401-20 (U405) +IN/-IN and +OUT/-OUT pins systematically swapped \u2014 same KiCad 5 pin-position bug, paired pins swap",
@@ -62,7 +81,13 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^U405$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U405"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -91,9 +116,14 @@
           "analyzer_section": "signal_analysis.transistor_circuits",
           "check": {
             "path": "signal_analysis.transistor_circuits",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "equals",
+            "value": 8
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 8
         },
         {
           "description": "TPS7A4501 and LM2941 LDOs correctly identified",
@@ -102,7 +132,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "L202+C218 LC filter at 25.3Hz for power ripple correctly identified",
@@ -112,7 +146,14 @@
             "op": "contains_match",
             "field": "inductor.ref",
             "pattern": "^L202$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "C218",
+            "L202"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q201 MMBT4401 capacitance multiplier with base RC filter correctly detected",
@@ -122,7 +163,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q201$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q201"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "5 RC snubber networks at bridge rectifier correctly detected",
@@ -131,7 +178,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -143,7 +194,17 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q501$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "J271",
+            "J310",
+            "Q501",
+            "Q502",
+            "Q507"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q502 J271 P_JFET has is_pchannel=false \u2014 'p_jfet' not in P-channel detection patterns",
@@ -153,7 +214,14 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q502$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "J271",
+            "Q502"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q503-Q506 (NPN_2E/PNP_2E 2-emitter BJTs) have emitter_net=null \u2014 pin detector looks for 'E'/'EMITTER' but these use 'E1'/'E2'",
@@ -163,7 +231,16 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q503$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q503",
+            "Q504",
+            "Q505",
+            "Q506"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -174,7 +251,13 @@
             "path": "signal_analysis.bridge_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bridge_circuits",
+          "subject_refs": [
+            "D201"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

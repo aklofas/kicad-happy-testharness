@@ -1,4 +1,4 @@
-# Findings: Ohmbedded-RP2040-PCB-Template / PCB
+# Findings: hlord2000/Ohmbedded-RP2040-PCB-Template / PCB
 
 ## FND-00000970: 2x2 key matrix (4 MX switches + 4 SOD-123 diodes) correctly detected
 

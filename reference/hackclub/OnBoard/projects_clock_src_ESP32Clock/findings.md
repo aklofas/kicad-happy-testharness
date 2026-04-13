@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_clock_src_ESP32Clock
+# Findings: hackclub/OnBoard / projects_clock_src_ESP32Clock
 
 ## FND-00000104: ESP32 clock display with 87 WS2812D-F8 addressable LEDs and AZ1117H-3.3 LDO. Regulator detected but LED chain and decoupling issues noted.
 

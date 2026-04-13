@@ -14,7 +14,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y101$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y101"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SPI bus detection correctly groups SPI signals",
@@ -29,11 +35,19 @@
       "incorrect": [
         {
           "description": "SPI nets SNS_SPI_SCK, SNS_SPI_MOSI, SNS_SPI_MISO falsely detected as I2C SCL/SDA -- pin-name fallback doesn't exclude nets already identified as SPI",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "BME688_CS net reported as I2C SDA because Teensy pin 39 has multi-function name '17_A3_TX4_SDA1'",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -45,7 +59,14 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^U101$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "U101",
+            "U201"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

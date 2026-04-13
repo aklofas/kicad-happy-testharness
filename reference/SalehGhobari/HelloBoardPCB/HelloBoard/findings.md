@@ -1,4 +1,4 @@
-# Findings: HelloBoardPCB / HelloBoard
+# Findings: SalehGhobari/HelloBoardPCB / HelloBoard
 
 ## FND-00000601: Component counts, BOM, and power rail extraction are accurate; TMP235A2DCKR (temperature sensor) falsely classified as LDO regulator; I2C bus with pullups correctly detected; crystal circuit (16 MH...
 

@@ -11,10 +11,18 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "contains_match",
-            "field": "ref",
-            "pattern": "^U2$"
-          }
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 3.3
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 3.3
         },
         {
           "description": "Q1 and Q2 BSS138 N-MOSFETs correctly identified with proper gate/drain/source net mapping and connector load type",
@@ -24,7 +32,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "All 38 components correctly counted, BOM values verified (C1=10uF, C2=1.0uF, C3=1.0uF, C4=10uF, 10 resistors)",
@@ -42,7 +57,17 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [],

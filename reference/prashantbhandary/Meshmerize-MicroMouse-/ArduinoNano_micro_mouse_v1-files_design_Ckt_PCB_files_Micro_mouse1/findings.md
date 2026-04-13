@@ -1,4 +1,4 @@
-# Findings: Meshmerize-MicroMouse- / ArduinoNano_micro_mouse_v1-files_design_Ckt_PCB_files_Micro_mouse1
+# Findings: prashantbhandary/Meshmerize-MicroMouse- / ArduinoNano_micro_mouse_v1-files_design_Ckt_PCB_files_Micro_mouse1
 
 ## FND-00000910: FPC-05F-12PH20 (FPC1) classified as 'fuse' instead of 'connector'; L293D motor driver (U1) not detected as a bridge/motor driver circuit
 

@@ -1,4 +1,4 @@
-# Findings: ESP07-Breakout / ESP07-Breakout
+# Findings: jbtronics/ESP07-Breakout / ESP07-Breakout
 
 ## FND-00000493: SW1 pin 2 is placed on __unnamed_0 instead of RST net; U1 (AP1117D33 LDO regulator) not detected as a power regulator; Spurious RC filter detected: R2/C1 reset debounce circuit misidentified as RC ...
 

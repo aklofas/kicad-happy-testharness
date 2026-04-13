@@ -1,4 +1,4 @@
-# Findings: ESP8266-IMU-Node / ESP8266-IMU-Node_ESP8266-IMU-Node
+# Findings: yunus-kunduz/ESP8266-IMU-Node / ESP8266-IMU-Node
 
 ## FND-00000504: Component inventory correct: 24 components across 7 types, all references and values match source; Net connectivity is accurately captured for all named nets (SDA, SCL, WAKE, BUTON, LED_KIRMIZI, LE...
 

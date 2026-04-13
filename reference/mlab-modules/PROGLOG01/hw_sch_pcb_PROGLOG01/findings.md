@@ -1,4 +1,4 @@
-# Findings: PROGLOG01 / hw_sch_pcb_PROGLOG01
+# Findings: mlab-modules/PROGLOG01 / hw_sch_pcb_PROGLOG01
 
 ## FND-00002005: Component count of 66 and type breakdown are accurate; TPS22919DCK (U1) misclassified as LDO regulator — it is a load switch; SPI bus cross-domain level-shifter warning is a false positive; SPI bus...
 

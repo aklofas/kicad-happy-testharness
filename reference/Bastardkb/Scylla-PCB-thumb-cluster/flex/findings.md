@@ -1,4 +1,4 @@
-# Findings: Scylla-PCB-thumb-cluster / flex_flex
+# Findings: Bastardkb/Scylla-PCB-thumb-cluster / flex
 
 ## FND-00001403: Component counts accurate; Mousebite breakoff tabs correctly classified as 'other'; LED chain detection generates 3 chains with D3 appearing in two chains and D2 as an isolated stub
 

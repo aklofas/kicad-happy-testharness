@@ -1,4 +1,4 @@
-# Findings: c64PowerSupply-kicad / C64PowerSupply
+# Findings: hotkeysoft/c64PowerSupply-kicad / C64PowerSupply
 
 ## FND-00002009: 
 

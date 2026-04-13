@@ -1,4 +1,4 @@
-# Findings: KiCad.Projects / MediumWaveRadioTransmitter_MediumWaveRadioTransmitter
+# Findings: BoBoBaSs84/KiCad.Projects / MediumWaveRadioTransmitter
 
 ## FND-00000734: Qz2 (Device:Crystal) misclassified as 'transistor' due to 'Qz' reference prefix; Crystal circuit (Qz2 resonator oscillator) not detected in crystal_circuits; No power rails reported correctly — sch...
 

@@ -1,4 +1,4 @@
-# Findings: IndiaNavi_PCB / Navi_2_0
+# Findings: theBrutzler/IndiaNavi_PCB / Navi_2_0
 
 ## FND-00000665: DISPLAY1 (EPD e-ink module) misclassified as type 'diode'; Dual MT3420C buck regulators correctly detected with feedback divider values and output voltages; I2C bus analysis correct: pull-ups detec...
 

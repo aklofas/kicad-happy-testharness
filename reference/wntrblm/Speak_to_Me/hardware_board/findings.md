@@ -1,4 +1,4 @@
-# Findings: Speak_to_Me / hardware_board_board
+# Findings: wntrblm/Speak_to_Me / hardware_board
 
 ## FND-00001597: V78E05-500-SMT DC-DC converter (PS1) classified as 'connector' not a power supply type; Three of four RC filters at board level have incorrect or nonsensical net assignments due to cross-sheet topo...
 

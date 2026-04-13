@@ -13,17 +13,32 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
         {
           "description": "2 RF matching networks falsely detected - L1 ferrite bead EMI filter and C12 decoupling capacitor misidentified as RF matching",
-          "analyzer_section": "signal_analysis.rf_matching"
+          "analyzer_section": "signal_analysis.rf_matching",
+          "detector": "rf_matching",
+          "subject_refs": [
+            "C12",
+            "L1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter count includes feedback networks that are not signal filters",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [],

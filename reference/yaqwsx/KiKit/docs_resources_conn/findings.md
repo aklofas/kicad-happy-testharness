@@ -1,4 +1,4 @@
-# Findings: KiKit / docs_resources_conn
+# Findings: yaqwsx/KiKit / docs_resources_conn
 
 ## FND-00000721: Duplicate sheet path in top-level sheets list; Component extraction, BOM grouping, and hierarchical net naming all correct
 

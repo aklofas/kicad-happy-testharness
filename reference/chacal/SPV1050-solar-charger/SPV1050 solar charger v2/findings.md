@@ -1,4 +1,4 @@
-# Findings: SPV1050-solar-charger / SPV1050 solar charger v2
+# Findings: chacal/SPV1050-solar-charger / SPV1050 solar charger v2
 
 ## FND-00001333: Component counts, BOM, and net extraction are accurate; Voltage dividers correctly detected for MPP and EOC pins; RC filter misidentification: R1/C1 is not a low-pass filter; SPV1050 energy harvest...
 

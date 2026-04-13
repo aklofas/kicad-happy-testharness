@@ -1,4 +1,4 @@
-# Findings: USBPDSINK01 / hw_sch_pcb_USBPDSINK01
+# Findings: mlab-modules/USBPDSINK01 / hw_sch_pcb_USBPDSINK01
 
 ## FND-00001757: Component count of 53 correct with accurate type breakdown; LDO regulator U2 correctly detected with input VBUS and output +3V3; I2C bus correctly detected on SDA and SCL nets with pull-up resistor...
 

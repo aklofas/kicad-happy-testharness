@@ -1,4 +1,4 @@
-# Findings: angst / hardware_pcb_angst
+# Findings: electrodonkey/angst / hardware_pcb_angst
 
 ## FND-00001935: Component counts and types correctly identified for 86-component STM32 motor controller; Three STSPIN233 motor driver ICs detected with correct bridge circuit grouping; RSH1/RSH2/RSH3 shunt resisto...
 

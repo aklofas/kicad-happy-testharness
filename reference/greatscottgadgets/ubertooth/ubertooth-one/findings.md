@@ -1,4 +1,4 @@
-# Findings: ubertooth / ubertooth-one
+# Findings: greatscottgadgets/ubertooth / ubertooth-one
 
 ## FND-00000073: Legacy net resolver assigns pins to wrong nets: CC2591 RF_P/AVDD pins on GND, LPC1758 GPIO/XTAL pins on 3V3D. 71/143 nets are single-pin orphans (50%).
 

@@ -1,4 +1,4 @@
-# Findings: PGA2311 / pga2311
+# Findings: jjrh/PGA2311 / pga2311
 
 ## FND-00001037: SPI bus not aggregated despite SCLK/SDI/CS/SDO nets being present and classified; -5V net classified as 'signal' instead of 'power'; PGA2311 component types and BOM correctly parsed from KiCad 5 le...
 

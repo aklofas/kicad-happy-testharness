@@ -72,8 +72,19 @@
             "path": "signal_analysis.rc_filters",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R91$"
-          }
+            "pattern": "^R104$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C81",
+            "C90",
+            "C91",
+            "C93",
+            "R104",
+            "R91"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal feedback resistor R13 1k with 27pF caps classified as RC filter at 5.89MHz - this is crystal oscillator biasing, not an RC filter",
@@ -83,7 +94,13 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R13$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "R13"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "AMP volume control network (R77 10k / R42 1k) classified as voltage divider but this is actually part of the digital volume control circuit for the audio amplifier where T2 is used as a variable attenuator",
@@ -92,8 +109,16 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R77$"
-          }
+            "pattern": "^R42$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R42",
+            "R77",
+            "T2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -105,7 +130,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^C21$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C21",
+            "C22"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "DVI connector (DVI1) present with 8 series resistors (R59-R66) for TMDS differential pairs but no DVI/HDMI interface detection",
@@ -150,7 +182,11 @@
             "path": "signal_analysis.buzzer_speaker_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "buzzer_speaker_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SD card interface (MICRO_SD1) not detected",
@@ -159,7 +195,11 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

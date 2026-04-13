@@ -1,4 +1,4 @@
-# Findings: Kicad-AMS1117 / AMS1117
+# Findings: heitorPB/Kicad-AMS1117 / AMS1117
 
 ## FND-00000780: power_regulators detector missed AP1117-50 linear regulator (U1); Decoupling analysis correctly identifies 2-cap bulk+bypass on both +12V and +5V rails
 

@@ -1,4 +1,4 @@
-# Findings: mutable_eurorack_kicad / shelves_hardware_design_pcb_KiCad_shelves_v05
+# Findings: mort13/mutable_eurorack_kicad / shelves_hardware_design_pcb_KiCad_shelves_v05
 
 ## FND-00002507: Mutable Instruments Shelves analog quad-band parametric EQ/filter eurorack module with five TL074D/TL072D opamps, three SSM2164S quad-VCAs, and two LM4041 shunt references. Analyzer correctly parses 5-sheet hierarchy but systematically misclassifies opamp feedback as open-loop, misses RC filters, protection diodes, and shunt voltage references.
 

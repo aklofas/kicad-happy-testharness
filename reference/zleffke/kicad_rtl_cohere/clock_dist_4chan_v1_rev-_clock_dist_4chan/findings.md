@@ -1,4 +1,4 @@
-# Findings: kicad_rtl_cohere / clock_dist_4chan_v1_rev-_clock_dist_4chan
+# Findings: zleffke/kicad_rtl_cohere / clock_dist_4chan_v1_rev-_clock_dist_4chan
 
 ## FND-00002370: RF chain not detected in 4-way active RF splitter with BGA2815 amplifier and TCP-2-25X+ splitter ICs; LDO regulator (LP2985-3.3) correctly identified and annotation issue (J0 zero-indexed) correctl...
 

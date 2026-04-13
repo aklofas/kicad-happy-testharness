@@ -1,4 +1,4 @@
-# Findings: AMUX01 / hw_sch_pcb_AMUX01
+# Findings: mlab-modules/AMUX01 / hw_sch_pcb_AMUX01
 
 ## FND-00000343: pwr_flag_warnings fires for GND and +3V3 despite both having PWR_FLAG symbols connected; D1 (BZV55C-5.6V Zener) not detected as a protection device
 

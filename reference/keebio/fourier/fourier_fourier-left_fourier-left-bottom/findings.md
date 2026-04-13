@@ -1,4 +1,4 @@
-# Findings: fourier / fourier_fourier-left_fourier-left-top
+# Findings: keebio/fourier / fourier_fourier-left_fourier-left-bottom
 
 ## FND-00002180: Key matrix topology detector misclassifies rows as columns and vice versa, overcounts switches 54 vs actual 34
 

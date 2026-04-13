@@ -1,4 +1,4 @@
-# Findings: crossover-schiit-stack / xover4schiit
+# Findings: introprose/crossover-schiit-stack / xover4schiit
 
 ## FND-00002023: 
 

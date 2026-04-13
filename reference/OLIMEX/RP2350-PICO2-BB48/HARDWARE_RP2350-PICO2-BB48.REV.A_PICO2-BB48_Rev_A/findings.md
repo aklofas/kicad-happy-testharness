@@ -1,4 +1,4 @@
-# Findings: RP2350-PICO2-BB48 / HARDWARE_RP2350-PICO2-BB48.REV.A_PICO2-BB48_Rev_A
+# Findings: OLIMEX/RP2350-PICO2-BB48 / HARDWARE_RP2350-PICO2-BB48.REV.A_PICO2-BB48_Rev_A
 
 ## FND-00001235: All three memory ICs (U1 W25Q16, U4 W25Q128, U5 APS6404L) missed by memory_interfaces detector; 4 pwr_flag_warnings fired despite 8 PWR_FLAG symbols present in the design; Crystal Q1 (12MHz ABM8), ...
 

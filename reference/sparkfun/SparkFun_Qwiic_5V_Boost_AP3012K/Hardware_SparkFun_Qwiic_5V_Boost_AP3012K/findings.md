@@ -1,4 +1,4 @@
-# Findings: SparkFun_Qwiic_5V_Boost_AP3012K / Hardware_SparkFun_Qwiic_5V_Boost_AP3012K
+# Findings: sparkfun/SparkFun_Qwiic_5V_Boost_AP3012K / Hardware_SparkFun_Qwiic_5V_Boost_AP3012K
 
 ## FND-00001498: Component count of 37 and type breakdown are accurate; AP3012 boost converter output_rail reported as 3.3V instead of 5V; AP3012 assumed_vref=0.6V is wrong; actual Vref is 1.23V, so estimated_vout=...
 

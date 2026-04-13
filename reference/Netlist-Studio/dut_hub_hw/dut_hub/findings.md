@@ -1,4 +1,4 @@
-# Findings: dut_hub_hw / dut_hub
+# Findings: Netlist-Studio/dut_hub_hw / dut_hub
 
 ## FND-00002027: Top-level hierarchical schematic: 158 total components across 8 parsed sheet instances (5 unique sheet files; dut.kicad_sch instantiated 4 times for DUT1–DUT4); Four crystal oscillator circuits det...
 

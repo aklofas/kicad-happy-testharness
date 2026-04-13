@@ -23,16 +23,32 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1",
+            "Y2",
+            "Y3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus with pullups R2, R3 correctly detected on SCL/SDA",
           "analyzer_section": "signal_analysis.design_observations",
           "check": {
             "path": "signal_analysis.design_observations",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "equals",
+            "value": 3
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "R2",
+            "R3"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 3
         },
         {
           "description": "LC filters in radio section correctly identified",
@@ -41,7 +57,11 @@
             "path": "signal_analysis.lc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -53,7 +73,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Same spurious RC filter detections (R7/C19, R4/C19, R4/C16) as LOGSX v2 - components not actually forming filter networks",
@@ -62,8 +88,17 @@
             "path": "signal_analysis.rc_filters",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R7$"
-          }
+            "pattern": "^R4$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C16",
+            "C19",
+            "R4",
+            "R7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

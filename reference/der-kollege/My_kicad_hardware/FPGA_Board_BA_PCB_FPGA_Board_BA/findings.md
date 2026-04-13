@@ -1,4 +1,4 @@
-# Findings: My_kicad_hardware / FPGA_Board_BA_PCB_FPGA_Board_BA
+# Findings: der-kollege/My_kicad_hardware / FPGA_Board_BA_PCB_FPGA_Board_BA
 
 ## FND-00001999: Component count of 558 and power rail detection are accurate; 72 UART buses falsely detected; involved devices are level shifters and connectors, not UART ICs; H-bridge (Q5/Q6) correctly detected; ...
 

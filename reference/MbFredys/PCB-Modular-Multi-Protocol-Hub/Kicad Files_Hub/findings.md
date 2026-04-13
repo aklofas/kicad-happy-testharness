@@ -1,4 +1,4 @@
-# Findings: PCB-Modular-Multi-Protocol-Hub / Kicad Files_Hub
+# Findings: MbFredys/PCB-Modular-Multi-Protocol-Hub / Kicad Files_Hub
 
 ## FND-00000225: Multi-Protocol Hub (167 components). Correct: 2 crystals, 2 transistors, 1 ethernet PHY, 2 voltage dividers, 3 regulators. False positive: MCP73871 battery charger classified as BMS (it's a charger, not BMS). RC filter overcounting: Ethernet termination network (R51-R54 50ohm + shared C58) generates 4 phantom filter detections. Protection device count conflates physical parts with protected nets (9 reported, 5 actual parts).
 

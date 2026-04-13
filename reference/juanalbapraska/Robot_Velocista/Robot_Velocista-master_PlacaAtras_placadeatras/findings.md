@@ -1,4 +1,4 @@
-# Findings: Robot_Velocista / Robot_Velocista-master_PlacaAtras_placadeatras_placadeatras
+# Findings: juanalbapraska/Robot_Velocista / Robot_Velocista-master_PlacaAtras_placadeatras
 
 ## FND-00001212: Empty PCB correctly parsed as a KiCad version 4 dummy/stub file; kicad_version reported as 'unknown' instead of 'KiCad 5 (legacy)' for version 4 file
 

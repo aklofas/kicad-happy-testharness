@@ -92,9 +92,18 @@
           "analyzer_section": "signal_analysis.lc_filters",
           "check": {
             "path": "signal_analysis.lc_filters",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "inductor.ref",
+            "pattern": "^L1$"
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "C10",
+            "C11",
+            "L1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling analysis on +3.3V rail correctly identifies 5 capacitors (C7, C6, C9, C24, C22) totaling ~1.02uF",
@@ -103,7 +112,17 @@
             "path": "signal_analysis.decoupling_analysis[0].cap_count",
             "op": "eq",
             "value": 5
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C22",
+            "C24",
+            "C6",
+            "C7",
+            "C9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Both +3.3V and +3V3 power rails correctly identified as separate nets",
@@ -138,8 +157,12 @@
           "check": {
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
-            "value": 2
-          }
+            "value": 1
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -155,7 +178,16 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Y2$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C14",
+            "C15",
+            "U1",
+            "Y2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Y1 (32.768kHz crystal) only has 1 load cap detected (C12 27pF) but should have 2: C12 (27pF) and C13 (22pF), connected to pins via the crystal oscillator circuit",
@@ -165,7 +197,15 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C12",
+            "C13",
+            "Y1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U2 subcircuit has zero neighbor_components, but should include at least C20 (input cap), C21 (output cap), and possibly the +3V3 power symbol connections. The empty neighbor list suggests the pin net assignment error prevented proper neighbor detection.",
@@ -179,7 +219,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R14$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C18",
+            "R14"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -188,9 +235,16 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RF matching network not detected: BAL1 (STBNR1_balun) with matching components C16, C17 (TBD), L2 connects STBlueNRG-1 RF pins to antenna pad via a balun+filter topology. This is a BLE 2.4GHz RF front-end.",
@@ -199,16 +253,32 @@
             "path": "signal_analysis.rf_matching",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_matching",
+          "subject_refs": [
+            "C16",
+            "C17",
+            "L2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Schottky diode protection circuit (D3, D4) providing reverse-current protection for battery charging is not detected as a protection device. These prevent reverse current flow from the supply into the coin cell battery.",
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
             "path": "signal_analysis.protection_devices",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D3$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D3",
+            "D4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Multi-stage SMPS input filter not characterized: the VBATT path uses R7-R8-R9-R10 (1k each) as series isolation resistors with parallel decoupling caps (C1/C2/C3, C4/C5/C6, C7/C8/C9, C22/C23/C24) forming a 4-stage pi-filter for the BlueNRG-1 SMPS supply.",
@@ -217,8 +287,29 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R7$"
-          }
+            "pattern": "^R10$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "C22",
+            "C23",
+            "C24",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "R10",
+            "R7",
+            "R8",
+            "R9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "ADC1 and ADC2 nets have zero component pins listed in the nets section (pins: []) despite having point_count of 4, meaning global labels connect them to U1 ADC pins and J3 connector pins. The analyzer lost the pin connections for these global label nets.",

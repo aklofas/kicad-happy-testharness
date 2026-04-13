@@ -13,7 +13,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "10 MOSFET circuits correctly identified with gate drivers",
@@ -22,7 +26,11 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "8 protection devices (CDSOT23-SM712 TVS, polyfuses, USBLC6, TPD4E1U06) correctly detected",
@@ -31,7 +39,11 @@
             "path": "signal_analysis.protection_devices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "VMOT battery voltage sensing divider correctly identified with ADS1115 load",
@@ -40,7 +52,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "WS2812B LED chain of 7 LEDs correctly detected",
@@ -49,7 +65,11 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "4 crystal circuits with load cap calculations correct",
@@ -58,7 +78,11 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -70,11 +94,29 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U12$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "D11",
+            "U12"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "False key_matrix \u2014 7 independent SPDT config switches (SW2-SW7) with per-switch diodes resemble matrix topology; row nets are CAN/enable signals, not keyboard rows",
-          "analyzer_section": "signal_analysis.key_matrices"
+          "analyzer_section": "signal_analysis.key_matrices",
+          "detector": "key_matrices",
+          "subject_refs": [
+            "SW2",
+            "SW3",
+            "SW4",
+            "SW5",
+            "SW6",
+            "SW7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -85,7 +127,11 @@
             "path": "signal_analysis.ethernet_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "ethernet_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "ISO1050DUB isolated CAN transceivers (U10/U11) not detected as isolation barriers \u2014 separate VCC1/VCC2 power domains",
@@ -95,7 +141,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U10$"
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [
+            "U10",
+            "U11"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: iCE40-ADC / ICE40-ADC_Rev_A
+# Findings: OLIMEX/iCE40-ADC / ICE40-ADC_Rev_A
 
 ## FND-00002139: SR1 (TLV431 shunt voltage reference) misclassified as 'switch'; SIG_IN1 (BNC connector) also misclassified as 'switch'; Decoupling analysis empty for U1 (ADC08100) because all its supply pins conne...
 

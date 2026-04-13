@@ -1,4 +1,4 @@
-# Findings: GoodEarthWeather/myKicadProjects / fieldRadio_fieldRadio-frontBack-panel_fieldRadio-frontBack-panel
+# Findings: GoodEarthWeather/myKicadProjects / fieldRadio_fieldRadio-frontBack-panel
 
 ## FND-00002516: 12-sheet SDR field radio (491 components, QSD receiver, Si5351A clock, MSP430 controller). Good structural accuracy. Issues: VR1 potentiometer as varistor, INA821 instrumentation amps as comparator, Si5351A clock output_net pointing at VDD3.3, spurious I2C detections, power_rails missing major rails.
 

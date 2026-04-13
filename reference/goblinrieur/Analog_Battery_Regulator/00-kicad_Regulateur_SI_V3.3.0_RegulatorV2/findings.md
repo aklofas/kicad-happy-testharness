@@ -1,4 +1,4 @@
-# Findings: Analog_Battery_Regulator / 00-kicad_Regulateur_SI_V3.3.0_RegulatorV2
+# Findings: goblinrieur/Analog_Battery_Regulator / 00-kicad_Regulateur_SI_V3.3.0_RegulatorV2
 
 ## FND-00000369: Legacy parser detects zero opamp circuits for 3x LM358 dual opamps (6 total units); Legacy parser misses one RC filter (R2/C8 low-pass at 7.23 Hz); Legacy parser inverts drain/source nets for IRFB4...
 

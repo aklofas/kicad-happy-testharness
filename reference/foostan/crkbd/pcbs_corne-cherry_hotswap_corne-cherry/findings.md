@@ -1,4 +1,4 @@
-# Findings: crkbd / pcbs_corne-cherry_hotswap_corne-cherry
+# Findings: foostan/crkbd / pcbs_corne-cherry_hotswap_corne-cherry
 
 ## FND-00000236: Split keyboard (18 components). All components have broken references (LED?, U?, D? placeholders), making all detection unreliable. 2 addressable LED chains and 5 ESD ICs detected but with annotation issues.
 

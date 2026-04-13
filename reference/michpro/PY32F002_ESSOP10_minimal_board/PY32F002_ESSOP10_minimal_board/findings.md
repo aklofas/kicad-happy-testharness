@@ -1,4 +1,4 @@
-# Findings: PY32F002_ESSOP10_minimal_board / PY32F002_ESSOP10_minimal_board
+# Findings: michpro/PY32F002_ESSOP10_minimal_board / PY32F002_ESSOP10_minimal_board
 
 ## FND-00001099: Component counts, BOM, and net extraction are accurate; Decoupling analysis correctly detects C1 (10u) and C2 (100n) on VCC rail; SWD connector J3 (4-pin) correctly identified with VCC/GND/SWDIO/SW...
 

@@ -1,4 +1,4 @@
-# Findings: bms-5s50-sc / control-pcb_BMS-5s
+# Findings: LibreSolar/bms-5s50-sc / control-pcb_BMS-5s
 
 ## FND-00002012: 
 

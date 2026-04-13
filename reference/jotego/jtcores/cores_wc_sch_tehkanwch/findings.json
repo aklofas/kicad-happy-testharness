@@ -8,15 +8,61 @@
       "correct": [
         {
           "description": "Crystal circuits detected for all three oscillators: Y1 (18.432 MHz clock), Y2 (400kHz resonator), Y3 (4.0 MHz CPU clock) with load caps CX15/CX16 for Y3 and C13/C14 for Y2",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C13",
+            "C14",
+            "Y1",
+            "Y2",
+            "Y3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "Voltage divider R23/R24 (4.7k/4.7k, VCC-REF-GND, ratio 0.5) correctly identified feeding the LM324 (C15) non-inverting inputs at pins 3 and 5",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "C15",
+            "R23",
+            "R24"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R23$"
+          }
         },
         {
           "description": "RC debounce/filter network RZ31/C24, R28/C16, RZ30/C23, RD1/C27 (each 100R + 220pF, fc=7.23 MHz) correctly detected as low-pass filters on joystick input lines",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C16",
+            "C23",
+            "C24",
+            "C27",
+            "R28"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R28$"
+          }
         },
         {
           "description": "Bus topology correctly identifies large A* (address), D* (data), and other bus signals with 1368 bus wires and 1200 bus entries in the multi-sheet schematic",
@@ -24,7 +70,16 @@
         },
         {
           "description": "Decoupling analysis correctly identifies only CF1/CF2 (104 = 100nF) tied to VCC, and flags that no bulk capacitance is present",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
@@ -61,7 +116,20 @@
         },
         {
           "description": "Spurious RC-network filter detected as R17 (100k) + C12 (4066 analog switch). C12 is a 4066 Quad Analog Switch IC, not a capacitor; its value 4066 is parsed as 4.066nF, generating a fictitious 391 Hz filter.",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C12",
+            "R17"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R17$"
+          }
         }
       ],
       "missed": [
@@ -70,13 +138,34 @@
           "analyzer_section": "signal_analysis.opamp_circuits",
           "check": {
             "path": "signal_analysis.opamp_circuits",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^C15$"
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "C15",
+            "R23",
+            "R24"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Y1 crystal has value 18.432 with no unit \u2014 the analyzer stores frequency as 18.432 Hz instead of 18.432 MHz.",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         }
       ],
       "suggestions": [

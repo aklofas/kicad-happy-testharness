@@ -1,4 +1,4 @@
-# Findings: 3330VCA / vca 1
+# Findings: hermflink/3330VCA / vca 1
 
 ## FND-00000318: TL072 opamps (U1, U3) not detected as opamp_circuits; Positive feedback networks on U1 not detected; C1 counted twice in rc_filters due to shared node with R1 and RV1; Decoupling analysis correctly...
 

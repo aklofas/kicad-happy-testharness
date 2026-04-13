@@ -34,7 +34,11 @@
         },
         {
           "description": "LT3790 buck-boost converter not detected as power regulator \u2014 classified as other",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -45,7 +49,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "No current sense detection despite Rch_Ibat (0.013 ohm) and Rch_Iin (0.003 ohm) sense resistors",
@@ -54,7 +62,11 @@
             "path": "signal_analysis.current_sense",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "No charger circuit detection for LT3790 buck-boost charger",
@@ -81,7 +93,11 @@
             "path": "signal_analysis.current_sense",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "MCP4725 DAC not recognized as analog output device",

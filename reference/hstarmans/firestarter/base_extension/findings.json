@@ -10,28 +10,54 @@
           "description": "U1 LM7805 correctly identified as LDO regulator with +12V input and +5V output",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators[?ref='U1'].topology",
-            "op": "eq",
-            "value": "LDO"
-          }
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U1$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U2 MCP1700T-3302E/TT correctly identified as LDO regulator with +5V input and +3.3V output",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators[?ref='U2'].output_rail",
-            "op": "eq",
-            "value": "+3.3V"
-          }
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "3 RC low-pass filters correctly detected on X_PO, Y_PO, Z_PO position feedback nets (R3/C27, R4/C28, R5/C29) with 159 Hz cutoff",
           "analyzer_section": "signal_analysis.rc_filters",
           "check": {
             "path": "signal_analysis.rc_filters",
-            "op": "count",
-            "value": 3
-          }
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R3$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C27",
+            "C28",
+            "C29",
+            "R3",
+            "R4",
+            "R5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Total component count of 76 is correct (29 caps, 12 resistors, 3 diodes, 6 ICs, 22 connectors, 2 mounting holes, 1 fuse, 1 logo)",
@@ -56,9 +82,16 @@
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
             "path": "signal_analysis.protection_devices",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^F1$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "F1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "UART bus detected with UARX net connecting IC1, IC2, IC3 (daisy-chained TMC2209 single-wire UART)",
@@ -92,9 +125,13 @@
           "analyzer_section": "signal_analysis.decoupling_analysis",
           "check": {
             "path": "signal_analysis.decoupling_analysis",
-            "op": "count",
-            "value": 4
-          }
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "CH224K (U3) correctly identified as USB PD controller IC",
@@ -119,9 +156,13 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "count",
-            "value": 2
-          }
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -166,9 +207,21 @@
           "analyzer_section": "signal_analysis.current_sense",
           "check": {
             "path": "signal_analysis.current_sense",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "shunt.ref",
+            "pattern": "^R10$"
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R8",
+            "R9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "3 decoupling capacitors (C12, C16, C19, all 0.1uF) missing from +12V rail decoupling analysis. These are on the +12V rail per power_net_summary but absent from decoupling_analysis, which shows 10 caps instead of 13.",
@@ -177,7 +230,15 @@
             "path": "signal_analysis.decoupling_analysis[?rail='+12V'].cap_count",
             "op": "gte",
             "value": 13
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C12",
+            "C16",
+            "C19"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

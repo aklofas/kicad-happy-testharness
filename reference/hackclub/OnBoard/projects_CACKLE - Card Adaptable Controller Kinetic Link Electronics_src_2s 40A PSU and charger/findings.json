@@ -28,7 +28,17 @@
       "incorrect": [
         {
           "description": "16 false positive rf_matching detections \u2014 resistors (R18 5mOhm sense, R21/R12 10ohm, R24/R23 10k) and capacitors misidentified as antennas; these are power supply filter components on a PSU board",
-          "analyzer_section": "signal_analysis.rf_matching"
+          "analyzer_section": "signal_analysis.rf_matching",
+          "detector": "rf_matching",
+          "subject_refs": [
+            "R12",
+            "R18",
+            "R21",
+            "R23",
+            "R24"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R27(120ohm)/R26(120ohm) RS-485 termination/bias resistors falsely detected as voltage divider between RS485+ and RS485-",
@@ -37,8 +47,15 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R27$"
-          }
+            "pattern": "^R26$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R26",
+            "R27"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "BOM sum (92) does not match total_components (112) \u2014 20 missing: net_tie(11)+test_point(6)+mounting_hole(2)=19, still 1 unaccounted",
@@ -58,7 +75,13 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^R18$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R18"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No charger circuit detection despite board name being \"2s 40A PSU and charger\"",
@@ -76,7 +99,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

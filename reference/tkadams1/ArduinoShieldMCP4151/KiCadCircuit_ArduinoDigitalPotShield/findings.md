@@ -1,4 +1,4 @@
-# Findings: ArduinoShieldMCP4151 / KiCadCircuit_ArduinoDigitalPotShield
+# Findings: tkadams1/ArduinoShieldMCP4151 / KiCadCircuit_ArduinoDigitalPotShield
 
 ## FND-00000366: SPI bus to MCP4151 not detected; Resistor 5kohms1 classified as 'other' instead of 'resistor'
 

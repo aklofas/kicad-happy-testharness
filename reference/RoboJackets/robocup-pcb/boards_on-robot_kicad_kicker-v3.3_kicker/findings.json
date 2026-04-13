@@ -14,7 +14,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q10$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "J5",
+            "Q10"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "BB_TX global label correctly flagged as single-pin net on this sub-sheet (gate drive from parent sheet)",
@@ -55,7 +62,14 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^R16$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R16",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R15(22ohm) + C9(220pF) RC filter (32.88MHz cutoff) correctly detected as gate drive snubber for Q2",
@@ -65,7 +79,15 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R15$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C9",
+            "Q2",
+            "R15"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q2 IRFS4227 N-MOSFET correctly identified with gate drive from U3 HVGATE pin",
@@ -75,7 +97,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q2$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q2",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "BOM component counts accurate: 48 total, 12 capacitors, 13 resistors, 1 transistor, 1 diode, 1 IC, 1 transformer",
@@ -94,10 +123,20 @@
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R17$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 18.3
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R17",
+            "R18",
+            "U3"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 18.3
         }
       ],
       "suggestions": [

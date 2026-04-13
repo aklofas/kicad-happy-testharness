@@ -1,4 +1,4 @@
-# Findings: crazyflie2-exp-template-electronics / ecad_template
+# Findings: bitcraze/crazyflie2-exp-template-electronics / ecad_template
 
 ## FND-00002308: Blank expansion template correctly parsed: 3 components, 20 unconnected nets, no signal detection; SPI and I2C interfaces exposed on connector pin names not reflected in bus_analysis
 

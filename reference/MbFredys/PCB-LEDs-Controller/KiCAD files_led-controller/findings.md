@@ -1,4 +1,4 @@
-# Findings: PCB-LEDs-Controller / KiCAD files_led-controller
+# Findings: MbFredys/PCB-LEDs-Controller / KiCAD files_led-controller
 
 ## FND-00001081: Incomplete gerber set correctly detected
 

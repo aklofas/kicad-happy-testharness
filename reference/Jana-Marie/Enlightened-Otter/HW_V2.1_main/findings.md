@@ -1,4 +1,4 @@
-# Findings: Enlightened-Otter / HW_V2.1_main
+# Findings: Jana-Marie/Enlightened-Otter / HW_V2.1_main
 
 ## FND-00000533: T2 (tactile button) misclassified as 'transformer' type due to 'T' reference prefix; U3 (BY25Q64ASSIG SPI flash) has pins:[] due to unresolved custom library symbol; SPI bus between U5 (ESP8266EX) ...
 

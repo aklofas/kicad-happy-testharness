@@ -1,4 +1,4 @@
-# Findings: SparkFun_GNSS_LG580P / Hardware_Production_SparkFun_GNSS_LG580P_panelized
+# Findings: sparkfun/SparkFun_GNSS_LG580P / Hardware_Production_SparkFun_GNSS_LG580P_panelized
 
 ## FND-00001427: Component count, power rails, and regulator detection are accurate; SPI bus not enumerated in signal_analysis despite PICO/POCI/SCK/~{CS} nets present; LC filter double-counting: each inductor appe...
 

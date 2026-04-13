@@ -1,4 +1,4 @@
-# Findings: SparkFun_Qwiic_ADC_ADS1219 / Hardware_Qwiic_ADC_ADS1219
+# Findings: sparkfun/SparkFun_Qwiic_ADC_ADS1219 / Hardware_Qwiic_ADC_ADS1219
 
 ## FND-00001500: Component count of 37 and type breakdown are accurate; I2C pull-up resistors (R2, R3) reported as absent despite being present via JP3 jumper; Reset pin (~RESET) pull-up correctly identified with R...
 

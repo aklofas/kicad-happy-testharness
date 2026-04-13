@@ -1,4 +1,4 @@
-# Findings: STEPBUBODC01 / hw_sch_pcb_STEPBUBODC01
+# Findings: mlab-modules/STEPBUBODC01 / hw_sch_pcb_STEPBUBODC01
 
 ## FND-00001297: TPS631000 buck-boost correctly detected as switching regulator with L1, V_in/V_out rails; design_observations incorrectly flags missing input and output caps for TPS631000; Feedback voltage divider...
 

@@ -1,4 +1,4 @@
-# Findings: computie / hardware_68k-SBC_68kBoard
+# Findings: transistorfet/computie / hardware_68k-SBC_68kBoard
 
 ## FND-00002029: 
 

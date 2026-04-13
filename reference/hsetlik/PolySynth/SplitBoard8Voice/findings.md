@@ -1,4 +1,4 @@
-# Findings: hsetlik/PolySynth / SplitBoard8Voice_SplitBoard8Voice
+# Findings: hsetlik/PolySynth / SplitBoard8Voice
 
 ## FND-00002523: 8-voice polyphonic synthesizer (581 components, 10 sheets, STM32F411, TPS56528 + L7805/L7905, TL074 opamp arrays, 65 SK6812 LEDs, MIDI, ILI9341 LCD). Strong analysis. Issues: rotary encoders as resistors (RE prefix), TCA9548A I2C mux as level shifter, 24 voice signals as power rails, crystal '32.768kHZ' frequency not parsed (case-sensitive).
 

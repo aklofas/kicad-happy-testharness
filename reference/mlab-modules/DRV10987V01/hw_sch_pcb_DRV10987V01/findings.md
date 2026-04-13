@@ -1,4 +1,4 @@
-# Findings: DRV10987V01 / hw_sch_pcb_DRV10987V01
+# Findings: mlab-modules/DRV10987V01 / hw_sch_pcb_DRV10987V01
 
 ## FND-00000462: All 30 components correctly identified with accurate references, values, and types; IC1 pin-to-net mapping is fully correct for all 25 pins; I2C bus detection correct: SCL and SDA with 4k7 pull-ups...
 

@@ -1,4 +1,4 @@
-# Findings: dib-mio168 / EDA files_KiCad_EEZ DIB MIO168
+# Findings: eez-open/dib-mio168 / EDA files_KiCad_EEZ DIB MIO168
 
 ## FND-00000291: EEZ DIB MIO168 mixed I/O module (279 components). Negative isolated rails (-15V_ISO, -5V_ISO) omitted from isolation_barriers. Phantom per-chip SPI bus entries for IC12/IC13 (already on main MIO bus). Duplicate reset_pin observation for IC8 (3x). OPA376 buffer has spurious input_resistor from neighboring opamp's feedback network.
 

@@ -1,4 +1,4 @@
-# Findings: ESP32-WROOM-32-Kicad-PCB / msp
+# Findings: letanga/ESP32-WROOM-32-Kicad-PCB / msp
 
 ## FND-00000495: Transistor circuits Q1/Q2 not detected despite clear auto-reset topology; Power regulator U2 (AMS1117-3.3) topology reported as unknown with null input/output rails; Split 3.3V power rails +3V3 and...
 

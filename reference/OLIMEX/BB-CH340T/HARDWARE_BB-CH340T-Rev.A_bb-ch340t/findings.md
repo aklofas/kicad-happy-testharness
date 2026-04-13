@@ -1,4 +1,4 @@
-# Findings: BB-CH340T / HARDWARE_BB-CH340T-Rev.A_bb-ch340t
+# Findings: OLIMEX/BB-CH340T / HARDWARE_BB-CH340T-Rev.A_bb-ch340t
 
 ## FND-00000400: UART detected on RXD/TXD nets but U1's actual serial pins are floating; U1 GND pin (pin 8) is not on the GND power net — isolated in an unnamed net
 

@@ -1,4 +1,4 @@
-# Findings: KiCadFiles / examples_test_test
+# Findings: Steffen-W/KiCadFiles / examples_test
 
 ## FND-00000706: Single-pin nets not flagged in connectivity_issues
 

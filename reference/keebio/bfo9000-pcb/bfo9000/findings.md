@@ -1,4 +1,4 @@
-# Findings: bfo9000-pcb / bfo9000
+# Findings: keebio/bfo9000-pcb / bfo9000
 
 ## FND-00001954: 6x9 keyboard matrix with 54 switches and 54 diodes correctly detected; I2C pullup resistors R1 (SCL) and R2 (SDA) correctly identified with VCC rail; USB connectors (USB1, USB2) correctly typed as ...
 

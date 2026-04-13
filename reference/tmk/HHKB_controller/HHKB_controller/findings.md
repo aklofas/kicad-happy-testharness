@@ -1,4 +1,4 @@
-# Findings: HHKB_controller / HHKB_controller
+# Findings: tmk/HHKB_controller / HHKB_controller
 
 ## FND-00000591: U2 MIC5504-3.3YMTR LDO has zero pins resolved — topology=unknown, no I/O rails
 

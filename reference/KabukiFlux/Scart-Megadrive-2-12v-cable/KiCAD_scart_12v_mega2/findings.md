@@ -1,4 +1,4 @@
-# Findings: Scart-Megadrive-2-12v-cable / KiCAD_scart_12v_mega2
+# Findings: KabukiFlux/Scart-Megadrive-2-12v-cable / KiCAD_scart_12v_mega2
 
 ## FND-00001318: Scart cable board: TPS61040 boost converter with inductor L1 correctly identified as switching regulator; TPS61040 boost converter output rail identified as '__unnamed_4' (same as input) — input/ou...
 

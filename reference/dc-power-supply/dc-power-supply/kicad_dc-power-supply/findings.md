@@ -1,4 +1,4 @@
-# Findings: dc-power-supply / kicad_dc-power-supply
+# Findings: dc-power-supply/dc-power-supply / kicad_dc-power-supply
 
 ## FND-00000233: DC power supply (129 components). 2 RF matching networks falsely detected (L1 ferrite EMI filter + C12 decoupling misidentified). 5 regulators correct. 10 RC filters detected but many are feedback networks not signal filters.
 

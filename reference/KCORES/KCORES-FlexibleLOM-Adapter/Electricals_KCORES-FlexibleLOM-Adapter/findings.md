@@ -1,4 +1,4 @@
-# Findings: KCORES-FlexibleLOM-Adapter / Electricals_KCORES-FlexibleLOM-Adapter_KCORES-FlexibleLOM-Adapter
+# Findings: KCORES/KCORES-FlexibleLOM-Adapter / Electricals_KCORES-FlexibleLOM-Adapter
 
 ## FND-00000658: 34 UART false positives: SerDes RX0_P/N through RX7_P/N and TX0_P/N through TX7_P/N all flagged as UART; Differential pairs correctly detected: 17 pairs (RX0..7 P/N, TX0..7 P/N, NCSI pair) between ...
 

@@ -1,4 +1,4 @@
-# Findings: iCE40-DAC / Hardware revision A1_ICE40-DAC_Rev_A1
+# Findings: OLIMEX/iCE40-DAC / Hardware revision A1_ICE40-DAC_Rev_A1
 
 ## FND-00002142: Decoupling analysis misses C7 and C8 (22uF bulk caps) on +5V rail because their value is 'NA(22uF/6.3V/0603)'; Correctly captures Rev A schematic error: U2 (SN74ACT244) VCC pin on floating unnamed ...
 

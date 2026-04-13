@@ -1,4 +1,4 @@
-# Findings: RP2350-PICO2-XXL / HARDWARE_RP2350-PICO2-XXL-Rev.A_RP2350-PICO2-XXL_Rev_A
+# Findings: OLIMEX/RP2350-PICO2-XXL / HARDWARE_RP2350-PICO2-XXL-Rev.A_RP2350-PICO2-XXL_Rev_A
 
 ## FND-00001192: I2C bus detector generates 42 false positive detections — only 2 are real I2C buses; SPI bus not detected despite explicit SPI0/SPI1 net names (GPIO4-7, GPIO9-11); QSPI flash memory interface not d...
 

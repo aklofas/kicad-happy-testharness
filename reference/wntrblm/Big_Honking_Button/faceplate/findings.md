@@ -1,4 +1,4 @@
-# Findings: Big_Honking_Button / faceplate_faceplate
+# Findings: wntrblm/Big_Honking_Button / faceplate
 
 ## FND-00000410: U3 AP2112K-3.3 VIN reported on GND net instead of +5V; VOUT on unnamed net instead of +3.3V; U3 AP2112K-3.3 output_rail reported as __unnamed_1 instead of +3.3V; U5 TL072 power supply pins inverted...
 

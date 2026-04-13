@@ -1,4 +1,4 @@
-# Findings: ISS-PCB / boards_MIDAS-MK2_MIDAS-MK2.1-revA_MIDAS-MK2.1
+# Findings: ISSUIUC/ISS-PCB / boards_MIDAS-MK2_MIDAS-MK2.1-revA_MIDAS-MK2.1
 
 ## FND-00000155: Data acquisition board with ESP32-S3, motion sensors, pyro channels, CAN, LoRa. Good voltage divider and feedback detection. Switching regulators missing output_rail; isolation components not linked.
 

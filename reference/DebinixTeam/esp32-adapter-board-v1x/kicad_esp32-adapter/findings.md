@@ -1,4 +1,4 @@
-# Findings: esp32-adapter-board-v1x / kicad_esp32-adapter_esp32-adapter
+# Findings: DebinixTeam/esp32-adapter-board-v1x / kicad_esp32-adapter
 
 ## FND-00002044: GND net falsely detected as an I2C SDA line; SPI bus false positives: SCK mapped to GND and +3V3 rails
 

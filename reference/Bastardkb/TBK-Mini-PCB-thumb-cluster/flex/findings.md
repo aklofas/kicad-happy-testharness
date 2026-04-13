@@ -1,4 +1,4 @@
-# Findings: TBK-Mini-PCB-thumb-cluster / flex_flex
+# Findings: Bastardkb/TBK-Mini-PCB-thumb-cluster / flex
 
 ## FND-00001620: assembly_complexity reports all 18 components as SMD; PCB shows 14 are THT; multi_driver_nets flags DOUT pins of paired reversible SK6812MINI LEDs
 

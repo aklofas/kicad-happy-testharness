@@ -1,4 +1,4 @@
-# Findings: dell-d6000-usb-c-adapter / DellAdapter_3.1_Panel
+# Findings: abaozone/dell-d6000-usb-c-adapter / DellAdapter_3.1
 
 ## FND-00002311: TX1+/TX1-/RX1+/RX1-/TX2+/TX2-/RX2+/RX2- falsely detected as UART nets
 

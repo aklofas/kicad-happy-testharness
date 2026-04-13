@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_Nat3z_65_Keyboard_src_keypad
+# Findings: hackclub/OnBoard / projects_Nat3z_65_Keyboard_src_keypad
 
 ## FND-00000099: ATmega32U4 65-key keyboard with USB-C, crystal, and fuse protection. Good matrix and signal detection but IC refs missing.
 

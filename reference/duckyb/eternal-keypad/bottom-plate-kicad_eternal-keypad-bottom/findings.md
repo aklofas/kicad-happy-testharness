@@ -1,4 +1,4 @@
-# Findings: eternal-keypad / bottom-plate-kicad_eternal-keypad-bottom
+# Findings: duckyb/eternal-keypad / bottom-plate-kicad_eternal-keypad-bottom
 
 ## FND-00002061: Key matrix correctly detected: 5x8, 36 keys with per-key diodes; WS2812B addressable LED chain of 8 LEDs correctly detected; bus_topology 'width' field counts label placement instances, not unique ...
 

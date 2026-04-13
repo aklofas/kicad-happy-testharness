@@ -1,4 +1,4 @@
-# Findings: PCB-Temperature-Controller / KiCAD files_Controlador-temperatura
+# Findings: MbFredys/PCB-Temperature-Controller / KiCAD files_Controlador-temperatura
 
 ## FND-00001086: 1.5mm PTH holes misclassified as mounting holes — likely relay K1 contact pins; Complete 9-layer gerber set correctly identified as complete
 

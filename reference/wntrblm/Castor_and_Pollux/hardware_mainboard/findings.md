@@ -1,4 +1,4 @@
-# Findings: Castor_and_Pollux / hardware_mainboard_mainboard
+# Findings: wntrblm/Castor_and_Pollux / hardware_mainboard
 
 ## FND-00000164: Eurorack Castor & Pollux synthesizer mainboard. TVS diodes and potentiometers misclassified; I2C and USB detection missing.
 

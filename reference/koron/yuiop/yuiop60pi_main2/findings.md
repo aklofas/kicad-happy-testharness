@@ -1,4 +1,4 @@
-# Findings: koron/yuiop / yuiop60pi_main2_main2
+# Findings: koron/yuiop / yuiop60pi_main2
 
 ## FND-00002514: Keyboard PCB (PGA2040, 5x15 key matrix, 56 WS2812 LEDs). Component counts and key matrix correct, but U1 pin-to-net mapping severely wrong due to mirrored placement, LED chain detection fragmented into 55+ pieces instead of 1 chain.
 

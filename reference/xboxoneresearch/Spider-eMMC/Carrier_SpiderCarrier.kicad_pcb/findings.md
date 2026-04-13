@@ -1,4 +1,4 @@
-# Findings: Spider-eMMC / Carrier_SpiderCarrier.kicad_pcb
+# Findings: xboxoneresearch/Spider-eMMC / Carrier_SpiderCarrier.kicad_pcb
 
 ## FND-00001578: statistics.dnp_parts=0 is correct for Carrier (no DNP components), but statistics.total_components=8 undercounts by 1; 61082-041400LF (40-pin SMD connector) is missing from BOM output entirely; 610...
 

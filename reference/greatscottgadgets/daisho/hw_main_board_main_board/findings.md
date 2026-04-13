@@ -1,4 +1,4 @@
-# Findings: daisho / hw_main_board_main_board
+# Findings: greatscottgadgets/daisho / hw_main_board_main_board
 
 ## FND-00000007: Legacy KiCad 5 .sch files (daisho: 60 files, OpenVent: 19 files) have 0 signal detections. Component extraction and net connectivity work, subcircuit detection works (231 subcircuits in daisho, 98 in OpenVent), but signal pattern analysis not wired up for legacy format.
 

@@ -1,4 +1,4 @@
-# Findings: hw_projects / DIYosc_diyosc
+# Findings: agkaminski/hw_projects / DIYosc_diyosc
 
 ## FND-00002171: SPI bus detected twice — once from MCU pins, once from AVR-ISP-6 connector pins; 60-LED matrix driven by 4 PNP transistors not recognized as a multiplexed LED display
 

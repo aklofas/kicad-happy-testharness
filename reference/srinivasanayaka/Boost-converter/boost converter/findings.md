@@ -1,4 +1,4 @@
-# Findings: Boost-converter / boost converter
+# Findings: srinivasanayaka/Boost-converter / boost converter
 
 ## FND-00000392: VR1 (XL6009 boost converter IC) misclassified as varistor; VR1 (XL6009) not detected in power_regulators; VR1 falsely reported as a protection device (varistor) in protection_devices; RV1 (potentio...
 

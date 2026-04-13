@@ -1,4 +1,4 @@
-# Findings: alps64 / alps64
+# Findings: tmk/alps64 / alps64
 
 ## FND-00001959: 86 KEYSW keyboard switches misclassified as 'relay' instead of 'switch'; Key matrix shows switches_on_matrix=0 despite 86 KEYSW components in the matrix; 8x8 key matrix correctly detected with 64 d...
 

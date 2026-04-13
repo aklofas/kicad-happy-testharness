@@ -1,4 +1,4 @@
-# Findings: ESP32-C3-DevKit-Lipo / HARDWARE_ESP32-C3-DevKit-Lipo_Rev_B_ESP32-C3-DevKit-Lipo_Rev_B
+# Findings: OLIMEX/ESP32-C3-DevKit-Lipo / HARDWARE_ESP32-C3-DevKit-Lipo_Rev_B
 
 ## FND-00000119: OLIMEX ESP32-C3 dev board with LiPo charging. Power domains and IC identification empty despite detecting SY8089 buck and BL4054B charger in BOM. Subcircuit neighbors empty. USB data lines detected but no ESD protection noted.
 

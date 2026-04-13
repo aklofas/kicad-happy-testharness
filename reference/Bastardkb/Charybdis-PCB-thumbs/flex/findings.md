@@ -1,4 +1,4 @@
-# Findings: Charybdis-PCB-thumbs / flex_flex
+# Findings: Bastardkb/Charybdis-PCB-thumbs / flex
 
 ## FND-00000423: Key matrix not detected despite 3 switches, 3 diodes, and named row/column nets; Addressable LED chain detector reports overlapping/duplicate chains instead of recognizing a parallel branching tree...
 

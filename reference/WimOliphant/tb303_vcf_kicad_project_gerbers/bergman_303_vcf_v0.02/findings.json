@@ -34,7 +34,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^L7805$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L7805"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RV1 and RV2 trimmer potentiometers classified as resistor instead of potentiometer",
@@ -49,7 +55,11 @@
             "path": "signal_analysis.filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: ThumbsUp / a44key-pcb
+# Findings: ak66666/ThumbsUp / a44key-pcb-bottom-plate
 
 ## FND-00001546: GND net lists U1 VCC-named pins; VCC net lists U1 GND-named pins; Crystal circuit detector incorrectly includes C11 (0.1uF bypass cap) as a crystal load capacitor; Key matrix estimated_keys reporte...
 

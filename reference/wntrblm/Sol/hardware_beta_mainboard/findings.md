@@ -1,4 +1,4 @@
-# Findings: Sol / hardware_beta_mainboard_mainboard
+# Findings: wntrblm/Sol / hardware_beta_mainboard
 
 ## FND-00001372: Net table inverts pin names for U1 power pins: GND net contains pin named VDD and vice versa; SPI bus incorrectly duplicated: two SPI bus entries found for a single AD5689R DAC, one with misidentif...
 

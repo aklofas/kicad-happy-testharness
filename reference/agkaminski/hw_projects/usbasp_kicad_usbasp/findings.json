@@ -14,7 +14,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1-Q4 BS170F MOSFET level shifters detected",
@@ -24,13 +30,26 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
         {
           "description": "Each transistor lists all 4 VCC pullup resistors as gate_resistors",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -51,7 +70,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D4$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D4",
+            "D5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: AnothaOne / Kicad_AnothaOne_2
+# Findings: StrawberryTurtle/AnothaOne / Kicad_AnothaOne_2
 
 ## FND-00000378: U1 pin-to-net mapping is incorrect throughout when global labels connect pins without wires; I2C bus falsely detected on K2/K3 nets due to wrong pin-net mapping; Bus width for K-prefix signals repo...
 

@@ -1,4 +1,4 @@
-# Findings: SparkFun_Capacitive_Soil_Moisture_Sensor_CY8CMBR3102 / Hardware_SparkFun_Capacitive_Soil_Moisture_Sensor
+# Findings: sparkfun/SparkFun_Capacitive_Soil_Moisture_Sensor_CY8CMBR3102 / Hardware_SparkFun_Capacitive_Soil_Moisture_Sensor
 
 ## FND-00001418: I2C pull-up resistors on SCL/SDA not detected (same jumper-traced pull-up miss as VEML7700); Component count (30), IC U1 (CY8CMBR3102 capacitive touch sensor), and I2C bus topology correctly identi...
 

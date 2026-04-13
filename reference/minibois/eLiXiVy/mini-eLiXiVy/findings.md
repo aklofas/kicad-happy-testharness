@@ -1,4 +1,4 @@
-# Findings: eLiXiVy / mini-eLiXiVy
+# Findings: minibois/eLiXiVy / mini-eLiXiVy
 
 ## FND-00002338: Logo/graphic symbols misclassified as power rails; False positive SPI bus detected from AVR-ISP-6 ICSP programming connector; Rotary encoder quadrature signals (RE+/RE-) falsely flagged as differen...
 

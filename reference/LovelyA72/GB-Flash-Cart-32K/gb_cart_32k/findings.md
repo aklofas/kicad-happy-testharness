@@ -1,4 +1,4 @@
-# Findings: GB-Flash-Cart-32K / gb_cart_32k
+# Findings: LovelyA72/GB-Flash-Cart-32K / gb_cart_32k
 
 ## FND-00000556: Component count and BOM correct; Power rails GND and VCC correctly identified; Flash memory interface not detected in memory_interfaces; R1 and R2 pull-up resistors not identified as protection/pul...
 

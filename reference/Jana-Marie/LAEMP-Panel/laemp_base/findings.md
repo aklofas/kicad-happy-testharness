@@ -1,4 +1,4 @@
-# Findings: LAEMP-Panel / laemp_base_laemp_base
+# Findings: Jana-Marie/LAEMP-Panel / laemp_base
 
 ## FND-00000762: LDO regulator, USB-C compliance, RC filters, LED chain all correctly detected; UART bus detection reports 4 separate single-device nets instead of a paired UART interface between U1 and U2; PWR_FLA...
 

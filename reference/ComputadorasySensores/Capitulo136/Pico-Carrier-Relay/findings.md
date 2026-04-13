@@ -1,4 +1,4 @@
-# Findings: Capitulo136 / Pico-Carrier-Relay
+# Findings: ComputadorasySensores/Capitulo136 / Pico-Carrier-Relay
 
 ## FND-00000422: Spurious PWR_FLAG warning for GND — PWR_FLAG symbol is present on the net; Flyback protection diodes (D2, D4, D6) across relay coils not detected as protection_devices; Transistor circuits (Q1, Q2,...
 

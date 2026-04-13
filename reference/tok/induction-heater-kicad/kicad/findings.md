@@ -1,4 +1,4 @@
-# Findings: induction-heater-kicad / kicad_kicad
+# Findings: tok/induction-heater-kicad / kicad
 
 ## FND-00002222: PCB analysis returns all-zero statistics for a valid .kicad_pcb file
 

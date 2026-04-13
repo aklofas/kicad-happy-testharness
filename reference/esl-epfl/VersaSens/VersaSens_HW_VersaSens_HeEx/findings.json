@@ -8,27 +8,79 @@
       "correct": [
         {
           "description": "8 power regulators correctly identified including TLV70025, TPS72325, TPS7A0318 LDOs, MAX20343 boost, TLV75801 with correct rails",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "11 RC filter networks in ECG/EDA analog front-ends correctly detected, including matched 131.58 Hz ECG filters and 16.93 Hz EDA filters",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "All 6 TPD4E1B06DCKR ESD protection ICs correctly identified on EMG electrode signals",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Both debug interfaces correctly detected: J27 (TC2070-IDC) JTAG through level shifters to Heepocrates ASIC, J4 (TC2030) SWD to BL5340",
-          "analyzer_section": "signal_analysis.debug_interfaces"
+          "analyzer_section": "signal_analysis.debug_interfaces",
+          "detector": "debug_interfaces",
+          "subject_refs": [
+            "J27",
+            "J4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "2 I2C buses correctly identified with correct device lists and missing pull-up warnings",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "3 indicator LEDs and SFH7016 PPG multi-wavelength LED correctly identified",
-          "analyzer_section": "signal_analysis.led_audit"
+          "analyzer_section": "signal_analysis.led_audit",
+          "detector": "led_audit",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.led_audit",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Accurate power domain mapping with 15+ distinct rails and correct IC assignments",
@@ -36,11 +88,29 @@
         },
         {
           "description": "14 decoupling rail groups with accurate capacitor counts",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Cross-domain signal analysis correctly flags signals needing level shifters, matching 5x SN74AXC4T774RSVR present in design",
-          "analyzer_section": "signal_analysis.cross_domain_signals"
+          "analyzer_section": "signal_analysis.cross_domain_signals",
+          "detector": "cross_domain_signals",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.cross_domain_signals",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Accurate BOM extraction with 334 components across 94 unique parts",
@@ -48,21 +118,50 @@
         },
         {
           "description": "Power sequencing validation correctly identifies regulator dependency chain",
-          "analyzer_section": "signal_analysis.power_sequencing_validation"
+          "analyzer_section": "signal_analysis.power_sequencing_validation",
+          "detector": "power_sequencing_validation",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.power_sequencing_validation",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "VR1 (TC42X-2-203E) varistor correctly identified as protection device",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [
+            "VR1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^VR1$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "IC14 (LM2664M6/NOPB) classified as LDO but is a switched-capacitor charge pump voltage inverter generating -3V3 from +3.3VP",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "IC8 (MAX20343) classified as 'ic_with_internal_regulator' but is specifically a USB switch with integrated buck-boost for USB OTG",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Sleep current audit classifies R8/R10/R11 (62 ohm LED series resistors) as pull-ups with 53.2mA each -- these are GPIO-driven LED current limiters, not pull-ups",
@@ -70,33 +169,83 @@
         },
         {
           "description": "ADS1298IPAGR (IC17) detected as ADC but with empty input_channels. Should have 8 differential channels (INxP/INxN) connected to EMG electrodes, resolution 24 bits",
-          "analyzer_section": "signal_analysis.adc_circuits"
+          "analyzer_section": "signal_analysis.adc_circuits",
+          "detector": "adc_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "IC24 (SIT1532AC 32.768 kHz MEMS oscillator) only in power_budget, not in clock_distribution which is empty. This is a clock source, not a generic IC",
-          "analyzer_section": "signal_analysis.clock_distribution"
+          "analyzer_section": "signal_analysis.clock_distribution",
+          "detector": "clock_distribution",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
         {
           "description": "IC1 (MAX77658) PMIC with integrated battery charger, 3 SIMOs, and 2 LDOs. Battery_chargers section empty despite being primary power source connected to battery and USB",
-          "analyzer_section": "signal_analysis.battery_chargers"
+          "analyzer_section": "signal_analysis.battery_chargers",
+          "detector": "battery_chargers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.battery_chargers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "IC3 (TPS7A0333PDBVR) 3.3V fixed LDO not detected in power_regulators despite same family as correctly detected IC9/IC22/IC23",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "IC7 (MAX86178ENJ+) biometric AFE combining PPG, ECG, and BioZ with multi-LED driver and photodiode not detected as sensor",
-          "analyzer_section": "signal_analysis.sensor_interfaces"
+          "analyzer_section": "signal_analysis.sensor_interfaces",
+          "detector": "sensor_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.sensor_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "IC21 (MAX30001GCWV+) clinical-grade ECG/BioZ AFE connected via SPI not detected as sensor",
-          "analyzer_section": "signal_analysis.sensor_interfaces"
+          "analyzer_section": "signal_analysis.sensor_interfaces",
+          "detector": "sensor_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.sensor_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "U3 (MLX90632) infrared contactless temperature sensor on I2C missing from sensor_interfaces",
-          "analyzer_section": "signal_analysis.sensor_interfaces"
+          "analyzer_section": "signal_analysis.sensor_interfaces",
+          "detector": "sensor_interfaces",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "IC2 (BL5340) dual-core Bluetooth 5.2 + 802.15.4 + NFC module -- primary wireless SoC not detected as wireless interface",
@@ -120,15 +269,42 @@
         },
         {
           "description": "SFH7016 multi-wavelength PPG LED + VEMD8080 photodiode not analyzed as optical sensor circuit",
-          "analyzer_section": "signal_analysis.sensor_interfaces"
+          "analyzer_section": "signal_analysis.sensor_interfaces",
+          "detector": "sensor_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.sensor_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "IC30 (W25Q128) 128Mbit SPI NOR flash and IC6 (AS5F38G04) 4Gbit SPI NAND flash not detected in memory_interfaces",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "RT1 NTC thermistor on MAX77658 THM input for battery temperature monitoring not analyzed",
-          "analyzer_section": "signal_analysis.battery_chargers"
+          "analyzer_section": "signal_analysis.battery_chargers",
+          "detector": "battery_chargers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.battery_chargers",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: RP2350B-Dev-Board / RP2350 Dev Board
+# Findings: jvanderberg/RP2350B-Dev-Board / RP2350 Dev Board
 
 ## FND-00001238: X1 crystal (ABRACON X252012MMB4SI-24, 24MHz) misclassified as type='connector'; VREG_LX (RP2350B switching inductor node) treated as a power domain, generating 6 spurious cross_domain_signals; W25Q...
 

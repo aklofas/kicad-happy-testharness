@@ -1,4 +1,4 @@
-# Findings: MOT_Photodiode / MOT_Photodiode
+# Findings: TU-Darmstadt-APQ/MOT_Photodiode / MOT_Photodiode
 
 ## FND-00000921: LT3032-12 dual-output LDO not detected as a power regulator; U2 ADA4898-1 classified as 'compensator' instead of transimpedance amplifier (TIA); V- flagged as cross-domain signal needing level shif...
 

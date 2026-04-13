@@ -1,4 +1,4 @@
-# Findings: OtterScreenAdapter / OtterScreen
+# Findings: Jana-Marie/OtterScreenAdapter / OtterScreen
 
 ## FND-00001028: Component count, BOM, power regulators correctly identified; NE555 timer (U2) not detected as oscillator/timer circuit; DisplayPort bridge interface (U1=5022505191) not detected in hdmi_dvi_interfaces
 

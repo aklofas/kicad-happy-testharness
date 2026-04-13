@@ -1,4 +1,4 @@
-# Findings: KiCad_JLC_template / pcb_JLC_DemoBoard
+# Findings: RickP/KiCad_JLC_template / pcb_JLC_DemoBoard
 
 ## FND-00000736: Simple LED driver circuit (BT1, R1, D1) correctly parsed with 3 nets, correct types; Battery polarity issue not flagged: BT1 pin1 ('+') connects to GND, pin2 ('-') connects to VCC
 

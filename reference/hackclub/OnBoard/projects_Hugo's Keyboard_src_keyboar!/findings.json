@@ -44,7 +44,30 @@
             "path": "signal_analysis.key_matrices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "key_matrices",
+          "subject_refs": [
+            "A0",
+            "A1",
+            "A2",
+            "A3",
+            "D0",
+            "D1",
+            "D10",
+            "D11",
+            "D12",
+            "D13",
+            "D2",
+            "D3",
+            "D4",
+            "D5",
+            "D6",
+            "D7",
+            "D8",
+            "D9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB data lines D+/D- not flagged for ESD protection analysis",
@@ -53,7 +76,11 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "KB2040 is an Adafruit RP2040 dev board - could provide more context about the module",

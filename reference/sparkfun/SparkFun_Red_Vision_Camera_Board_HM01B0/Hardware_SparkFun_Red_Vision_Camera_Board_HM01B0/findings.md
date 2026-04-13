@@ -1,4 +1,4 @@
-# Findings: SparkFun_Red_Vision_Camera_Board_HM01B0 / Hardware_SparkFun_Red_Vision_Camera_Board_HM01B0
+# Findings: sparkfun/SparkFun_Red_Vision_Camera_Board_HM01B0 / Hardware_SparkFun_Red_Vision_Camera_Board_HM01B0
 
 ## FND-00001518: HM01B0 camera board (46 components, KiCad 9); RT9080 LDO and active oscillator correctly identified; I2C bus missed despite SCL/SDA/CAM_SCL/CAM_SDA nets with R1/R2 pull-ups through JP1 solder jumper
 

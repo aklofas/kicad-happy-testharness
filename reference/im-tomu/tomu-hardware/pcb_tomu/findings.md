@@ -1,4 +1,4 @@
-# Findings: tomu-hardware / pcb_tomu
+# Findings: im-tomu/tomu-hardware / pcb_tomu
 
 ## FND-00000143: Minimal USB board (EFM32HG): USB differential pairs detected but very sparse analysis output for 22-component design, many components marked DNP
 

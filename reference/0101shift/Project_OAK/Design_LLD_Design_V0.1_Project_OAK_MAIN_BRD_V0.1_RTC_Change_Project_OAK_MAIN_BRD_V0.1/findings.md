@@ -1,4 +1,4 @@
-# Findings: Project_OAK / Design_LLD_Design_V0.1_Project_OAK_MAIN_BRD_V0.1_RTC_Change_Project_OAK_MAIN_BRD_V0.1
+# Findings: 0101shift/Project_OAK / Design_LLD_Design_V0.1_Project_OAK_MAIN_BRD_V0.1_RTC_Change_Project_OAK_MAIN_BRD_V0.1
 
 ## FND-00001720: Component counts correctly parsed for V0.1 main board (112 total); I2C bus detected with pull-ups on RTC_SCL and RTC_SDA; RV-8263 RTC correctly classified as ic, not crystal; 37 LEDs and 7 BJT tran...
 

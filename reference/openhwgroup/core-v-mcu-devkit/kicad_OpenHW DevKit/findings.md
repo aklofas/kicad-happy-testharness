@@ -1,4 +1,4 @@
-# Findings: core-v-mcu-devkit / kicad_OpenHW DevKit
+# Findings: openhwgroup/core-v-mcu-devkit / kicad_OpenHW DevKit
 
 ## FND-00000132: RISC-V dev kit with CORE-V MCU: strong bus protocol and power regulation detection, voltage sense dividers correctly found for power monitoring
 

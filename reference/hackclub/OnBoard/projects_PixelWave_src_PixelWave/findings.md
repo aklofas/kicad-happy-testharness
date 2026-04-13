@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_PixelWave_src_PixelWave
+# Findings: hackclub/OnBoard / projects_PixelWave_src_PixelWave
 
 ## FND-00000085: SK6812 addressable LEDs (310x) misclassified as diodes. Switching regulator XL4016 correctly identified with feedback network. USB diff pair detected with ESD protection.
 

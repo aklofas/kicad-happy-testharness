@@ -1,4 +1,4 @@
-# Findings: TouchDRO / TouchDRO
+# Findings: SidSkiba/TouchDRO / TouchDRO
 
 ## FND-00001640: USB compliance correctly identifies J1–J4 (USB_B_Micro) and skips J5–J8 (Conn_01x03); RC filter detection correctly identifies 8 RC paths (4 DATA + 4 CLK) sharing capacitors C1–C4; PWR_FLAG warning...
 

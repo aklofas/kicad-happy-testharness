@@ -1,4 +1,4 @@
-# Findings: RP2040_minimal / RP2040_minimal_r2_RP2040_minimal_r2
+# Findings: janelia-kicad/RP2040_minimal / RP2040_minimal_r2
 
 ## FND-00001233: LDO regulator (U1 NCP1117), RP2040 (U3), W25Q128 flash (U2) all correctly identified; Crystal Y1 (ABM8-272-T3) frequency not parsed — returns null instead of 12MHz; QSPI_SCLK net categorized as 'i2...
 

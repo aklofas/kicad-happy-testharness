@@ -1,4 +1,4 @@
-# Findings: ESP32-S2-DevKit-LiPo / HARDWARE_ESP32-S2-DevKit-Lipo-Rev.B1_ESP32-S2-DevKit-Lipo_Rev_B1
+# Findings: OLIMEX/ESP32-S2-DevKit-LiPo / HARDWARE_ESP32-S2-DevKit-Lipo-Rev.B1_ESP32-S2-DevKit-Lipo_Rev_B1
 
 ## FND-00000542: Component counts and BOM are accurate; Power rails correctly identified: +3.3V, +5V, +5V_USB, GND, VBAT, Vin; Crystal circuits detected correctly: 12 MHz (CH340T) and 32.768 kHz (optional RTC); Add...
 

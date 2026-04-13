@@ -1,4 +1,4 @@
-# Findings: blinkekatze / blinkekatze
+# Findings: TobleMiner/blinkekatze / blinkekatze
 
 ## FND-00002283: Gerber alignment flagged as misaligned due to sparse B.Cu extent vs board outline
 

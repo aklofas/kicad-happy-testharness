@@ -1,4 +1,4 @@
-# Findings: AppleII_SCSI_RevC_schematics / Apple_II_SCSI_RevC
+# Findings: hkzlab/AppleII_SCSI_RevC_schematics / Apple_II_SCSI_RevC
 
 ## FND-00000570: Component counts, BOM, and hierarchical sheet loading are correct; assembly_complexity.total_components (92) inflated relative to statistics.total_components (62); multi_driver_nets contains false ...
 

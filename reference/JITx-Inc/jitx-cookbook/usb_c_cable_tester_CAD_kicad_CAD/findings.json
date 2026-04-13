@@ -9,7 +9,11 @@
       "incorrect": [
         {
           "description": "UART detector misclassifies USB 3.1 SuperSpeed signals as UART",
-          "analyzer_section": "signal_analysis.bus_interfaces"
+          "analyzer_section": "signal_analysis.bus_interfaces",
+          "detector": "bus_interfaces",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -20,7 +24,11 @@
             "path": "signal_analysis.test_points",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "test_points",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

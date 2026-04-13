@@ -1,4 +1,4 @@
-# Findings: LoRa-868-915 / HARDWARE_LoRa-Rev-A_LoRa_RevA
+# Findings: OLIMEX/LoRa-868-915 / HARDWARE_LoRa-Rev-A_LoRa_RevA
 
 ## FND-00000825: rf_matching detector generates 17 false-positive entries treating every matching network component as 'antenna'; SPI bus detected twice for a single bus — duplicate from pin-name detection and net-...
 

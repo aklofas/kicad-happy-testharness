@@ -1,4 +1,4 @@
-# Findings: KeyBoard-Board / KeyBoard_Fedevel
+# Findings: tuankoko567/KeyBoard-Board / KeyBoard_Fedevel
 
 ## FND-00000674: RP2040 MCU, W25Q128 flash, crystal circuit, and USB Type-C compliance checks all detected correctly; Key matrix detector reports 3 rows in top-level schematic but design has 4 rows (ROW0–ROW3); USB...
 

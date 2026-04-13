@@ -1,4 +1,4 @@
-# Findings: ATTiny2313-Generic / ATTiny2313-Generic
+# Findings: RandyStockberger/ATTiny2313-Generic / ATTiny2313-Generic
 
 ## FND-00000340: IC1 VCC pin (pin 20) placed on GND net instead of +5V net; IC1 GND pin (pin 10) isolated in unnamed net instead of resolved to GND; SPI not detected despite AVR-ISP-6 header with MISO/MOSI/SCK conn...
 

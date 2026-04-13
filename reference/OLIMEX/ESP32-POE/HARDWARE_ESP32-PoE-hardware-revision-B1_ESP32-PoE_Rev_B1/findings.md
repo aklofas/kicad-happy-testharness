@@ -1,4 +1,4 @@
-# Findings: ESP32-POE / HARDWARE_ESP32-PoE-hardware-revision-B1_ESP32-PoE_Rev_B1
+# Findings: OLIMEX/ESP32-POE / HARDWARE_ESP32-PoE-hardware-revision-B1_ESP32-PoE_Rev_B1
 
 ## FND-00000513: kicad_version reported as 'unknown' for file_version 20230121 (KiCad 7); ESD protection for ethernet and USB differential pairs attributed to wrong components; Power regulator detection for U7 (TPS...
 

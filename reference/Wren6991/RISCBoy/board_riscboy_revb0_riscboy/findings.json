@@ -14,7 +14,16 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L1",
+            "L2",
+            "U2",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U7 (NCP115ASN330) correctly detected as LDO with input +BATT and output +3.3VA",
@@ -24,7 +33,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U7$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage dividers R7/R11 (330/100 ohm, ratio 0.23) and R8/R12 (330/100 ohm) correctly detected on STEREO_L_DC and STEREO_R_DC audio bias nets",
@@ -33,8 +48,17 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R7$"
-          }
+            "pattern": "^R11$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R11",
+            "R12",
+            "R7",
+            "R8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal Y1 (12M) with load caps C14 (10p) and C16 (10p) giving effective 8pF load correctly calculated",
@@ -44,7 +68,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C14",
+            "C16",
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "High-pass RC filters R14/C24 and R15/C25 at 15.39 Hz correctly detected - these are audio coupling/DC-blocking for stereo channels",
@@ -54,17 +86,37 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R14$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C24",
+            "C25",
+            "R14",
+            "R15"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC-networks R18/C36+C39 and R21/C42+C43 at 331.57 Hz on VPLL0/VPLL1 to +1V2 correctly detected as PLL supply filters for the FPGA",
           "analyzer_section": "signal_analysis.rc_filters",
           "check": {
             "path": "signal_analysis.rc_filters",
-            "op": "contains_match",
-            "field": "resistor.ref",
-            "pattern": "^R18$"
-          }
+            "op": "equals",
+            "value": 2
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C36",
+            "C39",
+            "C42",
+            "C43",
+            "R18",
+            "R21"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 2
         },
         {
           "description": "Memory interfaces correctly detected: U3 (W25Q16JV) connected to U1 (RP2040) with 6 shared signals, and U11 (W25Q16JV) connected to both U10 (iCE40) and U1 (RP2040)",
@@ -73,18 +125,35 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U3$"
-          }
+            "pattern": "^U1$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U10",
+            "U11",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Speaker circuit LS1 correctly detected with series resistor R9 (27 ohm) and driver IC U8 (74LVC2G04)",
           "analyzer_section": "signal_analysis.buzzer_speaker_circuits",
           "check": {
             "path": "signal_analysis.buzzer_speaker_circuits",
-            "op": "contains_match",
-            "field": "reference",
-            "pattern": "^LS1$"
-          }
+            "op": "equals",
+            "value": 1
+          },
+          "detector": "buzzer_speaker_circuits",
+          "subject_refs": [
+            "LS1",
+            "R9",
+            "U8"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 1
         },
         {
           "description": "Decoupling analysis correctly shows 6 rails with appropriate cap counts: +3V3 has 16 caps (6.2uF total), +1V2 has 7 caps (5.3uF)",
@@ -93,7 +162,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB data lines USB_D+/USB_D- correctly flagged as lacking ESD protection",
@@ -102,7 +175,11 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "12 switches (SW1-SW12) correctly classified as gamepad buttons",
@@ -123,7 +200,13 @@
             "op": "not_contains_match",
             "field": "bms_reference",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "bms_systems",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -134,8 +217,15 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U9$"
-          }
+            "pattern": "^U10$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U10",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U4 (MCP73831) LiPo charger with PROG resistor for charge current setting is a common battery management circuit worth detecting",
@@ -145,7 +235,13 @@
             "op": "contains_match",
             "field": "bms_reference",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "bms_systems",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

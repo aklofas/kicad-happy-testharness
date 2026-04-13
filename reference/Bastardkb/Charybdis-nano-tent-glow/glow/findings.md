@@ -1,4 +1,4 @@
-# Findings: Charybdis-nano-tent-glow / glow_glow
+# Findings: Bastardkb/Charybdis-nano-tent-glow / glow
 
 ## FND-00000427: Spurious third LED chain detected (D6 alone, chain_length=1) due to parallel chain topology not handled correctly; Chain 1 reports first_led=D5 but the second parallel chain starts at D6; Total est...
 

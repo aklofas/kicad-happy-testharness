@@ -1,4 +1,4 @@
-# Findings: RP2040-designguide / PCB_RP2040-Guide
+# Findings: calliah333/RP2040-designguide / PCB_RP2040-Guide
 
 ## FND-00001179: RP2040 crystal circuit correctly detected: 12MHz Y1, 22pF load caps C2/C3, CL_eff=14pF; USB-C compliance checks pass for CC1/CC2 5.1k pulldowns and USBLC6 ESD protection; pwr_flag_warnings fires fo...
 

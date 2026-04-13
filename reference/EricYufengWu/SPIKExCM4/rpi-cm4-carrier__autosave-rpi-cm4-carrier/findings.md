@@ -1,4 +1,4 @@
-# Findings: SPIKExCM4 / rpi-cm4-carrier__autosave-rpi-cm4-carrier
+# Findings: EricYufengWu/SPIKExCM4 / rpi-cm4-carrier__autosave-rpi-cm4-carrier
 
 ## FND-00001320: Empty/stub schematic correctly produces zero-component output
 

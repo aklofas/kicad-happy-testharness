@@ -1,4 +1,4 @@
-# Findings: MM1_SRAM_64k_A / MM1_SRAM_64k_A
+# Findings: JonathSpirit/MM1_SRAM_64k_A / MM1_SRAM_64k_A
 
 ## FND-00000876: Legacy .sch parser misses data pin connections for U1/U2 (IS61LV256AL SRAM) and logic gates U3-U5; single_pin_nets observation for ~MEMADDRESS_15 is a false positive
 

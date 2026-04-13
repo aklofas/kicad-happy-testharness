@@ -1,4 +1,4 @@
-# Findings: flipper-zero-backpacks / pcb_Clean_Clean
+# Findings: Chrismettal/flipper-zero-backpacks / pcb_Clean
 
 ## FND-00002091: I2C bus falsely detected using 'I2C_PULL_UP' control net as SCL line; BJT transistors Q5–Q8 (MMDT3906 dual PNP) not included in transistor_circuits analysis; microSD SPI interface on IO_35/IO_36/IO...
 

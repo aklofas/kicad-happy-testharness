@@ -1,4 +1,4 @@
-# Findings: din_power_atm90e26 / din_power_atm90e26
+# Findings: whatnick/din_power_atm90e26 / din_power_atm90e26
 
 ## FND-00002025: 
 

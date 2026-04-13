@@ -1,4 +1,4 @@
-# Findings: QSFP_Breakout / QSFP_Breakout
+# Findings: mwrnd/QSFP_Breakout / QSFP_Breakout
 
 ## FND-00001125: U1 (QSFP_Conn) classified as 'ic' type instead of 'connector'; 8 differential pairs (TX1-4, RX1-4) correctly detected with ESD protection noted; TPS562201 switching regulator correctly detected wit...
 

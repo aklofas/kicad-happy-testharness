@@ -1,4 +1,4 @@
-# Findings: SparkFun_Ideal_Diode_Breakout / Hardware_SparkFun_Ideal_Diode_Breakout
+# Findings: sparkfun/SparkFun_Ideal_Diode_Breakout / Hardware_SparkFun_Ideal_Diode_Breakout
 
 ## FND-00001465: Component count of 23 is accurate; Power rails correctly enumerate 9 nets (VIN1-VIN4, VOUT1-VOUT4, GND); Four ideal diode circuits not recognized as protection_devices; 8 transistors correctly iden...
 

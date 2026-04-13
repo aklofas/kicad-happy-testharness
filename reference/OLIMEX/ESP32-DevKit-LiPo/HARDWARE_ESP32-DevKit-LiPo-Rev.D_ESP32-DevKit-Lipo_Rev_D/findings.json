@@ -44,7 +44,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "BL4054B LiPo charger circuit not analyzed",
@@ -80,7 +84,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Auto-program circuit (Q2/Q3 DTR/RTS to GPIO0/EN) not linked to its USB-UART function",
@@ -90,7 +98,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q2$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q2",
+            "Q3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

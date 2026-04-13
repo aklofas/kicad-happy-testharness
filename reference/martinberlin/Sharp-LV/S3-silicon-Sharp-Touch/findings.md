@@ -1,4 +1,4 @@
-# Findings: Sharp-LV / S3-silicon-Sharp-Touch_S3-silicon-Sharp-Touch
+# Findings: martinberlin/Sharp-LV / S3-silicon-Sharp-Touch
 
 ## FND-00001438: Component count and BOM correctly parsed: 53 total, 3 DNP, 5 ICs; I2C bus devices list incomplete: Y3 (RV-3032-C7 RTC) omitted from SDA/SCL observations; USB ESD protection asymmetric: USB_D- repor...
 

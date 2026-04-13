@@ -1,4 +1,4 @@
-# Findings: Adapter-HRT902-TPN31A / Adapter-HRT902-TPN31A_Adapter-HRT902-TPN31A
+# Findings: goscickiw/Adapter-HRT902-TPN31A / Adapter-HRT902-TPN31A
 
 ## FND-00000543: Component count and BOM correct; Net topology correctly traced; assembly_complexity misclassifies all components as SMD; kicad_version reported as 'unknown' despite parseable version field; P1 NC p...
 

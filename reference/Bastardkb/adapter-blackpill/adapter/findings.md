@@ -1,4 +1,4 @@
-# Findings: adapter-blackpill / adapter_adapter
+# Findings: Bastardkb/adapter-blackpill / adapter
 
 ## FND-00001975: Component count correct: 28 total, correct type breakdown; SPI bus correctly detected on both left and right sides; I2C bus correctly detected on both sides (scl_l/sda_l and scl_r/sda_r); I2C repor...
 

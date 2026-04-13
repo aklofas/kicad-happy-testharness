@@ -1,4 +1,4 @@
-# Findings: TTLLVDS01 / hw_sch_pcb_TTLLVDS01
+# Findings: mlab-modules/TTLLVDS01 / hw_sch_pcb_TTLLVDS01
 
 ## FND-00001631: All BOM component values report symbol-library names instead of instance values — analyzer fails to read the (instances) section; pwr_flag_warnings fires for GND and VCC even though both have PWR_F...
 

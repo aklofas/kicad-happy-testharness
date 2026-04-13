@@ -1,4 +1,4 @@
-# Findings: hw_projects / usbasp_kicad_usbasp
+# Findings: agkaminski/hw_projects / usbasp_kicad_usbasp
 
 ## FND-00000189: USBasp programmer (35 components). Correct: crystal 12MHz, BS170F MOSFET level shifters, ATmega8A, USB-C CC check (correctly fails for 1.5k). Incorrect: gate_resistors lists all VCC pullups for each transistor. Missed: SPI/ISP bus, D4/D5 3V6 Zener USB clamps not in protection devices.
 

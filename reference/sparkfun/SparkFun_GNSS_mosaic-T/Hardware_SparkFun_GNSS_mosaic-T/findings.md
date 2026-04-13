@@ -1,4 +1,4 @@
-# Findings: SparkFun_GNSS_mosaic-T / Hardware_SparkFun_GNSS_mosaic-T
+# Findings: sparkfun/SparkFun_GNSS_mosaic-T / Hardware_SparkFun_GNSS_mosaic-T
 
 ## FND-00000231: GNSS mosaic-T board (106 components). Protection device count inflated (40 reported vs 14 actual) due to multi-pin TVS array per-pin counting. Regulators and RC filters correctly detected.
 

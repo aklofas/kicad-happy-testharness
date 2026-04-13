@@ -14,7 +14,19 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4",
+            "Q5",
+            "Q6",
+            "Q7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q8 (2N3904) correctly detected as LED driver BJT with emitter to GND, base resistor R8 (1K), and load_type=led",
@@ -24,7 +36,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q8$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q8",
+            "R8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Seven RC-network filters (R1/C1, R2/C2, R3/C3, R4/C4, R5/C5, R6/C6, R7/C7, all 330ohm/2.2nF) correctly detected at 219.22 kHz cutoff, forming sensor output conditioning on each channel",
@@ -34,7 +53,26 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R1$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "R1",
+            "R2",
+            "R3",
+            "R4",
+            "R5",
+            "R6",
+            "R7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "VCC rail decoupling with C8 (1.0uF) correctly identified",
@@ -43,7 +81,13 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "42 total components correctly counted: 16 resistors, 8 capacitors, 8 LEDs, 8 transistors, 2 connectors",

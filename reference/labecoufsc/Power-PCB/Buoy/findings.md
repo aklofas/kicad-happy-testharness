@@ -1,4 +1,4 @@
-# Findings: Power-PCB / Buoy
+# Findings: labecoufsc/Power-PCB / Buoy
 
 ## FND-00001093: kicad_version reported as 'unknown' for KiCad 7 file; Component count mismatch: statistics says 141, assembly_complexity says 143; Power ICs correctly identified: BQ24650 MPPT charge controller, TP...
 

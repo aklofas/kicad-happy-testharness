@@ -1,4 +1,4 @@
-# Findings: TPA3255_ClassD_PBTL / Current Control Board_CurrentControlPCB
+# Findings: EliMattingly22/TPA3255_ClassD_PBTL / Current Control Board_CurrentControlPCB
 
 ## FND-00000208: Analog current control board using ADA4610-2xR dual opamps for current command, error amplification, monitoring, and output buffering with +/-15V split supply and L78L05 5V reference. Excellent opamp circuit detection with accurate gain calculations.
 

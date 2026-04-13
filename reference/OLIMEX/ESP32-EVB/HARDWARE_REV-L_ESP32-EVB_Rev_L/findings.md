@@ -1,4 +1,4 @@
-# Findings: ESP32-EVB / HARDWARE_REV-L_ESP32-EVB_Rev_L
+# Findings: OLIMEX/ESP32-EVB / HARDWARE_REV-L_ESP32-EVB_Rev_L
 
 ## FND-00000111: CAN bus interface detected in bus_analysis but CAN transceiver (U6 SN65HVD230) not analyzed as subcircuit with neighbor components; Ethernet PHY magnetics and connector not linked to PHY
 

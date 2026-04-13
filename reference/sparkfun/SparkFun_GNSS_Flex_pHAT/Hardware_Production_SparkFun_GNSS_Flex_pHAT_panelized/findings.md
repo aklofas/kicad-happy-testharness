@@ -1,4 +1,4 @@
-# Findings: SparkFun_GNSS_Flex_pHAT / Hardware_Production_SparkFun_GNSS_Flex_pHAT_panelized
+# Findings: sparkfun/SparkFun_GNSS_Flex_pHAT / Hardware_Production_SparkFun_GNSS_Flex_pHAT_panelized
 
 ## FND-00001424: Component count, multiple LDOs, and USB compliance detection are accurate; USB ESD protection on D+/D- falsely reported as missing when DT1042-04SO is present; Multiple UART channels not enumerated...
 

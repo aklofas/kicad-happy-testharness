@@ -1,4 +1,4 @@
-# Findings: SparkFun_Audio_Player_Breakout_MY1690X-16S / Hardware_Production_SparkFun_Audio_Player_Breakout_MY1690X-16S_panelized
+# Findings: sparkfun/SparkFun_Audio_Player_Breakout_MY1690X-16S / Hardware_Production_SparkFun_Audio_Player_Breakout_MY1690X-16S_panelized
 
 ## FND-00001415: Component count (42), power rails (VIN/VUSB/VCC/3.3V_P/GND), and key IC U2 (MY1690X-16S MP3 decoder) all correctly identified; Power-OR diode pair (D2/D3 BAT60A Schottky) for VUSB/VIN selection not...
 

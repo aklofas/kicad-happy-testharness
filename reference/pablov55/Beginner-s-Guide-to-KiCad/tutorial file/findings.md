@@ -1,4 +1,4 @@
-# Findings: Beginner-s-Guide-to-KiCad / tutorial file_tutorial file
+# Findings: pablov55/Beginner-s-Guide-to-KiCad / tutorial file
 
 ## FND-00000386: PWR_FLAG warning fires despite PWR_FLAG being present on GNDREF net; Net connectivity error: R2 pin 1 and pin 2 are assigned to wrong nets; Transistor circuit load_type reported as 'connector' inst...
 

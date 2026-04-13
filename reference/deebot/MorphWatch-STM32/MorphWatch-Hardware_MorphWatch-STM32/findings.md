@@ -1,4 +1,4 @@
-# Findings: MorphWatch-STM32 / MorphWatch-Hardware_MorphWatch-STM32
+# Findings: deebot/MorphWatch-STM32 / MorphWatch-Hardware_MorphWatch-STM32
 
 ## FND-00000954: RC filter false positive: R1(10k)+C1(4.7uF) classified as 3.39 Hz high-pass filter, but R1 is Q2's gate pull-down and C1 is a gate bypass cap (both on GDR net); IC1 (ME6211C33M5G-N LDO) VSS pin sho...
 

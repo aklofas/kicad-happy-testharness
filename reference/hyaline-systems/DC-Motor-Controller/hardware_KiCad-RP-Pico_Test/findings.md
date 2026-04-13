@@ -1,4 +1,4 @@
-# Findings: DC-Motor-Controller / hardware_KiCad-RP-Pico_Test_Test
+# Findings: hyaline-systems/DC-Motor-Controller / hardware_KiCad-RP-Pico_Test
 
 ## FND-00000449: Raspberry Pi Pico test board: component count, refs, and connector pins all correct; I2C bus not detected on Test.kicad_sch despite GPIO4/GPIO5 (SDA/SCL) being labeled in the Pico symbol
 

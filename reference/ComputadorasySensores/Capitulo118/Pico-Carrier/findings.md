@@ -1,4 +1,4 @@
-# Findings: Capitulo118 / Pico-Carrier
+# Findings: ComputadorasySensores/Capitulo118 / Pico-Carrier
 
 ## FND-00000426: PWR_FLAG warning for GND is incorrect — PWR_FLAG IS connected to GND via wire; I2C bus not detected despite explicit SDA and SCL nets connecting four components; Assembly complexity misclassifies a...
 

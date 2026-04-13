@@ -1,4 +1,4 @@
-# Findings: ESP32-Camera-PCB / ESP32 Camera PCB
+# Findings: UnsignedArduino/ESP32-Camera-PCB / ESP32 Camera PCB
 
 ## FND-00000494: SPI bus not detected despite two SPI peripherals (ArduCam B5 and MicroSD B3) explicitly wired to ESP32 (B2); I2C bus not detected despite RTC (B6) and ArduCam I2C (B5 SDA/SCL) connected through lev...
 

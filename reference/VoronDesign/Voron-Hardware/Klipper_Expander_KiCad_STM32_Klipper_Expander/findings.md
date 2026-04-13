@@ -1,4 +1,4 @@
-# Findings: Voron-Hardware / Klipper_Expander_KiCad_STM32_Klipper_Expander
+# Findings: VoronDesign/Voron-Hardware / Klipper_Expander_KiCad_STM32_Klipper_Expander
 
 ## FND-00000075: Klipper Expander - STM32F042 GPIO/PWM expander with 4 MOSFET outputs, good transistor detection but missing regulator
 

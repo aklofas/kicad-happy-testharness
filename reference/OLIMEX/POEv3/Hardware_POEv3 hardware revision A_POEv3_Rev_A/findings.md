@@ -1,4 +1,4 @@
-# Findings: POEv3 / Hardware_POEv3 hardware revision A_POEv3_Rev_A
+# Findings: OLIMEX/POEv3 / Hardware_POEv3 hardware revision A_POEv3_Rev_A
 
 ## FND-00002002: Component count and type breakdown are accurate; L1 (33uH power inductor) misclassified as ferrite_bead; Cable-PoE1 (IDC cable) misclassified as type capacitor in BOM; TX4138 switching regulator co...
 

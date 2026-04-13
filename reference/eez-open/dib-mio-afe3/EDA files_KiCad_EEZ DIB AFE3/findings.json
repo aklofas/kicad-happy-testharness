@@ -13,16 +13,27 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "IC7 (OPA376) correctly identified as buffer configuration with gain=1.0 (inverting tied to output)",
           "analyzer_section": "signal_analysis.opamp_circuits",
           "check": {
             "path": "signal_analysis.opamp_circuits",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "field_equals",
+            "field": "gain",
+            "value": 1.0
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "gain",
+          "expected_value": 1.0
         },
         {
           "description": "IC5 unit 4 correctly identified as comparator with LO_CLAMP on non-inverting and IN4P on inverting",
@@ -31,7 +42,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "IC5 unit 3 correctly identified as comparator with HI_CLAMP on non-inverting and IN4P on inverting",
@@ -40,37 +55,68 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Voltage divider R25/R24 (330R/10K) from -2V5_ISO to GND generating LO_CLAMP reference, ratio=0.968",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R25$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.968
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R24",
+            "R25"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.968
         },
         {
           "description": "Voltage divider R22/R23 (330R/10K) from +2V5_ISO to GND generating HI_CLAMP reference, ratio=0.968",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R22$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.968
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R22",
+            "R23"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.968
         },
         {
           "description": "Voltage divider R20/R13 (100K/100K) correctly detected with ratio=0.5 feeding IN3N",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R20$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.5
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R13",
+            "R20"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.5
         },
         {
           "description": "Q1 and Q2 (2N7002) NMOS transistors correctly identified as switches driven by IC6 (DG212) analog switch",
@@ -80,7 +126,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "9 isolated power rails correctly identified: +15V_ISO, -15V_ISO, +5V_ISO, -5V_ISO, +3V3_ISO, +2V5_ISO, -2V5_ISO, GND, PWR_FLAG",
@@ -108,7 +161,15 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R5$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "R5",
+            "R6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling on +2V5_ISO (1.2uF across 3 caps) and +3V3_ISO (1.2uF across 3 caps) correctly tallied",
@@ -117,13 +178,21 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
         {
           "description": "Design observation for IC6 (DG212) decoupling is repeated 4 times (once per unit) claiming +15V_ISO rail missing caps; should be deduplicated to one observation per component",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -134,7 +203,11 @@
             "path": "signal_analysis.isolation_barriers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "No power_regulators detected. While power may come from backplane, the isolated DC-DC converters (if present on other sheets) or the power rail structure suggests power regulation should be noted.",
@@ -143,7 +216,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

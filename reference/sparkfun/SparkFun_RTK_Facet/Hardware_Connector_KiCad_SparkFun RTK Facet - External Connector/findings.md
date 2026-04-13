@@ -1,4 +1,4 @@
-# Findings: SparkFun_RTK_Facet / Hardware_Connector_KiCad_SparkFun RTK Facet - External Connector
+# Findings: sparkfun/SparkFun_RTK_Facet / Hardware_Connector_KiCad_SparkFun RTK Facet - External Connector
 
 ## FND-00001522: Component counts, power rails, and BOM entries are accurate; total_components (17) includes G3 which has in_bom=false; USB_DP reported as lacking ESD protection despite D1 (DT1042-04SO) protecting ...
 

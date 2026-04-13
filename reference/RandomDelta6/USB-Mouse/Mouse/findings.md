@@ -1,4 +1,4 @@
-# Findings: USB-Mouse / Mouse
+# Findings: RandomDelta6/USB-Mouse / Mouse
 
 ## FND-00001927: Component count, BOM groupings, and component types all correct; LQ1 (Optical_Mouse:LQ, value='EL') misclassified as 'inductor'; USB differential pair D+/D- not detected; D+ net missing from nets d...
 

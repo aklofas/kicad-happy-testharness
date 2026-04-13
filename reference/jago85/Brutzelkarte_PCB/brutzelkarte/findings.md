@@ -1,4 +1,4 @@
-# Findings: Brutzelkarte_PCB / brutzelkarte
+# Findings: jago85/Brutzelkarte_PCB / brutzelkarte
 
 ## FND-00000433: LD1-LD4 (Device:LED_Small) classified as 'inductor' instead of 'led'; 'led' component type missing entirely from component_types; LEDs counted under 'inductor'
 

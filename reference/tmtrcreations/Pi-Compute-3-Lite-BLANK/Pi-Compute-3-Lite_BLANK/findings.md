@@ -1,4 +1,4 @@
-# Findings: Pi-Compute-3-Lite-BLANK / Pi-Compute-3-Lite_BLANK
+# Findings: tmtrcreations/Pi-Compute-3-Lite-BLANK / Pi-Compute-3-Lite_BLANK
 
 ## FND-00001101: Legacy KiCad 5 schematic parsed correctly: 33 components, 22 nets, correct component type breakdown
 

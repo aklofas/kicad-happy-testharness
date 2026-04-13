@@ -1,4 +1,4 @@
-# Findings: SparkFun_Red_Vision_Touch_Display_for_Pico / Hardware_SparkFun_Red_Vision_Touch_Display_for_Pico
+# Findings: sparkfun/SparkFun_Red_Vision_Touch_Display_for_Pico / Hardware_SparkFun_Red_Vision_Touch_Display_for_Pico
 
 ## FND-00001520: Touch display for Pico (55 components, KiCad 9); component counts and I2C detection correct; I2C pull-ups R3/R4 through JP1 solder jumper missed (has_pullup=False); SPI bus not detected despite GPIO18/SCK, GPIO19/PICO, GPIO16/POCI signals
 

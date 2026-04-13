@@ -1,4 +1,4 @@
-# Findings: icezum / src-kicad_icezum
+# Findings: FPGAwars/icezum / src-kicad_icezum
 
 ## FND-00002219: LED components with 'LD' prefix misclassified as inductors; ESDUSB TVS diode misclassified as fuse; Multi-sheet hierarchy correctly parsed: 7 sheets with 211 components and complex power topology
 

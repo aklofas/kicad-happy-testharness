@@ -1,4 +1,4 @@
-# Findings: VCAI2C01 / hw_sch_pcb_VCAI2C01
+# Findings: mlab-modules/VCAI2C01 / hw_sch_pcb_VCAI2C01
 
 ## FND-00001762: 74 components and 31 nets correctly counted; Four symmetrical voltage dividers correctly detected for differential input channels; I2C bus detected on SDA/SCL with pull-up resistors R23/R24; Opamp ...
 

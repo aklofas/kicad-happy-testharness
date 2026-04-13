@@ -1,4 +1,4 @@
-# Findings: SparkFun_Soft_Power_Switch_USB-C / Hardware_Soft_Power_Switch_USB-C
+# Findings: sparkfun/SparkFun_Soft_Power_Switch_USB-C / Hardware_Soft_Power_Switch_USB-C
 
 ## FND-00001489: Component count correct: 42 total components, 39 nets, 0 no-connects; No-connect count correctly 0: all 'no_connect' strings are symbol pin type declarations; Q3 (SIL2308 dual MOSFET) N-channel uni...
 

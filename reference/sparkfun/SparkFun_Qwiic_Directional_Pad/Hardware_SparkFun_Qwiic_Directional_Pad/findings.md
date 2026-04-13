@@ -1,4 +1,4 @@
-# Findings: SparkFun_Qwiic_Directional_Pad / Hardware_SparkFun_Qwiic_Directional_Pad
+# Findings: sparkfun/SparkFun_Qwiic_Directional_Pad / Hardware_SparkFun_Qwiic_Directional_Pad
 
 ## FND-00001503: Component count of 43 and type breakdown are accurate; I2C pull-up resistors (R13, R7) reported as absent despite being present via JP6 jumper; PCA9554PW I2C GPIO expander correctly identified on I...
 

@@ -1,4 +1,4 @@
-# Findings: KiField / tests_integration_kicad5_hier_test2
+# Findings: devbisme/KiField / tests_integration_kicad5_hier_test2
 
 ## FND-00001649: Correct component count and I2C detection for AD5593R; I2C bus correctly detected on AD5593R SDA/SCL pins
 

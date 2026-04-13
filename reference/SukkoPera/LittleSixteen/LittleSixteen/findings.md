@@ -1,4 +1,4 @@
-# Findings: LittleSixteen / LittleSixteen
+# Findings: SukkoPera/LittleSixteen / LittleSixteen
 
 ## FND-00000822: 45 false no_driver ERC warnings from KiCad 5 legacy pin-type misclassification; L7812 topology reported as 'LDO' — it is a fixed linear regulator; Hierarchical multi-sheet parse correctly consolida...
 

@@ -1,4 +1,4 @@
-# Findings: RPi5-HATplus / HATPlus_HAT+
+# Findings: MisterHW/RPi5-HATplus / HATPlus_HAT+
 
 ## FND-00001225: HAT_3V3 and HAT_5V0 nets classified as 'signal' instead of 'power'; I2C bus (GPIO0_ID_SDA0/GPIO1_ID_SCL0) with EEPROM U1/U2 not detected as I2C memory interface; DNP component U2 (AT24CS64-MAHM) co...
 

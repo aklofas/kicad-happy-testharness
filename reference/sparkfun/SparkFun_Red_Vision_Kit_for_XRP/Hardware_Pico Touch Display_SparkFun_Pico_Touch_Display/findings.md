@@ -1,4 +1,4 @@
-# Findings: SparkFun_Red_Vision_Kit_for_XRP / Hardware_Pico Touch Display_SparkFun_Pico_Touch_Display
+# Findings: sparkfun/SparkFun_Red_Vision_Kit_for_XRP / Hardware_Pico Touch Display_SparkFun_Pico_Touch_Display
 
 ## FND-00000248: Pico display (55 components). No regulators (correct, passive interface). Q1 MOSFET correctly detected. No protection devices.
 

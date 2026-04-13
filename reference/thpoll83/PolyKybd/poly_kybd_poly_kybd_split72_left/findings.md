@@ -1,4 +1,4 @@
-# Findings: PolyKybd / poly_kybd_poly_kybd_split72_plate_right
+# Findings: thpoll83/PolyKybd / poly_kybd_poly_kybd_split72_left
 
 ## FND-00000292: PolyKybd keyboard mainboard (KiCad 5, 83 components). K_P/K_N key signals falsely detected as differential pair. MCU U2 falsely listed as USB ESD protection. Level-shifter false alarms for shift register signals (same 3.3V domain). WS2812B LED chain count severely undercounted (2 chains of 1 instead of ~100+).
 

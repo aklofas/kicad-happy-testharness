@@ -1,4 +1,4 @@
-# Findings: SparkFun_Serial_MP3_Player_Shield-MY1690X / Hardware_Production_SparkFun_Serial_MP3_Player_Shield_MY1690X_panelized
+# Findings: sparkfun/SparkFun_Serial_MP3_Player_Shield-MY1690X / Hardware_Production_SparkFun_Serial_MP3_Player_Shield_MY1690X_panelized
 
 ## FND-00001485: Component counts are accurate: 45 total, correct type breakdown; Power rails correctly identified: 3.3V, 3.3V_P, 5V, GND, VCC, VUSB; Protection devices correctly identified: D5 ESD IC and F1 resett...
 

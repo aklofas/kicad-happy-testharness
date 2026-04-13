@@ -1,4 +1,4 @@
-# Findings: PDH-module / KiCad_PDH_module
+# Findings: TU-Darmstadt-APQ/PDH-module / KiCad_PDH_module
 
 ## FND-00001077: Hierarchical schematic correctly aggregates all 4 sheets (3 sub-sheets + root), 85 components total including 3 logo graphics; label_shape_warnings incorrectly flags global_label input/output shape...
 

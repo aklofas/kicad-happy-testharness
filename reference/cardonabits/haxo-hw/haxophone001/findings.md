@@ -1,4 +1,4 @@
-# Findings: haxo-hw / haxophone001
+# Findings: cardonabits/haxo-hw / haxophone001
 
 ## FND-00002122: SDA and SCL nets merged into a single 'SCL' net; SDA net absent from output; I2S digital audio interface not detected (I2S_BCLK, I2S_DOUT, I2S_LRC nets to MAX98357); Key matrix underestimates key c...
 

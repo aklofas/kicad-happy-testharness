@@ -1,4 +1,4 @@
-# Findings: atmega2560_core / core
+# Findings: mvento/atmega2560_core / core
 
 ## FND-00001984: Unannotated schematic correctly handled — 8 unique references collapsed from 21 instances; Crystal Y? detected at 16MHz with correct frequency; Crystal load capacitors missed — load_caps=[] despite...
 

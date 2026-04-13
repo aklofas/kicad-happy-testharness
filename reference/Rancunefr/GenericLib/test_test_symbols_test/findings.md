@@ -1,4 +1,4 @@
-# Findings: GenericLib / test_test_symbols_test
+# Findings: Rancunefr/GenericLib / test_test_symbols_test
 
 ## FND-00000575: Component counts, net count, and power rail detection are accurate; BAT1 and BAT2 classified as 'connector' instead of a battery/power type; Logo* graphic symbols classified as 'inductor' instead o...
 

@@ -1,4 +1,4 @@
-# Findings: kicad_pcb_schematics / mini_projects_others_s6_ece_b_2k22_water_irigation_water_irigation
+# Findings: aruncs31s/kicad_pcb_schematics / mini_projects_others_s6_ece_b_2k22_water_irigation
 
 ## FND-00002363: Solenoid valves (U4, U5) and relay (U2) classified as 'ic' instead of actuator/other; Power rails 12v, 9v, 5v_Vin+, and 3.3v not recognized as power rails in statistics
 

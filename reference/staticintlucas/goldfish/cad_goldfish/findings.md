@@ -1,4 +1,4 @@
-# Findings: goldfish / cad_goldfish
+# Findings: staticintlucas/goldfish / cad_goldfish
 
 ## FND-00002105: usb_compliance vbus_esd_protection reports fail despite USBLC6-2P6 being connected to VBUS; Crystal circuit, USB-C CC pulldowns, and decoupling analysis correctly detected for ATmega32U4 USB HID de...
 

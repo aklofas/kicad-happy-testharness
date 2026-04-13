@@ -22,11 +22,21 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Same false positive crystal circuits as LNA1109",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "All 26 components have category=None",
@@ -41,7 +51,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: cnhardware / ch32v30x_ch32v305-currentmonitor_ch32v305-currentmonitor
+# Findings: cnlohr/cnhardware / ch32v30x_ch32v305-currentmonitor
 
 ## FND-00000161: Current monitoring board with AK5534 ADC and CH32V305. Current sense resistors R1=0.1ohm, R2=1ohm not detected on a board literally named 'currentmonitor'. I2S bus not detected; SCL/SDA falsely detected as I2C.
 

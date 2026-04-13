@@ -1,4 +1,4 @@
-# Findings: DuPAL_Board / board_DuPal_DIP_DuPal_DIP
+# Findings: DuPAL-PAL-DUmper/DuPAL_Board / board_DuPal_DIP
 
 ## FND-00000478: Component counts, BOM, and power rails correctly identified; Crystal Y1 (8 MHz) with 22 pF load capacitors C1/C2 correctly detected; L7805 linear regulator correctly identified with input rail RECT...
 

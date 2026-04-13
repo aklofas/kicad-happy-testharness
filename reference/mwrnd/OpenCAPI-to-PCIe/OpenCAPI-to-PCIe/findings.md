@@ -1,4 +1,4 @@
-# Findings: OpenCAPI-to-PCIe / OpenCAPI-to-PCIe
+# Findings: mwrnd/OpenCAPI-to-PCIe / OpenCAPI-to-PCIe
 
 ## FND-00000024: 32 PCIe Rx/Tx differential lanes falsely classified as UART signals due to net name pattern matching on "Rx"/"Tx"
 

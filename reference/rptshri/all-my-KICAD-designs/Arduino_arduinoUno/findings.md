@@ -1,4 +1,4 @@
-# Findings: all-my-KICAD-designs / Arduino_arduinoUno_arduinoUno
+# Findings: rptshri/all-my-KICAD-designs / Arduino_arduinoUno
 
 ## FND-00002340: Power regulator entries have reference=null despite components having valid references; MJE2955T PNP power transistors (U12, U7, U8, U13) classified as ic instead of transistor; Current-boost topol...
 

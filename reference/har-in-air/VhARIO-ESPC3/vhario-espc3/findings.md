@@ -1,4 +1,4 @@
-# Findings: VhARIO-ESPC3 / vhario-espc3
+# Findings: har-in-air/VhARIO-ESPC3 / vhario-espc3
 
 ## FND-00001792: Total component count 57 matches source schematic; LDO regulator U5 (TLV75533PDBV) correctly detected; Ferrite beads L1 and L2 correctly classified; USB ESD protection (BV03C TVS diodes D4, D6, D7)...
 

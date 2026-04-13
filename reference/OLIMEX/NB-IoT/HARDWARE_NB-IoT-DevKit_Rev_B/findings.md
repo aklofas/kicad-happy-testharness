@@ -1,4 +1,4 @@
-# Findings: NB-IoT / HARDWARE_NB-IoT-DevKit_Rev_B_NB-IoT-DevKit_Rev_B
+# Findings: OLIMEX/NB-IoT / HARDWARE_NB-IoT-DevKit_Rev_B
 
 ## FND-00001008: SIM card holder SIM1 classified as 'switch' instead of 'connector'; IT1185AU2 tact switches (PWR_KEY1, RST_KEY1) classified as 'connector' instead of 'switch'; Jumper components (SJ footprints) cla...
 

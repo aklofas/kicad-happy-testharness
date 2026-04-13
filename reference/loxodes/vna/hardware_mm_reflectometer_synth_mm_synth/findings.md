@@ -1,4 +1,4 @@
-# Findings: vna / hardware_mm_reflectometer_synth_mm_synth_mm_synth
+# Findings: loxodes/vna / hardware_mm_reflectometer_synth_mm_synth
 
 ## FND-00000152: VNA RF output chain with ADRF5042 SP4T switch, ADRF5730 digital attenuator, MAAM-011109 amplifiers, LTC5596 power detector. RF chain detection completely fails due to narrow keyword lists.
 

@@ -1,4 +1,4 @@
-# Findings: PCRD04 / hw_sch_pcb_PCRD04B
+# Findings: mlab-modules/PCRD04 / hw_sch_pcb_PCRD04B
 
 ## FND-00001053: Op-amp circuit detection correct: U1/U2 (OPA2314) as TIA/buffer/inverting, U4 (TS7211) as comparator; U6 'neosazovat' DNP marker not detected — dnp_parts=0, U6 dnp=false; Decoupling analysis misses...
 

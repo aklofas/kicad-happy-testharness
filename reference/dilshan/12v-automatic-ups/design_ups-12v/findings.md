@@ -1,4 +1,4 @@
-# Findings: 12v-automatic-ups / design_ups-12v
+# Findings: dilshan/12v-automatic-ups / design_ups-12v
 
 ## FND-00000308: PC817 optocoupler not detected as isolation barrier; Voltage divider R3/RV1/R8 for battery ADC sensing not detected; LM2576T-12 estimated_vout is 1.2V instead of 12V; Q3 (BD135) load_type misclassi...
 

@@ -1,4 +1,4 @@
-# Findings: ESP32S3-mini-DATALOGGER / ESP32-DEVKIT-DATALOGGER_ESp32-DEVKIT-DATALOGGER
+# Findings: Zektopic/ESP32S3-mini-DATALOGGER / ESP32-DEVKIT-DATALOGGER_ESp32-DEVKIT-DATALOGGER
 
 ## FND-00000516: Top-level sheet correctly parsed as hierarchy-only with 4 sub-sheets; aggregate component statistics match sum across sub-sheets
 

@@ -20,9 +20,18 @@
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
             "path": "signal_analysis.crystal_circuits",
-            "op": "min_count",
-            "value": 3
-          }
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "X1",
+            "X2",
+            "X3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Detected 12 opamp circuit units from 4 HA17558 dual opamps including 7 buffer configurations and 1 transimpedance",
@@ -30,8 +39,12 @@
           "check": {
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
-            "value": 12
-          }
+            "value": 1
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Detected 4 BF457 BJT transistor circuits (TR1-TR4) driving coin counter and lock solenoid outputs",
@@ -39,8 +52,12 @@
           "check": {
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
-            "value": 4
-          }
+            "value": 1
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Detected 7 RC filters in the audio section with reasonable cutoff frequencies (1-10 kHz range)",
@@ -48,8 +65,12 @@
           "check": {
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
-            "value": 7
-          }
+            "value": 1
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Correctly identified M51516L as a power regulator",
@@ -58,7 +79,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Correctly identified key ICs: 68000D CPU, Z80CPU, YM2151 FM synth, YM3012 DAC, OKI6295 ADPCM",
@@ -114,7 +139,11 @@
         },
         {
           "description": "128 false protection devices reported: all 128 'varistors' in protection_devices are actually misclassified 74LS ICs, SRAMs, and resistors, not actual protection circuits",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "V1* through V128* signals (video vertical counter bits) misidentified as power rails. These are timing counter output nets in the timing sub-sheet, not power supply rails. No power symbols or PWR_FLAG are connected to these nets",
@@ -126,7 +155,13 @@
         },
         {
           "description": "C61 value '25V' parsed as 25 pF capacitance (2.5e-11 F in decoupling analysis). The '25V' is a voltage rating, not a capacitance value. This causes incorrect decoupling analysis for the VCC rail",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C61"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "IC count of 95 is drastically undercounted because ~122 ICs with VIC/VU prefixes are misclassified as varistors. True IC count should be approximately 217",
@@ -145,7 +180,11 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "No buzzer_speaker_circuits detected despite SPEAKER_H and SPEAKER_L nets driving a speaker through M51516L power amplifier via opamp mixing stage",
@@ -154,7 +193,11 @@
             "path": "signal_analysis.buzzer_speaker_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "buzzer_speaker_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

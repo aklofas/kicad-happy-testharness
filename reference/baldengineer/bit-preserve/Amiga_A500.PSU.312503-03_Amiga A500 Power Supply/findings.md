@@ -1,4 +1,4 @@
-# Findings: bit-preserve / Amiga_A500.PSU.312503-03_Amiga A500 Power Supply
+# Findings: baldengineer/bit-preserve / Amiga_A500.PSU.312503-03_Amiga A500 Power Supply
 
 ## FND-00002342: 218 false current_sense detections caused by RF modulator capacitors (330 pF, 68 pF) treated as shunt resistors; RF-prefixed components universally misclassified as 'resistor' type; UART falsely de...
 

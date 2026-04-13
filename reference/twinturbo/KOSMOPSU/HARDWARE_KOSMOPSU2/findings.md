@@ -1,4 +1,4 @@
-# Findings: KOSMOPSU / HARDWARE_KOSMOPSU2
+# Findings: twinturbo/KOSMOPSU / HARDWARE_KOSMOPSU2
 
 ## FND-00000617: Component counts and BOM extraction correct; False positive: regulator input caps flagged as missing for U1 and U2; Protection devices only lists F1; F2 and F3 (also mains fuses) not detected; Line...
 

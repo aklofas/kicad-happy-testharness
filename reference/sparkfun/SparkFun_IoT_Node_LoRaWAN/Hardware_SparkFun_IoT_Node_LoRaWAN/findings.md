@@ -1,4 +1,4 @@
-# Findings: SparkFun_IoT_Node_LoRaWAN / Hardware_SparkFun_IoT_Node_LoRaWAN
+# Findings: sparkfun/SparkFun_IoT_Node_LoRaWAN / Hardware_SparkFun_IoT_Node_LoRaWAN
 
 ## FND-00000205: RP2350A-based IoT node with XBee LR LoRaWAN module, dual USB-C ports, PSRAM, flash, microSD, Qwiic I2C, and LiPo battery support. Good component classification and signal detection with a few regulators and bus interfaces missed.
 

@@ -1,4 +1,4 @@
-# Findings: Rotonometron / Kicad_Rotomaxetron_Rotomaxetron
+# Findings: Zoestra/Rotonometron / Kicad_Rotomaxetron
 
 ## FND-00001217: RP1 (RP2040+ dev board) classified as 'resistor' due to 'RP' reference prefix heuristic
 

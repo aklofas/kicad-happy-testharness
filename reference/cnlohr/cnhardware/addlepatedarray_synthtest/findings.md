@@ -1,4 +1,4 @@
-# Findings: cnhardware / addlepatedarray_synthtest_synthtest
+# Findings: cnlohr/cnhardware / addlepatedarray_synthtest
 
 ## FND-00000162: Synthesizer test board with TCXO oscillator. Y1 CFPS-72 TCXO misclassified as crystal instead of oscillator.
 

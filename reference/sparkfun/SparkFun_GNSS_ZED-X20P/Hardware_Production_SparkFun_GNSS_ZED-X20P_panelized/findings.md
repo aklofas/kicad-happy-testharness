@@ -1,4 +1,4 @@
-# Findings: SparkFun_GNSS_ZED-X20P / Hardware_Production_SparkFun_GNSS_ZED-X20P_panelized
+# Findings: sparkfun/SparkFun_GNSS_ZED-X20P / Hardware_Production_SparkFun_GNSS_ZED-X20P_panelized
 
 ## FND-00001430: LC filter detection is a false positive for RF matching network inductors; RF chain not detected despite clear SMA-to-GNSS-IC signal path; I2C pullup detection reports has_pullup=false despite 2.2k...
 

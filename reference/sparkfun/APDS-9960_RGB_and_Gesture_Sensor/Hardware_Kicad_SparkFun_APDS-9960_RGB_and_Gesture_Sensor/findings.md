@@ -1,4 +1,4 @@
-# Findings: APDS-9960_RGB_and_Gesture_Sensor / Hardware_Kicad_SparkFun_APDS-9960_RGB_and_Gesture_Sensor
+# Findings: sparkfun/APDS-9960_RGB_and_Gesture_Sensor / Hardware_Kicad_SparkFun_APDS-9960_RGB_and_Gesture_Sensor
 
 ## FND-00000339: I2C pull-ups R2 and R3 not detected — both SDA and SCL report has_pullup: false; U1 SDA (pin 1) and SCL (pin 7) both land in the same unnamed net __unnamed_4 — net tracing error merges two distinct...
 

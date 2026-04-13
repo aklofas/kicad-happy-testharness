@@ -1,4 +1,4 @@
-# Findings: SparkFun_Teensy_Ethernet_Adapter / Hardware_Teensy_Ethernet
+# Findings: sparkfun/SparkFun_Teensy_Ethernet_Adapter / Hardware_Teensy_Ethernet
 
 ## FND-00001583: Component counts and types are accurate for SparkFun Teensy Ethernet Adapter; TX+/TX-/RX+/RX- Ethernet magnetics signals misclassified as UART; Ethernet interface not detected despite B10601S 10BAS...
 

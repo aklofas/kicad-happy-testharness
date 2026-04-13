@@ -1,4 +1,4 @@
-# Findings: Schrankbeleuchtung-KiCad / Schrankbeleuchtung
+# Findings: Illuminux/Schrankbeleuchtung-KiCad / Schrankbeleuchtung
 
 ## FND-00001398: Component counts and types are accurate for all 33 components; Switching regulator (TPS560430) detected with correct topology and voltage mismatch correctly flagged; Voltage divider and LC filter c...
 

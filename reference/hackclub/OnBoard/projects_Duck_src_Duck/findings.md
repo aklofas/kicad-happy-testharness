@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_Duck_src_Duck
+# Findings: hackclub/OnBoard / projects_Duck_src_Duck
 
 ## FND-00000093: STM32F411 flight computer with GPS, flash, pyrotechnic channels. Pyro continuity sense dividers correctly detected. STM32 internal regulator classified as power_regulator which is debatable.
 

@@ -1,4 +1,4 @@
-# Findings: ESP32-C6-DevKit-Lipo / HARDWARE_ESP32-C6-DevKit-Lipo.Rev.A_ESP32-C6-DevKit-Lipo_Rev_A
+# Findings: OLIMEX/ESP32-C6-DevKit-Lipo / HARDWARE_ESP32-C6-DevKit-Lipo.Rev.A_ESP32-C6-DevKit-Lipo_Rev_A
 
 ## FND-00000510: Systemic reference resolution bug: analyzer reads property 'Reference' instead of project-specific instance reference, producing 15 wrong refs and 28 missing/wrong component refs; I2C SDA bus repor...
 

@@ -14,17 +14,29 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal Y1 16MHz detected with 12pF load caps; effective load 9pF calculated correctly",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
             "path": "signal_analysis.crystal_circuits",
-            "op": "contains_match",
-            "field": "reference",
-            "pattern": "^Y1$"
-          }
+            "op": "equals",
+            "value": 1
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 1
         },
         {
           "description": "Three I2C buses (I2C1, I2C2, I2C3) identified; all correctly flagged as missing external pullup resistors",
@@ -33,7 +45,11 @@
             "path": "signal_analysis.design_observations (i2c_bus)",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations (i2c_bus)",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "RC filter R2(10k)+C1(1u) on NRST net detected at 15.92 Hz (power-on reset circuit)",
@@ -43,7 +59,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R2$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Two WS2812B addressable LED chains detected in the 4 parsed sheets",
@@ -52,7 +75,11 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Decoupling analysis correctly identifies +3.3V (11 caps, 11.2uF), +3.3VA (2 caps), +5V (1 cap)",
@@ -61,7 +88,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "ERC no_driver warnings for FLASH_NHOLD (U2.VREF+ on wrong net), FLASH_NWP (U2.VCAP_2 on wrong net), and KB_LED_ARRAY (floating) are all genuine design issues",
@@ -79,7 +110,13 @@
             "path": "signal_analysis.design_observations (single_pin_nets)",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations (single_pin_nets)",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Polyfuse F1 (2A) correctly identified as protection device on VCC rail",
@@ -89,7 +126,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^F1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "F1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SPI1 and SPI2 buses identified; W25N01GVZEIG NAND flash on SPI2 detected",
@@ -122,7 +165,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R9$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "J1",
+            "R9"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -133,7 +184,18 @@
             "path": "signal_analysis.key_matrices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "key_matrices",
+          "subject_refs": [
+            "J10",
+            "J11",
+            "J12",
+            "J3",
+            "J4",
+            "J7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "74HCT595 shift register array (U500-U513, 14 chips) not recognized as a keyboard scan engine. The design uses Q-output pins (QC, QD, QF, QG) as the SHIFTR_CLK/RST/LATCH_CLK/NOE bus to keyboard connectors, while individual K_xxx key signals drive the control input pins (SRCLK, RCLK, ~SRCLR, ~OE). This is an unconventional use of shift registers for per-key addressing.",
@@ -142,7 +204,26 @@
             "path": "signal_analysis.key_matrices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "key_matrices",
+          "subject_refs": [
+            "U500",
+            "U501",
+            "U502",
+            "U503",
+            "U504",
+            "U505",
+            "U506",
+            "U507",
+            "U508",
+            "U509",
+            "U510",
+            "U511",
+            "U512",
+            "U513"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Addressable LED chain severely undercounted. keyboard.sch has 108 total sheet instances of SSD1306_TO_SPI.sch (one per key position), each containing a WS2812B LED. Only the unique file is parsed once, so the actual per-key LED chain of 100+ WS2812B devices is reduced to 2 chains of length 1.",
@@ -151,7 +232,11 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SHIFTR_NMASTER_RST global label appears on both mainboard.sch and keyboard.sch but does not resolve to any net in the output. The corresponding SHIFTR_RST net on mainboard connects only to 74HCT595 Q-output pins, not to any MCU reset control source. This net-name mismatch leaves the shift register reset undriven.",

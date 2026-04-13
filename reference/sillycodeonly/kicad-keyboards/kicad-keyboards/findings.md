@@ -1,4 +1,4 @@
-# Findings: kicad-keyboards / kicad-keyboards
+# Findings: sillycodeonly/kicad-keyboards / kicad-keyboards
 
 ## FND-00002250: Key matrix correctly detected: 4×9, 37 keys, 37 diodes, via net-name method; USB Full Speed interface not detected despite ATmega32U4 and D+/D- nets; Crystal circuit correctly detected with Y1 16MH...
 

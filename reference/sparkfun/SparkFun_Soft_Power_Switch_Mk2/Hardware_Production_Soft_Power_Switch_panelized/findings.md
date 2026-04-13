@@ -1,4 +1,4 @@
-# Findings: SparkFun_Soft_Power_Switch_Mk2 / Hardware_Production_Soft_Power_Switch_panelized
+# Findings: sparkfun/SparkFun_Soft_Power_Switch_Mk2 / Hardware_Production_Soft_Power_Switch_panelized
 
 ## FND-00001457: Component counts are accurate: 40 total, correct breakdown by type; Power rails correctly identified as GND, VIN, VOUT; Net count is accurate at 25 nets; Decoupling capacitors correctly detected on...
 

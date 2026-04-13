@@ -33,16 +33,31 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R7$"
-          }
+            "pattern": "^R11$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R11",
+            "R7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "NRST pin flagged as connected to Neopixel net - this is likely a net naming/mapping error in the legacy parser, NRST would not be intentionally connected to a Neopixel data line",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "MOSFET load_type reported as led for all 4 channels - these are general-purpose PWM outputs for fans/heaters/LEDs, not specifically LED loads",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -54,7 +69,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No SWD debug interface detection despite SWDIO net being classified as debug",

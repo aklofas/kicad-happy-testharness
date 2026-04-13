@@ -1,4 +1,4 @@
-# Findings: ESP32SmartBoard_PCB / ESP32SmartBoard_PCB_ESP32SmartBoard_PCB
+# Findings: ronaldsieber/ESP32SmartBoard_PCB / ESP32SmartBoard_PCB
 
 ## FND-00000498: U1 VIN and 3V3 pins incorrectly placed in GND net; U1 GND pin incorrectly placed in VIN rail net; U2 MH-Z19B RXD (pin 2) and TXD (pin 3) appear as isolated single-pin nets despite being wired; UART...
 

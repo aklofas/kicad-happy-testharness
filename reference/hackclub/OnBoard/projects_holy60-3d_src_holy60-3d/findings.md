@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_holy60-3d_src_holy60-3d
+# Findings: hackclub/OnBoard / projects_holy60-3d_src_holy60-3d
 
 ## FND-00000101: Holy60-3D is a 61-key keyboard switch matrix with no MCU on this board (connector-only). Matrix not detected despite clear Row/Column net names. 19 mounting holes classified but no connectors found.
 

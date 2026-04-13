@@ -1,4 +1,4 @@
-# Findings: electrostatic-adhesion-plate / 100100mm_Statikplatte
+# Findings: Jana-Marie/electrostatic-adhesion-plate / 100100mm_Statikplatte
 
 ## FND-00002035: N1..N10 detected as a parallel bus — false positive; these are sequential internal nodes; HV net not classified as high-voltage power — classified as plain 'signal'
 

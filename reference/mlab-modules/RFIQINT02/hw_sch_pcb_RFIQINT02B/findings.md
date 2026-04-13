@@ -1,4 +1,4 @@
-# Findings: RFIQINT02 / hw_sch_pcb_RFIQINT02B
+# Findings: mlab-modules/RFIQINT02 / hw_sch_pcb_RFIQINT02B
 
 ## FND-00001111: kicad_version reported as 'unknown' for a KiCad 5 format file (version 20211123); Multiple capacitors in BOM have wrong footprint 'Resistor_SMD:R_0805_2012Metric' — this is a schematic data issue f...
 

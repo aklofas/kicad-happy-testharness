@@ -1,4 +1,4 @@
-# Findings: kicad-usb-c / pcb_Blkhurst-USB-C
+# Findings: blkhurst/kicad-usb-c / pcb_Blkhurst-USB-C
 
 ## FND-00002269: USB4215-03-A (USB Type-C connector) incorrectly identified as not USB-C; 5.1k CC pull-down resistors (R1, R2) not recognized as USB-C CC termination
 

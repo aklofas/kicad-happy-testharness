@@ -1,4 +1,4 @@
-# Findings: iMX8MP-SOM-EVB / HARDWARE_iMX8MP-SOM-EVB-rev.b_iMX8MPLUS-SOM-EVB_Rev_B
+# Findings: OLIMEX/iMX8MP-SOM-EVB / HARDWARE_iMX8MP-SOM-EVB-rev.b_iMX8MPLUS-SOM-EVB_Rev_B
 
 ## FND-00000173: 329-component OLIMEX iMX8M Plus EVB. Correct: Ethernet PHYs, crystals, HDMI, ESD protection, SPI buses, USB pairs. Incorrect: U5/U10 MCP2562 CAN transceivers have completely scrambled pin-to-net mapping, VR1/VR2 AMS1117 as varistors, Flash_Con1 as fuse, T1/T2 digital transistors as transformers, false three-phase bridge from PHY strap FETs. Missed: AMS1117 LDOs not in power_regulators, USB power switches, several component type misclassifications.
 

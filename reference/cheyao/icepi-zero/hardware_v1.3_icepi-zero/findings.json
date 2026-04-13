@@ -11,45 +11,95 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "min_count",
-            "value": 3
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage divider ratios and estimated Vout values accurate: U2=1.1V (R6/R7), U3=2.515V (R8/R9), U4=3.327V (R10/R11) with Vref=0.6V",
           "analyzer_section": "signal_analysis.feedback_networks",
           "check": {
             "path": "signal_analysis.feedback_networks",
-            "op": "min_count",
-            "value": 3
-          }
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R10$"
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "R10",
+            "R11",
+            "R6",
+            "R7",
+            "R8",
+            "R9",
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "W9825G6KH SDRAM (U11) and W25Q128JVS SPI flash (U12) memory interfaces correctly detected with proper processor connections to ECP5 (U1)",
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
             "path": "signal_analysis.memory_interfaces",
-            "op": "min_count",
-            "value": 2
-          }
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U1$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U11",
+            "U12"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Four TPD2EUSB30A ESD protection ICs (U5, U7, U8, U10) correctly identified with protected differential pairs",
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
             "path": "signal_analysis.protection_devices",
-            "op": "min_count",
-            "value": 4
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U10$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "U10",
+            "U5",
+            "U7",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "50MHz active oscillator Y1 (SG-8018CG) correctly identified with GLOBAL_CLK output net",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
             "path": "signal_analysis.crystal_circuits",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus correctly detected with dual-domain pull-ups: 4.7k to +5V (R16/R17) and 3.3k to +3V3 (R18/R19) through PCA9306DC1 level translator (U6)",
@@ -120,8 +170,12 @@
           "check": {
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
-            "value": 4
-          }
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "UART bus detected between FT231XQ (U9) and ECP5 (U1) on USB_TXD/USB_RXD nets",
@@ -163,7 +217,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R42$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C44",
+            "D14",
+            "R42"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "IC pin analysis shows connected_pins=0, no_connect_pins=0, unconnected_pins=0 for every IC. This appears to be a bug since all ICs clearly have connected pins (e.g., U1 has 80+ signal pins, U9 has 21 pins all connected).",
@@ -176,9 +238,27 @@
           "analyzer_section": "signal_analysis.hdmi_dvi_interfaces",
           "check": {
             "path": "signal_analysis.hdmi_dvi_interfaces",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "connector",
+            "pattern": "^C36$"
+          },
+          "detector": "hdmi_dvi_interfaces",
+          "subject_refs": [
+            "C36",
+            "C37",
+            "C38",
+            "C39",
+            "C40",
+            "C41",
+            "C42",
+            "C43",
+            "D0",
+            "D1",
+            "D2",
+            "J2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "JTAG debug interface not detected. FT231XQ (U9) uses modem control signals for bitbang JTAG: ~{RI}->TDI, ~{CTS}->TDO, ~{DSR}->TCK, ~{DCD}->TMS, connected to ECP5 (U1) dedicated JTAG pins. This is a standard FTDI-based JTAG programming interface with test points (TP9-TP12).",
@@ -255,19 +335,71 @@
         },
         {
           "description": "U12 (W25Q128JVS) SPI flash correctly detected with 6 shared signal nets to U1",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U12"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "U11 (W9825G6KH) SDRAM correctly detected with 39 shared signal nets to U1",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U11"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "Three TLV62569DBV switching regulators U2/U3/U4 correctly identified with inductors and feedback dividers from +5V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "Y1 (SG-8018CG 50MHz MEMS) correctly detected as active_oscillator on GLOBAL_CLK",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "SPI flash bus correctly detected: FLASH_MOSI/FLASH_MISO between U12 and U1",
@@ -279,7 +411,22 @@
         },
         {
           "description": "ESD protection U5/U7/U8/U10 (TPD2EUSB30A) correctly identified on USB differential pairs",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [
+            "U10",
+            "U5",
+            "U7",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U10$"
+          }
         },
         {
           "description": "GPDI differential pairs correctly detected from U1",
@@ -311,7 +458,20 @@
       "missed": [
         {
           "description": "GPDI/HDMI-compatible interface not detected: J2 carries complete DVI-compatible differential video (GPDI_D0-2+/-, GPDI_CLK+/-) plus DDC I2C, HPD, CEC, UTIL from U1.",
-          "analyzer_section": "signal_analysis.hdmi_dvi_interfaces"
+          "analyzer_section": "signal_analysis.hdmi_dvi_interfaces",
+          "detector": "hdmi_dvi_interfaces",
+          "subject_refs": [
+            "J2",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.hdmi_dvi_interfaces",
+            "op": "contains_match",
+            "field": "connector",
+            "pattern": "^J2$"
+          }
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: fc980c-controller / rev0_fc980c-controller
+# Findings: wlhlm/fc980c-controller / rev0_fc980c-controller
 
 ## FND-00002064: Capacitive keyboard matrix not detected — design uses bit-encoded COL_BIT/ROW_BIT signals via external IC
 

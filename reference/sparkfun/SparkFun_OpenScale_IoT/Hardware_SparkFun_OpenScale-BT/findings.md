@@ -1,4 +1,4 @@
-# Findings: SparkFun_OpenScale_IoT / Hardware_SparkFun_OpenScale-BT
+# Findings: sparkfun/SparkFun_OpenScale_IoT / Hardware_SparkFun_OpenScale-BT
 
 ## FND-00001467: Component counts and types are accurate for OpenScale-BT schematic; LDO regulator U4 (RT9080-3.3) correctly detected as LDO with 5V input, 3.3V output; MOSFET level shifters Q5/Q6 correctly identif...
 

@@ -1,4 +1,4 @@
-# Findings: Churrosoft/OpenEFI-PCB / OpenEFI_rev4_OpenEFI_rev4
+# Findings: Churrosoft/OpenEFI-PCB / OpenEFI_rev4
 
 ## FND-00002520: Complex automotive ECU (339 components, 8 sheets, STM32F407, TPS5430 + AMS1117 + REF3033 power chain). Strong analysis overall. Issues: LT4363 surge stopper misclassified as regulator, LED resistor networks not traced, A4988 stepper driver missed, Graphic symbol as switch.
 

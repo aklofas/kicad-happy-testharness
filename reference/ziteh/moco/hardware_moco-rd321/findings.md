@@ -1,4 +1,4 @@
-# Findings: moco / hardware_moco-rd321_moco-rd321
+# Findings: ziteh/moco / hardware_moco-rd321
 
 ## FND-00000269: BLDC motor controller rd321 (STSPIN32F0A, 95 components). 7 duplicate power_regulator entries and 13 duplicate design_observations from 7-unit IC. Three-phase half-bridge (SiZ250DT dual MOSFETs), current sense shunts, and internal opamps all missed.
 

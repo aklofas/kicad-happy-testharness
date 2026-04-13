@@ -1,4 +1,4 @@
-# Findings: cap-soil-moisture-v2 / soil-moisture2_soil-moisture2x4-b4-export
+# Findings: acolomitchi/cap-soil-moisture-v2 / soil-moisture2__autosave-soil-moisture2
 
 ## FND-00001996: 
 

@@ -1,4 +1,4 @@
-# Findings: ISS-PCB / boards_TARS-MK4_TARS-MK4-FCB-revC_TARS-MK4-FCB
+# Findings: ISSUIUC/ISS-PCB / boards_TARS-MK4_TARS-MK4-FCB-revC_TARS-MK4-FCB
 
 ## FND-00000154: Flight computer with Teensy 4.1 and 7 motion/environmental sensors. SPI nets falsely detected as I2C buses due to pin-name fallback not excluding SPI nets.
 

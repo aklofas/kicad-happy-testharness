@@ -1,4 +1,4 @@
-# Findings: BreadBoard_Power_Supply_KICAD_Project / Breadboard_Power_Supply
+# Findings: jvarghes2501/BreadBoard_Power_Supply_KICAD_Project / Breadboard_Power_Supply
 
 ## FND-00000395: RC low-pass filter falsely detected from LED current-limiting resistor R1 and bypass cap C1; design_observations falsely reports missing decoupling caps on both LM7805 (U1) and LM317 (U2); LED powe...
 

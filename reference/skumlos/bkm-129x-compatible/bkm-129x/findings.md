@@ -1,4 +1,4 @@
-# Findings: bkm-129x-compatible / bkm-129x
+# Findings: skumlos/bkm-129x-compatible / bkm-129x
 
 ## FND-00002011: 
 

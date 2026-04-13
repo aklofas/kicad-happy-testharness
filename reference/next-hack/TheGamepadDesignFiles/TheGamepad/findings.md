@@ -1,4 +1,4 @@
-# Findings: TheGamepadDesignFiles / TheGamepad
+# Findings: next-hack/TheGamepadDesignFiles / TheGamepad
 
 ## FND-00001634: DISP1 (Adafruit4311 display) misclassified as 'diode' type; key_matrices detector fires a false positive on this shift-register gamepad; bus_topology 'width' field reports total pin-connection coun...
 

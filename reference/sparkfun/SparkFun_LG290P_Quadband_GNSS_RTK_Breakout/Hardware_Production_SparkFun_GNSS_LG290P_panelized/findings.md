@@ -1,4 +1,4 @@
-# Findings: SparkFun_LG290P_Quadband_GNSS_RTK_Breakout / Hardware_Production_SparkFun_GNSS_LG290P_panelized
+# Findings: sparkfun/SparkFun_LG290P_Quadband_GNSS_RTK_Breakout / Hardware_Production_SparkFun_GNSS_LG290P_panelized
 
 ## FND-00001445: Component counts are accurate: 62 total, 11 caps, 9 resistors, 4 ICs, 10 connectors, 7 jumpers; LDO regulator RT9080-3.3 correctly detected with topology, input/output rails; RC filter on VCC_RF (R...
 

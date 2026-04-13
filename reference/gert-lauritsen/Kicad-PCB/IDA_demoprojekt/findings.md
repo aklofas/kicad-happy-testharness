@@ -1,4 +1,4 @@
-# Findings: Kicad-PCB / IDA_demoprojekt_IDA_demoprojekt
+# Findings: gert-lauritsen/Kicad-PCB / IDA_demoprojekt
 
 ## FND-00000794: BOM collapses all U? refs into one entry, omitting nRF24L01P, USBLC6-2SC6, and AP2112K-3.3; Crystal circuit detected correctly for Y? (ASA-16.000MHZ-L-T); AP2112K-3.3 LDO regulator not detected in ...
 

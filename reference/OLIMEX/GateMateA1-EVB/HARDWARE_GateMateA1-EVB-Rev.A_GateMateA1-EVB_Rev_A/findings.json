@@ -126,19 +126,79 @@
       "correct": [
         {
           "description": "Identified all five SY8089AAAC switching regulators (U11-U15) with correct inductors (L3-L7). Four of five have correct feedback divider and output voltage.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L3",
+            "L4",
+            "L5",
+            "L6",
+            "L7",
+            "U11",
+            "U12",
+            "U13",
+            "U14",
+            "U15"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U11$"
+          }
         },
         {
           "description": "Correctly detected Q1 (12 MHz crystal) with load capacitors C111/C110 (18pF each, 12pF effective).",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C110",
+            "C111",
+            "Q1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^C110$"
+          }
         },
         {
           "description": "Correctly classified CR1 as an active oscillator (10 MHz) with output on pin 3.",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "CR1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^CR1$"
+          }
         },
         {
           "description": "Correctly identified PSRAM U8 (LY68S3200SLT) connected to RP2040 U10 via 6 shared QSPI signal nets.",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U10",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U10$"
+          }
         },
         {
           "description": "Correctly detected USB-C1 CC1/CC2 5.1k pull-down resistors and VBUS decoupling; accurately flagged missing VBUS ESD protection.",
@@ -146,7 +206,26 @@
         },
         {
           "description": "Correctly detected power-sequencing RC delay networks for regulator enable pins: R69/C122, R63/C117, R62/C116, R70/C123.",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C116",
+            "C117",
+            "C122",
+            "C123",
+            "R62",
+            "R63",
+            "R69",
+            "R70"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R62$"
+          }
         },
         {
           "description": "Correctly identified component counts: 73 resistors, 121 capacitors, 5 inductors, 2 ferrite beads, 13 ICs, 6 LEDs, 5 switches.",
@@ -158,31 +237,96 @@
         },
         {
           "description": "Button debounce filter R28 (10k) + C89 (100nF) correctly detected as 159 Hz LP filter on FPGA button input.",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C89",
+            "R28"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R28$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "U15 (SY8089AAAC) output_rail reported as '__unnamed_7' instead of VDD_CORE. Feedback divider R73=1k/R78=2k not detected, so estimated_vout absent. Vout = 0.6*(1+1k/2k) = 0.9V nominal.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "R73",
+            "R78",
+            "U15"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "vout",
+          "expected_value": 0.6,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "field_equals",
+            "field": "vout",
+            "value": 0.6
+          }
         },
         {
           "description": "R73 (1k) + C125 (47uF) incorrectly paired as a 3.39 Hz RC low-pass filter. R73 is actually the top feedback resistor for U15 (VDD_CORE to U15 FB), and C125 is the output bulk cap.",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C125",
+            "R73",
+            "U15"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "not_contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R73$"
+          }
         },
         {
           "description": "FET1 and FET2 (BSS138 N-MOSFETs) classified with load_type='inductive', but these are open-drain level shifters for PS2 keyboard interface. No inductive load present.",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
         {
           "description": "Five TVS protection diodes (TVS1-TVS5, GG0402052R542P) on VGA signal lines absent from protection_devices. TVS1-3 protect RGB, TVS4-5 protect sync signals.",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "VGA weighted-resistor DAC not detected. FPGA drives 4-bit Red, 5-bit Green, 4-bit Blue channels into resistor-ladder DACs feeding VGA1.",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

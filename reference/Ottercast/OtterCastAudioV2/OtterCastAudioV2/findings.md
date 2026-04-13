@@ -1,4 +1,4 @@
-# Findings: OtterCastAudioV2 / OtterCastAudioV2
+# Findings: Ottercast/OtterCastAudioV2 / OtterCastAudioV2
 
 ## FND-00000059: AE1 antenna connector classified as "other"
 

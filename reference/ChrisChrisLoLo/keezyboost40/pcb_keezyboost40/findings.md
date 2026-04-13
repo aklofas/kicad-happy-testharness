@@ -1,4 +1,4 @@
-# Findings: keezyboost40 / pcb_keezyboost40_keezyboost40
+# Findings: ChrisChrisLoLo/keezyboost40 / pcb_keezyboost40
 
 ## FND-00002232: ST7735 SPI display misclassified as I2C bus; Key matrix correctly detected as 4×10 with 40 switches and 40 diodes; KiCad version reported as 'unknown' for a valid KiCad 6 format file
 

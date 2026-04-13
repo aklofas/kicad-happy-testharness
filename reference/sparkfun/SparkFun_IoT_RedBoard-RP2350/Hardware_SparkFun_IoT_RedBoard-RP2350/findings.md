@@ -1,4 +1,4 @@
-# Findings: SparkFun_IoT_RedBoard-RP2350 / Hardware_SparkFun_IoT_RedBoard-RP2350
+# Findings: sparkfun/SparkFun_IoT_RedBoard-RP2350 / Hardware_SparkFun_IoT_RedBoard-RP2350
 
 ## FND-00000204: RP2350B-based development board with USB-C, LiPo charging, WiFi/BLE (RM2 module), PSRAM, flash, microSD, and HSTX display connector. Analyzer does well overall but misclassifies the LM66200 ideal diode OR controller as an LDO regulator.
 

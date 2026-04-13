@@ -1,4 +1,4 @@
-# Findings: NCCM / tests_test-project-nccm-large_test-project-nccm-large
+# Findings: Mage-Control-Systems-Ltd/NCCM / tests_test-project-nccm-large
 
 ## FND-00000956: netclass_flag objects not detected or reported; assembly_complexity misclassifies THT LED as SMD; Component count, BOM, net topology all correct; PWR_FLAG warning correctly fired for battery-powere...
 

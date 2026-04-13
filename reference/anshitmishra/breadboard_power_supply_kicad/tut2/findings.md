@@ -1,4 +1,4 @@
-# Findings: breadboard_power_supply_kicad / tut2
+# Findings: anshitmishra/breadboard_power_supply_kicad / tut2
 
 ## FND-00001995: 
 

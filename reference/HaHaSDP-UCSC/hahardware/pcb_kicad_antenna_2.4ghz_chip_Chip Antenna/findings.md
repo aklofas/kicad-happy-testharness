@@ -1,4 +1,4 @@
-# Findings: hahardware / pcb_kicad_antenna_2.4ghz_chip_Chip Antenna_Chip Antenna
+# Findings: HaHaSDP-UCSC/hahardware / pcb_kicad_antenna_2.4ghz_chip_Chip Antenna
 
 ## FND-00002163: LM2574 buck switching regulator misclassified as LDO topology; D7 '15AmpTriac' component misclassified as diode type
 

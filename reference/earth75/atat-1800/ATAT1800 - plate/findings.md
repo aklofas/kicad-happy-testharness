@@ -1,4 +1,4 @@
-# Findings: atat-1800 / ATAT1800
+# Findings: earth75/atat-1800 / ATAT1800 - plate
 
 ## FND-00001982: Component counts correctly parsed for large 1800-layout keyboard; 6x19 keyboard matrix with 101 keys correctly detected; MCP1725-3302E LDO regulator correctly identified as +5V to +3V3; USB Type-C ...
 

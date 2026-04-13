@@ -1,4 +1,4 @@
-# Findings: argos-switches-pcb / flex_flex
+# Findings: Bastardkb/argos-switches-pcb / flex
 
 ## FND-00001944: All 12 components correctly identified including 4 in-BOM LEDs and 4 not-in-BOM switches; SK6812MINI addressable LED chain of 4 LEDs correctly detected; Power rails correctly identified as 'Gnd' an...
 

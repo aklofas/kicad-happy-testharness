@@ -1,4 +1,4 @@
-# Findings: OpenVent-Bristol_KiCad / OV_Power_OV_Power
+# Findings: Open-Vent-Bristol/OpenVent-Bristol_KiCad / OV_Power_OV_Power
 
 ## FND-00000023: Legacy parse_legacy_schematic() does not call analyze_signal_paths() — 8+ circuit categories missed including LT1936 buck, LT3796 charger, LT6106 current sense, 5 voltage dividers, VNH5019 H-bridge, LTC4416 power path controller
 

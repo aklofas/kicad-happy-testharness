@@ -1,4 +1,4 @@
-# Findings: PongPCB / Pong
+# Findings: PlummersSoftwareLLC/PongPCB / Pong
 
 ## FND-00001118: Crystal circuit detection correct: Y1 2MHz with 30pF load caps; ERC no_driver warnings for control panel connector pins (SPEED, BATSIZE, RESET, PRACTICE, SOCCER, TENNIS) are correct; Decoupling obs...
 

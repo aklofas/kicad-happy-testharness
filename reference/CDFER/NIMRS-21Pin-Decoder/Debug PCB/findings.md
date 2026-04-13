@@ -1,4 +1,4 @@
-# Findings: NIMRS-21Pin-Decoder / Debug PCB_Debug PCB
+# Findings: CDFER/NIMRS-21Pin-Decoder / Debug PCB
 
 ## FND-00000960: Empty Debug PCB schematic correctly produces all-zero output
 

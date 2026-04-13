@@ -1,4 +1,4 @@
-# Findings: DEVLPR / DEVLPR
+# Findings: FANTM/DEVLPR / DEVLPR
 
 ## FND-00000238: EMG amplifier (40 components). 0 opamp circuits detected despite 3x OPA187 + 1x OPA2375 (4 active instances). 0 instrumentation amp circuits despite INA821. Dual +/-3V3 supply -3V3 rail decoupling not analyzed.
 

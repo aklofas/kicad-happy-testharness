@@ -1,4 +1,4 @@
-# Findings: PCRD06 / hw_sch_pcb_PCRD06
+# Findings: mlab-modules/PCRD06 / hw_sch_pcb_PCRD06
 
 ## FND-00001056: TS3021ILT comparator correctly identified as comparator_or_open_loop despite wrong lib_id (AD8691); Component and net counts match PCB: 33 components, 13 nets in both schematic and PCB
 

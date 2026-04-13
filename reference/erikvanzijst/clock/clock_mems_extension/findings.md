@@ -1,4 +1,4 @@
-# Findings: clock / clock_mems_extension_clock_mems_extension
+# Findings: erikvanzijst/clock / clock_mems_extension
 
 ## FND-00002013: XTAL1 (32.768kHz crystal) misclassified as type 'other' instead of 'crystal'; XTAL1 32.768kHz crystal circuit not detected in crystal_circuits; NE555P (U11) crystal_circuit entry has output_net='VC...
 

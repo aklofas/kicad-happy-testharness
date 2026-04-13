@@ -1,4 +1,4 @@
-# Findings: kicad-ref-schematics / kicad-ref-schematics
+# Findings: Kernow-Robotics/kicad-ref-schematics / kicad-ref-schematics
 
 ## FND-00002260: Crystal X1 (X322512MSB4SI) classified as 'connector' type, not 'crystal'; Crystal feedback resistor R1/C2 on XOUT net misclassified as an RC low-pass filter; SPI flash W25Q128 connected to RP2040 n...
 

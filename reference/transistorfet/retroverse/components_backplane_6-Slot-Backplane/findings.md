@@ -1,4 +1,4 @@
-# Findings: transistorfet/retroverse / components_backplane_6-Slot-Backplane_6-Slot-Backplane
+# Findings: transistorfet/retroverse / components_backplane_6-Slot-Backplane
 
 ## FND-00002627: 6-slot VME64 backplane with ATX power, active bus termination (TCA0372 + 4610X divider networks), and 74ACT32 daisy-chain logic. Analyzer correctly identifies hierarchical design, VME connectors, voltage dividers, and bus topology but misclassifies graphic logo as switch, labels opamp buffers as comparators, and misses VME bus protocol detection.
 

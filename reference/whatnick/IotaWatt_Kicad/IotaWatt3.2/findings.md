@@ -1,4 +1,4 @@
-# Findings: IotaWatt_Kicad / IotaWatt3.2
+# Findings: whatnick/IotaWatt_Kicad / IotaWatt3.2
 
 ## FND-00000650: 62 resistors present but zero voltage dividers detected — AC current transformer divider networks missed; Spurious SPI entries with MISO mapped to GND net — false positive pin-name matching in lega...
 

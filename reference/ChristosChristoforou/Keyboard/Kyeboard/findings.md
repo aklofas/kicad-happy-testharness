@@ -1,4 +1,4 @@
-# Findings: Keyboard / Kyeboard
+# Findings: ChristosChristoforou/Keyboard / Kyeboard
 
 ## FND-00000635: Button+/Button- and LED+/LED- incorrectly classified as differential pairs; U2 LM317 incorrectly flagged as missing input decoupling cap (C2 is present on __unnamed_50); Key matrix not detected des...
 

@@ -1,4 +1,4 @@
-# Findings: Mechanical-Keyboard-Pcb / Pcb-Files_Keyboard
+# Findings: EpicKiwiProCoder/Mechanical-Keyboard-Pcb / Pcb-Files_Keyboard
 
 ## FND-00000907: Key matrix detection is accurate: 5 rows, 14 columns, 61 switches, 61 diodes; assembly_complexity misclassifies 62 MX keyboard switches as SMD; reports 123 SMD + 1 THT instead of ~62 SMD + 62 THT; ...
 

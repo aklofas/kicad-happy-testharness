@@ -1,4 +1,4 @@
-# Findings: dib-mio-afe3 / EDA files_KiCad_EEZ DIB AFE3
+# Findings: eez-open/dib-mio-afe3 / EDA files_KiCad_EEZ DIB AFE3
 
 ## FND-00000201: EEZ DIB AFE3 analog front-end board with dual-channel input protection (fuses, relays, clamp circuits), MCP6004 comparators for window detection, OPA376 precision buffer, DG212 analog switches for range selection, 2N7002 MOSFETs, isolated power rails, and optocoupler isolation. Complex analog signal conditioning with 9 isolated power rails. Good opamp and transistor detection; no regulators found (power likely comes from backplane).
 

@@ -1,4 +1,4 @@
-# Findings: kicad-mem_disp_adaptor / epoch
+# Findings: winneymj/kicad-mem_disp_adaptor / epoch
 
 ## FND-00002196: False positive I2C bus: crystal oscillator feedback path (U1 SCL pin + R1 1M + U2 inverter) misidentified as I2C SCL line; Decoupling capacitor C1 not credited to U1 or U2 in decoupling_analysis de...
 

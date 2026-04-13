@@ -1,4 +1,4 @@
-# Findings: Arduino_Pro_Mini_Dx / Arduino_Pro_Mini_Dx
+# Findings: michpro/Arduino_Pro_Mini_Dx / Arduino_Pro_Mini_Dx
 
 ## FND-00000375: Crystal load capacitance calculation uses series formula instead of parallel for per-pin caps; RC filter detected between SW1 (reset button) and RESET net via R1+C5 is a topology misidentification;...
 

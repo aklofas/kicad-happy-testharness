@@ -1,4 +1,4 @@
-# Findings: Kicad_amplifier_circuit / kicad_project_kicad_project
+# Findings: Melek-Cherif/Kicad_amplifier_circuit / kicad_project
 
 ## FND-00000798: Op-amp circuit configurations correctly detected: inverting (unit 1), transimpedance/buffer (unit 2), unknown (unit 3 — power unit); Footprint filter warnings for capacitors are false positives — C...
 

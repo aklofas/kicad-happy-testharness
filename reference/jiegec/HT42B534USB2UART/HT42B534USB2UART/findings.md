@@ -1,4 +1,4 @@
-# Findings: HT42B534USB2UART / HT42B534USB2UART
+# Findings: jiegec/HT42B534USB2UART / HT42B534USB2UART
 
 ## FND-00000582: kicad_version reports 'unknown' for a KiCad 6+ file; RC filter detection misclassifies USB 33Ω series termination resistors + ESD caps as low-pass filters; USB Full Speed protocol not detected in b...
 

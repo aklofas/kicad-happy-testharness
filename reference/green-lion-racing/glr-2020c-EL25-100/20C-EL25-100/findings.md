@@ -1,4 +1,4 @@
-# Findings: glr-2020c-EL25-100 / 20C-EL25-100
+# Findings: green-lion-racing/glr-2020c-EL25-100 / 20C-EL25-100
 
 ## FND-00002101: All 3 relays and connector correctly detected as extending outside the board boundary
 

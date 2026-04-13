@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_TremorWatch_src_TremorWatch
+# Findings: hackclub/OnBoard / projects_TremorWatch_src_TremorWatch
 
 ## FND-00000103: Accelerometer wearable with MPU-6050, XIAO ESP32C3, microSD card, and resistor pack pull-ups. I2C detected but SPI for SD card missed.
 

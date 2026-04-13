@@ -1,4 +1,4 @@
-# Findings: hardware-design / kicad_project_open_authenticator
+# Findings: Open-Authenticator/hardware-design / kicad_project_open_authenticator
 
 ## FND-00002117: KiCad 5 legacy parser assigns IC1 GND/IN/ON pins and ESP32 GND pins to +3.3V net due to coordinate-matching bug with mirrored components; I2C false positive: LOAD_SWITCH_VCC power net classified as...
 

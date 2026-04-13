@@ -1,4 +1,4 @@
-# Findings: azonenberg/starshipraider / boards_MAXWELL_maxwell-main_maxwell-main
+# Findings: azonenberg/starshipraider / boards_MAXWELL_maxwell-main
 
 ## FND-00002521: 18-sheet FPGA test instrument (MAXWELL) with dual Xilinx FPGAs, DDR3 SODIMM, QSFP+, LMK04806B clocking, 24 INA233 power monitors. Major issues: STM32F777 falsely classified as switching regulator, 14 power conversion ICs missed entirely, INA233 monitors misclassified as opamps, power rails classified as signals.
 

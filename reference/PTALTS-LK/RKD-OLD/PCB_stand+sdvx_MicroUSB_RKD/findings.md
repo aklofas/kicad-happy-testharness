@@ -1,4 +1,4 @@
-# Findings: RKD-OLD / PCB_stand+sdvx_MicroUSB_RKD
+# Findings: PTALTS-LK/RKD-OLD / PCB_stand+sdvx_MicroUSB_RKD
 
 ## FND-00001141: K1–K6 keyboard switches (lib_id=Key:Key) misclassified as 'relay' instead of 'switch'; Crystal frequency not extracted from value string 'Crystal 12MHZ HC49'; AMS1117-33 LDO regulator correctly ide...
 

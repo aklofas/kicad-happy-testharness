@@ -1,4 +1,4 @@
-# Findings: MTS-module_80MHz_200MHz / KiCad_MTS_module
+# Findings: TU-Darmstadt-APQ/MTS-module_80MHz_200MHz / KiCad_MTS_module
 
 ## FND-00000887: LT3045xMSE (U2, U3) falsely flagged as 'inverting: true' in MTS_module top-level; Cross-domain signal false positive: __unnamed_4 flagged as needing level shifter between U10/U12; Regulator cap war...
 

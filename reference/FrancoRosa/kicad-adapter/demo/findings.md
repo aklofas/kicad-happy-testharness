@@ -1,4 +1,4 @@
-# Findings: kicad-adapter / demo_demo
+# Findings: FrancoRosa/kicad-adapter / demo
 
 ## FND-00002236: 1206 test points correctly identified as test_point type with no false detectors firing
 

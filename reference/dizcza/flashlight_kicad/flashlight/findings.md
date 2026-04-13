@@ -1,4 +1,4 @@
-# Findings: flashlight_kicad / flashlight
+# Findings: dizcza/flashlight_kicad / flashlight
 
 ## FND-00002068: MT3608 boost converter output_rail incorrectly identified as the same net as input_rail; USB-C connector correctly flagged for missing VBUS ESD protection and VBUS decoupling
 

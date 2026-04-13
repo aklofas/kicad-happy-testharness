@@ -1,4 +1,4 @@
-# Findings: ftdi-jtag-programmer / JTAGProgrammer_JTAGProgrammer
+# Findings: anthony-bernaert/ftdi-jtag-programmer / JTAGProgrammer
 
 ## FND-00002073: FT2232HL JTAG and UART interfaces not detected despite named nets
 

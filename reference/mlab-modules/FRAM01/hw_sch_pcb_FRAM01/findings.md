@@ -1,4 +1,4 @@
-# Findings: FRAM01 / hw_sch_pcb_FRAM01
+# Findings: mlab-modules/FRAM01 / hw_sch_pcb_FRAM01
 
 ## FND-00000550: Component inventory and BOM extraction accurate; SPI bus detected correctly; Decoupling capacitors correctly identified on +3.3V rail; PWR_FLAG warnings are false positives — schematic has explicit...
 

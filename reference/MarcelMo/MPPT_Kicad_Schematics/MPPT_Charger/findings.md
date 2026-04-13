@@ -1,4 +1,4 @@
-# Findings: MPPT_Kicad_Schematics / MPPT_Charger
+# Findings: MarcelMo/MPPT_Kicad_Schematics / MPPT_Charger
 
 ## FND-00000923: I2C pullups R29/R30 reported as valid pullups with pullup_rail=GND_J4 — GND_J4 is a ground net; XL7005A U6 estimated_vout=5.375V vs output_rail=+3.3V reported as mismatch — but the vout calculation...
 

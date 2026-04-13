@@ -1,4 +1,4 @@
-# Findings: brechtve-kicad-things / Templates_brechtve-kicad-arm-template_brechtve-kicad-arm-template
+# Findings: Fescron/brechtve-kicad-things / Templates_brechtve-kicad-arm-template
 
 ## FND-00002290: SWD interface not detected in bus_analysis despite SWDIO/SWCLK nets present; UART nets (TXD/RXD) correctly detected and classified
 

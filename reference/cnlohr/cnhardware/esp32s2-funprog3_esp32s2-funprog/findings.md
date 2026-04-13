@@ -1,4 +1,4 @@
-# Findings: cnhardware / esp32s2-funprog3_esp32s2-funprog
+# Findings: cnlohr/cnhardware / esp32s2-funprog3_esp32s2-funprog
 
 ## FND-00000159: ESP32-S2 development board with PCB antenna, USB, LEDs. Antenna A1 misclassified as IC via A-prefix; complementary BJT U11 ZDT6790TA classified as IC despite BJT in lib_id.
 

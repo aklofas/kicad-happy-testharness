@@ -1,4 +1,4 @@
-# Findings: splitflap / electronics_chainlinkDriver_chainlinkDriver
+# Findings: scottbez1/splitflap / electronics_chainlinkDriver
 
 ## FND-00000078: Legacy KiCad 5 schematic for split-flap motor driver board. 65 components, 184 nets correctly extracted. 0 signals detected due to KH-016. Design centers on 4x 74HC595 shift registers driving 4x TPL7407L open-drain arrays for motor control, plus 74HC165 parallel-in shift register for sensor input and 74HC125 buffer. This is a well-structured SPI-like daisy-chain topology.
 

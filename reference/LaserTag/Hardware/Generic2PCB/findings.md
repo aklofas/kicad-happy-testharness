@@ -1,4 +1,4 @@
-# Findings: Hardware / Generic2PCB_Generic2PCB
+# Findings: LaserTag/Hardware / Generic2PCB
 
 ## FND-00000584: Component counts, BOM, and voltage divider correctly extracted; BJT collector topology not flagged: all 3 NPN transistors (Q2/Q3/Q4) have collector on GND_IR rail; I2C bus observation flags SDA/SCL...
 

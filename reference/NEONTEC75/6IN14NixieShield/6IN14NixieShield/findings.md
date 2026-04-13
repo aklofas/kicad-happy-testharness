@@ -1,4 +1,4 @@
-# Findings: 6IN14NixieShield / 6IN14NixieShield
+# Findings: NEONTEC75/6IN14NixieShield / 6IN14NixieShield
 
 ## FND-00000323: 6 WS2812B LEDs detected as 6 separate single-LED chains instead of one daisy-chain of 6; Boost converter transistor circuit (Q1 IRF740 MOSFET) not detected; Discrete boost converter not detected as...
 

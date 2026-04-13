@@ -1,4 +1,4 @@
-# Findings: le_chiffre_keyboard_stm32 / kicad_pcb_stm32_hotswap_chiffre
+# Findings: sporkus/le_chiffre_keyboard_stm32 / kicad_pcb_stm32_hotswap_chiffre
 
 ## FND-00002375: USB CC1/CC2 pulldown check incorrectly fails — 5.1k resistors are present but on unnamed nets; Decoupling observations incorrectly flag missing caps for STM32 and LDO that actually have decoupling;...
 

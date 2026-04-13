@@ -1,4 +1,4 @@
-# Findings: modern-hobbyist/aesir / mist_mist_mist
+# Findings: modern-hobbyist/aesir / mist_mist
 
 ## FND-00002611: Custom mechanical keyboard (7x18 matrix, 103 keys) with STM32G474, 103 SK6812 addressable LEDs, ILI9341 LCD display, USB-C. Component counts and most signal detections are accurate; key issues are duplicated SPI bus, wrong IC function classification for regulator, and inconsistent ESD reporting for D-.
 

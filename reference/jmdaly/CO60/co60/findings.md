@@ -1,4 +1,4 @@
-# Findings: CO60 / co60
+# Findings: jmdaly/CO60 / co60
 
 ## FND-00000442: U2 (TLV70233 LDO) and U4 (74LVC1G34) have VCC/GND pins swapped in net assignments due to misread of KiCad 5 legacy transform matrix [1,0,0,-1]; power_regulators[0].input_rail is null for U2 (TLV702...
 

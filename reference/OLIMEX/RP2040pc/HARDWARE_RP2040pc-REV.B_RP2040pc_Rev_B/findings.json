@@ -58,7 +58,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R6$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C15",
+            "C16",
+            "R6"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Buttons (BOOT1 with T1102D footprint) classified as type other instead of switch",
@@ -78,7 +86,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^C15$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C15",
+            "C16",
+            "R6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "DVI connector (DVI1) with 8 series resistors (R24-R31) for TMDS differential pairs not detected as display interface",
@@ -96,7 +112,11 @@
             "path": "signal_analysis.buzzer_speaker_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "buzzer_speaker_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB hub IC not detected as subcircuit (U4 with VBUSM pin suggests FE1.1s or similar)",
@@ -124,7 +144,16 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D1",
+            "D5",
+            "D7",
+            "D9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "PGM/RUN1 connector for RP2040 programming/debug not detected",

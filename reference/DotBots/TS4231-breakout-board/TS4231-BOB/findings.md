@@ -1,4 +1,4 @@
-# Findings: TS4231-breakout-board / TS4231-BOB
+# Findings: DotBots/TS4231-breakout-board / TS4231-BOB
 
 ## FND-00001628: TS4231 light-to-digital converter correctly parsed: 6 components, 8 nets, +3.3V and GND power rails; pwr_flag_warnings for +3.3V and GND are valid — no PWR_FLAG symbols present in design; C2 (1 µF ...
 

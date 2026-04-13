@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_Hugo's Keyboard_src_keyboar!
+# Findings: hackclub/OnBoard / projects_Hugo's Keyboard_src_keyboar!
 
 ## FND-00000096: Hugo keyboard with KB2040 MCU, 76-key matrix using GPIO naming (A0-A3, D0-D13 etc). Matrix not detected, IC/connector refs missing, KiCad version unknown.
 

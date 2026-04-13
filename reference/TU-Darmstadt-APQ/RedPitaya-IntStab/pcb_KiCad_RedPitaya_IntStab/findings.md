@@ -1,4 +1,4 @@
-# Findings: RedPitaya-IntStab / pcb_KiCad_RedPitaya_IntStab
+# Findings: TU-Darmstadt-APQ/RedPitaya-IntStab / pcb_KiCad_RedPitaya_IntStab
 
 ## FND-00001240: 12 opamp circuits correctly identified with proper configurations; Voltage dividers and SMA connector detection correct; kicad_version reports 'unknown' for KiCad 7 files (file_version 20230121)
 

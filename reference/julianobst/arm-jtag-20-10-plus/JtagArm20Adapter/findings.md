@@ -1,4 +1,4 @@
-# Findings: arm-jtag-20-10-plus / JtagArm20Adapter
+# Findings: julianobst/arm-jtag-20-10-plus / JtagArm20Adapter
 
 ## FND-00001946: All 6 components correctly identified: 4 connectors and 2 solder jumpers; All 11 JTAG/SWD signal nets correctly parsed from KiCad 5 legacy format; No signal_analysis detections despite this being a...
 

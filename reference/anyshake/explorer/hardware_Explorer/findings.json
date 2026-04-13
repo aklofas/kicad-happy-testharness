@@ -13,28 +13,59 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U17$"
-          }
+            "pattern": "^U13$"
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U13",
+            "U14",
+            "U15",
+            "U17",
+            "U18",
+            "U19"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U3 MP2236GJ switching regulator correctly identified with Vref=0.8V (lookup), feedback divider R7 (100k) / R8 (12k), and estimated Vout=7.467V from VIN input",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "contains_match",
-            "field": "ref",
-            "pattern": "^U3$"
-          }
+            "op": "field_equals",
+            "field": "vout",
+            "value": 7.467
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "R7",
+            "R8",
+            "U3"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "vout",
+          "expected_value": 7.467
         },
         {
           "description": "R7/R8 feedback divider correctly identified with is_feedback=true, ratio=0.107, connected to U3 FB pin",
           "analyzer_section": "signal_analysis.feedback_networks",
           "check": {
             "path": "signal_analysis.feedback_networks",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R7$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.107
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "R7",
+            "R8",
+            "U3"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.107
         },
         {
           "description": "6 anti-aliasing filters correctly detected at 26.98 Hz (R64-R66, R79-R81 at 5.9k with 1uF caps) on PREAMP_ZP/ZN/EP/EN/NP/NN to AAF_ZP/ZN/EP/EN/NP/NN nets",
@@ -44,7 +75,18 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R64$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "R64",
+            "R65",
+            "R66",
+            "R79",
+            "R80",
+            "R81"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Multiple sub-Hz bandpass filter stages correctly detected using 43k resistors with 4.7uF caps (~0.79 Hz) for the EHZ/EHE/EHN seismic signal paths",
@@ -53,7 +95,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "R1 (330k) / R2 (510k) voltage divider correctly detected as enable threshold for U3 MP2236GJ EN pin (not feedback)",
@@ -63,7 +109,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R1$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R1",
+            "R2",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "7 protection devices correctly identified: D2 SMAJ12A on power, D8 SMAJ5.0CA on digital, D17-D20 SMAJ15CA on RS-232 TX/RX lines",
@@ -72,8 +126,19 @@
             "path": "signal_analysis.protection_devices",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^D2$"
-          }
+            "pattern": "^D17$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D17",
+            "D18",
+            "D19",
+            "D2",
+            "D20",
+            "D8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U5 AMS1117-3.3 and U2 LP2985-2.5 LDOs correctly detected with fixed output voltages from part number suffix",
@@ -82,8 +147,15 @@
             "path": "signal_analysis.power_regulators",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U5$"
-          }
+            "pattern": "^U2$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U4 TPS72325DBV correctly identified as inverting LDO (negative output regulator)",
@@ -93,7 +165,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U6 AT24CS08-SSHM EEPROM correctly detected as memory interface connected to U11 STM32F103C8Tx via 4 shared signal nets (I2C)",
@@ -102,8 +180,15 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U6$"
-          }
+            "pattern": "^U11$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U11",
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R4 (3.3k) / R3 (10k) voltage divider correctly detected with U1 TPS5430DDA VSENSE pin connection",
@@ -112,8 +197,16 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R4$"
-          }
+            "pattern": "^R3$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R3",
+            "R4",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "VIN and VCC decoupling correctly analyzed: VIN has 3 caps (45uF total), VCC has 8 caps (60.9uF total)",
@@ -122,7 +215,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -134,21 +231,44 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U1 TPS5430DDA detected as switching regulator with input_rail=VCC but no output_rail identified. The TPS5430DDA in this design generates the GNDA analog reference rail through an unusual topology (PH->L1->GNDA), and its feedback divider R4/R3 is detected as a separate voltage_divider but not linked to U1",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "not_contains_match",
-            "field": "ref",
-            "pattern": "^U1$"
-          }
+            "op": "equals",
+            "value": 1
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L1",
+            "R3",
+            "R4",
+            "U1"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 1
         },
         {
           "description": "Design observation for regulator_caps flags U4 TPS72325DBV and U5 AMS1117-3.3 as missing output caps, but the output nets are __unnamed which makes it hard to verify. U2 LP2985-2.5 also flagged for missing output caps on __unnamed_12",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U2",
+            "U4",
+            "U5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

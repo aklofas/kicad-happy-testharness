@@ -1,4 +1,4 @@
-# Findings: echomods / doj_source_v1.1-kicad_doj
+# Findings: kelu124/echomods / doj_source_v1.1-kicad_doj
 
 ## FND-00002032: 
 

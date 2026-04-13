@@ -1,4 +1,4 @@
-# Findings: Jordan87M/DCMG / DCMGv2wBUFFERS
+# Findings: Jordan87M/DCMG / DCMGv2
 
 ## FND-00002512: DC Microgrid signal routing schematic with 301 CONNECTOR symbols for relay contacts and bus segments. Analyzer correctly parsed all components, wiring, and connectivity with no significant errors.
 

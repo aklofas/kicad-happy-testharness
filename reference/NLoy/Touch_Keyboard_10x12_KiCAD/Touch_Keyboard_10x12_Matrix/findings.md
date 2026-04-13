@@ -1,4 +1,4 @@
-# Findings: Touch_Keyboard_10x12_KiCAD / Touch_Keyboard_10x12_Matrix
+# Findings: NLoy/Touch_Keyboard_10x12_KiCAD / Touch_Keyboard_10x12_Matrix
 
 ## FND-00001615: T1/T2/T3 (TOOLINGHOLE) misclassified as transformer; should be mounting_hole; M61 (MX_SW_solder keyboard switch) misclassified as 'other' instead of 'switch'; kicad_version reported as 'unknown' fo...
 

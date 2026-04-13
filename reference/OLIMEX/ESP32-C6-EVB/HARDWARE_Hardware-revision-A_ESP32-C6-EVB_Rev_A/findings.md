@@ -1,4 +1,4 @@
-# Findings: ESP32-C6-EVB / HARDWARE_Hardware-revision-A_ESP32-C6-EVB_Rev_A
+# Findings: OLIMEX/ESP32-C6-EVB / HARDWARE_Hardware-revision-A_ESP32-C6-EVB_Rev_A
 
 ## FND-00000115: Legacy KiCad 5 format parsed but signal analysis almost entirely empty - only 2 design observations (USB data without ESD); I2C/UART buses detected from net names but all subcircuit neighbor_components lists are empty; 11 components misclassified as other
 

@@ -1,4 +1,4 @@
-# Findings: LEDDs / enclosure_top_plate_v2.0-bicycle_hw_top_plate
+# Findings: VasilKalchev/LEDDs / enclosure_top_plate_v2.0-bicycle_hw_top_plate
 
 ## FND-00000772: Mechanical:Mechanical_Shape components misclassified as speaker, transformer, and relay
 

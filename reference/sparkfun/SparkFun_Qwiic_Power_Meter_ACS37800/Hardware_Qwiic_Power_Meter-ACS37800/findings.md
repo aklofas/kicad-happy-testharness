@@ -1,4 +1,4 @@
-# Findings: SparkFun_Qwiic_Power_Meter_ACS37800 / Hardware_Qwiic_Power_Meter-ACS37800
+# Findings: sparkfun/SparkFun_Qwiic_Power_Meter_ACS37800 / Hardware_Qwiic_Power_Meter-ACS37800
 
 ## FND-00001514: ACS37800 Hall-effect current sensor not detected in current_sense array; I2C pullups on SDA (R7=4.7k) and SCL (R8=4.7k) not detected — has_pullup reports false; Differential pair IP+/IP- correctly ...
 

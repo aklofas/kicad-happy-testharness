@@ -1,4 +1,4 @@
-# Findings: AnnaxFlipdotDriver / kicad_column_board_column_driver
+# Findings: CarlRaymond/AnnaxFlipdotDriver / kicad_column_board_column_driver
 
 ## FND-00000544: Component counts correct: 104 total, 12 ICs (8x TPIC6B595 + 4x TBD62783), 32 resistors, 8 caps, 47 diodes, 5 connectors; Shift register chain not detected: 8x TPIC6B595 power shift registers with R...
 

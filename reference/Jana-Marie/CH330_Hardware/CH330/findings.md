@@ -1,4 +1,4 @@
-# Findings: CH330_Hardware / CH330
+# Findings: Jana-Marie/CH330_Hardware / CH330
 
 ## FND-00000421: Net 'D+' incorrectly contains U1 pin 4 (RTS) instead of U1 pin 1 (UD+); Net 'D-' incorrectly contains U1 pin 3 (GND) instead of U1 pin 2 (UD-); Decoupling analysis misses C2 on V3 rail; Differentia...
 

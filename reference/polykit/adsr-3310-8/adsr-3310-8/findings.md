@@ -1,4 +1,4 @@
-# Findings: adsr-3310-8 / adsr-3310-8
+# Findings: polykit/adsr-3310-8 / adsr-3310-8
 
 ## FND-00001977: Multi-sheet parsing: both adsr-3310-8.sch (top) and adsr.sch (sub-sheet) parsed correctly; Eurorack dual-supply rails correctly identified: +12V and -12V; RC filters detected: 680Ω/100nF low-pass a...
 

@@ -1,4 +1,4 @@
-# Findings: Keyboard_PCB / Keyboard_PCB
+# Findings: HayatAhmad05/Keyboard_PCB / Keyboard_PCB
 
 ## FND-00000660: Key matrix correctly detected: 5×14, 70 switches, 70 diodes; Component counts correct: 70 diodes, 70 switches, 1 IC (ESP32-WROOM-32E); No power rails or PWR_FLAG warnings correctly reported for pow...
 

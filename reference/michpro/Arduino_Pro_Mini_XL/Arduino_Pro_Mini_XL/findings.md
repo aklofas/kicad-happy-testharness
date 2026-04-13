@@ -1,4 +1,4 @@
-# Findings: Arduino_Pro_Mini_XL / Arduino_Pro_Mini_XL
+# Findings: michpro/Arduino_Pro_Mini_XL / Arduino_Pro_Mini_XL
 
 ## FND-00000373: RC filter detector misidentifies DTR auto-reset network as an RC filter with DTR as ground net; Bus topology reports width=13 for 'A' prefix bus covering only nets A0-A7 (8 signals, 6 connected); Y...
 

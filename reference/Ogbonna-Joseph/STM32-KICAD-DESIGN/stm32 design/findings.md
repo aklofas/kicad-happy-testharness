@@ -1,4 +1,4 @@
-# Findings: STM32-KICAD-DESIGN / stm32 design
+# Findings: Ogbonna-Joseph/STM32-KICAD-DESIGN / stm32 design
 
 ## FND-00001342: AO3401A P-channel MOSFET incorrectly classified as N-channel (is_pchannel: false); MP2359DJ switching regulator feedback net reported as BUCK_SW instead of BUCK_FB; Crystal Y1 (16MHz) load caps cor...
 

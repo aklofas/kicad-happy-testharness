@@ -1,4 +1,4 @@
-# Findings: STM32f103-Kicad-Designs / STM32F103C8T6
+# Findings: geraldombuthia/STM32f103-Kicad-Designs / STM32F103C8T6
 
 ## FND-00001312: STM32F103C8T6 board correctly identified with AMS1117-3.3 LDO, USB D+/D- differential pair, I2C pull-ups, UART; USB ESD protection incorrectly attributed to U2 (STM32); U2 is the MCU, not ESD devic...
 

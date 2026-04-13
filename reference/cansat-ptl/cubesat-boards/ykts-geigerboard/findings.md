@@ -1,4 +1,4 @@
-# Findings: cubesat-boards / ykts-geigerboard_ykts-geigerboard
+# Findings: cansat-ptl/cubesat-boards / ykts-geigerboard
 
 ## FND-00000283: CubeSat Geiger counter board (102 components). LM2733YMF boost converter output rail same as input (doesn't trace past rectifier diode). L2+C18 AVR AVCC filter misclassified as RF matching. Unitless pF capacitor values parsed as Farads producing absurd time constants. Gate_driver_ics inflated via +3V3 power net traversal.
 

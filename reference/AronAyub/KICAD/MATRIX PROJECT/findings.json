@@ -32,7 +32,20 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4",
+            "Q5",
+            "Q6",
+            "Q7",
+            "Q8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "L78L05 (U7) correctly detected as LDO regulator with input_rail=VIN",
@@ -42,7 +55,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U7$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage divider R42/R41 (1K/2K) at ratio 0.667 on TX net correctly detected - this is a 5V-to-3.3V level shifter for the Bluetooth module (J6)",
@@ -51,8 +70,16 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R42$"
-          }
+            "pattern": "^R41$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "J6",
+            "R41",
+            "R42"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal Y1 with 22pF load caps C1 and C2 giving effective 14pF load correctly detected",
@@ -62,7 +89,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling analysis shows +5V rail with C6 (10uF) and VIN rail with C3 (10uF) correctly",
@@ -71,7 +106,14 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C3",
+            "C6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "43 resistors (R1-R43) correctly classified - 40x 220 ohm current-limiting resistors for LED columns plus control resistors",
@@ -101,7 +143,14 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "P8",
+            "Q1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q7 and Q8 transistors also show base_net=GND which is incorrect for the same reason",
@@ -111,7 +160,14 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q7$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q7",
+            "Q8"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q4 shows collector_net=QA and emitter_net=GND with emitter_is_ground=true, but Q2/Q3/Q5/Q6 show base=collector (e.g. Q2 base_net=P7, collector_net=P7) which indicates a pin mapping error - the base and collector pins are being conflated",
@@ -120,22 +176,47 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q4$"
-          }
+            "pattern": "^Q2$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "P7",
+            "Q2",
+            "Q3",
+            "Q4",
+            "Q5",
+            "Q6"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U7 output_rail detected as '12_5_S' which is an unusual net name. This appears to be the regulated 5V output rail name in the schematic, but the net name is confusing and may indicate a parsing issue with the original schematic's net naming",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "not_contains_match",
-            "field": "ref",
-            "pattern": "^U7$"
-          }
+            "op": "equals",
+            "value": 7
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U7"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 7
         },
         {
           "description": "Regulator caps observation says missing output cap for U7 on '12_5_S' rail, but C5 (100nF) or C4 may be on that rail - need to verify if the analyzer is correctly tracing the output net",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "C4",
+            "C5",
+            "U7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -146,7 +227,11 @@
             "path": "signal_analysis.key_matrices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "key_matrices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SPI daisy-chain of 74HC595 shift registers (U1->U2->U3->U4->U5 via QH'->SER) not detected as a bus protocol",
@@ -155,7 +240,17 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U4",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

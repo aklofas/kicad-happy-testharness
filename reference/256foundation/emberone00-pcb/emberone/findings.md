@@ -1,4 +1,4 @@
-# Findings: emberone00-pcb / emberone
+# Findings: 256foundation/emberone00-pcb / emberone
 
 ## FND-00002037: I2C pull-up reported as missing (has_pull_up=false) despite R19 and R20 (4.7k) on SDA/SCL
 

@@ -14,7 +14,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q2$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Q2",
+            "Q3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Actual RC filters correctly detected: R82/C176 battery temp sense (7Hz), R85/C190 NMI debounce (16Hz), R89/C156 reset filter (1.6kHz), R92/C178 HSIC power filter (16Hz)",
@@ -23,8 +30,21 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R89$"
-          }
+            "pattern": "^R82$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C156",
+            "C176",
+            "C178",
+            "C190",
+            "R82",
+            "R85",
+            "R89",
+            "R92"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -33,10 +53,19 @@
           "analyzer_section": "signal_analysis.rc_filters",
           "check": {
             "path": "signal_analysis.rc_filters",
-            "op": "not_contains_match",
-            "field": "resistor.ref",
-            "pattern": "^R80$"
-          }
+            "op": "field_equals",
+            "field": "vout",
+            "value": 0.6
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C143",
+            "R80"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "vout",
+          "expected_value": 0.6
         },
         {
           "description": "RC filter duplicates: R82/C176 and R90/C140 each reported twice (forward and reverse direction). Bidirectional traversal artifact inflates 4 real filters to 8 reported.",
@@ -46,7 +75,16 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R82$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C140",
+            "C176",
+            "R82",
+            "R90"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

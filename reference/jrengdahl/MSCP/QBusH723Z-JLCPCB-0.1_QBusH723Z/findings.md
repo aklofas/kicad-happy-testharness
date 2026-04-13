@@ -1,4 +1,4 @@
-# Findings: MSCP / QBusH723Z-JLCPCB-0.1_QBusH723Z
+# Findings: jrengdahl/MSCP / QBusH723Z-JLCPCB-0.1_QBusH723Z
 
 ## FND-00000925: Bus topology width values are consistently 2x the actual signal count; STM32 PG11 GPIO pin misidentified as a power_good signal; FMC (Flexible Memory Controller) parallel bus to FPGA not detected; ...
 

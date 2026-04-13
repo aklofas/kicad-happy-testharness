@@ -1,4 +1,4 @@
-# Findings: UBW32 / Hardware_Kicad_UBW32_MX460_v262
+# Findings: sparkfun/UBW32 / Hardware_Kicad_UBW32_MX460_v262
 
 ## FND-00001619: LM317-type regulator U2 Vref estimated as 0.6 V; should be 1.25 V, causing Vout to be reported as 0.969 V instead of ~3.3 V; LM317-type regulators U2 and U3 (V_REG_317SMD) classified as topology 'L...
 

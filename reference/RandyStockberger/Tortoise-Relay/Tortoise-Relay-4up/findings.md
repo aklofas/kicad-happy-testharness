@@ -1,4 +1,4 @@
-# Findings: Tortoise-Relay / Tortoise-Relay-4up
+# Findings: RandyStockberger/Tortoise-Relay / Tortoise-Relay-4up
 
 ## FND-00001636: EC2-12NU relays (RL1–RL4) misclassified as type='resistor'
 

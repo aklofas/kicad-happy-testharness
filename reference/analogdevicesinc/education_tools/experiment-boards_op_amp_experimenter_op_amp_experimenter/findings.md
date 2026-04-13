@@ -1,4 +1,4 @@
-# Findings: education_tools / experiment-boards_op_amp_experimenter_op_amp_experimenter
+# Findings: analogdevicesinc/education_tools / experiment-boards_op_amp_experimenter_op_amp_experimenter
 
 ## FND-00000011: Op-amp circuit detection correctly identifies LM741 inverting config (gain=-100, R2=10k/R12=100ohm) and two LM358 comparator configurations
 

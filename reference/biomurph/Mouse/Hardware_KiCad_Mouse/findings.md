@@ -1,4 +1,4 @@
-# Findings: Mouse / Hardware_KiCad_Mouse_Mouse
+# Findings: biomurph/Mouse / Hardware_KiCad_Mouse
 
 ## FND-00000936: I2C bus false positive: LEFT and D12 nets classified as SCL/SDA; Cross-domain signal false positive: ADNS_SCK flagged as needing level shifter; USB full-speed differential pair (D+/D-) not detected...
 

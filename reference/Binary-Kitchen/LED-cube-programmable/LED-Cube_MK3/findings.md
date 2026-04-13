@@ -1,4 +1,4 @@
-# Findings: LED-cube-programmable / LED-Cube_MK3
+# Findings: Binary-Kitchen/LED-cube-programmable / LED-Cube_MK3
 
 ## FND-00000800: Net connectivity broken for Q3, Q2, Q4 FET source pins in legacy KiCad5 schematic; Transistor drain/source swapped for Q3/Q4/Q1/Q2: drain_net=GND is topologically inverted for low-side switches; ER...
 

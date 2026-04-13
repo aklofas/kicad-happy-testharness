@@ -1,4 +1,4 @@
-# Findings: KCORES-CSPS-to-ATX-Converter / Electrical_KCORES CSPS to ATX Converter_KCORES CSPS to ATX Converter
+# Findings: KCORES/KCORES-CSPS-to-ATX-Converter / Electrical_KCORES CSPS to ATX Converter
 
 ## FND-00000656: UART false positives: ATX_PSON and ATX_PWOK flagged as UART nets; Mini560 DC-DC regulators (U1, U2, U3) not detected as power_regulators; Voltage divider R2/R3 (22K/3.3K) on +12V→~PSON input correc...
 

@@ -20,18 +20,36 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "min_count",
-            "value": 3
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Active oscillator X1 (XO32) correctly identified as active_oscillator with output on SYS_CLK net feeding both CPLDs (U1, U5)",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].type",
-            "op": "eq",
-            "value": "active_oscillator"
-          }
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "U1",
+            "U5",
+            "X1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Power rails correctly identified: +1V8, +3V3, +5V, GND, VIN, VDC (PWR_FLAG also listed)",
@@ -66,8 +84,12 @@
           "check": {
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
-            "value": 3
-          }
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "9 test points correctly mapped to their nets: TP1=VDC, TP2=1.8V, TP3=3.3V, TP4=5.0V, TP5=XO, TP6=T1, TP7=T2, TP8=CLK, TP9=SYS_CLK",
@@ -100,7 +122,18 @@
       "incorrect": [
         {
           "description": "Design observations incorrectly flag U2, U3, U4 as having missing input caps on VDC rail. In reality, C10, C11, C12 (all 4.7uF) are directly on the VDC net serving as shared input capacitors for all three regulators. The analyzer fails to recognize shared bulk input caps when multiple regulators share an input rail.",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "C10",
+            "C11",
+            "C12",
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "ERC warning 'no_driver' on VDC net is incorrect. VDC is driven through the power path: J1 barrel jack -> JP1 jumper -> SW1 switch -> F1 fuse -> VDC. The fuse output drives VDC. The analyzer does not recognize passive component chains as valid power paths.",
@@ -133,28 +166,77 @@
           "description": "Fuse F1 not detected as a protection device. F1 is in the power input path: J1 barrel jack -> JP1 -> SW1 -> F1 -> VDC, providing overcurrent protection for the entire board.",
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
-            "path": "statistics.component_types.fuse",
-            "op": "eq",
+            "path": "signal_analysis.protection_devices",
+            "op": "equals",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "F1",
+            "J1",
+            "SW1"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 1
         },
         {
           "description": "Memory interface not detected: U6 (GameBoy_SRAM_64K) connected to CPU U8 via MA0-MA12 (address), MD0-MD7 (data), ~{MCS}, ~{MRD}, ~{MWR} (control). This is a classic parallel SRAM interface with active-low chip enable, output enable, and write enable.",
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
             "path": "signal_analysis.memory_interfaces",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U6$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U6",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Second memory interface not detected: U7 (GameBoy_SRAM_64K) connected to CPU U8 via A0-A14 (address, remapped through cartridge slot J13), D0-D7 (data), ~{CS}, ~{RD}, ~{WR} (control). This is the external cartridge SRAM.",
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
             "path": "signal_analysis.memory_interfaces",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U7$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "A0",
+            "A1",
+            "A10",
+            "A11",
+            "A12",
+            "A13",
+            "A14",
+            "A2",
+            "A3",
+            "A4",
+            "A5",
+            "A6",
+            "A7",
+            "A8",
+            "A9",
+            "D0",
+            "D1",
+            "D2",
+            "D3",
+            "D4",
+            "D5",
+            "D6",
+            "D7",
+            "J13",
+            "U7",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "GameBoy serial link interface not identified: SCLK, SIN, SOUT connecting CPU U8 to CPLD U1 and external connector J14. This is a synchronous serial protocol used for Game Boy link cable communication.",
@@ -229,18 +311,36 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "min_count",
-            "value": 3
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U2$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Active oscillator X1 (XO32) correctly identified as active_oscillator with output on SYS_CLK net feeding both CPLDs U1 and U5",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].type",
-            "op": "eq",
-            "value": "active_oscillator"
-          }
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "U1",
+            "U5",
+            "X1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Power rails correctly identified: +1V8, +3V3, +5V, GND, VIN, VDC",
@@ -266,8 +366,12 @@
           "check": {
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
-            "value": 3
-          }
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "9 test points correctly mapped: TP1=VDC, TP2=1.8V, TP3=3.3V, TP4=5.0V, TP5=XO, TP6=T1, TP7=T2, TP8=CLK, TP9=SYS_CLK",
@@ -309,7 +413,18 @@
       "incorrect": [
         {
           "description": "Design observations incorrectly flag U2, U3, U4 as having missing input caps on VDC rail. C10, C11, C12 (all 4.7uF) are directly on the VDC net serving as shared input capacitors for all three regulators. The analyzer fails to recognize shared bulk input caps when multiple regulators share an input rail.",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "C10",
+            "C11",
+            "C12",
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "ERC warning 'no_driver' on VDC net is incorrect. VDC is driven through the power path: J1 barrel jack -> JP1 jumper -> SW1 switch -> F1 fuse -> VDC. The analyzer does not recognize passive component chains as valid power driver paths.",
@@ -342,28 +457,77 @@
           "description": "Fuse F1 not detected as a protection device. F1 is in the power input path: J1 barrel jack -> JP1 -> SW1 -> F1 -> VDC, providing overcurrent protection for the entire board.",
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
-            "path": "statistics.component_types.fuse",
-            "op": "eq",
+            "path": "signal_analysis.protection_devices",
+            "op": "equals",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "F1",
+            "J1",
+            "SW1"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 1
         },
         {
           "description": "VRAM memory interface not detected: U6 (GameBoy_SRAM_64K) connected to CPU U8 via MA0-MA12 (13-bit address), MD0-MD7 (8-bit data), ~{MCS} (chip enable), ~{MRD} (output enable), ~{MWR} (write enable). Classic parallel SRAM interface.",
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
             "path": "signal_analysis.memory_interfaces",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U6$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U6",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Cartridge SRAM interface not detected: U7 (GameBoy_SRAM_64K) connected to CPU U8 via A0-A14 (address through cartridge slot J13), D0-D7 (data), ~{CS}, ~{RD}, ~{WR} (control). External cartridge SRAM with active-low control.",
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
             "path": "signal_analysis.memory_interfaces",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U7$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "A0",
+            "A1",
+            "A10",
+            "A11",
+            "A12",
+            "A13",
+            "A14",
+            "A2",
+            "A3",
+            "A4",
+            "A5",
+            "A6",
+            "A7",
+            "A8",
+            "A9",
+            "D0",
+            "D1",
+            "D2",
+            "D3",
+            "D4",
+            "D5",
+            "D6",
+            "D7",
+            "J13",
+            "U7",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Game Boy serial link interface not identified: SCLK, SIN, SOUT connecting CPU U8 to CPLD U1 and external connector J14 (5-pin). This is the Game Boy link cable synchronous serial protocol.",

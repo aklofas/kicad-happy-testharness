@@ -1,4 +1,4 @@
-# Findings: Otter-Iron / KiCAD_Otter-Iron_TS100C
+# Findings: Jana-Marie/Otter-Iron / KiCAD_Otter-Iron_TS100C
 
 ## FND-00001023: Voltage divider R1+R2 on VBUS/UIN/GND detected with correct ratio 0.1515; LDO regulator U2 (AP2204R-3.3) correctly identified with VBUS input and +3V3 output; ESD IC (U1 USBLC6-4SC6) correctly dete...
 

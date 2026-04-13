@@ -1,4 +1,4 @@
-# Findings: Schematics-Kicad / Crossfade_Pedal_Crossfade_Pedal
+# Findings: EtienneQuarteyPapafio/Schematics-Kicad / Crossfade_Pedal
 
 ## FND-00001347: Component count of 19 with correct type breakdown is accurate; Transistor circuits Q1 and Q2 correctly identified as NPN BJT relay drivers; Relay flyback diodes D1 and D4 (1N4148) not detected as p...
 

@@ -1,4 +1,4 @@
-# Findings: LM399_Burnin_Board / lm399_burnin_board
+# Findings: TU-Darmstadt-APQ/LM399_Burnin_Board / lm399_burnin_board
 
 ## FND-00000818: LT1085-ADJ regulator voltage estimated as -0.664V with inverting=true; actual output is ~13V positive; 25 opamp circuits (OPA4202 quad) detected with correct inverting configuration and gain=-0.05/...
 

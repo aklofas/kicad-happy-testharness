@@ -1,4 +1,4 @@
-# Findings: giant-board-design-files / 4LayerV0.9.2_ATSAMA5D27-1G
+# Findings: Groboards/giant-board-design-files / 4LayerV0.9.2_ATSAMA5D27-1G
 
 ## FND-00002096: ACT8945A PMIC and MIC5247 LDO not detected as power regulators; USB differential pairs USBA_P/M and USBB_P/M not detected; I2C buses detected with correct missing pull-up flag
 

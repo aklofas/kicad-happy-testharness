@@ -1,4 +1,4 @@
-# Findings: moteus / hw_c1_moteus_c1
+# Findings: mjbots/moteus / hw_c1_moteus_c1
 
 ## FND-00000050: Current sense shunts (2mOhm) not detected
 

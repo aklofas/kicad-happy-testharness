@@ -1,4 +1,4 @@
-# Findings: souseiki-fammy-kicad / fammy
+# Findings: edorfaus/souseiki-fammy-kicad / fammy
 
 ## FND-00000243: Famicom clone (52 components). 5 RC filters detected with suspicious capacitor reuse (C2 in 3 filters, C3 in 2). 1 BJT and 10 decoupling caps correct.
 

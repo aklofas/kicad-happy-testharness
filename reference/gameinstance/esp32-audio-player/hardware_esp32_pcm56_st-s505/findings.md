@@ -1,4 +1,4 @@
-# Findings: esp32-audio-player / hardware_esp32_pcm56_st-s505_esp32_pcm56_st-s505
+# Findings: gameinstance/esp32-audio-player / hardware_esp32_pcm56_st-s505
 
 ## FND-00002046: LM79L05 negative voltage regulator misclassified as topology='LDO'; AC/DC mains power module (TMLM10105) not detected as an isolation barrier; Parallel PCM bus to PCM56 DAC not detected; Op-amp inv...
 

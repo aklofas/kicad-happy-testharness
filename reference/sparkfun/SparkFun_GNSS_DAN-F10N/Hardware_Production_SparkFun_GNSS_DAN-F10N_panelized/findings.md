@@ -1,4 +1,4 @@
-# Findings: SparkFun_GNSS_DAN-F10N / Hardware_Production_SparkFun_GNSS_DAN-F10N_panelized
+# Findings: sparkfun/SparkFun_GNSS_DAN-F10N / Hardware_Production_SparkFun_GNSS_DAN-F10N_panelized
 
 ## FND-00001421: Component count and power rail detection are accurate; RC and LC filter detection is correct for the GNSS RF power supply network; No I2C bus detected despite DAN-F10N GNSS module supporting I2C; L...
 

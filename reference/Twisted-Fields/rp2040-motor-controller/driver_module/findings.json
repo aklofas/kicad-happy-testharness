@@ -33,8 +33,16 @@
             "path": "signal_analysis.current_sense",
             "op": "not_contains_match",
             "field": "shunt.ref",
-            "pattern": "^R113$"
-          }
+            "pattern": "^R105$"
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R105",
+            "R113",
+            "U21"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -54,7 +62,11 @@
             "path": "signal_analysis.bridge_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bridge_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Bootstrap capacitor circuits for high-side gate drive not identified",

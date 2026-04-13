@@ -1,4 +1,4 @@
-# Findings: LIV3F_mikroBUS / TESEO-LIV3F_uBUS
+# Findings: mkmielke/LIV3F_mikroBUS / TESEO-LIV3F_uBUS
 
 ## FND-00000811: SAW RF filter F1 (B39162B4327P810) classified as 'fuse' type; All 4 I2C bus detections are false positives; BGA725L6 LNA has GND listed as a power rail in ic_power_rails; LC filter network for GPS ...
 

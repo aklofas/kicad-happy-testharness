@@ -13,7 +13,11 @@
             "path": "signal_analysis.key_matrices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "key_matrices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Row nets ROW0-ROW4 and column nets COL0-COL14 correctly identified by net name pattern",
@@ -22,7 +26,11 @@
             "path": "signal_analysis.key_matrices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "key_matrices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "68 diodes (D1-D68) correctly classified as diode type for anti-ghosting",
@@ -59,7 +67,11 @@
         },
         {
           "description": "key_matrices shows switches_on_matrix=0 despite 91 switch symbols being present. The MX switches are the matrix switches but are not recognized because they are classified as relays instead of switches",
-          "analyzer_section": "signal_analysis.key_matrices"
+          "analyzer_section": "signal_analysis.key_matrices",
+          "detector": "key_matrices",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [],

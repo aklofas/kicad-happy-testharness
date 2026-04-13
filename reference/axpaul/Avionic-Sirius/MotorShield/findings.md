@@ -1,4 +1,4 @@
-# Findings: Avionic-Sirius / MotorShield
+# Findings: axpaul/Avionic-Sirius / MotorShield
 
 ## FND-00000381: INA381 current sense amplifiers not detected in current_sense section; DRV8872DDA H-bridge motor drivers not detected in bridge_circuits; RC filter count doubled: 8 detected for 4 actual circuits d...
 

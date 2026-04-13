@@ -1,4 +1,4 @@
-# Findings: KiCad_Schematics / Dual_Inverter_Dual_Inverter
+# Findings: webbbn/KiCad_Schematics / Dual_Inverter
 
 ## FND-00000714: MCP1754ST-3302E/MB LDO voltage estimated as 2.3V instead of 3.3V; JUMPER_3-PIN components A1 and A2 misclassified as type 'ic' instead of 'jumper'
 

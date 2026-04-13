@@ -1,4 +1,4 @@
-# Findings: SparkFun_Red_Vision_Touch_Display_for_RedBoard / Hardware_SparkFun_Red_Vision_Touch_Display_for_RedBoard
+# Findings: sparkfun/SparkFun_Red_Vision_Touch_Display_for_RedBoard / Hardware_SparkFun_Red_Vision_Touch_Display_for_RedBoard
 
 ## FND-00001475: Component count of 34 and type breakdown correctly reported; NMOS transistor Q1 (backlight switch) correctly detected as transistor_circuit; I2C pull-up resistors R3/R4 (2.2k to 3.3V) not detected ...
 

@@ -1,4 +1,4 @@
-# Findings: Project-LabAnalogDesign2 / hardware_dc-dc-3-3V-RT8259GE_dc-dc-3-3V-RT8259GE
+# Findings: Fescron/Project-LabAnalogDesign2 / hardware_dc-dc-3-3V-RT8259GE
 
 ## FND-00001121: RC filter false positive: R1/C2/C5 are feedback divider + output caps, not an RC filter; Legacy .sch pin-name mismatch: U1 'BOOT' pin appears on 'FB' net; U1 'FB' pin on unnamed net; Power regulato...
 

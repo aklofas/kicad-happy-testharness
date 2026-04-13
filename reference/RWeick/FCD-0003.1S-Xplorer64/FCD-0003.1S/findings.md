@@ -1,4 +1,4 @@
-# Findings: FCD-0003.1S-Xplorer64 / FCD-0003.1S
+# Findings: RWeick/FCD-0003.1S-Xplorer64 / FCD-0003.1S
 
 ## FND-00000562: All component refs extracted as None — ref extraction fails for this schematic style; statistics.total_components (13) counts unique refs but components list has 22 instances — semantic inconsisten...
 

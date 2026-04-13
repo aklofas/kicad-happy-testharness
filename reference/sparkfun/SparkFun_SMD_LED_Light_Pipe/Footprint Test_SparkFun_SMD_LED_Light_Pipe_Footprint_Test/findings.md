@@ -1,4 +1,4 @@
-# Findings: SparkFun_SMD_LED_Light_Pipe / Footprint Test_SparkFun_SMD_LED_Light_Pipe_Footprint_Test
+# Findings: sparkfun/SparkFun_SMD_LED_Light_Pipe / Footprint Test_SparkFun_SMD_LED_Light_Pipe_Footprint_Test
 
 ## FND-00001479: APA102 addressable LED chain of 4 LEDs (D5-D8) correctly detected with SPI protocol; Component counts correct: 10 total, 6 LEDs (4 APA102 + 1 Blue + 1 White), 2 resistors, 1 connector, 1 logo; Curr...
 

@@ -1,4 +1,4 @@
-# Findings: 5uh-dc-lisn / kicad_5uH_LISN
+# Findings: LibreSolar/5uh-dc-lisn / kicad_5uH_LISN
 
 ## FND-00000320: RC filters R8/C6 and R9/C6 misclassified as high-pass instead of low-pass; LC filter formed by L6 (1mH) and C5 (0.47µF) in the LISN measurement branch not detected; MEAS1 (Radiall R141426 BNC conne...
 

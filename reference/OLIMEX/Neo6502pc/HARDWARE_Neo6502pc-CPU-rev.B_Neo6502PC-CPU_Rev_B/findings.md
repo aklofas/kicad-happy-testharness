@@ -1,4 +1,4 @@
-# Findings: Neo6502pc / HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B
+# Findings: OLIMEX/Neo6502pc / HARDWARE_Neo6502pc-CPU-rev.B_Neo6502PC-CPU_Rev_B
 
 ## FND-00000171: Neo6502 retro computer board with RP2040 + W65C02S. IDC cables as capacitors, buzzer as switch, expansion bus misclassified, SPI missed, false I2C on HDMI/GPIO.
 

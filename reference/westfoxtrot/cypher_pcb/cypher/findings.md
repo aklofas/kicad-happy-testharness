@@ -1,4 +1,4 @@
-# Findings: cypher_pcb / cypher
+# Findings: westfoxtrot/cypher_pcb / cypher
 
 ## FND-00000235: Keyboard (324 components). Key matrix diode count mismatch: 88 detected vs 93 in schematic. WS2812B LED chain, LDO, and protection devices all correct.
 

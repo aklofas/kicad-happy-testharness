@@ -25,7 +25,11 @@
       "incorrect": [
         {
           "description": "Key matrix reports only 1 column (COL5) but there should be ~16 columns for a 65-key 4-row matrix - likely only detected one column net while others use different naming",
-          "analyzer_section": "signal_analysis.key_matrices"
+          "analyzer_section": "signal_analysis.key_matrices",
+          "detector": "key_matrices",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "IC pin analysis shows ref=? for ATmega32U4-A, crystal, and USB connector - reference designators not populated",
@@ -44,7 +48,11 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB series resistors R2/R3 on D+/D- not analyzed for value correctness (22 ohm typical for USB)",

@@ -1,4 +1,4 @@
-# Findings: BP02 / hw_sch_pcb_BP02
+# Findings: mlab-modules/BP02 / hw_sch_pcb_BP02
 
 ## FND-00000393: rf_matching detector fires 13 times on a pure bandpass filter — all false positives; 5 parallel LC resonators (shunt tank circuits) not detected in lc_filters; Component counts, net count, BOM, and...
 

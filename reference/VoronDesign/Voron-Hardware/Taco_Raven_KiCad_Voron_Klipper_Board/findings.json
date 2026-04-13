@@ -37,19 +37,37 @@
       "incorrect": [
         {
           "description": "Single-pin nets reported on TMC2130 GNDP1 pins (SPI_CS_X/Y/E0/E1/Z2/Z3) - these are likely valid chip-select nets connected via hierarchical sheets, flagged as single-pin because sub-sheet connections are not followed",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Regulator caps flagged as missing for A4403 and AP2112 input/output - likely present but on unnamed nets the analyzer cannot trace back to the regulator",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "A4403"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MOSFET transistor circuits not detected despite board having high-current heater and fan outputs (expected for a Voron printer controller)",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB D+ flagged as missing ESD protection, but USB may not be a primary interface on this board",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -60,7 +78,11 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "TMC2130 SPI bus topology not characterized - 8 stepper drivers sharing SPI with individual chip selects is a key design pattern",
@@ -78,7 +100,11 @@
             "path": "signal_analysis.current_sense",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

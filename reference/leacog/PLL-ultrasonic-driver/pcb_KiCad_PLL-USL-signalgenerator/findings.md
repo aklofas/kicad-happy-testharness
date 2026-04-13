@@ -1,4 +1,4 @@
-# Findings: PLL-ultrasonic-driver / pcb_KiCad_PLL-USL-signalgenerator
+# Findings: leacog/PLL-ultrasonic-driver / pcb_KiCad_PLL-USL-signalgenerator
 
 ## FND-00001088: 
 

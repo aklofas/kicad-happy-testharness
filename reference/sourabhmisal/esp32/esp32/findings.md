@@ -1,4 +1,4 @@
-# Findings: esp32 / esp32_esp32
+# Findings: sourabhmisal/esp32 / esp32
 
 ## FND-00002042: 6 (NC)-suffixed components not flagged as DNP; ESP32 auto-reset circuit (EN/IO0 via S8050 transistors) correctly extracted
 

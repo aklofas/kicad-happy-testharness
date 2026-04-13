@@ -1,4 +1,4 @@
-# Findings: commodorelcd / commodorelcd
+# Findings: jgrip/commodorelcd / commodorelcd
 
 ## FND-00000169: Commodore LCD replica/interface board. CR-prefixed diodes misclassified as capacitors, speaker and DC-DC converter misclassified, no regulators detected.
 

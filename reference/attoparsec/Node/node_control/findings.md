@@ -1,4 +1,4 @@
-# Findings: Node / node_primary_panel
+# Findings: attoparsec/Node / node_control
 
 ## FND-00000990: FTDI1 misclassified as 'fuse' instead of 'connector'; POT1-4 (Device:R_POT_US) classified as 'connector' instead of 'resistor' or 'potentiometer'; RC filter false positive: R16+C3 are not a filter ...
 

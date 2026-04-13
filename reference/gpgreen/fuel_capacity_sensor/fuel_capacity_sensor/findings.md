@@ -1,4 +1,4 @@
-# Findings: fuel_capacity_sensor / fuel_capacity_sensor
+# Findings: gpgreen/fuel_capacity_sensor / fuel_capacity_sensor
 
 ## FND-00002076: CAN bus detection lists only U6 (MCP2551 transceiver), omitting U7 (AT90CAN64-16AU MCU) from devices; Correctly identified multi-ground isolation design with ADuM1201CR digital isolator and four di...
 

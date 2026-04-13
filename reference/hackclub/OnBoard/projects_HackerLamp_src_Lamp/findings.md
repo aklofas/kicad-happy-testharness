@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_HackerLamp_src_Lamp
+# Findings: hackclub/OnBoard / projects_HackerLamp_src_Lamp
 
 ## FND-00000106: HackerLamp with 100 SK6812 addressable LEDs driven by XIAO-RP2040. Very minimal analysis - only decoupling warning produced.
 

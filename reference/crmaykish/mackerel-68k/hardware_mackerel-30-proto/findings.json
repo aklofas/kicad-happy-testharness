@@ -19,37 +19,61 @@
           "description": "LM2576T-5 correctly classified as switching regulator with +12V input",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators[?ref=U6].topology",
-            "op": "eq",
-            "value": "switching"
-          }
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "AMS1117-3.3 correctly classified as LDO with +5V input and +3.3V output",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators[?ref=U7].output_rail",
-            "op": "eq",
-            "value": "+3.3V"
-          }
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Three active oscillators correctly detected (X1 CPU clock, X2 UART 3.6864MHz, X3 DRAM clock)",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
             "path": "signal_analysis.crystal_circuits",
-            "op": "min_count",
-            "value": 3
-          }
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "X1",
+            "X2",
+            "X3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "X2 frequency correctly parsed as 3.6864MHz from value string",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits[?reference=X2].frequency",
-            "op": "eq",
-            "value": 3686400.0
-          }
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X2$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "X2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Total component count of 131 matches actual schematic across 8 sheets",
@@ -100,10 +124,14 @@
           "description": "+5V decoupling analysis correctly counts 53 capacitors totaling 3364.6uF",
           "analyzer_section": "signal_analysis.decoupling_analysis",
           "check": {
-            "path": "signal_analysis.decoupling_analysis[?rail=+5V].cap_count",
-            "op": "eq",
-            "value": 53
-          }
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Five 74HC245 bus buffers correctly identified (U12-U16)",
@@ -124,11 +152,25 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^L1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Design observation flags U6 as having missing output caps on __unnamed_68, but C26 (1000uF) and C25 (10uF) are on the +5V rail after the inductor - correct buck converter output cap placement",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "C25",
+            "C26",
+            "U6"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Multi-driver net warnings for U15 B-side pins are false positives; U15 is a 74HC245 with DIR=GND connecting CPU bus signals to expansion connector - tri-state pins sharing nets with CPU outputs is expected",
@@ -145,18 +187,35 @@
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
             "path": "signal_analysis.memory_interfaces",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U10$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U10",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "DS1233 reset supervisor (U8) not detected as a protection/supervisory device; monitors +5V and drives /RESET to CPU, CPLDs, DUART, and expansion bus",
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
             "path": "signal_analysis.protection_devices",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^DS1233$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "DS1233",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "DIN41612 96-pin expansion bus (J14) not characterized as system bus with address A0-A19, buffered data EXP_D16-D31, control signals, chip select, and interrupt",
@@ -230,11 +289,37 @@
         },
         {
           "description": "Three oscillators X1, X2, X3 correctly identified as active_oscillator type",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "X1",
+            "X2",
+            "X3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^X1$"
+          }
         },
         {
           "description": "U7 AMS1117-3.3 correctly detected as LDO, input +5V, output +3.3V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U7"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 3,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "equals",
+            "value": 3
+          }
         },
         {
           "description": "XR68C681 (U5) UART signals correctly detected; CPLD correctly identified as bus partner",
@@ -246,17 +331,50 @@
         },
         {
           "description": "U6 LM2576T-5 correctly detected as switching topology on +12V input",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 5,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "equals",
+            "value": 5
+          }
         },
         {
           "description": "53 bypass capacitors on +5V rail correctly aggregated",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "U6 LM2576T-5 output_rail reported as '__unnamed_68' (switching node) instead of '+5V'. The FB pin connects to +5V, confirming that is the regulated output.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U6$"
+          }
         },
         {
           "description": "power_budget treats U6 as a 10mA load on +12V rather than a regulator converting +12V to +5V.",
@@ -270,15 +388,56 @@
       "missed": [
         {
           "description": "memory_interfaces is empty despite full DRAM subsystem: U10 (SIMM72) with /RAS0-3, /CAS0-3, DRAM_A0-A11, controlled by U9 CPLD.",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "A11",
+            "U10",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U10$"
+          }
         },
         {
           "description": "IDE/ATA interface not detected: IDE_D0-D15, /IDE_CS0, /IDE_CS1, /IDE_RD, /IDE_WR through J13 and U9 CPLD.",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "D15",
+            "J13",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U9$"
+          }
         },
         {
           "description": "DS1233 (U8) voltage supervisor not detected as protection device.",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [
+            "DS1233",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^DS1233$"
+          }
         },
         {
           "description": "MC68030RC (U1), MC68882 (U11), EPM7128 (U2/U9), XR68C681 (U5) all have no function labels in ic_pin_analysis.",

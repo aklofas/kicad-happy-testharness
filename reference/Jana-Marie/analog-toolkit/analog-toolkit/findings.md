@@ -1,4 +1,4 @@
-# Findings: analog-toolkit / analog-toolkit
+# Findings: Jana-Marie/analog-toolkit / analog-toolkit
 
 ## FND-00000070: 13 false positive RF matching networks on ADC input conditioning circuits (0-ohm series resistors + 10nF anti-aliasing caps)
 

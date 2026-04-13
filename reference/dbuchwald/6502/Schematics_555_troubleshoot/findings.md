@@ -1,4 +1,4 @@
-# Findings: 6502 / Schematics_555_troubleshoot_555_troubleshoot
+# Findings: dbuchwald/6502 / Schematics_555_troubleshoot
 
 ## FND-00000321: total_components and unique_parts drastically undercounted due to unannotated references; Net resolution corrupted: unannotated refs cause cross-component pin merging; memory_interfaces: 0 detected...
 

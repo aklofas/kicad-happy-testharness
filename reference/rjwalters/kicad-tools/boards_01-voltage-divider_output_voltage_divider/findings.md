@@ -1,4 +1,4 @@
-# Findings: kicad-tools / boards_01-voltage-divider_output_voltage_divider
+# Findings: rjwalters/kicad-tools / boards_01-voltage-divider_output_voltage_divider
 
 ## FND-00002352: Global-label-only schematic: component pins not resolved into named nets, breaking signal path analysis
 

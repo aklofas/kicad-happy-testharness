@@ -1,4 +1,4 @@
-# Findings: eis / pcb_eis_v0_eis
+# Findings: machdyne/eis / pcb_eis_v0_eis
 
 ## FND-00002034: bus_topology.width counts label occurrences, not unique nets — systematically 2x actual width; CSPI_SI and CSPI_SO misclassified as chip_select instead of data signals; Footprint filter warnings co...
 

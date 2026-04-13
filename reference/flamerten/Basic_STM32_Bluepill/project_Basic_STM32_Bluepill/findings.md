@@ -1,4 +1,4 @@
-# Findings: Basic_STM32_Bluepill / project_Basic_STM32_Bluepill
+# Findings: flamerten/Basic_STM32_Bluepill / project_Basic_STM32_Bluepill
 
 ## FND-00000387: USB FS pull-up resistor R5 not identified as usb_pullup; USART1 remapped pins not flagged — net name vs actual pin mismatch; BOOT0 switch circuit not detected as boot mode selector; Ferrite bead LC...
 

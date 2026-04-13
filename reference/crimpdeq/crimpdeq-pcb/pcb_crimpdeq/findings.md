@@ -1,4 +1,4 @@
-# Findings: crimpdeq-pcb / pcb_crimpdeq_crimpdeq
+# Findings: crimpdeq/crimpdeq-pcb / pcb_crimpdeq
 
 ## FND-00002318: HX711 24-bit ADC misclassified as a power regulator; Crystal Y1 frequency not parsed from value '32.768Hz'; USB ESD protection, switching regulator, and differential pairs correctly detected
 

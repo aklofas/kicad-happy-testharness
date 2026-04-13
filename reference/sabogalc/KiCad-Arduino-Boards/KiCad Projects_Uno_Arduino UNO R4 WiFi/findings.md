@@ -1,4 +1,4 @@
-# Findings: sabogalc/KiCad-Arduino-Boards / KiCad Projects_Uno_Arduino UNO R4 WiFi_Arduino UNO R4 WiFi
+# Findings: sabogalc/KiCad-Arduino-Boards / KiCad Projects_Uno_Arduino UNO R4 WiFi
 
 ## FND-00002615: Arduino UNO R4 WiFi with R7FA4M1AB3CFM MCU, ESP32-S3-MINI WiFi module, ISL854102 buck converter, AP7361C LDO, 12x8 charlieplexed LED matrix, USB-C with analog switch mux, and TXB0108 level translation; buck converter topology missed, USB ESD detection inconsistent, LED matrix undetected
 

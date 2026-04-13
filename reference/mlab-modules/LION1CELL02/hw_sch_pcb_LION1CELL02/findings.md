@@ -1,4 +1,4 @@
-# Findings: LION1CELL02 / hw_sch_pcb_LION1CELL02
+# Findings: mlab-modules/LION1CELL02 / hw_sch_pcb_LION1CELL02
 
 ## FND-00000805: Unrouted PCB correctly detected: 0 track segments, 69/77 nets unrouted, board_outline empty
 

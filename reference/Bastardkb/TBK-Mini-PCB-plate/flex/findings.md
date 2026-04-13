@@ -1,4 +1,4 @@
-# Findings: TBK-Mini-PCB-plate / flex_flex
+# Findings: Bastardkb/TBK-Mini-PCB-plate / flex
 
 ## FND-00001595: Component count (81), key matrix detection, and addressable LED detection are accurate; Assembly complexity reports 81 SMD / 0 THT instead of ~40 SMD / 41 THT; Addressable LED chains: 3 chains repo...
 

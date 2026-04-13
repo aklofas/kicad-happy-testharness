@@ -1,4 +1,4 @@
-# Findings: STM32F4-Reference-PCB / STM32F4_REV2
+# Findings: pms67/STM32F4-Reference-PCB / STM32F4_REV2
 
 ## FND-00001306: rf_matching detector false-positives on buck converter components; Buck converter detected with correct feedback network (R3/R5, BUCK_FB); STM32F405 crystal load capacitance correctly computed; KiC...
 

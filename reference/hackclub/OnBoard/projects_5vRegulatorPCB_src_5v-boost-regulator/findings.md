@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_5vRegulatorPCB_src_5v-boost-regulator
+# Findings: hackclub/OnBoard / projects_5vRegulatorPCB_src_5v-boost-regulator
 
 ## FND-00000090: TPS61032 boost regulator design accurately analyzed. Switching topology, feedback divider, and output voltage estimation all detected correctly.
 

@@ -1,4 +1,4 @@
-# Findings: ligra / ligra_back_ligra_back
+# Findings: Jana-Marie/ligra / ligra_back
 
 ## FND-00002382: NCP1117-12 output voltage estimated as 1.2V instead of 12V due to suffix parsing bug; Power regulator topology correctly identified: AL8843 switching regulator + two NCP1117 LDOs detected
 

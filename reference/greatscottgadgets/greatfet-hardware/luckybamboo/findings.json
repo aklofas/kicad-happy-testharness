@@ -27,8 +27,26 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^U8$"
-          }
+            "pattern": "^U10$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "U10",
+            "U11",
+            "U12",
+            "U13",
+            "U14",
+            "U15",
+            "U16",
+            "U17",
+            "U5",
+            "U6",
+            "U7",
+            "U8",
+            "U9"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "All 153 components have category=None despite correct component_types in statistics",
@@ -47,7 +65,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "No RF matching networks detected despite extensive RF frontend with baluns and matching components",
@@ -56,7 +78,11 @@
             "path": "signal_analysis.rf_matching",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_matching",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "ADF7242 transceivers not identified as RF transceivers in any signal analysis section. These are 802.15.4 radios critical to understanding the design.",
@@ -65,7 +91,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SKY13322 SP4T switch not identified in RF chain despite being the antenna routing switch",
@@ -74,7 +104,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "No SPI bus detection for ADF7242 control interface despite SPI being the primary control bus",

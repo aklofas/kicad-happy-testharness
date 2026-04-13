@@ -1,4 +1,4 @@
-# Findings: Modular_Macropad_Hardware_Kicad / Macropad_Dial_Mini_Module_Macropad Dial Module
+# Findings: Nxe5/Modular_Macropad_Hardware_Kicad / Macropad_Dial_Mini_Module_Macropad Dial Module
 
 ## FND-00001776: Key matrix correctly detected: 5x5 grid with 19 switches and 19 diodes; SK6812MINI addressable LED chain correctly detected: 17 LEDs chained on LED_GPIO; LTC3536 switching regulator correctly detec...
 

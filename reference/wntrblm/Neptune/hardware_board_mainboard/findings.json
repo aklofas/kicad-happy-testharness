@@ -13,7 +13,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "TL431A correctly classified as voltage reference with REF shorted to cathode (2.5V config)",
@@ -31,7 +35,11 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "31 RC filters with correct topology categorization (low-pass, high-pass, RC-network)",
@@ -40,7 +48,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "16 voltage dividers including TL431 reference and potentiometer bias correctly detected",
@@ -49,7 +61,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Decoupling coverage for +12V/-12V (8 caps each, 20.6uF) correctly reported",
@@ -58,7 +74,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -67,14 +87,30 @@
           "analyzer_section": "signal_analysis.opamp_circuits",
           "check": {
             "path": "signal_analysis.opamp_circuits",
-            "op": "not_contains_match",
-            "field": "reference",
-            "pattern": "^U1$"
-          }
+            "op": "field_equals",
+            "field": "gain",
+            "value": 3.2
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "R202",
+            "R205",
+            "U1"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "gain",
+          "expected_value": 3.2
         },
         {
           "description": "design_observations: U1 TL074 decoupling warning emitted 5 times (once per symbol unit) instead of once per IC",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -121,7 +157,11 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [],

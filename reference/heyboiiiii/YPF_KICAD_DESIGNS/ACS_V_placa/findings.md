@@ -1,4 +1,4 @@
-# Findings: YPF_KICAD_DESIGNS / ACS_V_placa_ACS_V_placa
+# Findings: heyboiiiii/YPF_KICAD_DESIGNS / ACS_V_placa
 
 ## FND-00001832: 7 components correctly identified with accurate types and net connectivity; Voltage divider R2/R1 correctly detected on ACS output conditioning network; Voltage divider R7/R8 (battery voltage measu...
 

@@ -1,4 +1,4 @@
-# Findings: PS1_DatelCheatCart_Clone / PowerReplay
+# Findings: hkzlab/PS1_DatelCheatCart_Clone / PowerReplay
 
 ## FND-00001061: T1 (L78L05 linear regulator) classified as 'transformer' instead of 'ic' or 'regulator'; bus_topology 'width' field reports bus-entry-count not signal-count; Component count, BOM, nets, and power r...
 

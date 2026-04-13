@@ -1,4 +1,4 @@
-# Findings: Modular-Synth-Hardware / Delay_Delay
+# Findings: MatthewATaylor/Modular-Synth-Hardware / Delay
 
 ## FND-00000255: Modular synth delay module (PT2399-based, 186 components). False parallel capacitor groupings in PT2399 RC networks inflate capacitance values. Op-amp integrator misclassified as compensator. GND-base transistors accumulate false driver lists.
 

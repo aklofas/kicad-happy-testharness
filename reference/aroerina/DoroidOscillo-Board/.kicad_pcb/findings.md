@@ -1,4 +1,4 @@
-# Findings: DoroidOscillo-Board / Android_Oscilloscope
+# Findings: aroerina/DoroidOscillo-Board / .kicad_pcb
 
 ## FND-00000477: Component count: 128 total, 14 ICs, 40 resistors, 50 capacitors, 5 inductors, 1 crystal, 4 connectors, 1 LED, 2 diodes, 3 test points, 3 fiducials, 5 other; BOM values for all resistors and capacit...
 

@@ -1,4 +1,4 @@
-# Findings: VIC2cr-Reloaded / VIC-Reloaded
+# Findings: sjgray/VIC2cr-Reloaded / VIC-Reloaded
 
 ## FND-00001748: Total component count (89) and all type breakdowns are accurate; unique_parts=45 matches distinct part values in BOM; total_no_connects=25 matches source schematic NoConn entries; power_rails corre...
 

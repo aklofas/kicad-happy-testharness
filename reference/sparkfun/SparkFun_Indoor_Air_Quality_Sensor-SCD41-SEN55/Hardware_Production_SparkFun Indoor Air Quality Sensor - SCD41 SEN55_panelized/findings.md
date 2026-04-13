@@ -1,4 +1,4 @@
-# Findings: SparkFun_Indoor_Air_Quality_Sensor-SCD41-SEN55 / Hardware_Production_SparkFun_AirQuality_Combo_panelized
+# Findings: sparkfun/SparkFun_Indoor_Air_Quality_Sensor-SCD41-SEN55 / Hardware_Production_SparkFun Indoor Air Quality Sensor - SCD41 SEN55_panelized
 
 ## FND-00001441: Power regulator detected with same input and output rail (3.3V→3.3V), but AP3012 is a boost converter producing 5V for the SEN55; I2C pull-up resistors R3 (SDA) and R4 (SCL) not detected; analyzer ...
 

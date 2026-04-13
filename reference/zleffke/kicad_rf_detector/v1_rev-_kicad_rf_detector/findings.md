@@ -1,4 +1,4 @@
-# Findings: kicad_rf_detector / v1_rev-_kicad_rf_detector
+# Findings: zleffke/kicad_rf_detector / v1_rev-_kicad_rf_detector
 
 ## FND-00002369: RV1 potentiometer (Device:R_POT_US) classified as 'resistor' component type; RF detector signal chain not detected — Schottky diode envelope detector with RF input and LC filter; RC filter detected...
 

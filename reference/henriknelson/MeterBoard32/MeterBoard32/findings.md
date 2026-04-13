@@ -1,4 +1,4 @@
-# Findings: MeterBoard32 / MeterBoard32
+# Findings: henriknelson/MeterBoard32 / MeterBoard32
 
 ## FND-00000949: AMS1117-3V3 LDO, WS2812B addressable LED chain, Q1/Q2 auto-reset circuit, RC filter on EN line, and decoupling analysis all correctly detected; USB Full-Speed bus protocol not detected despite CP21...
 

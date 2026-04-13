@@ -1,4 +1,4 @@
-# Findings: RFSWITCH01 / hw_sch_pcb_RFSWITCH01
+# Findings: mlab-modules/RFSWITCH01 / hw_sch_pcb_RFSWITCH01
 
 ## FND-00001144: RF chain detected PE4259 switches (U2, U4) and rf_matching networks for SMA antennas; RF chain missing SPF5189Z LNA (U3) as amplifier and FL1 SAW filter; SAW filter (FL1) detected as 'filter' compo...
 

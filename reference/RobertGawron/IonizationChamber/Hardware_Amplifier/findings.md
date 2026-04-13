@@ -1,4 +1,4 @@
-# Findings: IonizationChamber / Hardware_Amplifier_Amplifier
+# Findings: RobertGawron/IonizationChamber / Hardware_Amplifier
 
 ## FND-00000630: U1A (LMC6062 unit 1) misclassified as 'comparator_or_open_loop' — it is a transimpedance amplifier (TIA); V31 (Sensor:Nuclear-Radiation_Detector) classified as 'varistor' due to 'V' reference prefi...
 

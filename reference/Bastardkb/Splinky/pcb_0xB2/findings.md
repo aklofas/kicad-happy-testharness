@@ -1,4 +1,4 @@
-# Findings: Splinky / pcb_0xB2
+# Findings: Bastardkb/Splinky / pcb_0xB2
 
 ## FND-00001585: Component counts and types accurate for Splinky RP2040 keyboard controller; LDO regulator U3 (XC6210B332MR-G) correctly detected with 3.3V output; Crystal Y1 circuit correctly detected with 15pF lo...
 

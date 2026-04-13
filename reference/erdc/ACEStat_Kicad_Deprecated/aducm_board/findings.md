@@ -1,4 +1,4 @@
-# Findings: ACEStat_Kicad_Deprecated / aducm_board
+# Findings: erdc/ACEStat_Kicad_Deprecated / aducm_board
 
 ## FND-00000332: ADM7154 LDO regulator not detected in power_regulators
 

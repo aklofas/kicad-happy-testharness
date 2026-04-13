@@ -1,4 +1,4 @@
-# Findings: bldc / hardware_Control_control_v1
+# Findings: Rampagy/bldc / hardware_Control_control_v1
 
 ## FND-00002278: Serial signal nets +RX and +TX misclassified as power rails
 

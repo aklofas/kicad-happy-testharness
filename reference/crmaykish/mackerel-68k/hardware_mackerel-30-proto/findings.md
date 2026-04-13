@@ -1,4 +1,4 @@
-# Findings: crmaykish/mackerel-68k / hardware_mackerel-30-proto_mackerel-30-proto
+# Findings: crmaykish/mackerel-68k / hardware_mackerel-30-proto
 
 ## FND-00002595: MC68030 retro computer with DRAM, Flash, SRAM, dual UART, FPU, CPLDs, and DIN41612 expansion bus; analyzer correctly identifies power topology and oscillators but misses memory interfaces and bus architecture
 

@@ -1,4 +1,4 @@
-# Findings: keebs / CustomKeyboard_1_CustomKeyboard
+# Findings: samlee91/keebs / CustomKeyboard_1_CustomKeyboard
 
 ## FND-00002230: 90 keyboard key switches (keyboard_parts:KEYSW) misclassified as 'relay' in component statistics; Key matrix reports switches_on_matrix=0 due to key switches being misclassified as relays
 

@@ -1,4 +1,4 @@
-# Findings: haj-coaster / coaster_backboard_coaster_backboard
+# Findings: Jana-Marie/haj-coaster / coaster_backboard
 
 ## FND-00002111: IS31FL3733 LED matrix driver topology not detected; 20 RGBA multi-LED components misclassified as diodes
 

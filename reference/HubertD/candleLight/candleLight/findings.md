@@ -1,4 +1,4 @@
-# Findings: candleLight / candleLight
+# Findings: HubertD/candleLight / candleLight
 
 ## FND-00002301: Power rail +3V3 falsely classified as I2C SDA bus; CAN_S (CAN transceiver silent pin) falsely classified as I2C SCL; CAN bus correctly detected with CAN_TX/CAN_RX (STM32) and CAN_TXD/CAN_RXD (TJA10...
 

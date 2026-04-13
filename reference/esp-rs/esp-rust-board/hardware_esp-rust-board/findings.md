@@ -1,4 +1,4 @@
-# Findings: esp-rust-board / hardware_esp-rust-board_esp-rust-board
+# Findings: esp-rs/esp-rust-board / hardware_esp-rust-board
 
 ## FND-00000114: Good detection of ESP32-C3 dev board with USB-C, I2C sensors, LiPo charging, and switching regulator. I2C bus missing pull-ups flagged but may have internal pull-ups in ESP32-C3 module. Crystal value 32.768Hz should be 32.768kHz.
 

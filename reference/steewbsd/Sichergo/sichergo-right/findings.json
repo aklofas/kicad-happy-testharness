@@ -14,7 +14,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R5$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R5",
+            "R6",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC low-pass filter R2/C3 (4.7k/0.1uF) at 338.63 Hz correctly detected for reset filtering",
@@ -24,7 +32,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R2$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C3",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal Y1 (Crystal_GND24) with load caps C1 and C2 (10pF each) correctly detected with effective load 8pF",
@@ -34,7 +49,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Key matrix correctly detected: 4 rows x 5 columns, 18 switches (SW1-SW19 minus 1 for power/other), 18 diodes (CD4148W)",
@@ -43,7 +66,31 @@
             "path": "signal_analysis.key_matrices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "key_matrices",
+          "subject_refs": [
+            "SW1",
+            "SW10",
+            "SW11",
+            "SW12",
+            "SW13",
+            "SW14",
+            "SW15",
+            "SW16",
+            "SW17",
+            "SW18",
+            "SW19",
+            "SW2",
+            "SW3",
+            "SW4",
+            "SW5",
+            "SW6",
+            "SW7",
+            "SW8",
+            "SW9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 (2N7002) correctly detected as N-channel MOSFET LED driver with gate pulldown R7 (5.1k), gate driven by U2, LED D20 through R20 (1k)",
@@ -53,7 +100,17 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D20",
+            "Q1",
+            "R20",
+            "R7",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "+3V3 rail decoupling correctly analyzed: 7 caps totaling 11.5uF (C5,C6,C4,C3,C7,C9=0.1uF + C10=1uF + C8=10uF)",
@@ -62,7 +119,20 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C10",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "100 total components correctly counted: 19 switches, 18 LEDs, 18 diodes, 25 resistors, 10 capacitors",
@@ -98,7 +168,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

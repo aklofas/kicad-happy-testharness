@@ -1,4 +1,4 @@
-# Findings: boilernet / kicad_projects_compute_nodes_Compute Node
+# Findings: AkshathRaghav/boilernet / kicad_projects_compute_nodes_Compute Node
 
 ## FND-00000247: IoT compute node (34 components). All detections verified: 1 regulator, 2 RC filters, 2 BJTs, 2 ESD ICs. No issues.
 

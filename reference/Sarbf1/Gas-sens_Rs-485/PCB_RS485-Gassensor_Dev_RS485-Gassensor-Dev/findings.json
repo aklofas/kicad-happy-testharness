@@ -14,7 +14,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U3",
+            "U6",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U6 unit 2 correctly identified as comparator_or_open_loop for NO2 output (slight difference from production board where it was transimpedance_or_buffer)",
@@ -24,17 +32,32 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U6$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage dividers R14/R9 and R27/R28 correctly detected identically to production board",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R14$"
-          }
+            "op": "equals",
+            "value": 28
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R14",
+            "R27",
+            "R28",
+            "R9"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 28
         },
         {
           "description": "RC filters R17/C8 and R15/C4 (1k/470nF, fc=338.6Hz) correctly detected for PWM smoothing",
@@ -43,8 +66,17 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R17$"
-          }
+            "pattern": "^R15$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C4",
+            "C8",
+            "R15",
+            "R17"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U4 (OKI-78SR-5) and U5 (AP2127N-3.3) correctly identified as power regulator chain",
@@ -54,7 +86,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U4",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "12 connectors correctly counted (2 more than production board: J10, J11, J12 for development headers)",
@@ -75,11 +114,31 @@
             "op": "not_contains_match",
             "field": "shunt.ref",
             "pattern": "^R12$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R12",
+            "R220",
+            "U7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Same OKI-78SR voltage estimation error: estimated_vout=1.5V instead of 5V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 1.5,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 1.5
+          }
         }
       ],
       "missed": [],

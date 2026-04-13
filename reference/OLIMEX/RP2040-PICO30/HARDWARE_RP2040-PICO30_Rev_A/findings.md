@@ -1,4 +1,4 @@
-# Findings: RP2040-PICO30 / HARDWARE_RP2040-PICO30_Rev_A_RP2040-PICO30_Rev_A
+# Findings: OLIMEX/RP2040-PICO30 / HARDWARE_RP2040-PICO30_Rev_A
 
 ## FND-00001177: Voltage divider R12/R13 detected with mid-point at LX (switching node) instead of FB pin; SY8089 buck regulator feedback network not detected as part of the regulator circuit; Crystal circuit Y1 (1...
 

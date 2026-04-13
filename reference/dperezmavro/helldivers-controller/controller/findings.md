@@ -1,4 +1,4 @@
-# Findings: helldivers-controller / controller_controller
+# Findings: dperezmavro/helldivers-controller / controller
 
 ## FND-00002124: Correctly identifies 9 components: 1 SparkFun Pro Micro module, 4 SPDT toggle switches, 4 Cherry MX push buttons; SPDT switches wired as GND↔+5V voltage selectors feeding MCU GPIO not detected as a...
 

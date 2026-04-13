@@ -25,19 +25,43 @@
         },
         {
           "description": "24 of 40 regulators are false positives: 8x BLOCK_BPI_2 title blocks, 6x repeated MT7981B SoC, plus flash/RTC/EEPROM/logic ICs",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "AP7366-W5-7 inconsistently classified as switching in some sheets but correctly as LDO in others",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "POE-RT5400-12V has estimated_vout=1.2 -- parsed '12V' suffix as denominator giving 1.2V instead of 12V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 1.2,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 1.2
+          }
         },
         {
           "description": "All switching regulators share identical rail names input_rail=DVDD33, output_rail=EN_1V8 -- rail assignment collapses across sheets",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -48,7 +72,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Zero Ethernet interfaces detected -- EN8811 PHY + SQ24015-1PG/SG24002G magnetics + RJ45 connectors present",
@@ -57,7 +85,11 @@
             "path": "signal_analysis.ethernet_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "ethernet_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Zero memory interfaces detected -- MT7981B to NT5AD512M16C4-JR DDR4 interface present",
@@ -66,7 +98,11 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Zero RF chains/matching detected -- MT7976C WiFi has SAW filters, BPFs, diplexers, matching inductors, MMCX connectors",
@@ -75,7 +111,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [
@@ -137,7 +177,11 @@
         },
         {
           "description": "USB ESD inconsistency: design_observations says has_esd_protection: false while differential_pairs says has_esd: true for same USB nets.",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "JTAG_JTCK and JTAG_JTMS falsely detected as I2C SDA/SCL lines.",
@@ -147,15 +191,42 @@
       "missed": [
         {
           "description": "DDR4 memory interface not detected despite 58 EMI0_* nets connecting MT7981B to NT5AD512M16C4-JR.",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "EN8811 2.5GbE Ethernet PHY not detected despite HSGMII and SMI_MDC/MDIO connections.",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "detector": "ethernet_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "MT7976C Wi-Fi 6 radio entirely absent from rf_chains despite AFE0_WF* analog front-end nets.",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.rf_chains",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "26 of 30 UART detections are false positives: WiFi TX gain rails (AVDD18_WF3_TX_GA), Ethernet PHY nets (TXVP_A), SGMII nets.",
@@ -163,7 +234,16 @@
         },
         {
           "description": "Most power regulators missed: only one AP7366 detected, missing SY8089AAAC, MP8756GD, LA1314HD, LA3484A.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

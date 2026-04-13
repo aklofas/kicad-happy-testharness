@@ -1,4 +1,4 @@
-# Findings: hackquad / ecad_hackquad_hackquad
+# Findings: divisionind/hackquad / ecad_hackquad
 
 ## FND-00002110: Quad-SPI PSRAM interface (ESP32 to LY68L6400) not detected as SPI bus; Four N-channel MOSFETs driving DC motors (quadcopter) not recognized as motor drive topology; RT6150AGQW switching regulator a...
 

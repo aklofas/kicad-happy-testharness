@@ -22,7 +22,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Opamp circuits correctly detected in analog signal path",
@@ -31,7 +35,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -52,7 +60,11 @@
             "path": "signal_analysis.bus_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB connection for programming/configuration not detected",
@@ -61,7 +73,11 @@
             "path": "signal_analysis.bus_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [
@@ -90,7 +106,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Q1 PNP transistor correctly identified",
@@ -114,8 +134,16 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R18$"
-          }
+            "pattern": "^R16$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "Q1",
+            "R16",
+            "R18"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -143,9 +171,14 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "equals",
+            "value": 3
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 3
         },
         {
           "description": "191 components with correct breakdown",
@@ -163,7 +196,11 @@
             "path": "signal_analysis.protection_devices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -202,8 +239,16 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^U7$"
-          }
+            "pattern": "^U10$"
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U10",
+            "U7",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 MMBT3906 PNP correctly detected with base resistor",
@@ -213,7 +258,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -228,8 +279,15 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R18$"
-          }
+            "pattern": "^R16$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R16",
+            "R18"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Hierarchical label input nets flagged as single_pin_nets",

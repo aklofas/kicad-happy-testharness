@@ -1,4 +1,4 @@
-# Findings: hackrf / hardware_hackrf-one_hackrf-one
+# Findings: greatscottgadgets/hackrf / hardware_hackrf-one
 
 ## FND-00000293: hackrf-one PCB: copper_layers_used includes F.SilkS (non-copper layer), SMD count may be slightly inflated, no RF/impedance analysis for this RF-heavy board
 

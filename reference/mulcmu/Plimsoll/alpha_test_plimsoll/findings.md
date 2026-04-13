@@ -1,4 +1,4 @@
-# Findings: Plimsoll / alpha_test_plimsoll
+# Findings: mulcmu/Plimsoll / alpha_test_plimsoll
 
 ## FND-00001135: dnp_parts reports 0 but 2 DNP components (C1, C2) are present; same bug in mini_hx717 (2 DNP) and underbed (9 DNP); sourcing_audit reports mpn_percent=0% and all 11 BOM parts as missing_mpn despite...
 

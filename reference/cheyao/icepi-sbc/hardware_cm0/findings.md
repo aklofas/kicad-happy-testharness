@@ -1,4 +1,4 @@
-# Findings: icepi-sbc / hardware_cm0
+# Findings: cheyao/icepi-sbc / hardware_cm0
 
 ## FND-00002217: Ethernet PHY differential nets EPHY_RX+/- and EPHY_TX+/- falsely reported as UART signals in bus_analysis.uart; eMMC 8-bit bus correctly detected in cpu schematic with all 10 signals (CLK, CMD, D0-...
 

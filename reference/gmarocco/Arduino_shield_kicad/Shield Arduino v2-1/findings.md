@@ -1,4 +1,4 @@
-# Findings: Arduino_shield_kicad / Shield Arduino v2-1
+# Findings: gmarocco/Arduino_shield_kicad / Shield Arduino v2-1
 
 ## FND-00000379: VR1 trimmer potentiometer misclassified as varistor; C5 capacitance massively overestimated: MPN prefix in value string parsed as capacitance; VR1 trimmer potentiometer incorrectly listed as protec...
 

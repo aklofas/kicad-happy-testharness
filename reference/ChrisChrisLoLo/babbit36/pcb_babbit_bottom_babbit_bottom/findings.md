@@ -1,4 +1,4 @@
-# Findings: babbit36 / pcb_babbit_bottom_babbit_bottom_babbit_bottom
+# Findings: ChrisChrisLoLo/babbit36 / pcb_babbit_bottom_babbit_bottom
 
 ## FND-00001819: Empty schematic correctly parsed with zero components and nets
 

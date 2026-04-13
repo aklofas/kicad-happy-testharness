@@ -1,4 +1,4 @@
-# Findings: ESP32-P4-PC / HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B
+# Findings: OLIMEX/ESP32-P4-PC / HARDWARE_ESP32-P4-PC-Rev.B_ESP32-P4-PC_Rev_B
 
 ## FND-00000112: Complex SBC with HDMI, USB hub, Ethernet, audio codec well-analyzed for power regulation but missing HDMI bridge, USB hub, and audio codec subcircuit classification; crystal circuits undetected
 

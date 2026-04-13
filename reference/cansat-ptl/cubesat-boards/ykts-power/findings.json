@@ -13,7 +13,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "4 KIA3415 dual PMOS transistors correctly detected as P-channel with gate resistors",
@@ -22,7 +26,11 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "2 voltage dividers (490K/100K) correctly detected as BQ25070 feedback dividers",
@@ -31,7 +39,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "2 crystals (Y1=8MHz, Y2=12MHz) with 22pF load caps correct",
@@ -41,7 +53,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1",
+            "Y2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -52,12 +71,24 @@
             "path": "signal_analysis.rc_filters",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R2$"
-          }
+            "pattern": "^R1$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C5",
+            "R1",
+            "R2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "False missing-input-cap warnings for all 4 TPS63001/TPS63002 \u2014 caps exist but hierarchical sheet merges PGND with VIN",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -68,8 +99,15 @@
             "path": "signal_analysis.bms_systems",
             "op": "contains_match",
             "field": "bms_reference",
-            "pattern": "^U7$"
-          }
+            "pattern": "^U14$"
+          },
+          "detector": "bms_systems",
+          "subject_refs": [
+            "U14",
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "INA3221AIRGVR (U6) 3-channel current/power monitor with 3x 0.1ohm shunts not detected in current_sense",
@@ -79,7 +117,13 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^U6$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

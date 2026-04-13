@@ -1,4 +1,4 @@
-# Findings: KicadMotorController / MController
+# Findings: markh2016/KicadMotorController / MController
 
 ## FND-00000750: Q1 (BT139-600 TRIAC) misclassified as 'transistor' type; assembly_complexity smd_count=4 wrong — all components are THT; Component count, BOM, net extraction, and signal analysis all correct
 

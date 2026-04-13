@@ -1,4 +1,4 @@
-# Findings: mutable_eurorack_kicad / ripples_hardware_design_pcb_KiCad_ripples_v40
+# Findings: mort13/mutable_eurorack_kicad / ripples_hardware_design_pcb_KiCad_ripples_v40
 
 ## FND-00000163: Mutable Instruments Ripples filter module. Eagle-imported schematic with empty instance Values causes catastrophic power symbol net naming failure -- all power/ground connections dumped into single empty-string net.
 

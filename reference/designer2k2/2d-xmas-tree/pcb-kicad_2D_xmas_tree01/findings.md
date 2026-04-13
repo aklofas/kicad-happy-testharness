@@ -1,4 +1,4 @@
-# Findings: 2d-xmas-tree / pcb-kicad_2D_xmas_tree01
+# Findings: designer2k2/2d-xmas-tree / pcb-kicad_2D_xmas_tree01
 
 ## FND-00000314: I2C bus falsely detected on ATtiny25 ISP RESET and charlieplexing GPIO lines; Decoupling observation correct but misleading: C1 exists between VCC and GND but has no specified value; Charlieplexing...
 

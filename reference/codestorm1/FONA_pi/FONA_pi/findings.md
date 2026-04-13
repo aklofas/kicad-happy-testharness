@@ -1,4 +1,4 @@
-# Findings: FONA_pi / FONA_pi
+# Findings: codestorm1/FONA_pi / FONA_pi
 
 ## FND-00000563: Component count and BOM extraction accurate; Net extraction and connectivity correct; assembly_complexity classifies 24 THT connectors as SMD (other_SMD); assembly_complexity.unique_footprints repo...
 

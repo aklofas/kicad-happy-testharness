@@ -1,4 +1,4 @@
-# Findings: coco_motherboards / 26-3334_coco3_coco3
+# Findings: qbancoffee/coco_motherboards / 26-3334_coco3
 
 ## FND-00000284: CoCo3 motherboard (KiCad 5, 218 components). All core circuits correctly identified: 28.636MHz crystal, MC78L08 8V regulator, 7 NPN transistors (RGB video 2SC1815, power 2N6123, BCX38C buffer), cassette RC filters, 86.83MHz clock filters, 3 voltage dividers. TC1 trimmer cap not counted as crystal load cap.
 

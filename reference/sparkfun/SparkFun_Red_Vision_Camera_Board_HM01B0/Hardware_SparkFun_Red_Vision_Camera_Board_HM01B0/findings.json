@@ -21,11 +21,19 @@
           "check": {
             "path": "signal_analysis.power_regulators",
             "op": "contains_match",
-            "value": {
-              "ref": "U2",
-              "topology": "LDO"
-            }
-          }
+            "field": "ref",
+            "pattern": "^U2$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "C2",
+            "C5",
+            "C7",
+            "C8",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Y1 (24MHz, SparkFun-Clock:Oscillator_24MHz_3.2x2.5mm) correctly classified as active_oscillator. It is a 4-pin package with pins GND/VDD/OUT/EN \u2014 an active MEMS/clock oscillator, not a passive crystal. No load_caps reported which is correct: active oscillators have internal load caps.",
@@ -33,20 +41,34 @@
           "check": {
             "path": "signal_analysis.crystal_circuits",
             "op": "contains_match",
-            "value": {
-              "reference": "Y1",
-              "type": "active_oscillator"
-            }
-          }
+            "field": "reference",
+            "pattern": "^Y1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1-Q4 (RE1C002UNTCL NMOS) all 4 correctly detected. Q1 (gate=2.8V, drain=SDA, source=CAM_SDA) and Q2 (gate=2.8V, drain=SCL, source=CAM_SCL) are bidirectional I2C level shifters. Q3/Q4 are camera power/control switches (PWDN, RST). All captured in transistor_circuits.",
           "analyzer_section": "signal_analysis.transistor_circuits",
           "check": {
             "path": "signal_analysis.transistor_circuits",
-            "op": "min_count",
+            "op": "equals",
             "value": 4
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2",
+            "Q3",
+            "Q4"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 4
         },
         {
           "description": "Power rails correctly identified: 3.3V (host-supplied input), 2.8V (from RT9080 LDO), 1.5V (camera supply rail), GND. All four domains present. Decoupling analysis covers all three voltage rails accurately.",
@@ -76,7 +98,14 @@
             "path": "signal_analysis.pull_up_resistors",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "pull_up_resistors",
+          "subject_refs": [
+            "R1",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

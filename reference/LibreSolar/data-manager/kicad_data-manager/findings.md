@@ -1,4 +1,4 @@
-# Findings: data-manager / kicad_data-manager
+# Findings: LibreSolar/data-manager / kicad_data-manager
 
 ## FND-00002310: SI8621AB-B-ISR digital isolator (U2) not detected in isolation_barriers; ERC false positives: TX_EXT/RX_EXT reported as no-driver nets, but pin context is wrong; TX_EXT/RX_EXT on J2 (RJ12 connector...
 

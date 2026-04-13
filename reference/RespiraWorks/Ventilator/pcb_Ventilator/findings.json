@@ -14,7 +14,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R163$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R163",
+            "R164",
+            "R165"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage divider R166/R168 (442k/39k) correctly detected as VBat-Sense scaling divider with 0.081 ratio, matching the same scaling topology as Vin-Sense",
@@ -24,17 +32,33 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R166$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R166",
+            "R168"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter C95/R163-R164-R165 correctly detected as 240 Hz low-pass on Vin-Sense line, with C95=10nF forming the filter",
           "analyzer_section": "signal_analysis.rc_filters",
           "check": {
             "path": "signal_analysis.rc_filters",
-            "op": "contains_match",
-            "field": "resistor.ref",
-            "pattern": "^R163$"
-          }
+            "op": "equals",
+            "value": 165
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C95",
+            "R163",
+            "R164",
+            "R165"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 165
         },
         {
           "description": "Voltage divider R169/R170 (442k/100k) for battery charger input voltage sensing correctly identified",
@@ -44,7 +68,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R169$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R169",
+            "R170"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Feedback divider R171/R172 (52.3k/10k) on RegN net for buck converter correctly found with ratio 0.16",
@@ -54,7 +85,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R171$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R171",
+            "R172"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R175/R176 (316k/100k) Pack-P voltage sensing divider correctly identified with R183/C106 low-pass filter at 5.31 Hz",
@@ -64,7 +102,16 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R175$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "C106",
+            "R175",
+            "R176",
+            "R183"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R212/R213 (100k/10k) feedback divider from 12Vout correctly detected with ratio 0.091",
@@ -74,7 +121,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R212$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R212",
+            "R213"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "146 total components correctly counted across 4 sub-sheets (battery_controller, battery_charger, battery_balancer, power_vsys)",
@@ -112,8 +166,16 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R167$"
-          }
+            "pattern": "^R166$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R166",
+            "R167",
+            "R168"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R164/R165 (39k/39k) similarly reported as a standalone 0.5 ratio divider. R164 is part of the R163-R164-R165 attenuator chain for Vin-Sense, not a standalone divider.",
@@ -122,8 +184,16 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R164$"
-          }
+            "pattern": "^R163$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R163",
+            "R164",
+            "R165"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -135,7 +205,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U25$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U25"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No protection_devices detected for D26 (SMBJ20AQ 20V TVS zener) which provides surge protection on the power input line.",
@@ -145,7 +221,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D26$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D26"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [
@@ -169,7 +251,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R71$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R71",
+            "R72",
+            "R77"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC low-pass filter R66/C47 (100k/100nF) at 15.92 Hz on PD-Alarm correctly identified",
@@ -179,7 +269,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R66$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C47",
+            "R66"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC low-pass filter R67/C49 (442k/1uF) at 0.36 Hz correctly detected as a very slow time constant circuit",
@@ -189,7 +286,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R67$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C49",
+            "R67"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter R70/C52 (249k/10nF) at 63.92 Hz correctly identified",
@@ -199,7 +303,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R70$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C52",
+            "R70"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "BJT transistors Q4, Q5, Q9, Q11, Q13 (MMBT3904) correctly identified with base resistors and pulldown analysis",
@@ -208,8 +319,18 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q4$"
-          }
+            "pattern": "^Q11$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q11",
+            "Q13",
+            "Q4",
+            "Q5",
+            "Q9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "74 total components and 5 power rails (+3.3V_Ctrl, +5V, +5V_Batt, +5V_GUI, GND) correctly enumerated",
@@ -249,7 +370,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U6$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U6",
+            "U7",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [
@@ -272,7 +401,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1",
+            "Y3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "18 power rails correctly identified including +12V, +3.3V_Ctrl, +3.3V_FPGA, +5V variants, and +VLink",
@@ -300,7 +436,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R30$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R30",
+            "R31"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Feedback divider R34/R35 (52.3k/10k) on Fb net for 5V buck converter correctly identified",
@@ -310,7 +453,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R34$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R34",
+            "R35"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R253/R254 (4.7k/4.7k) VSense mid-rail divider from +3.3V_Ctrl correctly found",
@@ -320,7 +470,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R253$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R253",
+            "R254"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage divider R21/R20 (1k/1k) for UI-Power-Off signal correctly detected",
@@ -329,8 +486,15 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R21$"
-          }
+            "pattern": "^R20$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R20",
+            "R21"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -341,8 +505,17 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R135$"
-          }
+            "pattern": "^R134$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "A2",
+            "D23",
+            "R134",
+            "R135"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -353,7 +526,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "I2C bus connections (SCL/SDA nets visible throughout battery controller, sensors, and other sub-sheets) not detected as bus protocols.",
@@ -362,7 +539,11 @@
             "path": "signal_analysis.bus_protocols",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_protocols",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

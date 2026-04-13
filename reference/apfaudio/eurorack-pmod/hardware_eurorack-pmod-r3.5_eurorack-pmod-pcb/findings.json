@@ -22,7 +22,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Power regulators correctly detected",
@@ -31,7 +35,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -43,7 +51,16 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q2$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q2",
+            "Q3",
+            "Q4",
+            "Q5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "14 of 15 RC filters are opamp feedback R+C pairs (output-to-inverting-input), not standalone filters \u2014 only R35+C32 is genuine",
@@ -53,7 +70,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R35$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C32",
+            "R35"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R27/R28 and R19/R20 voltage dividers are actually opamp feedback networks (R27 is feedback from U2 output to inverting input)",
@@ -62,8 +86,18 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "not_contains_match",
             "field": "r_top.ref",
-            "pattern": "^R27$"
-          }
+            "pattern": "^R19$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R19",
+            "R20",
+            "R27",
+            "R28",
+            "U2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -75,7 +109,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U11$"
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [
+            "U11"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [
@@ -105,7 +145,11 @@
             "path": "signal_analysis.opamp_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -117,7 +161,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R33$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C27",
+            "R33"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U9 unit 2 TL072 classified as 'comparator_or_open_loop' \u2014 feedback through RN7 (resistor_network type) missed because 2-hop detection only looks for 'resistor' type, not 'resistor_network'",
@@ -127,7 +178,14 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^U9$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "RN7",
+            "U9"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

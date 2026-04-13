@@ -45,7 +45,16 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [
+            "C75",
+            "C77",
+            "C78",
+            "L5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [
@@ -74,8 +83,15 @@
             "path": "signal_analysis.lc_filters",
             "op": "not_contains_match",
             "field": "inductor.ref",
-            "pattern": "^C78$"
-          }
+            "pattern": "^C77$"
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "C77",
+            "C78"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -100,7 +116,11 @@
         {
           "type": "component_classification",
           "description": "AP6236 has internal DCDC converter but primary function is WiFi/BT module. Classified as switching power regulator instead of wireless module.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [],
@@ -131,7 +151,16 @@
             "path": "signal_analysis.bus_protocols",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_protocols",
+          "subject_refs": [
+            "D0",
+            "D1",
+            "D2",
+            "D3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [
@@ -161,7 +190,11 @@
             "path": "signal_analysis.bus_protocols",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_protocols",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

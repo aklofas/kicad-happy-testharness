@@ -1,4 +1,4 @@
-# Findings: Awesome-Keebs / pcb files_torn-master_torn_left_torn_left
+# Findings: EanNewton/Awesome-Keebs / pcb files_torn-master_torn_left
 
 ## FND-00000389: LEDs L1, L2, L3 classified as 'inductor' instead of 'led'; QR1 (Graphic:SYM_Arrow45_Small) classified as 'transistor'; GND net falsely detected as I2C SDA bus line for MCP23017; Key matrix estimate...
 

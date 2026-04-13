@@ -14,7 +14,14 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R1$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R1",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R3(110K)/C7(100uF) RC filter correctly identified with 0.01Hz cutoff \u2014 extremely low-frequency filter for DC reference stabilization",
@@ -24,7 +31,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R3$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C7",
+            "R3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling analysis correct: V+ rail has 150uF total, Vbat has 110uF total",
@@ -33,7 +47,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [],

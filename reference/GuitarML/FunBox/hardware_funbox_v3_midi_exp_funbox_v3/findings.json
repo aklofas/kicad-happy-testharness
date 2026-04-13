@@ -13,8 +13,20 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R5$"
-          }
+            "pattern": "^R10$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R10",
+            "R11",
+            "R12",
+            "R5",
+            "R6",
+            "R7",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Two anti-aliasing RC low-pass filters R2/C4 and R1/C3 (3.3k/2.2nF at 21.92 kHz) correctly detected on AUDIO_OUT_BUFFER_LEFT and AUDIO_OUT_BUFFER_RIGHT output paths",
@@ -23,18 +35,36 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R2$"
-          }
+            "pattern": "^R1$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C3",
+            "C4",
+            "R1",
+            "R2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Six op-amp buffer circuits correctly identified: U3 units 1,2 (MCP6002) and U1 units 1,2,3,4 (MCP6024) all in buffer configuration with gain=1.0",
           "analyzer_section": "signal_analysis.opamp_circuits",
           "check": {
             "path": "signal_analysis.opamp_circuits",
-            "op": "contains_match",
-            "field": "reference",
-            "pattern": "^U3$"
-          }
+            "op": "field_equals",
+            "field": "gain",
+            "value": 1.0
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U1",
+            "U3"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "gain",
+          "expected_value": 1.0
         },
         {
           "description": "U2 (L7805) correctly detected as LDO regulator with input=VCC, output=5V",
@@ -44,7 +74,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L7805",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "A1 (Electrosmith_Daisy_Seed_Rev7) correctly classified as IC (DSP module)",
@@ -89,7 +126,14 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "A1",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Design observation correctly flags missing input/output caps for L7805 regulator",
@@ -98,7 +142,13 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "L7805"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [],
@@ -111,7 +161,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U5$"
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

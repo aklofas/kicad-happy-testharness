@@ -1,4 +1,4 @@
-# Findings: DaisyRogue_PCB / DaisyRogue
+# Findings: robertsonics/DaisyRogue_PCB / DaisyRogue
 
 ## FND-00000465: Component inventory (40 parts, 11 unique) and BOM correctly extracted; PCM1681TPWPQ1 (U3) pin-to-net mapping is fully and correctly resolved; I2C bus detection correct for U3 SCL/SDA with 2.2K pull...
 

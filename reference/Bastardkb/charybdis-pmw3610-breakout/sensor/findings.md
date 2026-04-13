@@ -1,4 +1,4 @@
-# Findings: charybdis-pmw3610-breakout / sensor
+# Findings: Bastardkb/charybdis-pmw3610-breakout / sensor
 
 ## FND-00001997: 
 

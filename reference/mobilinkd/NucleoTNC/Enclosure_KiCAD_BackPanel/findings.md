@@ -1,4 +1,4 @@
-# Findings: NucleoTNC / Enclosure_KiCAD_BackPanel_BackPanel
+# Findings: mobilinkd/NucleoTNC / Enclosure_KiCAD_BackPanel
 
 ## FND-00000993: Logo_Open_Hardware_Large graphic classified as a power rail; LED_TX net falsely detected as UART interface; I2C bus not detected despite I2C_SCL and I2C_SDA nets with a 24LC32 EEPROM; Transistor ci...
 

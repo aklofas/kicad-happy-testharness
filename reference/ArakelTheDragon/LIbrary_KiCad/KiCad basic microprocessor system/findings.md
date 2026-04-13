@@ -1,4 +1,4 @@
-# Findings: LIbrary_KiCad / KiCad basic microprocessor system_KiCad basic microprocessor system
+# Findings: ArakelTheDragon/LIbrary_KiCad / KiCad basic microprocessor system
 
 ## FND-00000814: LM2596 feedback voltage divider misclassified as RC low-pass filter at 0.16 Hz; annotation_issues correctly detects duplicate_references for all unannotated '?' refs including U?
 

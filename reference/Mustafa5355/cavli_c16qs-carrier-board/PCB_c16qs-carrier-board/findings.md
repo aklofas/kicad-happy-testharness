@@ -1,4 +1,4 @@
-# Findings: cavli_c16qs-carrier-board / PCB_c16qs-carrier-board
+# Findings: Mustafa5355/cavli_c16qs-carrier-board / PCB_c16qs-carrier-board
 
 ## FND-00002315: AP62250WU buck converter (U3) not detected in power_regulators; test_coverage incorrectly lists UART nets as uncovered despite J_UART1 being identified as a UART debug connector for those exact net...
 

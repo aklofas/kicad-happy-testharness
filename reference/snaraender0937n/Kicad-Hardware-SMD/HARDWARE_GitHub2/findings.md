@@ -1,4 +1,4 @@
-# Findings: Kicad-Hardware-SMD / HARDWARE_GitHub2
+# Findings: snaraender0937n/Kicad-Hardware-SMD / HARDWARE_GitHub2
 
 ## FND-00000788: Triple-rail power supply (L7805/L7812/L7912) with 22 components correctly parsed; C4 (capacitor) appears on both pin 1 and pin 2 of the same net (__unnamed_3) — shorted cap not flagged; power_rails...
 

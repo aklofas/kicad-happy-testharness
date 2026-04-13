@@ -13,7 +13,11 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -25,7 +29,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^C2$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C2",
+            "C3"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

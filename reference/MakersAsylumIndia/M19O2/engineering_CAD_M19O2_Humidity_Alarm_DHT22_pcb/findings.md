@@ -1,4 +1,4 @@
-# Findings: M19O2 / engineering_CAD_M19O2_Humidity_Alarm_DHT22_pcb_DHT22_pcb
+# Findings: MakersAsylumIndia/M19O2 / engineering_CAD_M19O2_Humidity_Alarm_DHT22_pcb
 
 ## FND-00000837: Output file does not exist — RFSOC project has not been analyzed
 

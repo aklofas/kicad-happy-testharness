@@ -1,4 +1,4 @@
-# Findings: TI92-revive / ti92-reviceStable_ti92-reviceStable
+# Findings: ccadic/TI92-revive / ti92-reviceStable
 
 ## FND-00001604: Keyboard switches classified as RF transceivers in all keyboard schematics; TCA8418 keyboard controller matrix not detected in any keyboard schematic; Component count undercounts by 8: 80 reported ...
 

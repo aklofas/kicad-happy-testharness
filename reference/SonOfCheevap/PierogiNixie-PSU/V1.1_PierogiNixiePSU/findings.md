@@ -1,4 +1,4 @@
-# Findings: PierogiNixie-PSU / V1.1_PierogiNixiePSU
+# Findings: SonOfCheevap/PierogiNixie-PSU / V1.1_PierogiNixiePSU
 
 ## FND-00001127: VR1 (TC33X-2-502E Bourns trimpot) misclassified as 'varistor'; RC filter false positive: R1=1.5M feedback divider + output caps detected as low-pass RC; LC filter resonant frequency wrong: C1=100uF...
 

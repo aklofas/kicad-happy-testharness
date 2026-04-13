@@ -46,7 +46,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Zero RC filters detected in the entire design",
@@ -55,7 +59,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Zero power regulators detected - SY8089AAAC (U2) is a buck regulator and TX4138 (U1) is a DC-DC controller, both should be identified",
@@ -64,8 +72,15 @@
             "path": "signal_analysis.power_regulators",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U2$"
-          }
+            "pattern": "^U1$"
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Zero protection devices detected despite SMAJ58A TVS diode (D1) and multiple Schottky diodes for reverse polarity protection",
@@ -75,7 +90,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Zero decoupling analysis despite having 11 capacitors on the board",
@@ -84,7 +105,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "All subcircuit neighbor_components lists are empty - no neighboring components linked to any IC",
@@ -102,7 +127,11 @@
             "path": "signal_analysis.isolation_barriers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "isolation_barriers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Crystal circuit for ESP32-C6 module not detected (12pF cap C5 suggests external crystal)",
@@ -111,8 +140,15 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^C6$"
-          }
+            "pattern": "^C5$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C5",
+            "C6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No USB interface detected despite USB-OTG1 connector present",

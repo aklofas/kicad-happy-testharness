@@ -1,4 +1,4 @@
-# Findings: LIGHTNING01 / hw_sch_pcb_LIGHTNING01
+# Findings: mlab-modules/LIGHTNING01 / hw_sch_pcb_LIGHTNING01
 
 ## FND-00000803: I2C bus detection for AS3935 via SCL/SDA_MOSI labels with 10k pullup resistors correct; Mounting holes (M1-M4) classified as 'other' rather than 'mounting_hole'; PWR_FLAG warnings for GND and VCC c...
 

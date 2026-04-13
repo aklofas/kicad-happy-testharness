@@ -14,7 +14,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^X1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C13",
+            "X1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Cassette interface RC filters (R5+C26, R23+C32, R22+C33) correct",
@@ -23,8 +30,19 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R5$"
-          }
+            "pattern": "^R22$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C26",
+            "C32",
+            "C33",
+            "R22",
+            "R23",
+            "R5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R14+C8 LP at 1.59Hz power-on reset RC correctly detected",
@@ -34,7 +52,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R14$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C8",
+            "R14"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 KSD880O driven by SC77527P correctly identified",
@@ -44,7 +69,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q2 2N3904 with collector=GNDS correctly captured",
@@ -54,7 +85,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q2$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R12+C15 and R29+C17 clock filters at 28.42MHz correct",
@@ -64,7 +101,16 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R12$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C15",
+            "C17",
+            "R12",
+            "R29"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -76,7 +122,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R8$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C21",
+            "R8"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

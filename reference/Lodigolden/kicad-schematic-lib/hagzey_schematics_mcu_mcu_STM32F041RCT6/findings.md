@@ -1,4 +1,4 @@
-# Findings: kicad-schematic-lib / hagzey_schematics_mcu_mcu_STM32F041RCT6
+# Findings: Lodigolden/kicad-schematic-lib / hagzey_schematics_mcu_mcu_STM32F041RCT6
 
 ## FND-00002264: STM32F041RCT6 MCU schematic parsed as empty (0 components, 0 nets)
 

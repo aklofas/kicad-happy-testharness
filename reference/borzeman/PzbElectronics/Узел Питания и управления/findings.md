@@ -1,4 +1,4 @@
-# Findings: borzeman/PzbElectronics / Узел Питания и управления_Узел Питания и управления
+# Findings: borzeman/PzbElectronics / Узел Питания и управления
 
 ## FND-00002517: Industrial food processing machine power/control unit (363 components, 25 sub-sheets, 12 IRF4905 MOSFET circuits). Major classification issue: lib_id ignored in favor of reference prefix, causing 29 LED-strip connectors as LEDs, 6 circuit breakers as capacitors, 2 DS18B20 sensors as transformers, 1 AC motor as capacitor.
 

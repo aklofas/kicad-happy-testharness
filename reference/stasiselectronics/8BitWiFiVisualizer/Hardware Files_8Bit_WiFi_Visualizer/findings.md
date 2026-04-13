@@ -1,4 +1,4 @@
-# Findings: 8BitWiFiVisualizer / Hardware Files_8Bit_WiFi_Visualizer
+# Findings: stasiselectronics/8BitWiFiVisualizer / Hardware Files_8Bit_WiFi_Visualizer
 
 ## FND-00000325: All 28 components reported as missing_mpn despite having 'Manufacturer PN' custom field populated; U2 (74HC595 shift register) has zero pins extracted, making all connected signal nets appear uncon...
 

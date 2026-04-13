@@ -1,4 +1,4 @@
-# Findings: KiCad_Designs / 3to4_Adapter_3to4_Adapter
+# Findings: computergeek1507/KiCad_Designs / 3to4_Adapter
 
 ## FND-00002274: OKI-78SR-5 switching regulator misclassified as LDO with wrong Vout estimate; SPI bus to 74HCT595 shift registers not detected
 

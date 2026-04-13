@@ -1,4 +1,4 @@
-# Findings: for-idle-hands-keyboard / for-idle-hands
+# Findings: peej/for-idle-hands-keyboard / for-idle-hands
 
 ## FND-00002069: KEYSW keyboard switches misclassified as relay type; Key matrix reports switches_on_matrix=0 due to KEYSW misclassification as relay
 

@@ -1,4 +1,4 @@
-# Findings: jammanator-pi / kicad_jamma_raspi
+# Findings: KabukiFlux/jammanator-pi / kicad_jamma_raspi
 
 ## FND-00000249: JAMMA arcade interface (25 components). Multi-project schematic duplication: analyzer includes ALL project instances instead of filtering to target project (56 counted vs 25 actual). Zero signal detections correct for passive I/O buffer design.
 

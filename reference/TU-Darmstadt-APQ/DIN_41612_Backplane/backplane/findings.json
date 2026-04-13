@@ -14,7 +14,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R8$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R8",
+            "R9",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Feedback network R6/R7 (1.65k/10k) correctly identified as feeding U1 (ADM1270) FB_PG pin, marked as is_feedback=true",
@@ -24,7 +32,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R6$"
-          }
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "R6",
+            "R7",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Four low-pass RC filters (R20/C31, R12/C18, R10/C15, R1/C1 all 22R/1u) at 7.23 kHz correctly detected as input filtering on the MOSFET source/drain paths",
@@ -33,8 +49,21 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R20$"
-          }
+            "pattern": "^R1$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "C15",
+            "C18",
+            "C31",
+            "R1",
+            "R10",
+            "R12",
+            "R20"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Protection devices D2 and D3 (SMBJ40CA bidirectional TVS) correctly detected on the Vin rail",
@@ -44,7 +73,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D2$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D2",
+            "D3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1, Q2 (SQM120P06 P-channel MOSFET) correctly detected as MOSFET transistor circuits with U1 (ADM1270) as gate driver for Q1",
@@ -54,7 +90,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q3, Q4 (SQJQ160E) correctly detected as MOSFET transistor circuits",
@@ -64,7 +108,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q3$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q3",
+            "Q4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U1 (ADM1270) and U2 (LM5067) correctly classified as ICs",
@@ -82,7 +133,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "146 components including 52 mounting holes (DIN 41612 connector mounting), 15 connectors, 31 capacitors correctly counted",
@@ -134,7 +189,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R8$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R8",
+            "R9",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Feedback divider R6/R7 (1.65k/10k) correctly identified as feedback to U1 FB_PG pin with is_feedback=true",
@@ -144,7 +207,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R6$"
-          }
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "R6",
+            "R7",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC low-pass filters R10/C15 and R1/C1 (both 22R/1u at 7.23 kHz) correctly detected",
@@ -153,8 +224,17 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R10$"
-          }
+            "pattern": "^R1$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "C15",
+            "R1",
+            "R10"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D2 (SMBJ40CA) correctly detected as protection device on Vin rail clamping to GND",
@@ -164,7 +244,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D2$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 (SQM120P06) correctly identified as P-channel MOSFET with U1 (ADM1270) as gate driver IC",
@@ -174,7 +260,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q2 (SQM120P06) correctly identified as P-channel MOSFET",
@@ -184,7 +277,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q2$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R3 (3m ohm sense resistor) correctly classified as resistor; it serves as current sense for the ADM1270",
@@ -211,7 +310,13 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [],
@@ -224,7 +329,13 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^R3$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

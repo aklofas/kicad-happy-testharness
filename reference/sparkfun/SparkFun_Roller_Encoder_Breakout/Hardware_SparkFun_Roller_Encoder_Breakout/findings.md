@@ -1,4 +1,4 @@
-# Findings: SparkFun_Roller_Encoder_Breakout / Hardware_SparkFun_Roller_Encoder_Breakout
+# Findings: sparkfun/SparkFun_Roller_Encoder_Breakout / Hardware_SparkFun_Roller_Encoder_Breakout
 
 ## FND-00001477: Component count, types, and net topology correctly captured for simple breakout; Roller encoder SW1 with quadrature outputs A, B and switch S1/S2 correctly wired to J1; assembly_complexity incorrec...
 

@@ -1,4 +1,4 @@
-# Findings: coco_motherboards / 26-313xA_coco2_coco2
+# Findings: qbancoffee/coco_motherboards / 26-313xA_coco2
 
 ## FND-00000286: CoCo2 motherboard 26-313xA (KiCad 5, 152 components). Largely accurate. R8+C21 pull-up/termination on VDGCLK misclassified as LP filter. TC1 trimmer not counted as crystal load cap.
 

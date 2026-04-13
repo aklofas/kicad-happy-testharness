@@ -1,4 +1,4 @@
-# Findings: SparkFun_Ambient_Light_Sensor-VEML7700 / Hardware_SparkFun_VEML7700
+# Findings: sparkfun/SparkFun_Ambient_Light_Sensor-VEML7700 / Hardware_SparkFun_VEML7700
 
 ## FND-00001412: I2C pull-up resistors R2 and R6 not detected as pull-ups on SCL/SDA; Component count and types correctly identified: 25 total, 1 IC (VEML7700-TT), 4 resistors, 2 caps, 2 Qwiic connectors; I2C bus c...
 

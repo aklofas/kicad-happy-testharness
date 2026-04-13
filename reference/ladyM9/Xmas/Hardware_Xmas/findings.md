@@ -1,4 +1,4 @@
-# Findings: Xmas / Hardware_Xmas
+# Findings: ladyM9/Xmas / Hardware_Xmas
 
 ## FND-00001771: 56 components detected correctly across all types; WS2812B addressable LED chain of 12 LEDs correctly detected; TPS7A2633DRVR LDO regulator correctly identified from VDD to 3V3; SPK1 (MLT-7525 piez...
 

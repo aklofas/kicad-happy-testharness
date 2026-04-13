@@ -1,4 +1,4 @@
-# Findings: current-dr-amp / KiCad_current-dr-amp_current-dr-amp
+# Findings: werediver/current-dr-amp / KiCad_current-dr-amp
 
 ## FND-00002322: Vee and Vee_hi negative supply rails misclassified as 'signal' instead of 'power'; All three op-amps (OPA1641/OPA1611) detected with configuration 'unknown'
 

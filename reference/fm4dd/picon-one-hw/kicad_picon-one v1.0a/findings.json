@@ -43,7 +43,11 @@
         },
         {
           "description": "Crystal frequency field is null despite 14.7456MHz in value string",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SPI bus pin mapping has MISO mapped to CS net - incorrect signal identification",
@@ -85,7 +89,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "12V input connectors (12V1, 12V2) not traced through power path",

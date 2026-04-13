@@ -1,4 +1,4 @@
-# Findings: robocup-pcb / boards_on-robot_kicad_kicker-v3.3_kicker
+# Findings: RoboJackets/robocup-pcb / boards_on-robot_kicad_kicker-v3.3_kicker
 
 ## FND-00000218: Robocup kicker breakbeam sub-sheet (11 components). Correct: Q10 BSS806N MOSFET correctly identified with proper pin mapping and connector load type, R49 pull-up correctly not flagged as divider, power distribution correct. False negative: RV1 500V varistor (PVG3) not detected as protection device. Single-pin net on RV1 pin 1 is expected (NC pin on 3-pin package).
 

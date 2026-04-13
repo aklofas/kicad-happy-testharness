@@ -1,4 +1,4 @@
-# Findings: VGA2HDMI / HARDWARE_VGA2HDMI-REV.C_VGA2HDMI_Rev_C
+# Findings: OLIMEX/VGA2HDMI / HARDWARE_VGA2HDMI-REV.C_VGA2HDMI_Rev_C
 
 ## FND-00001786: Total component count (86 unique refs) is accurate; HDMI interface detected correctly; Crystal circuit detected (Q1 = 24.576 MHz quartz crystal); VGA RGB RC high-pass filters correctly identified; ...
 

@@ -14,7 +14,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U3",
+            "U6",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U3 unit 2 correctly identified as transimpedance/buffer for CO output with R8 feedback (10R)",
@@ -24,7 +32,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "R8",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U6 unit 1 correctly identified as comparator (no feedback) generating Counter_NO digital output",
@@ -34,7 +49,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U6$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U9 units 1-2 (AD8676) correctly identified as transimpedance/buffer with R16/R19 (2.2k) feedback for U_Out_CO and U_Out_NO outputs",
@@ -44,27 +65,55 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U9$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "R16",
+            "R19",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage divider R14/R9 (2.2k/1k, ratio=0.31) correctly detected generating reference for U3 non-inverting input",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R14$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.31
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R14",
+            "R9",
+            "U3"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.31
         },
         {
           "description": "Voltage divider R27/R28 (1k/1k, ratio=0.5) correctly detected generating mid-rail reference for U6 comparator",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R27$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.5
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R27",
+            "R28",
+            "U6"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.5
         },
         {
           "description": "RC low-pass filters R17/C8 and R15/C4 (1k/470nF, fc=338.6Hz) correctly detected for PWM-to-analog conversion on gas sensor heater drives",
@@ -73,8 +122,17 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R17$"
-          }
+            "pattern": "^R15$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C4",
+            "C8",
+            "R15",
+            "R17"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U4 (OKI-78SR-5) correctly identified as switching DC-DC converter from +24V to +5V",
@@ -84,7 +142,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U5 (AP2127N-3.3) correctly identified as LDO from +5V to +3.3V",
@@ -94,7 +158,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U5$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Dual MCU design correctly parsed: U1 (STM32G031K8Tx, in_bom=yes) and U2 (STM32G031K8Ux, dnp=yes) with matching pin counts",
@@ -122,7 +192,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U4",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -134,17 +211,33 @@
             "op": "not_contains_match",
             "field": "shunt.ref",
             "pattern": "^R12$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R12",
+            "R220",
+            "U7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U4 (OKI-78SR-5_1.5-W36-C) estimated_vout=1.5V is wrong; it outputs 5V. The '1.5' in the part name refers to the 1.5A current rating, not the output voltage. The output rail is correctly labeled +5V.",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "not_contains_match",
-            "field": "ref",
-            "pattern": "^U4$"
-          }
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 1.5
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 1.5
         }
       ],
       "missed": [],

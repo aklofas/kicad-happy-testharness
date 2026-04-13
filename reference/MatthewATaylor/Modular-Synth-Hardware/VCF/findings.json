@@ -14,7 +14,22 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q101$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q101",
+            "Q102",
+            "Q103",
+            "Q104",
+            "Q105",
+            "Q106",
+            "Q107",
+            "Q108",
+            "Q109",
+            "Q110"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage dividers for CV input networks accurately detected",
@@ -23,7 +38,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -35,7 +54,16 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^U101$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U101",
+            "U104",
+            "U105",
+            "U106"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U106 unit 2 misclassified as 'compensator' \u2014 R201 (4.7M) connects from +12V to inverting input as bias, not feedback; C201 (1n) is the sole feedback element (integrator)",
@@ -45,7 +73,15 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^U106$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "C201",
+            "R201",
+            "U106"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q302, Q402, Q201 (NPN, base=GND) each accumulate 22 false base_resistors and 5 false base_driver_ics from GND net traversal",
@@ -54,8 +90,16 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "not_contains_match",
             "field": "reference",
-            "pattern": "^Q302$"
-          }
+            "pattern": "^Q201$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q201",
+            "Q302",
+            "Q402"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q303, Q403 load_type='connector' \u2014 GND-collector traversal finds J101 power connector as load instead of emitter-side resistors",
@@ -65,7 +109,15 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q303$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "J101",
+            "Q303",
+            "Q403"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "False parallel capacitor grouping: C301+C401 reported as 20uF parallel but they connect to different exponential converter branches (different pin2 nodes)",
@@ -75,7 +127,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^C301$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C301",
+            "C401"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

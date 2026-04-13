@@ -1,4 +1,4 @@
-# Findings: BandSelector / kicad_BandSelector_BandSelector
+# Findings: n1kdo/BandSelector / kicad_BandSelector
 
 ## FND-00000397: Inrush analysis reports 22000A inrush and 2200000uF due to bare-numeric capacitor value misparse; Inconsistent capacitor unit parsing: bare numeric 'uF' values parsed as picofarads in decoupling_an...
 

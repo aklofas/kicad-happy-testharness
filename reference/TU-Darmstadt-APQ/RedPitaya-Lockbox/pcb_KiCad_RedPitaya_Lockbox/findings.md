@@ -1,4 +1,4 @@
-# Findings: RedPitaya-Lockbox / pcb_KiCad_RedPitaya_Lockbox
+# Findings: TU-Darmstadt-APQ/RedPitaya-Lockbox / pcb_KiCad_RedPitaya_Lockbox
 
 ## FND-00001243: LT1236-10 misclassified as LDO with estimated_vout=1.0V; LT3045/LT3094 positive/negative linear regulators detected; Hierarchical sheet references (110 components, 3 sheets) correctly parsed; -12V ...
 

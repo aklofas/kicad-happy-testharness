@@ -1,4 +1,4 @@
-# Findings: decennium-kicad / hackerspacesnl
+# Findings: revspace/decennium-kicad / hackerspacesnl
 
 ## FND-00002024: 
 

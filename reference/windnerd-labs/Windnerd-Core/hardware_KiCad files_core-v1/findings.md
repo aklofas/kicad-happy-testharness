@@ -1,4 +1,4 @@
-# Findings: Windnerd-Core / hardware_KiCad files_core-v1
+# Findings: windnerd-labs/Windnerd-Core / hardware_KiCad files_core-v1
 
 ## FND-00001971: LDO regulator XC6206P332MR correctly identified with topology and rails; I2C bus correctly detected with pull-up resistors on both SDA and SCL; ESD protection device SP0502BAHT correctly identified...
 

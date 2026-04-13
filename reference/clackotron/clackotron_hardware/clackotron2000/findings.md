@@ -1,4 +1,4 @@
-# Findings: clackotron_hardware / clackotron2000_clackotron2000
+# Findings: clackotron/clackotron_hardware / clackotron2000
 
 ## FND-00002307: R-78B5.0-1.0 switching regulator estimated_vout is 1.0V instead of 5.0V; RS-485 differential pair (RS485_A / RS485_B) not detected as differential_pairs; All four level-shifter MOSFETs report spuri...
 

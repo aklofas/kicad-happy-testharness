@@ -1,4 +1,4 @@
-# Findings: ESP32_mini_8Port_WLED / ESP32_mini_8Port_WLED
+# Findings: w4b-zero/ESP32_mini_8Port_WLED / ESP32_mini_8Port_WLED
 
 ## FND-00000523: Component count, BOM, and net connectivity are correctly extracted; I2C bus falsely detected from ESP32 pin name substrings; neither net is actually I2C; UART interface on U1 TXD/RXD connected to J...
 

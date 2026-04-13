@@ -1,4 +1,4 @@
-# Findings: PixArt / pcb_PixArt
+# Findings: trzy/PixArt / pcb_PixArt
 
 ## FND-00001089: Component counts, power rails, and no-connect counts are accurate; Dual I2C interface on PAJ7025 correctly detected (G7_SCL_M/G8_SDA_M and CP_SCL/CP_SDA); Decoupling analysis empty despite C1 (10uF...
 

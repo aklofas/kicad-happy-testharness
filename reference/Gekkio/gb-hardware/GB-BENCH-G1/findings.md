@@ -1,4 +1,4 @@
-# Findings: Gekkio/gb-hardware / GB-BENCH-G1_GB-BENCH-G1
+# Findings: Gekkio/gb-hardware / GB-BENCH-G1
 
 ## FND-00002553: Game Boy test bench with DMG CPU, dual CPLDs, dual SRAM, 3 LDOs; good component/net/bus extraction, but missed JTAG chain, memory interfaces, fuse protection, and incorrectly flags regulator input caps as missing
 

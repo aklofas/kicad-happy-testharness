@@ -1,4 +1,4 @@
-# Findings: KiCad-Projects / 20_Pixel_Ring_WS2812B_20_Pixel_Ring_WS2812B
+# Findings: scottcher/KiCad-Projects / 20_Pixel_Ring_WS2812B
 
 ## FND-00000688: WS2812B net resolution bug: VDD pin (pin 1) placed on 'DOUT' net; False positive rf_matching detection: R1 (470 ohm) + L1 (WS2812B LED) flagged as RF matching network
 

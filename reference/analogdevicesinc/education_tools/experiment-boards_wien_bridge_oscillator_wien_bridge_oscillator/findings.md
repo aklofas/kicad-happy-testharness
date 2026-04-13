@@ -1,4 +1,4 @@
-# Findings: education_tools / experiment-boards_wien_bridge_oscillator_wien_bridge_oscillator
+# Findings: analogdevicesinc/education_tools / experiment-boards_wien_bridge_oscillator_wien_bridge_oscillator
 
 ## FND-00000013: Wien bridge RC filters detected at 145 MHz and 7.2 MHz — likely false positives since Wien bridge operates at audio frequencies. Op-amp classified as comparator_or_open_loop instead of oscillator.
 

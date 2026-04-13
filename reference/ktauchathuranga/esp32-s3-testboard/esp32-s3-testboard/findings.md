@@ -1,4 +1,4 @@
-# Findings: esp32-s3-testboard / esp32-s3-testboard_esp32-s3-testboard
+# Findings: ktauchathuranga/esp32-s3-testboard / esp32-s3-testboard
 
 ## FND-00002049: D5 (CLV1L-FKB bi-color LED) misclassified as diode instead of led; I2C bus correctly detected with pull-ups and both devices (ESP32-S3, Si7020); RC filter on EN net misidentified as low-pass with +...
 

@@ -1,4 +1,4 @@
-# Findings: NodeOven-kicad-design / NodeOven
+# Findings: Hans-Beerman/NodeOven-kicad-design / NodeOven
 
 ## FND-00000988: Q1/Q2/Q3 NPN transistor circuits show collector_net=GND which is topologically backward for NPN switch; Relay K1 (SANYOU SRD Form C) and flyback diodes D1/D2 (1N4004) correctly identified; No relay...
 

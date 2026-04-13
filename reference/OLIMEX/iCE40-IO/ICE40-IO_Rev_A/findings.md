@@ -1,4 +1,4 @@
-# Findings: iCE40-IO / ICE40-IO_Rev_A
+# Findings: OLIMEX/iCE40-IO / ICE40-IO_Rev_A
 
 ## FND-00002146: VGA15-F connector (VGA1) misclassified as 'varistor' component type; VGA video output interface not detected despite 9 VGA signal nets and R-2R DAC resistor networks; UART detection reports IrDA_Tx...
 

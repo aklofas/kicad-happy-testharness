@@ -1,4 +1,4 @@
-# Findings: Biploar-power-supply-KiCAD / Bipolar power supply
+# Findings: jvedder/Biploar-power-supply-KiCAD / Bipolar power supply
 
 ## FND-00000391: LM337 feedback voltage divider (R21/R22) not detected; ADJ_P/ADJ_N detected as a differential pair; IN_P/IN_N detected as a differential pair; AC rectifier/dual half-wave rectifier topology not det...
 

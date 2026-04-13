@@ -1,4 +1,4 @@
-# Findings: car_usb_power_adapter / car_usb_power_adapter
+# Findings: polemon/car_usb_power_adapter / car_usb_power_adapter
 
 ## FND-00002314: MC34063AD buck regulator topology reported as 'unknown' instead of 'buck'; False positive RC low-pass filter: R4+C3 is feedback resistor plus output cap, not a signal filter; R3 (0.22Ω) on MC34063 ...
 

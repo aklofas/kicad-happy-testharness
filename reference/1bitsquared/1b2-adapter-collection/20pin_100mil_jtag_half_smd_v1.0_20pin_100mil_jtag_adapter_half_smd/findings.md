@@ -1,4 +1,4 @@
-# Findings: 1b2-adapter-collection / 20pin_100mil_jtag_half_smd_v1.0_20pin_100mil_jtag_adapter_half_smd
+# Findings: 1bitsquared/1b2-adapter-collection / 20pin_100mil_jtag_half_smd_v1.0_20pin_100mil_jtag_adapter_half_smd
 
 ## FND-00000312: X1 (DNP JTAG-10) missing from missing_mpn list despite having no standard MPN field; No design_observation for JTAG/SWD debug interface adapter detected; ERC no_driver warning for VREF net is a fal...
 

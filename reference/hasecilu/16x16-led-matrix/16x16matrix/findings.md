@@ -1,4 +1,4 @@
-# Findings: 16x16-led-matrix / 16x16matrix
+# Findings: hasecilu/16x16-led-matrix / 16x16matrix
 
 ## FND-00000310: SPI bus not detected for MAX7219 interface; MAX7219 LED driver not detected as addressable_led_chain or LED driver subcircuit; PWR_FLAG warnings incorrectly fire despite PWR_FLAG symbols being pres...
 

@@ -1,4 +1,4 @@
-# Findings: kicad-parts-placer / example_example-placement_example-placement
+# Findings: snhobbs/kicad-parts-placer / example_example-placement
 
 ## FND-00002198: Test point components classified as 'test_point' type but use Conn_01x01_Male lib_id — while classification is defensible, pin extraction for J1 (Conn_01x20) yields no pins; Differential pairs RX+/...
 

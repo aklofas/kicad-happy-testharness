@@ -1,4 +1,4 @@
-# Findings: SparkFun_Qwiic_Fingerprint_Sensor_FPC2534 / Hardware_Production_SparkFun_Qwiic_Fingerprint_Sensor_FPC2534_panelized
+# Findings: sparkfun/SparkFun_Qwiic_Fingerprint_Sensor_FPC2534 / Hardware_Production_SparkFun_Qwiic_Fingerprint_Sensor_FPC2534_panelized
 
 ## FND-00001449: Total component count of 45 is correct; Component type breakdown is accurate; LDO regulator U2 (RT9080-3.3) correctly detected; Decoupling capacitors on 3.3V and VBUS rails correctly identified; I2...
 

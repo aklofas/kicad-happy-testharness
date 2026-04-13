@@ -1,4 +1,4 @@
-# Findings: ALTIMET02 / hw_sch_pcb_ALTIMET02
+# Findings: mlab-modules/ALTIMET02 / hw_sch_pcb_ALTIMET02
 
 ## FND-00000338: I2C bus not detected despite explicit SDA/SCL signals and 5.1k pull-up resistors; Zener diode ESD/overvoltage protection on VDD not detected; SPI bus detected as half_duplex with only 2 signals, mi...
 

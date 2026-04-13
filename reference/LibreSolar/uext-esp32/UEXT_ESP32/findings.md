@@ -1,4 +1,4 @@
-# Findings: uext-esp32 / UEXT_ESP32
+# Findings: LibreSolar/uext-esp32 / UEXT_ESP32
 
 ## FND-00000142: Very simple UEXT expansion board with ESP32-WROOM-32D (10 components). Minimal but mostly correct analysis. False positive SPI bus detection from UEXT connector pin names. Auto-program transistors correctly detected.
 

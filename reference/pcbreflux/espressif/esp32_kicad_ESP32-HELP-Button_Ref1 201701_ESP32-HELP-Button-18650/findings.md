@@ -1,4 +1,4 @@
-# Findings: espressif / esp32_kicad_ESP32-HELP-Button_Ref1 201701_ESP32-HELP-Button-18650
+# Findings: pcbreflux/espressif / esp32_kicad_ESP32-HELP-Button_Ref1 201701_ESP32-HELP-Button-18650
 
 ## FND-00002082: I2C SCL bus analysis shows only U3 connected, missing U2, U4, U5; INA219 current sense IC not detected in current_sense section; I2C bus correctly detected on SDA with all four devices and pull-up ...
 

@@ -1,4 +1,4 @@
-# Findings: eurorack-pmod / hardware_eurorack-pmod-r3.5_eurorack-pmod-pcb
+# Findings: apfaudio/eurorack-pmod / hardware_eurorack-pmod-r3.5_eurorack-pmod-pcb
 
 ## FND-00000261: Eurorack FPGA audio PMOD interface r3.5 (153 components). MMBFJ111 JFETs misclassified as MOSFET. 14/15 RC filters are opamp feedback pairs, not standalone filters. Voltage dividers are actually opamp feedback networks.
 

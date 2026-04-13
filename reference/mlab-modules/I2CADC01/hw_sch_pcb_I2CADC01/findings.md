@@ -1,4 +1,4 @@
-# Findings: I2CADC01 / hw_sch_pcb_I2CADC01
+# Findings: mlab-modules/I2CADC01 / hw_sch_pcb_I2CADC01
 
 ## FND-00000597: LTC2485 falsely identified as RS485 transceiver; LM4041-adj voltage reference (D4) misclassified as diode; R3+C8 reported as RC low-pass filter but is a voltage reference bypass network; I2C bus co...
 

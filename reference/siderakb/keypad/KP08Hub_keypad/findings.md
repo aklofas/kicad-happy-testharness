@@ -1,4 +1,4 @@
-# Findings: keypad / KP08Hub_keypad_KP08Hub_keypad
+# Findings: siderakb/keypad / KP08Hub_keypad
 
 ## FND-00000244: USB hub (23 components). Incorrect regulator topology: U3 (CY7C65642 USB hub IC) VREG pin classified as LDO output but it is actually a reference input pin.
 

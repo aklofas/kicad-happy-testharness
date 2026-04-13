@@ -28,7 +28,11 @@
       "incorrect": [
         {
           "description": "AP63357 buck converter Vref reported as 0.6V but datasheet specifies 0.765V reference",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -37,9 +41,14 @@
           "analyzer_section": "signal_analysis.bus_interfaces",
           "check": {
             "path": "signal_analysis.bus_interfaces",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "equals",
+            "value": 128
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 128
         }
       ],
       "suggestions": [
@@ -87,7 +96,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB-C compliance with 5.1k CC pulldowns pass",
@@ -105,13 +120,23 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [
+            "D4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
         {
           "description": "AP63357 output voltage calculated as 3.873V using wrong Vref=0.6V (correct Vref=0.765V gives 4.94V matching 5V rail)",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Bus signal widths inflated: QSPI_D width=12 (actual 4), IMU_INT width=4 (actual 2)",
@@ -126,7 +151,11 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SPI interface to RM2 radio module not detected",

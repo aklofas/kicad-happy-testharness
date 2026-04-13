@@ -1,4 +1,4 @@
-# Findings: PCIe_x8_Breakout / PCIe_x8_Breakout
+# Findings: mwrnd/PCIe_x8_Breakout / PCIe_x8_Breakout
 
 ## FND-00001072: 35 U.FL coaxial connectors incorrectly classified as 'uart' debug connectors; PCIe x8 edge connector (J1) misclassified as 'jtag' debug connector; Component counts, test point detection, power rail...
 

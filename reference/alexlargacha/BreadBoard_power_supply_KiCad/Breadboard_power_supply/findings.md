@@ -1,4 +1,4 @@
-# Findings: BreadBoard_power_supply_KiCad / Breadboard_power_supply
+# Findings: alexlargacha/BreadBoard_power_supply_KiCad / Breadboard_power_supply
 
 ## FND-00000388: Bridge rectifier formed by D1/D2/D3/D4 not detected; R1/C1 falsely detected as RC filter; R1 is the LED current-limiter for D5; design_observations incorrectly reports U1 input (Vin) and output (Vo...
 

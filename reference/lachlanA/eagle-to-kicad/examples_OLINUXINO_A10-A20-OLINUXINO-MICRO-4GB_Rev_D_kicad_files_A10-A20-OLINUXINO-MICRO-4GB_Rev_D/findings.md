@@ -1,4 +1,4 @@
-# Findings: eagle-to-kicad / examples_OLINUXINO_A10-A20-OLINUXINO-MICRO-4GB_Rev_D_kicad_files_A10-A20-OLINUXINO-MICRO-4GB_Rev_D
+# Findings: lachlanA/eagle-to-kicad / examples_OLINUXINO_A10-A20-OLINUXINO-MICRO-4GB_Rev_D_kicad_files_A10-A20-OLINUXINO-MICRO-4GB_Rev_D
 
 ## FND-00002031: 
 

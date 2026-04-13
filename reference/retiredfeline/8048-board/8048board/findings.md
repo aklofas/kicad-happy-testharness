@@ -1,4 +1,4 @@
-# Findings: 8048-board / 8048board
+# Findings: retiredfeline/8048-board / 8048board
 
 ## FND-00000324: Decoupling analysis undercounts bypass caps: C1, C3, C9 excluded from +5V decoupling; has_bulk=false incorrectly: C9 (1µF electrolytic) is a bulk capacitor on +5V; Memory interface not detected: 80...
 

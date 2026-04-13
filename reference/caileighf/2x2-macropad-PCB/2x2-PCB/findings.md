@@ -1,4 +1,4 @@
-# Findings: 2x2-macropad-PCB / 2x2-PCB
+# Findings: caileighf/2x2-macropad-PCB / 2x2-PCB
 
 ## FND-00000315: Key matrix estimated_keys and switches_on_matrix report 7 instead of 4; Key matrix estimated_keys reports 7 instead of 4; ERC no_driver warnings for D+/D- are false positives caused by broken net c...
 

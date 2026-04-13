@@ -1,4 +1,4 @@
-# Findings: USB_Dongle_KiCad / USB_Dongle_KiCad
+# Findings: 2sayle/USB_Dongle_KiCad / USB_Dongle_KiCad
 
 ## FND-00001759: Total component count correct at 56; Crystal Y2 (24 MHz) detected with correct load caps; LDO and MCU internal regulator both detected as power regulators; USB-C connector J1 compliance checks perf...
 

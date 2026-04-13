@@ -1,4 +1,4 @@
-# Findings: ecg_teaching_board / ECG Learning Board
+# Findings: emptydave/ecg_teaching_board / ECG Learning Board
 
 ## FND-00002028: 
 

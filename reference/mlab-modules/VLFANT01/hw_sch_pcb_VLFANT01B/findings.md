@@ -1,4 +1,4 @@
-# Findings: VLFANT01 / hw_sch_pcb_VLFANT01B
+# Findings: mlab-modules/VLFANT01 / hw_sch_pcb_VLFANT01B
 
 ## FND-00001790: Component count correct: 9 total (5 connectors + 4 mounting holes); Mounting holes M1-M4 classified as 'other' instead of 'mounting_hole'; No signal detectors triggered for passive antenna intercon...
 

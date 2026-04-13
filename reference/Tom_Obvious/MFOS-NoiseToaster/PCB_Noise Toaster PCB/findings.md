@@ -1,4 +1,4 @@
-# Findings: MFOS-NoiseToaster / PCB_Noise Toaster PCB
+# Findings: Tom_Obvious/MFOS-NoiseToaster / PCB_Noise Toaster PCB
 
 ## FND-00000849: B+ and B- misidentified as differential signal pair; B+ and B- not detected as power rails despite being the only supply nets in sub-sheets
 

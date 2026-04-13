@@ -1,4 +1,4 @@
-# Findings: LAEMP-Prism / laemp_wall_laemp_wall
+# Findings: Jana-Marie/LAEMP-Prism / laemp_wall
 
 ## FND-00000209: LED wall panel with 41 SK6812 addressable LEDs and per-LED 100nF decoupling capacitors, powered from VBUS via 6-pin connector. The analyzer correctly identifies all components but fails to detect the LED daisy-chain due to missing pin-net mapping in legacy .sch parsing.
 

@@ -1,4 +1,4 @@
-# Findings: glasgow / hardware_boards_glasgow_glasgow
+# Findings: GlasgowEmbedded/glasgow / hardware_boards_glasgow
 
 ## FND-00000001: current_sense detector produces 68 false positives in glasgow.kicad_sch by pairing R49 (0.15 ohm shunt) with every IC sharing GND net
 

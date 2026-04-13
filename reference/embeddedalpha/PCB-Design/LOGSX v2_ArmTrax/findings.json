@@ -23,7 +23,21 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "C46",
+            "C47",
+            "C7",
+            "C8",
+            "Y1",
+            "Y2",
+            "Y3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "LC filter L3/C21 at 205 MHz and L6/C37 at 129 MHz correctly detected in radio section - plausible for sub-GHz RF matching",
@@ -33,7 +47,16 @@
             "op": "contains_match",
             "field": "inductor.ref",
             "pattern": "^L3$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "C21",
+            "C37",
+            "L3",
+            "L6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus detection for SCL/SDA nets with pullups R2/R3 to +3.3V on accelerometer U9 (STM32F103) is correct",
@@ -42,7 +65,15 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "R2",
+            "R3",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Ferrite beads FB1, FB2 correctly classified as ferrite_bead type",
@@ -61,7 +92,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R9$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C22",
+            "R9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -73,7 +111,18 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "C17",
+            "D1",
+            "D3",
+            "FB1",
+            "L1",
+            "U2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter R7/C19 at 7.23 MHz: R7 (1K) is a charging LED current-limiting resistor in the MCP73113 circuit, not part of an RC filter with C19 (22pF load cap for the crystal). These are on different nets in the Power sheet",
@@ -83,7 +132,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R7$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C19",
+            "R7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter R4/C19 at 14.47 MHz and R4/C16 at 318 kHz: R4 (500 ohm) is an ADC voltage divider resistor, not connected to C19 or C16 in a filter topology",
@@ -93,7 +149,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R4$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C16",
+            "C19",
+            "R4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "L3 value incorrectly parsed as '5nF' (henries=5e-09). L3 is an inductor with value 5nF in the schematic - this is likely a mislabeled component in the source, but the analyzer should not treat nF as henries",
@@ -103,7 +167,13 @@
             "op": "not_contains_match",
             "field": "inductor.ref",
             "pattern": "^L3$"
-          }
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "L3"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

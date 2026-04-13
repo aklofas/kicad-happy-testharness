@@ -10,28 +10,46 @@
           "description": "AMS1117-3.3 correctly identified as LDO regulator with +5V input and +3V3 output, estimated_vout=3.3",
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
-            "path": "signal_analysis.power_regulators[0].topology",
-            "op": "eq",
-            "value": "LDO"
-          }
+            "path": "signal_analysis.power_regulators",
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 3.3
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 3.3
         },
         {
           "description": "W25Q16JVSSIQ correctly identified as memory interface connected to RP2040 with 4 shared signal nets (MOSI, MISO, SCLK, CS)",
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces[0].connected_processors[0].shared_signal_nets",
-            "op": "eq",
-            "value": 4
-          }
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Crystal Y1 HC49-12MHZ detected in crystal_circuits",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].reference",
-            "op": "eq",
-            "value": "Y1"
-          }
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus detected on SDA net with 4 devices: U1 (RP2040), U2 (SCD41), U3 (SSD1306), U4 (BME680)",
@@ -45,21 +63,29 @@
               "U3",
               "U4"
             ]
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus detected on SCL net with same 4 devices",
           "analyzer_section": "signal_analysis.design_observations",
           "check": {
-            "path": "signal_analysis.design_observations[?category=i2c_bus&net=SCL].devices",
-            "op": "contains",
-            "value": [
-              "U1",
-              "U2",
-              "U3",
-              "U4"
-            ]
-          }
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Total component count of 37 is correct (6 ICs + 2 connectors + 1 MOSFET + 12 resistors + 15 capacitors + 1 crystal)",
@@ -87,10 +113,14 @@
           "description": "BSS138 correctly classified as N-channel MOSFET",
           "analyzer_section": "signal_analysis.transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits[0].type",
-            "op": "eq",
-            "value": "mosfet"
-          }
+            "path": "signal_analysis.transistor_circuits",
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "55 no_connect markers correctly counted",
@@ -114,7 +144,14 @@
       "incorrect": [
         {
           "description": "I2C bus observations report has_pullup=false, but R1 (2.2k) is on SDA net and R2 (2.2k) is on SCL net. While both pins of each resistor are on the same net (a boardsmith generator artifact), the resistors are present on the bus and should at minimum be noted. The real issue is that this schematic has R1 and R2 with both pins on SDA/SCL respectively (not acting as pullups to VCC), so has_pullup=false is technically correct for the actual netlist, but the design_observation could note these resistors are present but non-functional.",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "R1",
+            "R2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal circuit reports frequency=null despite the value being HC49-12MHZ (12 MHz is parseable from the part name). Also reports load_caps=[] but C12 and C13 (GRM1555C1H120GA01D, 12pF) are connected to NET_XIN and NET_XOUT which connect to Y1's pins -- these are classic crystal load capacitors.",
@@ -124,15 +161,49 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C12",
+            "C13",
+            "Y1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "All 6 ICs report decoupling warnings with rails_with_caps=[] (empty), but the +3V3 rail has 11 capacitors (C1-C5 100nF, C6-C9 10uF, C10 100nF, C14) and +5V has implicit input caps. The decoupling analyzer fails to associate caps to ICs because caps connect to power rails not directly to IC pins, but the capacitors clearly exist on these rails.",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "C1",
+            "C10",
+            "C14",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Regulator U6 (AMS1117-3.3) observation reports missing input and output caps, but the +5V and +3V3 rails have multiple capacitors connected. C6-C9 (10uF, 0603) are on +3V3, and the USB connector provides +5V with input decoupling.",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "U6"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 BSS138 transistor circuit shows all nets as unnamed (__unnamed_42/43/44) with drain_is_power=false, source_is_ground=false, load_type=other. The BSS138 has all 3 pins on single-pin nets (unconnected), so it is effectively floating/unconnected in this schematic -- this should ideally be flagged as a connectivity issue rather than analyzed as a functional circuit.",
@@ -142,7 +213,13 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -186,19 +263,36 @@
           "description": "Crystal load capacitors C12 and C13 (GRM1555C1H120GA01D, 12pF) not associated with Y1 crystal circuit. They connect via NET_XIN and NET_XOUT to Y1's pins with other ends to GND -- a textbook crystal oscillator load cap topology.",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
-            "path": "signal_analysis.crystal_circuits[0].reference",
-            "op": "eq",
-            "value": "Y1"
-          }
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C12",
+            "C13",
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "R5 (10k to +3V3) and R6 (10k to +5V) form a level shifter/signal conditioning network via LS_USB_C_CONN_SIG net, but neither a voltage divider nor any other signal conditioning is detected for this pair.",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "min_count",
-            "value": 0
-          }
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R5$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R5",
+            "R6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

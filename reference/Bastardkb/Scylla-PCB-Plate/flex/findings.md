@@ -1,4 +1,4 @@
-# Findings: Scylla-PCB-Plate / flex_flex
+# Findings: Bastardkb/Scylla-PCB-Plate / flex
 
 ## FND-00001401: Key matrix correctly detected as 5x6 with 24 switches and 12 dual-diode packages; Addressable LED chain detection produces 3 overlapping chains instead of recognizing the branching parallel topolog...
 

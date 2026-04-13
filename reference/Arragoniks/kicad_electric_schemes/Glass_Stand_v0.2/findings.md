@@ -1,4 +1,4 @@
-# Findings: kicad_electric_schemes / Glass_Stand_v0.2_Glass_Stand_v0.2
+# Findings: Arragoniks/kicad_electric_schemes / Glass_Stand_v0.2
 
 ## FND-00002357: total_components reports 12 but 42 components are present in the components list
 

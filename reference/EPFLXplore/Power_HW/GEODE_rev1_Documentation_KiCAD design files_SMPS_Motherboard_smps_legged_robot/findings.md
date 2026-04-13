@@ -1,4 +1,4 @@
-# Findings: Power_HW / GEODE_rev1_Documentation_KiCAD design files_SMPS_Motherboard_smps_legged_robot
+# Findings: EPFLXplore/Power_HW / GEODE_rev1_Documentation_KiCAD design files_SMPS_Motherboard_smps_legged_robot
 
 ## FND-00002502: Top-level architecture sheet for a multi-rail SMPS motherboard powering a legged robot, orchestrating battery precharge, dual power modules, MCU, CAN/Ethernet communication, and auxiliary local generation across 15 sub-sheets. The analyzer correctly identifies the three switching regulators, CAN/Ethernet differential pairs, TVS and ESD protection, and bus topology, but produces one false positive and one missed detection in signal classification.
 

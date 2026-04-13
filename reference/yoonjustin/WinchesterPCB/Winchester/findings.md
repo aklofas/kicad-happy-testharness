@@ -1,4 +1,4 @@
-# Findings: WinchesterPCB / Winchester
+# Findings: yoonjustin/WinchesterPCB / Winchester
 
 ## FND-00001969: Component counts and power rail detection are accurate; USB differential pair DP/DM correctly detected; Crystal Y1 detected in signal_analysis; LM1881 (video sync separator IC) misclassified as 'in...
 

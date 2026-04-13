@@ -55,7 +55,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U13$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U13"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "TPS62A02 (U5) detected as switching regulator but missing estimated_vout - the feedback network for FB_DCDC was not linked to the regulator",
@@ -65,7 +71,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U5$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal oscillator RC filters (R87 1M with C113/C114 27pF, fc=5.9kHz) misidentified as generic low-pass filters - these are actually crystal load capacitor bias resistors for the 40MHz crystal",
@@ -75,7 +87,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R87$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C113",
+            "C114",
+            "R87"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter R13 10M with C1/C2 22pF classified as 723Hz low-pass but this is the crystal feedback resistor for the main oscillator",
@@ -85,7 +105,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R13$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "R13"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -124,7 +152,13 @@
             "op": "contains_match",
             "field": "memory_reference",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No crystal circuits detected despite ESP32-P4 having external crystal oscillator with 22pF load caps (C1/C2) and 10M feedback resistor (R13)",
@@ -133,8 +167,17 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^P4$"
-          }
+            "pattern": "^C1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C1",
+            "C2",
+            "P4",
+            "R13"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MIPI-DSI differential pairs (to LT8912B) not detected",
@@ -170,8 +213,16 @@
             "path": "signal_analysis.protection_devices",
             "op": "contains_match",
             "field": "ref",
-            "pattern": "^U9$"
-          }
+            "pattern": "^U10$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "U10",
+            "U11",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "TP4054 battery charger (U15) not identified as charger subcircuit",

@@ -1,4 +1,4 @@
-# Findings: bat-detector-pcb / bat-detector
+# Findings: tok/bat-detector-pcb / bat-detector
 
 ## FND-00001963: MK1 (Microphone_Ultrasound) classified as 'fiducial' instead of 'microphone'; opamp_circuits is empty despite two TL072 op-amp units (U2) being present; RC filters correctly detected with 7 entries...
 

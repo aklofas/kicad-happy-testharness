@@ -1,4 +1,4 @@
-# Findings: SFH203_photodetector / KiCad_SFH203_photodetector
+# Findings: TU-Darmstadt-APQ/SFH203_photodetector / KiCad_SFH203_photodetector
 
 ## FND-00001288: Edge.Cuts counted as a copper layer, inflating copper_layers_used to 3
 

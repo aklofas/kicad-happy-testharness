@@ -1,4 +1,4 @@
-# Findings: diode-rom / diode-rom-16_diode-rom-16
+# Findings: interrupt_tv/diode-rom / diode-rom-16
 
 ## FND-00002329: bus_topology 'width' field reports bus entry count (84 total) instead of signal count per bus; False positive pwr_flag_warnings: PWR_FLAG symbols are present but analyzer fails to resolve their net...
 

@@ -40,7 +40,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "BL4054B LiPo charger not detected - charging circuit analysis missing",
@@ -59,7 +63,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^C3$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No decoupling analysis despite 7 capacitors present",
@@ -68,7 +78,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB CC resistors (R4/R2 5.1k) not identified for USB-C current advertisement",
@@ -77,7 +91,14 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "R2",
+            "R4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "WPM2015-3 P-MOSFET power path switch not detected",
@@ -86,7 +107,11 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

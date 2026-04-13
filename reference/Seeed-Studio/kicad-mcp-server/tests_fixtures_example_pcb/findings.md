@@ -1,4 +1,4 @@
-# Findings: kicad-mcp-server / tests_fixtures_example_pcb
+# Findings: Seeed-Studio/kicad-mcp-server / tests_fixtures_example_pcb
 
 ## FND-00002194: dnp_parts counter reports 0 despite R3 having dnp=yes in source; I2C bus not detected despite SCL and SDA named nets present
 

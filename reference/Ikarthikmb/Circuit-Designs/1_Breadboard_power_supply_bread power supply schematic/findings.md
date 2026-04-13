@@ -1,4 +1,4 @@
-# Findings: Circuit-Designs / 1_Breadboard_power_supply_bread power supply schematic
+# Findings: Ikarthikmb/Circuit-Designs / 1_Breadboard_power_supply_bread power supply schematic
 
 ## FND-00000428: Bridge rectifier formed by D1/D2/D3/D4 not detected; design_observations incorrectly reports Vin and Vout1 have no decoupling capacitors; Net 'V-' (negative power rail / GND return) classified as '...
 

@@ -1,4 +1,4 @@
-# Findings: GTAG / project_gtag
+# Findings: JonathSpirit/GTAG / project_gtag
 
 ## FND-00000572: Component count, types, nets, and BOM all accurate for KiCad 5 legacy format; RC filter detection is topologically valid for the dual-resistor shared-cap network
 

@@ -14,7 +14,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U7$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Y1 12MHz crystal with C5=15pF and C2=15pF load caps correctly detected, effective load 10.5pF",
@@ -24,7 +30,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C2",
+            "C5",
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D1 and D3 DT1042-04SO correctly identified as USB ESD protection on USB_D+/USB_D- and XBLR_USB_D+/XBLR_USB_D- lines",
@@ -34,7 +48,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D1",
+            "D3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 DMG2305UX correctly identified as P-channel MOSFET power switch controlled by gate on __unnamed_34",
@@ -44,7 +65,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "WS2812B_CBI (D4) addressable LED chain correctly detected on LED_IN net",
@@ -53,7 +80,13 @@
             "path": "signal_analysis.addressable_led_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "addressable_led_chains",
+          "subject_refs": [
+            "D4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D2 BAT20J correctly classified as diode (Schottky for reverse polarity protection)",
@@ -71,7 +104,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "U1 RP2350A, U2 W25Q128JVPIM, U3 APS6404L-3SQR-ZR, U4 XBLR (XBee LR), U5 CH340C all correctly classified as ICs",
@@ -89,7 +126,13 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [],
@@ -102,7 +145,13 @@
             "op": "contains_match",
             "field": "bms_reference",
             "pattern": "^U8$"
-          }
+          },
+          "detector": "bms_systems",
+          "subject_refs": [
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MAX17048 (U9) I2C fuel gauge for battery monitoring not detected",
@@ -112,16 +161,30 @@
             "op": "contains_match",
             "field": "bms_reference",
             "pattern": "^U9$"
-          }
+          },
+          "detector": "bms_systems",
+          "subject_refs": [
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus on SDA/SCL connecting U1 (RP2350A) and U9 (MAX17048) with pull-up jumper JP7 not detected as bus interface",
           "analyzer_section": "signal_analysis.bus_interfaces",
           "check": {
             "path": "signal_analysis.bus_interfaces",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "equals",
+            "value": 7
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [
+            "U1",
+            "U9"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 7
         },
         {
           "description": "QSPI flash interface (U2 W25Q128JVPIM) and QSPI PSRAM interface (U3 APS6404L-3SQR-ZR) not detected as memory buses",
@@ -131,7 +194,14 @@
             "op": "contains_match",
             "field": "memory_reference",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U2",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Dual USB-C interfaces with CH340C (U5) USB-UART bridge for both RP2350 and XBLR module not detected as USB buses",
@@ -140,7 +210,13 @@
             "path": "signal_analysis.bus_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "XBee LR LoRaWAN module (U4) not detected as RF/radio component despite being a LoRaWAN transceiver",
@@ -149,7 +225,13 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

@@ -1,4 +1,4 @@
-# Findings: esphome-xiao-base / pcb_pcb
+# Findings: 0rax/esphome-xiao-base / pcb
 
 ## FND-00002060: test_coverage reports SDA, SCL, SPI, UART, and power nets as uncovered even though they are all exposed by J2 (a 2x6 debug breakout connector); J2 debug connector classified solely as 'uart' interf...
 

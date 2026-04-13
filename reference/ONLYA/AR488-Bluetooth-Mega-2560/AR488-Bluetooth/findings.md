@@ -1,4 +1,4 @@
-# Findings: AR488-Bluetooth-Mega-2560 / AR488-Bluetooth
+# Findings: ONLYA/AR488-Bluetooth-Mega-2560 / AR488-Bluetooth
 
 ## FND-00000344: Boost regulator U4 (XC9141B50CMR-G) missing input_rail in power_regulators entry; U3 (Level_Shifter) not detected as a level-shifter interface — only classified as generic IC; U5 (MCP65R41T-1202E c...
 

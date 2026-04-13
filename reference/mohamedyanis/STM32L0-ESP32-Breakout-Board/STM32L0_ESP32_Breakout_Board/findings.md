@@ -1,4 +1,4 @@
-# Findings: STM32L0-ESP32-Breakout-Board / STM32L0_ESP32_Breakout_Board
+# Findings: mohamedyanis/STM32L0-ESP32-Breakout-Board / STM32L0_ESP32_Breakout_Board
 
 ## FND-00001309: Crystal circuit correctly detected with correct load cap matching; PWR_FLAG warnings correctly raised for +3.3VA and GND rails; Power budget correctly estimates ~250mA for +3.3V rail (ESP32 + STM32...
 

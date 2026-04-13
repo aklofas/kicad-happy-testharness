@@ -1,4 +1,4 @@
-# Findings: NaturalKeyboard / NaturalKeyboard
+# Findings: cyberknet/NaturalKeyboard / NaturalKeyboard
 
 ## FND-00000986: ATmega32U4 keyboard correctly detected with crystal, RC filters, decoupling, and key matrix; Key matrix detects 95 switches on matrix but design has 109 keyboard switches
 

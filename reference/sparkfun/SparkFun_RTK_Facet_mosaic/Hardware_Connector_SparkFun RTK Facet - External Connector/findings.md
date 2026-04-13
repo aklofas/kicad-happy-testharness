@@ -1,4 +1,4 @@
-# Findings: SparkFun_RTK_Facet_mosaic / Hardware_Connector_SparkFun RTK Facet - External Connector
+# Findings: sparkfun/SparkFun_RTK_Facet_mosaic / Hardware_Connector_SparkFun RTK Facet - External Connector
 
 ## FND-00001532: Component counts, BOM, and power rail detection are accurate; Three LDO regulators correctly detected with correct topologies and rails; Crystal Y1 (24MHz) detected with correct load capacitor calc...
 

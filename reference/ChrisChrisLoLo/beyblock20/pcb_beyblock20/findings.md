@@ -1,4 +1,4 @@
-# Findings: beyblock20 / pcb_beyblock20_beyblock20
+# Findings: ChrisChrisLoLo/beyblock20 / pcb_beyblock20
 
 ## FND-00001952: 4x5 keyboard matrix correctly detected with 20 switches and 20 diodes; I2C bus detected with pullups for OLED display; TRRS connectors (U2, U3) classified as 'ic' type instead of 'connector'; Missi...
 

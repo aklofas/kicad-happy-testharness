@@ -1,4 +1,4 @@
-# Findings: vaucasy / vaucasy_left_vaucasy_left
+# Findings: engemkeres/vaucasy / vaucasy_left
 
 ## FND-00000239: Keyboard (108 components). All detections verified correct: 31-key matrix, 2 regulators, 5 protection devices, 2 RC filters, 1 crystal. No issues.
 

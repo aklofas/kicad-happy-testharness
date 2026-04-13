@@ -1,4 +1,4 @@
-# Findings: MechKeyboard / keyboard_pcb
+# Findings: AlexanderMandera/MechKeyboard / keyboard_pcb
 
 ## FND-00000944: I2C pull-up resistors R1/R2 not detected — has_pullup false despite R1(SDA-3V3) and R2(SCL-3V3) present; Key matrix correctly detected: 6 rows, 21 columns, 105 keys/switches/diodes; USB data lines ...
 

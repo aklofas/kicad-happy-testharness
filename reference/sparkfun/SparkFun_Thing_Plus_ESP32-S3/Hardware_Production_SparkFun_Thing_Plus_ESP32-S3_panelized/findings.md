@@ -1,4 +1,4 @@
-# Findings: SparkFun_Thing_Plus_ESP32-S3 / Hardware_Production_SparkFun_Thing_Plus_ESP32-S3_panelized
+# Findings: sparkfun/SparkFun_Thing_Plus_ESP32-S3 / Hardware_Production_SparkFun_Thing_Plus_ESP32-S3_panelized
 
 ## FND-00001571: ESD protection device U2 (DT1042-04SO) not detected in signal_analysis.protection_devices; LDO regulators U6 and U1 (RT9080-3.3) correctly detected with topology and output rails; WS2812B addressab...
 

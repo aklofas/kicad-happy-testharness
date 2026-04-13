@@ -1,4 +1,4 @@
-# Findings: 3320VCF / vcf1
+# Findings: hermflink/3320VCF / vcf1
 
 ## FND-00000317: opamp_circuits=0 despite TL074 (U1, 4 units) and TL072 (U2, 2 units) forming multiple op-amp stages; feedback_networks=0 despite multiple op-amp feedback resistor networks present; U2 (TL072) missi...
 

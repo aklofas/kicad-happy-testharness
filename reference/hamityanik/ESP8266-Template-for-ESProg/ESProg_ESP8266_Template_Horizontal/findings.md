@@ -1,4 +1,4 @@
-# Findings: ESP8266-Template-for-ESProg / ESProg_ESP8266_Template_Horizontal
+# Findings: hamityanik/ESP8266-Template-for-ESProg / ESProg_ESP8266_Template_Horizontal
 
 ## FND-00000505: Net 'RXD' incorrectly contains U1 GPIO15 (pin 16) and P1 pin 3 (VCC); should contain U1 GPIO3/RXD (pin 21) and P1 pin 4 (RXD); Net '+3V3' incorrectly contains U1 MOSI (pin 13) and P1 pin 4 (RXD); b...
 

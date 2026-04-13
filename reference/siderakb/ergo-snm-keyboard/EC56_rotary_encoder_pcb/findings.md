@@ -1,4 +1,4 @@
-# Findings: ergo-snm-keyboard / EC56_rotary_encoder_pcb_EC56_rotary_encoder_pcb
+# Findings: siderakb/ergo-snm-keyboard / EC56_rotary_encoder_pcb
 
 ## FND-00002185: Bus width counts label instances instead of unique signal names, systematically overcounting; Key matrix correctly detected in rev1 flat schematic (5 rows x 7 cols, 35 keys with 35 diodes)
 

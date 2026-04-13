@@ -1,4 +1,4 @@
-# Findings: Kicad-designs / learning project 2
+# Findings: Naooye/Kicad-designs / learning project 2
 
 ## FND-00000796: I2C bus detected on A4/A5 (SDA/SCL) connecting Arduino Nano to MAX30102 and SSD1306; Schematic/PCB reference mismatch not flagged: schematic uses SW1/SW2/SW3 but PCB uses UP/DOWN/MENU; 14 component...
 

@@ -1,4 +1,4 @@
-# Findings: GateMateA1-EVB / HARDWARE_GateMateA1-EVB-Rev.A_GateMateA1-EVB_Rev_A
+# Findings: OLIMEX/GateMateA1-EVB / HARDWARE_GateMateA1-EVB-Rev.A_GateMateA1-EVB_Rev_A
 
 ## FND-00000596: Component classification correct across all categories; 5 TPS62A02A switching regulators correctly detected with proper inductor associations; Memory interface correctly detected: LY68S3200SLT SPI ...
 

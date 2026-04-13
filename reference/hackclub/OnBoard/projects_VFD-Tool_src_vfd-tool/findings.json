@@ -37,10 +37,19 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "not_contains_match",
-            "field": "ref",
-            "pattern": "^U7$"
-          }
+            "op": "field_equals",
+            "field": "vout",
+            "value": 2.58
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U7",
+            "U8"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "vout",
+          "expected_value": 2.58
         },
         {
           "description": "TPS54331DR U10 has no estimated Vout despite likely having feedback divider",
@@ -50,7 +59,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U10$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U10"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "BOM sum (171) does not match total_components (174) \u2014 3 missing, test_points=4 but test_points appear in BOM for other projects",
@@ -74,7 +89,11 @@
             "path": "signal_analysis.current_sense",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

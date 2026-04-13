@@ -1,4 +1,4 @@
-# Findings: CyberKeeb2040 / PCB_MainBoard_MainBoard
+# Findings: zli117/CyberKeeb2040 / PCB_MainBoard
 
 ## FND-00000445: Component counts are correct across both sheets: 166 total, 84 diodes, 69 switches, 5 resistors, 2 capacitors, 5 connectors, 1 IC; U1 correctly identified as Raspberry Pi Pico (MCU_RaspberryPi_and_...
 

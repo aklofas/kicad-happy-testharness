@@ -1,4 +1,4 @@
-# Findings: ErgoTravel / ExternalPCBCase_BottomPlate_Bottom Plate
+# Findings: jpconstantineau/ErgoTravel / ExternalPCBCase_BottomPlate_Bottom Plate
 
 ## FND-00000546: KEYSW keyboard switches misclassified as 'relay' (28 instances); key_matrices reports switches_on_matrix=0 due to relay misclassification; I2C SCL net incorrectly mapped to ProMicro pin 15 (GND), S...
 

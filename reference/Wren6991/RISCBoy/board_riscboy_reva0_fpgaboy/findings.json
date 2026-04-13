@@ -14,27 +14,49 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U5$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage divider R17/R18 (450k/100k) at ratio 0.182 correctly detected as feedback divider for NCP1532 SW2 output (3.3V rail)",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R17$"
-          }
+            "op": "equals",
+            "value": 182
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R17",
+            "R18",
+            "SW2"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 182
         },
         {
           "description": "Voltage divider R19/R20 (100k/100k) at ratio 0.5 correctly detected as feedback divider for NCP1532 SW1 output (1.2V rail)",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R19$"
-          }
+            "op": "equals",
+            "value": 5
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R19",
+            "R20",
+            "SW1"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 5
         },
         {
           "description": "Audio voltage divider R15/R14 (680/220) at ratio 0.244 on AUDIO_PWM net feeding P4 headphone jack is correct",
@@ -43,8 +65,16 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R15$"
-          }
+            "pattern": "^R14$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "P4",
+            "R14",
+            "R15"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "ESD protection D3, D4 (DF2B7AFS) on USB_DP and USB_DM correctly detected, plus D5 on +5V rail",
@@ -54,7 +84,15 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D3$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D3",
+            "D4",
+            "D5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC-networks R8/C5 and R7/C3 at ~16 kHz on +1V2 rail correctly detected as PLL supply filters",
@@ -63,8 +101,17 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R8$"
-          }
+            "pattern": "^R7$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C3",
+            "C5",
+            "R7",
+            "R8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "DSC60XX (U2) correctly identified as active oscillator",
@@ -74,7 +121,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U2$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB data nets USB_DP/USB_DM correctly flagged with ESD protection present (D3/D4)",
@@ -83,7 +136,14 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "D3",
+            "D4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling coverage across 4 rails (+BATT, +5V, +3V3, +1V2) correctly tallied",
@@ -92,21 +152,48 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
         {
           "description": "Single-pin nets reports 38 nets, but many are SRAM address/data bus signals (SRAM_A13, SRAM_~WE, etc.) which connect U1 (iCE40) to U3 (GS74116) across hierarchical sheets. These are legitimate multi-pin nets that appear single-pin due to cross-sheet connectivity parsing issues",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U1",
+            "U3"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "NCP1532 regulator detected with input_rail=PWR_EN, but PWR_EN is actually the enable control signal, not the power input. The actual input is +BATT",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 1532,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "equals",
+            "value": 1532
+          }
         },
         {
           "description": "Decoupling observations repeatedly flag U8 (74LVC2G04) as missing caps on PWR_EN rail. PWR_EN is a logic signal, not a power rail, so decoupling is not expected",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U8"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -118,7 +205,13 @@
             "op": "contains_match",
             "field": "bms_reference",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "bms_systems",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "W25Q16 (U6) SPI flash connected to iCE40 FPGA (U1) not detected in memory_interfaces",
@@ -127,8 +220,15 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U6$"
-          }
+            "pattern": "^U1$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "GS74116 (U3) 4Mbit SRAM connected to iCE40 FPGA (U1) via parallel address/data bus not detected in memory_interfaces",
@@ -137,8 +237,15 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U3$"
-          }
+            "pattern": "^U1$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "CP2102N (U7) USB-UART bridge not classified or noted in design_observations",
@@ -147,7 +254,13 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [
@@ -166,67 +279,257 @@
       "correct": [
         {
           "description": "Voltage divider R17 (450k) / R18 (100k) correctly identified as feedback for NCP1532 CH1 (+3V3 output), ratio 0.1818 is correct",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R17",
+            "R18"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R17$"
+          }
         },
         {
           "description": "Voltage divider R19 (100k) / R20 (100k) correctly identified as feedback for NCP1532 CH2 (+1V2 output), ratio 0.5 is correct",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R19",
+            "R20"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R19$"
+          }
         },
         {
           "description": "Voltage divider R15 (680) / R14 (220) correctly identified as audio output attenuator with parallel_count=2, connected to P4 speaker connector",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "P4",
+            "R14",
+            "R15"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R14$"
+          }
         },
         {
           "description": "Voltage divider R12 (100k) / R21 (100k) correctly identified as reset divider for CP2102N U7 pin ~RST, ratio 0.5, from +5V to GND",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R12",
+            "R21",
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R12$"
+          }
         },
         {
           "description": "RC filter R23 (100k) / C31 (1u) at 1.59 Hz correctly identified as part of soft-latching power switch debounce circuit",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C31",
+            "R23"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R23$"
+          }
         },
         {
           "description": "RC filter R24 (100k) / C32 (0.1u) at 15.92 Hz correctly identified as PWR_EN debounce filter",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C32",
+            "R24"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R24$"
+          }
         },
         {
           "description": "RC filter R22 (10k) / C21+C19 parallel at 1.58 Hz correctly identified as USB controller VDD filter for CP2102N REGIN pin",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C19",
+            "C21",
+            "R22"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R22$"
+          }
         },
         {
           "description": "RC-network R8 (10) / C5 (1u) and R7 (10) / C3 (1u) correctly identified as FPGA 1V2 PLL power filters",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C3",
+            "C5",
+            "R7",
+            "R8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R7$"
+          }
         },
         {
           "description": "Protection devices D3/D4/D5 (DF2B7AFS TVS diodes) correctly identified protecting USB_DP, USB_DM, and +5V",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D3",
+            "D4",
+            "D5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D3$"
+          }
         },
         {
           "description": "Q1 (BSS816NW) NMOS correctly identified as LED/backlight driver, gate driven by LCD_PWM with R1 10k pulldown, gate driver U1 FPGA",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "R1",
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "LED D1 correctly identified as indicator LED with R6 (680 ohm) series resistor driven by U4",
-          "analyzer_section": "signal_analysis.led_audit"
+          "analyzer_section": "signal_analysis.led_audit",
+          "detector": "led_audit",
+          "subject_refs": [
+            "D1",
+            "R6",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SPI bus FLASH correctly identified with FLASH_SCK, FLASH_MOSI, FLASH_MISO connecting to U6 (W25Q16), full_duplex mode",
-          "analyzer_section": "signal_analysis.bus_analysis.spi"
+          "analyzer_section": "signal_analysis.bus_analysis.spi",
+          "detector": "bus_analysis",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB differential pair USB_DP/USB_DM correctly identified",
-          "analyzer_section": "signal_analysis.differential_pairs"
+          "analyzer_section": "signal_analysis.differential_pairs",
+          "detector": "differential_pairs",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.differential_pairs",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "ESD coverage audit correctly identifies P3 USB connector as fully protected by D3/D4",
-          "analyzer_section": "signal_analysis.esd_coverage_audit"
+          "analyzer_section": "signal_analysis.esd_coverage_audit",
+          "detector": "esd_coverage_audit",
+          "subject_refs": [
+            "D3",
+            "D4",
+            "P3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling analysis correctly identifies 4 rails (+BATT 2uF, +5V 12.1uF, +3V3 13.7uF, +1V2 11.4uF) with accurate cap counts",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Power domains correctly map all 8 ICs (U1-U8) to their respective power rails",
-          "analyzer_section": "signal_analysis.power_domains"
+          "analyzer_section": "signal_analysis.power_domains",
+          "detector": "power_domains",
+          "subject_refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U4",
+            "U5",
+            "U6",
+            "U7",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Component counts are accurate: 93 total components, 8 ICs, 32 capacitors, 26 resistors, 2 LEDs, 9 test points",
@@ -238,99 +541,342 @@
         },
         {
           "description": "U5 NCP1532 correctly identified as switching regulator topology",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U5$"
+          }
         },
         {
           "description": "U2 (DSC60XX 12MHz MEMS oscillator) correctly identified as active oscillator",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U2$"
+          }
         }
       ],
       "incorrect": [
         {
           "description": "NCP1532 (U5) input_rail reported as 'PWR_EN' but the actual power input (VIN, pin 3) connects to +BATT. PWR_EN is the enable signal, not the power input rail",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U5$"
+          }
         },
         {
           "description": "Only one power_regulator entry for U5 NCP1532, but it is a dual-channel buck converter producing both +3V3 (CH1 via L1, R17/R18 feedback) and +1V2 (CH2 via L2, R19/R20 feedback)",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L1",
+            "L2",
+            "R17",
+            "R18",
+            "R19",
+            "R20",
+            "U5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U5$"
+          }
         },
         {
           "description": "Crystal circuit U2 (DSC60XX) output_net is '+3V3' which is the power supply net, not the clock output. The actual output net is 'CLK_OSC'",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^U2$"
+          }
         },
         {
           "description": "Clock distribution U2 output_net also incorrectly '+3V3' instead of 'CLK_OSC'. The consumers list [U3, U1, U6, U8] is wrong \u2014 CLK_OSC only connects to U1 FPGA",
-          "analyzer_section": "signal_analysis.clock_distribution"
+          "analyzer_section": "signal_analysis.clock_distribution",
+          "detector": "clock_distribution",
+          "subject_refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U6",
+            "U8"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB differential pair has_esd is false despite D3/D4 (DF2B7AFS) being correctly identified in protection_devices and esd_coverage_audit",
-          "analyzer_section": "signal_analysis.differential_pairs"
+          "analyzer_section": "signal_analysis.differential_pairs",
+          "detector": "differential_pairs",
+          "subject_refs": [
+            "D3",
+            "D4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Q1 transistor circuit has_flyback_diode is true with flyback_diode='D5', but D5 is a TVS on USB +5V, completely unrelated to Q1 backlight circuit",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D5",
+            "Q1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "Q1 LED driver led_ref is D2 (charge status LED) not the LCD backlight. Actual backlight load is R2-R5 parallel 220-ohm to P1 connector",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "D2",
+            "P1",
+            "Q1",
+            "R2",
+            "R3",
+            "R4",
+            "R5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "not_contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          }
         },
         {
           "description": "I2C bus detection for LCD_SCL is a false positive. The LCD uses SPI not I2C: LCD_SCL=clock, LCD_SDA=MOSI, LCD_SDO=MISO, LCD_CS=chip select, LCD_D~C~=data/command",
-          "analyzer_section": "signal_analysis.bus_analysis.i2c"
+          "analyzer_section": "signal_analysis.bus_analysis.i2c",
+          "detector": "bus_analysis",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "UART detection shows empty devices lists for FPGA_UART_RX and FPGA_UART_TX. U7 (CP2102N) and U1 (FPGA) should be listed as endpoints",
-          "analyzer_section": "signal_analysis.bus_analysis.uart"
+          "analyzer_section": "signal_analysis.bus_analysis.uart",
+          "detector": "bus_analysis",
+          "subject_refs": [
+            "U1",
+            "U7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage divider R17/R18 mid_point connects to U5 pin 7 'SW2' but should connect to FB1 (pin 1). Pin mapping error",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "FB1",
+            "R17",
+            "R18",
+            "SW2",
+            "U5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R17$"
+          }
         },
         {
           "description": "Voltage divider R19/R20 mid_point connects to U5 pin 4 'SW1' but should connect to FB2 (pin 10). Same pin mapping confusion",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "FB2",
+            "R19",
+            "R20",
+            "SW1",
+            "U5"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "not_contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R19$"
+          }
         },
         {
           "description": "Design observation reports U5 and U8 rails_without_caps for 'PWR_EN', but PWR_EN is a logic enable signal, not a power rail needing decoupling",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U5",
+            "U8"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
         {
           "description": "BQ21040 (U4) battery charger completely missed. U4 is a linear Li-ion charger: +5V USB input, +BATT output, R9 (10k) timer, R10 (680) ISET charge current resistor (~147mA), D2/R11 charge status LED",
-          "analyzer_section": "signal_analysis.battery_chargers"
+          "analyzer_section": "signal_analysis.battery_chargers",
+          "detector": "battery_chargers",
+          "subject_refs": [
+            "D2",
+            "R10",
+            "R11",
+            "R9",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SRAM memory interface completely missed. U3 (GS74116AGP) is a 16Mbit parallel SRAM with 18 address lines, 16 data lines, and control signals, all connected to U1 FPGA",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "Display interface completely missed. P1 (ILI9341) is an 18-pin FFC connector for TFT LCD with SPI interface, backlight PWM control through Q1",
-          "analyzer_section": "signal_analysis.display_interfaces"
+          "analyzer_section": "signal_analysis.display_interfaces",
+          "detector": "display_interfaces",
+          "subject_refs": [
+            "P1",
+            "Q1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Soft-latching power switch circuit not detected. U8 (74LVC2G04 dual inverter) forms a bistable latch with SW1 pushbutton, producing PWR_EN to enable U5 regulator",
-          "analyzer_section": "signal_analysis.power_path"
+          "analyzer_section": "signal_analysis.power_path",
+          "detector": "power_path",
+          "subject_refs": [
+            "SW1",
+            "U5",
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Audio low-pass filter not detected. R15/R13 (680 ohm parallel) + R14 (220) + C30 (0.1u) form RC low-pass on AUDIO_PWM for analog audio output to P4",
-          "analyzer_section": "signal_analysis.audio_circuits"
+          "analyzer_section": "signal_analysis.audio_circuits",
+          "detector": "audio_circuits",
+          "subject_refs": [
+            "C30",
+            "P4",
+            "R13",
+            "R14",
+            "R15"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "QSPI Flash quad-SPI capability not detected. U6 (W25Q16) has FLASH_IO2/IO3 via RN1 10k pull-ups indicating quad-SPI mode",
-          "analyzer_section": "signal_analysis.bus_analysis.spi"
+          "analyzer_section": "signal_analysis.bus_analysis.spi",
+          "detector": "bus_analysis",
+          "subject_refs": [
+            "RN1",
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB-to-UART bridge U7 (CP2102N) not detected as USB interface. Bridges USB D+/D- to FPGA UART with R25/R26 (220) series termination",
-          "analyzer_section": "signal_analysis.usb_interfaces"
+          "analyzer_section": "signal_analysis.usb_interfaces",
+          "detector": "usb_interfaces",
+          "subject_refs": [
+            "R25",
+            "R26",
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Reset circuit missed. U5 NCP1532 ~POR output drives FPGA_~RST with RN2 10k pull-ups on FPGA_CFG_DONE and FPGA_~RST",
-          "analyzer_section": "signal_analysis.reset_supervisors"
+          "analyzer_section": "signal_analysis.reset_supervisors",
+          "detector": "reset_supervisors",
+          "subject_refs": [
+            "RN2",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Second LCD SPI bus not detected. LCD interface (LCD_CS, LCD_SCL, LCD_SDA, LCD_SDO) is separate SPI bus from FLASH SPI bus",
-          "analyzer_section": "signal_analysis.bus_analysis.spi"
+          "analyzer_section": "signal_analysis.bus_analysis.spi",
+          "detector": "bus_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "suggestions": [

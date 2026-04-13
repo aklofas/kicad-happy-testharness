@@ -1,4 +1,4 @@
-# Findings: hat-design / hat-design
+# Findings: disk91/hat-design / hat-design
 
 ## FND-00002119: I2C bus correctly detected with AT24CS32 EEPROM and pull-up resistors; I2C line names swapped relative to Pi HAT specification naming convention
 

@@ -1,4 +1,4 @@
-# Findings: gh60 / keyboard
+# Findings: komar007/gh60 / keyboard
 
 ## FND-00002080: Key matrix reports diodes_on_matrix=0 despite 65 diodes present on the matrix sub-sheet; SPI bus not detected despite explicit SCK/MOSI/MISO labels present on IC1 (ATmega32U4) ISP header; I2C false...
 

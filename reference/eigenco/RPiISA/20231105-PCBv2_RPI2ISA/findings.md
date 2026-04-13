@@ -1,4 +1,4 @@
-# Findings: RPiISA / 20231105-PCBv2_RPI2ISA
+# Findings: eigenco/RPiISA / 20231105-PCBv2_RPI2ISA
 
 ## FND-00001201: RPiISA v2 schematic parsed correctly: 4 components, ISA bus + RPi + crystal oscillator; Crystal oscillator Y1 not detected in crystal_circuits; single_pin_nets correctly reported for unconnected IS...
 

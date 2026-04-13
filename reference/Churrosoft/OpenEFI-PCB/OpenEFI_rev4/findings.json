@@ -8,31 +8,110 @@
       "correct": [
         {
           "description": "TPS5430 switching regulator with L1, feedback divider R68/R70 correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L1",
+            "R68",
+            "R70"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^L1$"
+          }
         },
         {
           "description": "AMS1117-3.3 LDO and REF3033 voltage reference correctly identified",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Y1 (25MHz) and Y3 (32.768kHz) crystals with load caps correctly detected",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1",
+            "Y3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          }
         },
         {
           "description": "8-channel RC filter bank for analog inputs correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "CAN bus with differential pair and SPI bus correctly detected",
-          "analyzer_section": "signal_analysis.bus_analysis"
+          "analyzer_section": "signal_analysis.bus_analysis",
+          "detector": "bus_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "R21 (0.01R) current sense with U6 correctly detected",
-          "analyzer_section": "signal_analysis.current_sense"
+          "analyzer_section": "signal_analysis.current_sense",
+          "detector": "current_sense",
+          "subject_refs": [
+            "R21",
+            "U6"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 6,
+          "check": {
+            "path": "signal_analysis.current_sense",
+            "op": "equals",
+            "value": 6
+          }
         },
         {
           "description": "U26 SP720ABTG ESD protection for 14 analog channels correctly identified",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [
+            "U26"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U26$"
+          }
         }
       ],
       "incorrect": [
@@ -42,25 +121,77 @@
         },
         {
           "description": "U6 LT4363 surge stopper classified as 'ic_with_internal_regulator' \u2014 it's an OV/OC protection controller driving external MOSFET Q10, not a regulator. FB sets OV trip threshold (1.5V ref), not regulated output.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "Q10",
+            "U6"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U6$"
+          }
         },
         {
           "description": "16 LEDs (D16-D77) flagged as 'direct_drive' with no current limiter \u2014 actually limited through RN1-RN4 (1k resistor network arrays). Analyzer doesn't trace R_Pack04 as series elements.",
-          "analyzer_section": "signal_analysis.led_audit"
+          "analyzer_section": "signal_analysis.led_audit",
+          "detector": "led_audit",
+          "subject_refs": [
+            "D16",
+            "D77",
+            "RN1",
+            "RN2",
+            "RN3",
+            "RN4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
         {
           "description": "U23 A4988 stepper motor driver module not detected in motor_drivers",
-          "analyzer_section": "signal_analysis.motor_drivers"
+          "analyzer_section": "signal_analysis.motor_drivers",
+          "detector": "motor_drivers",
+          "subject_refs": [
+            "A4988",
+            "U23"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "TC4424A (U21/U24/U29/U30) MOSFET gate drivers for ignition coils not detected",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "U21",
+            "U24",
+            "U29",
+            "U30"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U21$"
+          }
         },
         {
           "description": "U36 MAX9926 VR sensor interface not detected in sensor_interfaces",
-          "analyzer_section": "signal_analysis.sensor_interfaces"
+          "analyzer_section": "signal_analysis.sensor_interfaces",
+          "detector": "sensor_interfaces",
+          "subject_refs": [
+            "U36"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

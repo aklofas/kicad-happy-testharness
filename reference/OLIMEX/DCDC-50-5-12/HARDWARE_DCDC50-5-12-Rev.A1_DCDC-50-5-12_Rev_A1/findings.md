@@ -1,4 +1,4 @@
-# Findings: DCDC-50-5-12 / HARDWARE_DCDC50-5-12-Rev.A1_DCDC-50-5-12_Rev_A1
+# Findings: OLIMEX/DCDC-50-5-12 / HARDWARE_DCDC50-5-12-Rev.A1_DCDC-50-5-12_Rev_A1
 
 ## FND-00000457: Component inventory and BOM extraction are accurate; Power rails (GND, Vin, Vout) and net labels correctly extracted; U1 TX4138 pin mapping correctly parsed; U1 power regulator input_rail reported ...
 

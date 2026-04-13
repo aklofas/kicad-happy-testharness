@@ -32,11 +32,19 @@
         },
         {
           "description": "Ethernet PHY detected but magnetics and RJ45 connector (LAN1) not linked to PHY",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "detector": "ethernet_interfaces",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "BJT transistor circuits show collector_is_power: false and emitter_is_ground: false, with no base resistors detected - suggests the pin connectivity analysis is not working for legacy format",
-          "analyzer_section": "signal_analysis.transistor_circuits"
+          "analyzer_section": "signal_analysis.transistor_circuits",
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "All subcircuit neighbor_components lists are empty - no adjacent passives found for any IC",
@@ -51,7 +59,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Zero RC filters detected in the entire design",
@@ -60,7 +72,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Zero power regulators detected - TPS62A02 (U1) switching regulator completely missed",
@@ -70,7 +86,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Zero protection devices detected despite TVS diodes (TVS1-TVS4) and Schottky diode D6 present",
@@ -80,7 +102,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D6$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Zero decoupling analysis despite 21 capacitors on the board",
@@ -89,7 +117,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "CH340X USB-UART bridge not identified as USB interface",
@@ -107,7 +139,11 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Separate +3.3VLAN power domain (dedicated Ethernet PHY supply) not analyzed for isolation from main +3.3V",

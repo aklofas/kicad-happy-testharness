@@ -1,4 +1,4 @@
-# Findings: STEPUPDC02 / hw_sch_pcb_STEPUPDC02
+# Findings: mlab-modules/STEPUPDC02 / hw_sch_pcb_STEPUPDC02
 
 ## FND-00001336: Component counts and topology extraction correct for TPS61041 boost converter; TPS61041 Vout estimated at ~14V but actual Vout is ~28.8V; power_regulator output_rail and input_rail both reported as...
 

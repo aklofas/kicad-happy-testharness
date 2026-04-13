@@ -1,4 +1,4 @@
-# Findings: ESP32-board / esp32_board
+# Findings: iwCircuitDesign/ESP32-board / esp32_board
 
 ## FND-00000497: Net named 'SENSOR_VP' incorrectly maps to U3 pin 2 (3.3V supply); the +3.3V net carries U3 pin 4 labeled SENSOR_VP; Many named GPIO nets (IO34, IO35, IO32, IO33, IO25-IO27, IO12-IO14, SD0-SD3, CLK,...
 

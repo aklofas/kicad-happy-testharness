@@ -1,4 +1,4 @@
-# Findings: TPS5430 / TPS5430
+# Findings: M4a1x/TPS5430 / TPS5430
 
 ## FND-00001625: pwr_flag_warnings fires for GND, VCC, and VDD even though all three nets have PWR_FLAG symbols placed on them; C9 and C10 (100 µF tantalum) missing from VDD decoupling analysis due to {slash} value...
 

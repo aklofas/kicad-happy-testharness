@@ -1,4 +1,4 @@
-# Findings: KLOTZ / PCB_Klotz
+# Findings: GEIGEIGEIST/KLOTZ / PCB_Klotz
 
 ## FND-00000612: LEDs (L1, L2, L3) misclassified as 'inductor' type instead of 'led'; False positive I2C bus detection on LED signal nets; assembly_complexity reports all 55 components as SMD with tht_count=0, cont...
 

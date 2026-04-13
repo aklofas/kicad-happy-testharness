@@ -1,4 +1,4 @@
-# Findings: SparkFun_Qwiic_Navigation_Switch / Hardware_SparkFun_Qwiic_Navigation
+# Findings: sparkfun/SparkFun_Qwiic_Navigation_Switch / Hardware_SparkFun_Qwiic_Navigation
 
 ## FND-00001510: Component count of 43 is accurate; I2C pullups on SDA (R13) and SCL (R7) not detected — has_pullup reports false; I2C bus (SDA, SCL) and PCA9554 IC correctly detected; Power rails (3.3V, GND), deco...
 

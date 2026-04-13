@@ -1,4 +1,4 @@
-# Findings: USB-I2C-BRIDGE / USB-I2C-BRIDGE
+# Findings: Jana-Marie/USB-I2C-BRIDGE / USB-I2C-BRIDGE
 
 ## FND-00001642: Component count: 17 total, 10 unique parts correctly parsed; USBLC6-4 correctly detected as ESD protection device for USB lines; USB D+/D- differential pair detected with ESD protection; Differenti...
 

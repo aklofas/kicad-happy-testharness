@@ -1,4 +1,4 @@
-# Findings: HadesFCS / Hardware_HadesMicro_HadesMicro
+# Findings: pms67/HadesFCS / Hardware_HadesMicro
 
 ## FND-00000300: Gerber review: 4-layer mini flight controller (50x50mm). Combined drill=unknown, has_pth=false
 

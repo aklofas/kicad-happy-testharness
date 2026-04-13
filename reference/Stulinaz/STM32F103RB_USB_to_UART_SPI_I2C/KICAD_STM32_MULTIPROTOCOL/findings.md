@@ -1,4 +1,4 @@
-# Findings: STM32F103RB_USB_to_UART_SPI_I2C / KICAD_STM32_MULTIPROTOCOL
+# Findings: Stulinaz/STM32F103RB_USB_to_UART_SPI_I2C / KICAD_STM32_MULTIPROTOCOL
 
 ## FND-00001303: Footprint filter warnings correctly flagged for LEDs using R-footprint; PWR_FLAG warning correctly raised for +3V3 rail; Annotation issue C0 (zero-indexed ref) correctly detected; USB compliance vb...
 

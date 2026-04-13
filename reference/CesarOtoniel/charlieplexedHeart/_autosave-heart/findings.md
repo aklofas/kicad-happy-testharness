@@ -1,4 +1,4 @@
-# Findings: charlieplexedHeart / heart
+# Findings: CesarOtoniel/charlieplexedHeart / _autosave-heart
 
 ## FND-00002304: Charlieplexed LED topology not detected for 20-LED ATtiny13 design; Power net summary misses ATtiny13A VCC pin; only 3 components on VCC
 

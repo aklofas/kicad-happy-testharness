@@ -1,4 +1,4 @@
-# Findings: PICTAS / hardware_pictas-pcb_pictas
+# Findings: bigbass1997/PICTAS / hardware_pictas-pcb_pictas
 
 ## FND-00001049: SPI, UART, I2C, USB differential pair, memory interface all correctly detected; No power regulator detected despite power mux sub-sheet (power-select with TPS2115APWR)
 

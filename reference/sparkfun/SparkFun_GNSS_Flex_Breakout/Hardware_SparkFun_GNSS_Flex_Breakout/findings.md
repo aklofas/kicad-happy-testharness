@@ -1,4 +1,4 @@
-# Findings: SparkFun_GNSS_Flex_Breakout / Hardware_SparkFun_GNSS_Flex_Breakout
+# Findings: sparkfun/SparkFun_GNSS_Flex_Breakout / Hardware_SparkFun_GNSS_Flex_Breakout
 
 ## FND-00000206: GNSS flex breakout board with CH342F dual UART, 74HC4066 analog switches for signal routing, microSD slot, dual 2x10 GNSS plug-in headers, and USB-C. Analyzer correctly identifies regulators and ESD protection but misses several bus interfaces.
 

@@ -1,4 +1,4 @@
-# Findings: franzininho-diy-board / Franzininho DIY_Franzininho
+# Findings: Franzininho/franzininho-diy-board / Franzininho DIY_Franzininho
 
 ## FND-00002182: False positive: L78L05 regulator reports missing output caps (5V rail) even though C1 and C2 are present on it
 

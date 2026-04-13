@@ -1,4 +1,4 @@
-# Findings: Strandjungs_ReactionGame / hardware_Strandjungs_1of5
+# Findings: JochiSt/Strandjungs_ReactionGame / hardware_Strandjungs_1of5
 
 ## FND-00001593: Component count (64), type classification, and power regulator detection are accurate; Assembly complexity reports 51 SMD / 13 THT instead of ~35 SMD / 29 THT; All 5 BUZ11 transistors share the sam...
 

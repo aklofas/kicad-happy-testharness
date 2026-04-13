@@ -1,4 +1,4 @@
-# Findings: LAEMP-Prism / laemp_led_board_laemp_led_board
+# Findings: Jana-Marie/LAEMP-Prism / laemp_led_board
 
 ## FND-00000210: LED board with 44 SK6812 addressable LEDs in a daisy chain with per-LED 100nF decoupling capacitors, dual 4-pin connectors for power and data. Analyzer correctly detects the full 44-LED chain and VBUS decoupling.
 

@@ -1,4 +1,4 @@
-# Findings: KICAD-Designs- / STM32
+# Findings: prabhagaran/KICAD-Designs- / STM32
 
 ## FND-00000668: STM32F103C8T6 + AMS1117-3.3 LDO correctly detected with I2C pull-ups, UART, and SWD; USB ESD: differential_pairs reports has_esd=true crediting U2 (MCU) as ESD protection device; assembly_complexit...
 

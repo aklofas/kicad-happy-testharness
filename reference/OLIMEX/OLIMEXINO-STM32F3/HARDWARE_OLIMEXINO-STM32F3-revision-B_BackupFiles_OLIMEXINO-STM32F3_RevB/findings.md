@@ -1,4 +1,4 @@
-# Findings: OLIMEXINO-STM32F3 / HARDWARE_OLIMEXINO-STM32F3-revision-B_BackupFiles_OLIMEXINO-STM32F3_RevB
+# Findings: OLIMEX/OLIMEXINO-STM32F3 / HARDWARE_OLIMEXINO-STM32F3-revision-B_BackupFiles_OLIMEXINO-STM32F3_RevB
 
 ## FND-00000975: Crystal frequency parsed as 0.0327681206125 Hz instead of 32768 Hz; assembly_complexity reports tht_count=0 while PCB analyzer correctly reports tht_count=12; PWR_FLAG warning on +BATT is a false p...
 

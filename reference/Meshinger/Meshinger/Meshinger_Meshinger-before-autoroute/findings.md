@@ -1,4 +1,4 @@
-# Findings: Meshinger / Meshinger_Meshinger-before-autoroute
+# Findings: Meshinger/Meshinger / Meshinger_Meshinger-before-autoroute
 
 ## FND-00000901: SS2040FL (U1, U2, U3) classified as 'ic' type instead of 'diode'; LC filter correctly detected between L1 (10uH) and C3 (4.7uF) sharing unnamed net, with accurate resonant frequency calculation
 

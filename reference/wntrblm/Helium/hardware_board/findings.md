@@ -1,4 +1,4 @@
-# Findings: Helium / hardware_board_board
+# Findings: wntrblm/Helium / hardware_board
 
 ## FND-00000606: PWR_FLAG symbols not parsed — false pwr_flag_warnings on +12V and -12V
 

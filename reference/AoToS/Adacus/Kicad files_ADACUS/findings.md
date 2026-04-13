@@ -1,4 +1,4 @@
-# Findings: Adacus / Kicad files_ADACUS
+# Findings: AoToS/Adacus / Kicad files_ADACUS
 
 ## FND-00000360: RC filter detector incorrectly groups C403 and C405 as parallel capacitors; RC filter R404/C405 misidentified: opamp output node labeled as 'ground_net'
 

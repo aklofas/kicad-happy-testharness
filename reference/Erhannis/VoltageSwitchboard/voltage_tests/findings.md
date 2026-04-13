@@ -1,4 +1,4 @@
-# Findings: VoltageSwitchboard / voltage_tests
+# Findings: Erhannis/VoltageSwitchboard / voltage_tests
 
 ## FND-00001666: Component count correct: 7 components (2C, 2R, 1L, 1D, 1 boost IC); Boost converter LM27313XMF not detected as power_regulator; LM27313XMF switching regulator classified as 'switch' instead of 'ic'
 

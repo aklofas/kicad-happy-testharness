@@ -1,4 +1,4 @@
-# Findings: iCE40-DIO / ICE40-DIO_Rev_A
+# Findings: OLIMEX/iCE40-DIO / ICE40-DIO_Rev_A
 
 ## FND-00002144: KiCad 5 legacy parser assigns U1 pin 3 (SCL) to net 'Vdac' instead of 'UEXT_SCL'; I2C, SPI, and UART correctly detected on UEXT connector interface; LDO regulator (MCP1825 VR1) detected with associ...
 

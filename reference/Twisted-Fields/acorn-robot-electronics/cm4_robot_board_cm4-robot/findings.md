@@ -1,4 +1,4 @@
-# Findings: acorn-robot-electronics / cm4_robot_board_cm4-robot
+# Findings: Twisted-Fields/acorn-robot-electronics / cm4_robot_board_cm4-robot
 
 ## FND-00000272: CM4 robot board (246 components). TPS61040 boost output_rail wrong (+5V instead of +12V). 7 SPDT config switches falsely detected as keyboard matrix. Ethernet interface, CAN isolation barriers, SPI and I2C buses missed.
 

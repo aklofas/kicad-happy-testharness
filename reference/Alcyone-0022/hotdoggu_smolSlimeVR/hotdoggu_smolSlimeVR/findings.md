@@ -1,4 +1,4 @@
-# Findings: hotdoggu_smolSlimeVR / hotdoggu_smolSlimeVR
+# Findings: Alcyone-0022/hotdoggu_smolSlimeVR / hotdoggu_smolSlimeVR
 
 ## FND-00002128: USB-C CC pulldowns R2/R3 (value '5.1k, 1%') not recognized as valid 5.1k pulldowns due to value parsing failure; Correctly identifies I2C bus with SDA/SCL pull-ups, LP5907 LDO regulator topology, a...
 

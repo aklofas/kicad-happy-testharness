@@ -1,4 +1,4 @@
-# Findings: 6502puter / 6502puter
+# Findings: frankbartunek/6502puter / 6502puter
 
 ## FND-00000322: Memory chips U7 (27C512 EPROM) and U8 (M29W004 Flash) not detected as memory_interfaces; W65C51N ACIA (U4) not detected as a UART device in bus_analysis.uart; Crystal Y1 load caps C6/C7 are 10uF (e...
 

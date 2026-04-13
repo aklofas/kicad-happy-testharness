@@ -1,4 +1,4 @@
-# Findings: Skeletyl-PCB-plate / flex_flex
+# Findings: Bastardkb/Skeletyl-PCB-plate / flex
 
 ## FND-00001407: Key matrix correctly detected as 4×5 grid with 15 actual keys; Addressable LED chain detection reports 3 chains (one duplicate) instead of 2; Component counts (69 total, 15 switches, 15 diodes, 30 ...
 

@@ -1,4 +1,4 @@
-# Findings: ISM02 / hw_sch_pcb_ISM02
+# Findings: mlab-modules/ISM02 / hw_sch_pcb_ISM02
 
 ## FND-00000648: SPI bus detected twice for a single-bus design (U1 SX1262 only); RF chain correctly detects SX1262 transceiver and PE4259 RF switch; Power regulator U2 (MIC5504-3.3YM5 LDO) correctly detected +5V t...
 

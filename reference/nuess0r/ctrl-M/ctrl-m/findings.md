@@ -1,4 +1,4 @@
-# Findings: ctrl-M / ctrl-m
+# Findings: nuess0r/ctrl-M / ctrl-m
 
 ## FND-00002320: Bus width values are exactly double the actual signal count for all detected buses; Keyboard matrix (R0..R15 rows, C0..C7 columns) not detected as a key_matrix; USB D+/D- differential pair classifi...
 

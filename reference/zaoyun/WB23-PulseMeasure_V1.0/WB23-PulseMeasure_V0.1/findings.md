@@ -1,4 +1,4 @@
-# Findings: WB23-PulseMeasure_V1.0 / WB23-PulseMeasure_V0.1
+# Findings: zaoyun/WB23-PulseMeasure_V1.0 / WB23-PulseMeasure_V0.1
 
 ## FND-00001794: Total component count of 75 is accurate; Resistor and capacitor counts are accurate; VR1 (3296W trimmer potentiometer) misclassified as varistor; V3 (REF3025 precision voltage reference) misclassif...
 

@@ -1,4 +1,4 @@
-# Findings: kicad-spice-demo / spicedemo
+# Findings: stffrdhrn/kicad-spice-demo / spicedemo
 
 ## FND-00002267: Opamp comparator circuit (LM193 with feedback resistors) not detected as opamp_circuit; VSS power rail classified as 'ground' rather than a negative/secondary supply
 

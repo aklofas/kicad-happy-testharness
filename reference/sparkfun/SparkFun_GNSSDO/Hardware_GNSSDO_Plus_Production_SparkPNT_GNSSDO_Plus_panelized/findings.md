@@ -1,4 +1,4 @@
-# Findings: SparkFun_GNSSDO / Hardware_GNSSDO_Plus_Production_SparkPNT_GNSSDO_Plus_panelized
+# Findings: sparkfun/SparkFun_GNSSDO / Hardware_GNSSDO_Plus_Production_SparkPNT_GNSSDO_Plus_panelized
 
 ## FND-00001812: Total component count (296) correct for hierarchical GNSSDO design; key_matrix detected for independent panel switches sharing SD card net names; component_types miscounts relay:1 and transformer:1...
 

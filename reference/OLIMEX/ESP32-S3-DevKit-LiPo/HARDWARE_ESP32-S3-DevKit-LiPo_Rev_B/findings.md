@@ -1,4 +1,4 @@
-# Findings: ESP32-S3-DevKit-LiPo / HARDWARE_ESP32-S3-DevKit-LiPo_Rev_B_ESP32-S3-DevKit-LiPo_Rev_B
+# Findings: OLIMEX/ESP32-S3-DevKit-LiPo / HARDWARE_ESP32-S3-DevKit-LiPo_Rev_B
 
 ## FND-00000183: OLIMEX ESP32-S3 dev board (58 components). Correct: all components extracted, SY8089 switching regulator, CH340X, BL4054B charger, fiducials. Incorrect: T1/T2 BC817-40 NPN BJTs classified as transformer (T prefix), pUEXT1 CONN_01X10 classified as other, SY8089 input_rail=GND. Missed: battery sensing voltage divider R6/R7, feedback divider R10/R11, auto-programming circuit.
 

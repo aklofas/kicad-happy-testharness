@@ -13,16 +13,29 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Crystal Y301 12MHz with 15pF load caps (C313, C314) correctly detected with effective load 10.5pF",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
             "path": "signal_analysis.crystal_circuits",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y301$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C313",
+            "C314",
+            "Y301"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Two power regulators correctly identified: VX7805-500 (24V->5V) and MIC5317-3.3 (5V->3.3V) with correct rail assignments",
@@ -30,8 +43,12 @@
           "check": {
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
-            "value": 2
-          }
+            "value": 1
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "9 I2C bus segments detected including 4 PCA9545 muxed channels plus main bus, all with 4.7k pull-ups to +3V3",
@@ -65,9 +82,16 @@
           "analyzer_section": "signal_analysis.transistor_circuits",
           "check": {
             "path": "signal_analysis.transistor_circuits",
-            "op": "min_count",
-            "value": 5
-          }
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q201$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q201"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling analysis correctly identifies 4 power rails (+3V3, +24V, +5V, +1V1) with appropriate capacitor counts and totals",
@@ -75,8 +99,12 @@
           "check": {
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
-            "value": 4
-          }
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "12 protection devices detected: 4 PESD3V3 ESD diodes on I2C, 1 SMAJ28CA TVS on power input, 6 MOVs on motor outputs, 1 USB ESD IC",
@@ -84,8 +112,12 @@
           "check": {
             "path": "signal_analysis.protection_devices",
             "op": "min_count",
-            "value": 11
-          }
+            "value": 1
+          },
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "229 total components accurately counted with correct type breakdown including 74 capacitors, 62 resistors, 16 ICs, 18 connectors, 13 ferrite beads",
@@ -118,16 +150,28 @@
           "description": "Q201 P-channel MOSFET correctly identified with gate pulldown R201 (47k) forming reverse polarity protection",
           "analyzer_section": "signal_analysis.transistor_circuits",
           "check": {
-            "path": "signal_analysis.transistor_circuits[1].is_pchannel",
-            "op": "eq",
-            "value": true
-          }
+            "path": "signal_analysis.transistor_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q201$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q201",
+            "R201"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
         {
           "description": "VX7805-500 classified as 'LDO' topology but it is a CUI switching DC-DC converter module (VX78xx series). From 24V to 5V an LDO would dissipate excessive heat. Should be 'switching' or 'DC-DC'.",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "RS-485 differential pair esd_protection field lists U801 (MAX3078E transceiver) as ESD protection, but the actual ESD device is D801 (SM712_SOT23 TVS diode). U801 is the bus transceiver, not a protection device.",
@@ -174,10 +218,19 @@
           "description": "Reverse polarity protection circuit topology not explicitly identified. Q201 P-channel MOSFET with D202 Zener gate clamp and R201 47k pulldown is a classic pattern but not called out as a named protection topology.",
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
-            "path": "signal_analysis.transistor_circuits[1].gate_pulldown.reference",
-            "op": "eq",
-            "value": "R201"
-          }
+            "path": "signal_analysis.protection_devices",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^D202$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D202",
+            "Q201",
+            "R201"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

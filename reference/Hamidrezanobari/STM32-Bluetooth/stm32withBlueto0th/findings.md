@@ -1,4 +1,4 @@
-# Findings: STM32-Bluetooth / stm32withBlueto0th
+# Findings: Hamidrezanobari/STM32-Bluetooth / stm32withBlueto0th
 
 ## FND-00001340: Component count and type breakdown accurate for STM32WB55 BLE board; LDO regulator correctly identified with VBUS→+3.3V topology; 32kHz LSE crystal load capacitors correctly detected and effective ...
 

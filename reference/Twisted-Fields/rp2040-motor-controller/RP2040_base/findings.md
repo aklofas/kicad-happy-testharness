@@ -1,4 +1,4 @@
-# Findings: rp2040-motor-controller / RP2040_base_RP2040_base
+# Findings: Twisted-Fields/rp2040-motor-controller / RP2040_base
 
 ## FND-00000123: Motor controller base board: good power regulation and CAN bus detection, but missing current sense on base board and isolation components not identified
 

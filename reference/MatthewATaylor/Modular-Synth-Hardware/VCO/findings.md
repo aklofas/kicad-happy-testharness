@@ -1,4 +1,4 @@
-# Findings: Modular-Synth-Hardware / VCO_VCO
+# Findings: MatthewATaylor/Modular-Synth-Hardware / VCO
 
 ## FND-00000256: Analog VCO module (151 components). Sawtooth integrator core misclassified as compensator. GND-base transistors in exponential converter accumulate false base_resistor/driver lists from GND net traversal.
 

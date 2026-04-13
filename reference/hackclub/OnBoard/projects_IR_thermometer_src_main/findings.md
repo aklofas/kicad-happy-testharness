@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_IR_thermometer_src_main
+# Findings: hackclub/OnBoard / projects_IR_thermometer_src_main
 
 ## FND-00000100: IR thermometer with MLX90614 sensor, SEEED XIAO MCU, SPX2920 LDO regulator, and SSD1306 OLED. Good overall detection.
 

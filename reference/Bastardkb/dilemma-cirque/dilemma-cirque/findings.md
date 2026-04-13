@@ -1,4 +1,4 @@
-# Findings: dilemma-cirque / dilemma-cirque_dilemma-cirque
+# Findings: Bastardkb/dilemma-cirque / dilemma-cirque
 
 ## FND-00002327: Assembly complexity reports all 9 components as SMD with 0 THT, but J1 is a through-hole connector; SPI and I2C bus interfaces not detected in bus_analysis despite clear net names MISO/MOSI/SCK/SS/...
 

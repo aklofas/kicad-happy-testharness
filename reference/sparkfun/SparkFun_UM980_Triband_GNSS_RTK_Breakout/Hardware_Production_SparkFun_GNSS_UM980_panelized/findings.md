@@ -1,4 +1,4 @@
-# Findings: SparkFun_UM980_Triband_GNSS_RTK_Breakout / Hardware_Production_SparkFun_GNSS_UM980_panelized
+# Findings: sparkfun/SparkFun_UM980_Triband_GNSS_RTK_Breakout / Hardware_Production_SparkFun_GNSS_UM980_panelized
 
 ## FND-00001575: Board outline not extracted: gr_poly on Edge.Cuts produces edge_count=0 and bounding_box=null; Board width and height null despite valid Edge.Cuts polygon
 

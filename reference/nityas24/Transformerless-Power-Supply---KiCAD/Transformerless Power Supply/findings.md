@@ -1,4 +1,4 @@
-# Findings: Transformerless-Power-Supply---KiCAD / Transformerless Power Supply_Transformerless Power Supply
+# Findings: nityas24/Transformerless-Power-Supply---KiCAD / Transformerless Power Supply
 
 ## FND-00001618: Full-bridge rectifier (D1–D4: four 1N4007 diodes) not detected; bridge_circuits=[]; LM7805 (TO220 fixed linear regulator) classified as topology 'LDO'; C4 value '225K/2.2uF' parsed as 225000 F (225...
 

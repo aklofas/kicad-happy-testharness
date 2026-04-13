@@ -1,4 +1,4 @@
-# Findings: SparkFun_Default_KiCad_Setup / Example-Basic Board_SparkFun_Basic_Board_Example
+# Findings: sparkfun/SparkFun_Default_KiCad_Setup / Example-Basic Board_SparkFun_Basic_Board_Example
 
 ## FND-00001389: LDO regulator (RT9080-3.3) correctly identified with 3.3V output; I2C bus not detected in bus_analysis despite SCL/SDA nets and Qwiic connector; Component count of 20 total components accurately re...
 

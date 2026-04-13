@@ -1,4 +1,4 @@
-# Findings: Shrimp42 / Case_Rev2_PCB Bottom_PCB Bottom
+# Findings: GreenMashedPotato/Shrimp42 / Case_Rev2_PCB Bottom
 
 ## FND-00001355: Keyboard switches misclassified as 'relay' type; key_matrices detector fires zero results despite clear CL/RL matrix nets; Component counts correct: 87 total (42 switches + 42 diodes + 1 MCU + 2 co...
 

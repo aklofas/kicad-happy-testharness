@@ -1,4 +1,4 @@
-# Findings: CH32V_macropad / CH32V003_Macropad
+# Findings: thermitebegiants/CH32V_macropad / CH32V003_Macropad
 
 ## FND-00000440: design_observations single_pin_nets count is 1 but two single-pin nets exist; R1 (1.5K) misclassified as series resistor on MCU_D+/MCU_D- differential pair; U1 (CH32V003 MCU) incorrectly credited a...
 

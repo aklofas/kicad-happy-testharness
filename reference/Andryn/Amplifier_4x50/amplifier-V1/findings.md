@@ -1,4 +1,4 @@
-# Findings: Amplifier_4x50 / amplifier
+# Findings: Andryn/Amplifier_4x50 / amplifier-V1
 
 ## FND-00000365: LC power supply filter not detected; IC1 (LA47516) Vcc supply pins not linked to +12V power domain; Audio amplifier circuit (BTL 4-channel) not recognized in signal analysis; RC filter ground_net i...
 

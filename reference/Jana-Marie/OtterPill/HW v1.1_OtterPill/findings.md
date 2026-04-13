@@ -1,4 +1,4 @@
-# Findings: OtterPill / HW v1.1_OtterPill
+# Findings: Jana-Marie/OtterPill / HW v1.1_OtterPill
 
 ## FND-00001798: Component count correctly matches source (43 components); components[] array uses 'reference' key but outputs 'ref'=None for all entries; Power regulator (SY8201 buck converter) correctly detected ...
 

@@ -1,4 +1,4 @@
-# Findings: hybrid-valve-board / hybrid-valve-board
+# Findings: CarletonURocketry/hybrid-valve-board / hybrid-valve-board
 
 ## FND-00002136: False half-bridge detection: independent high-side PMOS and low-side NMOS switches are not a half-bridge; Optocoupler isolation barriers (LTV-817S x4) not detected in isolation_barriers
 

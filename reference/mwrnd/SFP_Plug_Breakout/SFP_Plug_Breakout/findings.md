@@ -1,4 +1,4 @@
-# Findings: SFP_Plug_Breakout / SFP_Plug_Breakout
+# Findings: mwrnd/SFP_Plug_Breakout / SFP_Plug_Breakout
 
 ## FND-00001290: RX_LOS, TX_FAULT, TX_DISABLE misclassified as UART nets in bus_analysis; SFP I2C management interface (SDA_MOD-DEF2 / SCL_MOD-DEF1) not detected as I2C; Four differential pairs correctly identified...
 

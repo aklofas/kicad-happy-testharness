@@ -1,4 +1,4 @@
-# Findings: KiCAD_PRJ / DFSDM_DFSDM_144_DFSDM_144
+# Findings: kadonotakashi/KiCAD_PRJ / DFSDM_DFSDM_144
 
 ## FND-00001677: Empty schematic correctly parsed with zero components
 

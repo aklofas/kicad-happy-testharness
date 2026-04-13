@@ -8,47 +8,164 @@
       "correct": [
         {
           "description": "U3 (LM22676MR-5) correctly identified as switching regulator with inductor L3, input 24V_5V, output +5V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L3",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U3$"
+          }
         },
         {
           "description": "U6 (LM22676MR-ADJ) correctly identified as switching regulator with inductor L4, feedback divider R7/R5",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L4",
+            "R5",
+            "R7",
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U6$"
+          }
         },
         {
           "description": "21 voltage dividers for encoder signal conditioning correctly detected - all R=1k/10k pairs (ratio 0.909) feeding FPGA",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "Feedback voltage divider R7=1.54k / R5=976 for U6 correctly identified with is_feedback=true, ratio 0.388",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R5",
+            "R7",
+            "U6"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R5$"
+          }
         },
         {
           "description": "Enable threshold divider R1=6.2k / R2=1k correctly identified, connected to U3 EN",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R1",
+            "R2",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R1$"
+          }
         },
         {
           "description": "7 RC low-pass filters on PWM-to-analog conversion (R=4k, C=0.01uF, fc=3.98kHz) correctly detected",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "21 RC low-pass filters on encoder lines (R=1k, C=100pF, fc=1.59MHz) correctly detected for EMI filtering",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "94 TVS diodes correctly identified as protection_devices on all signal lines",
-          "analyzer_section": "signal_analysis.protection_devices"
+          "analyzer_section": "signal_analysis.protection_devices",
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.protection_devices",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "3 LSF0108 level shifter ICs (U10-U12) correctly identified as bidirectional translators, 3.3V to 5V",
-          "analyzer_section": "signal_analysis.level_shifters"
+          "analyzer_section": "signal_analysis.level_shifters",
+          "detector": "level_shifters",
+          "subject_refs": [
+            "U10",
+            "U11",
+            "U12"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Cross-domain signals correctly detected with level_translators assigned to U10/U11/U12",
-          "analyzer_section": "signal_analysis.cross_domain_signals"
+          "analyzer_section": "signal_analysis.cross_domain_signals",
+          "detector": "cross_domain_signals",
+          "subject_refs": [
+            "U10",
+            "U11",
+            "U12"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "10 LEDs with 290 ohm series resistors correctly detected",
-          "analyzer_section": "signal_analysis.led_audit"
+          "analyzer_section": "signal_analysis.led_audit",
+          "detector": "led_audit",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.led_audit",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "USB-C connector J29 correctly analyzed with CC1/CC2 5.1k pulldowns and 27 ohm DP/DM series resistors",
@@ -56,7 +173,15 @@
         },
         {
           "description": "UART buses correctly detected: UART3 between U1 and U13 (FPGA), UART_TX/RX between U1 and U9 (FT231XS)",
-          "analyzer_section": "signal_analysis.bus_analysis.uart"
+          "analyzer_section": "signal_analysis.bus_analysis.uart",
+          "detector": "bus_analysis",
+          "subject_refs": [
+            "U1",
+            "U13",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Hierarchical design correctly flattened from 3 sheets",
@@ -80,21 +205,63 @@
         },
         {
           "description": "Decoupling observations correct for NUCLEO, FPGA, and FT231XS",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "RC filters on PS_NRST and PS_NPOR correctly detected as reset filters",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "min_count",
+            "value": 1
+          }
         }
       ],
       "incorrect": [
         {
           "description": "U1 (NUCLEO-F446RE) incorrectly classified as power_regulator with 'switching' topology. U1 is an STM32 development board module, not a voltage regulator",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "U6 (LM22676MR-ADJ) estimated_vout is 1.547V but correct value is 3.31V. Analyzer assumed Vref=0.6V but LM22676 datasheet specifies Vref=1.285V",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U6"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "not_contains_match",
+            "field": "ref",
+            "pattern": "^U6$"
+          }
         },
         {
           "description": "Inrush analysis uses wrong output voltage of 1.547V for U6, propagating the Vref error",
@@ -102,7 +269,14 @@
         },
         {
           "description": "Duplicate LED entries: D115 and D116 each appear twice due to multi-unit NUCLEO symbol",
-          "analyzer_section": "signal_analysis.led_audit"
+          "analyzer_section": "signal_analysis.led_audit",
+          "detector": "led_audit",
+          "subject_refs": [
+            "D115",
+            "D116"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Duplicate entries in sleep_current_audit: D115/R92 and D116/R93 appear 4 times each on +3.3V rail",
@@ -126,7 +300,11 @@
         },
         {
           "description": "Level shifter side_a/side_b supply_net fields are null for all LSF0108 ICs despite having VREF_A/VREF_B pins",
-          "analyzer_section": "signal_analysis.level_shifters"
+          "analyzer_section": "signal_analysis.level_shifters",
+          "detector": "level_shifters",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -152,11 +330,27 @@
         },
         {
           "description": "Extensive TVS protection (94 diodes) + RC filtering on all encoder inputs as deliberate MRI environment EMI hardening not synthesized",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.design_observations",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "SW7 (5V Enable) and SW8 (3.3V Enable) as manual power sequencing switches not detected",
-          "analyzer_section": "signal_analysis.power_sequencing_validation"
+          "analyzer_section": "signal_analysis.power_sequencing_validation",
+          "detector": "power_sequencing_validation",
+          "subject_refs": [
+            "SW7",
+            "SW8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D1, D13, D14, D88 likely flyback/freewheeling diodes for motor outputs not classified",
@@ -164,11 +358,33 @@
         },
         {
           "description": "R159/C86 (200k/0.1uF, fc=7.96Hz) appears to be power-on-reset/delayed enable circuit, not a signal filter",
-          "analyzer_section": "signal_analysis.rc_filters"
+          "analyzer_section": "signal_analysis.rc_filters",
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C86",
+            "R159"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R159$"
+          }
         },
         {
           "description": "LSF0108 level shifters may carry SPI-like signals between FPGA and NUCLEO not classified as bus",
-          "analyzer_section": "signal_analysis.bus_analysis"
+          "analyzer_section": "signal_analysis.bus_analysis",
+          "detector": "bus_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.bus_analysis",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "D114 near U9 (FT231XS) likely USB VBUS power OR-ing/protection diode not classified",

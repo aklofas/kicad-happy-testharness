@@ -1,4 +1,4 @@
-# Findings: Mechanical-Keyboard-PCB / Mechanical-Keyboard-PCB
+# Findings: g0tMarks/Mechanical-Keyboard-PCB / Mechanical-Keyboard-PCB
 
 ## FND-00000883: Key matrix (6x14, 67 keys), USB-C compliance, ESD protection, fuse, ATmega32U4, duplicate annotation all correctly detected; Key matrix: switches_on_matrix=0 despite 67 key switches (K1-K67) being ...
 

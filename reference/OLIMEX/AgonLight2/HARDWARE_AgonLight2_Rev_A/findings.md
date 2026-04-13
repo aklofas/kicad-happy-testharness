@@ -1,4 +1,4 @@
-# Findings: AgonLight2 / HARDWARE_AgonLight2_Rev_A_AgonLight2_Rev_A
+# Findings: OLIMEX/AgonLight2 / HARDWARE_AgonLight2_Rev_A
 
 ## FND-00000558: Component counts, BOM, and power rails correctly parsed across 4 sheets; VGA15 connector (VGA1) misclassified as varistor; Active oscillator Q1 reports output_net as 'GND' instead of the actual clo...
 

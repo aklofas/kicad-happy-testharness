@@ -1,4 +1,4 @@
-# Findings: GPS-Tracker / PCB__autosave-mcudev
+# Findings: mohamedboubaker/GPS-Tracker / PCB__autosave-mcudev
 
 ## FND-00000594: 18 capacitors with non-standard 'U' reference prefix misclassified as 'ic'; Crystal load caps (U8, U9 = 30pF each) not detected because they are misclassified as ICs; Transistor circuit Q1 gate_dri...
 

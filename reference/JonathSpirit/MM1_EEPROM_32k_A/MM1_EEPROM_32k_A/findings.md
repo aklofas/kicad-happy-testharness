@@ -1,4 +1,4 @@
-# Findings: MM1_EEPROM_32k_A / MM1_EEPROM_32k_A
+# Findings: JonathSpirit/MM1_EEPROM_32k_A / MM1_EEPROM_32k_A
 
 ## FND-00000871: Legacy .sch parser misses U1 data pin net connections for all 8 MEMDATA nets; Net classifier misclassifies all MEMADDRESS_* lines as 'chip_select' instead of 'address'; memory_interfaces detector f...
 

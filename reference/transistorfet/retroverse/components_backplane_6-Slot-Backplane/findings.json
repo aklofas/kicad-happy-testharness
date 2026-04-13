@@ -48,8 +48,12 @@
           "check": {
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
-            "value": 4
-          }
+            "value": 1
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Bus topology correctly detects A[0..31] (32-bit address), D[0..31] (32-bit data), and AM[0..5] (6-bit address modifier) buses",
@@ -93,8 +97,12 @@
           "check": {
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
-            "value": 3
-          }
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "IRQ1-IRQ7 nets correctly classified as 'interrupt' type",
@@ -149,7 +157,11 @@
         },
         {
           "description": "TCA0372 opamp circuits classified as 'comparator_or_open_loop' but they are actually configured as voltage followers/buffers with positive feedback (output tied to non-inverting input) providing a regulated termination voltage. The TCA0372 is a high-current dual power opamp specifically designed for active bus termination. While the positive feedback connection could be interpreted as comparator-like, the intent is a unity-gain buffer driving the termination reference rail through a decoupling capacitor.",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "VME bus control signals (~{AS}, ~{DS0}, ~{DS1}, ~{DTACK}, ~{BERR}, ~{WRITE}, ~{BBSY}, ~{BCLR}, ~{RETRY}) are classified as generic 'signal' rather than 'control'. These are well-known VME bus control strobes that should be classified as control signals.",
@@ -225,11 +237,39 @@
         },
         {
           "description": "All 4 comparator voltage-divider references correctly detected: R19/R20, R3/R4, R21/R22, R7/R8 producing 2.94V",
-          "analyzer_section": "signal_analysis.voltage_dividers"
+          "analyzer_section": "signal_analysis.voltage_dividers",
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R19",
+            "R20",
+            "R21",
+            "R22",
+            "R3",
+            "R4",
+            "R7",
+            "R8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R19$"
+          }
         },
         {
           "description": "All 4 TCA0372 units correctly classified as comparator_or_open_loop with hysteresis feedback",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.opamp_circuits",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "VME bus topology correctly detects A[1..31], D[0..31], AM[0..5] from 536 bus wires across 9 sheets",

@@ -1,4 +1,4 @@
-# Findings: ESP32-GATEWAY / HARDWARE_Hardware revision I_ESP32-GATEWAY_Rev_I
+# Findings: OLIMEX/ESP32-GATEWAY / HARDWARE_Hardware revision I_ESP32-GATEWAY_Rev_I
 
 ## FND-00000120: Legacy KiCad 5 format - Ethernet PHY detected but signal analysis severely limited; RMII signals misclassified as UART; zero voltage dividers/RC filters/power regulators detected despite TPS62A02 and CH340 being present; all subcircuit neighbors empty
 

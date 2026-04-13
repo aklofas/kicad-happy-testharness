@@ -1,4 +1,4 @@
-# Findings: Zenestra / zenestra-template_zenestra-template
+# Findings: splitkb/Zenestra / zenestra-template
 
 ## FND-00001825: All 10 mounting holes correctly identified with zero nets; assembly_complexity misclassifies all 10 mounting holes as SMD
 

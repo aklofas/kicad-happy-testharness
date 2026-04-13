@@ -1,4 +1,4 @@
-# Findings: Dual-pos-neg-5V-Supply-from-USB-power / KiCAD_files_LT193n_+-5V_Supply
+# Findings: drmcnelson/Dual-pos-neg-5V-Supply-from-USB-power / KiCAD_files_LT193n_+-5V_Supply
 
 ## FND-00000484: Component references correctly resolved from sheet instance table (C1→C201, U1→U201, etc.); U201 (LT1930ES5-TRMPBF) pin mapping fully correct: SW pin 1, GND pin 2, FB pin 3, *SHDN pin 4, VIN pin 5;...
 

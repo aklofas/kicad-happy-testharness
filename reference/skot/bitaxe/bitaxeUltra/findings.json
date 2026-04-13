@@ -46,7 +46,15 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R4$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C35",
+            "C44",
+            "R4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -80,7 +88,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R13$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C45",
+            "R13"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

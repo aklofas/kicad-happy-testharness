@@ -1,4 +1,4 @@
-# Findings: PCB-Mini-Environmental-Sensor / Kicad Files_Mini_Environmental_Sensor
+# Findings: MbFredys/PCB-Mini-Environmental-Sensor / Kicad Files_Mini_Environmental_Sensor
 
 ## FND-00001084: USB-C CC1/CC2 pull-down resistor failure correctly detected: 10k instead of 5.1k; PWR_FLAG warnings for +3V3, GND, VBUS are legitimate ERC issues; I2C buses (BME280 and SGP40) and all sensor ICs co...
 

@@ -1,4 +1,4 @@
-# Findings: Gas-sens_Rs-485 / PCB_RS485-Gassensor_Dev_RS485-Gassensor-Dev_RS485-Gassensor-Dev
+# Findings: Sarbf1/Gas-sens_Rs-485 / PCB_RS485-Gassensor_Dev_RS485-Gassensor-Dev
 
 ## FND-00000203: Development version of the RS485 gas sensor board, nearly identical to the production version with same dual-MCU design, opamp signal conditioning, and RS485 interface. Minor differences include extra connectors (J10-J12) and one fewer capacitor. Same analysis issues as the production board.
 

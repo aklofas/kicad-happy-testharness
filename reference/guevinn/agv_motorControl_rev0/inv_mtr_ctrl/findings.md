@@ -1,4 +1,4 @@
-# Findings: agv_motorControl_rev0 / inv_mtr_ctrl
+# Findings: guevinn/agv_motorControl_rev0 / inv_mtr_ctrl
 
 ## FND-00001980: Three-phase bridge circuit correctly detected with correct MOSFET assignments; bridge_circuits.driver_ics is empty — DRV8328B (U1) not recognized as gate driver IC; VDSLVL voltage divider (R3=141k/...
 

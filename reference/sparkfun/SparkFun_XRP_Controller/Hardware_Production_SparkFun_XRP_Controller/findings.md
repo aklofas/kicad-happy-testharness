@@ -1,4 +1,4 @@
-# Findings: SparkFun_XRP_Controller / Hardware_Production_SparkFun_XRP_Controller
+# Findings: sparkfun/SparkFun_XRP_Controller / Hardware_Production_SparkFun_XRP_Controller
 
 ## FND-00001892: Component inventory and statistics are accurate; Crystal circuit (Y1 12MHz) correctly detected with load capacitors; WS2812B addressable LED chain (D4) correctly detected; USB-C compliance checks p...
 

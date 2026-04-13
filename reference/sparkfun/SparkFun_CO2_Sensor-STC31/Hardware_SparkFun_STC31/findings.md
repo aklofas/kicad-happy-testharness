@@ -1,4 +1,4 @@
-# Findings: SparkFun_CO2_Sensor-STC31 / Hardware_SparkFun_STC31
+# Findings: sparkfun/SparkFun_CO2_Sensor-STC31 / Hardware_SparkFun_STC31
 
 ## FND-00001381: I2C bus detected with both STC31 and SHTC3 as devices on SCL/SDA; I2C pull-up resistors reported as missing, but R2 (2.2k) and R3 (2.2k) are present pull-ups behind solder jumper JP2; Component cou...
 

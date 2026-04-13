@@ -1,4 +1,4 @@
-# Findings: SparkFun_RFID_USB-C_Reader / Hardware_SparkFun_USB_RFID_Reader
+# Findings: sparkfun/SparkFun_RFID_USB-C_Reader / Hardware_SparkFun_USB_RFID_Reader
 
 ## FND-00001516: RFID USB-C reader (40 components); component counts and protection devices correct; buzzer transistor driver missed (Q1 collector drives BZ1(-)); UART not detected despite CH340C USB-UART converter
 

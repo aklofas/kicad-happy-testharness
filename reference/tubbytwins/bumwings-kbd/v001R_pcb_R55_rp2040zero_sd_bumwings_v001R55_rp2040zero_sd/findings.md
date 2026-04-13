@@ -1,4 +1,4 @@
-# Findings: bumwings-kbd / v001R_pcb_R55_rp2040zero_sd_bumwings_v001R55_rp2040zero_sd
+# Findings: tubbytwins/bumwings-kbd / v001R_pcb_R55_rp2040zero_sd_bumwings_v001R55_rp2040zero_sd
 
 ## FND-00002345: RZ1 (RP2040-Zero MCU module) misclassified as type 'resistor' instead of 'ic'; Key matrix correctly detected as 8x14 with 54 switches and 54 diodes
 

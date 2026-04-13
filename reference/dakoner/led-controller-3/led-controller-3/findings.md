@@ -1,4 +1,4 @@
-# Findings: led-controller-3 / led-controller-3
+# Findings: dakoner/led-controller-3 / led-controller-3
 
 ## FND-00002376: SPICE DC voltage sources V1/V2 misclassified as varistors; SPI bus false positive on ESP32 internal flash pins; Missed detection that this is an early-stage/incomplete design with minimal connections
 

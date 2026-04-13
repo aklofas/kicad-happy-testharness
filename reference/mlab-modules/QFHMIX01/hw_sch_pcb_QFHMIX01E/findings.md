@@ -1,4 +1,4 @@
-# Findings: QFHMIX01 / hw_sch_pcb_QFHMIX01E
+# Findings: mlab-modules/QFHMIX01 / hw_sch_pcb_QFHMIX01E
 
 ## FND-00000264: QFH antenna RF mixer board (235 components). AD8343 active mixers not detected in rf_chains. Power bypass caps falsely labeled as 'antenna' in rf_matching. LO port series RC networks misclassified as high-pass with wrong output_net=GND.
 

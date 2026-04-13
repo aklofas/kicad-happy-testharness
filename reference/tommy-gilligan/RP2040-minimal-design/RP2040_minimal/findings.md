@@ -1,4 +1,4 @@
-# Findings: RP2040-minimal-design / RP2040_minimal
+# Findings: tommy-gilligan/RP2040-minimal-design / RP2040_minimal
 
 ## FND-00001188: LDO regulator U1 (NCP1117-3.3) detected with correct topology, input/output rails; Crystal Y1 detected with correct load cap circuit (C14/C15 = 27pF, CL_eff = 16.5pF); Crystal frequency parsed as n...
 

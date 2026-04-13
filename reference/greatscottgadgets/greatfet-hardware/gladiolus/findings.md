@@ -1,4 +1,4 @@
-# Findings: greatfet-hardware / gladiolus_gladiolus
+# Findings: greatscottgadgets/greatfet-hardware / gladiolus
 
 ## FND-00000118: GreatFET One (Gladiolus) is an SDR/USB security research board with AD8330 VGA, AD9283 ADC, THS4520 diff amp, AD9704 DAC, and analog switches. The analyzer correctly identifies 7 subcircuits, 10 RF matching networks, 7 voltage dividers, 4 RC filters, and 17 LC filters. However, crystal_circuits falsely identifies 74LVC1G3157 SPDT analog switches as active oscillators, and all 138 components have category=None despite component_types being correctly classified in statistics.
 

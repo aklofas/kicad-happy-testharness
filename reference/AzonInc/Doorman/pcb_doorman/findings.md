@@ -1,4 +1,4 @@
-# Findings: Doorman / pcb_doorman
+# Findings: AzonInc/Doorman / pcb_doorman
 
 ## FND-00000474: statistics.dnp_parts reports 0 but 8 DNP components are present; pwr_flag_warnings falsely report +5V, +24V Bus, VCC, GND, +3.3V as missing PWR_FLAG; bus_topology width counts label instances inste...
 

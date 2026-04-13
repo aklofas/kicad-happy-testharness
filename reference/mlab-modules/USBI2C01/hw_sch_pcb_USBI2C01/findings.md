@@ -1,4 +1,4 @@
-# Findings: USBI2C01 / hw_sch_pcb_USBI2C01
+# Findings: mlab-modules/USBI2C01 / hw_sch_pcb_USBI2C01
 
 ## FND-00001755: CP2112 USB-to-I2C bridge IC (X1) misclassified as 'connector' instead of 'ic'; I2C bus not detected despite CP2112 having SDA/SCL pins connected; SV1-SV7 connector/header components misclassified a...
 

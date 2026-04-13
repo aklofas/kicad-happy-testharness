@@ -1,4 +1,4 @@
-# Findings: lets-split / lets-split
+# Findings: SirEelBiscuits/lets-split / lets-split
 
 ## FND-00002380: Key matrix estimated_keys and switches_on_matrix report 48 instead of 24; Voltage divider (HalfSelector bias network) correctly detected for split keyboard half-identification; USB Type-C CC pull-d...
 

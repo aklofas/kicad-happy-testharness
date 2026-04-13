@@ -1,4 +1,4 @@
-# Findings: EleLab_v2 / PCB_CAD_EleLab_v2_Bus100_EleLab_v2_Bus100
+# Findings: Chrismettal/EleLab_v2 / PCB_CAD_EleLab_v2_Bus100
 
 ## FND-00000527: Component counts, power rails, and types all correctly identified for power distribution bus board
 

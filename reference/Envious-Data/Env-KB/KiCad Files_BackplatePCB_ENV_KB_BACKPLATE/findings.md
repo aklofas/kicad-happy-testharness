@@ -1,4 +1,4 @@
-# Findings: Env-KB / KiCad Files_BackplatePCB_ENV_KB_BACKPLATE
+# Findings: Envious-Data/Env-KB / KiCad Files_BackplatePCB_ENV_KB_BACKPLATE
 
 ## FND-00000560: LED and resistor components misclassified as 'connector' type due to non-standard reference prefixes; Key matrix detection is accurate: 6 rows, 18 columns, 96 switches, 92 matrix diodes; USB Type-C...
 

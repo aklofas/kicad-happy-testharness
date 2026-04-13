@@ -1,4 +1,4 @@
-# Findings: KiCAD-MIDI-Templates / MIDI_IN_MIDI_IN
+# Findings: TuDo-Makerspace/KiCAD-MIDI-Templates / MIDI_IN
 
 ## FND-00000677: statistics.total_components reports 7 but there are 27 actual component instances on the sheet; 6N137 optocoupler not detected in isolation_barriers; Protection diodes (D? = 1N4148/1N400x) not dete...
 

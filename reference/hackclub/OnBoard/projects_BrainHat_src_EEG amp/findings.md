@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_BrainHat_src_EEG amp
+# Findings: hackclub/OnBoard / projects_BrainHat_src_EEG amp
 
 ## FND-00000095: EEG amplifier using AD8232 heart rate monitor IC and TS5A3159A analog switch. Opamp detection is questionable for AD8232 which is not a generic opamp.
 

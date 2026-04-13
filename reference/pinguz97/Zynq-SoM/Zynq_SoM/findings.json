@@ -13,7 +13,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "TPS7A20 LDO correctly identified",
@@ -22,7 +26,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "DDR3L SDRAM interface correctly detected",
@@ -31,7 +39,11 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "STM32G431 system controller crystal correctly detected",
@@ -40,7 +52,11 @@
             "path": "signal_analysis.crystal_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -52,15 +68,34 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U8$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "R25",
+            "R78",
+            "R79",
+            "U8"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Duplicate reset_pin observations for U7 (IS21ES08G eMMC) \u2014 emitted 3 times identically",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "has_high_freq=false on +1V35 with 11x 47nF/0201 caps (SRF ~23MHz) \u2014 47nF in 0201 is standard FPGA HF bypass",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "TPSM82864 multi-VOUT pins flagged as multi_driver_net \u2014 internal connection of power module QFN pads is expected",
@@ -75,7 +110,11 @@
             "path": "signal_analysis.ethernet_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "ethernet_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [
@@ -100,15 +139,46 @@
       "correct": [
         {
           "description": "All five power regulators correctly detected with accurate feedback divider analysis",
-          "analyzer_section": "signal_analysis.power_regulators"
+          "analyzer_section": "signal_analysis.power_regulators",
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.power_regulators",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DDR3L memory interface correctly identified: U1 MT41K256M16TW with 25 shared signal nets to U2 XC7Z020",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U1$"
+          }
         },
         {
           "description": "W25Q128JVS SPI flash correctly detected with 5 shared nets to Zynq",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "min_count",
+            "value": 1
+          }
         },
         {
           "description": "DDR CK, DQS0, DQS1 differential pairs correctly identified with series impedance matching",
@@ -152,11 +222,35 @@
       "missed": [
         {
           "description": "RTL8211F (U3) not detected as Ethernet PHY \u2014 uses custom MyLibrary: lib_id.",
-          "analyzer_section": "signal_analysis.ethernet_interfaces"
+          "analyzer_section": "signal_analysis.ethernet_interfaces",
+          "detector": "ethernet_interfaces",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.ethernet_interfaces",
+            "op": "contains_match",
+            "field": "phy_reference",
+            "pattern": "^U3$"
+          }
         },
         {
           "description": "IS21ES08G eMMC (U7) not detected in memory_interfaces \u2014 uses custom MyLibrary: lib_id.",
-          "analyzer_section": "signal_analysis.memory_interfaces"
+          "analyzer_section": "signal_analysis.memory_interfaces",
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9,
+          "check": {
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U7$"
+          }
         },
         {
           "description": "U2 XC7Z020 power domain detection severely incomplete: only '+3V3' tracked despite VCCINT (1.0V), VCCAUX (1.8V) etc.",

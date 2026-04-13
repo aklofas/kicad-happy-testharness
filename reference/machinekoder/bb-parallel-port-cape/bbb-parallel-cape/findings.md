@@ -1,4 +1,4 @@
-# Findings: bb-parallel-port-cape / bbb-parallel-cape
+# Findings: machinekoder/bb-parallel-port-cape / bbb-parallel-cape
 
 ## FND-00001967: Multi-sheet schematic correctly parsed: 2 sheets, 54 components, 256 nets; Multiple ground domains correctly detected as isolation barrier; Decoupling cap warnings correctly issued for all 5 GTL200...
 

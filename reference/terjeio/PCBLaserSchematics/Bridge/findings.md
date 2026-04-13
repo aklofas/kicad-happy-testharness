@@ -1,4 +1,4 @@
-# Findings: PCBLaserSchematics / Bridge_Bridge
+# Findings: terjeio/PCBLaserSchematics / Bridge
 
 ## FND-00001063: Component extraction, net topology, and label parsing all correct; 12V and 3V3 rails classified as 'signal' instead of 'power'
 

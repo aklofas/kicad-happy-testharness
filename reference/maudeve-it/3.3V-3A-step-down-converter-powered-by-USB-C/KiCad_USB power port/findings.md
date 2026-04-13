@@ -1,4 +1,4 @@
-# Findings: 3.3V-3A-step-down-converter-powered-by-USB-C / KiCad_USB power port
+# Findings: maudeve-it/3.3V-3A-step-down-converter-powered-by-USB-C / KiCad_USB power port
 
 ## FND-00000316: rf_matching false positive: bootstrap cap C7 and power inductor L1 misidentified as RF matching network; bridge_circuits false positive: Q5 and Q6 (two N-channel 2N7002s) misdetected as half-bridge...
 

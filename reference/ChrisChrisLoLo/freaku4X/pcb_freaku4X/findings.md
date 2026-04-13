@@ -1,4 +1,4 @@
-# Findings: freaku4X / pcb_freaku4X_freaku4X
+# Findings: ChrisChrisLoLo/freaku4X / pcb_freaku4X
 
 ## FND-00002071: Key matrix correctly detected as 8x5 with 41 switches and 40 diodes; OLED display (OL1) on I2C bus not listed as I2C device; I2C bus missing pullup resistors correctly flagged
 

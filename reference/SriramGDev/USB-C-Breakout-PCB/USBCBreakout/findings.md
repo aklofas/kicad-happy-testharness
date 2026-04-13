@@ -1,4 +1,4 @@
-# Findings: USB-C-Breakout-PCB / USBCBreakout
+# Findings: SriramGDev/USB-C-Breakout-PCB / USBCBreakout
 
 ## FND-00001559: USB interface not detected for Wurth-632723300011 USB-C connector; U1 (PRTR5V0U2X) pin-to-net mapping is wrong due to KiCad 5 legacy net tracing error; PRTR5V0U2X correctly identified as ESD protec...
 

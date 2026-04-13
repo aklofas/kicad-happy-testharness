@@ -1,4 +1,4 @@
-# Findings: iCE40HX8K-EVB / HARDWARE_REV-B1_iCE40HX8K-EVB_Rev_B1
+# Findings: OLIMEX/iCE40HX8K-EVB / HARDWARE_REV-B1_iCE40HX8K-EVB_Rev_B1
 
 ## FND-00002212: SY8009 switching regulators have input_rail=null despite being on +5V supply; JTAG connector (JTAG1/CON6) and JTAG enable jumper (JTAG_E1) not detected in bus analysis
 

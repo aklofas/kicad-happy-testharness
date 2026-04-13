@@ -1,4 +1,4 @@
-# Findings: OrangePiR1-schematics / KiCad_OrangePiR1
+# Findings: t-cun/OrangePiR1-schematics / KiCad_OrangePiR1
 
 ## FND-00000979: D-prefix components (DR*, DC*, DU*) misclassified as diode type
 

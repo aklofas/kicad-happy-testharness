@@ -1,4 +1,4 @@
-# Findings: KLOR / PCB_klor1_3_klor1_3
+# Findings: GEIGEIGEIST/KLOR / PCB_klor1_3
 
 ## FND-00000671: Component count inconsistency: statistics=88, simulation_readiness=100, assembly_complexity=109 — three different values; J1 (MJ-4PP-9, TRRS audio connector) misclassified as a UART debug connector...
 

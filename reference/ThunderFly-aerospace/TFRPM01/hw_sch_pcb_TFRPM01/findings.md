@@ -1,4 +1,4 @@
-# Findings: TFRPM01 / hw_sch_pcb_TFRPM01
+# Findings: ThunderFly-aerospace/TFRPM01 / hw_sch_pcb_TFRPM01
 
 ## FND-00001621: assembly_complexity.total_components=29 overcounts due to multi-unit IC U2 counted twice; assembly_complexity reports tht_count=0 but J1 (PinHeader_1x03_P2.54mm_Horizontal) is THT
 

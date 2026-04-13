@@ -26,17 +26,31 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R6$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R6",
+            "R7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Feedback divider R10/R11 for SY8089 not detected",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R10$"
-          }
+            "op": "equals",
+            "value": 8089
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R10",
+            "R11"
+          ],
+          "expected_relation": "count_equals",
+          "confidence": 0.6,
+          "expected_value": 8089
         }
       ],
       "suggestions": [

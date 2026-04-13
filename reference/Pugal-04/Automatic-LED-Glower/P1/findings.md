@@ -1,4 +1,4 @@
-# Findings: Automatic-LED-Glower / P1_P1
+# Findings: Pugal-04/Automatic-LED-Glower / P1
 
 ## FND-00000367: PWR_FLAG warnings fire despite explicit PWR_FLAG symbols on both rails; LDR/resistor voltage divider not detected in signal_analysis; sleep_current_audit misclassifies LED series resistor R3 as a p...
 

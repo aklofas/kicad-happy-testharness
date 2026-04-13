@@ -1,4 +1,4 @@
-# Findings: KiCad-Schematics / Boost 3.0A 5V 0805_2012_Boost 3.0A 5V 0805_2012
+# Findings: lendres/KiCad-Schematics / Boost 3.0A 5V 0805_2012
 
 ## FND-00000701: All MPNs reported missing despite F6 'Manufacturer Part No.' fields being populated in the .sch file; GND net incorrectly contains U? VIN (pin 2) and SW (pin 8) pins; BATT+ net incorrectly contains...
 

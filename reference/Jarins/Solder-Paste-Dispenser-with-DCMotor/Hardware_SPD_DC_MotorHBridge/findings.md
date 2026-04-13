@@ -1,4 +1,4 @@
-# Findings: Solder-Paste-Dispenser-with-DCMotor / Hardware_SPD_DC_MotorHBridge
+# Findings: Jarins/Solder-Paste-Dispenser-with-DCMotor / Hardware_SPD_DC_MotorHBridge
 
 ## FND-00001409: T0 and T1 (MountingHole_Pad footprints) misclassified as 'transformer'; Crystal oscillator circuit (Y1 + STM32F103) not detected — crystal_circuits empty
 

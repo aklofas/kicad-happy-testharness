@@ -1,4 +1,4 @@
-# Findings: bs_kombo_sidru / hardware_pcb_kombo_TP4056_m_kombo_TP4056_m
+# Findings: MelexinVN/bs_kombo_sidru / hardware_pcb_kombo_TP4056_m
 
 ## FND-00002008: 
 

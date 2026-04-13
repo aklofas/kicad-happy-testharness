@@ -1,4 +1,4 @@
-# Findings: M8SBC-486 / pcb_homebrew_486
+# Findings: maniekx86/M8SBC-486 / pcb_homebrew_486
 
 ## FND-00000844: AMS1117 regulators and voltage divider feedback networks correctly detected
 

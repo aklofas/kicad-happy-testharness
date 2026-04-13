@@ -34,11 +34,21 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "4 false positive crystal circuits detected. The LNA1109 has no crystals or oscillators - all active components are RF switches and an amplifier. The crystal detector is likely matching on capacitor-inductor networks near ICs.",
-          "analyzer_section": "signal_analysis.crystal_circuits"
+          "analyzer_section": "signal_analysis.crystal_circuits",
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "All 25 components have category=None. On a 25-component board, accurate categorization is especially important for design understanding.",
@@ -50,7 +60,16 @@
         },
         {
           "description": "RF chain shows 0 connections between the amplifier and filter, meaning the signal path U1->U3->U4->U2 is not traced",
-          "analyzer_section": "signal_analysis.rf_chains.connections"
+          "analyzer_section": "signal_analysis.rf_chains.connections",
+          "detector": "rf_chains",
+          "subject_refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -61,7 +80,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "The bypass/enable path controlled by R1 (3k) and R2 (470) for the LNA bias is not identified as an LNA bias network",
@@ -79,7 +102,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [

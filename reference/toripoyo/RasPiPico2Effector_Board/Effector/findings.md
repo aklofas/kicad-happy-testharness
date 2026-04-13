@@ -1,4 +1,4 @@
-# Findings: RasPiPico2Effector_Board / Effector
+# Findings: toripoyo/RasPiPico2Effector_Board / Effector
 
 ## FND-00001228: GNDA/GND split ground domains correctly detected with appropriate multi-domain warning; Voltage divider mid-point bias networks for op-amp inputs correctly detected; Op-amp unity-gain buffer config...
 

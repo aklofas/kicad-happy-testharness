@@ -1,4 +1,4 @@
-# Findings: dactyl-pcb-single-col / single-col_single-col
+# Findings: Bastardkb/dactyl-pcb-single-col / single-col
 
 ## FND-00002325: Key matrix (6x1) and SK6812MINI LED chain (6 LEDs) correctly detected; Bus topology reports 'row' signal width=18 instead of 6 (counts label instances, not unique signals)
 

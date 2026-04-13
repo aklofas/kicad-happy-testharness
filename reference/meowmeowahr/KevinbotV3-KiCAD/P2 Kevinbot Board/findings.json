@@ -11,20 +11,38 @@
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R18$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.077
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R18",
+            "R19"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.077
         },
         {
           "description": "Voltage divider R14/R15 (180K/10K, ratio=0.053) correctly detected for voltage monitoring channel A on VMOUT_A_RAW net",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
             "path": "signal_analysis.voltage_dividers",
-            "op": "contains_match",
-            "field": "r_top.ref",
-            "pattern": "^R14$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.053
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R14",
+            "R15"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.053
         },
         {
           "description": "RC low-pass filter R55/C20 (887R/10pF, fc=17.9MHz) correctly detected for high-frequency noise filtering",
@@ -34,7 +52,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R55$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C20",
+            "R55"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC low-pass filters R54/C18 and R53/C18 (20k/2.2uF, fc=3.62Hz) correctly detected as slow analog averaging filters",
@@ -43,8 +68,16 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R54$"
-          }
+            "pattern": "^R53$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C18",
+            "R53",
+            "R54"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Feedback divider R59/R58 (2.15k/3.4k) correctly identified as feedback network for the PSU regulator",
@@ -53,8 +86,15 @@
             "path": "signal_analysis.feedback_networks",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R59$"
-          }
+            "pattern": "^R58$"
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [
+            "R58",
+            "R59"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "26 connectors, 7 test points, 4 fuses, 6 LEDs correctly classified",
@@ -72,7 +112,14 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C22",
+            "C23"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Power rails +5V, +5VUSB, VBUS, VCCIO, GND all correctly identified",
@@ -108,14 +155,30 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "not_contains_match",
-            "field": "ref",
-            "pattern": "^R59$"
-          }
+            "op": "field_equals",
+            "field": "ratio",
+            "value": 0.613
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "R56",
+            "R58",
+            "R59"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "ratio",
+          "expected_value": 0.613
         },
         {
           "description": "VBUS decoupling shows only C1 (10nF) which seems low but may be correct for the specific design context",
-          "analyzer_section": "signal_analysis.decoupling_analysis"
+          "analyzer_section": "signal_analysis.decoupling_analysis",
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],
@@ -145,7 +208,14 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U15$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "L1",
+            "U15"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "4 voltage dividers correctly detected for the TMUX1511 analog mux channels",
@@ -154,7 +224,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "5 RC filters detected for voltage monitoring averaging and EMI suppression",
@@ -163,7 +237,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "2 feedback networks identified connecting to the LM25145 FB pin",
@@ -172,7 +250,11 @@
             "path": "signal_analysis.feedback_networks",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "feedback_networks",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "18 resistors, 12 capacitors, 3 fuses correctly counted in sub-sheet",
@@ -193,7 +275,16 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U15$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "R56",
+            "R58",
+            "R59",
+            "U15"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

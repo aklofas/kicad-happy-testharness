@@ -1,4 +1,4 @@
-# Findings: FlatPort / FlatPort
+# Findings: fire-h0und/FlatPort / FlatPort
 
 ## FND-00000553: BT1 (SW_Push, value='BOOT') misclassified as battery instead of switch; RS1 (SW_Push, value='RESET') misclassified as resistor instead of switch; component_types reports battery:1 and resistor:9 du...
 

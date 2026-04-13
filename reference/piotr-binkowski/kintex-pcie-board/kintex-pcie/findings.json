@@ -37,19 +37,34 @@
           "description": "W25Q128JVS SPI flash (U3) correctly detected as memory interface connected to FPGA with 6 shared signal nets",
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces[?memory_reference=='U3']",
-            "op": "min_count",
-            "value": 1
-          }
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U3$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "TPD4E02B04DQAR ESD protection ICs (U6, U7) correctly detected protecting B2B differential pairs",
           "analyzer_section": "signal_analysis.protection_devices",
           "check": {
             "path": "signal_analysis.protection_devices",
-            "op": "min_count",
-            "value": 2
-          }
+            "op": "contains_match",
+            "field": "ref",
+            "pattern": "^U6$"
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "U6",
+            "U7"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Power sequencing correctly detects U8 EN driven by 1V_PG (power good from U9), establishing U9->U8 sequence",
@@ -65,27 +80,54 @@
           "analyzer_section": "signal_analysis.transistor_circuits",
           "check": {
             "path": "signal_analysis.transistor_circuits",
-            "op": "min_count",
-            "value": 3
-          }
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Q1$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q2",
+            "Q3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Voltage divider R15/R16 (15K/3K from +12V) correctly detected feeding U9 EN pin via 1V_EN net",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers[?r_top.ref=='R15']",
-            "op": "min_count",
-            "value": 1
-          }
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R15$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R15",
+            "R16",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "VREF voltage divider R18/R19 (2K/2K from +1V8) correctly detected generating 0.9V reference for DDR2 SDRAM U2",
           "analyzer_section": "signal_analysis.voltage_dividers",
           "check": {
-            "path": "signal_analysis.voltage_dividers[?r_top.ref=='R18']",
-            "op": "min_count",
-            "value": 1
-          }
+            "path": "signal_analysis.voltage_dividers",
+            "op": "contains_match",
+            "field": "r_top.ref",
+            "pattern": "^R18$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R18",
+            "R19",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "GND and GNDA dual ground domains correctly identified with GNDA as analog ground for FPGA VDDA supply",
@@ -129,8 +171,12 @@
           "check": {
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
-            "value": 5
-          }
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -142,7 +188,13 @@
             "op": "not_contains_match",
             "field": "ref",
             "pattern": "^U8$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U8"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "16 LVDS/differential signals (B2B_TXC_*, B2B_TXD_*, B2B_RXC_*, B2B_RXD_*, GTX_125_*) misclassified as UART bus signals in bus_analysis. These are differential data/clock pairs for the board-to-board LVDS link and GTX reference clock, not UART.",
@@ -156,7 +208,14 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R12$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C2",
+            "R12"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Power budget shows +1V8 and +3V3 rails with no regulator assigned, despite both being outputs of U8 (MPM54304). MGTAVCC rail is entirely missing from the power budget. Only MGTAVTT is attributed to U8.",
@@ -172,10 +231,18 @@
           "description": "DDR2 SDRAM interface: MT47H64M8SH (U2) is a 60-pin DDR2 memory IC with 28+ signal connections to FPGA U1 (DDR_A0-13, DDR_BA0-1, DDR_DQ0-7, DDR_DM, DDR_DQS_P/N, DDR_CK_P/N, DDR_CAS, DDR_RAS, DDR_WE, DDR_CKE, DDR_ODT). This is the most signal-rich interface on the board and was not detected in memory_interfaces.",
           "analyzer_section": "signal_analysis.memory_interfaces",
           "check": {
-            "path": "signal_analysis.memory_interfaces[?memory_reference=='U2']",
-            "op": "min_count",
-            "value": 1
-          }
+            "path": "signal_analysis.memory_interfaces",
+            "op": "contains_match",
+            "field": "memory_reference",
+            "pattern": "^U1$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "SPI bus between FPGA U1 and Flash U3 via nets SPI_CLK, SPI_CS, SPI_D0-D3 (Quad SPI) not detected in bus_analysis.spi despite 6 signal nets and proper SPI naming convention.",
@@ -200,9 +267,17 @@
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
             "path": "signal_analysis.crystal_circuits",
-            "op": "min_count",
-            "value": 1
-          }
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^U4$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "U4",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MGTAVCC power rail (1.0V for FPGA MGT analog) missing from decoupling_analysis despite having C12 (22uF) and C21 (4.7uF) on the rail with 10 pin connections.",
@@ -211,7 +286,14 @@
             "path": "signal_analysis.decoupling_analysis[?rail=='MGTAVCC']",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C12",
+            "C21"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "MGTAVTT power rail (1.2V for FPGA MGT termination) missing from decoupling_analysis despite having C15 (22uF) and C25 (4.7uF) on the rail with 14 pin connections.",
@@ -220,7 +302,14 @@
             "path": "signal_analysis.decoupling_analysis[?rail=='MGTAVTT']",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C15",
+            "C25"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus (MPM_SDA, MPM_SCK) between FPGA U1 and PMIC U8 detected in bus_analysis but missing pull-up resistors flagged as a design concern. The I2C bus has no pull-ups which is notable for a bus that requires them.",

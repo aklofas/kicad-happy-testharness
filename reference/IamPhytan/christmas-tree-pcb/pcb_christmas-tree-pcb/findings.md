@@ -1,4 +1,4 @@
-# Findings: christmas-tree-pcb / pcb_christmas-tree-pcb
+# Findings: IamPhytan/christmas-tree-pcb / pcb_christmas-tree-pcb
 
 ## FND-00001998: 
 

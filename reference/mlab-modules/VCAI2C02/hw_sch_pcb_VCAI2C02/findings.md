@@ -1,4 +1,4 @@
-# Findings: VCAI2C02 / hw_sch_pcb_VCAI2C02
+# Findings: mlab-modules/VCAI2C02 / hw_sch_pcb_VCAI2C02
 
 ## FND-00001764: 43 components correctly counted with transformer and mounting holes recognized; Isolation barrier correctly detected for ADuM3190ARQZ across GNDD/GNDPWR domains; Isolated DC-DC flyback converter (T...
 

@@ -1,4 +1,4 @@
-# Findings: UDVBM-1 / kicad6_nano_UDVBM-1_Nano
+# Findings: mostlydiyrf/UDVBM-1 / kicad6_nano_UDVBM-1_Nano
 
 ## FND-00001609: kicad_version reported as 'unknown' instead of '6' for all three schematics; Capacitor value '0.10' parsed as 0.1 Farads (100 MF) instead of 100 nF (0.1 uF); LM7805 classified as topology='LDO' but...
 

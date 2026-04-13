@@ -1,4 +1,4 @@
-# Findings: Teensy-3.5-Breakout-Boaard / Arduino_As_Uno_R3_Arduino_As_Uno
+# Findings: mjs513/Teensy-3.5-Breakout-Boaard / Arduino_As_Uno_R3_Arduino_As_Uno
 
 ## FND-00001728: 8 connector-only schematic parsed correctly with power rails and UART net classification; Power rails correctly identified: +3.3V, +5V, GND, Vin
 

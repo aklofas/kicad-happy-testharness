@@ -1,4 +1,4 @@
-# Findings: detect_trigger_hw / detect_rev1_detect_rev1
+# Findings: appiko/detect_trigger_hw / detect_rev1
 
 ## FND-00002030: 
 

@@ -1,4 +1,4 @@
-# Findings: BB-ADS1220 / HARDWARE_BB-ADS1220_Rev.A_bb-ads1220_old
+# Findings: OLIMEX/BB-ADS1220 / HARDWARE_BB-ADS1220_Rev.A_bb-ads1220
 
 ## FND-00000382: REFP label not merging U1 REFP0 pin into REFP net; REFN label not merging U1 REFN0 pin into REFN net; AVSS label not merging U1 AVSS pin into AVSS net; SPI bus not detected despite clear SCLK/DIN/D...
 

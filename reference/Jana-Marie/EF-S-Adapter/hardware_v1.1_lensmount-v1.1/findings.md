@@ -1,4 +1,4 @@
-# Findings: EF-S-Adapter / hardware_v1.1_lensmount-v1.1
+# Findings: Jana-Marie/EF-S-Adapter / hardware_v1.1_lensmount-v1.1
 
 ## FND-00000488: All 39 component references and 41 nets correctly extracted; U1 STM32F042F6Px USB pin assignments are correct; Q1/Q2/Q3 2N7002 N-channel level shifters correctly identified; U2 XC6206PxxxMR LDO reg...
 

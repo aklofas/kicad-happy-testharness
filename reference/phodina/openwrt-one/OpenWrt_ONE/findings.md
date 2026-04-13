@@ -1,4 +1,4 @@
-# Findings: openwrt-one / OpenWrt_ONE
+# Findings: phodina/openwrt-one / OpenWrt_ONE
 
 ## FND-00000156: OpenWrt One router with MT7981B SoC, MT7976C WiFi, EN8811 2.5G Ethernet. Altium-imported design with unannotated components. 60% false-positive rate on regulators; ref prefix classifier fails on Altium naming.
 

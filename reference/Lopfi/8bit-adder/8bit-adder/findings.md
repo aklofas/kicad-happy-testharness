@@ -1,4 +1,4 @@
-# Findings: 8bit-adder / 8bit-adder
+# Findings: Lopfi/8bit-adder / 8bit-adder
 
 ## FND-00000347: assembly_complexity misclassifies THT axial resistors as other_SMD
 

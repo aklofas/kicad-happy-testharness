@@ -1,4 +1,4 @@
-# Findings: SIPM02 / hw_sch_pcb_SIPM02
+# Findings: mlab-modules/SIPM02 / hw_sch_pcb_SIPM02
 
 ## FND-00001246: Component counts, net extraction, and BOM correct; R8 typed as resistor but has value '100nF'; C10 typed as capacitor but has value '0R' — BOM grouping is mixed; RC filter chain on SiPM bias supply...
 

@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_Trail-Laser-Tag_src_DevIos-Sensor_DevIos-Sensor
+# Findings: hackclub/OnBoard / projects_Trail-Laser-Tag_src_DevIos-Sensor
 
 ## FND-00000105: Simple IR receiver board with two TSOP38438 IR receivers, a decoupling cap, and a current limiting resistor. Minimal design correctly analyzed.
 

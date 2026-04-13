@@ -1,4 +1,4 @@
-# Findings: RPi-Z80_Controller / PCB_RPi-Z80-Controller
+# Findings: DarthKitten2130/RPi-Z80_Controller / PCB_RPi-Z80-Controller
 
 ## FND-00001197: Power.sch correctly parsed as empty sub-sheet with no components
 

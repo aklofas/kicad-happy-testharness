@@ -1,4 +1,4 @@
-# Findings: argos-mouse / controller_splinktegrated
+# Findings: Bastardkb/argos-mouse / controller_splinktegrated
 
 ## FND-00001942: Component count, BOM, and power rails correctly extracted for RP2040 mouse controller; Crystal circuit with correct 15pF load caps identified for RP2040; LDO regulator U3 (XC6210B332MR-G) correctly...
 

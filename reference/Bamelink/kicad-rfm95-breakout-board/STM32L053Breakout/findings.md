@@ -1,4 +1,4 @@
-# Findings: kicad-rfm95-breakout-board / STM32L053Breakout
+# Findings: Bamelink/kicad-rfm95-breakout-board / STM32L053Breakout
 
 ## FND-00002262: RFM95W-868S2 LoRa RF module not detected in rf_chains or rf_matching; SPI bus chip_select_count reported as 0 for both SPI bus entries, but RFM95 has NSS pin connected; AMS1117-3.3 LDO regulator co...
 

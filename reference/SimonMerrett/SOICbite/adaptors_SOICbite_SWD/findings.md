@@ -1,4 +1,4 @@
-# Findings: SOICbite / adaptors_SOICbite_SWD_SOICbite_SWD
+# Findings: SimonMerrett/SOICbite / adaptors_SOICbite_SWD
 
 ## FND-00001250: VCC/GND net assignment swapped for J1/J4 ARM SWD connector pins; SWO and SWDCLK net labels are swapped relative to actual pin assignments
 

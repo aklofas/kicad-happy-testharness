@@ -1,4 +1,4 @@
-# Findings: pcb / DPH_testcontroller
+# Findings: kiibohd/pcb / DPH_testcontroller
 
 ## FND-00000224: kiibohd DPH test controller (45 components, legacy KiCad 5). Zero signal detections but design contains 2x LM324 quad op-amps (8 active filter stages with 4066 analog switches) that were completely missed. BOM extraction is accurate.
 

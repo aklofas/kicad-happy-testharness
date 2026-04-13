@@ -1,4 +1,4 @@
-# Findings: STM32-SDR_PCB / LCSDR
+# Findings: arsenal007/STM32-SDR_PCB / LCSDR
 
 ## FND-00001263: R4+C7 RC filter misclassified — pull-up to +3V3 parsed as RC-network with inverted input/output nets
 

@@ -1,4 +1,4 @@
-# Findings: ESP32_nixieclock / KiCad_nixie_clock
+# Findings: taltalp/ESP32_nixieclock / KiCad_nixie_clock
 
 ## FND-00000500: Component references, nets, and labels all correctly extracted for ESP32 sub-sheet
 

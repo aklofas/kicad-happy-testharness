@@ -1,4 +1,4 @@
-# Findings: clock-design / clock
+# Findings: chrisjohgorman/clock-design / clock
 
 ## FND-00002016: 4MHz crystal circuit correctly detected with load cap analysis; Decoupling warning for ATmega162 and HD44780 correctly flagged
 

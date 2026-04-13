@@ -1,4 +1,4 @@
-# Findings: Jeden-board / Jeden-Board
+# Findings: Wojtekb30/Jeden-board / Jeden-Board
 
 ## FND-00000654: Component count (29), net count (53), BOM, power rails, and protection device (D2=TVS on VCC) correctly detected; UART between FT232RL (U2) and ATmega328-P (U1) not detected; crystal_circuits corre...
 

@@ -1,4 +1,4 @@
-# Findings: FlashyChristmasTree / LedChristmasTree3
+# Findings: benjohnemmett/FlashyChristmasTree / LedChristmasTree3
 
 ## FND-00000552: Component count and BOM extraction accurate; Net topology and pin connectivity correct; RC low-pass filter false positive — this is a 555 astable timing network; PWR net classified as 'signal' inst...
 

@@ -14,7 +14,16 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Two LC filters correctly detected: L2/C5+C12 and L1/C6+C13 both at 15.17 kHz resonant frequency with parallel capacitance of 11uF, representing the Class D output reconstruction filters",
@@ -23,8 +32,19 @@
             "path": "signal_analysis.lc_filters",
             "op": "contains_match",
             "field": "inductor.ref",
-            "pattern": "^L2$"
-          }
+            "pattern": "^L1$"
+          },
+          "detector": "lc_filters",
+          "subject_refs": [
+            "C12",
+            "C13",
+            "C5",
+            "C6",
+            "L1",
+            "L2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling analysis correctly identifies V1.6 rail (1uF on C14) and +5V rail (144uF across 9 capacitors including 100uF C4)",
@@ -33,7 +53,14 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C14",
+            "C4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "41 components correctly counted: 4 ICs, 18 resistors, 14 capacitors, 2 inductors, 3 connectors",
@@ -73,7 +100,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R17$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "C14",
+            "R17",
+            "R18"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

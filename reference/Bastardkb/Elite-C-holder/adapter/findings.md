@@ -1,4 +1,4 @@
-# Findings: Elite-C-holder / adapter_adapter
+# Findings: Bastardkb/Elite-C-holder / adapter
 
 ## FND-00000509: Component extraction is accurate: 32 components across correct types (6 resistors, 4 switches, 2 ICs, 4 mounting holes, 14 connectors, 2 jumpers); Net connectivity is accurately extracted for all n...
 

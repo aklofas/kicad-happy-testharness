@@ -13,8 +13,31 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "contains_match",
             "field": "r_top.ref",
-            "pattern": "^R99$"
-          }
+            "pattern": "^R100$"
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R100",
+            "R99",
+            "U1",
+            "U10",
+            "U11",
+            "U12",
+            "U13",
+            "U14",
+            "U15",
+            "U16",
+            "U2",
+            "U3",
+            "U4",
+            "U5",
+            "U6",
+            "U7",
+            "U8",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "32 BC849C BJT transistor circuits correctly analyzed with base resistors (2M2 for input stages, 220k for cascade stages), emitter resistors (1k), and correct base/collector/emitter net assignments",
@@ -23,7 +46,11 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "66 RC filter stages correctly detected including 16 low-pass filters (220k + 100nF, ~7.23 Hz) for sensor biasing, 16 high-pass filters (10k + 100nF, ~159 Hz) for AC coupling, and 16 RC-networks (4k7 + 100nF) for collector pull-up filtering",
@@ -32,7 +59,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "16 BPW34 photodiodes correctly classified as diode type (D1-D16)",
@@ -59,7 +90,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "16 SHIELD connectors (J1-J16) correctly classified as connector type for photodiode shield connections",
@@ -81,7 +116,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U17$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U17"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "The 16 AP331A comparators (U1-U16) are used as signal discriminators for the photodiode channels but are not detected in opamp_circuits. While comparators are distinct from op-amps, they share the same topology and the analyzer should recognize comparator-based circuits.",
@@ -91,7 +132,28 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U1",
+            "U10",
+            "U11",
+            "U12",
+            "U13",
+            "U14",
+            "U15",
+            "U16",
+            "U2",
+            "U3",
+            "U4",
+            "U5",
+            "U6",
+            "U7",
+            "U8",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

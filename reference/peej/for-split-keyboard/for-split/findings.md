@@ -1,4 +1,4 @@
-# Findings: for-split-keyboard / for-split
+# Findings: peej/for-split-keyboard / for-split
 
 ## FND-00002179: Key matrix correctly detected as 5 rows x 12 columns with diode-per-key topology; Key matrix overcounts diodes_on_matrix (36) and switches_on_matrix (34) vs actual 30 each; reset_pin observation in...
 

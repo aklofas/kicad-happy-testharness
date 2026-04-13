@@ -40,7 +40,11 @@
       "incorrect": [
         {
           "description": "LMV358 opamp circuits both classified as comparator_or_open_loop but one is likely a Sallen-Key active filter (typical in baseband signal conditioning for SDR)",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "UART bus analysis reports 66 entries which is far too many - appears to be matching any 2-pin net as UART, including power nets like 3V3RX",
@@ -58,15 +62,31 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RF chain amplifiers list is empty despite design having baseband amplifier paths and gain stages",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "Missing regulator input cap flagged for U24 (LDO-ADJ) input rail __unnamed_82 but this is likely connected through the hierarchical sheet",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U24"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -113,7 +133,11 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "suggestions": [
@@ -165,23 +189,43 @@
       "incorrect": [
         {
           "description": "LMV358 opamp circuits classified as comparator_or_open_loop but these form active filters in the baseband signal conditioning path",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "RF chain amplifiers list is empty despite the radio module containing gain stages in the signal path",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "RF chain filters list is empty despite multiple LC filter networks being detected separately in lc_filters",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "RX_RCVR.SDA/SCL pullup rail shown as 3V3TX but radio.kicad_sch context suggests these should be on the RX power domain",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "16 single-pin nets reported includes hierarchical connections (AFE_SPI.CS, TX_XCVR.SHDN, etc.) that are connected in the parent sheet - not real issues",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -192,7 +236,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "No PLL loop filter detection for RFFC5072 charge pump outputs (R59/C90/C91/C87 form loop filter)",
@@ -210,7 +258,13 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [
+            "U11"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Baseband IQ signal paths (TXBB.I+/-, TXBB.Q+/-, RXBB.I+/-, RXBB.Q+/-) not traced as differential pairs or signal chains",
@@ -273,19 +327,35 @@
       "incorrect": [
         {
           "description": "RF chain amplifiers list is empty - the RX path should have LNA stages between antenna and mixer",
-          "analyzer_section": "signal_analysis.rf_chains"
+          "analyzer_section": "signal_analysis.rf_chains",
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "RF matching list is empty for RX path despite LC network components being present around the signal chain",
-          "analyzer_section": "signal_analysis.rf_matching"
+          "analyzer_section": "signal_analysis.rf_matching",
+          "detector": "rf_matching",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "LMV358 opamp classified as comparator_or_open_loop but forms active filter in baseband path",
-          "analyzer_section": "signal_analysis.opamp_circuits"
+          "analyzer_section": "signal_analysis.opamp_circuits",
+          "detector": "opamp_circuits",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         },
         {
           "description": "6 single-pin nets reported but include hierarchical connections (RXBB.Q+/-, RXBB.I+/-, etc.) connected in parent sheet",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -296,7 +366,11 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "PLL loop filter for RFFC5072 not detected",
@@ -323,7 +397,13 @@
             "path": "signal_analysis.rf_chains",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rf_chains",
+          "subject_refs": [
+            "U14"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

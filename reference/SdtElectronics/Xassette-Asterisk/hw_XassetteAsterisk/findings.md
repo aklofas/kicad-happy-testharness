@@ -1,4 +1,4 @@
-# Findings: Xassette-Asterisk / hw_XassetteAsterisk
+# Findings: SdtElectronics/Xassette-Asterisk / hw_XassetteAsterisk
 
 ## FND-00001766: Component count 144 matches KiCad 5 schematic source; D3 (Device:LED) correctly classified as led, not diode; Two switching regulators (SY8089AAAC) and one LDO (XC6206) detected; Two crystal circui...
 

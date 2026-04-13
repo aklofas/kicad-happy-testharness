@@ -1,4 +1,4 @@
-# Findings: ATU_0_HW / ATU_0
+# Findings: papamidas/ATU_0_HW / ATU_0
 
 ## FND-00000353: RL* relay components misclassified as resistors; relay type missing entirely from statistics; relay type absent from component_types statistics in all three output files
 

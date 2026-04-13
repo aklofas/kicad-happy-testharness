@@ -1,4 +1,4 @@
-# Findings: Nucleo2USB / Nucleo2USB
+# Findings: dmitrystu/Nucleo2USB / Nucleo2USB
 
 ## FND-00000969: USB D+/D- differential pairs on OTG connectors not detected; ESD protection ICs (ESDAxxSC6) correctly detected on both OTG USB buses; PMEG2010EJ Schottky diodes (D1-D3) misclassified as reverse_pol...
 

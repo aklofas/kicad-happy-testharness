@@ -1,4 +1,4 @@
-# Findings: 1590A / Base_Buffered_Buffered
+# Findings: torvalds/1590A / Base_Buffered
 
 ## FND-00000309: PWR_FLAG symbols not resolved to their connected power nets; pwr_flag_warnings false positive for GND: PWR_FLAG is present but not recognized; LED net classified as 'output_drive' despite having on...
 

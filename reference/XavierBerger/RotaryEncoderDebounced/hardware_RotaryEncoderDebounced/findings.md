@@ -1,4 +1,4 @@
-# Findings: RotaryEncoderDebounced / hardware_RotaryEncoderDebounced
+# Findings: XavierBerger/RotaryEncoderDebounced / hardware_RotaryEncoderDebounced
 
 ## FND-00001181: Three RC low-pass debounce filters correctly detected (R1/C1, R2/C2, R3/C3) at 1.59 kHz cutoff; Three pull-up resistors (R4, R5, R6) on 3.3 V correctly identified; 74HC14 Schmitt trigger inverter c...
 

@@ -1,4 +1,4 @@
-# Findings: kicadPCBs / amurNutzlast_amurNutzlast
+# Findings: Siegmundshof93/kicadPCBs / amurNutzlast
 
 ## FND-00002271: LT3030 regulator estimated_vout=0.601V incorrect; analyzer selects current-sense resistors (0.1Ω/100Ω) instead of ADJ pin feedback divider (357kΩ/210kΩ); Correct detection of FPGA design with I2C/S...
 

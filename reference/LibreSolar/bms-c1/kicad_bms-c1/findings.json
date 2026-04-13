@@ -13,8 +13,18 @@
             "path": "signal_analysis.bms_systems",
             "op": "contains_match",
             "field": "bms_reference",
-            "pattern": "^U4$"
-          }
+            "pattern": "^Q12$"
+          },
+          "detector": "bms_systems",
+          "subject_refs": [
+            "Q12",
+            "Q2",
+            "Q3",
+            "Q4",
+            "Q5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Current sense shunt R45 (300uOhm) correctly detected between BAT- and PACK- with BQ76952 as sense IC",
@@ -24,7 +34,13 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^R45$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "R45"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Feedback voltage divider R28 (82k) / R31 (35.7k) correctly identified as feedback for U3 LMR38010 FB pin with is_feedback=true",
@@ -34,7 +50,15 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R28$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R28",
+            "R31",
+            "U3"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "16 cell input RC filters correctly detected (R2-R17 with C1-C16 pairs, 20 ohm + 220nF parallel caps, ~18 kHz cutoff) for BQ76952 cell voltage measurement inputs",
@@ -43,8 +67,45 @@
             "path": "signal_analysis.rc_filters",
             "op": "contains_match",
             "field": "resistor.ref",
-            "pattern": "^R2$"
-          }
+            "pattern": "^R10$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C1",
+            "C10",
+            "C11",
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C16",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R14",
+            "R15",
+            "R16",
+            "R17",
+            "R2",
+            "R3",
+            "R4",
+            "R5",
+            "R6",
+            "R7",
+            "R8",
+            "R9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Shunt sense RC filters R19/C28 and R20/C28 (100 ohm + 100nF, ~15.9 kHz) correctly detected for SRP/SRN current sense inputs",
@@ -54,7 +115,15 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R19$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C28",
+            "R19",
+            "R20"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "12 MOSFET transistor circuits correctly analyzed including Q2-Q5 (IPT012N08N5 charge/discharge), Q12 (ZXMP10A17GTA P-channel), Q1 (DMN10H220LE) with gate resistors identified",
@@ -63,8 +132,19 @@
             "path": "signal_analysis.transistor_circuits",
             "op": "contains_match",
             "field": "reference",
-            "pattern": "^Q2$"
-          }
+            "pattern": "^Q1$"
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1",
+            "Q12",
+            "Q2",
+            "Q3",
+            "Q4",
+            "Q5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "ESD protection diodes D3/D4 (ESD5B5.0ST1G) on USB data lines and D8 (PESD2CANFD) on CAN bus correctly detected",
@@ -74,7 +154,15 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D3$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D3",
+            "D4",
+            "D8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C bus with pull-ups R32/R33 on I2C_SDA/I2C_SCL correctly detected connecting U4 (BQ76952) and U5",
@@ -83,7 +171,16 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "R32",
+            "R33",
+            "U4",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RT1 and RT2 (10k NTC thermistors) correctly classified as thermistor type in component_types",
@@ -101,14 +198,26 @@
           "analyzer_section": "signal_analysis.power_regulators",
           "check": {
             "path": "signal_analysis.power_regulators",
-            "op": "not_contains_match",
-            "field": "ref",
-            "pattern": "^U3$"
-          }
+            "op": "field_equals",
+            "field": "estimated_vout",
+            "value": 1.978
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U3"
+          ],
+          "expected_relation": "field_value_equals",
+          "confidence": 0.6,
+          "field": "estimated_vout",
+          "expected_value": 1.978
         },
         {
           "description": "Design observation vout_net_mismatch reports 40.1% difference between estimated 1.978V and +3V3 rail, but this mismatch is caused by the wrong Vref assumption, not a real circuit error",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [],

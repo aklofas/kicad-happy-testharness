@@ -1,4 +1,4 @@
-# Findings: AVR-Controller-Board / Kicad files_AVR_Controller_E168_E3
+# Findings: Chaitanya-cloud-mac/AVR-Controller-Board / Kicad files_AVR_Controller_E168_E3
 
 ## FND-00000346: signal_analysis.design_observations incorrectly reports U3 input cap as missing; J1 (2x03 ISP header) not identified as AVR ISP programming header; SPI bus not detected; pwr_flag_warnings incorrect...
 

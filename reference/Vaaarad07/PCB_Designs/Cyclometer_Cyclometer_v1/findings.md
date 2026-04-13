@@ -1,4 +1,4 @@
-# Findings: PCB_Designs / Cyclometer_Cyclometer_v1
+# Findings: Vaaarad07/PCB_Designs / Cyclometer_Cyclometer_v1
 
 ## FND-00001042: XBee module (XB24CDMPIT-001) not detected as RF chain; STM32F407 microcontroller misclassified as a power regulator; MORNSUN isolated DC-DC (U7), I2C buses with pullups, and CAN transceiver (MCP255...
 

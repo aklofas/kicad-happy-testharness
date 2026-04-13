@@ -1,4 +1,4 @@
-# Findings: SparkFun_Pico_Add_On_Flipper / Hardware_SparkFun_Pico_Add_On_Flipper
+# Findings: sparkfun/SparkFun_Pico_Add_On_Flipper / Hardware_SparkFun_Pico_Add_On_Flipper
 
 ## FND-00001470: Component counts correct: 16 total with 5 connectors, 4 fiducials, 2 resistors, 1 switch, 1 jumper, 3 other; I2C bus not detected despite R1/R2 (2.2k) pullup resistors on IO4/SDA and IO5/SCL nets; ...
 

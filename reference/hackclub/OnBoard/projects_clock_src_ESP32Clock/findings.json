@@ -30,7 +30,11 @@
         },
         {
           "description": "Regulator output noted as missing caps but 10 capacitors on the board may include regulator output caps - needs net-level analysis",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.7
         }
       ],
       "missed": [
@@ -50,7 +54,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "USB-C connector type not identified (TYPE-C 16PIN 2MD(073) is an EasyEDA part)",

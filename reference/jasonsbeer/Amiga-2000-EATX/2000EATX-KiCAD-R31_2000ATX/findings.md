@@ -1,4 +1,4 @@
-# Findings: Amiga-2000-EATX / 2000EATX-KiCAD-R31_2000ATX
+# Findings: jasonsbeer/Amiga-2000-EATX / 2000EATX-KiCAD-R31_2000ATX
 
 ## FND-00000280: Amiga 2000 EATX recreation (612 components). Two bugs found: Q200/Q201 MMBFJ211 JFETs misclassified as MOSFET (hardcoded type in signal_detectors.py). VC800 trimmer capacitor misclassified as varistor (VC prefix falls through to V->varistor), missing from Y800 crystal load caps. RC filters (67 entries, mostly 1k+1nF Zorro bus snubbers), BJT circuits, voltage dividers, MC7905 regulator, active oscillators all correct.
 

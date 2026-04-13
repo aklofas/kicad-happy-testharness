@@ -1,4 +1,4 @@
-# Findings: AronAyub/KICAD / MATRIX PROJECT_MATRIX PROJECT
+# Findings: AronAyub/KICAD / MATRIX PROJECT
 
 ## FND-00002545: LED matrix display driver with ATmega328PB-AU, five 74HC595 shift registers, eight 2N3055 power transistors for row driving, L78L05 voltage regulator, and a Bluetooth serial module. Analyzer correctly identified the core architecture including transistor circuits and voltage divider for level shifting.
 

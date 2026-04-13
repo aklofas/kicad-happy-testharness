@@ -1,4 +1,4 @@
-# Findings: Stock-Ticker-Hardware / Stock-Ticker-Hardware
+# Findings: UnsignedArduino/Stock-Ticker-Hardware / Stock-Ticker-Hardware
 
 ## FND-00001591: Capacitor value parsing: µF values are not converted to Farads correctly; RC filter cutoff frequency reported as 0.00 Hz due to capacitor parsing bug; SPI bus not detected despite CLK, CS, DOUT sig...
 

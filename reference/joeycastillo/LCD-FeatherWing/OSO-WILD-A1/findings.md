@@ -1,4 +1,4 @@
-# Findings: LCD-FeatherWing / OSO-WILD-A1_OSO-WILD-A1
+# Findings: joeycastillo/LCD-FeatherWing / OSO-WILD-A1
 
 ## FND-00000766: A3 kicad_sch correctly reports zero components — file is a blank shell
 

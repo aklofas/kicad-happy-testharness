@@ -1,4 +1,4 @@
-# Findings: PCIe_x16-to-x8_Debifurcator / PCIe_x16-to-x8_Debifurcator
+# Findings: mwrnd/PCIe_x16-to-x8_Debifurcator / PCIe_x16-to-x8_Debifurcator
 
 ## FND-00001070: Component counts, BOM, DNP flag, power rails all correct; assembly_complexity reports all 8 components as SMD with 0 THT — wrong; pwr_flag_warnings fires on +12V and +3.3VA — false positives for PC...
 

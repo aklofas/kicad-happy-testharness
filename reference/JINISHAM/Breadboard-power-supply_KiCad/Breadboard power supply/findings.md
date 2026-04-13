@@ -1,4 +1,4 @@
-# Findings: Breadboard-power-supply_KiCad / Breadboard power supply
+# Findings: JINISHAM/Breadboard-power-supply_KiCad / Breadboard power supply
 
 ## FND-00000416: R1+C3 incorrectly detected as RC low-pass filter; they are LM317 feedback and output bypass components; Design observation incorrectly reports U1 (LM7805) is missing input and output capacitors; Po...
 

@@ -1,4 +1,4 @@
-# Findings: STM32-SAMPLE-KICAD-BOARD / STM32_SAMPLE
+# Findings: MCLEANS/STM32-SAMPLE-KICAD-BOARD / STM32_SAMPLE
 
 ## FND-00001345: PCB component_groups shows D1-D6 (6 LEDs) but schematic has D1-D7 (7 LEDs); 2-layer board with mixed front/back placement correctly detected; Large courtyard overlap between J4 and U2 correctly det...
 

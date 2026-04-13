@@ -1,4 +1,4 @@
-# Findings: KiCad-RP-Pico / Test_Test
+# Findings: ncarandini/KiCad-RP-Pico / Test
 
 ## FND-00000732: Pico breakout board correctly parsed — 4 components, 36 nets, all pins connected; Power domain reports VBUS net as primary power rail for Pico instead of VSYS/3V3; AGND (pin 33) and ADC_VREF (pin 3...
 

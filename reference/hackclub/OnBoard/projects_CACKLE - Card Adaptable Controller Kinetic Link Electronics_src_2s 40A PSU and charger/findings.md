@@ -1,4 +1,4 @@
-# Findings: OnBoard / projects_CACKLE - Card Adaptable Controller Kinetic Link Electronics_src_2s 40A PSU and charger_2s 40A PSU and charger
+# Findings: hackclub/OnBoard / projects_CACKLE - Card Adaptable Controller Kinetic Link Electronics_src_2s 40A PSU and charger
 
 ## FND-00000091: 2S battery PSU/charger with BQ76905 BMS, half-bridge motor driver, RS-485. 16 false positive rf_matching detections on power filter components. RS-485 termination resistors misidentified as voltage divider.
 

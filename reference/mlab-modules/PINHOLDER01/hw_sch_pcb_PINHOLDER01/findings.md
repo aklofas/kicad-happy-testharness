@@ -1,4 +1,4 @@
-# Findings: PINHOLDER01 / hw_sch_pcb_PINHOLDER01
+# Findings: mlab-modules/PINHOLDER01 / hw_sch_pcb_PINHOLDER01
 
 ## FND-00001039: Small utility board (5 footprints, 3 nets) correctly analyzed
 

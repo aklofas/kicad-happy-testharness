@@ -1,4 +1,4 @@
-# Findings: kicad-pcbs / signalgen_signalgen
+# Findings: brightcloudy/kicad-pcbs / signalgen
 
 ## FND-00002255: ADP1715-3.3 LDO regulator has input and output rails swapped; SPI bus to AD9834 DDS chip not detected; ADA4805-1 op-amps classified as comparator_or_open_loop when circuit context suggests buffer/a...
 

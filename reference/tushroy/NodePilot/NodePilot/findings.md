@@ -1,4 +1,4 @@
-# Findings: NodePilot / NodePilot
+# Findings: tushroy/NodePilot / NodePilot
 
 ## FND-00000967: PC817 optocouplers and B0505S isolated DC-DC not detected as isolation barriers; Transistor circuits (Q1/Q2/Q4 2N3904) correctly detected with base resistors; RC filters correctly identified includ...
 

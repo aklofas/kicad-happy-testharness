@@ -1,4 +1,4 @@
-# Findings: HuskyA100_Nucleo_Shield / HuskyA100_Nucleo_Shield
+# Findings: stoneil/HuskyA100_Nucleo_Shield / HuskyA100_Nucleo_Shield
 
 ## FND-00000605: Component count, connector types, and BOM accurate for a connector-heavy Nucleo shield; Decoupling analysis empty — C1–C8 on 3.3V rail not detected because 3.3V uses global labels, not power symbol...
 

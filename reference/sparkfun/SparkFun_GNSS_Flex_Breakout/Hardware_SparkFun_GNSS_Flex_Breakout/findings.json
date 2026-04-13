@@ -14,7 +14,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RT9080-3.3 (U1) correctly identified as fixed 3.3V LDO with 5V input",
@@ -24,7 +30,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D1 DF5A5.6LFU correctly identified as multi-line ESD protection on SD card lines (SD_CLK, SD_DAT0, SD_CMD)",
@@ -34,7 +46,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D21 DT1042-04SO correctly identified as ESD protection on multiple signal lines",
@@ -44,7 +62,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^D21$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "D21"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "D22 and D19 BAT60A Schottky diodes correctly classified",
@@ -63,7 +87,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^F1$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "F1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "3 decoupling rails (3.3V with 13 caps/46.3uF, 5V with 4 caps/22uF, VUSB2 with 1 cap) correctly analyzed",
@@ -72,7 +102,11 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "U5 and U3 74HC4066BQ correctly classified as ICs (analog switches for signal routing)",
@@ -99,7 +133,13 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "47 protection devices comprehensively detected across SD card, GNSS, and USB signal lines",
@@ -108,7 +148,11 @@
             "path": "signal_analysis.protection_devices",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -125,7 +169,11 @@
             "path": "signal_analysis.bus_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SD card interface (SD_CLK, SD_DAT0, SD_CMD, SD_DAT3) connecting to J1 microSD_Friction with ESD protection (D1) not detected as memory/storage interface",
@@ -134,7 +182,14 @@
             "path": "signal_analysis.bus_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [
+            "D1",
+            "J1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB-C interface through CH342F (U2) dual UART bridge not detected as USB bus",
@@ -143,7 +198,13 @@
             "path": "signal_analysis.bus_interfaces",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "bus_interfaces",
+          "subject_refs": [
+            "U2"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "74HC4066BQ (U3, U5) analog switch signal routing for GNSS UART multiplexing not analyzed -- these route UART TX/RX between GNSS module and CH342F or RP2350",
@@ -153,7 +214,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U3$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "U3",
+            "U5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "No voltage dividers detected, but R5=100k and other resistors may form enable/bias networks worth flagging",
@@ -163,7 +231,13 @@
             "op": "contains_match",
             "field": "r_top.ref",
             "pattern": "^R5$"
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [
+            "R5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

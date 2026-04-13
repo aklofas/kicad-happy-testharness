@@ -1,4 +1,4 @@
-# Findings: Raemixx500 / Raemixx500
+# Findings: SukkoPera/Raemixx500 / Raemixx500
 
 ## FND-00001207: TC9 (Device:C_Variable, variable capacitor) misclassified as 'transformer'; Y9 (32768 Hz RTC crystal) not detected in crystal_circuits for rtc.sch standalone analysis
 

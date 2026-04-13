@@ -1,4 +1,4 @@
-# Findings: jonathan-tooley/903 / KiCad_Real903_A-GA_A-GA
+# Findings: jonathan-tooley/903 / KiCad_Real903_A-GA
 
 ## FND-00002519: Vintage 903 computer board with 6 custom LS_Gen ICs, DIN41612 connector, 560 mounting pads, 124 test points. Correct parsing overall. Issues: multi-unit IC pin_nets shows wrong-unit pins, 6v/Neg6v power rails classified as signal.
 

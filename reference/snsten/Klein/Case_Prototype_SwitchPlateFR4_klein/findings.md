@@ -1,4 +1,4 @@
-# Findings: Klein / Case_Prototype_SwitchPlateFR4_klein
+# Findings: snsten/Klein / Case_Prototype_SwitchPlateFR4_klein
 
 ## FND-00000760: T1 (Trackpad_Mount) misclassified as 'transformer'; U3 (TRRS AudioJack4) misclassified as 'ic'; Key matrix detected as 4x4 (COL 1 missing); should be 4x5; VCC_3{slash}5 global labels present in lab...
 

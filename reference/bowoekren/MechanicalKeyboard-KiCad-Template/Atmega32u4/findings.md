@@ -1,4 +1,4 @@
-# Findings: MechanicalKeyboard-KiCad-Template / Atmega32u4
+# Findings: bowoekren/MechanicalKeyboard-KiCad-Template / Atmega32u4
 
 ## FND-00000885: Crystal component (ref='Crystal', value='16Mhz', lib_id='Device:Crystal_GND24_Small') misclassified as capacitor; USB compliance check not run despite USB_TYPEC connector (HRO-TYPE-C-31-M-12) being...
 

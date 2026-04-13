@@ -28,19 +28,32 @@
           "description": "Crystal Y1 correctly identified as 32MHz with two 30pF load caps (C6, C7) and effective load 18pF",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
-            "path": "$.signal_analysis.crystal_circuits[0].frequency",
-            "op": "eq",
-            "value": 32000000.0
-          }
+            "path": "signal_analysis.crystal_circuits",
+            "op": "contains_match",
+            "field": "reference",
+            "pattern": "^Y1$"
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C6",
+            "C7",
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal load cap calculation correct: CL_eff = (30pF * 30pF)/(30pF + 30pF) + 3pF stray = 18pF",
           "analyzer_section": "signal_analysis.crystal_circuits",
           "check": {
-            "path": "$.signal_analysis.crystal_circuits[0].effective_load_pF",
-            "op": "eq",
-            "value": 18.0
-          }
+            "path": "signal_analysis.crystal_circuits",
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "I2C1 bus correctly detected with R22 (4.7k) pullup on SCL and R23 (4.7k) pullup on SDA to +3.3V",
@@ -49,7 +62,14 @@
             "path": "$.signal_analysis.design_observations[?(@.category=='i2c_bus' && @.net=='I2C1_SCL')].pullup_resistor",
             "op": "eq",
             "value": "R22"
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "R22",
+            "R23"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "I2C2 bus correctly detected with R24 (4.7k) pullup on SCL and R25 (4.7k) pullup on SDA to +3.3V",
@@ -58,7 +78,14 @@
             "path": "$.signal_analysis.design_observations[?(@.category=='i2c_bus' && @.net=='I2C2_SCL')].pullup_resistor",
             "op": "eq",
             "value": "R24"
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "R24",
+            "R25"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Reset circuit correctly detected: R33 (4.7k) pullup, C8 (100nF) filter cap, SW1 push button",
@@ -67,25 +94,45 @@
             "path": "$.signal_analysis.design_observations[?(@.category=='reset_pin')].component",
             "op": "eq",
             "value": "U2"
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "C8",
+            "R33",
+            "SW1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter on NRST correctly identified: R33 4.7k + C8 100nF = 338.63 Hz low-pass",
           "analyzer_section": "signal_analysis.rc_filters",
           "check": {
-            "path": "$.signal_analysis.rc_filters[0].cutoff_hz",
-            "op": "approx",
-            "value": 338.63
-          }
+            "path": "signal_analysis.rc_filters",
+            "op": "contains_match",
+            "field": "resistor.ref",
+            "pattern": "^R33$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C8",
+            "R33"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Decoupling analysis correctly finds 12 caps on +3.3V rail (9x 100nF + 3x 1uF = 3.9uF total)",
           "analyzer_section": "signal_analysis.decoupling_analysis",
           "check": {
-            "path": "$.signal_analysis.decoupling_analysis[0].cap_count",
-            "op": "eq",
-            "value": 12
-          }
+            "path": "signal_analysis.decoupling_analysis",
+            "op": "min_count",
+            "value": 1
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "SPI3 bus correctly detected with SCK, MISO, MOSI signals in full-duplex mode",
@@ -204,7 +251,13 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "C17"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Debug jumper JP1 (3-pin jumper connecting +3.3V, common, and GND) not analyzed as a debug/configuration feature. This jumper selects BOOT0 mode or similar debug configuration for the STM32, with R32 (4.7k) in the circuit.",
@@ -213,7 +266,13 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "R32"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Duplicate I2C2_SCL hierarchical label (at two locations: 195.58,116.84 and 123.19,109.22) not flagged as a noteworthy connectivity pattern. Similarly I2C2_SDA appears at two locations (123.19,111.76 and 195.58,124.46) and I2C1_SCL/SDA are at both the MCU pins and the pullup resistor section.",

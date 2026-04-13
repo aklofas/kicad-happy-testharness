@@ -1,4 +1,4 @@
-# Findings: HadesFCS / Hardware_HadesMicroJLCPCB_HadesMicroJLCPCB
+# Findings: pms67/HadesFCS / Hardware_HadesMicroJLCPCB
 
 ## FND-00000083: HadesMicro JLCPCB edition - 84 components, zero signals due to KH-016; compact flight controller design
 

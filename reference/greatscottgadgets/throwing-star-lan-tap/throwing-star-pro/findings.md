@@ -1,4 +1,4 @@
-# Findings: throwing-star-lan-tap / throwing-star-pro
+# Findings: greatscottgadgets/throwing-star-lan-tap / throwing-star-pro
 
 ## FND-00000071: Legacy wire-to-pin connectivity completely broken: all 32 RJ45 data pins appear as isolated unnamed nets instead of being connected to SIG1-SIG8 labeled nets
 

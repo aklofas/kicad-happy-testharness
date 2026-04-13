@@ -1,4 +1,4 @@
-# Findings: Avionic-Mastodonte / BR-Motor
+# Findings: axpaul/Avionic-Mastodonte / BR-Motor
 
 ## FND-00000380: RC filter overcounting: 12 detected but only 6 are true signal-path filters; Q1 (SQD50P04-13L_T4GE3) classified as is_pchannel=false, but it is a P-Channel MOSFET; LM340AT (U1) classified as topolo...
 

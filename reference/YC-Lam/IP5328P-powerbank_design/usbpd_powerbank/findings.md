@@ -1,4 +1,4 @@
-# Findings: IP5328P-powerbank_design / usbpd_powerbank
+# Findings: YC-Lam/IP5328P-powerbank_design / usbpd_powerbank
 
 ## FND-00000662: kicad_version reported as 'unknown' for a valid KiCad 5.99/pre-6 schematic; IP5328 power bank IC correctly identified as switching regulator with inductor L1; USB-C CC resistor fail is correct: R2/...
 

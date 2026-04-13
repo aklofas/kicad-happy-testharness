@@ -14,7 +14,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U8$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U9 USBLC6-2P6 ESD protection correctly detected on USB_DP, USB_DM, and USB_VBUS nets",
@@ -24,7 +30,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U9$"
-          }
+          },
+          "detector": "protection_devices",
+          "subject_refs": [
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Crystal Y1 (X50328MSB2GI) correctly detected with 2x 20pF load caps (C6, C9) giving effective CL=13pF, flagged as in_typical_range=true",
@@ -34,7 +46,15 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "C6",
+            "C9",
+            "Y1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Low-pass RC filter R5 (47k) / C16 (0.1uF) at 33.86 Hz correctly detected on +3.3V rail",
@@ -44,7 +64,14 @@
             "op": "contains_match",
             "field": "resistor.ref",
             "pattern": "^R5$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C16",
+            "R5"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "13 decoupling caps on +3.3V rail (15.8uF total including C1 4.7uF bulk and C20 10uF) correctly analyzed with has_bulk=true, has_bypass=true",
@@ -53,7 +80,14 @@
             "path": "signal_analysis.decoupling_analysis",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "decoupling_analysis",
+          "subject_refs": [
+            "C1",
+            "C20"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "U1 STM32F401VCTx correctly detected as ic_with_internal_regulator topology in power_regulators",
@@ -63,7 +97,13 @@
             "op": "contains_match",
             "field": "ref",
             "pattern": "^U1$"
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [
+            "U1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "USB data lines USB_DP and USB_DM correctly flagged with has_esd_protection=true via U9",
@@ -72,7 +112,13 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Missing input cap warning for U8 TLV76133DCY on USB_VBUS rail correctly flagged in regulator_caps observation",
@@ -81,7 +127,13 @@
             "path": "signal_analysis.design_observations",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "design_observations",
+          "subject_refs": [
+            "U8"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -91,7 +143,14 @@
         },
         {
           "description": "Decoupling observation flags U7 AP22816KC and U1 STM32F401VCTx as missing caps on PWR_ON and PWR_OK rails, but these are logic signals not power rails requiring decoupling",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U1",
+            "U7"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -102,8 +161,22 @@
             "path": "signal_analysis.memory_interfaces",
             "op": "contains_match",
             "field": "memory_reference",
-            "pattern": "^U4$"
-          }
+            "pattern": "^U1$"
+          },
+          "detector": "memory_interfaces",
+          "subject_refs": [
+            "U1",
+            "U10",
+            "U11",
+            "U15",
+            "U16",
+            "U4",
+            "U6",
+            "U8",
+            "U9"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

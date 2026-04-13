@@ -1,4 +1,4 @@
-# Findings: BlueSCSI-v2 / hardware_Centronics_50Pin_Centronics_50Pin
+# Findings: jbnd/BlueSCSI-v2 / hardware_Centronics_50Pin
 
 ## FND-00000411: RP1 (Raspberry Pi Pico module) classified as 'resistor' due to R-prefix heuristic; SD2 (MicroSD card socket) classified as 'switch' instead of a memory/connector component; AP1117-ADJ regulator Vre...
 

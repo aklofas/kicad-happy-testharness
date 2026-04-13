@@ -1,4 +1,4 @@
-# Findings: AidonBoard32 / AidonBoard32
+# Findings: henriknelson/AidonBoard32 / AidonBoard32
 
 ## FND-00000364: Q4 incorrectly identified as LED driver; U2 (CP2102N) incorrectly listed as gate driver IC for Q1 PMOS
 

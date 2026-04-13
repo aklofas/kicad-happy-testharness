@@ -1,4 +1,4 @@
-# Findings: hackrf / hardware_LNA915_LNA915
+# Findings: greatscottgadgets/hackrf / hardware_LNA915
 
 ## FND-00002157: RF switches and CPLD falsely classified as active oscillators due to 'sg-' keyword matching 'gsg-symbols' library name; Test coverage classifies 17 RF and I2S signals as 'uart' due to overly broad ...
 

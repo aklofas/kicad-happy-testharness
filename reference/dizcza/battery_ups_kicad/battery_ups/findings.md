@@ -1,4 +1,4 @@
-# Findings: battery_ups_kicad / battery_ups
+# Findings: dizcza/battery_ups_kicad / battery_ups
 
 ## FND-00001965: Power regulator modules (XL4015 step-down U1, step-up U3) not detected in signal_analysis.power_regulators; multi_driver_nets false positive: GND driven by U1.OUT- and U3.OUT- is not a real conflic...
 

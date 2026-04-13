@@ -1,4 +1,4 @@
-# Findings: Bangle-JS2-SWD / Bangle-USB-SWD
+# Findings: nica-f/Bangle-JS2-SWD / Bangle-USB-SWD
 
 ## FND-00000385: Single-pin nets not flagged in connectivity_issues; SWD debug connector not detected in test_coverage; All connectors classified as SMD; should be THT; VbusA net classified as 'signal' instead of '...
 

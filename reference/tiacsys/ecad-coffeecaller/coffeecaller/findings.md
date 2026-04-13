@@ -1,4 +1,4 @@
-# Findings: ecad-coffeecaller / coffeecaller
+# Findings: tiacsys/ecad-coffeecaller / coffeecaller
 
 ## FND-00002346: KEY1 (TS-1003S-07026 tactile switch) misclassified as type 'relay'
 

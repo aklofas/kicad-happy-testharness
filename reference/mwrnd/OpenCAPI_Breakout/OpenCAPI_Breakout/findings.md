@@ -1,4 +1,4 @@
-# Findings: OpenCAPI_Breakout / OpenCAPI_Breakout
+# Findings: mwrnd/OpenCAPI_Breakout / OpenCAPI_Breakout
 
 ## FND-00000084: KiCad 8 high-speed connector breakout board. 36 components (all connectors - 1 OpenCAPI host connector + 35 coaxial connectors). Differential pair detection is excellent (17/17 pairs found). UART bus detection is a false positive - Tx/Rx named nets are high-speed serial lanes, not UART.
 

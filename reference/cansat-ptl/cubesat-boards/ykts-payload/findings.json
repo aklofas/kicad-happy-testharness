@@ -13,7 +13,11 @@
             "path": "signal_analysis.voltage_dividers",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "voltage_dividers",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "4 crystal circuits (Y1/Y3 8MHz, Y2/Y4 12MHz) with 22pF load caps correct",
@@ -23,7 +27,16 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Y1$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "Y1",
+            "Y2",
+            "Y3",
+            "Y4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "3 power regulators (AMS1117-5.0, dual L78L33) correctly identified",
@@ -32,7 +45,11 @@
             "path": "signal_analysis.power_regulators",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "power_regulators",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         },
         {
           "description": "PMOS Q1 PMV65XP high-side switch correctly identified",
@@ -42,7 +59,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^Q1$"
-          }
+          },
+          "detector": "transistor_circuits",
+          "subject_refs": [
+            "Q1"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "incorrect": [
@@ -53,8 +76,16 @@
             "path": "signal_analysis.rc_filters",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R30$"
-          }
+            "pattern": "^R29$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C14",
+            "R29",
+            "R30"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Same double-counting for C29 (R48+C29 and R47+C29)",
@@ -63,8 +94,16 @@
             "path": "signal_analysis.rc_filters",
             "op": "not_contains_match",
             "field": "resistor.ref",
-            "pattern": "^R48$"
-          }
+            "pattern": "^R47$"
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C29",
+            "R47",
+            "R48"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [
@@ -76,7 +115,13 @@
             "op": "contains_match",
             "field": "shunt.ref",
             "pattern": "^U4$"
-          }
+          },
+          "detector": "current_sense",
+          "subject_refs": [
+            "U4"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         }
       ],
       "suggestions": [

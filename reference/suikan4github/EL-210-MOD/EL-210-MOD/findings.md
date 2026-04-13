@@ -1,4 +1,4 @@
-# Findings: EL-210-MOD / EL-210-MOD
+# Findings: suikan4github/EL-210-MOD / EL-210-MOD
 
 ## FND-00000490: Component inventory and BOM counts are correct; Power rails correctly identified: +24V, +3.3V, +BATT, -2V5, GND; Both boost regulator circuits correctly detected and characterized; U6 estimated out...
 

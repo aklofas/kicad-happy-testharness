@@ -1,4 +1,4 @@
-# Findings: dual-button-doorbell / door_bell
+# Findings: espena/dual-button-doorbell / door_bell
 
 ## FND-00002335: UART bus not detected despite MAX3232 RS-232 transceiver and UART debug connector; Cross-domain level-shifter warnings correctly identified for I2S signals
 

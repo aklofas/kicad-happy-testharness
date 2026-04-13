@@ -1,4 +1,4 @@
-# Findings: Full-Mechanical-keyboard-PCB / 1. mechanical keyboard
+# Findings: martinchez/Full-Mechanical-keyboard-PCB / 1. mechanical keyboard
 
 ## FND-00000565: Component counts accurate: 41 diodes, 41 switches (MX_SW_solder), 3 stabilizers (MX_stab), 4 mounting holes, 1 connector; Key matrix detected: 4 rows × 11 columns, 41 switches, 41 diodes; kicad_ver...
 

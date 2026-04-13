@@ -1,4 +1,4 @@
-# Findings: tb303_vcf_kicad_project_gerbers / bergman_303_vcf_v0.02
+# Findings: WimOliphant/tb303_vcf_kicad_project_gerbers / bergman_303_vcf_v0.02
 
 ## FND-00000170: TB-303 VCF clone analog filter circuit. L7805 regulator classified as IC, trimmers as resistors, no analog filter detection.
 

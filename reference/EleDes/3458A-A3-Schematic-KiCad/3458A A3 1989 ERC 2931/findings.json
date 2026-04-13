@@ -14,7 +14,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U230$"
-          }
+          },
+          "detector": "crystal_circuits",
+          "subject_refs": [
+            "U230"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "LM6361 U140 correctly classified as transimpedance_or_buffer with R141=12.1k feedback",
@@ -24,7 +30,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U140$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "R141",
+            "U140"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "LM358 U170 units correctly classified as inverting (gain=-0.412) and buffer",
@@ -34,7 +47,13 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U170$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U170"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "LT1001 reference regulators U160/U165 for +12ref/-12ref correctly identified",
@@ -44,7 +63,14 @@
             "op": "contains_match",
             "field": "reference",
             "pattern": "^U160$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "U160",
+            "U165"
+          ],
+          "expected_relation": "in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Precision RC filters for signal path correctly detected (XO_OVLD, XF/R, ACDA/DCDA)",
@@ -53,7 +79,11 @@
             "path": "signal_analysis.rc_filters",
             "op": "min_count",
             "value": 1
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [],
+          "expected_relation": "in_detector",
+          "confidence": 0.7
         }
       ],
       "incorrect": [
@@ -65,7 +95,14 @@
             "op": "not_contains_match",
             "field": "reference",
             "pattern": "^U405$"
-          }
+          },
+          "detector": "opamp_circuits",
+          "subject_refs": [
+            "C403",
+            "U405"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "RC filter [7] (R407+C403, ground_net=HTRIG) is false positive \u2014 R407 is comparator input resistor, C403 is hysteresis cap; HTRIG is comparator output, not ground",
@@ -75,11 +112,29 @@
             "op": "not_contains_match",
             "field": "resistor.ref",
             "pattern": "^R407$"
-          }
+          },
+          "detector": "rc_filters",
+          "subject_refs": [
+            "C403",
+            "R407"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         },
         {
           "description": "Duplicate design_observations: U213 5x, U303 7x, U302 7x, U353 7x, U150 7x, U403 5x \u2014 decoupling check iterates per unit, inflating 25 unique ICs to 66 entries",
-          "analyzer_section": "signal_analysis.design_observations"
+          "analyzer_section": "signal_analysis.design_observations",
+          "detector": "design_observations",
+          "subject_refs": [
+            "U150",
+            "U213",
+            "U302",
+            "U303",
+            "U353",
+            "U403"
+          ],
+          "expected_relation": "not_in_detector",
+          "confidence": 0.9
         }
       ],
       "missed": [],

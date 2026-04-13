@@ -1,4 +1,4 @@
-# Findings: cynthion-hardware / cynthion
+# Findings: greatscottgadgets/cynthion-hardware / cynthion
 
 ## FND-00000015: Deep review of cynthion-hardware across 17 sub-sheets. 4 LDOs correct, I2C/USB/memory detection solid. PWR_FLAG warnings spurious (Issue #10). Voltage divider false positives for BJT base bias networks (Issue #12). Missed SPI bus, Zener voltage monitor, and transistor circuits on power_supplies sheet.
 

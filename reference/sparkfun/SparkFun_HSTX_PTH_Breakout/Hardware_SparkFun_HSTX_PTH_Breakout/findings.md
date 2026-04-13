@@ -1,4 +1,4 @@
-# Findings: SparkFun_HSTX_PTH_Breakout / Hardware_SparkFun_HSTX_PTH_Breakout
+# Findings: sparkfun/SparkFun_HSTX_PTH_Breakout / Hardware_SparkFun_HSTX_PTH_Breakout
 
 ## FND-00001461: Component count of 8 is accurate; power_rails lists only GND, missing 3.3V; HSTX differential pairs misclassified as UART nets; HSTX differential pairs not detected; Net count of 16 and wire count ...
 
