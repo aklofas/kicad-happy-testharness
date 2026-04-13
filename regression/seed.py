@@ -920,6 +920,70 @@ def generate_emc_assertions(data, tolerance=0.10):
     return assertions
 
 
+def generate_thermal_assertions(data, tolerance=0.10):
+    """Generate assertions from a thermal analysis output dict."""
+    summary = data.get("summary", {})
+
+    assertions = []
+    ast_num = 1
+
+    total = summary.get("total_findings", summary.get("total_checks", 0))
+    components_analyzed = summary.get("components_analyzed", 0)
+    if total == 0 and components_analyzed == 0:
+        return assertions
+
+    # Total findings count range — use total_findings (with total_checks fallback)
+    total_key = "summary.total_findings" if "total_findings" in summary else "summary.total_checks"
+    if total > 0:
+        lo, hi = _range_bounds(total, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Finding count ~{total} (tolerance {tolerance:.0%})",
+            "check": {"path": total_key, "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Per-severity counts (range for non-zero)
+    for sev in ("critical", "high", "medium", "low"):
+        count = summary.get(sev, 0)
+        if count > 0:
+            lo, hi = _range_bounds(count, tolerance)
+            assertions.append({
+                "id": f"SEED-{ast_num:08d}",
+                "description": f"{sev} count ~{count}",
+                "check": {"path": f"summary.{sev}", "op": "range",
+                          "min": lo, "max": hi},
+            })
+            ast_num += 1
+
+    # Components analyzed count range
+    if components_analyzed > 0:
+        lo, hi = _range_bounds(components_analyzed, tolerance)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Components analyzed ~{components_analyzed} (tolerance {tolerance:.0%})",
+            "check": {"path": "summary.components_analyzed", "op": "range",
+                      "min": lo, "max": hi},
+        })
+        ast_num += 1
+
+    # Thermal score range (0-100)
+    score = summary.get("thermal_score", 0)
+    if score > 0:
+        slo = max(0, score - 10)
+        shi = min(100, score + 10)
+        assertions.append({
+            "id": f"SEED-{ast_num:08d}",
+            "description": f"Thermal score ~{score} (+-10)",
+            "check": {"path": "summary.thermal_score", "op": "range",
+                      "min": slo, "max": shi},
+        })
+        ast_num += 1
+
+    return assertions
+
+
 def generate_spice_assertions(data, tolerance=0.10):
     """Generate assertions from a SPICE simulation output dict."""
     summary = data.get("summary", {})
@@ -990,6 +1054,9 @@ def _meets_seeding_threshold(data, atype, min_components=10):
         return s.get("total_findings", s.get("total_checks", 0)) >= 1
     elif atype == "datasheets":
         return data.get("extracted", 0) >= 1
+    elif atype == "thermal":
+        s = data.get("summary", {})
+        return s.get("total_findings", s.get("total_checks", 0)) >= 1 or s.get("components_analyzed", 0) >= 1
     return False
 
 
@@ -1130,6 +1197,8 @@ def generate_for_repo(repo_name, atype, tolerance, min_components,
                 assertions = generate_spice_assertions(data_content, tolerance)
             elif atype == "emc":
                 assertions = generate_emc_assertions(data_content, tolerance)
+            elif atype == "thermal":
+                assertions = generate_thermal_assertions(data_content, tolerance)
             elif atype == "datasheets":
                 assertions = generate_datasheets_assertions(data_content, tolerance)
             else:

@@ -325,6 +325,41 @@ def generate_emc_structural_assertions(data, strict=True):
     return assertions
 
 
+def generate_thermal_structural_assertions(data, strict=True):
+    """Generate structural assertions from thermal analysis output.
+
+    For each component ref in thermal_assessments, asserts presence.
+    """
+    assessments = data.get("thermal_assessments", [])
+    if not assessments:
+        return []
+
+    assertions = []
+    ast_num = 1
+
+    seen_refs = set()
+    for assessment in assessments:
+        ref = assessment.get("ref", "")
+        if not ref or ref in seen_refs:
+            continue
+        if not re.match(r'^[A-Za-z0-9_]+$', ref):
+            continue
+        seen_refs.add(ref)
+        assertions.append({
+            "id": f"STRUCT-{ast_num:08d}",
+            "description": f"{ref} in thermal_assessments",
+            "check": {
+                "path": "thermal_assessments",
+                "op": "contains_match",
+                "field": "ref",
+                "pattern": rf"^{re.escape(ref)}$",
+            },
+        })
+        ast_num += 1
+
+    return assertions
+
+
 def generate_datasheets_structural_assertions(data, strict=True):
     """Generate structural assertions from a datasheets validation report.
 
@@ -395,6 +430,10 @@ def generate_for_repo(repo_name, atype, strict, min_components,
             elif atype == "datasheets":
                 extracted = data_content.get("extracted", 0)
                 below_threshold = extracted < 1
+            elif atype == "thermal":
+                s = data_content.get("summary", {})
+                total_checks = s.get("total_findings", s.get("total_checks", 0))
+                below_threshold = total_checks < 1 and s.get("components_analyzed", 0) < 1
             else:
                 stats = data_content.get("statistics", {})
                 comps = (stats.get("total_components", 0)
@@ -408,6 +447,8 @@ def generate_for_repo(repo_name, atype, strict, min_components,
                     assertions = generate_spice_structural_assertions(data_content, strict)
                 elif atype == "emc":
                     assertions = generate_emc_structural_assertions(data_content, strict)
+                elif atype == "thermal":
+                    assertions = generate_thermal_structural_assertions(data_content, strict)
                 elif atype == "datasheets":
                     assertions = generate_datasheets_structural_assertions(data_content, strict)
                 elif atype == "schematic":

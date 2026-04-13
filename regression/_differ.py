@@ -399,4 +399,17 @@ def extract_manifest_entry(data, analyzer_type):
             "by_category": by_cat,
         }
 
+    elif analyzer_type == "thermal":
+        summary = data.get("summary", {})
+        return {
+            "components_analyzed": summary.get("components_analyzed", 0),
+            "thermal_score": summary.get("thermal_score", 0),
+            "total_findings": summary.get("total_findings", summary.get("total_checks", 0)),
+            "critical": summary.get("critical", 0),
+            "high": summary.get("high", 0),
+            "medium": summary.get("medium", 0),
+            "low": summary.get("low", 0),
+            "thermal_assessments": len(data.get("thermal_assessments", [])),
+        }
+
     return {}
