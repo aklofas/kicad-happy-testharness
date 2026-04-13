@@ -11,6 +11,115 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-04-12 — Batch 52: TH-021..TH-025 + B5/B7 (Phase 1 bug fixes)
+
+### TH-021 (MED): harness.py _run() catches TimeoutExpired
+- **Fix:** Wrapped `subprocess.run` in try/except `TimeoutExpired`. Returns False instead of crashing pipeline.
+
+### TH-022 (MED): run_tests.py regex-based summary parsing
+- **Fix:** Replaced fragile `split()` parsing with `re.search(r'(\d+)\s+passed,\s+(\d+)\s+failed')`. Warns on fallback. Test count jumped 302→326 because `test_diff_analysis.py` (25 tests) was previously counted as 1.
+
+### TH-023 (MED): cleanup_drift.py matches on category not description substrings
+- **Fix:** Rewrote to iterate items in same order as `validate_finding()`, matching on `(category, item_type)` pairs. Items with explicit check fields now correctly identified.
+
+### TH-024 (LOW): cleanup_drift.py calls save_findings() for markdown regeneration
+- **Fix:** Replaced raw `fpath.write_text()` with `save_findings()` which auto-regenerates findings.md.
+
+### TH-025 (MED): run_pcb.py uses run_analyzer() standard CLI
+- **Fix:** Removed manual argparse. Pre-parses `--full` flag, delegates to `run_analyzer()` which provides `--cross-section`, `--repo-list`, `--resume`, `--validate`, `--json`, and `DEFAULT_JOBS`.
+
+### B5: seed_structural.py tolerant SPICE — documented as exact-only
+- **Fix:** Removed dead `lo`/`hi` computation. Documented that `count_matches` op only supports exact equality.
+
+### B7: add_repos.py --resume ternary fixed
+- **Fix:** Non-resume branch now returns empty progress dict instead of loading saved progress.
+
+---
+
+## 2026-04-12 — Batch 51: TH-016..TH-020 (Phase 0 critical fixes)
+
+### TH-016 (HIGH): validate_outputs.py + validate_invariants.py owner/repo path
+- **Fix:** `split("/", 1)` → `split("/", 2)` to get `[owner, repo, within_repo]`. Both tools were finding 0 outputs.
+
+### TH-017 (HIGH): validate_spice.py two-level directory iteration
+- **Fix:** Replaced flat `iterdir()` with two-level `owner_dir/repo_dir` iteration matching `validate_emc.py` pattern.
+
+### TH-018 (HIGH): generate_analytics.py glob depth + Path.rglob
+- **Fix:** Replaced 4 `glob.glob` patterns with `Path.rglob`. Added `owner/` level. Fixed `parts[]` indexing. Was showing ~0.3% of data.
+
+### TH-019 (MED): compare.py --all uses list_repos()
+- **Fix:** One-line change from `d.name for d in DATA_DIR.iterdir()` to `list_repos()`.
+
+### TH-020 (MED): promote.py regenerates all analyzer types
+- **Fix:** Loop over `ANALYZER_TYPES` instead of hardcoding `"schematic"`.
+
+---
+
+## 2026-04-12 — Batch 50: Code quality fixes (KH-276, KH-278, KH-279, KH-280, KH-281)
+
+### KH-276 (LOW): RC filter detected with cutoff_hz=0.0
+
+- **Where fixed:** kicad-happy repo, commit `a243870`
+- **Root cause:** `detect_rc_filters()` allowed zero-value R/C pairs into the detection pipeline.
+- **Fix:** Added early `continue` when `r_val` or `c_val` is zero/None.
+
+### KH-278 (MED): GP-001 silently returns empty when PCB data missing
+
+- **Where fixed:** kicad-happy repo, commit `fc450e2`
+- **Root cause:** `check_return_path_coverage()` returned empty findings when `return_path_continuity` data was absent.
+- **Fix:** Emits INFO finding recommending `--full` flag when data is missing.
+
+### KH-279 (MED): Formula divide-by-zero on zero/negative inputs
+
+- **Where fixed:** kicad-happy repo, commit `12ecbac`
+- **Root cause:** `dm_radiation_v_m`, `cm_radiation_v_m`, `harmonic_spectrum` had no guards on zero freq/distance.
+- **Fix:** Early return 0.0/[] for unphysical inputs.
+
+### KH-280 (MED): MPN sanitization cache key collisions
+
+- **Where fixed:** kicad-happy repo, commit `998dfbd`
+- **Root cause:** `_sanitize_mpn()` mapped `STM32F-103` and `STM32F/103` to identical keys.
+- **Fix:** Appends 6-char MD5 hash suffix for uniqueness.
+
+### KH-281 (MED): Cache copies forward stale outputs
+
+- **Where fixed:** kicad-happy repo, commit `0b0e72e`
+- **Root cause:** Copy-forward block didn't compare source hashes between runs.
+- **Fix:** Skips copy when `source_hashes` differ between previous and current run.
+
+### KH-277 — WON'T FIX
+
+Mouser/element14 APIs require API key in URL query params. By design. Closed.
+
+---
+
+## 2026-04-12 — Batch 49: KH-230 empty Value substitution
+
+### KH-230 (LOW): Empty placed Value silently substituted with lib_symbol default
+
+- **Where fixed:** kicad-happy repo, commit `7eb2926`
+- **Root cause:** `analyze_schematic.py:443-448` used `if not value:` to decide whether to fall back to the lib_symbol default. An explicitly empty `(property "Value" "")` is falsy, so the fallback triggered and replaced `""` with the lib_symbol's placeholder (e.g., `"R"`).
+- **Fix:** Check `if value is None:` instead of `if not value:`. Only fall back when the property is entirely missing (Eagle imports), not when it exists but is empty.
+- **Verified:** py_compile clean, synthetic test covers all 3 cases (value present, empty, missing). CLI smoke test passes.
+- **Harness verification:** Affected: schematic analyzer. 1 corpus file: `hamster/SAINTCON/CHC/2022/Circuits - Series and Parallel.kicad_sch`. Verify R1 instance with empty Value now has `value: ""` not `value: "R"`.
+
+---
+
+## 2026-04-12 — Batch 48: KH-236 Vref prefix-collision
+
+### KH-236 (MED): Regulator Vref prefix-collision in _REGULATOR_VREF table
+
+- **Where fixed:** kicad-happy repo, commits `a457129` (phase 1), `58459de` (phase 2)
+- **Root cause:** Three failure modes: (1) LM78xx/LM79xx fixed-output parts not caught by suffix parser (no separator before voltage digits), falling through to `LM78 → 1.25V`. (2) Broad prefixes (TPS7A, TPS56, MP2, AP73, AP736) spanning sub-families with different Vref values. (3) Fixed-output-only families (LM78, LM79) in the table. 185 confirmed mismatches across 337 DigiKey-verified variants.
+- **Fix (2 phases):**
+  1. Extended suffix parser with `re.match(r'LM7[89][A-Z]?(\d{2})')` pattern for LM78xx/LM79xx fixed-output convention.
+  2. Replaced 6 broad collision prefixes with ~40 per-sub-family entries. Removed LM78/LM79 (fixed-output only). Split TPS7A into 9 sub-families, TPS56 into 11, MP2 into 13, AP73/AP736 into 4 explicit adjustable entries. Added TPS54302/08=0.596V cross-reference from KH-237.
+- **Phase 3 (vref_source annotation):** Already implemented — `signal_detectors.py` already tracks and emits `vref_source` (fixed_suffix/lookup/heuristic).
+- **Verified:** 19/19 targeted assertions pass, py_compile clean, CLI smoke tests pass.
+- **Harness verification:** Affected: schematic analyzer. Re-run `run_schematic.py` on quick_200. Expect `estimated_vout` changes on LM78xx (now fixed_suffix), TPS7A (split Vref), MP2/TPS56 (corrected Vref). BUGFIX assertion candidates: LM7805→fixed_suffix=5V (was lookup=1.25V), TPS7A4901→Vref=1.194V (was 1.19V), MP2338→Vref=0.5V (was 0.8V).
+
+---
+
 ## 2026-04-12 — Batch 47: KH-237 switching frequency prefix-collision
 
 ### KH-237 (HIGH): Switching frequency prefix-collision + duplicated table
