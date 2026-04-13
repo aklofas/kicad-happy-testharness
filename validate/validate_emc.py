@@ -23,7 +23,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import OUTPUTS_DIR
+from utils import OUTPUTS_DIR, add_repo_filter_args, resolve_repos
 
 
 def cross_validate_file(schematic_data, pcb_data, emc_data):
@@ -205,7 +205,7 @@ def find_source_json(emc_json_path):
 def main():
     parser = argparse.ArgumentParser(
         description="Cross-validate EMC results against analyzer outputs")
-    parser.add_argument("--repo", help="Only validate this repo")
+    add_repo_filter_args(parser)
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--summary", action="store_true",
                         help="Only print summary line")
@@ -215,6 +215,8 @@ def main():
     if not emc_dir.exists():
         print("No EMC outputs found. Run run/run_emc.py first.", file=sys.stderr)
         sys.exit(1)
+
+    repos = resolve_repos(args)
 
     total_checks = 0
     total_match = 0
@@ -229,7 +231,7 @@ def main():
             if not repo_dir.is_dir():
                 continue
             repo_key = f"{owner_dir.name}/{repo_dir.name}"
-            if args.repo and repo_key != args.repo:
+            if repos is not None and repo_key not in repos:
                 continue
 
             for emc_file in sorted(repo_dir.glob("*.json")):

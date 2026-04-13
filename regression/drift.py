@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import OUTPUTS_DIR, resolve_path
+from utils import OUTPUTS_DIR, resolve_path, add_repo_filter_args, resolve_repos
 from regression.findings import load_findings
 from regression.checks import evaluate_assertion
 
@@ -144,13 +144,22 @@ def validate_finding(finding):
 
 def main():
     parser = argparse.ArgumentParser(description="Validate findings against current outputs")
-    parser.add_argument("--repo", help="Filter by repo name")
+    add_repo_filter_args(parser)
     parser.add_argument("--status", help="Filter by finding status")
     parser.add_argument("--json", action="store_true", help="Machine-readable JSON output")
     args = parser.parse_args()
 
-    data = load_findings(args.repo)
-    findings = data.get("findings", [])
+    repos = resolve_repos(args)
+    if repos is None or len(repos) != 1:
+        # Load all findings then filter by repo list (or load all if repos is None)
+        data = load_findings(None)
+        findings = data.get("findings", [])
+        if repos is not None:
+            repos_set = set(repos)
+            findings = [f for f in findings if f.get("repo", "") in repos_set]
+    else:
+        data = load_findings(repos[0])
+        findings = data.get("findings", [])
 
     if args.status:
         findings = [f for f in findings if f.get("status") == args.status]

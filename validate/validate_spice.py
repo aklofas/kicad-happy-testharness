@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import OUTPUTS_DIR, list_repos
+from utils import OUTPUTS_DIR, list_repos, add_repo_filter_args, resolve_repos
 
 
 def cross_validate_file(schematic_json, spice_json):
@@ -229,7 +229,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Cross-validate SPICE results against analyzer values"
     )
-    parser.add_argument("--repo", help="Only validate one repo")
+    add_repo_filter_args(parser)
     parser.add_argument("--summary", action="store_true",
                         help="Print summary only (no per-file details)")
     parser.add_argument("--mismatches-only", action="store_true",
@@ -245,9 +245,8 @@ def main():
         sys.exit(1)
 
     # Build owner/repo list from two-level directory structure
-    if args.repo:
-        repos = [args.repo]
-    else:
+    repos = resolve_repos(args)
+    if repos is None:
         repos = []
         for owner_dir in sorted(spice_dir.iterdir()):
             if not owner_dir.is_dir():

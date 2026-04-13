@@ -18,14 +18,15 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "regression"))
-from utils import OUTPUTS_DIR, safe_load_json
+from utils import OUTPUTS_DIR, safe_load_json, add_repo_filter_args, resolve_repos
 from seed import _DETECTOR_FIELD_SPECS
 
 
-def collect_detector_stats(detector_filter=None):
-    """Scan all schematic outputs and collect per-detector field statistics.
+def collect_detector_stats(detector_filter=None, repos=None):
+    """Scan schematic outputs and collect per-detector field statistics.
 
     Returns {detector: {files, items, fields: {field: count}, enums: {field: {val: count}}}}.
+    repos: if not None, only include repos in this list (owner/repo strings).
     """
     sch_dir = OUTPUTS_DIR / "schematic"
     if not sch_dir.exists():
@@ -43,6 +44,8 @@ def collect_detector_stats(detector_filter=None):
             continue
         for repo_dir in owner_dir.iterdir():
             if not repo_dir.is_dir():
+                continue
+            if repos is not None and f"{owner_dir.name}/{repo_dir.name}" not in repos:
                 continue
             for f in repo_dir.glob("*.json"):
                 try:
@@ -127,11 +130,13 @@ def format_report(stats, detector_filter=None):
 def main():
     parser = argparse.ArgumentParser(
         description="Detector coverage dashboard — field-level corpus statistics")
+    add_repo_filter_args(parser)
     parser.add_argument("--detector", help="Show only this detector")
     parser.add_argument("--json", action="store_true", help="JSON output")
     args = parser.parse_args()
 
-    stats = collect_detector_stats(detector_filter=args.detector)
+    repos = resolve_repos(args)
+    stats = collect_detector_stats(detector_filter=args.detector, repos=repos)
 
     if not stats:
         print("No detector data found. Run schematic analysis first.")

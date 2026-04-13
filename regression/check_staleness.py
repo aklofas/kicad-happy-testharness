@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from checks import load_assertions
 from run_checks import find_output_file
-from utils import OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES
+from utils import OUTPUTS_DIR, DATA_DIR, ANALYZER_TYPES, add_repo_filter_args, resolve_repos
 
 
 def check_staleness(data_dir, repo_name=None, analyzer_type=None):
@@ -131,19 +131,42 @@ def main():
     parser = argparse.ArgumentParser(
         description="Detect stale or missing assertions"
     )
-    parser.add_argument("--repo", help="Only check this repo")
+    add_repo_filter_args(parser)
     parser.add_argument("--type", choices=ANALYZER_TYPES,
                         help="Only check one analyzer type")
     parser.add_argument("--json", action="store_true",
                         help="Output as JSON")
     args = parser.parse_args()
 
-    stale, missing, total_sets = check_staleness(
-        DATA_DIR, repo_name=args.repo, analyzer_type=args.type,
-    )
-    uncovered = find_uncovered_outputs(
-        DATA_DIR, repo_name=args.repo, analyzer_type=args.type,
-    )
+    repos = resolve_repos(args)
+
+    stale_all = []
+    missing_all = []
+    total_sets = 0
+    uncovered_all = []
+
+    if repos is None:
+        stale_all, missing_all, total_sets = check_staleness(
+            DATA_DIR, repo_name=None, analyzer_type=args.type,
+        )
+        uncovered_all = find_uncovered_outputs(
+            DATA_DIR, repo_name=None, analyzer_type=args.type,
+        )
+    else:
+        for repo_name in repos:
+            s, m, t = check_staleness(
+                DATA_DIR, repo_name=repo_name, analyzer_type=args.type,
+            )
+            stale_all.extend(s)
+            missing_all.extend(m)
+            total_sets += t
+            uncovered_all.extend(find_uncovered_outputs(
+                DATA_DIR, repo_name=repo_name, analyzer_type=args.type,
+            ))
+
+    stale = stale_all
+    missing = missing_all
+    uncovered = uncovered_all
 
     if args.json:
         json.dump({

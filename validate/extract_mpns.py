@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from utils import HARNESS_DIR
+from utils import HARNESS_DIR, add_repo_filter_args, resolve_repos
 
 
 def is_valid_mpn(mpn: str) -> bool:
@@ -75,7 +75,7 @@ def extract_from_json(json_path: Path) -> list:
 def main():
     parser = argparse.ArgumentParser(
         description="Extract MPNs from analyzer JSON outputs")
-    parser.add_argument("--repo", help="Only extract from this repo")
+    add_repo_filter_args(parser)
     parser.add_argument(
         "--output", "-o",
         default=str(HARNESS_DIR / "results" / "extracted_mpns.json"),
@@ -95,14 +95,15 @@ def main():
         print(f"Error: {results_dir} not found. Run analyzers first.")
         return
 
+    repos = resolve_repos(args)
+
     # Structure: results/outputs/schematic/{owner}/{repo}/*.json
     owner_dirs = sorted(d for d in results_dir.iterdir() if d.is_dir())
     for owner_dir in owner_dirs:
         repo_dirs = sorted(d for d in owner_dir.iterdir() if d.is_dir())
-        if args.repo:
+        if repos is not None:
             repo_dirs = [d for d in repo_dirs
-                         if d.name == args.repo
-                         or f"{owner_dir.name}/{d.name}" == args.repo]
+                         if f"{owner_dir.name}/{d.name}" in repos]
         for repo_dir in repo_dirs:
             project = f"{owner_dir.name}/{repo_dir.name}"
             for json_file in sorted(repo_dir.glob("*.json")):
