@@ -5,15 +5,35 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 2 decoupling_placement",
+      "description": "Exactly 4 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 2
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U104 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U104$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "U103 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U103$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
       "description": "U101 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -23,7 +43,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000005",
       "description": "U102 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -33,7 +53,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000006",
       "description": "Exactly 6 tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -42,7 +62,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "C102 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -52,7 +72,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000008",
       "description": "C103 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -62,7 +82,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000009",
       "description": "C104 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -72,7 +92,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000010",
       "description": "C105 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -82,7 +102,7 @@
       }
     },
     {
-      "id": "STRUCT-00000009",
+      "id": "STRUCT-00000011",
       "description": "C108 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",
@@ -92,7 +112,7 @@
       }
     },
     {
-      "id": "STRUCT-00000010",
+      "id": "STRUCT-00000012",
       "description": "C109 in tombstoning_risk",
       "check": {
         "path": "tombstoning_risk",

@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~126 (tolerance 10%)",
+      "description": "Net count ~123 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 119,
-        "max": 133
+        "min": 116,
+        "max": 130
       }
     },
     {
@@ -91,7 +91,7 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "15 design_observations detected",
+      "description": "4 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -141,36 +141,6 @@
     },
     {
       "id": "SEED-00000015",
-      "description": "4 led_audit detected",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000016",
-      "description": "All led_audit have ref",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000017",
-      "description": "All led_audit type values are valid",
-      "check": {
-        "path": "signal_analysis.led_audit",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(indicator_led)$",
-        "value": 4
-      }
-    },
-    {
-      "id": "SEED-00000018",
       "description": "21 opamp_circuits detected",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -179,7 +149,7 @@
       }
     },
     {
-      "id": "SEED-00000019",
+      "id": "SEED-00000016",
       "description": "All opamp_circuits have reference present",
       "check": {
         "path": "signal_analysis.opamp_circuits",
@@ -189,26 +159,7 @@
       }
     },
     {
-      "id": "SEED-00000020",
-      "description": "2 power_regulators detected",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000021",
-      "description": "All power_regulators have ref present",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000022",
+      "id": "SEED-00000017",
       "description": "2 suggested_certifications detected",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -217,7 +168,7 @@
       }
     },
     {
-      "id": "SEED-00000023",
+      "id": "SEED-00000018",
       "description": "1 transistor_circuits detected",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -226,7 +177,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000019",
       "description": "All transistor_circuits have reference present",
       "check": {
         "path": "signal_analysis.transistor_circuits",
@@ -236,7 +187,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000020",
       "description": "Has 46 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -245,7 +196,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000021",
       "description": "Has 14 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -254,7 +205,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000022",
       "description": "Has 14 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -263,7 +214,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000023",
       "description": "Has 6 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -272,7 +223,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000024",
       "description": "Has 65 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -281,7 +232,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000025",
       "description": "Has 5 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",

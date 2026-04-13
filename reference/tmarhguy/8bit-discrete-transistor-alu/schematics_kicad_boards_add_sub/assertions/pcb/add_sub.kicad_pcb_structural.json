@@ -5,15 +5,25 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 4 decoupling_placement",
+      "description": "Exactly 6 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 4
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000002",
+      "description": "U702 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U702$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
       "description": "U3301 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -23,7 +33,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000004",
       "description": "U1101 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -33,7 +43,17 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000005",
+      "description": "U701 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U701$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
       "description": "U201 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -43,7 +63,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000007",
       "description": "U2201 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",

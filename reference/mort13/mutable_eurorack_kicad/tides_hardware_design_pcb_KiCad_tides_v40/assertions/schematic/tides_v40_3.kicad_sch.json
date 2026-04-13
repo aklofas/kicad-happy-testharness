@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~9 (tolerance 10%)",
+      "description": "Net count ~6 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 8,
-        "max": 10
+        "min": 5,
+        "max": 7
       }
     },
     {
@@ -42,7 +42,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "4 design_observations detected",
+      "description": "1 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -51,25 +51,6 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "2 power_regulators detected",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000007",
-      "description": "All power_regulators have ref present",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000008",
       "description": "2 suggested_certifications detected",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -78,7 +59,7 @@
       }
     },
     {
-      "id": "SEED-00000009",
+      "id": "SEED-00000007",
       "description": "Has 9 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",

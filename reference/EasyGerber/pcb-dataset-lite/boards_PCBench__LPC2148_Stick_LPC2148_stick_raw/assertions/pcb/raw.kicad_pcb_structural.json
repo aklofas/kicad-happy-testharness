@@ -5,6 +5,45 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
+      "description": "Exactly 3 decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "equals",
+        "value": 3
+      }
+    },
+    {
+      "id": "STRUCT-00000002",
+      "description": "IC1 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000003",
+      "description": "IC2 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^IC2$"
+      }
+    },
+    {
+      "id": "STRUCT-00000004",
+      "description": "U1 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U1$"
+      }
+    },
+    {
+      "id": "STRUCT-00000005",
       "description": "Exactly 4 thermal_analysis.thermal_pads",
       "check": {
         "path": "thermal_analysis.thermal_pads",
@@ -13,7 +52,7 @@
       }
     },
     {
-      "id": "STRUCT-00000002",
+      "id": "STRUCT-00000006",
       "description": "IC1 in thermal_analysis.thermal_pads",
       "check": {
         "path": "thermal_analysis.thermal_pads",
@@ -23,7 +62,7 @@
       }
     },
     {
-      "id": "STRUCT-00000003",
+      "id": "STRUCT-00000007",
       "description": "IC2 in thermal_analysis.thermal_pads",
       "check": {
         "path": "thermal_analysis.thermal_pads",
@@ -33,7 +72,7 @@
       }
     },
     {
-      "id": "STRUCT-00000004",
+      "id": "STRUCT-00000008",
       "description": "CON2 in thermal_analysis.thermal_pads",
       "check": {
         "path": "thermal_analysis.thermal_pads",
@@ -43,7 +82,7 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000009",
       "description": "Exactly 4 thermal_pad_vias",
       "check": {
         "path": "thermal_pad_vias",
@@ -52,7 +91,7 @@
       }
     },
     {
-      "id": "STRUCT-00000006",
+      "id": "STRUCT-00000010",
       "description": "IC1 in thermal_pad_vias",
       "check": {
         "path": "thermal_pad_vias",
@@ -62,7 +101,7 @@
       }
     },
     {
-      "id": "STRUCT-00000007",
+      "id": "STRUCT-00000011",
       "description": "IC2 in thermal_pad_vias",
       "check": {
         "path": "thermal_pad_vias",
@@ -72,7 +111,7 @@
       }
     },
     {
-      "id": "STRUCT-00000008",
+      "id": "STRUCT-00000012",
       "description": "CON2 in thermal_pad_vias",
       "check": {
         "path": "thermal_pad_vias",

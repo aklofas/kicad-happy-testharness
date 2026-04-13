@@ -5,20 +5,20 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 1 connector_ground_audit",
+      "description": "Exactly 4 connector_ground_audit",
       "check": {
         "path": "signal_analysis.connector_ground_audit",
         "op": "equals",
-        "value": 1
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 9 design_observations",
+      "description": "Exactly 2 design_observations",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "equals",
-        "value": 9
+        "value": 2
       }
     },
     {
@@ -32,35 +32,6 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 2 power_regulators",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "equals",
-        "value": 2
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "U2 in power_regulators",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "U3 in power_regulators",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U3$"
-      }
-    },
-    {
-      "id": "STRUCT-00000007",
       "description": "Exactly 2 suggested_certifications",
       "check": {
         "path": "signal_analysis.suggested_certifications",

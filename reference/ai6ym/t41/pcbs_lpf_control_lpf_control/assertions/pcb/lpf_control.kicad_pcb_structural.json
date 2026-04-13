@@ -5,11 +5,11 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 21 decoupling_placement",
+      "description": "Exactly 22 decoupling_placement",
       "check": {
         "path": "decoupling_placement",
         "op": "equals",
-        "value": 21
+        "value": 22
       }
     },
     {
@@ -204,6 +204,16 @@
     },
     {
       "id": "STRUCT-00000021",
+      "description": "U10 in decoupling_placement",
+      "check": {
+        "path": "decoupling_placement",
+        "op": "contains_match",
+        "field": "ic",
+        "pattern": "^U10$"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
       "description": "U9 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",
@@ -213,7 +223,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "U2 in decoupling_placement",
       "check": {
         "path": "decoupling_placement",

@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~645 (tolerance 10%)",
+      "description": "Net count ~644 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 625,
-        "max": 665
+        "min": 624,
+        "max": 664
       }
     },
     {
@@ -42,7 +42,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "6 connector_ground_audit detected",
+      "description": "9 connector_ground_audit detected",
       "check": {
         "path": "signal_analysis.connector_ground_audit",
         "op": "min_count",
@@ -150,7 +150,7 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "12 led_audit detected",
+      "description": "5 led_audit detected",
       "check": {
         "path": "signal_analysis.led_audit",
         "op": "min_count",
@@ -175,7 +175,7 @@
         "op": "count_matches",
         "field": "type",
         "pattern": "^(indicator_led)$",
-        "value": 12
+        "value": 5
       }
     },
     {
@@ -267,25 +267,6 @@
     },
     {
       "id": "SEED-00000028",
-      "description": "3 transistor_circuits detected",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000029",
-      "description": "All transistor_circuits have reference present",
-      "check": {
-        "path": "signal_analysis.transistor_circuits",
-        "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000030",
       "description": "Has 80 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -294,7 +275,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000029",
       "description": "Has 24 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -303,7 +284,7 @@
       }
     },
     {
-      "id": "SEED-00000032",
+      "id": "SEED-00000030",
       "description": "Has 6 crystal(s)",
       "check": {
         "path": "statistics.component_types.crystal",
@@ -312,7 +293,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000031",
       "description": "Has 7 diode(s)",
       "check": {
         "path": "statistics.component_types.diode",
@@ -321,7 +302,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000032",
       "description": "Has 23 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -330,7 +311,7 @@
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000033",
       "description": "Has 10 jumper(s)",
       "check": {
         "path": "statistics.component_types.jumper",
@@ -339,7 +320,7 @@
       }
     },
     {
-      "id": "SEED-00000036",
+      "id": "SEED-00000034",
       "description": "Has 13 led(s)",
       "check": {
         "path": "statistics.component_types.led",
@@ -348,7 +329,7 @@
       }
     },
     {
-      "id": "SEED-00000037",
+      "id": "SEED-00000035",
       "description": "Has 5 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -357,7 +338,7 @@
       }
     },
     {
-      "id": "SEED-00000038",
+      "id": "SEED-00000036",
       "description": "Has 61 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -366,7 +347,7 @@
       }
     },
     {
-      "id": "SEED-00000039",
+      "id": "SEED-00000037",
       "description": "Has 41 test_point(s)",
       "check": {
         "path": "statistics.component_types.test_point",

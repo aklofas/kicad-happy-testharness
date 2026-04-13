@@ -15,12 +15,12 @@
     },
     {
       "id": "SEED-00000002",
-      "description": "Net count ~40 (tolerance 10%)",
+      "description": "Net count ~37 (tolerance 10%)",
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "min": 36,
-        "max": 44
+        "min": 33,
+        "max": 41
       }
     },
     {
@@ -42,7 +42,7 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "1 connector_ground_audit detected",
+      "description": "4 connector_ground_audit detected",
       "check": {
         "path": "signal_analysis.connector_ground_audit",
         "op": "min_count",
@@ -51,7 +51,7 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "9 design_observations detected",
+      "description": "2 design_observations detected",
       "check": {
         "path": "signal_analysis.design_observations",
         "op": "min_count",
@@ -101,25 +101,6 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "2 power_regulators detected",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000012",
-      "description": "All power_regulators have ref present",
-      "check": {
-        "path": "signal_analysis.power_regulators",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000013",
       "description": "2 suggested_certifications detected",
       "check": {
         "path": "signal_analysis.suggested_certifications",
@@ -128,7 +109,7 @@
       }
     },
     {
-      "id": "SEED-00000014",
+      "id": "SEED-00000012",
       "description": "Has 14 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -137,7 +118,7 @@
       }
     },
     {
-      "id": "SEED-00000015",
+      "id": "SEED-00000013",
       "description": "Has 10 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
