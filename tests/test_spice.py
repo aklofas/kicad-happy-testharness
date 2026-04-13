@@ -163,10 +163,9 @@ def test_spice_structural_empty():
 def test_spice_structural_strict_vs_tolerant():
     strict = generate_spice_structural_assertions(SPICE_OUTPUT, strict=True)
     tolerant = generate_spice_structural_assertions(SPICE_OUTPUT, strict=False)
-    # Both should have same count of type assertions
-    strict_types = [a for a in strict if "Exactly" in a["description"] or "~" in a["description"]]
-    tolerant_types = [a for a in tolerant if "Exactly" in a["description"] or "~" in a["description"]]
-    assert len(strict_types) == len(tolerant_types)
+    # Both should produce the same number of assertions (same structure, different ops)
+    assert len(strict) == len(tolerant), \
+        f"strict ({len(strict)}) and tolerant ({len(tolerant)}) should have same count"
 
 
 # ---------------------------------------------------------------------------

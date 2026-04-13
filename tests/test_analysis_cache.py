@@ -259,10 +259,10 @@ def test_create_run_copies_forward_previous_outputs():
             source_hashes={"main.kicad_sch": "sha256:bbb"},
             scripts={"schematic": "analyze_schematic.py"},
             run_id="run2")
-        # Run 2 should have both files: pcb.json copied forward + schematic.json
+        # Run 2 has different source_hashes than run 1 → no copy-forward (KH-281)
         run2_dir = os.path.join(analysis_dir, "run2")
-        assert os.path.isfile(os.path.join(run2_dir, "pcb.json")), \
-            "pcb.json should be copied forward from run1"
+        assert not os.path.isfile(os.path.join(run2_dir, "pcb.json")), \
+            "pcb.json should NOT be copied forward when source_hashes differ"
         assert os.path.isfile(os.path.join(run2_dir, "schematic.json")), \
             "schematic.json should exist in run2"
     finally:
