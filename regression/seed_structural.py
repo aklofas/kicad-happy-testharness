@@ -207,11 +207,12 @@ def generate_spice_structural_assertions(data, strict=True):
                 },
             })
         else:
-            lo = max(0, count - 1)
-            hi = count + 1
+            # count_matches only supports exact equality — tolerant mode
+            # uses the same assertion but with a relaxed description.
+            # True range support would need a different op (not available).
             assertions.append({
                 "id": f"STRUCT-{ast_num:08d}",
-                "description": f"~{count} {stype} simulation(s) (±1)",
+                "description": f"{count} {stype} simulation(s)",
                 "check": {
                     "path": "simulation_results",
                     "op": "count_matches",

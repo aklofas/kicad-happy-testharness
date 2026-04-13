@@ -34,7 +34,12 @@ def _run(cmd, description, timeout=600):
     print(f"  {description}")
     print(f"{'=' * 60}\n")
     t0 = time.time()
-    result = subprocess.run(cmd, cwd=str(HARNESS_DIR), timeout=timeout)
+    try:
+        result = subprocess.run(cmd, cwd=str(HARNESS_DIR), timeout=timeout)
+    except subprocess.TimeoutExpired:
+        elapsed = time.time() - t0
+        print(f"\n  [TIMEOUT] {description} ({elapsed:.1f}s, limit {timeout}s)")
+        return False
     elapsed = time.time() - t0
     ok = result.returncode == 0
     status = "PASS" if ok else "FAIL"

@@ -474,7 +474,7 @@ def main():
         sys.exit(1)
 
     candidates = load_candidates(args.input, args.limit)
-    progress = load_progress() if args.resume else load_progress()
+    progress = load_progress() if args.resume else {"completed": [], "purged": [], "failed": []}
 
     # Filter out already-completed repos
     completed_set = set(progress["completed"] + progress["purged"]

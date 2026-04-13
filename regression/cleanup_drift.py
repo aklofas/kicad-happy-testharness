@@ -19,8 +19,51 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from drift import validate_finding
-from findings import load_findings, _iter_findings_files
+from findings import load_findings, save_findings, _iter_findings_files
 from utils import DATA_DIR
+
+
+def _find_removal_indices(finding):
+    """Run drift validation and return indices to remove per item type.
+
+    Matches drift results to finding items by iterating in the same order
+    as validate_finding(), which processes correct/incorrect/missed items
+    sequentially. Items with explicit check fields are matched by their
+    (category, item_type) — not by description substrings.
+
+    Returns {correct: set(int), incorrect: set(int), missed: set(int)}.
+    """
+    results = validate_finding(finding)
+    removals = {"correct": set(), "incorrect": set(), "missed": set()}
+
+    # Build per-type result lists in the same iteration order as validate_finding
+    type_results = {"correct": [], "incorrect": [], "missed": []}
+    for category, item_type, desc in results:
+        if item_type in type_results:
+            type_results[item_type].append(category)
+
+    # Map categories to removal decisions
+    removal_categories = {
+        "correct": {"regression"},
+        "incorrect": {"possibly_fixed"},
+        "missed": {"now_detected"},
+    }
+
+    for item_type, categories in type_results.items():
+        items = finding.get(item_type, [])
+        # validate_finding skips items without analyzer_section, so we
+        # need to track which items produced results
+        result_idx = 0
+        for i, item in enumerate(items):
+            section = item.get("analyzer_section")
+            if not section:
+                continue
+            if result_idx < len(categories):
+                if categories[result_idx] in removal_categories[item_type]:
+                    removals[item_type].add(i)
+                result_idx += 1
+
+    return removals
 
 
 def main():
@@ -34,38 +77,16 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    # Load all findings
-    data = load_findings(args.repo)
-    findings = data.get("findings", [])
+    # Collect removal indices per finding across all files
+    drift_removals = {}  # finding_id -> removals dict
 
-    # Group drift results by finding_id and item
-    drift_removals = {}  # finding_id -> {correct: set(), incorrect: set(), missed: set()}
-
-    for finding in findings:
-        fid = finding.get("id", "?")
-        results = validate_finding(finding)
-
-        removals = {"correct": set(), "incorrect": set(), "missed": set()}
-        for category, item_type, desc in results:
-            if category == "regression" and item_type == "correct":
-                # Find the matching correct item by description prefix
-                for i, item in enumerate(finding.get("correct", [])):
-                    section = item.get("analyzer_section", "")
-                    if f"{section} now empty/missing" in desc:
-                        removals["correct"].add(i)
-            elif category == "possibly_fixed" and item_type == "incorrect":
-                for i, item in enumerate(finding.get("incorrect", [])):
-                    section = item.get("analyzer_section", "")
-                    if f"{section} now empty" in desc:
-                        removals["incorrect"].add(i)
-            elif category == "now_detected" and item_type == "missed":
-                for i, item in enumerate(finding.get("missed", [])):
-                    section = item.get("analyzer_section", "")
-                    if f"{section} now has" in desc:
-                        removals["missed"].add(i)
-
-        if any(removals.values()):
-            drift_removals[fid] = removals
+    for _repo, _proj, fpath in _iter_findings_files(args.repo):
+        fdata = json.loads(fpath.read_text(encoding="utf-8"))
+        for finding in fdata.get("findings", []):
+            fid = finding.get("id", "?")
+            removals = _find_removal_indices(finding)
+            if any(removals.values()):
+                drift_removals[fid] = removals
 
     if not drift_removals:
         print("No drift items to clean up.")
@@ -87,10 +108,10 @@ def main():
         print("\n(dry run — no changes made)")
         return
 
-    # Apply changes: update findings.json files
+    # Apply changes and save with findings.md regeneration
     modified_files = set()
 
-    for _repo, _proj, fpath in _iter_findings_files(args.repo):
+    for repo, proj, fpath in _iter_findings_files(args.repo):
         fdata = json.loads(fpath.read_text(encoding="utf-8"))
         changed = False
 
@@ -110,18 +131,10 @@ def main():
                         changed = True
 
         if changed:
-            fpath.write_text(json.dumps(fdata, indent=2) + "\n", encoding="utf-8")
+            save_findings(fdata, repo, proj)
             modified_files.add(fpath)
 
-    print(f"\nModified {len(modified_files)} findings.json files")
-
-    # Re-render findings.md for modified files
-    for fpath in modified_files:
-        md_path = fpath.parent / "findings.md"
-        # Render will be done by findings.py render
-        pass
-
-    print("Run 'python3 regression/findings.py render' to update findings.md files")
+    print(f"\nModified {len(modified_files)} findings files (JSON + markdown regenerated)")
 
 
 if __name__ == "__main__":

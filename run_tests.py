@@ -120,7 +120,6 @@ def run_quick_sanity():
                 capture_output=True, text=True, timeout=120,
             )
             if result.returncode == 0:
-                import json
                 data = json.loads(result.stdout)
                 rate = data.get("pass_rate", "?")
                 total = data.get("total", 0)
@@ -219,41 +218,39 @@ def main():
                 print(f"  SKIP  {rel} (timed out after {timeout}s)")
             continue
 
-        # Parse last line for counts
+        # Parse last line for counts — try both summary formats
         last_lines = result.stdout.strip().split("\n")
         summary_line = last_lines[-1] if last_lines else ""
         p = f = s = 0
+        parsed = False
 
         if result.returncode == 0:
-            # Try to parse "N passed, N failed (N total)"
-            try:
-                parts = summary_line.split()
-                p = int(parts[0])
-                f = int(parts[2])
+            # Format 1: "N passed, N failed (N total)"
+            import re
+            m = re.search(r'(\d+)\s+passed,\s+(\d+)\s+failed', summary_line)
+            if m:
+                p = int(m.group(1))
+                f = int(m.group(2))
+                parsed = True
+                # Check for skipped
+                ms = re.search(r'(\d+)\s+skipped', summary_line)
+                if ms:
+                    s = int(ms.group(1))
                 total_passed += p
                 total_failed += f
-                status = f"{p}p {f}f"
-            except (IndexError, ValueError):
-                # Try "Results: N passed, N failed, N skipped (N total)"
-                try:
-                    if "Results:" in summary_line:
-                        p = int(summary_line.split("passed")[0].split()[-1])
-                        f = int(summary_line.split("failed")[0].split()[-1])
-                        s = int(summary_line.split("skipped")[0].split()[-1])
-                        total_passed += p
-                        total_failed += f
-                        total_skipped += s
-                        status = f"{p}p {f}f {s}s"
-                    else:
-                        p = 1
-                        total_passed += 1
-                        status = "ok"
-                except (IndexError, ValueError):
-                    p = 1
-                    total_passed += 1
-                    status = "ok"
-            file_results.append({"file": str(rel), "passed": p, "failed": f, "status": "pass"})
-            if not args.json:
+                total_skipped += s
+                status = f"{p}p {f}f" + (f" {s}s" if s else "")
+            else:
+                # Fallback: couldn't parse summary — warn instead of silently
+                # counting as "1 passed"
+                p = 1
+                total_passed += 1
+                status = "ok"
+                if not args.json:
+                    print(f"  WARN  {rel} (unparsed summary: {summary_line!r})")
+            file_results.append({"file": str(rel), "passed": p, "failed": f,
+                                 "skipped": s, "status": "pass", "parsed": parsed})
+            if not args.json and parsed:
                 print(f"  PASS  {rel} ({status})")
         else:
             total_failed += 1
