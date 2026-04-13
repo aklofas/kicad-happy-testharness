@@ -11,7 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fixtures._build_sch import Schematic, pin1, pin2
+from fixtures._build_sch import Schematic, pin1, pin2, ic_pin_pos
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 
@@ -253,23 +253,91 @@ def test_rc_negative_rc_snubber_like():
 # === Deferred Stubs (need IC/crystal/diode builder support) ===
 
 def test_reg_positive_by_value():
-    # DEFERRED: needs IC (multi-pin) builder support to place regulator symbols
-    # (e.g. LM7805, AMS1117) with correct Value fields.
-    # Add when Schematic().ic() is implemented.
-    return
+    """AMS1117-3.3 LDO with VIN/VOUT/GND — should detect power regulator."""
+    REG_PINS = [
+        ("VIN",  "3", -5.08, 0, "input"),
+        ("GND",  "1", 0, 5.08, "power_in"),
+        ("VOUT", "2", 5.08, 0, "output"),
+    ]
+    cx, cy = 50, 50
+    sch = (
+        Schematic()
+        .ic("U1", "AMS1117-3.3", "Regulator_Linear:AMS1117-3.3", REG_PINS, at=(cx, cy))
+        .power("+5V", at=(35, cy))
+        .power("GND", at=(cx, 65))
+        .label("3V3_OUT", at=(65, cy))
+        # +5V → VIN
+        .wire((35, cy), ic_pin_pos(cx, cy, "VIN", REG_PINS))
+        # GND pin → GND symbol
+        .wire(ic_pin_pos(cx, cy, "GND", REG_PINS), (cx, 65))
+        # VOUT → 3V3_OUT label
+        .wire(ic_pin_pos(cx, cy, "VOUT", REG_PINS), (65, cy))
+    )
+    data = run_analyzer(sch)
+    if data is None:
+        print("  SKIP: kicad-happy not available")
+        return
+    regs = data.get("signal_analysis", {}).get("power_regulators", [])
+    assert len(regs) >= 1, f"Expected ≥1 regulator, got {len(regs)}: {regs}"
+    refs = [r["ref"] for r in regs]
+    assert "U1" in refs, f"U1 not found in regulators: {refs}"
 
 
 def test_crystal_positive():
-    # DEFERRED: needs crystal symbol builder support (Device:Crystal, 2+ pins,
-    # with load caps and oscillator IC).
-    # Add when Schematic().crystal() is implemented.
-    return
+    """16MHz crystal with two 18pF load caps to GND — should detect crystal circuit."""
+    # Y1 horizontal (angle=90), C1 and C2 vertical beneath each crystal pin
+    Y1_cx, Y1_cy = 50, 50
+    C1_cx, C1_cy = pin1(Y1_cx, Y1_cy, 90)[0], 60  # under pin1
+    C2_cx, C2_cy = pin2(Y1_cx, Y1_cy, 90)[0], 60  # under pin2
+
+    sch = (
+        Schematic()
+        .crystal("Y1", "16MHz", at=(Y1_cx, Y1_cy), angle=90)
+        .capacitor("C1", "18p", at=(C1_cx, C1_cy))
+        .capacitor("C2", "18p", at=(C2_cx, C2_cy))
+        .power("GND", at=(C1_cx, 70))
+        .power("GND", at=(C2_cx, 70))
+        # Y1 pin1 → C1 pin1 (vertical wire)
+        .wire(pin1(Y1_cx, Y1_cy, 90), pin1(C1_cx, C1_cy))
+        # Y1 pin2 → C2 pin1 (vertical wire)
+        .wire(pin2(Y1_cx, Y1_cy, 90), pin1(C2_cx, C2_cy))
+        # C1 pin2 → GND
+        .wire(pin2(C1_cx, C1_cy), (C1_cx, 70))
+        # C2 pin2 → GND
+        .wire(pin2(C2_cx, C2_cy), (C2_cx, 70))
+    )
+    data = run_analyzer(sch)
+    if data is None:
+        print("  SKIP: kicad-happy not available")
+        return
+    cc = data.get("signal_analysis", {}).get("crystal_circuits", [])
+    assert len(cc) >= 1, f"Expected ≥1 crystal circuit, got {len(cc)}: {cc}"
+    y1 = [c for c in cc if c.get("reference") == "Y1"]
+    assert len(y1) == 1, f"Y1 not found in crystal circuits: {cc}"
+    assert y1[0].get("frequency", 0) > 0, f"Expected frequency > 0"
 
 
 def test_protection_positive():
-    # DEFERRED: needs diode/TVS symbol builder support (Device:D_Zener, Device:D_TVS).
-    # Add when Schematic().diode() is implemented.
-    return
+    """TVS diode between signal and GND — should detect protection device."""
+    D_cx, D_cy = 50, 50
+    sch = (
+        Schematic()
+        .diode("D1", "PESD5V0S1BA", at=(D_cx, D_cy), variant="D_TVS")
+        .label("USB_D+", at=(D_cx, 40))
+        .power("GND", at=(D_cx, 60))
+        # Signal → D1 cathode (pin1)
+        .wire((D_cx, 40), pin1(D_cx, D_cy))
+        # D1 anode (pin2) → GND
+        .wire(pin2(D_cx, D_cy), (D_cx, 60))
+    )
+    data = run_analyzer(sch)
+    if data is None:
+        print("  SKIP: kicad-happy not available")
+        return
+    pd = data.get("signal_analysis", {}).get("protection_devices", [])
+    assert len(pd) >= 1, f"Expected ≥1 protection device, got {len(pd)}: {pd}"
+    d1 = [d for d in pd if d.get("ref") == "D1"]
+    assert len(d1) == 1, f"D1 not found in protection devices: {pd}"
 
 
 # === Runner ===

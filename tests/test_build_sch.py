@@ -11,7 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fixtures._build_sch import Schematic, pin1, pin2, _PIN_OFFSET
+from fixtures._build_sch import Schematic, pin1, pin2, ic_pin_pos, _PIN_OFFSET
 
 
 def test_empty_schematic_is_valid_sexp():
@@ -80,6 +80,49 @@ def test_pin1_horizontal():
 
 def test_pin2_horizontal():
     assert pin2(50, 50, 90) == (round(50 + _PIN_OFFSET, 4), 50)
+
+
+def test_crystal_produces_symbol():
+    sch = Schematic().crystal("Y1", "16MHz", at=(50, 50))
+    text = sch.render()
+    assert '"Y1"' in text
+    assert '"16MHz"' in text
+    assert 'lib_id "Device:Crystal"' in text
+
+
+def test_diode_produces_symbol():
+    sch = Schematic().diode("D1", "1N4148", at=(50, 50))
+    text = sch.render()
+    assert '"D1"' in text
+    assert '"1N4148"' in text
+    assert 'lib_id "Device:D"' in text
+
+
+def test_diode_tvs_variant():
+    sch = Schematic().diode("D1", "PESD5V0", at=(50, 50), variant="D_TVS")
+    text = sch.render()
+    assert 'lib_id "Device:D_TVS"' in text
+
+
+def test_ic_produces_symbol():
+    pins = [("VIN", "1", -5.08, 0, "input"), ("GND", "2", 0, 5.08, "power_in"),
+            ("VOUT", "3", 5.08, 0, "output")]
+    sch = Schematic().ic("U1", "AMS1117-3.3", "Regulator_Linear:AMS1117-3.3", pins, at=(50, 50))
+    text = sch.render()
+    assert '"U1"' in text
+    assert '"AMS1117-3.3"' in text
+    assert 'lib_id "Regulator_Linear:AMS1117-3.3"' in text
+    assert '(pin "1"' in text
+    assert '(pin "2"' in text
+    assert '(pin "3"' in text
+
+
+def test_ic_pin_pos_helper():
+    pins = [("VIN", "1", -5.08, 0, "input"), ("GND", "2", 0, 5.08, "power_in"),
+            ("VOUT", "3", 5.08, 0, "output")]
+    assert ic_pin_pos(50, 50, "VIN", pins) == (50 - 5.08, 50)
+    assert ic_pin_pos(50, 50, "VOUT", pins) == (50 + 5.08, 50)
+    assert ic_pin_pos(50, 50, "GND", pins) == (50, 50 + 5.08)
 
 
 def test_analyzer_accepts_output():

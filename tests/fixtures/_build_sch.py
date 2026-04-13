@@ -67,6 +67,18 @@ def pin2(x, y, angle=0):
     return (x, round(y + _PIN_OFFSET, 4))
 
 
+def ic_pin_pos(cx, cy, pin_name, pins):
+    """Compute absolute screen position of an IC pin by name.
+
+    pins: same list of (name, number, dx, dy, pin_type) passed to ic().
+    dx, dy are screen-coordinate offsets from component center.
+    """
+    for name, num, dx, dy, ptype in pins:
+        if name == pin_name:
+            return (round(cx + dx, 4), round(cy + dy, 4))
+    raise ValueError(f"Pin '{pin_name}' not found in pin list")
+
+
 # --- Lib symbol templates ---
 
 _LIB_DEVICE_R = '''    (symbol "Device:R" (pin_numbers hide) (pin_names (offset 0)) (in_bom yes) (on_board yes)
@@ -103,6 +115,75 @@ _LIB_DEVICE_C = '''    (symbol "Device:C" (pin_numbers hide) (pin_names (offset 
       )
     )'''
 
+_LIB_DEVICE_CRYSTAL = '''    (symbol "Device:Crystal" (pin_numbers hide) (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
+      (property "Reference" "Y" (at 2.032 0 90) (effects (font (size 1.27 1.27))))
+      (property "Value" "Crystal" (at 0 0 90) (effects (font (size 1.27 1.27))))
+      (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (symbol "Crystal_0_1"
+        (rectangle (start -0.762 -1.524) (end 0.762 1.524)
+          (stroke (width 0) (type default)) (fill (type none)))
+        (polyline (pts (xy -1.524 -2.032) (xy -1.524 2.032)) (stroke (width 0.508) (type default)) (fill (type none)))
+        (polyline (pts (xy 1.524 -2.032) (xy 1.524 2.032)) (stroke (width 0.508) (type default)) (fill (type none)))
+      )
+      (symbol "Crystal_1_1"
+        (pin passive line (at 0 3.81 270) (length 1.27) (name "1" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+        (pin passive line (at 0 -3.81 90) (length 1.27) (name "2" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+      )
+    )'''
+
+
+def _lib_diode(variant):
+    """Generate a diode lib_symbol. variant: D, D_Zener, D_TVS, D_Schottky."""
+    return f'''    (symbol "Device:{variant}" (pin_numbers hide) (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
+      (property "Reference" "D" (at 0 2.54 0) (effects (font (size 1.27 1.27))))
+      (property "Value" "{variant}" (at 0 -2.54 0) (effects (font (size 1.27 1.27))))
+      (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (symbol "{variant}_0_1"
+        (polyline (pts (xy -1.27 1.27) (xy -1.27 -1.27)) (stroke (width 0.254) (type default)) (fill (type none)))
+        (polyline (pts (xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27))
+          (stroke (width 0.254) (type default)) (fill (type none)))
+      )
+      (symbol "{variant}_1_1"
+        (pin passive line (at 0 3.81 270) (length 1.27) (name "K" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+        (pin passive line (at 0 -3.81 90) (length 1.27) (name "A" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+      )
+    )'''
+
+
+def _lib_ic(lib_id, pins):
+    """Generate an IC lib_symbol with named pins.
+
+    pins: list of (name, number, dx, dy, pin_type) where dx/dy are screen offsets.
+    """
+    short = lib_id.split(":")[-1] if ":" in lib_id else lib_id
+    pin_lines = []
+    for name, num, dx, dy, ptype in pins:
+        sym_x, sym_y = dx, -dy  # screen y-down → symbol y-up
+        if abs(dx) >= abs(dy):
+            angle = 0 if dx < 0 else 180
+        else:
+            angle = 90 if dy > 0 else 270
+        pin_lines.append(
+            f'        (pin {ptype} line (at {sym_x} {sym_y} {angle}) (length 2.54) '
+            f'(name "{name}" (effects (font (size 1.27 1.27)))) '
+            f'(number "{num}" (effects (font (size 1.27 1.27)))))')
+    pin_text = '\n'.join(pin_lines)
+    return f'''    (symbol "{lib_id}" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
+      (property "Reference" "U" (at 0 7.62 0) (effects (font (size 1.27 1.27))))
+      (property "Value" "{short}" (at 0 -7.62 0) (effects (font (size 1.27 1.27))))
+      (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (symbol "{short}_0_1"
+        (rectangle (start -6.35 6.35) (end 6.35 -6.35)
+          (stroke (width 0.254) (type default)) (fill (type background)))
+      )
+      (symbol "{short}_1_1"
+{pin_text}
+      )
+    )'''
+
 
 def _lib_power(name):
     """Generate a power symbol lib definition."""
@@ -133,6 +214,8 @@ class Schematic:
         self._labels = []       # net labels
         self._lib_ids = set()   # track which lib_symbols we need
         self._power_names = set()  # track power symbol names
+        self._diode_variants = set()  # track diode variants for lib_symbols
+        self._ic_defs = {}      # lib_id → pins list for IC lib_symbols
 
     def resistor(self, ref, value, at=(50, 50), angle=0):
         self._lib_ids.add("Device:R")
@@ -159,6 +242,37 @@ class Schematic:
         })
         return self
 
+    def crystal(self, ref, value, at=(50, 50), angle=0):
+        self._lib_ids.add("Device:Crystal")
+        self._symbols.append({
+            "lib_id": "Device:Crystal", "ref": ref, "value": value,
+            "x": at[0], "y": at[1], "angle": angle,
+        })
+        return self
+
+    def diode(self, ref, value, at=(50, 50), angle=0, variant="D"):
+        lib_id = f"Device:{variant}"
+        self._diode_variants.add(variant)
+        self._symbols.append({
+            "lib_id": lib_id, "ref": ref, "value": value,
+            "x": at[0], "y": at[1], "angle": angle,
+        })
+        return self
+
+    def ic(self, ref, value, lib_id, pins, at=(50, 50)):
+        """Place a generic IC with named pins.
+
+        pins: list of (name, number, dx, dy, pin_type) tuples.
+        dx, dy are screen-coordinate offsets from component center.
+        pin_type: "input", "output", "passive", "power_in", "power_out".
+        """
+        self._ic_defs[lib_id] = pins
+        self._symbols.append({
+            "lib_id": lib_id, "ref": ref, "value": value,
+            "x": at[0], "y": at[1], "angle": 0, "pins": pins,
+        })
+        return self
+
     def wire(self, start, end):
         self._wires.append({"x1": start[0], "y1": start[1],
                             "x2": end[0], "y2": end[1]})
@@ -182,6 +296,12 @@ class Schematic:
             lines.append(_LIB_DEVICE_R)
         if "Device:C" in self._lib_ids:
             lines.append(_LIB_DEVICE_C)
+        if "Device:Crystal" in self._lib_ids:
+            lines.append(_LIB_DEVICE_CRYSTAL)
+        for variant in sorted(self._diode_variants):
+            lines.append(_lib_diode(variant))
+        for lid, pins in sorted(self._ic_defs.items()):
+            lines.append(_lib_ic(lid, pins))
         for name in sorted(self._power_names):
             lines.append(_lib_power(name))
         lines.append('  )')
@@ -212,8 +332,12 @@ class Schematic:
             lines.append(f'      (effects (font (size 1.27 1.27)) hide))')
             lines.append(f'    (property "Datasheet" "~" (at {sym["x"]} {sym["y"]} 0)')
             lines.append(f'      (effects (font (size 1.27 1.27)) hide))')
-            lines.append(f'    (pin "1" (uuid "{_uuid()}"))')
-            lines.append(f'    (pin "2" (uuid "{_uuid()}"))')
+            if sym.get("pins"):
+                for p in sym["pins"]:
+                    lines.append(f'    (pin "{p[1]}" (uuid "{_uuid()}"))')
+            else:
+                lines.append(f'    (pin "1" (uuid "{_uuid()}"))')
+                lines.append(f'    (pin "2" (uuid "{_uuid()}"))')
             lines.append(f'  )')
 
         lines.append(')')

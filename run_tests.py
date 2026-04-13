@@ -60,6 +60,9 @@ SMOKE_TESTS = [
     "tests/test_add_repos.py",       # 6 tests — category insert point logic
     "tests/test_build_sch.py",       # 12 tests — KiCad schematic builder (P4)
     "tests/test_synthetic.py",       # 11 tests — synthetic detector fixtures (P4)
+    "tests/test_spice_coverage.py",  # 14 tests — SPICE coverage metrics (P10)
+    "tests/test_bug_cemetery.py",    # 11 tests — historical bug reproducers (P8)
+    "tests/test_metamorphic.py",     # 10 tests — invariance/covariance (P5)
 ]
 
 
