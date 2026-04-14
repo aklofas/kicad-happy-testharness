@@ -1,8 +1,8 @@
 """Extract KiCad component references from finding description strings.
 
 Provides extract_refs() for pulling component designators (R1, C23, U4, etc.)
-from free-text descriptions, and REF_FIELD_MAP for mapping signal detector
-names to the field containing component refs in their output.
+from free-text descriptions, and REF_FIELD_MAP for mapping detector names
+(as they appear in findings[].detector) to the field containing component refs.
 """
 
 import re
@@ -125,42 +125,40 @@ def extract_refs_ordered(description):
     return ordered
 
 
-# Maps signal detector names to the field(s) containing component refs.
+# Maps detector names (as they appear in findings[].detector) to the field(s) containing component refs.
 # For composite fields like "R163 442k", the ref is the first token.
 REF_FIELD_MAP = {
-    "opamp_circuits": "reference",
-    "voltage_dividers": "r_top.ref",     # nested dict with ref key
-    "protection_devices": "ref",
-    "transistor_circuits": "reference",
-    "power_regulators": "ref",
-    "crystal_circuits": "reference",
-    "rc_filters": "resistor.ref",        # nested dict with ref key
-    "lc_filters": "inductor.ref",        # nested dict with ref key
-    "led_drivers": "ref",
-    "current_sense": "shunt.ref",         # nested dict with ref key
-    "rf_matching": None,                 # no single ref field — "antenna" is value not ref
-    "design_observations": None,          # various categories, no single ref field
-    "key_matrices": None,                # no ref field — count-only
-    "feedback_networks": "r_top.ref",  # same divider structure as voltage_dividers
-    "snubbers": "ref",
-    "decoupling_analysis": None,         # rail is a net name, not a ref
-    "buzzer_speaker_circuits": "reference",
-    "bridge_circuits": None,             # topology-based, no single ref
-    "isolation_barriers": "ref",
-    "ethernet_interfaces": "phy_reference",
-    "hdmi_dvi_interfaces": "connector",
-    "memory_interfaces": "memory_reference",
-    "rf_chains": None,                   # complex structure — count-only
-    "bms_systems": "bms_reference",
-    "addressable_led_chains": None,      # first_led is the lead, not a simple ref field
+    "detect_opamp_circuits": "reference",
+    "detect_voltage_dividers": "r_top.ref",     # nested dict with ref key
+    "detect_protection_devices": "ref",
+    "detect_transistor_circuits": "reference",
+    "detect_power_regulators": "ref",
+    "detect_crystal_circuits": "reference",
+    "detect_rc_filters": "resistor.ref",        # nested dict with ref key
+    "detect_lc_filters": "inductor.ref",        # nested dict with ref key
+    "detect_led_drivers": "ref",
+    "detect_current_sense": "shunt.ref",         # nested dict with ref key
+    "detect_rf_matching": None,                 # no single ref field — "antenna" is value not ref
+    "detect_design_observations": None,          # various categories, no single ref field
+    "detect_key_matrices": None,                # no ref field — count-only
+    "validate_feedback_stability": "r_top.ref",  # same divider structure as voltage_dividers
+    "detect_decoupling": None,                  # rail is a net name, not a ref
+    "detect_buzzer_speakers": "reference",
+    "detect_bridge_circuits": None,             # topology-based, no single ref
+    "detect_isolation_barriers": "ref",
+    "detect_ethernet_interfaces": "phy_reference",
+    "detect_hdmi_dvi_interfaces": "connector",
+    "detect_memory_interfaces": "memory_reference",
+    "detect_rf_chains": None,                   # complex structure — count-only
+    "detect_bms_systems": "bms_reference",
+    "detect_addressable_leds": None,            # first_led is the lead, not a simple ref field
 }
 
-# Maps PCB analyzer section names to the field containing component refs.
+# Maps PCB detector/section names to the field containing component refs.
 PCB_REF_FIELD_MAP = {
     "decoupling_placement": "ic",
-    "thermal_pad_vias": "component",
-    "thermal_analysis.thermal_pads": "component",
-    "tombstoning_risk": "component",
+    "analyze_thermal_pad_vias": "component",
+    "analyze_tombstoning_risk": "component",
 }
 
 
